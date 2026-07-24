@@ -15,6 +15,7 @@ from aimf.domain.graph.validation import optional_nonblank, require_nonblank
 from aimf.domain.recommendations import RecommendationResult
 from aimf.models import AnalysisResult
 from aimf.reporting.architecture.models import ArchitectureReportSection
+from aimf.reporting.dependency.models import DependencyReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
 
 
@@ -174,6 +175,8 @@ class ModernizationReportInput(BaseModel):
     architecture_report: ArchitectureReportSection | None = None
     # Phase 4.3.6 — optional technical debt report presentation (additive under assessment).
     technical_debt_report: TechnicalDebtReportSection | None = None
+    # Phase 4.4.6 — optional dependency report presentation (additive under assessment).
+    dependency_report: DependencyReportSection | None = None
 
     @field_validator("generated_at_utc")
     @classmethod

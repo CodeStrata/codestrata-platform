@@ -710,6 +710,31 @@ class TechnicalDebtRulesSettings(BaseModel):
     )
 
 
+class DependencyRuleToggle(BaseModel):
+    """Per-rule enablement under [rules.dependency]."""
+
+    enabled: bool = True
+
+
+class DependencyRulesSettings(BaseModel):
+    """Dependency Intelligence pack settings (disabled by default; Phase 4.4.3)."""
+
+    enabled: bool = False
+    unresolved_version: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    mutable_version: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    unbounded_requirement: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    conflicting_exact_versions: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    duplicate_declaration: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+
+
 class RulesSettings(BaseModel):
     """Shared Rule Platform settings (disabled by default; Phase 4.1)."""
 
@@ -724,6 +749,7 @@ class RulesSettings(BaseModel):
     technical_debt: TechnicalDebtRulesSettings = Field(
         default_factory=TechnicalDebtRulesSettings
     )
+    dependency: DependencyRulesSettings = Field(default_factory=DependencyRulesSettings)
 
     @field_validator(
         "max_rules_per_run",
@@ -753,9 +779,10 @@ class RulesSettings(BaseModel):
 
     @model_validator(mode="after")
     def validate_architecture_requires_platform(self) -> RulesSettings:
-        # Architecture pack may be configured while platform disabled; assess ignores it.
+        # Packs may be configured while platform disabled; assess ignores them.
         _ = self.architecture
         _ = self.technical_debt
+        _ = self.dependency
         return self
 
 
@@ -846,12 +873,52 @@ class ComplexityEvidenceSettings(BaseModel):
         return value
 
 
+class DependencyEvidenceSettings(BaseModel):
+    """Declared-dependency manifest collectors (Phase 4.4.2).
+
+    Owned by the Dependency Evidence Platform. Disabled by default.
+    """
+
+    enabled: bool = False
+    maven: LanguageProviderToggle = Field(default_factory=LanguageProviderToggle)
+    gradle: LanguageProviderToggle = Field(default_factory=LanguageProviderToggle)
+    python: LanguageProviderToggle = Field(default_factory=LanguageProviderToggle)
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("dependency evidence bounds must be positive")
+        return value
+
+
 class EvidenceSettings(BaseModel):
     """Evidence collection settings."""
 
     language: LanguageEvidenceSettings = Field(default_factory=LanguageEvidenceSettings)
     complexity: ComplexityEvidenceSettings = Field(
         default_factory=ComplexityEvidenceSettings
+    )
+    dependency: DependencyEvidenceSettings = Field(
+        default_factory=DependencyEvidenceSettings
     )
 
 
@@ -918,12 +985,27 @@ class TechnicalDebtAssessmentSectionSettings(BaseModel):
     include_synthesis: bool = True
 
 
+class DependencyAssessmentSectionSettings(BaseModel):
+    """Dependency assessment section (disabled by default; Phase 4.4.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+    include_synthesis: bool = True
+
+
 class AssessmentSectionsSettings(BaseModel):
     architecture: ArchitectureAssessmentSectionSettings = Field(
         default_factory=ArchitectureAssessmentSectionSettings
     )
     technical_debt: TechnicalDebtAssessmentSectionSettings = Field(
         default_factory=TechnicalDebtAssessmentSectionSettings
+    )
+    dependency: DependencyAssessmentSectionSettings = Field(
+        default_factory=DependencyAssessmentSectionSettings
     )
 
 
@@ -966,12 +1048,31 @@ class TechnicalDebtReportSectionSettings(BaseModel):
     include_traceability: bool = True
 
 
+class DependencyReportSectionSettings(BaseModel):
+    """Dependency section in HTML/JSON reports (disabled by default; Phase 4.4.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_landscape: bool = True
+    include_production_health: bool = True
+    include_test_observations: bool = True
+    include_hotspots: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
 class ReportSectionsSettings(BaseModel):
     architecture: ArchitectureReportSectionSettings = Field(
         default_factory=ArchitectureReportSectionSettings
     )
     technical_debt: TechnicalDebtReportSectionSettings = Field(
         default_factory=TechnicalDebtReportSectionSettings
+    )
+    dependency: DependencyReportSectionSettings = Field(
+        default_factory=DependencyReportSectionSettings
     )
 
 

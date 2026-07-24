@@ -158,6 +158,12 @@ class AssessmentCommandResult(BaseModel):
     technical_debt_assessment_status: str | None = None
     technical_debt_assessment_finding_count: int | None = Field(default=None, ge=0)
     technical_debt_assessment_artifact_path: Path | None = None
+    dependency_assessment_status: str | None = None
+    dependency_assessment_finding_count: int | None = Field(default=None, ge=0)
+    dependency_assessment_artifact_path: Path | None = None
+    dependency_evidence_status: str | None = None
+    dependency_evidence_declaration_count: int | None = Field(default=None, ge=0)
+    dependency_evidence_artifact_path: Path | None = None
     architecture_report_enabled: bool | None = None
     architecture_report_status: str | None = None
     architecture_report_section_version: str | None = None
@@ -174,6 +180,13 @@ class AssessmentCommandResult(BaseModel):
     technical_debt_report_conclusion_count: int | None = Field(default=None, ge=0)
     technical_debt_report_hotspot_count: int | None = Field(default=None, ge=0)
     technical_debt_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    dependency_report_enabled: bool | None = None
+    dependency_report_status: str | None = None
+    dependency_report_section_version: str | None = None
+    dependency_report_finding_count: int | None = Field(default=None, ge=0)
+    dependency_report_conclusion_count: int | None = Field(default=None, ge=0)
+    dependency_report_hotspot_count: int | None = Field(default=None, ge=0)
+    dependency_report_adapter_ms: float | None = Field(default=None, ge=0.0)
     knowledge_repository_id: str | None = None
     knowledge_run_id: str | None = None
     knowledge_snapshot_id: str | None = None
@@ -574,6 +587,14 @@ class AssessmentApplicationService:
         technical_debt_assessment_status = None
         technical_debt_assessment_finding_count = None
         technical_debt_section_for_report = None
+        dependency_assessment_artifact = None
+        dependency_assessment_status = None
+        dependency_assessment_finding_count = None
+        dependency_section_for_report = None
+        dependency_evidence_artifact = None
+        dependency_evidence_status = None
+        dependency_evidence_declaration_count = None
+        dependency_pack_result = None
         try:
             rule_evaluation = active_rule_engine.evaluate_pipeline_result(graph_pipeline_result)
             from aimf.application.rules.architecture.assessment import (
@@ -608,6 +629,23 @@ class AssessmentApplicationService:
                 rule_evaluation = merge_rule_evaluations(
                     rule_evaluation,
                     technical_debt_pack_result.evaluation,
+                )
+            from aimf.application.dependency.assessment.factory import (
+                dependency_pack_enabled as dependency_rules_pack_enabled,
+            )
+            from aimf.application.rules.dependency.assessment import (
+                evaluate_dependency_pack_detailed,
+            )
+
+            if dependency_rules_pack_enabled(loaded_settings):
+                dependency_pack_result = evaluate_dependency_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_root=Path(repository.path),
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    dependency_pack_result.evaluation,
                 )
             findings_artifact = write_findings_artifact(
                 rule_evaluation,
@@ -863,6 +901,190 @@ class AssessmentApplicationService:
             raise AssessmentCommandError(
                 f"[rule_engine] Rule evaluation failed: {sanitize_provider_text(str(error))}"
             ) from error
+
+        # Phase 4.4.2 / 4.4.3 — Dependency Evidence + Dependency hygiene assessment.
+        try:
+            from aimf.application.dependency.assessment.artifacts import (
+                write_dependency_assessment_artifact,
+            )
+            from aimf.application.dependency.assessment.factory import (
+                configuration_fingerprint_payload as dep_configuration_fingerprint_payload,
+            )
+            from aimf.application.dependency.assessment.factory import (
+                create_dependency_assessment_assembler,
+                dependency_assessment_section_enabled,
+                dependency_assessment_section_settings,
+                dependency_pack_enabled,
+            )
+            from aimf.application.evidence.dependency.artifacts import (
+                write_dependency_evidence_artifact,
+            )
+            from aimf.application.evidence.dependency.io import (
+                load_dependency_manifest_texts,
+            )
+            from aimf.application.evidence.dependency.service import (
+                create_dependency_evidence_service,
+            )
+            from aimf.application.rules.dependency.assessment import (
+                dependency_evidence_collection_enabled,
+            )
+            from aimf.domain.dependency.ids import HYGIENE_RULE_IDS
+
+            dependency_evidence = (
+                dependency_pack_result.dependency_evidence
+                if dependency_pack_result is not None
+                else None
+            )
+            if (
+                dependency_evidence is None
+                and dependency_evidence_collection_enabled(loaded_settings)
+            ):
+                dep_evidence_service = create_dependency_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                _paths, texts = load_dependency_manifest_texts(
+                    relative_paths=inventory_paths,
+                    repository_root=Path(repository.path),
+                    max_files=loaded_settings.evidence.dependency.max_files,
+                    max_chars=loaded_settings.evidence.dependency.max_file_chars,
+                )
+                dependency_evidence = dep_evidence_service.collect(
+                    repository_id=str(
+                        getattr(repository, "name", None) or repository.path
+                    ),
+                    relative_paths=inventory_paths,
+                    file_texts=texts,
+                    configuration_fingerprint=(
+                        f"evidence.dependency.enabled="
+                        f"{loaded_settings.evidence.dependency.enabled}"
+                    ),
+                )
+
+            if dependency_evidence is not None:
+                evidence_write = write_dependency_evidence_artifact(
+                    dependency_evidence,
+                    report_paths.run_directory,
+                )
+                dependency_evidence_artifact = evidence_write.path
+                dependency_evidence_status = dependency_evidence.status.value
+                dependency_evidence_declaration_count = evidence_write.declaration_count
+
+            if dependency_assessment_section_enabled(loaded_settings):
+                dep_section_cfg = dependency_assessment_section_settings(
+                    loaded_settings
+                )
+                dep_assembler = create_dependency_assessment_assembler()
+                dep_pack_on = dependency_pack_enabled(loaded_settings)
+                if not dep_pack_on:
+                    dependency_section = dep_assembler.assemble_disabled(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        reason="dependency_pack_disabled",
+                    )
+                    if dependency_evidence is not None:
+                        dependency_section = dependency_section.model_copy(
+                            update={
+                                "evidence_pipeline": "dependency.manifest",
+                                "evidence_fingerprint": (
+                                    dependency_evidence.evidence_fingerprint
+                                ),
+                            }
+                        )
+                else:
+                    pack_eval = (
+                        dependency_pack_result.evaluation
+                        if dependency_pack_result is not None
+                        else None
+                    )
+                    pack_findings = (
+                        pack_eval.findings if pack_eval is not None else ()
+                    )
+                    matched = len(pack_findings)
+                    executed = (
+                        len(pack_eval.rules_evaluated) if pack_eval is not None else 0
+                    )
+                    skipped = (
+                        len(pack_eval.rules_skipped) if pack_eval is not None else 0
+                    )
+                    evidence_on = dependency_evidence_collection_enabled(
+                        loaded_settings
+                    )
+                    dependency_section = dep_assembler.assemble(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        findings=pack_findings,
+                        pack_enabled=True,
+                        evidence_enabled=evidence_on,
+                        include_findings=dep_section_cfg.include_findings,
+                        include_coverage=dep_section_cfg.include_coverage,
+                        include_limitations=dep_section_cfg.include_limitations,
+                        include_traceability=dep_section_cfg.include_traceability,
+                        include_execution_summary=(
+                            dep_section_cfg.include_execution_summary
+                        ),
+                        include_synthesis=dep_section_cfg.include_synthesis,
+                        dependency_evidence=dependency_evidence,
+                        evidence_pipeline=(
+                            dependency_pack_result.evidence_pipeline
+                            if dependency_pack_result is not None
+                            else (
+                                "dependency.manifest"
+                                if dependency_evidence is not None
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            dependency_pack_result.evidence_fingerprint
+                            if dependency_pack_result is not None
+                            else (
+                                dependency_evidence.evidence_fingerprint
+                                if dependency_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=dep_configuration_fingerprint_payload(
+                            loaded_settings,
+                            pack_enabled=True,
+                        ),
+                        dependency_rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=max(executed - matched, 0),
+                        rules_not_applicable=skipped,
+                        diagnostics=(
+                            dependency_pack_result.diagnostics
+                            if dependency_pack_result is not None
+                            else ()
+                        ),
+                    )
+                dep_write = write_dependency_assessment_artifact(
+                    dependency_section,
+                    report_paths.run_directory,
+                )
+                dependency_assessment_artifact = dep_write.path
+                dependency_assessment_status = dependency_section.status.value
+                dependency_assessment_finding_count = dep_write.finding_count
+                dependency_section_for_report = dependency_section
+        except Exception as error:  # noqa: BLE001 - isolate dependency pack failures
+            dependency_assessment_artifact = None
+            dependency_assessment_status = "failed"
+            dependency_assessment_finding_count = None
+            dependency_section_for_report = None
+            dependency_evidence_artifact = None
+            dependency_evidence_status = "failed"
+            dependency_evidence_declaration_count = None
+            warn(
+                "Dependency assessment/evidence could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         try:
             recommendation_result = active_recommendation_engine.evaluate_pipeline_result(
                 pipeline_result=graph_pipeline_result,
@@ -1150,6 +1372,80 @@ class AssessmentApplicationService:
                 "Technical debt report section enabled, but no technical debt "
                 "assessment section was available for this run."
             )
+        dependency_report_section = None
+        dependency_report_enabled = loaded_settings.report.sections.dependency.enabled
+        dependency_report_status = None
+        dependency_report_section_version = None
+        dependency_report_finding_count = None
+        dependency_report_conclusion_count = None
+        dependency_report_hotspot_count = None
+        dependency_report_adapter_ms = None
+        report_dependency_cfg = loaded_settings.report.sections.dependency
+        if (
+            report_dependency_cfg.enabled
+            and dependency_section_for_report is not None
+        ):
+            from aimf.reporting.dependency.adapter import DependencyReportAdapter
+
+            dep_adapter_started = perf_counter()
+            try:
+                dependency_report_section = DependencyReportAdapter().adapt(
+                    dependency_section_for_report,
+                    include_executive_summary=(
+                        report_dependency_cfg.include_executive_summary
+                    ),
+                    include_landscape=report_dependency_cfg.include_landscape,
+                    include_production_health=(
+                        report_dependency_cfg.include_production_health
+                    ),
+                    include_test_observations=(
+                        report_dependency_cfg.include_test_observations
+                    ),
+                    include_hotspots=report_dependency_cfg.include_hotspots,
+                    include_conclusions=report_dependency_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_dependency_cfg.include_recommendations
+                    ),
+                    include_coverage=report_dependency_cfg.include_coverage,
+                    include_limitations=report_dependency_cfg.include_limitations,
+                    include_traceability=report_dependency_cfg.include_traceability,
+                )
+                dependency_report_adapter_ms = round(
+                    (perf_counter() - dep_adapter_started) * 1000, 2
+                )
+                dependency_report_status = dependency_report_section.status
+                dependency_report_section_version = (
+                    dependency_report_section.section_version
+                )
+                dependency_report_finding_count = int(
+                    dependency_report_section.metadata.get(
+                        "production_finding_count", "0"
+                    )
+                    or "0"
+                )
+                dependency_report_conclusion_count = len(
+                    dependency_report_section.conclusions
+                )
+                dependency_report_hotspot_count = len(
+                    dependency_report_section.manifest_hotspots
+                )
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                dependency_report_section = None
+                dependency_report_adapter_ms = round(
+                    (perf_counter() - dep_adapter_started) * 1000, 2
+                )
+                dependency_report_status = "failed"
+                warn(
+                    "Dependency report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_dependency_cfg.enabled:
+            dependency_report_status = "unavailable"
+            warn(
+                "Dependency report section enabled, but no dependency assessment "
+                "section was available for this run."
+            )
         report_input = ModernizationReportInput(
             analysis_result=analysis_result,
             assessment_mode=mode,
@@ -1182,6 +1478,7 @@ class AssessmentApplicationService:
             ),
             architecture_report=architecture_report_section,
             technical_debt_report=technical_debt_report_section,
+            dependency_report=dependency_report_section,
         )
         try:
             written_paths = write_modernization_assessment_reports(
@@ -1247,6 +1544,12 @@ class AssessmentApplicationService:
             technical_debt_assessment_status=technical_debt_assessment_status,
             technical_debt_assessment_finding_count=technical_debt_assessment_finding_count,
             technical_debt_assessment_artifact=technical_debt_assessment_artifact,
+            dependency_assessment_status=dependency_assessment_status,
+            dependency_assessment_finding_count=dependency_assessment_finding_count,
+            dependency_assessment_artifact=dependency_assessment_artifact,
+            dependency_evidence_status=dependency_evidence_status,
+            dependency_evidence_declaration_count=dependency_evidence_declaration_count,
+            dependency_evidence_artifact=dependency_evidence_artifact,
             architecture_report_enabled=architecture_report_enabled,
             architecture_report_status=architecture_report_status,
             architecture_report_section_version=architecture_report_section_version,
@@ -1263,6 +1566,13 @@ class AssessmentApplicationService:
             technical_debt_report_conclusion_count=technical_debt_report_conclusion_count,
             technical_debt_report_hotspot_count=technical_debt_report_hotspot_count,
             technical_debt_report_adapter_ms=technical_debt_report_adapter_ms,
+            dependency_report_enabled=dependency_report_enabled,
+            dependency_report_status=dependency_report_status,
+            dependency_report_section_version=dependency_report_section_version,
+            dependency_report_finding_count=dependency_report_finding_count,
+            dependency_report_conclusion_count=dependency_report_conclusion_count,
+            dependency_report_hotspot_count=dependency_report_hotspot_count,
+            dependency_report_adapter_ms=dependency_report_adapter_ms,
         )
         _print_success_summary(active_console, result)
         try:
@@ -1815,6 +2125,12 @@ def _build_command_result(
     technical_debt_assessment_status: str | None = None,
     technical_debt_assessment_finding_count: int | None = None,
     technical_debt_assessment_artifact: Path | None = None,
+    dependency_assessment_status: str | None = None,
+    dependency_assessment_finding_count: int | None = None,
+    dependency_assessment_artifact: Path | None = None,
+    dependency_evidence_status: str | None = None,
+    dependency_evidence_declaration_count: int | None = None,
+    dependency_evidence_artifact: Path | None = None,
     architecture_report_enabled: bool | None = None,
     architecture_report_status: str | None = None,
     architecture_report_section_version: str | None = None,
@@ -1829,6 +2145,13 @@ def _build_command_result(
     technical_debt_report_conclusion_count: int | None = None,
     technical_debt_report_hotspot_count: int | None = None,
     technical_debt_report_adapter_ms: float | None = None,
+    dependency_report_enabled: bool | None = None,
+    dependency_report_status: str | None = None,
+    dependency_report_section_version: str | None = None,
+    dependency_report_finding_count: int | None = None,
+    dependency_report_conclusion_count: int | None = None,
+    dependency_report_hotspot_count: int | None = None,
+    dependency_report_adapter_ms: float | None = None,
 ) -> AssessmentCommandResult:
     deterministic_recommendation_count = len(analysis_result.recommendations)
     graph_fields: dict[str, object] = {}
@@ -1881,6 +2204,24 @@ def _build_command_result(
         graph_fields["technical_debt_assessment_artifact_path"] = (
             technical_debt_assessment_artifact
         )
+    if dependency_assessment_status is not None:
+        graph_fields["dependency_assessment_status"] = dependency_assessment_status
+    if dependency_assessment_finding_count is not None:
+        graph_fields["dependency_assessment_finding_count"] = (
+            dependency_assessment_finding_count
+        )
+    if dependency_assessment_artifact is not None:
+        graph_fields["dependency_assessment_artifact_path"] = (
+            dependency_assessment_artifact
+        )
+    if dependency_evidence_status is not None:
+        graph_fields["dependency_evidence_status"] = dependency_evidence_status
+    if dependency_evidence_declaration_count is not None:
+        graph_fields["dependency_evidence_declaration_count"] = (
+            dependency_evidence_declaration_count
+        )
+    if dependency_evidence_artifact is not None:
+        graph_fields["dependency_evidence_artifact_path"] = dependency_evidence_artifact
     if architecture_report_enabled is not None:
         graph_fields["architecture_report_enabled"] = architecture_report_enabled
     if architecture_report_status is not None:
@@ -1927,6 +2268,28 @@ def _build_command_result(
         graph_fields["technical_debt_report_adapter_ms"] = (
             technical_debt_report_adapter_ms
         )
+    if dependency_report_enabled is not None:
+        graph_fields["dependency_report_enabled"] = dependency_report_enabled
+    if dependency_report_status is not None:
+        graph_fields["dependency_report_status"] = dependency_report_status
+    if dependency_report_section_version is not None:
+        graph_fields["dependency_report_section_version"] = (
+            dependency_report_section_version
+        )
+    if dependency_report_finding_count is not None:
+        graph_fields["dependency_report_finding_count"] = (
+            dependency_report_finding_count
+        )
+    if dependency_report_conclusion_count is not None:
+        graph_fields["dependency_report_conclusion_count"] = (
+            dependency_report_conclusion_count
+        )
+    if dependency_report_hotspot_count is not None:
+        graph_fields["dependency_report_hotspot_count"] = (
+            dependency_report_hotspot_count
+        )
+    if dependency_report_adapter_ms is not None:
+        graph_fields["dependency_report_adapter_ms"] = dependency_report_adapter_ms
     if (
         mode == AssessmentMode.AI_ENHANCED
         and ai_status == AIExecutionStatus.SUCCEEDED
@@ -2099,6 +2462,32 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
             "Technical debt assessment artifact: "
             f"{_display_path(result.technical_debt_assessment_artifact_path)}"
         )
+    if result.dependency_assessment_status is not None:
+        console.print(
+            f"Dependency assessment: {result.dependency_assessment_status}"
+        )
+    if result.dependency_assessment_finding_count is not None:
+        console.print(
+            "Dependency assessment findings: "
+            f"{result.dependency_assessment_finding_count}"
+        )
+    if result.dependency_assessment_artifact_path is not None:
+        console.print(
+            "Dependency assessment artifact: "
+            f"{_display_path(result.dependency_assessment_artifact_path)}"
+        )
+    if result.dependency_evidence_status is not None:
+        console.print(f"Dependency evidence: {result.dependency_evidence_status}")
+    if result.dependency_evidence_declaration_count is not None:
+        console.print(
+            "Dependency evidence declarations: "
+            f"{result.dependency_evidence_declaration_count}"
+        )
+    if result.dependency_evidence_artifact_path is not None:
+        console.print(
+            "Dependency evidence artifact: "
+            f"{_display_path(result.dependency_evidence_artifact_path)}"
+        )
     if result.architecture_report_enabled:
         console.print(
             "Architecture report section: "
@@ -2108,6 +2497,11 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
         console.print(
             "Technical debt report section: "
             f"{result.technical_debt_report_status or 'unavailable'}"
+        )
+    if result.dependency_report_enabled:
+        console.print(
+            "Dependency report section: "
+            f"{result.dependency_report_status or 'unavailable'}"
         )
     if result.architecture_conclusion_count is not None:
         console.print(f"Architecture conclusions: {result.architecture_conclusion_count}")
