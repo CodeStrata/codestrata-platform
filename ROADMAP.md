@@ -28,9 +28,17 @@ YAML-based enterprise architecture model.
   - **4.3.4A** Complexity Precision and Inventory Usability — Complete
   - **4.3.5** Debt Assessment Synthesis — Complete
   - **4.3.6** Debt Report Integration — Complete
-- **4.4 Security Intelligence** — not started
-- **4.5 Performance Intelligence** — not started
-- **4.6 Modernization Intelligence** — not started
+- **4.4 Dependency Intelligence** — Complete through CTO report integration
+  - **4.4.1** Dependency Domain Foundation — Complete
+  - **4.4.2** Dependency Evidence Platform — Complete
+  - **4.4.3** Dependency Rules & Findings — Complete
+  - **4.4.3A** Unresolved-version precision correction — Complete
+  - **4.4.4** Dependency Inventory and Assessment Usability — Complete
+  - **4.4.5** Dependency Assessment Synthesis — Complete
+  - **4.4.6** Dependency CTO Report Integration — Complete
+- **4.5 Security Intelligence** — not started
+- **4.6 Performance Intelligence** — not started
+- **4.7 Modernization Intelligence** — not started
 
 ## Phase 5 — Language and Build Ecosystem Expansion
 

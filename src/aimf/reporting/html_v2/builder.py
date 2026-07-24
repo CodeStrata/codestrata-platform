@@ -163,6 +163,7 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Html
         ai_enrichment=ai_view,
         architecture_report=report_input.architecture_report,
         technical_debt_report=report_input.technical_debt_report,
+        dependency_report=report_input.dependency_report,
         artifacts=artifacts,
         metadata=metadata,
     )
