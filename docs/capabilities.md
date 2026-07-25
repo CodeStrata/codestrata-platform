@@ -34,7 +34,10 @@
 | Security Assessment Inventory (4.5.4) | Available (disabled by default; inventories/hotspots on schema 1.3.0) |
 | Security Assessment Synthesis (4.5.5) | Available (disabled by default; `include_synthesis=true` when section enabled; no scores/report) |
 | Security report | Available (disabled by default; `assessment.security` in report) |
-| Performance packs | Deferred (Phase 4.6) |
+| Test Intelligence Domain Foundation (4.6.1) | Available (domain/config only; disabled by default; no scanning) |
+| Repository Test Evidence (4.6.2) | Available (disabled by default; `repository-testing-evidence.json` 1.0.0; platform evidence) |
+| Test Hygiene Rules (4.6.3) | Available (disabled by default; `testing.core` → Findings; TEST-004 deferred) |
+| Performance packs | Deferred |
 | Dimension scoring / CTO report | Designed (4.1.2); not implemented |
 | Analysis Intelligence packs (remaining) | In progress / planned (4.2–4.6) |
 | GitHub PR review | Deferred (Phase 6) |

@@ -151,3 +151,29 @@ and HTML `#security-assessment`. Gate
 scores, or compliance claims. See [security/report.md](security/report.md)
 and
 [../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md](../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md).
+
+## Phase 4.6.1
+
+Test Intelligence domain foundation: taxonomy, assessment lifecycle, feature
+gates, empty/disabled sections, deterministic `testing-assessment.json`. No
+test discovery, framework detection, or Findings yet. See
+[testing/README.md](testing/README.md).
+
+## Phase 4.6.2
+
+Repository Test Evidence (platform): deterministic
+`repository-testing-evidence.json` **1.0.0** for repository-observable testing
+structure and configuration facts. Disabled by default via
+`[evidence.repository_testing]`. Not owned by Test Intelligence; no Findings,
+rules, assessment, report, or test execution. See
+[repository-test-evidence.md](repository-test-evidence.md) and
+[../reviews/PHASE_4_6_2_REPOSITORY_TEST_EVIDENCE_REVIEW.md](../reviews/PHASE_4_6_2_REPOSITORY_TEST_EVIDENCE_REVIEW.md).
+
+## Phase 4.6.3
+
+Test Hygiene rules (`testing.core` 1.0.0) consume repository-testing evidence
+and emit shared Findings into `testing-assessment` **1.0.0**. Four rules
+registered (TEST-001/002/003/005); TEST-004 deferred. No inventory, synthesis,
+or CTO report integration. See [testing/hygiene-rules.md](testing/hygiene-rules.md)
+and
+[../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md](../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md).

@@ -763,6 +763,16 @@ class SecurityRulesSettings(BaseModel):
     debug_enabled: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
 
 
+class TestingRulesSettings(BaseModel):
+    """Test Intelligence pack settings (disabled by default; Phase 4.6.3)."""
+
+    enabled: bool = False
+    test_001: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    test_002: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    test_003: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    test_005: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+
+
 class RulesSettings(BaseModel):
     """Shared Rule Platform settings (disabled by default; Phase 4.1)."""
 
@@ -779,6 +789,7 @@ class RulesSettings(BaseModel):
     )
     dependency: DependencyRulesSettings = Field(default_factory=DependencyRulesSettings)
     security: SecurityRulesSettings = Field(default_factory=SecurityRulesSettings)
+    testing: TestingRulesSettings = Field(default_factory=TestingRulesSettings)
 
     @field_validator(
         "max_rules_per_run",
@@ -813,6 +824,7 @@ class RulesSettings(BaseModel):
         _ = self.technical_debt
         _ = self.dependency
         _ = self.security
+        _ = self.testing
         return self
 
 
@@ -977,6 +989,43 @@ class RepositorySensitiveEvidenceSettings(BaseModel):
         return value
 
 
+class RepositoryTestingEvidenceSettings(BaseModel):
+    """Repository-observable testing structure evidence (Phase 4.6.2).
+
+    Platform evidence — not owned by Test Intelligence. Disabled by default.
+    Collects structure and configuration facts only; no Findings or execution.
+    """
+
+    enabled: bool = False
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    max_file_bytes: int = 2_000_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+            "/reports/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars", "max_file_bytes")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("repository-testing evidence bounds must be positive")
+        return value
+
+
 class EvidenceSettings(BaseModel):
     """Evidence collection settings."""
 
@@ -989,6 +1038,9 @@ class EvidenceSettings(BaseModel):
     )
     repository_sensitive: RepositorySensitiveEvidenceSettings = Field(
         default_factory=RepositorySensitiveEvidenceSettings
+    )
+    repository_testing: RepositoryTestingEvidenceSettings = Field(
+        default_factory=RepositoryTestingEvidenceSettings
     )
 
 
@@ -1079,6 +1131,17 @@ class SecurityAssessmentSectionSettings(BaseModel):
     include_synthesis: bool = True
 
 
+class TestingAssessmentSectionSettings(BaseModel):
+    """Test assessment section (disabled by default; Phase 4.6.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+
+
 class AssessmentSectionsSettings(BaseModel):
     architecture: ArchitectureAssessmentSectionSettings = Field(
         default_factory=ArchitectureAssessmentSectionSettings
@@ -1091,6 +1154,9 @@ class AssessmentSectionsSettings(BaseModel):
     )
     security: SecurityAssessmentSectionSettings = Field(
         default_factory=SecurityAssessmentSectionSettings
+    )
+    testing: TestingAssessmentSectionSettings = Field(
+        default_factory=TestingAssessmentSectionSettings
     )
 
 
