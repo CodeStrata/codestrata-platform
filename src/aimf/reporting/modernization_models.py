@@ -16,6 +16,7 @@ from aimf.domain.recommendations import RecommendationResult
 from aimf.models import AnalysisResult
 from aimf.reporting.architecture.models import ArchitectureReportSection
 from aimf.reporting.dependency.models import DependencyReportSection
+from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
 
 
@@ -177,6 +178,8 @@ class ModernizationReportInput(BaseModel):
     technical_debt_report: TechnicalDebtReportSection | None = None
     # Phase 4.4.6 — optional dependency report presentation (additive under assessment).
     dependency_report: DependencyReportSection | None = None
+    # Phase 4.5.6 — optional security report presentation (additive under assessment).
+    security_report: SecurityReportSection | None = None
 
     @field_validator("generated_at_utc")
     @classmethod

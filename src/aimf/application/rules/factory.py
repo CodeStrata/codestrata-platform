@@ -35,8 +35,10 @@ def create_rule_analysis_service(
     include_fixture_rules: bool = False,
     include_architecture_pack: bool = True,
     include_technical_debt_pack: bool = True,
+    include_dependency_pack: bool = True,
+    include_security_pack: bool = True,
 ) -> RuleAnalysisService:
-    """Create a service with optional Architecture / Technical Debt pack registration.
+    """Create a service with optional Architecture / TD / Dependency / Security packs.
 
     Packs are registered for CLI/MCP discovery even when disabled for assess.
     Execution remains gated by ``rules.enabled`` and per-pack ``enabled`` flags.
@@ -61,6 +63,26 @@ def create_rule_analysis_service(
             )
 
             register_technical_debt_pack(
+                resolved,
+                settings=rules_settings,
+                production=True,
+            )
+        if include_dependency_pack:
+            from aimf.application.rules.dependency.registration import (
+                register_dependency_pack,
+            )
+
+            register_dependency_pack(
+                resolved,
+                settings=rules_settings,
+                production=True,
+            )
+        if include_security_pack:
+            from aimf.application.rules.security.registration import (
+                register_security_pack,
+            )
+
+            register_security_pack(
                 resolved,
                 settings=rules_settings,
                 production=True,

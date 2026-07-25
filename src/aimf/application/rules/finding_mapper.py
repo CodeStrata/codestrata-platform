@@ -10,7 +10,8 @@ from aimf.domain.rules.results import RuleMatch
 _CATEGORY_MAP: dict[RuleCategory, FindingCategory] = {
     RuleCategory.ARCHITECTURE: FindingCategory.ARCHITECTURE,
     RuleCategory.TECHNICAL_DEBT: FindingCategory.TECHNICAL_DEBT,
-    RuleCategory.SECURITY: FindingCategory.GOVERNANCE,
+    RuleCategory.DEPENDENCY: FindingCategory.DEPENDENCY,
+    RuleCategory.SECURITY: FindingCategory.SECURITY,
     RuleCategory.PERFORMANCE: FindingCategory.MODERNIZATION,
     RuleCategory.PLATFORM: FindingCategory.GOVERNANCE,
     RuleCategory.EXPERIMENTAL: FindingCategory.UNKNOWN,
@@ -57,6 +58,24 @@ class RuleFindingMapper:
 
             metadata.update(enrich_debt_metadata(str(match.rule_id)))
             metadata.update(_technical_debt_evidence_metadata(match))
+        elif match.provenance == "dependency.core" or str(match.rule_id).startswith(
+            "dependency."
+        ):
+            from aimf.application.rules.dependency.helpers import (
+                enrich_finding_metadata as enrich_dependency_metadata,
+            )
+
+            metadata.update(enrich_dependency_metadata(str(match.rule_id)))
+            metadata.update(_dependency_evidence_metadata(match))
+        elif match.provenance == "security.core" or str(match.rule_id).startswith(
+            "security."
+        ):
+            from aimf.application.rules.security.helpers import (
+                enrich_finding_metadata as enrich_security_metadata,
+            )
+
+            metadata.update(enrich_security_metadata(str(match.rule_id)))
+            metadata.update(_security_evidence_metadata(match))
         return Finding.create(
             rule_id=str(match.rule_id),
             title=match.title,
@@ -117,6 +136,92 @@ def _technical_debt_evidence_metadata(match: RuleMatch) -> dict[str, str]:
         promoted["line_start"] = str(match.evidence[0].line_start)
     if match.evidence[0].line_end is not None:
         promoted["line_end"] = str(match.evidence[0].line_end)
+    return promoted
+
+
+_DEP_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "ecosystem",
+    "manifest_type",
+    "declaration_kind",
+    "normalized_identity",
+    "original_identity",
+    "raw_version",
+    "resolved_version_local",
+    "version_resolution_status",
+    "classification",
+    "configuration_name",
+    "profile",
+    "group_name",
+    "environment_marker",
+    "unresolved_expression",
+    "mutable_expression",
+    "conflict_versions",
+    "participating_evidence_ids",
+    "duplicate_count",
+)
+
+
+def _dependency_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match dependency attributes for reviewable Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _DEP_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
+    if match.evidence[0].line_end is not None:
+        promoted["line_end"] = str(match.evidence[0].line_end)
+    # Preserve all participating evidence IDs when multi-evidence matches.
+    if len(match.evidence) > 1:
+        ids = [
+            item.attributes.get("evidence_id") or item.subject_reference
+            for item in match.evidence
+        ]
+        promoted["participating_evidence_ids"] = ",".join(
+            item for item in ids if item
+        )
+    return promoted
+
+
+_SEC_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "path",
+    "kind",
+    "inspection_status",
+    "content_classifications",
+    "classification",
+    "normalized_key",
+    "key_family",
+    "value_kind",
+    "placeholder_status",
+    "redacted_preview",
+    "value_fingerprint",
+    "section",
+    "literal_boolean",
+    "is_wildcard_origin",
+    "security_category",
+)
+
+
+def _security_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match repository-sensitive attributes for Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _SEC_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
     return promoted
 
 

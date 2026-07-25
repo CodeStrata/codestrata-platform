@@ -30,6 +30,7 @@ class FindingCategory(StrEnum):
     DOCUMENTATION = "documentation"
     BUILD = "build"
     GOVERNANCE = "governance"
+    SECURITY = "security"
     MODERNIZATION = "modernization"
     UNKNOWN = "unknown"
 

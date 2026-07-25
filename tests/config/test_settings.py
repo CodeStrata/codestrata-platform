@@ -263,6 +263,126 @@ def test_technical_debt_gates_disabled_by_default(tmp_path: Path) -> None:
     assert settings.assessment.sections.technical_debt.include_findings is True
     assert settings.report.sections.technical_debt.enabled is False
     assert settings.report.sections.technical_debt.include_executive_summary is True
+    assert settings.rules.dependency.enabled is False
+    assert settings.assessment.sections.dependency.enabled is False
+    assert settings.report.sections.dependency.enabled is False
+    assert settings.report.sections.dependency.include_executive_summary is True
+
+
+def test_dependency_gates_disabled_by_default(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.dependency.enabled is False
+    assert settings.rules.dependency.unresolved_version.enabled is True
+    assert settings.rules.dependency.mutable_version.enabled is True
+    assert settings.rules.dependency.unbounded_requirement.enabled is True
+    assert settings.rules.dependency.conflicting_exact_versions.enabled is True
+    assert settings.rules.dependency.duplicate_declaration.enabled is True
+    assert settings.assessment.sections.dependency.enabled is False
+    assert settings.assessment.sections.dependency.include_findings is True
+    assert settings.assessment.sections.dependency.include_synthesis is True
+    assert settings.report.sections.dependency.enabled is False
+    assert settings.rules.security.enabled is False
+    assert settings.assessment.sections.security.enabled is False
+
+
+def test_security_gates_disabled_by_default(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.security.enabled is False
+    assert settings.assessment.sections.security.enabled is False
+    assert settings.assessment.sections.security.include_findings is True
+    assert settings.assessment.sections.security.include_synthesis is True
+    assert settings.report.sections.security.enabled is False
+
+
+def test_security_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [rules]
+        enabled = true
+
+        [rules.security]
+        enabled = true
+
+        [assessment.sections.security]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.security.enabled is True
+    assert settings.assessment.sections.security.enabled is True
+    assert settings.report.sections.security.enabled is False
+    assert settings.rules.dependency.enabled is False
+    assert settings.assessment.sections.dependency.enabled is False
+    assert settings.rules.architecture.enabled is False
+    assert settings.rules.technical_debt.enabled is False
+
+
+def test_security_report_section_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [report.sections.security]
+        enabled = true
+        include_hotspots = false
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.report.sections.security.enabled is True
+    assert settings.report.sections.security.include_hotspots is False
+    assert settings.report.sections.security.include_themes is True
+    assert settings.report.sections.dependency.enabled is False
+    assert settings.assessment.sections.security.enabled is False
+
+
+def test_dependency_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [rules]
+        enabled = true
+
+        [rules.dependency]
+        enabled = true
+
+        [assessment.sections.dependency]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.dependency.enabled is True
+    assert settings.assessment.sections.dependency.enabled is True
+    # Backward compatible: existing packs unchanged by dependency enablement.
+    assert settings.rules.technical_debt.enabled is False
+    assert settings.assessment.sections.technical_debt.enabled is False
 
 
 def test_technical_debt_report_section_can_be_enabled(tmp_path: Path) -> None:

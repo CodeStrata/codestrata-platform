@@ -104,3 +104,50 @@ Technical Debt CTO report integration: assessment section → report adapter →
 `report.json` / HTML. See
 [technical-debt-reporting/README.md](technical-debt-reporting/README.md) and
 [../reviews/PHASE_4_3_ACCEPTANCE_REVIEW.md](../reviews/PHASE_4_3_ACCEPTANCE_REVIEW.md).
+
+## Phase 4.4.1
+
+Dependency Intelligence domain foundation: engineering-role taxonomy,
+assessment section contracts, feature gates, empty/disabled sections. No
+manifest parsing or production dependency rules yet. See
+[dependency/README.md](dependency/README.md) and
+[../design/PHASE_4_4_DEPENDENCY_INTELLIGENCE.md](../design/PHASE_4_4_DEPENDENCY_INTELLIGENCE.md).
+
+## Phase 4.4.2
+
+Dependency Evidence Platform: deterministic Maven/Gradle/Python manifest
+collectors and `dependency-evidence.json`. See
+[dependency/evidence.md](dependency/evidence.md).
+
+## Phase 4.4.6
+
+Dependency CTO report integration: assessment section → report adapter →
+`report.json` / HTML (`assessment.dependency`, anchor `dependency-assessment`).
+See [dependency/report.md](dependency/report.md) and
+[../reviews/PHASE_4_4_ACCEPTANCE_REVIEW.md](../reviews/PHASE_4_4_ACCEPTANCE_REVIEW.md).
+
+## Phase 4.5.1
+
+Security Intelligence domain foundation: taxonomy, assessment lifecycle,
+feature gates, empty/disabled sections, deterministic
+`security-assessment.json`. No security scanning yet. See
+[security/README.md](security/README.md) and
+[../architecture/intelligence-platform.md](../architecture/intelligence-platform.md).
+
+## Phase 4.5.3
+
+Security hygiene rules (`security.core` 1.0.0) consume repository-sensitive
+evidence and emit shared Findings into `security-assessment` **1.1.0**.
+No inventory, synthesis, or CTO report integration. See
+[security/hygiene-rules.md](security/hygiene-rules.md).
+
+## Phase 4.5.6
+
+Security Intelligence report integration: presentation-only
+`SecurityReportAdapter` projects `SecurityAssessmentSection` into
+`report.security` 1.0.0 for optional `assessment.security` in `report.json`
+and HTML `#security-assessment`. Gate
+`[report.sections.security] enabled = false` by default. No re-analysis,
+scores, or compliance claims. See [security/report.md](security/report.md)
+and
+[../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md](../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md).

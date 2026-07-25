@@ -19,6 +19,7 @@ class RuleCategory(StrEnum):
 
     ARCHITECTURE = "architecture"
     TECHNICAL_DEBT = "technical_debt"
+    DEPENDENCY = "dependency"
     SECURITY = "security"
     PERFORMANCE = "performance"
     PLATFORM = "platform"

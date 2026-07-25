@@ -164,6 +164,17 @@ class AssessmentCommandResult(BaseModel):
     dependency_evidence_status: str | None = None
     dependency_evidence_declaration_count: int | None = Field(default=None, ge=0)
     dependency_evidence_artifact_path: Path | None = None
+    repository_sensitive_evidence_status: str | None = None
+    repository_sensitive_evidence_artifact_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_sensitive_evidence_configuration_fact_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_sensitive_evidence_artifact_path: Path | None = None
+    security_assessment_status: str | None = None
+    security_assessment_finding_count: int | None = Field(default=None, ge=0)
+    security_assessment_artifact_path: Path | None = None
     architecture_report_enabled: bool | None = None
     architecture_report_status: str | None = None
     architecture_report_section_version: str | None = None
@@ -187,6 +198,13 @@ class AssessmentCommandResult(BaseModel):
     dependency_report_conclusion_count: int | None = Field(default=None, ge=0)
     dependency_report_hotspot_count: int | None = Field(default=None, ge=0)
     dependency_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    security_report_enabled: bool | None = None
+    security_report_status: str | None = None
+    security_report_section_version: str | None = None
+    security_report_finding_count: int | None = Field(default=None, ge=0)
+    security_report_conclusion_count: int | None = Field(default=None, ge=0)
+    security_report_hotspot_count: int | None = Field(default=None, ge=0)
+    security_report_adapter_ms: float | None = Field(default=None, ge=0.0)
     knowledge_repository_id: str | None = None
     knowledge_run_id: str | None = None
     knowledge_snapshot_id: str | None = None
@@ -594,7 +612,13 @@ class AssessmentApplicationService:
         dependency_evidence_artifact = None
         dependency_evidence_status = None
         dependency_evidence_declaration_count = None
+        repository_sensitive_evidence_artifact = None
+        repository_sensitive_evidence_status = None
+        repository_sensitive_evidence_artifact_count = None
+        repository_sensitive_evidence_configuration_fact_count = None
+        repository_sensitive_evidence = None
         dependency_pack_result = None
+        security_pack_result = None
         try:
             rule_evaluation = active_rule_engine.evaluate_pipeline_result(graph_pipeline_result)
             from aimf.application.rules.architecture.assessment import (
@@ -647,6 +671,84 @@ class AssessmentApplicationService:
                     rule_evaluation,
                     dependency_pack_result.evaluation,
                 )
+
+            # Phase 4.5.2 / 4.5.3 — collect repository-sensitive evidence once,
+            # then evaluate security hygiene rules against the in-memory bundle.
+            from aimf.application.evidence.repository_sensitive.artifacts import (
+                write_repository_sensitive_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_sensitive.io import (
+                load_repository_sensitive_inputs,
+            )
+            from aimf.application.evidence.repository_sensitive.service import (
+                create_repository_sensitive_evidence_service,
+                repository_sensitive_evidence_collection_enabled,
+            )
+            from aimf.application.security.assessment.factory import (
+                security_pack_enabled as security_rules_pack_enabled,
+            )
+
+            if repository_sensitive_evidence_collection_enabled(loaded_settings):
+                rs_settings = loaded_settings.evidence.repository_sensitive
+                rs_service = create_repository_sensitive_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                _candidates, texts, binaries, load_errors = (
+                    load_repository_sensitive_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rs_settings.ignore_path_markers,
+                        max_files=rs_settings.max_files,
+                        max_file_chars=rs_settings.max_file_chars,
+                        max_file_bytes=rs_settings.max_file_bytes,
+                    )
+                )
+                repository_sensitive_evidence = rs_service.collect(
+                    repository_id=str(
+                        getattr(repository, "name", None) or repository.path
+                    ),
+                    relative_paths=inventory_paths,
+                    file_texts=texts,
+                    file_binaries=binaries,
+                    load_errors=load_errors,
+                    configuration_fingerprint=(
+                        f"evidence.repository_sensitive.enabled="
+                        f"{rs_settings.enabled}"
+                    ),
+                )
+                rs_write = write_repository_sensitive_evidence_artifact(
+                    repository_sensitive_evidence,
+                    report_paths.run_directory,
+                )
+                repository_sensitive_evidence_artifact = rs_write.path
+                repository_sensitive_evidence_status = (
+                    repository_sensitive_evidence.status.value
+                )
+                repository_sensitive_evidence_artifact_count = rs_write.artifact_count
+                repository_sensitive_evidence_configuration_fact_count = (
+                    rs_write.configuration_fact_count
+                )
+
+            security_pack_result = None
+            if security_rules_pack_enabled(loaded_settings):
+                from aimf.application.rules.security.assessment import (
+                    evaluate_security_pack_detailed,
+                )
+
+                security_pack_result = evaluate_security_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_sensitive_evidence=repository_sensitive_evidence,
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    security_pack_result.evaluation,
+                )
+
             findings_artifact = write_findings_artifact(
                 rule_evaluation,
                 report_paths.run_directory,
@@ -1085,6 +1187,199 @@ class AssessmentApplicationService:
                 f"Details: {sanitize_provider_text(str(error))}"
             )
 
+        # Phase 4.5.2 — repository-sensitive evidence fallback when not collected above.
+        try:
+            from aimf.application.evidence.repository_sensitive.artifacts import (
+                write_repository_sensitive_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_sensitive.io import (
+                load_repository_sensitive_inputs,
+            )
+            from aimf.application.evidence.repository_sensitive.service import (
+                create_repository_sensitive_evidence_service,
+                repository_sensitive_evidence_collection_enabled,
+            )
+
+            if (
+                repository_sensitive_evidence is None
+                and repository_sensitive_evidence_collection_enabled(loaded_settings)
+            ):
+                rs_settings = loaded_settings.evidence.repository_sensitive
+                rs_service = create_repository_sensitive_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                _candidates, texts, binaries, load_errors = (
+                    load_repository_sensitive_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rs_settings.ignore_path_markers,
+                        max_files=rs_settings.max_files,
+                        max_file_chars=rs_settings.max_file_chars,
+                        max_file_bytes=rs_settings.max_file_bytes,
+                    )
+                )
+                repository_sensitive_evidence = rs_service.collect(
+                    repository_id=str(
+                        getattr(repository, "name", None) or repository.path
+                    ),
+                    relative_paths=inventory_paths,
+                    file_texts=texts,
+                    file_binaries=binaries,
+                    load_errors=load_errors,
+                    configuration_fingerprint=(
+                        f"evidence.repository_sensitive.enabled="
+                        f"{rs_settings.enabled}"
+                    ),
+                )
+                rs_write = write_repository_sensitive_evidence_artifact(
+                    repository_sensitive_evidence,
+                    report_paths.run_directory,
+                )
+                repository_sensitive_evidence_artifact = rs_write.path
+                repository_sensitive_evidence_status = (
+                    repository_sensitive_evidence.status.value
+                )
+                repository_sensitive_evidence_artifact_count = rs_write.artifact_count
+                repository_sensitive_evidence_configuration_fact_count = (
+                    rs_write.configuration_fact_count
+                )
+        except Exception as error:  # noqa: BLE001 - isolate evidence failures
+            if repository_sensitive_evidence_status is None:
+                repository_sensitive_evidence_artifact = None
+                repository_sensitive_evidence_status = "failed"
+                repository_sensitive_evidence_artifact_count = None
+                repository_sensitive_evidence_configuration_fact_count = None
+                warn(
+                    "Repository-sensitive evidence could not be built; "
+                    "remaining assessment content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+
+        # Phase 4.5.3 — Security hygiene assessment (Findings + execution facts).
+        security_assessment_artifact = None
+        security_assessment_status = None
+        security_assessment_finding_count = None
+        security_section_for_report = None
+        try:
+            from aimf.application.security.assessment.artifacts import (
+                write_security_assessment_artifact,
+            )
+            from aimf.application.security.assessment.factory import (
+                configuration_fingerprint_payload as sec_configuration_fingerprint_payload,
+            )
+            from aimf.application.security.assessment.factory import (
+                create_security_assessment_assembler,
+                security_assessment_section_enabled,
+                security_assessment_section_settings,
+                security_pack_enabled,
+            )
+            from aimf.domain.security.ids import HYGIENE_RULE_IDS
+
+            if security_assessment_section_enabled(loaded_settings):
+                sec_assembler = create_security_assessment_assembler()
+                repo_id = str(getattr(repository, "name", None) or repository.path)
+                sec_cfg = security_assessment_section_settings(loaded_settings)
+                pack_on = security_pack_enabled(loaded_settings)
+                if not pack_on:
+                    security_section = sec_assembler.assemble_disabled(
+                        repository_id=repo_id,
+                        reason="security_pack_disabled",
+                        evidence=repository_sensitive_evidence,
+                    )
+                else:
+                    pack_eval = (
+                        security_pack_result.evaluation
+                        if security_pack_result is not None
+                        else None
+                    )
+                    pack_findings = (
+                        pack_eval.findings if pack_eval is not None else ()
+                    )
+                    matched = len(pack_findings)
+                    executed = (
+                        len(pack_eval.rules_evaluated) if pack_eval is not None else 0
+                    )
+                    skipped = (
+                        len(pack_eval.rules_skipped) if pack_eval is not None else 0
+                    )
+                    evidence_on = bool(
+                        loaded_settings.evidence.repository_sensitive.enabled
+                    )
+                    evidence_available = repository_sensitive_evidence is not None
+                    security_section = sec_assembler.assemble(
+                        repository_id=repo_id,
+                        findings=pack_findings,
+                        pack_enabled=True,
+                        evidence_enabled=evidence_on,
+                        evidence_available=evidence_available,
+                        include_findings=sec_cfg.include_findings,
+                        include_coverage=sec_cfg.include_coverage,
+                        include_limitations=sec_cfg.include_limitations,
+                        include_traceability=sec_cfg.include_traceability,
+                        include_execution_summary=sec_cfg.include_execution_summary,
+                        include_synthesis=sec_cfg.include_synthesis,
+                        evidence_pipeline=(
+                            security_pack_result.evidence_pipeline
+                            if security_pack_result is not None
+                            else (
+                                "repository_sensitive"
+                                if evidence_available
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            security_pack_result.evidence_fingerprint
+                            if security_pack_result is not None
+                            else (
+                                repository_sensitive_evidence.evidence_fingerprint
+                                if repository_sensitive_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=sec_configuration_fingerprint_payload(
+                            loaded_settings,
+                            pack_enabled=True,
+                        ),
+                        security_rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=max(executed - matched, 0),
+                        rules_not_applicable=skipped,
+                        diagnostics=(
+                            security_pack_result.diagnostics
+                            if security_pack_result is not None
+                            else ()
+                        ),
+                        repository_sensitive_evidence=repository_sensitive_evidence,
+                        rule_execution_facts=(
+                            security_pack_result.rule_execution_facts
+                            if security_pack_result is not None
+                            else ()
+                        ),
+                    )
+                sec_write = write_security_assessment_artifact(
+                    security_section,
+                    report_paths.run_directory,
+                )
+                security_assessment_artifact = sec_write.path
+                security_assessment_status = security_section.status.value
+                security_assessment_finding_count = sec_write.finding_count
+                security_section_for_report = security_section
+        except Exception as error:  # noqa: BLE001 - isolate security failures
+            security_assessment_artifact = None
+            security_assessment_status = "failed"
+            security_assessment_finding_count = None
+            security_section_for_report = None
+            warn(
+                "Security assessment could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         try:
             recommendation_result = active_recommendation_engine.evaluate_pipeline_result(
                 pipeline_result=graph_pipeline_result,
@@ -1446,6 +1741,74 @@ class AssessmentApplicationService:
                 "Dependency report section enabled, but no dependency assessment "
                 "section was available for this run."
             )
+        security_report_section = None
+        security_report_enabled = loaded_settings.report.sections.security.enabled
+        security_report_status = None
+        security_report_section_version = None
+        security_report_finding_count = None
+        security_report_conclusion_count = None
+        security_report_hotspot_count = None
+        security_report_adapter_ms = None
+        report_security_cfg = loaded_settings.report.sections.security
+        if (
+            report_security_cfg.enabled
+            and security_section_for_report is not None
+        ):
+            from aimf.reporting.security.adapter import SecurityReportAdapter
+
+            sec_adapter_started = perf_counter()
+            try:
+                security_report_section = SecurityReportAdapter().adapt(
+                    security_section_for_report,
+                    include_executive_summary=(
+                        report_security_cfg.include_executive_summary
+                    ),
+                    include_coverage=report_security_cfg.include_coverage,
+                    include_findings=report_security_cfg.include_findings,
+                    include_themes=report_security_cfg.include_themes,
+                    include_hotspots=report_security_cfg.include_hotspots,
+                    include_conclusions=report_security_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_security_cfg.include_recommendations
+                    ),
+                    include_diagnostics=report_security_cfg.include_diagnostics,
+                    include_limitations=report_security_cfg.include_limitations,
+                    include_traceability=report_security_cfg.include_traceability,
+                )
+                security_report_adapter_ms = round(
+                    (perf_counter() - sec_adapter_started) * 1000, 2
+                )
+                security_report_status = security_report_section.status
+                security_report_section_version = (
+                    security_report_section.section_version
+                )
+                security_report_finding_count = int(
+                    security_report_section.metadata.get(
+                        "production_finding_count", "0"
+                    )
+                    or "0"
+                )
+                security_report_conclusion_count = len(
+                    security_report_section.conclusions
+                )
+                security_report_hotspot_count = len(security_report_section.hotspots)
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                security_report_section = None
+                security_report_adapter_ms = round(
+                    (perf_counter() - sec_adapter_started) * 1000, 2
+                )
+                security_report_status = "failed"
+                warn(
+                    "Security report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_security_cfg.enabled:
+            security_report_status = "unavailable"
+            warn(
+                "Security report section enabled, but no security assessment "
+                "section was available for this run."
+            )
         report_input = ModernizationReportInput(
             analysis_result=analysis_result,
             assessment_mode=mode,
@@ -1479,6 +1842,7 @@ class AssessmentApplicationService:
             architecture_report=architecture_report_section,
             technical_debt_report=technical_debt_report_section,
             dependency_report=dependency_report_section,
+            security_report=security_report_section,
         )
         try:
             written_paths = write_modernization_assessment_reports(
@@ -1550,6 +1914,19 @@ class AssessmentApplicationService:
             dependency_evidence_status=dependency_evidence_status,
             dependency_evidence_declaration_count=dependency_evidence_declaration_count,
             dependency_evidence_artifact=dependency_evidence_artifact,
+            repository_sensitive_evidence_status=repository_sensitive_evidence_status,
+            repository_sensitive_evidence_artifact_count=(
+                repository_sensitive_evidence_artifact_count
+            ),
+            repository_sensitive_evidence_configuration_fact_count=(
+                repository_sensitive_evidence_configuration_fact_count
+            ),
+            repository_sensitive_evidence_artifact=(
+                repository_sensitive_evidence_artifact
+            ),
+            security_assessment_status=security_assessment_status,
+            security_assessment_finding_count=security_assessment_finding_count,
+            security_assessment_artifact=security_assessment_artifact,
             architecture_report_enabled=architecture_report_enabled,
             architecture_report_status=architecture_report_status,
             architecture_report_section_version=architecture_report_section_version,
@@ -1573,6 +1950,13 @@ class AssessmentApplicationService:
             dependency_report_conclusion_count=dependency_report_conclusion_count,
             dependency_report_hotspot_count=dependency_report_hotspot_count,
             dependency_report_adapter_ms=dependency_report_adapter_ms,
+            security_report_enabled=security_report_enabled,
+            security_report_status=security_report_status,
+            security_report_section_version=security_report_section_version,
+            security_report_finding_count=security_report_finding_count,
+            security_report_conclusion_count=security_report_conclusion_count,
+            security_report_hotspot_count=security_report_hotspot_count,
+            security_report_adapter_ms=security_report_adapter_ms,
         )
         _print_success_summary(active_console, result)
         try:
@@ -2131,6 +2515,13 @@ def _build_command_result(
     dependency_evidence_status: str | None = None,
     dependency_evidence_declaration_count: int | None = None,
     dependency_evidence_artifact: Path | None = None,
+    repository_sensitive_evidence_status: str | None = None,
+    repository_sensitive_evidence_artifact_count: int | None = None,
+    repository_sensitive_evidence_configuration_fact_count: int | None = None,
+    repository_sensitive_evidence_artifact: Path | None = None,
+    security_assessment_status: str | None = None,
+    security_assessment_finding_count: int | None = None,
+    security_assessment_artifact: Path | None = None,
     architecture_report_enabled: bool | None = None,
     architecture_report_status: str | None = None,
     architecture_report_section_version: str | None = None,
@@ -2152,6 +2543,13 @@ def _build_command_result(
     dependency_report_conclusion_count: int | None = None,
     dependency_report_hotspot_count: int | None = None,
     dependency_report_adapter_ms: float | None = None,
+    security_report_enabled: bool | None = None,
+    security_report_status: str | None = None,
+    security_report_section_version: str | None = None,
+    security_report_finding_count: int | None = None,
+    security_report_conclusion_count: int | None = None,
+    security_report_hotspot_count: int | None = None,
+    security_report_adapter_ms: float | None = None,
 ) -> AssessmentCommandResult:
     deterministic_recommendation_count = len(analysis_result.recommendations)
     graph_fields: dict[str, object] = {}
@@ -2222,6 +2620,30 @@ def _build_command_result(
         )
     if dependency_evidence_artifact is not None:
         graph_fields["dependency_evidence_artifact_path"] = dependency_evidence_artifact
+    if repository_sensitive_evidence_status is not None:
+        graph_fields["repository_sensitive_evidence_status"] = (
+            repository_sensitive_evidence_status
+        )
+    if repository_sensitive_evidence_artifact_count is not None:
+        graph_fields["repository_sensitive_evidence_artifact_count"] = (
+            repository_sensitive_evidence_artifact_count
+        )
+    if repository_sensitive_evidence_configuration_fact_count is not None:
+        graph_fields["repository_sensitive_evidence_configuration_fact_count"] = (
+            repository_sensitive_evidence_configuration_fact_count
+        )
+    if repository_sensitive_evidence_artifact is not None:
+        graph_fields["repository_sensitive_evidence_artifact_path"] = (
+            repository_sensitive_evidence_artifact
+        )
+    if security_assessment_status is not None:
+        graph_fields["security_assessment_status"] = security_assessment_status
+    if security_assessment_finding_count is not None:
+        graph_fields["security_assessment_finding_count"] = (
+            security_assessment_finding_count
+        )
+    if security_assessment_artifact is not None:
+        graph_fields["security_assessment_artifact_path"] = security_assessment_artifact
     if architecture_report_enabled is not None:
         graph_fields["architecture_report_enabled"] = architecture_report_enabled
     if architecture_report_status is not None:
@@ -2290,6 +2712,24 @@ def _build_command_result(
         )
     if dependency_report_adapter_ms is not None:
         graph_fields["dependency_report_adapter_ms"] = dependency_report_adapter_ms
+    if security_report_enabled is not None:
+        graph_fields["security_report_enabled"] = security_report_enabled
+    if security_report_status is not None:
+        graph_fields["security_report_status"] = security_report_status
+    if security_report_section_version is not None:
+        graph_fields["security_report_section_version"] = (
+            security_report_section_version
+        )
+    if security_report_finding_count is not None:
+        graph_fields["security_report_finding_count"] = security_report_finding_count
+    if security_report_conclusion_count is not None:
+        graph_fields["security_report_conclusion_count"] = (
+            security_report_conclusion_count
+        )
+    if security_report_hotspot_count is not None:
+        graph_fields["security_report_hotspot_count"] = security_report_hotspot_count
+    if security_report_adapter_ms is not None:
+        graph_fields["security_report_adapter_ms"] = security_report_adapter_ms
     if (
         mode == AssessmentMode.AI_ENHANCED
         and ai_status == AIExecutionStatus.SUCCEEDED
@@ -2488,6 +2928,38 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
             "Dependency evidence artifact: "
             f"{_display_path(result.dependency_evidence_artifact_path)}"
         )
+    if result.repository_sensitive_evidence_status is not None:
+        console.print(
+            "Repository-sensitive evidence: "
+            f"{result.repository_sensitive_evidence_status}"
+        )
+    if result.repository_sensitive_evidence_artifact_count is not None:
+        console.print(
+            "Repository-sensitive artifacts: "
+            f"{result.repository_sensitive_evidence_artifact_count}"
+        )
+    if result.repository_sensitive_evidence_configuration_fact_count is not None:
+        console.print(
+            "Repository-sensitive configuration facts: "
+            f"{result.repository_sensitive_evidence_configuration_fact_count}"
+        )
+    if result.repository_sensitive_evidence_artifact_path is not None:
+        console.print(
+            "Repository-sensitive evidence artifact: "
+            f"{_display_path(result.repository_sensitive_evidence_artifact_path)}"
+        )
+    if result.security_assessment_status is not None:
+        console.print(f"Security assessment: {result.security_assessment_status}")
+    if result.security_assessment_finding_count is not None:
+        console.print(
+            "Security assessment findings: "
+            f"{result.security_assessment_finding_count}"
+        )
+    if result.security_assessment_artifact_path is not None:
+        console.print(
+            "Security assessment artifact: "
+            f"{_display_path(result.security_assessment_artifact_path)}"
+        )
     if result.architecture_report_enabled:
         console.print(
             "Architecture report section: "
@@ -2502,6 +2974,11 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
         console.print(
             "Dependency report section: "
             f"{result.dependency_report_status or 'unavailable'}"
+        )
+    if result.security_report_enabled:
+        console.print(
+            "Security report section: "
+            f"{result.security_report_status or 'unavailable'}"
         )
     if result.architecture_conclusion_count is not None:
         console.print(f"Architecture conclusions: {result.architecture_conclusion_count}")

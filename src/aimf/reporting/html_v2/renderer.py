@@ -21,6 +21,7 @@ from aimf.reporting.html_v2.models import (
     HtmlReportViewModel,
     RecommendationView,
 )
+from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
 
 CONTENT_SECURITY_POLICY = (
@@ -121,6 +122,21 @@ class HtmlReportRenderer:
                         "Deterministic declared-dependency assessment presentation. "
                         "Does not invent health scores, vulnerability verdicts, "
                         "license assessments, or latest-version advice. Hotspot "
+                        "order is presentation order, not priority ranking."
+                    ),
+                )
+            )
+        if view.security_report is not None:
+            parts.append(
+                _section(
+                    "Security Intelligence",
+                    _render_security(view.security_report),
+                    section_id="security-assessment",
+                    note=(
+                        "Deterministic repository Security hygiene assessment "
+                        "presentation. Does not invent vulnerability verdicts, "
+                        "compliance claims, scores, or exploitability. Zero findings "
+                        "do not establish that the repository is secure. Hotspot "
                         "order is presentation order, not priority ranking."
                     ),
                 )
@@ -1013,6 +1029,295 @@ def _render_dependency(section: DependencyReportSection) -> str:
         parts.append(diagnostics_block)
     if limitations_block:
         parts.append(limitations_block)
+    if trace:
+        parts.extend(["<h3>Traceability</h3>", trace])
+    return "\n".join(parts)
+
+
+def _render_security(section: SecurityReportSection) -> str:
+    coverage = section.coverage_summary
+    finding = section.finding_summary
+    coverage_rows = (
+        "<tr><td>Evidence status</td>"
+        f"<td>{escape_html(coverage.evidence_status or '—')}</td></tr>"
+        "<tr><td>Evidence schema</td>"
+        f"<td>{escape_html(coverage.evidence_schema_name or '—')}@"
+        f"{escape_html(coverage.evidence_schema_version or '—')}</td></tr>"
+        "<tr><td>Candidate artifacts discovered / inspected</td>"
+        f"<td>{coverage.candidate_artifacts_discovered} / "
+        f"{coverage.artifacts_inspected}</td></tr>"
+        "<tr><td>Structured files parsed / configuration facts</td>"
+        f"<td>{coverage.structured_files_parsed} / "
+        f"{coverage.configuration_facts_collected}</td></tr>"
+        "<tr><td>Rules registered / executed</td>"
+        f"<td>{coverage.rules_registered} / {coverage.rules_executed}</td></tr>"
+        "<tr><td>Malformed / unsupported / skipped files</td>"
+        f"<td>{coverage.malformed_files} / {coverage.unsupported_binaries} / "
+        f"{coverage.skipped_files}</td></tr>"
+        "<tr><td>Source roles represented</td>"
+        f"<td>{escape_html(', '.join(coverage.source_roles_represented) or '—')}</td></tr>"
+        "<tr><td>Formats represented</td>"
+        f"<td>{escape_html(', '.join(coverage.formats_represented) or '—')}</td></tr>"
+    )
+    coverage_table = (
+        "<table><thead><tr><th>Coverage</th><th>Detail</th></tr></thead>"
+        f"<tbody>{coverage_rows}</tbody></table>"
+        f"<p class='muted'>{escape_html(coverage.note)}</p>"
+    )
+    status_block = (
+        f"<p><strong>Assessment status:</strong> "
+        f"{escape_html(section.assessment_status)}</p>"
+        f"<p><strong>Synthesis status:</strong> "
+        f"{escape_html(section.synthesis_status)}</p>"
+        f"{coverage_table}"
+    )
+    if finding.production_finding_count == 0 and finding.none_detected_statement:
+        production_findings = (
+            f"<p>{escape_html(finding.none_detected_statement)}</p>"
+        )
+    else:
+        production_findings = (
+            "".join(
+                "<article class='card'>"
+                f"<h4>{escape_html(item.title)}</h4>"
+                f"<p>{escape_html(item.explanation or '')}</p>"
+                + (
+                    f"<p><strong>Remediation:</strong> "
+                    f"{escape_html(item.remediation)}</p>"
+                    if item.remediation
+                    else ""
+                )
+                + "<p class='muted'>"
+                f"ID: <code>{escape_html(item.finding_id)}</code> · "
+                f"Rule: <code>{escape_html(item.rule_id)}</code> · "
+                f"Severity: {escape_html(item.severity)} · "
+                f"Category: {escape_html(item.category)} · "
+                f"Source role: {escape_html(item.source_role)}"
+                + (
+                    f" · Path: <code>{escape_html(item.path)}</code>"
+                    if item.path
+                    else ""
+                )
+                + "</p></article>"
+                for item in finding.production_findings
+            )
+            or "<p class='muted'>No production-role findings displayed.</p>"
+        )
+    production_block = (
+        f"<p class='muted'>Production findings: "
+        f"{finding.production_finding_count} "
+        f"(showing {finding.production_findings_displayed})</p>"
+        f"{production_findings}"
+    )
+    if finding.additional_observations:
+        additional_block = (
+            "<p class='muted'>Test, fixture, and unknown-role observations "
+            f"({finding.test_finding_count} test/fixture, "
+            f"{finding.unknown_finding_count} unknown). These do not contribute "
+            "to the production-primary view.</p>"
+            + "".join(
+                "<article class='card'>"
+                f"<h4>{escape_html(item.title)}</h4>"
+                f"<p>{escape_html(item.explanation or '')}</p>"
+                "<p class='muted'>"
+                f"ID: <code>{escape_html(item.finding_id)}</code> · "
+                f"Rule: <code>{escape_html(item.rule_id)}</code> · "
+                f"Source role: {escape_html(item.source_role)}"
+                + (
+                    f" · Path: <code>{escape_html(item.path)}</code>"
+                    if item.path
+                    else ""
+                )
+                + "</p></article>"
+                for item in finding.additional_observations
+            )
+        )
+    else:
+        additional_block = ""
+    themes = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.theme_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Scope: {escape_html(item.scope)} · "
+        f"Source role: {escape_html(item.source_role)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.themes
+    )
+    hotspots = "".join(
+        "<tr>"
+        f"<td>{item.presentation_order}</td>"
+        f"<td><code>{escape_html(item.path)}</code></td>"
+        f"<td>{item.production_finding_count}</td>"
+        f"<td>{item.test_finding_count}</td>"
+        f"<td>{item.unknown_finding_count}</td>"
+        f"<td>{item.total_finding_count}</td>"
+        f"<td>{escape_html(item.highest_severity)}</td>"
+        f"<td>{escape_html(', '.join(item.rule_ids) or '—')}</td>"
+        f"<td>{escape_html(', '.join(item.categories) or '—')}</td>"
+        "</tr>"
+        for item in section.hotspots
+    )
+    hotspots_table = (
+        "<table><thead><tr>"
+        "<th>#</th><th>Location</th><th>Production</th><th>Test/fixture</th>"
+        "<th>Unknown</th><th>Total</th><th>Highest severity</th>"
+        "<th>Rules</th><th>Categories</th>"
+        "</tr></thead><tbody>"
+        f"{hotspots}</tbody></table>"
+        if hotspots
+        else ""
+    )
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.conclusion_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.conclusions
+    )
+    if section.recommendation_groups:
+        recommendations = "".join(
+            f"<h4>{escape_html(group.group)}</h4>"
+            + "".join(
+                "<article class='card'>"
+                f"<h5>{escape_html(item.title)}</h5>"
+                f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+                f"<p>{escape_html(item.rationale)}</p>"
+                f"<p class='muted'>"
+                f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+                f"{'Conditional' if item.conditional else 'Direct'} · "
+                f"Audience: {escape_html(item.audience)}"
+                "</p></article>"
+                for item in group.recommendations
+            )
+            for group in section.recommendation_groups
+        )
+    else:
+        recommendations = "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+            f"{'Conditional' if item.conditional else 'Direct'} · "
+            f"Audience: {escape_html(item.audience)}"
+            "</p></article>"
+            for item in section.recommendations
+        )
+    diagnostics = "".join(
+        "<li>"
+        f"<code>{escape_html(item.origin)}</code> · "
+        f"<code>{escape_html(item.diagnostic_code)}</code> — "
+        f"{escape_html(item.message)}"
+        + (
+            f" (<code>{escape_html(item.path)}</code>)"
+            if item.path
+            else ""
+        )
+        + "</li>"
+        for item in section.diagnostics
+    )
+    diagnostics_block = (
+        f"<details><summary>Coverage diagnostics "
+        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
+        "</summary><ul>"
+        f"{diagnostics}"
+        "</ul></details>"
+        if section.diagnostics
+        else ""
+    )
+    limitations = "".join(
+        f"<li><strong>{escape_html(item.category)}</strong> — "
+        f"{escape_html(item.summary)}</li>"
+        for item in section.limitations
+    )
+    limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
+    trace = (
+        f"<p>{escape_html(section.traceability.summary)}</p>"
+        "<details><summary>Sample relationships</summary><ul>"
+        + "".join(
+            "<li>"
+            f"{escape_html(edge.relation)}: "
+            f"<code>{escape_html(edge.source_id)}</code> → "
+            f"<code>{escape_html(edge.target_id)}</code>"
+            "</li>"
+            for edge in section.traceability.sample_edges
+        )
+        + "</ul></details>"
+        if section.traceability.sample_edges or section.traceability.summary
+        else ""
+    )
+    pack = (
+        f"{escape_html(section.security_pack_id or '—')}@"
+        f"{escape_html(section.security_pack_version or '—')}"
+    )
+    parts = [
+        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p><strong>Pack:</strong> {pack}</p>",
+        "<h3>Executive Summary</h3>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+        "<h3>Assessment and Coverage Status</h3>",
+        status_block,
+        "<h3>Production-Primary Findings</h3>",
+        production_block,
+    ]
+    if additional_block:
+        parts.extend(
+            [
+                "<h3>Additional Test/Fixture/Unknown Observations</h3>",
+                additional_block,
+            ]
+        )
+    if themes:
+        parts.extend(
+            [
+                "<h3>Security Themes</h3>",
+                f"<p class='muted'>Showing {section.themes_displayed} of "
+                f"{section.themes_total}</p>",
+                themes,
+            ]
+        )
+    if hotspots_table:
+        parts.extend(
+            [
+                "<h3>Finding Hotspots</h3>",
+                f"<p class='muted'>{escape_html(section.hotspot_presentation_note)}</p>",
+                hotspots_table,
+            ]
+        )
+    if conclusions:
+        parts.extend(
+            [
+                "<h3>Conclusions</h3>",
+                f"<p class='muted'>Showing {section.conclusions_displayed} of "
+                f"{section.conclusions_total}</p>",
+                conclusions,
+            ]
+        )
+    if recommendations:
+        parts.extend(
+            [
+                "<h3>Recommendations</h3>",
+                f"<p class='muted'>Showing {section.recommendations_displayed} of "
+                f"{section.recommendations_total}</p>",
+                recommendations,
+            ]
+        )
+    if diagnostics_block:
+        parts.extend(["<h3>Coverage Diagnostics</h3>", diagnostics_block])
+    if limitations_block:
+        parts.extend(["<h3>Limitations</h3>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)

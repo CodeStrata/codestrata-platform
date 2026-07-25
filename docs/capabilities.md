@@ -28,7 +28,13 @@
 | Dependency Inventory / Assessment Usability (4.4.4) | Available (disabled by default; production-primary `dependency-assessment.json` 1.1.0+) |
 | Dependency Assessment Synthesis (4.4.5) | Available (disabled by default; themes/conclusions/recommendations on schema 1.2.0) |
 | Dependency CTO Report Integration (4.4.6) | Available (disabled by default; `assessment.dependency` in report) |
-| Security / Performance packs | Deferred (Phase 4.5+) |
+| Security Intelligence Domain Foundation (4.5.1) | Available (domain/config only; disabled by default; no scanning) |
+| Repository-Sensitive Evidence (4.5.2) | Available (disabled by default; `repository-sensitive-evidence.json` 1.1.0; no Findings/rules) |
+| Security Hygiene Rules (4.5.3) | Available (disabled by default; `security.core` → Findings; pack unchanged in 4.5.4) |
+| Security Assessment Inventory (4.5.4) | Available (disabled by default; inventories/hotspots on schema 1.3.0) |
+| Security Assessment Synthesis (4.5.5) | Available (disabled by default; `include_synthesis=true` when section enabled; no scores/report) |
+| Security report | Available (disabled by default; `assessment.security` in report) |
+| Performance packs | Deferred (Phase 4.6) |
 | Dimension scoring / CTO report | Designed (4.1.2); not implemented |
 | Analysis Intelligence packs (remaining) | In progress / planned (4.2–4.6) |
 | GitHub PR review | Deferred (Phase 6) |

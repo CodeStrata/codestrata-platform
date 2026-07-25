@@ -14,6 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from aimf.domain.graph.validation import as_tuple, require_nonblank
 from aimf.reporting.architecture.models import ArchitectureReportSection
 from aimf.reporting.dependency.models import DependencyReportSection
+from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
 
 
@@ -333,6 +334,7 @@ class HtmlReportViewModel(BaseModel):
     architecture_report: ArchitectureReportSection | None = None
     technical_debt_report: TechnicalDebtReportSection | None = None
     dependency_report: DependencyReportSection | None = None
+    security_report: SecurityReportSection | None = None
     artifacts: tuple[ArtifactRefView, ...] = ()
     metadata: AssessmentMetadataView
     provenance_note: str = (
