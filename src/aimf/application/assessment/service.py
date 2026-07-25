@@ -172,9 +172,20 @@ class AssessmentCommandResult(BaseModel):
         default=None, ge=0
     )
     repository_sensitive_evidence_artifact_path: Path | None = None
+    repository_testing_evidence_status: str | None = None
+    repository_testing_evidence_candidate_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_testing_evidence_framework_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_testing_evidence_artifact_path: Path | None = None
     security_assessment_status: str | None = None
     security_assessment_finding_count: int | None = Field(default=None, ge=0)
     security_assessment_artifact_path: Path | None = None
+    testing_assessment_status: str | None = None
+    testing_assessment_finding_count: int | None = Field(default=None, ge=0)
+    testing_assessment_artifact_path: Path | None = None
     architecture_report_enabled: bool | None = None
     architecture_report_status: str | None = None
     architecture_report_section_version: str | None = None
@@ -595,6 +606,7 @@ class AssessmentApplicationService:
         stage("Evaluating assessment rules")
         active_rule_engine = rule_engine or RuleEngine()
         active_recommendation_engine = recommendation_engine or RecommendationEngine()
+        findings_artifact = None
         architecture_conclusions_artifact = None
         architecture_conclusion_count = None
         architecture_assessment_artifact = None
@@ -617,8 +629,14 @@ class AssessmentApplicationService:
         repository_sensitive_evidence_artifact_count = None
         repository_sensitive_evidence_configuration_fact_count = None
         repository_sensitive_evidence = None
+        repository_testing_evidence_artifact = None
+        repository_testing_evidence_status = None
+        repository_testing_evidence_candidate_count = None
+        repository_testing_evidence_framework_count = None
+        repository_testing_evidence = None
         dependency_pack_result = None
         security_pack_result = None
+        testing_pack_result = None
         try:
             rule_evaluation = active_rule_engine.evaluate_pipeline_result(graph_pipeline_result)
             from aimf.application.rules.architecture.assessment import (
@@ -1259,6 +1277,134 @@ class AssessmentApplicationService:
                     f"Details: {sanitize_provider_text(str(error))}"
                 )
 
+        # Phase 4.6.2 — repository-testing evidence (structure/config facts only).
+        try:
+            from aimf.application.evidence.repository_testing.artifacts import (
+                write_repository_testing_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_testing.io import (
+                load_repository_testing_inputs,
+            )
+            from aimf.application.evidence.repository_testing.service import (
+                create_repository_testing_evidence_service,
+                repository_testing_evidence_collection_enabled,
+            )
+
+            if repository_testing_evidence_collection_enabled(loaded_settings):
+                rt_settings = loaded_settings.evidence.repository_testing
+                rt_service = create_repository_testing_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                if not inventory_paths:
+                    from aimf.application.evidence.repository_testing.limitations import (
+                        standard_limitations,
+                    )
+                    from aimf.domain.evidence.repository_testing.enums import (
+                        RepositoryTestingParseStatus,
+                    )
+                    from aimf.domain.evidence.repository_testing.identifiers import (
+                        make_bundle_id,
+                    )
+                    from aimf.domain.evidence.repository_testing.models import (
+                        AggregatedRepositoryTestingEvidence,
+                    )
+
+                    repo_id = str(
+                        getattr(repository, "name", None) or repository.path
+                    )
+                    repository_testing_evidence = AggregatedRepositoryTestingEvidence(
+                        bundle_id=make_bundle_id(
+                            repository_id=repo_id, fingerprint="insufficient"
+                        ),
+                        repository_id=repo_id,
+                        status=RepositoryTestingParseStatus.INSUFFICIENT_EVIDENCE,
+                        limitations=standard_limitations(),
+                        evidence_fingerprint="insufficient",
+                    )
+                else:
+                    _rt_meta, rt_texts, rt_load_errors = (
+                        load_repository_testing_inputs(
+                            relative_paths=inventory_paths,
+                            repository_root=Path(repository.path),
+                            ignore_path_markers=rt_settings.ignore_path_markers,
+                            max_files=rt_settings.max_files,
+                            max_file_chars=rt_settings.max_file_chars,
+                            max_file_bytes=rt_settings.max_file_bytes,
+                        )
+                    )
+                    repository_testing_evidence = rt_service.collect(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        relative_paths=inventory_paths,
+                        file_texts=rt_texts,
+                        load_errors=rt_load_errors,
+                        configuration_fingerprint=(
+                            f"evidence.repository_testing.enabled="
+                            f"{rt_settings.enabled}"
+                        ),
+                    )
+                rt_write = write_repository_testing_evidence_artifact(
+                    repository_testing_evidence,
+                    report_paths.run_directory,
+                )
+                repository_testing_evidence_artifact = rt_write.path
+                repository_testing_evidence_status = (
+                    repository_testing_evidence.status.value
+                )
+                repository_testing_evidence_candidate_count = rt_write.candidate_count
+                repository_testing_evidence_framework_count = rt_write.framework_count
+        except Exception as error:  # noqa: BLE001 - isolate evidence failures
+            repository_testing_evidence = None
+            repository_testing_evidence_artifact = None
+            repository_testing_evidence_status = "failed"
+            repository_testing_evidence_candidate_count = None
+            repository_testing_evidence_framework_count = None
+            warn(
+                "Repository-testing evidence could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.6.3 — Test Hygiene rules against in-memory repository-testing evidence.
+        testing_pack_result = None
+        try:
+            from aimf.application.rules.architecture.assessment import (
+                merge_rule_evaluations,
+            )
+            from aimf.application.rules.testing.assessment import (
+                evaluate_testing_pack_detailed,
+            )
+            from aimf.application.testing.assessment.factory import (
+                testing_pack_enabled as testing_rules_pack_enabled,
+            )
+
+            if testing_rules_pack_enabled(loaded_settings):
+                testing_pack_result = evaluate_testing_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_testing_evidence=repository_testing_evidence,
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    testing_pack_result.evaluation,
+                )
+                findings_artifact = write_findings_artifact(
+                    rule_evaluation,
+                    report_paths.run_directory,
+                )
+        except Exception as error:  # noqa: BLE001 - isolate testing rule failures
+            testing_pack_result = None
+            warn(
+                "Test Hygiene rules could not be evaluated; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         # Phase 4.5.3 — Security hygiene assessment (Findings + execution facts).
         security_assessment_artifact = None
         security_assessment_status = None
@@ -1376,6 +1522,118 @@ class AssessmentApplicationService:
             security_section_for_report = None
             warn(
                 "Security assessment could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.6.3 — Test Hygiene assessment (Findings from repository-testing evidence).
+        testing_assessment_artifact = None
+        testing_assessment_status = None
+        testing_assessment_finding_count = None
+        try:
+            from aimf.application.testing.assessment.artifacts import (
+                write_testing_assessment_artifact,
+            )
+            from aimf.application.testing.assessment.factory import (
+                create_testing_assessment_assembler,
+                testing_assessment_section_enabled,
+                testing_assessment_section_settings,
+                testing_pack_enabled,
+            )
+            from aimf.domain.testing.ids import HYGIENE_RULE_IDS
+
+            if testing_assessment_section_enabled(loaded_settings):
+                test_assembler = create_testing_assessment_assembler()
+                repo_id = str(getattr(repository, "name", None) or repository.path)
+                test_cfg = testing_assessment_section_settings(loaded_settings)
+                pack_on = testing_pack_enabled(loaded_settings)
+                if not pack_on:
+                    testing_section = test_assembler.assemble_disabled(
+                        repository_id=repo_id,
+                        reason="testing_pack_disabled",
+                    )
+                else:
+                    pack_findings = (
+                        testing_pack_result.evaluation.findings
+                        if testing_pack_result is not None
+                        else ()
+                    )
+                    executed = 0
+                    matched = 0
+                    not_matched = 0
+                    not_applicable = 0
+                    failed = 0
+                    if testing_pack_result is not None:
+                        for fact in testing_pack_result.rule_execution_facts:
+                            if fact.executed:
+                                executed += 1
+                            status = fact.evaluation_status
+                            if status == "matched":
+                                matched += 1
+                            elif status == "not_matched":
+                                not_matched += 1
+                            elif status == "not_applicable":
+                                not_applicable += 1
+                            elif status == "failed":
+                                failed += 1
+                    testing_section = test_assembler.assemble(
+                        repository_id=repo_id,
+                        findings=pack_findings,
+                        evidence=repository_testing_evidence,
+                        pack_enabled=True,
+                        rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=not_matched,
+                        rules_not_applicable=not_applicable,
+                        rules_failed=failed,
+                        evidence_pipeline=(
+                            testing_pack_result.evidence_pipeline
+                            if testing_pack_result is not None
+                            else (
+                                "repository_testing"
+                                if repository_testing_evidence is not None
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            testing_pack_result.evidence_fingerprint
+                            if testing_pack_result is not None
+                            else (
+                                repository_testing_evidence.evidence_fingerprint
+                                if repository_testing_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=(
+                            f"rules.testing.enabled=true|"
+                            f"evidence.repository_testing.enabled="
+                            f"{loaded_settings.evidence.repository_testing.enabled}"
+                        ),
+                        diagnostics=(
+                            testing_pack_result.diagnostics
+                            if testing_pack_result is not None
+                            else ()
+                        ),
+                        include_findings=test_cfg.include_findings,
+                        include_coverage=test_cfg.include_coverage,
+                        include_limitations=test_cfg.include_limitations,
+                        include_traceability=test_cfg.include_traceability,
+                        include_execution_summary=test_cfg.include_execution_summary,
+                    )
+                test_write = write_testing_assessment_artifact(
+                    testing_section,
+                    report_paths.run_directory,
+                )
+                testing_assessment_artifact = test_write.path
+                testing_assessment_status = testing_section.status.value
+                testing_assessment_finding_count = test_write.finding_count
+        except Exception as error:  # noqa: BLE001 - isolate testing failures
+            testing_assessment_artifact = None
+            testing_assessment_status = "failed"
+            testing_assessment_finding_count = None
+            warn(
+                "Test assessment could not be built; "
                 "remaining assessment content was kept. "
                 f"Details: {sanitize_provider_text(str(error))}"
             )
@@ -1924,9 +2182,22 @@ class AssessmentApplicationService:
             repository_sensitive_evidence_artifact=(
                 repository_sensitive_evidence_artifact
             ),
+            repository_testing_evidence_status=repository_testing_evidence_status,
+            repository_testing_evidence_candidate_count=(
+                repository_testing_evidence_candidate_count
+            ),
+            repository_testing_evidence_framework_count=(
+                repository_testing_evidence_framework_count
+            ),
+            repository_testing_evidence_artifact=(
+                repository_testing_evidence_artifact
+            ),
             security_assessment_status=security_assessment_status,
             security_assessment_finding_count=security_assessment_finding_count,
             security_assessment_artifact=security_assessment_artifact,
+            testing_assessment_status=testing_assessment_status,
+            testing_assessment_finding_count=testing_assessment_finding_count,
+            testing_assessment_artifact=testing_assessment_artifact,
             architecture_report_enabled=architecture_report_enabled,
             architecture_report_status=architecture_report_status,
             architecture_report_section_version=architecture_report_section_version,
@@ -2519,9 +2790,16 @@ def _build_command_result(
     repository_sensitive_evidence_artifact_count: int | None = None,
     repository_sensitive_evidence_configuration_fact_count: int | None = None,
     repository_sensitive_evidence_artifact: Path | None = None,
+    repository_testing_evidence_status: str | None = None,
+    repository_testing_evidence_candidate_count: int | None = None,
+    repository_testing_evidence_framework_count: int | None = None,
+    repository_testing_evidence_artifact: Path | None = None,
     security_assessment_status: str | None = None,
     security_assessment_finding_count: int | None = None,
     security_assessment_artifact: Path | None = None,
+    testing_assessment_status: str | None = None,
+    testing_assessment_finding_count: int | None = None,
+    testing_assessment_artifact: Path | None = None,
     architecture_report_enabled: bool | None = None,
     architecture_report_status: str | None = None,
     architecture_report_section_version: str | None = None,
@@ -2636,6 +2914,22 @@ def _build_command_result(
         graph_fields["repository_sensitive_evidence_artifact_path"] = (
             repository_sensitive_evidence_artifact
         )
+    if repository_testing_evidence_status is not None:
+        graph_fields["repository_testing_evidence_status"] = (
+            repository_testing_evidence_status
+        )
+    if repository_testing_evidence_candidate_count is not None:
+        graph_fields["repository_testing_evidence_candidate_count"] = (
+            repository_testing_evidence_candidate_count
+        )
+    if repository_testing_evidence_framework_count is not None:
+        graph_fields["repository_testing_evidence_framework_count"] = (
+            repository_testing_evidence_framework_count
+        )
+    if repository_testing_evidence_artifact is not None:
+        graph_fields["repository_testing_evidence_artifact_path"] = (
+            repository_testing_evidence_artifact
+        )
     if security_assessment_status is not None:
         graph_fields["security_assessment_status"] = security_assessment_status
     if security_assessment_finding_count is not None:
@@ -2644,6 +2938,14 @@ def _build_command_result(
         )
     if security_assessment_artifact is not None:
         graph_fields["security_assessment_artifact_path"] = security_assessment_artifact
+    if testing_assessment_status is not None:
+        graph_fields["testing_assessment_status"] = testing_assessment_status
+    if testing_assessment_finding_count is not None:
+        graph_fields["testing_assessment_finding_count"] = (
+            testing_assessment_finding_count
+        )
+    if testing_assessment_artifact is not None:
+        graph_fields["testing_assessment_artifact_path"] = testing_assessment_artifact
     if architecture_report_enabled is not None:
         graph_fields["architecture_report_enabled"] = architecture_report_enabled
     if architecture_report_status is not None:
@@ -2948,6 +3250,26 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
             "Repository-sensitive evidence artifact: "
             f"{_display_path(result.repository_sensitive_evidence_artifact_path)}"
         )
+    if result.repository_testing_evidence_status is not None:
+        console.print(
+            "Repository-testing evidence: "
+            f"{result.repository_testing_evidence_status}"
+        )
+    if result.repository_testing_evidence_candidate_count is not None:
+        console.print(
+            "Repository-testing candidates: "
+            f"{result.repository_testing_evidence_candidate_count}"
+        )
+    if result.repository_testing_evidence_framework_count is not None:
+        console.print(
+            "Repository-testing frameworks: "
+            f"{result.repository_testing_evidence_framework_count}"
+        )
+    if result.repository_testing_evidence_artifact_path is not None:
+        console.print(
+            "Repository-testing evidence artifact: "
+            f"{_display_path(result.repository_testing_evidence_artifact_path)}"
+        )
     if result.security_assessment_status is not None:
         console.print(f"Security assessment: {result.security_assessment_status}")
     if result.security_assessment_finding_count is not None:
@@ -2959,6 +3281,18 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
         console.print(
             "Security assessment artifact: "
             f"{_display_path(result.security_assessment_artifact_path)}"
+        )
+    if result.testing_assessment_status is not None:
+        console.print(f"Test assessment: {result.testing_assessment_status}")
+    if result.testing_assessment_finding_count is not None:
+        console.print(
+            "Test assessment findings: "
+            f"{result.testing_assessment_finding_count}"
+        )
+    if result.testing_assessment_artifact_path is not None:
+        console.print(
+            "Test assessment artifact: "
+            f"{_display_path(result.testing_assessment_artifact_path)}"
         )
     if result.architecture_report_enabled:
         console.print(

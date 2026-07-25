@@ -13,7 +13,7 @@ from aimf.application.rules.factory import create_rule_analysis_service
 from aimf.application.rules.fixtures import fixture_rules
 from aimf.application.rules.incremental import rule_invalidation_fingerprint
 from aimf.application.rules.registry import RuleRegistry
-from aimf.application.rules.testing import RuleTestHarness
+from aimf.application.rules.harness import RuleTestHarness
 from aimf.domain.rules.applicability import RuleSuppression
 from aimf.domain.rules.context import IncrementalChangeView, RuleExecutionPolicy
 from aimf.domain.rules.enums import (

@@ -119,6 +119,8 @@ class RuleExecutionContext(BaseModel):
     dependency_evidence: Any | None = None
     # Optional AggregatedRepositorySensitiveEvidence for Security Intelligence (Phase 4.5.3).
     repository_sensitive_evidence: Any | None = None
+    # Optional AggregatedRepositoryTestingEvidence for Test Intelligence (Phase 4.6.3).
+    repository_testing_evidence: Any | None = None
     incremental: IncrementalChangeView = Field(default_factory=IncrementalChangeView)
     policy: RuleExecutionPolicy = Field(default_factory=RuleExecutionPolicy)
     provenance: dict[str, str] = Field(default_factory=dict)

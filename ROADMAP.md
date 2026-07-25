@@ -43,8 +43,12 @@ YAML-based enterprise architecture model.
   - **4.5.4** Security Assessment Inventory — Complete
   - **4.5.5** Deterministic Security Synthesis — Complete
   - **4.5.6** Security Intelligence Report Integration — Complete
-- **4.6 Performance Intelligence** — not started
-- **4.7 Modernization Intelligence** — not started
+- **4.6 Test Intelligence** — In Progress
+  - **4.6.1** Test Intelligence Domain Foundation — Complete
+  - **4.6.2** Repository Test Evidence Foundation — Complete (platform evidence; disabled by default)
+  - **4.6.3** Test Hygiene Rules — Complete (`testing.core`; TEST-004 deferred)
+- **4.7 Performance Intelligence** — not started
+- **4.8 Modernization Intelligence** — not started
 
 ## Phase 5 — Language and Build Ecosystem Expansion
 

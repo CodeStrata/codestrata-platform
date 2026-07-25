@@ -12,6 +12,7 @@ _CATEGORY_MAP: dict[RuleCategory, FindingCategory] = {
     RuleCategory.TECHNICAL_DEBT: FindingCategory.TECHNICAL_DEBT,
     RuleCategory.DEPENDENCY: FindingCategory.DEPENDENCY,
     RuleCategory.SECURITY: FindingCategory.SECURITY,
+    RuleCategory.TESTING: FindingCategory.TESTING,
     RuleCategory.PERFORMANCE: FindingCategory.MODERNIZATION,
     RuleCategory.PLATFORM: FindingCategory.GOVERNANCE,
     RuleCategory.EXPERIMENTAL: FindingCategory.UNKNOWN,
@@ -76,6 +77,15 @@ class RuleFindingMapper:
 
             metadata.update(enrich_security_metadata(str(match.rule_id)))
             metadata.update(_security_evidence_metadata(match))
+        elif match.provenance == "testing.core" or str(match.rule_id).startswith(
+            "testing."
+        ):
+            from aimf.application.rules.testing.helpers import (
+                enrich_finding_metadata as enrich_testing_metadata,
+            )
+
+            metadata.update(enrich_testing_metadata(str(match.rule_id)))
+            metadata.update(_testing_evidence_metadata(match))
         return Finding.create(
             rule_id=str(match.rule_id),
             title=match.title,
@@ -217,6 +227,50 @@ def _security_evidence_metadata(match: RuleMatch) -> dict[str, str]:
     attrs = match.evidence[0].attributes
     promoted: dict[str, str] = {}
     for key in _SEC_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
+    return promoted
+
+
+_TEST_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "path",
+    "marker_type",
+    "marker_text",
+    "marker_count",
+    "marker_types",
+    "hotspot_paths",
+    "role",
+    "confirmation_level",
+    "language_hint",
+    "framework",
+    "basis",
+    "declared_version",
+    "detail",
+    "fact_type",
+    "tool",
+    "job_or_step",
+    "command_projection",
+    "considered_count",
+    "unconfirmed_count",
+    "unconfirmed_ratio",
+    "coverage_configurations",
+    "ci_files_inspected",
+    "testing_category",
+)
+
+
+def _testing_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match repository-testing attributes for Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _TEST_EVIDENCE_METADATA_KEYS:
         value = attrs.get(key)
         if value:
             promoted[key] = value

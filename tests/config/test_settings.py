@@ -308,6 +308,53 @@ def test_security_gates_disabled_by_default(tmp_path: Path) -> None:
     assert settings.assessment.sections.security.include_findings is True
     assert settings.assessment.sections.security.include_synthesis is True
     assert settings.report.sections.security.enabled is False
+    assert settings.rules.testing.enabled is False
+    assert settings.assessment.sections.testing.enabled is False
+
+
+def test_testing_gates_disabled_by_default(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.testing.enabled is False
+    assert settings.assessment.sections.testing.enabled is False
+    assert settings.assessment.sections.testing.include_findings is True
+    assert "include_synthesis" not in type(settings.assessment.sections.testing).model_fields
+    assert "testing" not in type(settings.report.sections).model_fields
+    assert settings.rules.security.enabled is False
+    assert settings.assessment.sections.security.enabled is False
+
+
+def test_testing_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [rules]
+        enabled = true
+
+        [rules.testing]
+        enabled = true
+
+        [assessment.sections.testing]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.testing.enabled is True
+    assert settings.assessment.sections.testing.enabled is True
+    assert settings.rules.security.enabled is False
+    assert settings.assessment.sections.security.enabled is False
+    assert settings.report.sections.security.enabled is False
 
 
 def test_security_gates_can_be_enabled(tmp_path: Path) -> None:

@@ -21,6 +21,7 @@ class RuleCategory(StrEnum):
     TECHNICAL_DEBT = "technical_debt"
     DEPENDENCY = "dependency"
     SECURITY = "security"
+    TESTING = "testing"
     PERFORMANCE = "performance"
     PLATFORM = "platform"
     EXPERIMENTAL = "experimental"

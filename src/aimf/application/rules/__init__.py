@@ -23,7 +23,7 @@ def __getattr__(name: str) -> object:
 
         return RuleRegistry
     if name == "RuleTestHarness":
-        from aimf.application.rules.testing import RuleTestHarness
+        from aimf.application.rules.harness import RuleTestHarness
 
         return RuleTestHarness
     if name == "RuleExecutionFacade":
