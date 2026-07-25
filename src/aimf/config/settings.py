@@ -735,6 +735,34 @@ class DependencyRulesSettings(BaseModel):
     )
 
 
+class SecurityRulesSettings(BaseModel):
+    """Security Intelligence pack settings (disabled by default; Phase 4.5.3)."""
+
+    enabled: bool = False
+    private_key_material: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    credential_literal: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    placeholder_credential: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    tls_verification_disabled: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    hostname_verification_disabled: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    authentication_disabled: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    permissive_cors_origin: DependencyRuleToggle = Field(
+        default_factory=DependencyRuleToggle
+    )
+    debug_enabled: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+
+
 class RulesSettings(BaseModel):
     """Shared Rule Platform settings (disabled by default; Phase 4.1)."""
 
@@ -750,6 +778,7 @@ class RulesSettings(BaseModel):
         default_factory=TechnicalDebtRulesSettings
     )
     dependency: DependencyRulesSettings = Field(default_factory=DependencyRulesSettings)
+    security: SecurityRulesSettings = Field(default_factory=SecurityRulesSettings)
 
     @field_validator(
         "max_rules_per_run",
@@ -783,6 +812,7 @@ class RulesSettings(BaseModel):
         _ = self.architecture
         _ = self.technical_debt
         _ = self.dependency
+        _ = self.security
         return self
 
 
@@ -910,6 +940,43 @@ class DependencyEvidenceSettings(BaseModel):
         return value
 
 
+class RepositorySensitiveEvidenceSettings(BaseModel):
+    """Repository-visible security-relevant evidence (Phase 4.5.2).
+
+    Platform evidence — not owned by Security Intelligence. Disabled by default.
+    Collects artifact and configuration literals only; no Findings or severity.
+    """
+
+    enabled: bool = False
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    max_file_bytes: int = 2_000_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+            "/reports/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars", "max_file_bytes")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("repository-sensitive evidence bounds must be positive")
+        return value
+
+
 class EvidenceSettings(BaseModel):
     """Evidence collection settings."""
 
@@ -919,6 +986,9 @@ class EvidenceSettings(BaseModel):
     )
     dependency: DependencyEvidenceSettings = Field(
         default_factory=DependencyEvidenceSettings
+    )
+    repository_sensitive: RepositorySensitiveEvidenceSettings = Field(
+        default_factory=RepositorySensitiveEvidenceSettings
     )
 
 
@@ -997,6 +1067,18 @@ class DependencyAssessmentSectionSettings(BaseModel):
     include_synthesis: bool = True
 
 
+class SecurityAssessmentSectionSettings(BaseModel):
+    """Security assessment section (disabled by default; Phase 4.5.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+    include_synthesis: bool = True
+
+
 class AssessmentSectionsSettings(BaseModel):
     architecture: ArchitectureAssessmentSectionSettings = Field(
         default_factory=ArchitectureAssessmentSectionSettings
@@ -1006,6 +1088,9 @@ class AssessmentSectionsSettings(BaseModel):
     )
     dependency: DependencyAssessmentSectionSettings = Field(
         default_factory=DependencyAssessmentSectionSettings
+    )
+    security: SecurityAssessmentSectionSettings = Field(
+        default_factory=SecurityAssessmentSectionSettings
     )
 
 
@@ -1064,6 +1149,22 @@ class DependencyReportSectionSettings(BaseModel):
     include_traceability: bool = True
 
 
+class SecurityReportSectionSettings(BaseModel):
+    """Security section in HTML/JSON reports (disabled by default; Phase 4.5.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_coverage: bool = True
+    include_findings: bool = True
+    include_themes: bool = True
+    include_hotspots: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_diagnostics: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
 class ReportSectionsSettings(BaseModel):
     architecture: ArchitectureReportSectionSettings = Field(
         default_factory=ArchitectureReportSectionSettings
@@ -1073,6 +1174,9 @@ class ReportSectionsSettings(BaseModel):
     )
     dependency: DependencyReportSectionSettings = Field(
         default_factory=DependencyReportSectionSettings
+    )
+    security: SecurityReportSectionSettings = Field(
+        default_factory=SecurityReportSectionSettings
     )
 
 

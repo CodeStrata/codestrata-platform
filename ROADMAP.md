@@ -36,7 +36,13 @@ YAML-based enterprise architecture model.
   - **4.4.4** Dependency Inventory and Assessment Usability — Complete
   - **4.4.5** Dependency Assessment Synthesis — Complete
   - **4.4.6** Dependency CTO Report Integration — Complete
-- **4.5 Security Intelligence** — not started
+- **4.5 Security Intelligence** — Complete through report integration
+  - **4.5.1** Security Domain Foundation — Complete
+  - **4.5.2** Repository Security-Relevant Evidence Foundation — Complete
+  - **4.5.3** Repository Security Hygiene Rules — Complete
+  - **4.5.4** Security Assessment Inventory — Complete
+  - **4.5.5** Deterministic Security Synthesis — Complete
+  - **4.5.6** Security Intelligence Report Integration — Complete
 - **4.6 Performance Intelligence** — not started
 - **4.7 Modernization Intelligence** — not started
 

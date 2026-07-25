@@ -139,6 +139,9 @@ def build_assessment_json_document(
     # Optional Phase 4.4.6 dependency report section (schema remains 1.2; additive key).
     if report_input.dependency_report is not None:
         assessment["dependency"] = report_input.dependency_report.model_dump(mode="json")
+    # Optional Phase 4.5.6 security report section (schema remains 1.2; additive key).
+    if report_input.security_report is not None:
+        assessment["security"] = report_input.security_report.model_dump(mode="json")
     return {
         "schema_version": ASSESSMENT_JSON_SCHEMA_VERSION,
         "report_version": ASSESSMENT_JSON_REPORT_VERSION,
