@@ -20,7 +20,7 @@ def test_php_packs_include_language_gate() -> None:
 
 
 def test_sample_php_app_complexity_collects(tmp_path: Path) -> None:
-    sample = Path("examples/sample-php-app")
+    sample = Path("test-fixtures/sample-php-app")
     if not sample.is_dir():
         return
     paths = tuple(
@@ -51,7 +51,7 @@ def test_sample_php_app_complexity_collects(tmp_path: Path) -> None:
 
 
 def test_sample_php_detector_still_laravel(tmp_path: Path) -> None:
-    sample = Path("examples/sample-php-app")
+    sample = Path("test-fixtures/sample-php-app")
     files = [
         path.relative_to(sample).as_posix()
         for path in sample.rglob("*")

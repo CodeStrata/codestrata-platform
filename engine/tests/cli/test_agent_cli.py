@@ -29,7 +29,7 @@ def _config(tmp_path: Path, knowledge: Path) -> Path:
     config.write_text(
         f"""
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge]
         directory = "{knowledge.as_posix()}"

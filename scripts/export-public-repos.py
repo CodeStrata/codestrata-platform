@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import hashlib
+import os
 import shutil
 import sys
 from dataclasses import dataclass, field
@@ -23,6 +24,29 @@ except ImportError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "public-export-manifest.yaml"
+
+# Directory names pruned during source walks so generated trees are never copied.
+_PRUNE_DIR_NAMES = frozenset(
+    {
+        ".git",
+        "__pycache__",
+        ".pytest_cache",
+        ".mypy_cache",
+        ".ruff_cache",
+        ".codestrata",
+        ".codestrata-examples",
+        ".codestrata-test-knowledge",
+        ".venv",
+        "venv",
+        "node_modules",
+        "dist",
+        "build",
+        ".eggs",
+        "pgdata",
+        "pgdata17",
+        "reports",
+    }
+)
 
 
 @dataclass
@@ -49,12 +73,21 @@ def _match_any(rel: str, patterns: list[str]) -> bool:
 
 
 def _iter_files(base: Path) -> list[Path]:
+    """List files under ``base``, pruning known generated directories early."""
+
     files: list[Path] = []
     if not base.exists():
         return files
-    for path in sorted(base.rglob("*")):
-        if path.is_file():
-            files.append(path)
+    for dirpath, dirnames, filenames in os.walk(base, topdown=True, followlinks=False):
+        dirnames[:] = sorted(
+            name
+            for name in dirnames
+            if name not in _PRUNE_DIR_NAMES and not name.endswith(".egg-info")
+        )
+        for name in sorted(filenames):
+            path = Path(dirpath) / name
+            if path.is_file() and not path.is_symlink():
+                files.append(path)
     return files
 
 

@@ -2,24 +2,28 @@
 
 **Version:** 0.1.0
 
-## Monorepo layout (Phase 5.23)
+## Monorepo layout
 
 ```text
 codestrata-platform/          # private source of truth
 ├── engine/                   # Community Engine → public codestrata-engine
-├── examples/                 # samples/reports → public codestrata-examples
+├── examples/                 # real-world showcases → public codestrata-examples
+├── test-fixtures/            # internal language samples (not in examples export)
 ├── cursor-plugin/            # placeholder → codestrata-cursor
 ├── vscode-plugin/            # placeholder → codestrata-vscode
-├── platform/                 # private Platform / Enterprise examples & docs
-├── scripts/                  # export + validate + dogfood harnesses
+├── platform/                 # private Platform (RAG + Knowledge Graph)
+├── scripts/                  # verify_release, export, security, showcase wrappers
 ├── public-export-manifest.yaml
-├── docs/                     # monorepo sync docs
 └── tests/architecture/       # engine↔platform boundary tests
 ```
 
-Public mirrors are generated; see [docs/public-export.md](docs/public-export.md).
+Public mirrors are generated; see [platform/README.md](platform/README.md)
+(maintainer handbook — export / validate / publish).
 Engine runtime must not depend on `platform/`. Security posture:
 [engine/docs/security/threat-model.md](engine/docs/security/threat-model.md).
+
+Current product direction: [ROADMAP.md](ROADMAP.md).
+Completed releases: [CHANGELOG.md](CHANGELOG.md).
 
 ## Purpose
 
@@ -203,16 +207,14 @@ fails the assessment; incomplete runs are never “latest completed.” Default
 assessment remains full recomputation; incremental execution is opt-in only
 (see Phase 2F below).
 
-## Repository Knowledge Layer (Phase 5.1–5.7)
+## Repository Knowledge Layer (Phase 5.1–5.9) — Platform
 
-Provider-neutral contracts for canonical knowledge documents, chunks, embeddings,
-dense vector storage, grounded retrieval, citation-bound answers, and MCP exposure.
-Phase 5.7 adds repository-intelligence MCP tools (`repository_*`) over
-`RepositoryRetriever` / `GroundedAnswerEngine` / `KnowledgeQueryService` with
-stdio and streamable-http transports. No production embeddings, production LLMs,
-hybrid search, or reranking.
-See [docs/repository-knowledge/](engine/docs/repository-knowledge/) and
-[docs/mcp/overview.md](engine/docs/mcp/overview.md).
+RAG projection, embeddings, vector storage, retrieval, and grounded answering
+are implemented in the private **Platform** package. Community Engine keeps
+assessment contracts and extension entry points only.
+
+See [platform/docs/rag/](platform/docs/rag/) (monorepo) and
+[engine/docs/mcp/overview.md](engine/docs/mcp/overview.md) for assessment MCP.
 
 ### Query services (Increment 3)
 

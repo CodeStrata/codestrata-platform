@@ -12,7 +12,7 @@ Phase 4.9 of CodeStrata Analysis Intelligence.
 | 4.9.6 Report Integration | Complete (`report.performance` **1.0.0**; presentation only; disabled by default) |
 
 Design authority:
-[intelligence-platform.md](../../architecture/intelligence-platform.md).
+[analysis-intelligence-conventions.md](../../architecture/analysis-intelligence-conventions.md).
 
 ## Purpose
 

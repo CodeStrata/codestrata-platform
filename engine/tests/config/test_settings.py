@@ -91,12 +91,12 @@ def test_load_settings_accepts_local_repository_path(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
     settings = load_settings(config_file)
-    assert settings.repository.path == "examples/sample-js-app"
+    assert settings.repository.path == "test-fixtures/sample-js-app"
     assert settings.repository.url is None
 
 
@@ -131,7 +131,7 @@ def test_load_settings_reads_knowledge_directory(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge]
         directory = ".codestrata/custom-knowledge"
@@ -147,7 +147,7 @@ def test_load_settings_reads_mcp_defaults(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -161,7 +161,7 @@ def test_load_settings_reads_mcp_section(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [mcp]
         enabled = true

@@ -61,7 +61,7 @@ def _settings(
     answer_provider: str = "deterministic_extractive",
 ) -> CodestrataSettings:
     return CodestrataSettings(
-        repository=RepositorySettings(path="examples/sample-js-app"),
+        repository=RepositorySettings(path="test-fixtures/sample-js-app"),
         ai=AiSettings(
             embedding_provider=embedding_provider,
             answer_provider=answer_provider,
@@ -316,7 +316,7 @@ def test_ai_settings_reject_unknown_and_unused_provider_ok(tmp_path: Any) -> Non
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [ai]
         embedding_provider = "openai"

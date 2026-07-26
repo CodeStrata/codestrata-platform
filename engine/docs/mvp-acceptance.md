@@ -12,10 +12,11 @@ codestrata acceptance status
 codestrata acceptance status --output reports/mvp-acceptance --json
 ```
 
-Or:
+For monorepo release gates (security, lint, tests, export), use
+`python scripts/verify_release.py`. Optionally add live acceptance:
 
 ```bash
-python scripts/mvp_acceptance.py
+python scripts/verify_release.py --with-acceptance
 ```
 
 ## Workflow (per repository)
@@ -35,7 +36,7 @@ python scripts/mvp_acceptance.py
 |----|------|
 | codestrata | repository root |
 | spring-petclinic | `.codestrata/workspace/spring-petclinic` |
-| synthetic-multilang | `examples/sample-js-app` |
+| synthetic-multilang | `test-fixtures/sample-js-app` |
 
 ## Outputs
 

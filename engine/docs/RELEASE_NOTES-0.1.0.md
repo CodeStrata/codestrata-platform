@@ -26,7 +26,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install dist/codestrata-0.1.0-py3-none-any.whl
 codestrata version
-codestrata assess --repo examples/sample-js-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
 From a clone (development):
@@ -49,13 +49,13 @@ multi-tenancy) are **not** Community defaults. See
 ## Sample reports
 
 Golden HTML/JSON samples for each language live under
-[examples/sample-reports/](../../examples/sample-reports/README.md).
+[test-fixtures/sample-reports/](../../test-fixtures/sample-reports/README.md).
 
 ## Breaking / rename notes
 
 This release uses the **CodeStrata** package and CLI exclusively. Pre-rename
-package and CLI names are not shipped. See
-[rename-codestrata.md](rename-codestrata.md).
+package and CLI names are not shipped. The product rename was completed in
+Phase 5.16 (see [ROADMAP.md](../../ROADMAP.md)).
 
 ## Known limitations
 

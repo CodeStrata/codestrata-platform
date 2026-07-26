@@ -42,7 +42,7 @@ from codestrata.models import Repository
 from codestrata.services.detectors.csharp_technology_detector import CsharpTechnologyDetector
 
 ROOT = Path(__file__).resolve().parents[3]  # monorepo root
-SAMPLE = ROOT / "examples" / "sample-csharp-app"
+SAMPLE = ROOT / "test-fixtures" / "sample-csharp-app"
 
 
 def test_packs_include_csharp() -> None:

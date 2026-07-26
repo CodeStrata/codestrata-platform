@@ -1,0 +1,25 @@
+{
+  "example_id": "laravel-realworld",
+  "repository_url": "https://github.com/yukicountry/realworld-laravel-layered-architecture.git",
+  "commit_sha": "49fb3b2c902475373dc4251a664af1962efe9c90",
+  "license_spdx": "MIT",
+  "profile": "community",
+  "status": "pending_live_refresh",
+  "technologies": ["PHP", "Laravel"],
+  "finding_count": null,
+  "recommendation_count": null,
+  "findings_by_severity": {},
+  "findings_by_category": {},
+  "top_findings": [],
+  "top_recommendations": [],
+  "architecture_summary": {
+    "notes": "Maintained MIT Laravel RealWorld layered architecture sample."
+  },
+  "roadmap_summary": {},
+  "elapsed_seconds": null,
+  "known_false_positives": [],
+  "known_unsupported_areas": [
+    "Composer vendor/ is not fetched",
+    "AI enrichment not part of baseline showcase"
+  ]
+}

@@ -56,13 +56,13 @@ pytest tests/docs -q
 * Update docs when CLI, artifacts, or configuration change.
 * Never resurrect pre-rename package/CLI/config identifiers in user-facing surfaces.
 
-## Adding a language sample
+## Adding a language fixture
 
-1. Create `examples/sample-<lang>-app/` with a minimal build manifest.
+1. Create `test-fixtures/sample-<lang>-app/` with a minimal build manifest.
 2. Add a short README with `codestrata assess --repo …` instructions.
-3. Link it from [examples/README.md](../../examples/README.md).
+3. Link it from [test-fixtures/README.md](../../test-fixtures/README.md).
 4. Ensure documentation validation still passes (`tests/docs`).
-
+5. Do **not** add language samples to the public `examples/` (showcase) tree.
 ## Documentation conventions
 
 * Prefer kebab-case topic files under `docs/`.

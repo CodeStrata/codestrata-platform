@@ -25,7 +25,7 @@ def test_enterprise_init_and_validate(tmp_path: Path) -> None:
     config.write_text(
         f"""
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [knowledge]
         directory = "{tmp_path / "knowledge"}"
         [enterprise]

@@ -17,6 +17,10 @@ defaults:
     - "**/.ruff_cache/**"
     - "**/*.egg-info/**"
     - "**/.codestrata/**"
+    - "**/.codestrata-examples/**"
+    - "**/.codestrata-test-knowledge/**"
+    - "**/.venv/**"
+    - "**/venv/**"
     - "**/.env"
     - "**/.env.*"
     - "**/reports/**"
@@ -24,11 +28,24 @@ defaults:
     - "**/build/**"
     - "**/.git/**"
     - "**/node_modules/**"
+    - "**/*.sqlite"
+    - "**/*.db"
+    - "**/*.lock"
+    - "**/pgdata/**"
+    - "**/pgdata*/**"
   forbid_path_substrings:
     - "platform/"
     - ".codestrata/"
+    - ".codestrata-examples/"
+    - ".codestrata-test-knowledge/"
     - "secrets"
     - ".env"
+    - "/build/"
+    - "/dist/"
+    - ".pytest_cache"
+    - ".mypy_cache"
+    - ".ruff_cache"
+    - "knowledge.sqlite"
   forbid_content_patterns:
     - "(?i)BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY"
     - "(?i)aws_secret_access_key\\s*="
@@ -56,18 +73,18 @@ exports:
       - "SUPPORT.md"
       - "codestrata.toml"
       - ".env.example"
-    # Pull minimal smoke samples into the engine mirror for offline quick-start.
+    # Pull a minimal smoke fixture into the engine mirror for offline quick-start.
     extra_includes:
-      - from: examples/sample-js-app
-        to: examples/sample-js-app
-      - from: examples/README.md
-        to: examples/README.md
+      - from: test-fixtures/sample-js-app
+        to: test-fixtures/sample-js-app
     exclude:
       - "**/complexity/fixtures/**"
       - "**/.DS_Store"
       # Stale docs/tests that referenced pre-move Enterprise paths (if any remain).
       - "tests/interfaces/mcp/test_mcp_enterprise_tools.py"
       - "docs/enterprise-knowledge-graph/**"
+      - "docs/reviews/**"
+      - "docs/design/**"
     validation:
       require_files:
         - LICENSE
@@ -78,16 +95,17 @@ exports:
         - src/codestrata/extensions/__init__.py
         - codestrata.toml
         - SECURITY.md
+        - test-fixtures/sample-js-app/package.json
       forbid_globs:
         - "platform/**"
       commands:
         - "python -m pip install -e '.[dev]'"
         - "codestrata version"
-        - "codestrata assess --repo examples/sample-js-app --output /tmp/cs-engine-export-reports --no-ai"
+        - "codestrata assess --repo test-fixtures/sample-js-app --output /tmp/cs-engine-export-reports --no-ai"
         - "python -m pytest -q tests/config/test_settings.py"
 
   - name: codestrata-examples
-    description: Public sample applications and golden sample reports
+    description: Real-world showcase manifests, fetch scripts, attribution, curated expected results
     source_root: examples
     public_repository: codestrata-examples
     destination_layout: flat
@@ -97,30 +115,36 @@ exports:
       - "**/.DS_Store"
       - "**/node_modules/**"
       - "**/__pycache__/**"
+      - "**/.codestrata-examples/**"
+      - "**/reports/**"
+      - "**/reports/showcases/**"
+      - "**/sample-*-app/**"
+      - "**/sample-reports/**"
+      - "**/fixtures/**"
     validation:
       require_files:
         - README.md
-        - sample-js-app/package.json
-        - sample-python-app/pyproject.toml
-        - sample-java-app/pom.xml
-        - sample-php-app/composer.json
-        - sample-csharp-app/src/SampleAspNet/SampleAspNet.csproj
-        - sample-reports/README.md
-        - sample-reports/javascript/report.html
-        - sample-reports/python/report.html
-        - sample-reports/java/report.html
-        - sample-reports/php/report.html
-        - sample-reports/csharp/report.html
+        - real-world/README.md
+        - real-world/THIRD_PARTY.md
+        - real-world/MANIFEST_SCHEMA.md
+        - real-world/manifests/spring-petclinic.yaml
+        - real-world/manifests/dotnet-eshop.yaml
+        - real-world/manifests/laravel-realworld.yaml
+        - real-world/scripts/fetch_example.py
+        - real-world/scripts/run_showcase.py
+        - expected-results/README.md
+        - expected-results/spring-petclinic/summary.md
+        - expected-results/dotnet-eshop/summary.md
+        - expected-results/laravel-realworld/summary.md
       forbid_globs:
         - "platform/**"
         - "**/.env"
-      require_language_samples:
-        - javascript
-        - python
-        - java
-        - php
-        - csharp
-
+        - "**/.codestrata-examples/**"
+        - "**/reports/showcases/**"
+        - "**/sample-*-app/**"
+        - "sample-*/**"
+        - "**/sample-reports/**"
+        - "fixtures/**"
   - name: codestrata-cursor
     description: Cursor plugin placeholder (not implemented in Phase 5.23)
     source_root: cursor-plugin

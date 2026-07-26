@@ -198,7 +198,7 @@ def _validate_engine_install(dest: Path) -> list[str]:
                     str(codestrata),
                     "assess",
                     "--repo",
-                    "examples/sample-js-app",
+                    "test-fixtures/sample-js-app",
                     "--output",
                     str(report_dir),
                     "--no-ai",

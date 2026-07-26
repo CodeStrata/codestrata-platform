@@ -40,7 +40,7 @@ def test_load_settings_knowledge_defaults(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -55,7 +55,7 @@ def test_load_settings_knowledge_vector_store_section(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge]
         directory = ".codestrata/custom-knowledge"
@@ -77,7 +77,7 @@ def test_load_settings_knowledge_embedding_and_indexing(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge.embedding]
         enabled = true
@@ -107,7 +107,7 @@ def test_load_settings_knowledge_projection_and_chunking(tmp_path: Path) -> None
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge.projection]
         enabled = true
@@ -143,7 +143,7 @@ def test_pgvector_provider_requires_connection_string(
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge.vector_store]
         provider = "pgvector"

@@ -23,6 +23,7 @@ Use before a Community release candidate or commercial deployment.
 - [ ] SBOM refreshed (`engine/docs/security/sbom-cyclonedx.json` when generated;
       mark as an environment snapshot, not a signed release artifact)
 - [ ] `python scripts/security_check.py` passes
+- [ ] Prefer `python scripts/verify_release.py` for the full maintainer gate
 
 ## Export / Community surface
 
@@ -33,6 +34,7 @@ Use before a Community release candidate or commercial deployment.
 
 ## Verification
 
+- [ ] `python scripts/verify_release.py` (or equivalent below)
 - [ ] `ruff check .`
 - [ ] `mypy engine/src`
 - [ ] `pytest`

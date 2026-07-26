@@ -52,10 +52,10 @@ Details: [runtime.md](runtime.md).
 | Rules / findings | `codestrata rules` | [rule-engine.md](rule-engine.md) |
 | Recommendations | (assess) | [recommendation-engine.md](recommendation-engine.md) |
 | Knowledge store | `.codestrata/knowledge` | [knowledge-store.md](knowledge-store.md) |
-| Repository knowledge / RAG | `codestrata repository` | [repository-knowledge/README.md](repository-knowledge/README.md) |
+| Repository knowledge / RAG | Platform CLI extensions | Monorepo `platform/docs/rag/` (not CE docs) |
 | MCP | `codestrata mcp` | [mcp-server.md](mcp-server.md) |
 | Agents | `codestrata agent` | [agent-framework.md](agent-framework.md) |
-| Enterprise KG | `codestrata enterprise` | [community-edition.md](community-edition.md) (stub → platform docs) |
+| Enterprise KG | Platform CLI extensions | Monorepo `platform/docs/knowledge_graph/` |
 | Execution profiles | `codestrata config` | [configuration-profiles.md](configuration-profiles.md) |
 | Runtime performance | `analysis.runtime` | [runtime-performance.md](runtime-performance.md) |
 
@@ -86,7 +86,7 @@ Evidence and packs currently emphasize:
 Sample apps for each language plus golden HTML/JSON reports:
 
 * Samples: [examples/README.md](../../examples/README.md)
-* Reports: [examples/sample-reports/README.md](../../examples/sample-reports/README.md)
+* Reports: [test-fixtures/sample-reports/README.md](../../test-fixtures/sample-reports/README.md)
 
 ## Related
 

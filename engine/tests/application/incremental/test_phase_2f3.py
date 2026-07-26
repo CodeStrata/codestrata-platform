@@ -257,7 +257,7 @@ def test_operations_blocks_when_rollout_off() -> None:
         rollout=IncrementalRolloutPolicy(mode=IncrementalRolloutMode.OFF),
     )
     with pytest.raises(IncrementalRolloutDisabledError):
-        ops.create_plan(IncrementalPlanningRequest(repository_identifier="examples/sample-js-app"))
+        ops.create_plan(IncrementalPlanningRequest(repository_identifier="test-fixtures/sample-js-app"))
 
 
 def test_settings_rollout_defaults(tmp_path: Path) -> None:
@@ -265,7 +265,7 @@ def test_settings_rollout_defaults(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -281,7 +281,7 @@ def test_settings_legacy_enabled_maps_to_plan_only(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         enabled = true
         """,
@@ -296,7 +296,7 @@ def test_settings_conflict_rejected(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         rollout_mode = "off"
         enabled = true
@@ -317,7 +317,7 @@ def test_plan_only_blocks_execution() -> None:
     with pytest.raises(IncrementalRolloutDisabledError):
         ops.execute(
             IncrementalExecutionRequest(
-                repository="examples/sample-js-app",
+                repository="test-fixtures/sample-js-app",
                 output_directory="reports",
             )
         )

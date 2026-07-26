@@ -291,11 +291,16 @@ class AssessmentCommandResult(BaseModel):
     knowledge_index_artifact_path: Path | None = None
     knowledge_index_fingerprint: str | None = None
 
-    @model_validator(mode="after")
-    def populate_report_path_alias(self) -> AssessmentCommandResult:
-        if self.report_path is None:
-            return self.model_copy(update={"report_path": self.html_report_path})
-        return self
+    @model_validator(mode="before")
+    @classmethod
+    def populate_report_path_alias(cls, data: object) -> object:
+        """Default ``report_path`` to the HTML report when callers omit it."""
+
+        if not isinstance(data, dict):
+            return data
+        if data.get("report_path") is None and data.get("html_report_path") is not None:
+            return {**data, "report_path": data["html_report_path"]}
+        return data
 
 
 class _RepositoryScanner(Protocol):

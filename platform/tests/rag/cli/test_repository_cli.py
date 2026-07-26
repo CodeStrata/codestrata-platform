@@ -32,7 +32,7 @@ def test_repository_answer_json_with_mock(tmp_path: Path) -> None:
     config.write_text(
         f"""
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge]
         directory = "{(tmp_path / "knowledge").as_posix()}"

@@ -1,0 +1,106 @@
+{
+  "architecture_summary": {
+    "has_api_layer": true,
+    "has_domain_layer": true,
+    "has_persistence_layer": true,
+    "has_service_layer": false,
+    "is_multi_application": false
+  },
+  "assessment_coverage": [
+    "technology_detection",
+    "architecture_signals",
+    "dependency_signals",
+    "cloud_readiness_signals",
+    "html_json_reports"
+  ],
+  "attribution_url": "https://github.com/spring-projects/spring-petclinic",
+  "codestrata_version": "CodeStrata 0.1.0",
+  "commit_sha": "f182358d02e4a68e52bdbabf55ca7800288511e7",
+  "elapsed_seconds": 2.15,
+  "example_id": "spring-petclinic",
+  "executive_summary_text": "Analyzed repository 'spring-petclinic' with 131 scanned file(s). Detected 12 finding(s) (0 critical) and 1 recommendation(s) (0 critical/high priority). Automated tests were detected. CI was detected. Cloud capabilities detected: devcontainer, docker-compose, kubernetes, deployment-workflow.",
+  "finding_count": 12,
+  "findings_by_category": {
+    "architecture": 5,
+    "cloud_readiness": 4,
+    "dependency": 1,
+    "maintainability": 2
+  },
+  "findings_by_severity": {
+    "critical": 0,
+    "high": 0,
+    "info": 11,
+    "low": 1,
+    "medium": 0
+  },
+  "known_false_positives": [
+    "Gradle dependency-locking finding may be noisy for Maven-primary samples that also ship a build.gradle."
+  ],
+  "known_unsupported_areas": [
+    "Assessment is source-static; runtime Spring profiles and databases are not executed.",
+    "Optional AI enrichment requires separate credentials and is not part of the baseline showcase."
+  ],
+  "license_spdx": "Apache-2.0",
+  "profile": "community",
+  "project_name": "Spring PetClinic",
+  "recommendation_count": 1,
+  "repository_size_mb": 1.84,
+  "repository_url": "https://github.com/spring-projects/spring-petclinic.git",
+  "roadmap_summary": {
+    "notes": "Baseline deterministic assess produced one low-priority cloud packaging recommendation; no formal multi-wave roadmap artifact in this profile."
+  },
+  "status": "curated_from_live_showcase",
+  "technologies": [
+    "Gradle",
+    "Maven",
+    "Spring Boot",
+    "Java",
+    "JUnit"
+  ],
+  "top_findings": [
+    {
+      "category": "dependency",
+      "id": "e039f3ef-ccd7-5a94-a113-c0612f11d70c",
+      "rule_id": "DEP003",
+      "severity": "low",
+      "title": "Dependency locking is not configured"
+    },
+    {
+      "category": "architecture",
+      "id": "ec53dcfb-d3e4-51f9-a6d4-3d967e079a0f",
+      "rule_id": "ARCH001",
+      "severity": "informational",
+      "title": "Application architecture components detected"
+    },
+    {
+      "category": "architecture",
+      "id": "2d4a6fdb-ff31-5a14-b5ce-39ea4bad3819",
+      "rule_id": "ARCH002",
+      "severity": "informational",
+      "title": "API layer detected"
+    },
+    {
+      "category": "architecture",
+      "id": "9b006163-bf37-51d5-b962-c08552b6d9a2",
+      "rule_id": "ARCH003",
+      "severity": "informational",
+      "title": "Persistence layer detected"
+    },
+    {
+      "category": "architecture",
+      "id": "aadc8c94-9d99-5a4b-a7c1-d104ac83568f",
+      "rule_id": "ARCH005",
+      "severity": "informational",
+      "title": "Test structure detected"
+    }
+  ],
+  "top_recommendations": [
+    {
+      "category": "cloud",
+      "id": "fc4f8d7d-ff3b-52aa-aeec-ba9a0e0709b8",
+      "rule_id": "REC.CLOUD.003",
+      "severity": "low",
+      "title": "Evaluate reusable Kubernetes deployment packaging"
+    }
+  ]
+}

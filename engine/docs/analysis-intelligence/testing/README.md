@@ -12,7 +12,7 @@ Phase 4.6 of CodeStrata Analysis Intelligence.
 | 4.6.6 Report Integration | Complete (`report.testing` **1.0.0**; default off) |
 
 Design authority:
-[intelligence-platform.md](../../architecture/intelligence-platform.md).
+[analysis-intelligence-conventions.md](../../architecture/analysis-intelligence-conventions.md).
 
 ## Purpose
 
@@ -123,7 +123,3 @@ See also:
 - [taxonomy.md](taxonomy.md)
 - [configuration.md](configuration.md)
 - [../repository-test-evidence.md](../repository-test-evidence.md)
-- [../../reviews/PHASE_4_6_6_TEST_REPORT_INTEGRATION_REVIEW.md](../../reviews/PHASE_4_6_6_TEST_REPORT_INTEGRATION_REVIEW.md)
-- [../../reviews/PHASE_4_6_5_TEST_SYNTHESIS_REVIEW.md](../../reviews/PHASE_4_6_5_TEST_SYNTHESIS_REVIEW.md)
-- [../../reviews/PHASE_4_6_4_TEST_ASSESSMENT_INVENTORY_REVIEW.md](../../reviews/PHASE_4_6_4_TEST_ASSESSMENT_INVENTORY_REVIEW.md)
-- [../../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md](../../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md)

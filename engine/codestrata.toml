@@ -5,7 +5,7 @@
 # Or clone from GitHub (also required for `codestrata scan`):
 #   url = "https://github.com/YOUR_ORG/YOUR_REPO"
 #   branch = "main"
-path = "examples/sample-js-app"
+path = "test-fixtures/sample-js-app"
 
 # Execution profile (Phase 5.20). Default when omitted: community.
 # Allowed: community | local | enterprise | bedrock | openai

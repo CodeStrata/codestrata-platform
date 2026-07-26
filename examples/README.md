@@ -1,51 +1,130 @@
-# Examples
+# CodeStrata Examples
 
-Language sample repositories for CodeStrata onboarding, docs, and dogfood.
+[![Related: Engine](https://img.shields.io/badge/requires-codestrata--engine-blue.svg)](https://github.com/sknampally/codestrata-engine)
 
-| Sample | Language | Assess |
-| ------ | -------- | ------ |
-| [`sample-js-app`](sample-js-app/) | JavaScript | `codestrata assess --repo examples/sample-js-app --output reports` |
-| [`sample-python-app`](sample-python-app/) | Python | `codestrata assess --repo examples/sample-python-app --output reports` |
-| [`sample-java-app`](sample-java-app/) | Java | `codestrata assess --repo examples/sample-java-app --output reports` |
-| [`sample-php-app`](sample-php-app/) | PHP | `codestrata assess --repo examples/sample-php-app --output reports` |
-| [`sample-csharp-app`](sample-csharp-app/) | C# / .NET | `codestrata assess --repo examples/sample-csharp-app --output reports` |
+Pinned **real-world open-source showcases** for demonstrating CodeStrata on
+recognized applications — without vendoring third-party source into this
+repository.
 
-Golden HTML/JSON reports: [sample-reports/README.md](sample-reports/README.md).
+**Audience:** engineers and engineering leaders who want realistic assessment
+demos; maintainers who refresh pinned revisions.
 
-Default `codestrata.toml` points at `sample-js-app`:
+> **Public mirror** of `codestrata-platform/examples`. Prefer changes in the
+> private monorepo.
+
+---
+
+## Why this repository?
+
+| Need | This repo provides |
+| ---- | ------------------ |
+| Credible demos | Spring PetClinic, .NET eShop, Laravel RealWorld |
+| Reproducible runs | Exact commit SHAs in manifests (never floating `main`) |
+| Safe automation | Fetch scripts that refuse arbitrary URLs and skip installs |
+| Bounded artifacts | Curated `expected-results/` summaries (not raw report trees) |
+
+Language sample apps used in automated tests are **not** published here; they
+remain internal monorepo fixtures.
+
+---
+
+## Relationship to other CodeStrata repos
+
+| Repository | Role |
+| ---------- | ---- |
+| [codestrata-engine](https://github.com/sknampally/codestrata-engine) | Assessment CLI you must install first |
+| **codestrata-examples** (this repo) | Showcase manifests, fetch scripts, attribution, curated summaries |
+| Platform (private) | RAG / Knowledge Graph — not required for baseline showcases |
+
+Product statement: *The Engine produces structured engineering intelligence.
+The Platform stores, connects, retrieves, and reasons over that intelligence.*
+
+---
+
+## Repository structure
+
+```text
+.
+├── README.md
+├── real-world/
+│   ├── manifests/          # one YAML per showcase (pinned SHA required)
+│   ├── scripts/            # portable fetch + showcase runners
+│   ├── MANIFEST_SCHEMA.md
+│   ├── THIRD_PARTY.md      # attribution (no endorsement implied)
+│   └── README.md
+└── expected-results/       # curated summaries per showcase
+```
+
+---
+
+## Showcases
+
+| ID | Project | License | Typical runtime |
+| -- | ------- | ------- | --------------- |
+| `spring-petclinic` | Spring PetClinic | Apache-2.0 | moderate |
+| `dotnet-eshop` | Microsoft .NET eShop | MIT | slow |
+| `laravel-realworld` | Laravel RealWorld (layered) | MIT | fast |
+
+Attribution: [real-world/THIRD_PARTY.md](real-world/THIRD_PARTY.md).  
+Curated results: [expected-results/](expected-results/).
+
+---
+
+## Getting started
+
+### Prerequisites
+
+* Python 3.12+
+* `git` on `PATH`
+* [codestrata-engine](https://github.com/sknampally/codestrata-engine) installed
+  (`codestrata` on `PATH`)
+* Network access to GitHub for the fetch step
+
+Baseline showcases use `--profile community --no-ai` (no AI credentials).
+
+### Fetch and assess (portable scripts)
+
+From this repository root:
 
 ```bash
-codestrata config validate --config codestrata.toml
-codestrata assess --config codestrata.toml --output reports --no-ai
-# Optional: --profile local|community|enterprise|bedrock|openai
+python real-world/scripts/fetch_example.py --list
+python real-world/scripts/fetch_example.py spring-petclinic
+
+codestrata assess \
+  --repo .codestrata-examples/spring-petclinic \
+  --output reports/showcases/spring-petclinic \
+  --profile community \
+  --no-ai
 ```
 
-## Expected artifacts (deterministic)
-
-* Exit code `0`
-* `reports/<name>/<YYYYMMDD-HHMMSS>/report.html`
-* `report.json`, `findings.json`, `recommendations.json`, `graphs/`
-* No `ai-enrichment.json` unless `--with-ai` succeeded
-
-## Private GitHub HTTPS clones
-
-Set a token in `.env` (never commit secrets) and reference it from
-`codestrata.toml`:
-
-```toml
-[repository.authentication]
-type = "github_token"
-token_env = "CODESTRATA_GITHUB_TOKEN"
-```
-
-## AI mode (optional)
-
-Requires AWS credentials and Bedrock configuration:
+One-shot (fetch + assess + summary):
 
 ```bash
-aws sso login --profile <profile-name>
-codestrata assess --config codestrata.toml --output reports --with-ai
+python real-world/scripts/run_showcase.py spring-petclinic
 ```
 
-See [docs/configuration-profiles.md](../engine/docs/configuration-profiles.md) and
-[docs/tutorial.md](../engine/docs/tutorial.md).
+Fetched trees land under `.codestrata-examples/` (gitignored). Never commit
+upstream source or raw report directories.
+
+In the private monorepo, equivalent wrappers also exist as
+In the private monorepo, convenience wrappers also exist at
+`scripts/fetch_example.py` and `scripts/run_showcase.py`.
+
+More detail: [real-world/README.md](real-world/README.md).
+
+---
+
+## What is not included
+
+* CodeStrata-owned `sample-*-app` language fixtures
+* Golden mini-app `sample-reports/`
+* Fetched third-party source trees
+* Local assess report directories, caches, or credentials
+
+---
+
+## Maintainers: refreshing pins
+
+Bump `commit_sha` + `pinned_on` in the manifest, re-run the showcase, update
+`expected-results/` and `THIRD_PARTY.md`. Never pin floating branches or tags.
+Schema: [real-world/MANIFEST_SCHEMA.md](real-world/MANIFEST_SCHEMA.md).

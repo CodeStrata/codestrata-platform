@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from codestrata.paths import engine_root, examples_root, workspace_root
+from codestrata.paths import engine_root, test_fixtures_root, workspace_root
 
 _ENGINE = engine_root()
-_EXAMPLES = examples_root()
+_FIXTURES = test_fixtures_root()
 _WORKSPACE = workspace_root()
 
 # Back-compat alias for CLI/scripts that imported ROOT as the workspace root.
@@ -19,9 +19,9 @@ ACCEPTANCE_TARGETS: tuple[tuple[str, Path], ...] = (
         "spring-petclinic",
         _WORKSPACE / ".codestrata" / "workspace" / "spring-petclinic",
     ),
-    ("synthetic-multilang", _EXAMPLES / "sample-js-app"),
-    ("sample-php-app", _EXAMPLES / "sample-php-app"),
-    ("sample-csharp-app", _EXAMPLES / "sample-csharp-app"),
+    ("synthetic-multilang", _FIXTURES / "sample-js-app"),
+    ("sample-php-app", _FIXTURES / "sample-php-app"),
+    ("sample-csharp-app", _FIXTURES / "sample-csharp-app"),
 )
 
 PREDEFINED_QUESTIONS: tuple[str, ...] = (

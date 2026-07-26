@@ -39,7 +39,7 @@ def workspace_root() -> Path:
 
 
 def examples_root() -> Path:
-    """Public sample apps directory (monorepo ``examples/`` or engine ``examples/``)."""
+    """Public examples directory (real-world showcases; monorepo or engine)."""
 
     ws = workspace_root()
     if (ws / "examples").is_dir():
@@ -48,3 +48,15 @@ def examples_root() -> Path:
     if (eng / "examples").is_dir():
         return eng / "examples"
     return ws / "examples"
+
+
+def test_fixtures_root() -> Path:
+    """Internal language sample fixtures (not part of codestrata-examples)."""
+
+    ws = workspace_root()
+    if (ws / "test-fixtures").is_dir():
+        return ws / "test-fixtures"
+    eng = engine_root()
+    if (eng / "test-fixtures").is_dir():
+        return eng / "test-fixtures"
+    return ws / "test-fixtures"

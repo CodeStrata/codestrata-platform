@@ -12,7 +12,7 @@ Phase 4.7 of CodeStrata Analysis Intelligence.
 | 4.7.6 Cloud Report Integration | Complete (`report.cloud` **1.0.0**; disabled by default) |
 
 Design authority:
-[intelligence-platform.md](../../architecture/intelligence-platform.md).
+[analysis-intelligence-conventions.md](../../architecture/analysis-intelligence-conventions.md).
 
 ## Purpose
 

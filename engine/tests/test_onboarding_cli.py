@@ -20,7 +20,7 @@ from codestrata.reporting import AssessmentMode
 runner = CliRunner()
 REPO_ROOT = Path(__file__).resolve().parents[2]  # monorepo root
 ENGINE_ROOT = REPO_ROOT / "engine"
-SAMPLE_JS = REPO_ROOT / "examples" / "sample-js-app"
+SAMPLE_JS = REPO_ROOT / "test-fixtures" / "sample-js-app"
 
 
 def _settings(**overrides: object) -> CodestrataSettings:
@@ -294,17 +294,19 @@ def test_readme_documents_canonical_workflow() -> None:
     assert "ModuleNotFoundError" in readme
     assert "python -m pip install -e ." in readme
     assert 'python -c "import codestrata; print(codestrata.__file__)"' in readme
-    assert "Cloning the repository does **not** install" in readme
+    assert "does not install the CLI" in readme or "does **not** install" in readme
     assert "aws sso login --profile <profile-name>" in readme
     assert "codestrata help" not in readme
+    assert "test-fixtures/sample-js-app" in readme
+    assert "docs/quick-start.md" in readme
 
 
 def test_shipped_codestrata_toml_uses_sample_js_not_petclinic() -> None:
     text = (REPO_ROOT / "codestrata.toml").read_text(encoding="utf-8")
-    assert "examples/sample-js-app" in text
+    assert "test-fixtures/sample-js-app" in text
     assert "spring-petclinic" not in text
     settings = load_settings(REPO_ROOT / "codestrata.toml")
-    assert settings.repository.path == "examples/sample-js-app"
+    assert settings.repository.path == "test-fixtures/sample-js-app"
     assert settings.repository.url is None
 
 

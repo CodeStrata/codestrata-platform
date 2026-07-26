@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Clean-install smoke test for CodeStrata packaging (Phase 5.14).
+"""Clean-install smoke test for CodeStrata Engine packaging.
 
-Builds a wheel, installs it into a fresh virtualenv, and runs deterministic
-onboard against a tiny sample repository with no cloud credentials.
+Builds a wheel, installs it into a fresh virtualenv, and runs a deterministic
+smoke assessment against a tiny sample repository with no cloud credentials.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ import venv
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+ENGINE = ROOT / "engine"
 DEFAULT_OUTPUT = ROOT / "reports" / "release-readiness"
 DIST = ROOT / "dist"
 
@@ -133,7 +134,11 @@ def main() -> int:
 
         if DIST.exists():
             shutil.rmtree(DIST)
-        build_proc = _run([sys.executable, "-m", "build", "--outdir", str(DIST)], cwd=ROOT)
+        # Build the Community Engine package (not the monorepo workspace pyproject).
+        build_proc = _run(
+            [sys.executable, "-m", "build", "--outdir", str(DIST)],
+            cwd=ENGINE,
+        )
         steps.append(
             {
                 "name": "build",
@@ -250,7 +255,8 @@ def main() -> int:
                 ([str(codestrata_bin), "onboard", "--help"], "onboard_help"),
                 ([str(codestrata_bin), "report", "validate", "--help"], "report_validate_help"),
                 ([str(codestrata_bin), "acceptance", "run", "--help"], "acceptance_run_help"),
-                ([str(codestrata_bin), "mcp", "health", "--config", str(config)], "mcp_health"),
+                # Engine-only wheel: list tools (do not call Platform-only repository_health).
+                ([str(codestrata_bin), "mcp", "tools", "--config", str(config)], "mcp_tools"),
                 (
                     [
                         str(codestrata_bin),
