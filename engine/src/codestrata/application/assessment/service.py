@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import re
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
@@ -2570,7 +2569,7 @@ class AssessmentApplicationService:
                 try_write_ai_enrichment_artifact,
             )
 
-            resolved_model_id = resolve_bedrock_model_id(
+            resolved_model_id = resolve_assess_model_id(
                 cli_model_id=model_id,
                 settings=loaded_settings,
             )
@@ -3661,27 +3660,26 @@ def run_assessment(
     )
 
 
+def resolve_assess_model_id(
+    *,
+    cli_model_id: str | None,
+    settings: CodestrataSettings,
+) -> str:
+    """Resolve assess / Modernization Advisor model ID for the active provider."""
+
+    from codestrata.ai.providers.factory import resolve_assess_model_id as _resolve
+
+    return _resolve(cli_model_id=cli_model_id, settings=settings)
+
+
 def resolve_bedrock_model_id(
     *,
     cli_model_id: str | None,
     settings: CodestrataSettings,
 ) -> str:
-    """Resolve Bedrock model ID from CLI, environment, config, then default."""
+    """Backward-compatible alias for :func:`resolve_assess_model_id`."""
 
-    from codestrata.config.settings import DEFAULT_BEDROCK_MODEL_ID
-
-    if cli_model_id and cli_model_id.strip():
-        return cli_model_id.strip()
-
-    env_model_id = os.environ.get(CODESTRATA_BEDROCK_MODEL_ID_ENV)
-    if env_model_id and env_model_id.strip():
-        return env_model_id.strip()
-
-    configured = settings.ai.bedrock.model_id
-    if configured and configured.strip():
-        return configured.strip()
-
-    return DEFAULT_BEDROCK_MODEL_ID
+    return resolve_assess_model_id(cli_model_id=cli_model_id, settings=settings)
 
 
 def modernization_report_basename(repository_name: str) -> str:
@@ -3809,27 +3807,27 @@ def _run_ai_assessment(
     _ = prompt_builder  # Phase 1 prompt builder unused; enrichment has its own prompt.
     _ = agent  # Legacy agent path replaced by single-call enrichment service.
 
-    stage("Building AI enrichment context")
+    stage("Building Modernization Advisor context")
     try:
-        active_provider = provider or _create_bedrock_provider(settings)
+        active_provider = provider or _create_assess_ai_provider(settings)
     except AIProviderError as error:
         raise _map_provider_error(error, model_id=resolved_model_id) from error
 
     if not isinstance(rule_evaluation, RuleEvaluationResult):
         raise AssessmentCommandError(
-            "AI enrichment requires RuleEvaluationResult",
+            "Modernization Advisor requires RuleEvaluationResult",
             ai_status=AIExecutionStatus.PROVIDER_FAILED,
             customer_message=customer_failure_message(AIExecutionStatus.PROVIDER_FAILED),
         )
     if not isinstance(recommendation_result, RecommendationResult):
         raise AssessmentCommandError(
-            "AI enrichment requires RecommendationResult",
+            "Modernization Advisor requires RecommendationResult",
             ai_status=AIExecutionStatus.PROVIDER_FAILED,
             customer_message=customer_failure_message(AIExecutionStatus.PROVIDER_FAILED),
         )
     graph = repository_graph if isinstance(repository_graph, RepositoryGraph) else None
 
-    stage("Running AI enrichment")
+    stage("Running Modernization Advisor")
     service = AiEnrichmentService(
         active_provider,
         prompt_builder=AiEnrichmentPromptBuilder(),
@@ -3878,12 +3876,14 @@ def _run_ai_assessment(
             ),
         ) from error
     except AIProviderTimeoutError as error:
+        provider_label = (settings.ai.provider or "bedrock").strip().lower()
         raise AssessmentCommandError(
-            f"Bedrock timeout or throttling: {sanitize_provider_text(str(error))}",
+            f"AI provider timeout or throttling ({provider_label}): "
+            f"{sanitize_provider_text(str(error))}",
             ai_status=AIExecutionStatus.PROVIDER_FAILED,
             customer_message=customer_failure_message(AIExecutionStatus.PROVIDER_FAILED),
             ai_attempt=AIAttemptInfo(
-                provider="bedrock",
+                provider=provider_label,
                 model_id=resolved_model_id,
                 stages_completed=stages_for_status(AIExecutionStatus.PROVIDER_FAILED),
                 failure_code=failure_code_for_status(AIExecutionStatus.PROVIDER_FAILED),
@@ -4678,10 +4678,16 @@ def _scan_repository(
     ).scan(path)
 
 
-def _create_bedrock_provider(settings: CodestrataSettings) -> AIModelProvider:
-    from codestrata.ai.providers.bedrock import BedrockAIModelProvider
+def _create_assess_ai_provider(settings: CodestrataSettings) -> AIModelProvider:
+    from codestrata.ai.providers.factory import create_assess_ai_provider
 
-    return BedrockAIModelProvider(settings=settings)
+    return create_assess_ai_provider(settings)
+
+
+def _create_bedrock_provider(settings: CodestrataSettings) -> AIModelProvider:
+    """Backward-compatible alias for Bedrock-only callers."""
+
+    return _create_assess_ai_provider(settings)
 
 
 def _safe_repository_reference(repo: str) -> str:

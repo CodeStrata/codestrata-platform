@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+* Phase 6.1 Modernization Advisor: unify assess `--with-ai` on
+  `AiEnrichmentResult`; Bedrock + OpenAI provider factory; advisor metadata
+  (model, provider, advisor/prompt version, generated timestamp); HTML/JSON
+  consume the same domain model; CTO/VP advisor persona; fail-soft preserved
+
 ### Changed
 
 * Phase 5.27.4 scripts architecture review: remove phase dogfood scripts and

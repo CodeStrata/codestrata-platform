@@ -146,6 +146,7 @@ def build_assessment_json_document(
                 "failure_detail": ai_block.get("failure_detail"),
                 "internal_execution_artifact": ai_block.get("internal_execution_artifact"),
             },
+            "ai_enrichment": _ai_enrichment_payload(report_input),
             "timing": timing,
             "coverage": {
                 "deterministic_analysis": "completed",
@@ -428,6 +429,15 @@ def _comparison_payload(analysis: AnalysisResult) -> dict[str, Any] | None:
     sanitized = _sanitize_payload_paths(payload)
     assert isinstance(sanitized, dict)
     return sanitized
+
+
+def _ai_enrichment_payload(report_input: ModernizationReportInput) -> dict[str, Any] | None:
+    """First-class Modernization Advisor domain model for report.json consumers."""
+
+    enrichment = report_input.ai_enrichment
+    if enrichment is None:
+        return None
+    return enrichment.model_dump(mode="json")
 
 
 def _ai_block(report_input: ModernizationReportInput) -> dict[str, Any]:

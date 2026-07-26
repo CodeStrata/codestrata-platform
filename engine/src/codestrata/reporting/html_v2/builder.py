@@ -219,7 +219,12 @@ def default_report_artifacts(
             )
         )
     if include_ai_enrichment:
-        items.append(ReportArtifactInput(label="AI Enrichment", relative_path="ai-enrichment.json"))
+        items.append(
+            ReportArtifactInput(
+                label="Modernization Advisor",
+                relative_path="ai-enrichment.json",
+            )
+        )
     if include_ai_execution:
         items.append(ReportArtifactInput(label="AI Execution", relative_path="ai-execution.json"))
     return tuple(items)
@@ -449,6 +454,9 @@ def _build_ai_enrichment(result: AiEnrichmentResult | None) -> AiEnrichmentView 
         referenced_recommendation_ids=tuple(result.referenced_recommendation_ids),
         provider=_safe_text(result.provider_metadata.provider),
         model_id=_safe_text(result.provider_metadata.model_id),
+        advisor_version=_safe_optional_text(result.provider_metadata.advisor_version),
+        prompt_version=_safe_optional_text(result.provider_metadata.prompt_version),
+        generated_at_utc=_safe_optional_text(result.provider_metadata.generated_at_utc),
         request_id=_safe_optional_text(result.provider_metadata.request_id),
         latency_ms=result.provider_metadata.latency_ms,
         input_tokens=result.provider_metadata.input_tokens,

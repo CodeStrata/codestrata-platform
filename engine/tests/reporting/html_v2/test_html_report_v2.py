@@ -239,19 +239,55 @@ def test_findings_and_recommendations_render(tmp_path: Path) -> None:
 
 def test_ai_enrichment_present_and_absent(tmp_path: Path) -> None:
     without = HtmlReportRenderer().render(build_html_report_view_model(_report_input(tmp_path)))
+    assert 'id="modernization-advisor"' not in without
     assert 'id="ai-enrichment"' not in without
 
-    with_ai = HtmlReportRenderer().render(
-        build_html_report_view_model(_report_input(tmp_path, with_ai=True))
-    )
-    assert "AI Executive Summary" in with_ai
-    assert "AI-generated interpretation" in with_ai
+    view = build_html_report_view_model(_report_input(tmp_path, with_ai=True))
+    with_ai = HtmlReportRenderer().render(view)
+    assert 'id="modernization-advisor"' in with_ai
+    assert "Modernization Advisor" in with_ai
+    assert "Modernization Advisor interpretation" in with_ai
     assert "Stabilize dependencies" in with_ai
     assert "fake" in with_ai
     assert "m1" in with_ai
+    assert view.ai_enrichment is not None
+    assert view.ai_enrichment.advisor_version == "1.0.0"
+    assert view.ai_enrichment.prompt_version == "1.1.0"
+    assert "Advisor version" in with_ai
+    assert "Prompt version" in with_ai
     # Deterministic sections remain labeled distinctly.
     assert "deterministic findings" in with_ai.lower()
     assert "deterministic recommendations" in with_ai.lower()
+
+
+def test_report_json_unchanged_shape(tmp_path: Path) -> None:
+    from codestrata.reporting.assessment_json import build_assessment_json_document
+
+    report_input = _report_input(tmp_path)
+    document = build_assessment_json_document(report_input)
+    assert document["schema_version"] == "1.2"
+    assert "assessment" in document
+    assert "findings" in document["assessment"]
+    # Absent advisor: key present as null; legacy assessment.ai remains.
+    assert document["assessment"]["ai_enrichment"] is None
+    assert "ai" in document["assessment"]
+    assert "assessment_rule_evaluation" not in document["assessment"]
+
+
+def test_report_json_includes_ai_enrichment_domain_model(tmp_path: Path) -> None:
+    from codestrata.reporting.assessment_json import build_assessment_json_document
+
+    report_input = _report_input(tmp_path, with_ai=True)
+    document = build_assessment_json_document(report_input)
+    enrichment = document["assessment"]["ai_enrichment"]
+    assert enrichment is not None
+    assert enrichment["executive_summary"]["headline"] == "Stabilize dependencies"
+    assert enrichment["provider_metadata"]["provider"] == "fake"
+    assert enrichment["provider_metadata"]["model_id"] == "m1"
+    assert enrichment["provider_metadata"]["advisor_version"] == "1.0.0"
+    assert enrichment["provider_metadata"]["prompt_version"] == "1.1.0"
+    # Legacy bridge block remains for older consumers.
+    assert document["assessment"]["ai"]["status"] == "not_requested"
 
 
 def test_html_escaping_and_no_secret_or_absolute_path_leak(tmp_path: Path) -> None:
@@ -283,19 +319,6 @@ def test_stable_deterministic_html_bytes(tmp_path: Path) -> None:
     second = renderer.render(build_html_report_view_model(report_input))
     assert first == second
     assert first.endswith("\n")
-
-
-def test_report_json_unchanged_shape(tmp_path: Path) -> None:
-    from codestrata.reporting.assessment_json import build_assessment_json_document
-
-    report_input = _report_input(tmp_path)
-    document = build_assessment_json_document(report_input)
-    assert document["schema_version"] == "1.2"
-    assert "assessment" in document
-    assert "findings" in document["assessment"]
-    # Phase 3 fields are not dumped into customer report.json contract keys.
-    assert "ai_enrichment" not in document["assessment"]
-    assert "assessment_rule_evaluation" not in document["assessment"]
 
 
 def test_artifact_write_keeps_phase3_artifacts(tmp_path: Path) -> None:

@@ -271,14 +271,17 @@ class AiEnrichmentView(BaseModel):
     referenced_recommendation_ids: tuple[str, ...] = ()
     provider: str
     model_id: str
+    advisor_version: str | None = None
+    prompt_version: str | None = None
+    generated_at_utc: str | None = None
     request_id: str | None = None
     latency_ms: float | None = None
     input_tokens: int | None = None
     output_tokens: int | None = None
     limitations: tuple[str, ...] = ()
     disclaimer: str = (
-        "AI-generated interpretation. Deterministic findings and recommendations "
-        "remain the source of truth."
+        "Modernization Advisor interpretation. Deterministic findings and "
+        "recommendations remain the source of truth."
     )
 
 

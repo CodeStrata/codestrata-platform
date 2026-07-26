@@ -10,6 +10,10 @@ from codestrata.ai.providers.exceptions import (
     AIResponseParsingError,
     AIResponseValidationError,
 )
+from codestrata.ai.providers.factory import (
+    create_assess_ai_provider,
+    resolve_assess_model_id,
+)
 from codestrata.ai.providers.models import (
     DEFAULT_MAX_OUTPUT_TOKENS,
     DEFAULT_TEMPERATURE,
@@ -20,6 +24,7 @@ from codestrata.ai.providers.models import (
     ModelUsage,
     ModernizationModelRequest,
 )
+from codestrata.ai.providers.openai_provider import OpenAIAIModelProvider
 from codestrata.ai.providers.parsing import parse_recommendation_response, sanitize_provider_text
 
 __all__ = [
@@ -39,6 +44,9 @@ __all__ = [
     "ModelInvocationResult",
     "ModelUsage",
     "ModernizationModelRequest",
+    "OpenAIAIModelProvider",
+    "create_assess_ai_provider",
     "parse_recommendation_response",
+    "resolve_assess_model_id",
     "sanitize_provider_text",
 ]

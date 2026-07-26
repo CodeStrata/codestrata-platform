@@ -1,13 +1,15 @@
-# AI enrichment
+# Modernization Advisor (AI enrichment)
 
-Optional one-call narrative over deterministic findings and recommendations.
+Optional one-call leadership narrative over deterministic findings and
+recommendations. Customer-facing name: **Modernization Advisor**. Internal
+modules may still use `AiEnrichment*` identifiers.
 
 ```text
 findings.json + recommendations.json + compact repo summary
         ↓
-AI Enrichment (exactly one Bedrock Converse call)
+Modernization Advisor (exactly one provider call: Bedrock or OpenAI)
         ↓
-ai-enrichment.json
+ai-enrichment.json  (+ report HTML/JSON from AiEnrichmentResult)
 ```
 
 ## Boundary
@@ -18,6 +20,26 @@ ai-enrichment.json
 | Referencing known finding/recommendation IDs | Mutating `findings.json` / `recommendations.json` |
 | Compact budgeted context | Full graph dumps, source files, secrets |
 
+## Providers
+
+Configure `[ai].provider` as `bedrock` (default) or `openai`.
+
+* Bedrock: Converse API; model via `--model-id`, `CODESTRATA_BEDROCK_MODEL_ID`,
+  or `ai.bedrock.model_id`
+* OpenAI: Chat Completions with `response_format=json_object`; model via
+  `--model-id`, `CODESTRATA_OPENAI_MODEL_ID`, or `ai.openai.answer_model`
+
+## Advisor metadata
+
+Successful enrichment stamps:
+
+* Provider and model
+* Advisor version / prompt version
+* Generated timestamp (UTC)
+
+HTML and JSON reports both render from the same `AiEnrichmentResult` domain
+model (`assessment.ai_enrichment` in report.json).
+
 ## Call budget
 
 * Deterministic mode: **0** provider calls
@@ -26,7 +48,7 @@ ai-enrichment.json
 
 ## Failure behavior
 
-Enrichment failures become staged warnings. Deterministic graphs, findings,
+Advisor failures become staged warnings. Deterministic graphs, findings,
 recommendations, and reports remain valid. No fabricated enrichment is written.
 CLI exit code remains 0 for enrichment-only failure.
 

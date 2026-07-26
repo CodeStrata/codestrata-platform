@@ -52,11 +52,13 @@ class ModelInvocationMetadata(BaseModel):
 
 
 class ModelInvocationResult(BaseModel):
-    """Parsed recommendation result plus invocation metadata."""
+    """Raw model response plus optional legacy recommendation parse."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    recommendation_result: AIRecommendationResult
+    # Legacy AI-REC contract (optional). Modernization Advisor path parses
+    # ``AiEnrichmentResult`` from ``raw_response_text`` instead.
+    recommendation_result: AIRecommendationResult | None = None
     metadata: ModelInvocationMetadata
     raw_response_text: str
     parsed_model_response: dict[str, Any] | None = None

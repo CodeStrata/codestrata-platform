@@ -620,3 +620,71 @@ def test_fenced_json_with_trailing_prose_rejected() -> None:
 def test_no_anthropic_payload_helpers_exported() -> None:
     assert not hasattr(bedrock_module, "ANTHROPIC_BEDROCK_VERSION")
     assert not hasattr(bedrock_module, "build_anthropic_bedrock_payload")
+
+
+def test_openai_provider_parses_enrichment_shaped_json() -> None:
+    from codestrata.ai.providers.openai_provider import OpenAIAIModelProvider
+
+    enrichment_payload = {
+        "executive_summary": {"headline": "H", "narrative": "N"},
+        "themes": [{"title": "T", "summary": "S"}],
+        "priorities": [],
+        "risks": [],
+        "suggested_next_steps": [],
+        "provider_metadata": {"provider": "openai", "model_id": "gpt-4o-mini"},
+        "limitations": [],
+    }
+    choice = MagicMock()
+    choice.message.content = json.dumps(enrichment_payload)
+    choice.finish_reason = "stop"
+    response = MagicMock()
+    response.choices = [choice]
+    response.usage = MagicMock(prompt_tokens=10, completion_tokens=20, total_tokens=30)
+    response.id = "chatcmpl-test"
+    client = MagicMock()
+    client.chat.completions.create.return_value = response
+
+    provider = OpenAIAIModelProvider(client=client)
+    result = provider.invoke(_model_request(), _options(model_id="gpt-4o-mini"))
+    assert result.recommendation_result is None
+    assert result.metadata.provider == "openai"
+    assert result.metadata.model_id == "gpt-4o-mini"
+    assert result.metadata.request_id == "chatcmpl-test"
+    assert result.metadata.usage.input_tokens == 10
+    assert json.loads(result.raw_response_text)["executive_summary"]["headline"] == "H"
+    client.chat.completions.create.assert_called_once()
+    kwargs = client.chat.completions.create.call_args.kwargs
+    assert kwargs["response_format"] == {"type": "json_object"}
+    assert kwargs["model"] == "gpt-4o-mini"
+
+
+def test_create_assess_ai_provider_selects_openai() -> None:
+    from codestrata.ai.providers.factory import create_assess_ai_provider
+    from codestrata.ai.providers.openai_provider import OpenAIAIModelProvider
+    from codestrata.config import CodestrataSettings
+
+    settings = CodestrataSettings.model_validate(
+        {"repository": {"path": "."}, "ai": {"provider": "openai", "openai": {}}}
+    )
+    provider = create_assess_ai_provider(settings)
+    assert isinstance(provider, OpenAIAIModelProvider)
+
+
+def test_resolve_assess_model_id_openai(monkeypatch: pytest.MonkeyPatch) -> None:
+    from codestrata.ai.providers.factory import resolve_assess_model_id
+    from codestrata.config import CodestrataSettings
+
+    settings = CodestrataSettings.model_validate(
+        {
+            "repository": {"path": "."},
+            "ai": {
+                "provider": "openai",
+                "openai": {"answer_model": "gpt-4o"},
+            },
+        }
+    )
+    monkeypatch.setenv("CODESTRATA_OPENAI_MODEL_ID", "env-openai")
+    assert resolve_assess_model_id(cli_model_id="cli", settings=settings) == "cli"
+    assert resolve_assess_model_id(cli_model_id=None, settings=settings) == "env-openai"
+    monkeypatch.delenv("CODESTRATA_OPENAI_MODEL_ID", raising=False)
+    assert resolve_assess_model_id(cli_model_id=None, settings=settings) == "gpt-4o"

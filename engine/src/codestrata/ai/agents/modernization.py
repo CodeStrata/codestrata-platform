@@ -91,6 +91,13 @@ class ModernizationAssessmentAgent:
                 options,
                 recorder,
             )
+            if model_result.recommendation_result is None:
+                raise AIResponseParsingError(
+                    "Model response did not include a recommendation result "
+                    "(Modernization Advisor JSON is handled by AiEnrichmentService)",
+                    metadata=model_result.metadata,
+                    raw_response_text=model_result.raw_response_text,
+                )
             recommendation_result, normalization_removals = self._validate_recommendations(
                 model_result.recommendation_result,
                 context,
@@ -391,6 +398,13 @@ class ModernizationAssessmentAgent:
             total_tokens=usage.total_tokens,
         )
         recommendation = result.recommendation_result
+        recommendation_count = (
+            len(recommendation.recommendations) if recommendation is not None else 0
+        )
+        phase_count = (
+            len(recommendation.modernization_phases) if recommendation is not None else 0
+        )
+        limitation_count = len(recommendation.limitations) if recommendation is not None else 0
         recorder.record_step(
             step_type=AgentStepType.MODEL_INVOCATION,
             name="invoke_model",
@@ -406,9 +420,9 @@ class ModernizationAssessmentAgent:
                 "input_tokens": usage.input_tokens,
                 "output_tokens": usage.output_tokens,
                 "total_tokens": usage.total_tokens,
-                "recommendation_count": len(recommendation.recommendations),
-                "phase_count": len(recommendation.modernization_phases),
-                "limitation_count": len(recommendation.limitations),
+                "recommendation_count": recommendation_count,
+                "phase_count": phase_count,
+                "limitation_count": limitation_count,
                 "raw_response_size": summary_size(result.raw_response_text),
             },
         )

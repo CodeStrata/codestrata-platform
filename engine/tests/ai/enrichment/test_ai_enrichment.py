@@ -296,58 +296,9 @@ class _EnrichmentFakeProvider(AIModelProvider):
         request: ModernizationModelRequest,
         options: ModelInvocationOptions,
     ) -> ModelInvocationResult:
-        from codestrata.ai.recommendations.enums import (
-            AIRecommendationConfidence,
-            AIRecommendationEffort,
-            AIRecommendationImpact,
-            AIRecommendationPriority,
-        )
-        from codestrata.ai.recommendations.models import (
-            AIRecommendation,
-            AIRecommendationResult,
-            EvidenceCoverage,
-            ModernizationPhase,
-        )
-
         self.calls.append(request)
-        # Minimal placeholder required by ModelInvocationResult contract.
-        placeholder = AIRecommendationResult(
-            executive_summary="placeholder",
-            overall_assessment="placeholder",
-            key_risks=[],
-            recommendations=[
-                AIRecommendation(
-                    recommendation_id="AI-REC-001",
-                    title="placeholder",
-                    description="placeholder",
-                    rationale="placeholder",
-                    priority=AIRecommendationPriority.LOW,
-                    effort=AIRecommendationEffort.SMALL,
-                    impact=AIRecommendationImpact.LOW,
-                    confidence=AIRecommendationConfidence.LOW,
-                    related_finding_ids=[],
-                    suggested_actions=["n/a"],
-                )
-            ],
-            modernization_phases=[
-                ModernizationPhase(
-                    phase=1,
-                    name="n/a",
-                    objective="n/a",
-                    recommendations=["AI-REC-001"],
-                    expected_outcomes=["n/a"],
-                )
-            ],
-            evidence_coverage=EvidenceCoverage(
-                total_findings=0,
-                findings_considered=0,
-                findings_referenced=0,
-                coverage_percentage=0.0,
-            ),
-            limitations=["placeholder"],
-        )
         return ModelInvocationResult(
-            recommendation_result=placeholder,
+            recommendation_result=None,
             metadata=ModelInvocationMetadata(
                 provider="fake",
                 model_id=options.model_id,
@@ -357,6 +308,132 @@ class _EnrichmentFakeProvider(AIModelProvider):
             raw_response_text=json.dumps(self.payload),
             parsed_model_response=self.payload,
         )
+
+
+def test_prompt_includes_advisor_persona() -> None:
+    from codestrata.ai.enrichment.advisor import MODERNIZATION_ADVISOR_PERSONA
+
+    assert "CTO" in MODERNIZATION_ADVISOR_PERSONA
+    assert "VP Engineering" in MODERNIZATION_ADVISOR_PERSONA
+    assert "senior engineering modernization advisor" in MODERNIZATION_ADVISOR_PERSONA
+
+
+def test_parse_stamps_advisor_metadata(tmp_path: Path) -> None:
+    from codestrata.ai.enrichment.advisor import (
+        MODERNIZATION_ADVISOR_PROMPT_VERSION,
+        MODERNIZATION_ADVISOR_VERSION,
+    )
+
+    repository = _js_repo(tmp_path / "app")
+    pipeline, rules, recs, analysis = _pipeline_bundle(repository)
+    context = build_ai_enrichment_context(
+        analysis_result=analysis,
+        rule_evaluation=rules,
+        recommendation_result=recs,
+        repository_graph=pipeline.repository_graph,
+    )
+    finding_id = context.allowed_finding_ids[0]
+    rec_id = context.allowed_recommendation_ids[0]
+    payload = {
+        "executive_summary": {"headline": "Meta", "narrative": "Stamped."},
+        "themes": [
+            {
+                "title": "T",
+                "summary": "S",
+                "related_finding_ids": [finding_id],
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "priorities": [
+            {
+                "title": "P",
+                "rationale": "R",
+                "priority": "high",
+                "related_finding_ids": [finding_id],
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "risks": [],
+        "suggested_next_steps": [
+            {
+                "order": 1,
+                "title": "Next",
+                "summary": "Do it",
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "provider_metadata": {"provider": "fake", "model_id": "m"},
+        "limitations": [],
+    }
+    metadata = ModelInvocationMetadata(
+        provider="fake",
+        model_id="m",
+        latency_ms=1.0,
+        usage=ModelUsage(input_tokens=1, output_tokens=1, total_tokens=2),
+    )
+    result = parse_enrichment_response(json.dumps(payload), context, metadata)
+    assert result.provider_metadata.advisor_version == MODERNIZATION_ADVISOR_VERSION
+    assert result.provider_metadata.prompt_version == MODERNIZATION_ADVISOR_PROMPT_VERSION
+    assert result.provider_metadata.generated_at_utc is not None
+    assert result.provider_metadata.generated_at_utc.endswith("Z")
+
+
+def test_service_prompt_contains_persona(tmp_path: Path) -> None:
+    from codestrata.ai.enrichment.advisor import MODERNIZATION_ADVISOR_PERSONA
+
+    repository = _js_repo(tmp_path / "app")
+    pipeline, rules, recs, analysis = _pipeline_bundle(repository)
+    context = build_ai_enrichment_context(
+        analysis_result=analysis,
+        rule_evaluation=rules,
+        recommendation_result=recs,
+        repository_graph=pipeline.repository_graph,
+    )
+    finding_id = context.allowed_finding_ids[0]
+    rec_id = context.allowed_recommendation_ids[0]
+    payload = {
+        "executive_summary": {"headline": "JS narrative", "narrative": "Act on basics."},
+        "themes": [
+            {
+                "title": "Basics",
+                "summary": "Lockfile/tests",
+                "related_finding_ids": [finding_id],
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "priorities": [
+            {
+                "title": "Lockfile",
+                "rationale": "Reproducibility",
+                "priority": "high",
+                "related_finding_ids": [finding_id],
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "risks": [],
+        "suggested_next_steps": [
+            {
+                "order": 1,
+                "title": "Add lockfile",
+                "summary": "Commit lockfile",
+                "related_recommendation_ids": [rec_id],
+            }
+        ],
+        "provider_metadata": {"provider": "fake", "model_id": "m"},
+        "limitations": [],
+    }
+    provider = _EnrichmentFakeProvider(payload)
+    run = AiEnrichmentService(provider).run(
+        analysis_result=analysis,
+        rule_evaluation=rules,
+        recommendation_result=recs,
+        repository_graph=pipeline.repository_graph,
+        model_options=ModelInvocationOptions(model_id="m"),
+    )
+    system = next(msg.content for msg in run.prompt_request.messages if msg.role == "system")
+    assert system.startswith(MODERNIZATION_ADVISOR_PERSONA)
+    assert run.enrichment.provider_metadata.advisor_version == "1.0.0"
+    assert run.enrichment.provider_metadata.prompt_version == "1.1.0"
 
 
 def test_service_one_call_javascript(tmp_path: Path) -> None:
