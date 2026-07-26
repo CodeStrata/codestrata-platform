@@ -8,7 +8,12 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from codestrata.ai.agents.trace import utc_now
 from codestrata.ai.contracts.models import LLMAnalysisContext
+from codestrata.ai.enrichment.advisor import (
+    MODERNIZATION_ADVISOR_PROMPT_VERSION,
+    MODERNIZATION_ADVISOR_VERSION,
+)
 from codestrata.ai.enrichment.context import AiEnrichmentContext
 from codestrata.ai.enrichment.validation import (
     AiEnrichmentValidationError,
@@ -72,9 +77,9 @@ def parse_enrichment_response(
             raw_response_text=raw_text,
         )
     data = dict(data)
-    data.setdefault(
-        "provider_metadata",
-        _provider_metadata_payload(metadata),
+    data["provider_metadata"] = _advisor_provider_metadata_payload(
+        metadata,
+        existing=data.get("provider_metadata"),
     )
     try:
         result = AiEnrichmentResult.model_validate(data)
@@ -105,8 +110,9 @@ def enrichment_from_invocation(
 ) -> AiEnrichmentResult:
     """Resolve enrichment from an invocation result.
 
-    Prefer raw enrichment JSON. Fall back to mapping a legacy
-    ``AIRecommendationResult`` so existing fake providers keep working.
+    Prefer raw Modernization Advisor JSON (``AiEnrichmentResult``). Fall back to
+    mapping a legacy ``AIRecommendationResult`` when present so older fixtures
+    keep working.
     """
 
     raw = invocation.raw_response_text or ""
@@ -119,6 +125,12 @@ def enrichment_from_invocation(
             json.dumps(invocation.parsed_model_response),
             context,
             invocation.metadata,
+        )
+    if invocation.recommendation_result is None:
+        raise AIResponseParsingError(
+            "Model response is not valid Modernization Advisor JSON",
+            metadata=invocation.metadata,
+            raw_response_text=raw,
         )
     return bridge_recommendation_to_enrichment(
         invocation.recommendation_result,
@@ -345,15 +357,34 @@ def _payload_looks_like_enrichment(data: Any) -> bool:
 
 
 def _provider_metadata_payload(metadata: ModelInvocationMetadata) -> dict[str, Any]:
-    return {
-        "provider": metadata.provider,
-        "model_id": metadata.model_id,
-        "request_id": metadata.request_id,
-        "latency_ms": metadata.latency_ms,
-        "input_tokens": metadata.usage.input_tokens,
-        "output_tokens": metadata.usage.output_tokens,
-        "stop_reason": metadata.stop_reason,
-    }
+    return _advisor_provider_metadata_payload(metadata, existing=None)
+
+
+def _advisor_provider_metadata_payload(
+    metadata: ModelInvocationMetadata,
+    *,
+    existing: object,
+) -> dict[str, Any]:
+    """Merge invocation metadata with advisor version stamps."""
+
+    base: dict[str, Any] = {}
+    if isinstance(existing, dict):
+        base.update(existing)
+    base.update(
+        {
+            "provider": metadata.provider,
+            "model_id": metadata.model_id,
+            "request_id": metadata.request_id,
+            "latency_ms": metadata.latency_ms,
+            "input_tokens": metadata.usage.input_tokens,
+            "output_tokens": metadata.usage.output_tokens,
+            "stop_reason": metadata.stop_reason,
+            "advisor_version": MODERNIZATION_ADVISOR_VERSION,
+            "prompt_version": MODERNIZATION_ADVISOR_PROMPT_VERSION,
+            "generated_at_utc": utc_now().isoformat().replace("+00:00", "Z"),
+        }
+    )
+    return base
 
 
 def _filter_ids(values: list[str] | tuple[str, ...], allowed: set[str]) -> tuple[str, ...]:

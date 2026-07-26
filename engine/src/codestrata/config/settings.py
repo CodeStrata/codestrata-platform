@@ -258,8 +258,8 @@ class AiSettings(BaseModel):
     """AI subsystem settings (assessment + knowledge providers).
 
     ``embedding_provider`` and ``answer_provider`` are independently
-    configurable (Phase 5.8). ``provider`` remains the assessment Converse
-    provider selector for ``codestrata assess --with-ai``.
+    configurable (Phase 5.8). ``provider`` selects the Modernization Advisor
+    model backend for ``codestrata assess --with-ai`` (Bedrock or OpenAI).
     """
 
     provider: str = "bedrock"
@@ -275,6 +275,14 @@ class AiSettings(BaseModel):
         if not compact:
             raise ValueError("must be a nonempty string")
         return compact
+
+    @field_validator("provider")
+    @classmethod
+    def validate_assess_provider(cls, value: str) -> str:
+        allowed = {"bedrock", "openai"}
+        if value not in allowed:
+            raise ValueError(f"ai.provider must be one of {sorted(allowed)}")
+        return value
 
     @field_validator("embedding_provider")
     @classmethod

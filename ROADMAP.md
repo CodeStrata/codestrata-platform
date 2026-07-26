@@ -13,8 +13,9 @@
 | ----- | ------ |
 | **1–4** Analysis foundation & Analysis Intelligence packs | Complete (see CHANGELOG) |
 | **5** Repository Knowledge, packaging, monorepo, showcases, docs hygiene | **Complete** |
-| **6.1–6.5** Engineering Workflow Intelligence (MVP) | **Next** |
-| Beyond 6.5 | Deferred pending engineering-leader feedback |
+| **6.1** Modernization Advisor (BYO LLM narrative) | **In progress** |
+| **6.2** GitHub Repository Acquisition (ephemeral public checkouts) | Next after 6.1 |
+| Beyond 6.2 | Deferred pending engineering-leader feedback |
 
 ---
 
@@ -32,34 +33,33 @@ Detailed phase logs were retired from this file; see [CHANGELOG.md](CHANGELOG.md
 
 ---
 
-## Phase 6 — Engineering Workflow Intelligence (MVP)
+## Phase 6 — Engineering Workflow Intelligence
 
-**Goal:** Bring CodeStrata intelligence into day-to-day engineering workflows,
-starting with GitHub pull-request review. Scope below is the **MVP target**;
-detailed design may be refined with engineering-leader feedback before each
-subphase starts.
+**Goal:** Bring CodeStrata intelligence into day-to-day engineering leadership
+and workflows. Engine remains the deterministic source of truth; optional AI
+and acquisition paths are fail-soft and bounded.
 
 | Subphase | Intent |
 | -------- | ------ |
-| **6.1** | PR / workflow foundations — GitHub context model, auth/config boundaries, safe repository + PR identification |
-| **6.2** | Diff-aware assessment — reuse incremental / impact analysis on PR changes; produce PR-scoped findings |
-| **6.3** | PR review surfacing — publish review comments or check annotations grounded in existing findings/evidence |
-| **6.4** | CI integration — GitHub Actions (or equivalent) entry points; non-interactive assess/report for PRs |
-| **6.5** | MVP hardening — acceptance harness, failure modes, docs, and export-safe Community surfaces for the PR workflow |
+| **6.1** | **Modernization Advisor** — unified `AiEnrichmentResult` narrative for CTOs/VPs over deterministic assessment; Bedrock + OpenAI providers; renderer-independent domain model; fail-soft |
+| **6.2** | **GitHub Repository Acquisition** — secure ephemeral checkouts for public repositories |
 
-**MVP exit criteria (directional):**
+**6.1 exit criteria (directional):**
 
-* A maintainer can run CodeStrata against a pull request and get grounded,
-  evidence-backed feedback without inventing facts
-* Community Engine remains usable offline / without hosted Platform secrets
-* Platform may extend workflow surfaces via existing entry points only
-  (Platform → Engine)
+* `--with-ai` produces Modernization Advisor output from one provider call
+* Advisor never invents findings; citations stay within allowed IDs
+* HTML and JSON consume the same enrichment domain model
+* AI failure never blocks deterministic reports
+
+**Out of 6.1:** RAG, Knowledge Graph chat, agents, Platform hosting, GitHub
+acquisition (those belong elsewhere or in 6.2+).
 
 ---
 
 ## Deferred (post-MVP)
 
-Explicitly **out of MVP** until engineering-leader feedback prioritizes them:
+Explicitly **out of current Phase 6 MVP** until engineering-leader feedback
+prioritizes them:
 
 * Broader language / build ecosystem expansion beyond current JS, Java, Python,
   PHP, and C# / .NET coverage
@@ -70,12 +70,13 @@ Explicitly **out of MVP** until engineering-leader feedback prioritizes them:
 * Cursor / VS Code plugin implementation (placeholders only today)
 * Automated public-mirror publish/sync bots (export staging exists; publish is
   intentional and separate)
+* Diff-aware PR review surfacing and CI check annotations (post-6.2)
 
 ---
 
 ## How to use this file
 
-* Update **Phase 6** rows as subphases start or complete
+* Update Phase 6 rows as subphases start or complete
 * Do **not** reintroduce long historical checklists here
 * Record shipped work in [CHANGELOG.md](CHANGELOG.md)
 * Operational how-to: [platform/README.md](platform/README.md)

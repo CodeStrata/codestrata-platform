@@ -1,5 +1,11 @@
-"""AI enrichment package: narrative over deterministic findings/recommendations."""
+"""AI enrichment package: Modernization Advisor over deterministic evidence."""
 
+from codestrata.ai.enrichment.advisor import (
+    MODERNIZATION_ADVISOR_NAME,
+    MODERNIZATION_ADVISOR_PERSONA,
+    MODERNIZATION_ADVISOR_PROMPT_VERSION,
+    MODERNIZATION_ADVISOR_VERSION,
+)
 from codestrata.ai.enrichment.artifacts import (
     AI_ENRICHMENT_FILENAME,
     AiEnrichmentArtifactWriteResult,
@@ -27,6 +33,10 @@ from codestrata.ai.enrichment.validation import (
 __all__ = [
     "AI_ENRICHMENT_FILENAME",
     "DEFAULT_MAX_CONTEXT_CHARACTERS",
+    "MODERNIZATION_ADVISOR_NAME",
+    "MODERNIZATION_ADVISOR_PERSONA",
+    "MODERNIZATION_ADVISOR_PROMPT_VERSION",
+    "MODERNIZATION_ADVISOR_VERSION",
     "AiEnrichmentArtifactWriteResult",
     "AiEnrichmentBudgetError",
     "AiEnrichmentContext",

@@ -229,9 +229,9 @@ class HtmlReportRenderer:
         if view.ai_enrichment is not None:
             parts.append(
                 _section(
-                    "AI Executive Summary",
+                    "Modernization Advisor",
                     _render_ai(view.ai_enrichment),
-                    section_id="ai-enrichment",
+                    section_id="modernization-advisor",
                     note=(
                         "AI-generated interpretation. Not merged into findings or recommendations."
                     ),
@@ -2576,10 +2576,16 @@ def _render_ai(ai: AiEnrichmentView) -> str:
         "<h4>Referenced IDs</h4>\n"
         f"<p>Findings: {_id_list(ai.referenced_finding_ids) or '—'}</p>\n"
         f"<p>Recommendations: {_id_list(ai.referenced_recommendation_ids) or '—'}</p>\n"
-        "<h4>Provider metadata</h4>\n"
+        "<h4>Advisor metadata</h4>\n"
         '<dl class="meta">\n'
         f"<div><dt>Provider</dt><dd>{escape_html(ai.provider)}</dd></div>\n"
         f"<div><dt>Model</dt><dd>{escape_html(ai.model_id)}</dd></div>\n"
+        f"<div><dt>Advisor version</dt><dd>"
+        f"{escape_html(ai.advisor_version or '—')}</dd></div>\n"
+        f"<div><dt>Prompt version</dt><dd>"
+        f"{escape_html(ai.prompt_version or '—')}</dd></div>\n"
+        f"<div><dt>Generated</dt><dd>"
+        f"{escape_html(ai.generated_at_utc or '—')}</dd></div>\n"
         f"<div><dt>Request ID</dt><dd>{escape_html(ai.request_id or '—')}</dd></div>\n"
         "<div><dt>Latency (ms)</dt><dd>"
         f"{ai.latency_ms if ai.latency_ms is not None else '—'}"

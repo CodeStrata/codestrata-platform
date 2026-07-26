@@ -13,6 +13,7 @@ from codestrata.application.assessment.service import (
     modernization_json_report_filename,
     modernization_report_basename,
     modernization_report_filename,
+    resolve_assess_model_id,
     resolve_assessment_repository,
     resolve_bedrock_model_id,
     run_assessment,
@@ -32,6 +33,7 @@ __all__ = [
     "modernization_report_basename",
     "modernization_report_filename",
     "resolve_assessment_repository",
+    "resolve_assess_model_id",
     "resolve_bedrock_model_id",
     "run_assessment",
 ]

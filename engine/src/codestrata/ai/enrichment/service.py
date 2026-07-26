@@ -25,9 +25,7 @@ from codestrata.ai.enrichment.context import (
 )
 from codestrata.ai.enrichment.parsing import (
     bridge_enrichment_to_recommendation,
-    bridge_recommendation_to_enrichment,
     enrichment_from_invocation,
-    looks_like_enrichment_payload,
 )
 from codestrata.ai.enrichment.prompt import (
     AiEnrichmentPromptBuilder,
@@ -108,21 +106,12 @@ class AiEnrichmentService:
             analysis_context=analysis_context,
         )
         invocation = self._provider.invoke(request, model_options)
-        if looks_like_enrichment_payload(invocation.raw_response_text or ""):
-            enrichment = enrichment_from_invocation(invocation, enrichment_context)
-            recommendation = bridge_enrichment_to_recommendation(
-                enrichment,
-                context=enrichment_context,
-                analysis_context=analysis_context,
-            )
-        else:
-            # Legacy provider responses (AIRecommendationResult) stay report-compatible.
-            enrichment = bridge_recommendation_to_enrichment(
-                invocation.recommendation_result,
-                context=enrichment_context,
-                metadata=invocation.metadata,
-            )
-            recommendation = invocation.recommendation_result
+        enrichment = enrichment_from_invocation(invocation, enrichment_context)
+        recommendation = bridge_enrichment_to_recommendation(
+            enrichment,
+            context=enrichment_context,
+            analysis_context=analysis_context,
+        )
         started = utc_now()
         completed = utc_now()
         prompt_hash = _stable_hash(

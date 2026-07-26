@@ -81,8 +81,9 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--with-ai/--no-ai",
                 help=(
-                    "Enable AI-enhanced assessment. Default is --no-ai "
-                    "(deterministic evidence only; no cloud provider required)."
+                    "Enable Modernization Advisor (AI narrative over deterministic "
+                    "assessment). Default is --no-ai (deterministic evidence only; "
+                    "no cloud provider required)."
                 ),
             ),
         ] = False,
@@ -91,9 +92,11 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--model-id",
                 help=(
-                    "Bedrock model ID for --with-ai. Resolution order: this flag, "
-                    "CODESTRATA_BEDROCK_MODEL_ID, ai.bedrock.model_id, then "
-                    "amazon.nova-lite-v1:0."
+                    "Model ID for Modernization Advisor (--with-ai). Resolution "
+                    "order: this flag; then provider-specific env/config "
+                    "(CODESTRATA_BEDROCK_MODEL_ID / ai.bedrock.model_id for "
+                    "Bedrock, CODESTRATA_OPENAI_MODEL_ID / ai.openai.answer_model "
+                    "for OpenAI); then provider default."
                 ),
             ),
         ] = None,

@@ -127,24 +127,27 @@ class SuggestedNextStep(BaseModel):
 
 
 class AiProviderMetadata(BaseModel):
-    """Provider/model metadata for one enrichment invocation."""
+    """Provider and Modernization Advisor metadata for one enrichment invocation."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     provider: str
     model_id: str
+    advisor_version: str = "1.0.0"
+    prompt_version: str = "1.1.0"
+    generated_at_utc: str | None = None
     request_id: str | None = None
     latency_ms: float | None = Field(default=None, ge=0.0)
     input_tokens: int | None = Field(default=None, ge=0)
     output_tokens: int | None = Field(default=None, ge=0)
     stop_reason: str | None = None
 
-    @field_validator("provider", "model_id", mode="before")
+    @field_validator("provider", "model_id", "advisor_version", "prompt_version", mode="before")
     @classmethod
     def normalize_required(cls, value: object) -> str:
         return require_nonblank(str(value), label="provider metadata field")
 
-    @field_validator("request_id", "stop_reason", mode="before")
+    @field_validator("request_id", "stop_reason", "generated_at_utc", mode="before")
     @classmethod
     def normalize_optional(cls, value: object) -> str | None:
         if value is None:

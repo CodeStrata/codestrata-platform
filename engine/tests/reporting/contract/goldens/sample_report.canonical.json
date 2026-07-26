@@ -30,6 +30,7 @@
       "stop_reason": null,
       "total_tokens": null
     },
+    "ai_enrichment": null,
     "comparison": null,
     "coverage": {
       "ai_interpretation": "not_requested",

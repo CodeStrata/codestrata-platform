@@ -137,6 +137,15 @@ class BedrockAIModelProvider(AIModelProvider):
             stop_reason=stop_reason,
         )
         try:
+            from codestrata.ai.enrichment.parsing import looks_like_enrichment_payload
+
+            if looks_like_enrichment_payload(raw_response_text):
+                # Modernization Advisor JSON — leave parsing to AiEnrichmentService.
+                return ModelInvocationResult(
+                    recommendation_result=None,
+                    metadata=metadata,
+                    raw_response_text=raw_response_text,
+                )
             parse_outcome = parse_recommendation_response(
                 raw_response_text,
                 request.analysis_context,

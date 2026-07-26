@@ -386,9 +386,9 @@ def test_local_repository_assessment_success(tmp_path: Path) -> None:
     html = result.html_report_path.read_text(encoding="utf-8")
     assert "Findings Overview" in html
     assert "Modernization Roadmap" in html
-    assert "AI Executive Summary" in html
-    assert 'id="ai-enrichment"' in html
-    assert "AI-generated interpretation" in html or "Rotate secrets" in html
+    assert "Modernization Advisor" in html
+    assert 'id="modernization-advisor"' in html
+    assert "Modernization Advisor interpretation" in html or "Rotate secrets" in html
 
 
 def test_deterministic_assessment_success_without_model_or_aws(
@@ -509,6 +509,8 @@ def test_deterministic_orchestration_order(tmp_path: Path) -> None:
     assert "Running modernization assessment" not in joined
     assert "Building AI enrichment context" not in joined
     assert "Running AI enrichment" not in joined
+    assert "Building Modernization Advisor context" not in joined
+    assert "Running Modernization Advisor" not in joined
     assert "Assessment mode: Deterministic" in joined
     assert "Deterministic recommendations:" in joined
     assert "Model ID:" not in joined
@@ -522,8 +524,8 @@ def test_ai_enhanced_orchestration_order(tmp_path: Path) -> None:
         "Scanning repository",
         "Detecting technologies",
         "Running deterministic analysis",
-        "Building AI enrichment context",
-        "Running AI enrichment",
+        "Building Modernization Advisor context",
+        "Running Modernization Advisor",
         "Generating HTML and JSON reports",
     ]
     positions = [joined.index(stage) for stage in stages]
@@ -945,8 +947,8 @@ def test_ai_mode_writes_html_and_json(tmp_path: Path) -> None:
     assert "repository_facts" in payload["assessment"]
     html = result.html_report_path.read_text(encoding="utf-8")
     assert "Modernization Roadmap" in html
-    assert "AI Executive Summary" in html
-    assert 'id="ai-enrichment"' in html
+    assert "Modernization Advisor" in html
+    assert 'id="modernization-advisor"' in html
 
 
 def test_second_assessment_preserves_previous_run(tmp_path: Path) -> None:

@@ -1,4 +1,4 @@
-"""Prompt builder for AI enrichment over deterministic findings/recommendations."""
+"""Prompt builder for Modernization Advisor (AI enrichment) over deterministic evidence."""
 
 from __future__ import annotations
 
@@ -6,12 +6,16 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from codestrata.ai.enrichment.advisor import (
+    MODERNIZATION_ADVISOR_PERSONA,
+    MODERNIZATION_ADVISOR_PROMPT_VERSION,
+)
 from codestrata.ai.enrichment.context import AiEnrichmentContext
 from codestrata.ai.prompts.models import PromptMessage, PromptMetadata, PromptRequest
 from codestrata.domain.ai_enrichment import AI_ENRICHMENT_RESULT_VERSION, AiEnrichmentResult
 
-ENRICHMENT_PROMPT_PURPOSE = "modernization_enrichment"
-ENRICHMENT_PROMPT_TEMPLATE_VERSION = "1.0.0"
+ENRICHMENT_PROMPT_PURPOSE = "modernization_advisor"
+ENRICHMENT_PROMPT_TEMPLATE_VERSION = MODERNIZATION_ADVISOR_PROMPT_VERSION
 DEFAULT_ENRICHMENT_MAX_CONTEXT_CHARACTERS = 60_000
 
 
@@ -30,7 +34,7 @@ class AiEnrichmentPromptOptions(BaseModel):
 
 
 class AiEnrichmentPromptBuilder:
-    """Build a strict JSON enrichment prompt from compact context."""
+    """Build a strict JSON Modernization Advisor prompt from compact context."""
 
     def build(
         self,
@@ -51,13 +55,13 @@ class AiEnrichmentPromptBuilder:
             ensure_ascii=False,
         )
         system = (
-            "You are CodeStrata's modernization narrative assistant. "
+            f"{MODERNIZATION_ADVISOR_PERSONA} "
             "Use only the supplied findings and recommendations. "
             "Do not invent unsupported issues. "
             "Distinguish facts (supplied IDs and summaries) from interpretation. "
             "Preserve finding and recommendation IDs for traceability. "
             "Return strict JSON only matching the provided schema. "
-            "Keep the response concise and actionable."
+            "Keep the response concise and actionable for engineering leaders."
         )
         developer = (
             "Rules:\n"
@@ -69,7 +73,9 @@ class AiEnrichmentPromptBuilder:
             "the supplied evidence.\n"
             "4. If evidence is thin, say so in limitations instead of inventing "
             "detail.\n"
-            f"5. Output schema version: {AI_ENRICHMENT_RESULT_VERSION}."
+            "5. Write for CTOs and VP Engineering: clear business language, "
+            "no raw rule-id laundry lists in the executive summary.\n"
+            f"6. Output schema version: {AI_ENRICHMENT_RESULT_VERSION}."
         )
         user = (
             f"Repository: {context.repository.display_name}\n"
@@ -89,8 +95,8 @@ class AiEnrichmentPromptBuilder:
             context_truncated=context.truncated,
             prompt_template_version=active.template_version,
         )
-        # PromptRequest.purpose is fixed to modernization_assessment for provider
-        # compatibility; enrichment semantics are carried in messages + schema.
+        # PromptRequest.purpose remains modernization_assessment for provider
+        # compatibility; advisor semantics live in messages + schema.
         return PromptRequest(
             purpose="modernization_assessment",
             messages=[
