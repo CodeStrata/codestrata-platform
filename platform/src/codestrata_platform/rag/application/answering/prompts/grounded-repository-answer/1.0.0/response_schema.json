@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "required": [
+    "summary",
+    "statements",
+    "citations",
+    "evidence_ids",
+    "limitations",
+    "confidence",
+    "insufficient_evidence"
+  ],
+  "properties": {
+    "summary": {"type": "string"},
+    "statements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text", "citation_labels", "statement_type"],
+        "properties": {
+          "text": {"type": "string"},
+          "citation_labels": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "statement_type": {
+            "type": "string",
+            "enum": [
+              "fact",
+              "finding",
+              "recommendation",
+              "limitation",
+              "insufficient_evidence"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "none"]
+          }
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["citation_label"],
+        "properties": {
+          "citation_label": {"type": "string"},
+          "excerpt": {"type": "string"}
+        }
+      }
+    },
+    "evidence_ids": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "none"]
+    },
+    "insufficient_evidence": {"type": "boolean"}
+  }
+}

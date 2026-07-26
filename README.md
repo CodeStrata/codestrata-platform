@@ -1,306 +1,106 @@
-# AI Modernization Factory
+# codestrata-platform
 
-AI Modernization Factory (`aimf`) analyzes application repositories, detects technologies and engineering risks, and writes evidence-based HTML and JSON assessment reports.
+Private **source of truth** for CodeStrata Community and Commercial development.
 
-Deterministic analysis works without cloud credentials. Optional AI-enhanced assessment uses Amazon Bedrock when you pass `--with-ai`.
+> The Engine produces structured engineering intelligence. The Platform stores,
+> connects, retrieves, and reasons over that intelligence.
 
-## Clone
+Public GitHub repositories are **generated mirrors** — do not edit them directly.
+See [docs/public-export.md](docs/public-export.md).
 
-```bash
-git clone https://github.com/sknampally/ai-modernization-factory.git
-cd ai-modernization-factory
+| Badge | |
+| ----- | --- |
+| Edition | Community Engine is MIT-licensed under `engine/` |
+| Python | 3.12+ |
+| Version | 0.1.0 |
+
+---
+
+## Repository map
+
+```text
+codestrata-platform/
+├── engine/              Community Engine (CLI, MCP, packaging)  → codestrata-engine
+├── examples/            Sample apps + golden reports           → codestrata-examples
+├── cursor-plugin/       Placeholder only                       → codestrata-cursor
+├── vscode-plugin/       Placeholder only                       → codestrata-vscode
+├── platform/            Implemented commercial RAG + Knowledge Graph (not exported)
+├── scripts/             Export, validate, dogfood harnesses
+├── public-export-manifest.yaml
+├── docs/                Monorepo sync + index
+└── tests/architecture/  Engine ↔ Platform boundary tests
 ```
 
-Cloning the repository does **not** install the Python package. Continue with the virtual environment and install steps below.
+### What lives where
 
-## Virtual environment
+| Area | Path | Public? |
+| ---- | ---- | ------- |
+| **Engine** | `engine/` | Yes → `codestrata-engine` |
+| **Examples** | `examples/` | Yes → `codestrata-examples` |
+| **Plugins** | `cursor-plugin/`, `vscode-plugin/` | Placeholders only |
+| **Platform** | `platform/` | No (private; RAG + Knowledge Graph) |
+
+Related products outside this monorepo: `codestrata-ui`, `codestrata-site`.
+
+---
+
+## Community Engine (quick start)
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
+pip install -e "./engine[dev,mcp]"
+codestrata assess --repo examples/sample-js-app --output reports --no-ai
 ```
 
-On Windows (PowerShell):
+Engine docs: [engine/docs/quick-start.md](engine/docs/quick-start.md) ·
+[engine/docs/community-edition.md](engine/docs/community-edition.md) ·
+[engine/README.md](engine/README.md)
 
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
+---
 
-## Installation
+## Community vs Platform
+
+| Capability | Community Engine | Platform (`platform/`) |
+| ---------- | ---------------- | ---------------------- |
+| Local / GitHub assess, HTML/JSON reports | Shipped | Consumes Engine |
+| MCP assessment tools | Shipped | Adds RAG + KG tools via entry points |
+| Repository RAG (index/retrieve/answer) | Not included | Implemented under `platform/rag/` |
+| Persistent Knowledge Graph | Not included | Implemented under `platform/knowledge_graph/` |
+| Hosted multi-tenancy / SSO / billing | Not included | Not implemented (do not treat as shipped) |
+| Cursor / VS Code extensions | Placeholders | — |
+
+Install Platform for private monorepo development:
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -e .
+pip install -e "./platform[dev,mcp,pgvector]"
 ```
 
-For contribution / running the full test suite:
+---
+
+## Public export (staging only)
 
 ```bash
-python -m pip install -e ".[dev]"
+python scripts/export-public-repos.py --dry-run
+python scripts/export-public-repos.py
+python scripts/validate-public-exports.py
 ```
 
-## Installation verification
+No GitHub create/push/publish is performed by these scripts.
 
-```bash
-python -c "import aimf; print(aimf.__file__)"
-aimf version
-aimf --help
-aimf assess --help
-```
-
-If `import aimf` fails, the editable install is missing or the virtual environment is not active.
-
-## Configuration
-
-### `aimf.toml`
-
-Primary configuration file (loaded with `--config aimf.toml`).
-
-Repository selection for `aimf assess`:
-
-1. `--repo` on the command line (highest priority)
-2. `[repository].path` in `aimf.toml` (local checkout)
-3. `[repository].url` in `aimf.toml` (GitHub HTTPS or SSH URL)
-4. otherwise AIMF fails with an actionable error (never falls back to a demo repository)
-
-The shipped `aimf.toml` points at the bundled sample app:
-
-```toml
-[repository]
-path = "examples/sample-js-app"
-```
-
-Point AIMF at **your** repository:
-
-```toml
-[repository]
-path = "/absolute/or/relative/path/to/your-repo"
-```
-
-Or clone from GitHub (also required for `aimf scan`):
-
-```toml
-[repository]
-url = "https://github.com/YOUR_ORG/YOUR_REPO"
-branch = "main"
-```
-
-Supported `[repository]` fields: `path`, `url`, `branch`, and optional `authentication` (`github_token` with `token_env`, or `ssh_agent`).
-
-### `.env`
-
-AIMF automatically loads a `.env` file when reading configuration (walking upward from the config directory and the current working directory). Existing shell environment variables are never overwritten.
-
-```bash
-cp .env.example .env
-```
-
-Common variables (names only; do not commit secrets):
-
-| Variable | Purpose |
-| -------- | ------- |
-| `AIMF_GITHUB_TOKEN` | Private GitHub HTTPS clone token (referenced by name from `aimf.toml`) |
-| `AIMF_BEDROCK_MODEL_ID` | Optional Bedrock model override for `--with-ai` |
-| `AWS_PROFILE` / `AWS_REGION` | Optional AWS overrides (prefer `[aws]` in `aimf.toml`) |
-| `AIMF_LOG_LEVEL` | Logging level (`WARNING` default) |
-
-You do **not** need to run `source .env`.
-
-### AWS credentials (optional, for `--with-ai`)
-
-Configure a named profile with the AWS CLI, then authenticate:
-
-```bash
-aws sso login --profile <profile-name>
-AWS_PROFILE=<profile-name> aws sts get-caller-identity
-```
-
-Point AIMF at that profile via `aimf.toml` (preferred):
-
-```toml
-[aws]
-profile = "<profile-name>"
-region = "us-east-1"
-
-[ai]
-provider = "bedrock"
-
-[ai.bedrock]
-model_id = "amazon.nova-lite-v1:0"
-```
-
-Or export `AWS_PROFILE` / `AWS_REGION` in the environment. AIMF uses the configured profile for Bedrock when you pass `--with-ai`.
-
-### GitHub token (optional, private repos)
-
-```bash
-# in .env (never commit secrets)
-AIMF_GITHUB_TOKEN=your-token-value
-```
-
-```toml
-[repository]
-url = "https://github.com/your-org/private-repo"
-branch = "main"
-
-[repository.authentication]
-type = "github_token"
-token_env = "AIMF_GITHUB_TOKEN"
-```
-
-Never put token values in `aimf.toml`.
-
-## Assessment
-
-Canonical workflow:
-
-```bash
-aimf assess --config aimf.toml --output reports --with-ai
-```
-
-Deterministic only (no AWS / Bedrock required):
-
-```bash
-aimf assess --config aimf.toml --output reports
-```
-
-Override the configured repository for one run:
-
-```bash
-aimf assess --repo /path/to/your-repo --config aimf.toml --output reports
-```
-
-### `aimf scan` (clone + scan reports)
-
-`aimf scan` clones the GitHub URL from `[repository].url` and writes text/JSON/HTML scan reports. It requires `url` (local `path` alone is not enough):
-
-```bash
-aimf scan --config aimf.toml --report-directory reports
-```
-
-## Output
-
-Assessment reports are written under timestamped run directories:
-
-```text
-reports/<repository-name>/<YYYYMMDD-HHMMSS>/
-├── report.html          # customer-facing assessment
-├── report.json          # machine-readable assessment
-└── ai-execution.json    # only for --with-ai attempts (internal)
-```
-
-AIMF keeps the latest three completed runs per repository.
-
-**Deterministic analysis** (`--no-ai`, the default) scans the repository, runs analyzers, and writes evidence-based HTML/JSON without calling a cloud model.
-
-**`--with-ai`** adds an optional Bedrock interpretation layer over the same normalized evidence. If AI fails, deterministic reports are still written when possible.
-
-## Troubleshooting
-
-### `ModuleNotFoundError: No module named 'aimf'`
-
-The package is not installed in the active environment (cloning alone is not enough).
-
-```bash
-source .venv/bin/activate
-python -m pip install -e .
-python -c "import aimf; print(aimf.__file__)"
-aimf version
-```
-
-### AWS SSO / Bedrock authentication failed
-
-```bash
-aws sso login --profile <profile-name>
-AWS_PROFILE=<profile-name> aws sts get-caller-identity
-aimf assess --config aimf.toml --output reports --with-ai
-```
-
-Confirm `[aws].profile` / `[aws].region` and Bedrock model access in that account/region. Deterministic HTML/JSON are still written if AI fails.
-
-### GitHub authentication failed
-
-- HTTPS: ensure `AIMF_GITHUB_TOKEN` is set (via `.env` or the shell) and `token_env` matches that name
-- SSH: ensure your agent has a loaded key (`ssh-add -l`) and the URL uses `git@github.com:...`
-- Confirm the token/SSH key can read the repository
-
-### Repository not found / path does not exist
-
-```bash
-# Local path
-ls examples/sample-js-app
-aimf assess --repo examples/sample-js-app --output reports
-
-# Or update aimf.toml [repository].path / .url
-```
-
-### Missing configuration
-
-```text
-No repository configured.
-```
-
-Set `[repository].path` or `[repository].url` in `aimf.toml`, or pass `--repo`.
-
-```text
-Configuration file does not exist: aimf.toml
-```
-
-Run from the project root, or pass `--config /path/to/aimf.toml`.
-
-### `aimf scan` says URL is required
-
-`scan` only clones GitHub URLs. Set `[repository].url`, or use `aimf assess --repo <local-path>` for local checkouts.
-
-## CLI reference
-
-| Command | Purpose |
-| ------- | ------- |
-| `aimf version` | Print package version |
-| `aimf assess` | Primary assessment workflow (HTML + JSON) |
-| `aimf scan` | Clone configured GitHub repo; write scan reports |
-
-Useful `assess` flags:
-
-| Flag | Description |
-| ---- | ----------- |
-| `--config` / `-c` | TOML config path (default `aimf.toml`) |
-| `--repo` / `-r` | Local path or GitHub URL (overrides config) |
-| `--output` / `-o` | Report base directory (default `reports`) |
-| `--with-ai` / `--no-ai` | AI-enhanced vs deterministic (default `--no-ai`) |
-| `--model-id` | Bedrock model override (requires `--with-ai`) |
-| `--verbose` / `-v` | Diagnostic logging |
-
-## Optional sample app
-
-The repository includes `examples/sample-js-app`, a tiny Node.js sample used for onboarding and tests. It is **not** required for production use. Replace `[repository].path` with your own application as soon as you are ready.
+---
 
 ## Development
 
 ```bash
-python -m pip install -e ".[dev]"
-pytest
+pip install -e "./engine[dev,mcp]"
+pip install -e "./platform[dev,mcp,pgvector]"
 ruff check .
-ruff format --check .
-mypy src
+mypy engine/src
+pytest
+python scripts/security_check.py
+python scripts/validate-public-exports.py
 ```
 
-## Capabilities (summary)
-
-* Local path and public/private GitHub repository assessment
-* Technology detection for Java, JavaScript/TypeScript, and PHP ecosystems
-* Build, dependency, CI/CD, architecture, security, and cloud-readiness analyzers
-* Deterministic recommendations with evidence
-* Optional PMD static analysis for Java
-* Optional Bedrock AI interpretation over normalized evidence
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) and [docs/architecture/assessment-graph.md](docs/architecture/assessment-graph.md) for component details.
-
-## License
-
-MIT License. See `LICENSE`.
-
-## Author
-
-Satish Nampally — https://github.com/sknampally
+Security: [engine/SECURITY.md](engine/SECURITY.md) ·
+[engine/docs/security/threat-model.md](engine/docs/security/threat-model.md)

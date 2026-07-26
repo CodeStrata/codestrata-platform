@@ -1,0 +1,65 @@
+{
+  "finding_count": 2,
+  "findings": [
+    {
+      "affected_assessment_node_ids": [],
+      "category": "build",
+      "description": "No GitHub Actions workflow paths were found under .github/workflows/.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "no paths under .github/workflows/",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-python-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-missing-ci-workflow:cf7ae31a528350f2",
+      "metadata": {},
+      "rule_id": "codestrata-rule-missing-ci-workflow",
+      "severity": "low",
+      "source": "rule",
+      "title": "Missing CI workflow"
+    },
+    {
+      "affected_assessment_node_ids": [],
+      "category": "governance",
+      "description": "No LICENSE file was found in the repository inventory.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "LICENSE basename not present in inventory paths",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-python-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-missing-license:b3f522db162a5167",
+      "metadata": {},
+      "rule_id": "codestrata-rule-missing-license",
+      "severity": "medium",
+      "source": "rule",
+      "title": "Missing LICENSE"
+    }
+  ],
+  "rules_evaluated": [
+    "codestrata-rule-large-repository",
+    "codestrata-rule-maven-wrapper-missing",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-missing-readme",
+    "codestrata-rule-missing-tests",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing"
+  ],
+  "rules_skipped": [
+    "codestrata-rule-java-detected",
+    "codestrata-rule-maven-wrapper-missing",
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing",
+    "codestrata-rule-spring-boot-detected",
+    "codestrata-rule-unsupported-spring-boot-version"
+  ]
+}

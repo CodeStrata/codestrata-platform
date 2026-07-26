@@ -1,0 +1,158 @@
+# Public export manifest — codestrata-platform is the single source of truth.
+#
+# Public GitHub repositories are generated mirrors. Do not edit them directly.
+# Export staging only; this file never pushes or creates remote repositories.
+
+version: 1
+staging_directory: .export-staging
+source_of_truth: codestrata-platform
+
+defaults:
+  exclude_globs:
+    - "**/.DS_Store"
+    - "**/__pycache__/**"
+    - "**/*.pyc"
+    - "**/.pytest_cache/**"
+    - "**/.mypy_cache/**"
+    - "**/.ruff_cache/**"
+    - "**/*.egg-info/**"
+    - "**/.codestrata/**"
+    - "**/.env"
+    - "**/.env.*"
+    - "**/reports/**"
+    - "**/dist/**"
+    - "**/build/**"
+    - "**/.git/**"
+    - "**/node_modules/**"
+  forbid_path_substrings:
+    - "platform/"
+    - ".codestrata/"
+    - "secrets"
+    - ".env"
+  forbid_content_patterns:
+    - "(?i)BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY"
+    - "(?i)aws_secret_access_key\\s*="
+    - "(?i)api[_-]?key\\s*=\\s*['\"]?[A-Za-z0-9/+=]{20,}"
+
+exports:
+  - name: codestrata-engine
+    description: Community Edition assessment engine (CLI, MCP, packaging)
+    source_root: engine
+    public_repository: codestrata-engine
+    destination_layout: flat
+    include:
+      - "src/**"
+      - "tests/**"
+      - "docs/**"
+      - "schemas/**"
+      - "pyproject.toml"
+      - "MANIFEST.in"
+      - "LICENSE"
+      - "NOTICE"
+      - "README.md"
+      - "CODE_OF_CONDUCT.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "SUPPORT.md"
+      - "codestrata.toml"
+      - ".env.example"
+    # Pull minimal smoke samples into the engine mirror for offline quick-start.
+    extra_includes:
+      - from: examples/sample-js-app
+        to: examples/sample-js-app
+      - from: examples/README.md
+        to: examples/README.md
+    exclude:
+      - "**/complexity/fixtures/**"
+      - "**/.DS_Store"
+      # Stale docs/tests that referenced pre-move Enterprise paths (if any remain).
+      - "tests/interfaces/mcp/test_mcp_enterprise_tools.py"
+      - "docs/enterprise-knowledge-graph/**"
+    validation:
+      require_files:
+        - LICENSE
+        - NOTICE
+        - README.md
+        - pyproject.toml
+        - src/codestrata/__init__.py
+        - src/codestrata/extensions/__init__.py
+        - codestrata.toml
+        - SECURITY.md
+      forbid_globs:
+        - "platform/**"
+      commands:
+        - "python -m pip install -e '.[dev]'"
+        - "codestrata version"
+        - "codestrata assess --repo examples/sample-js-app --output /tmp/cs-engine-export-reports --no-ai"
+        - "python -m pytest -q tests/config/test_settings.py"
+
+  - name: codestrata-examples
+    description: Public sample applications and golden sample reports
+    source_root: examples
+    public_repository: codestrata-examples
+    destination_layout: flat
+    include:
+      - "**"
+    exclude:
+      - "**/.DS_Store"
+      - "**/node_modules/**"
+      - "**/__pycache__/**"
+    validation:
+      require_files:
+        - README.md
+        - sample-js-app/package.json
+        - sample-python-app/pyproject.toml
+        - sample-java-app/pom.xml
+        - sample-php-app/composer.json
+        - sample-csharp-app/src/SampleAspNet/SampleAspNet.csproj
+        - sample-reports/README.md
+        - sample-reports/javascript/report.html
+        - sample-reports/python/report.html
+        - sample-reports/java/report.html
+        - sample-reports/php/report.html
+        - sample-reports/csharp/report.html
+      forbid_globs:
+        - "platform/**"
+        - "**/.env"
+      require_language_samples:
+        - javascript
+        - python
+        - java
+        - php
+        - csharp
+
+  - name: codestrata-cursor
+    description: Cursor plugin placeholder (not implemented in Phase 5.23)
+    source_root: cursor-plugin
+    public_repository: codestrata-cursor
+    destination_layout: flat
+    include:
+      - "**"
+    exclude:
+      - "**/.DS_Store"
+    validation:
+      require_files:
+        - README.md
+        - PLACEHOLDER.md
+      allow_only_globs:
+        - "README.md"
+        - "PLACEHOLDER.md"
+        - ".gitkeep"
+
+  - name: codestrata-vscode
+    description: VS Code plugin placeholder (not implemented in Phase 5.23)
+    source_root: vscode-plugin
+    public_repository: codestrata-vscode
+    destination_layout: flat
+    include:
+      - "**"
+    exclude:
+      - "**/.DS_Store"
+    validation:
+      require_files:
+        - README.md
+        - PLACEHOLDER.md
+      allow_only_globs:
+        - "README.md"
+        - "PLACEHOLDER.md"
+        - ".gitkeep"

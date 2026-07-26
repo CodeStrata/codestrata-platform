@@ -1,0 +1,771 @@
+{
+  "assessment": {
+    "ai": {
+      "candidate_finding_count": null,
+      "estimated_input_tokens": null,
+      "evidence_coverage": null,
+      "executed": false,
+      "executive_summary": null,
+      "failure_code": null,
+      "failure_detail": null,
+      "failure_message": null,
+      "fallback_used": false,
+      "included_finding_count": null,
+      "input_tokens": null,
+      "internal_execution_artifact": null,
+      "key_risks": [],
+      "latency_ms": null,
+      "limitations": [],
+      "model_id": null,
+      "omitted_informational_count": null,
+      "output_tokens": null,
+      "overall_assessment": null,
+      "phases": [],
+      "provider": null,
+      "provider_invoked": false,
+      "recommendations": [],
+      "result_included": false,
+      "stages_completed": [],
+      "static_analysis_profile": null,
+      "status": "not_requested",
+      "stop_reason": null,
+      "total_tokens": null
+    },
+    "comparison": null,
+    "coverage": {
+      "ai_interpretation": "not_requested",
+      "deterministic_analysis": "completed",
+      "static_analysis": "disabled"
+    },
+    "deterministic_recommendations": [
+      {
+        "actions": [
+          "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change."
+        ],
+        "category": "ci_cd",
+        "dependencies": [],
+        "description": "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cicd.has_ci=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "id": "bba327aa-2f64-5a9f-ac1d-fba479c5b580",
+        "priority": "high",
+        "rationale": "CI/CD facts indicate no CI platform or pipeline was detected. Without automated gates, modernization changes are harder to validate consistently.",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CICD.001",
+        "title": "Establish CI build, test, and quality gates"
+      },
+      {
+        "actions": [
+          "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes."
+        ],
+        "category": "cloud",
+        "dependencies": [],
+        "description": "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cloud.has_docker=false; cloud.has_kubernetes=false; cloud.has_terraform=false; cloud.has_cloudformation=false; cloud.has_serverless=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+        "priority": "medium",
+        "rationale": "Cloud readiness facts show no Docker, Kubernetes, Terraform, CloudFormation, or serverless assets. Without a deployment baseline, modernization delivery remains difficult to reproduce and validate.",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CLOUD.001",
+        "title": "Create a deployment baseline for modernization"
+      }
+    ],
+    "executive_summary": {
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 0,
+      "file_count": 6,
+      "finding_count": 11,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 0,
+        "info": 5,
+        "low": 1,
+        "medium": 5
+      },
+      "recommendation_count": 2,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 1,
+        "low": 0,
+        "medium": 1
+      },
+      "summary_text": "Analyzed repository 'sample-php-app' with 6 scanned file(s). Detected 11 finding(s) (0 critical) and 2 recommendation(s) (1 critical/high priority). Automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 4,
+      "tests_detected": true
+    },
+    "findings": [
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "composer"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "monolog/monolog in composer.json uses version '^3.0'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "monolog/monolog in composer.json uses version '^3.0'.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "3af684fa-be02-5193-b831-8e2a785c5827",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP002",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency uses a dynamic version"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "composer"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "phpunit/phpunit in composer.json uses version '^11.0'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "phpunit/phpunit in composer.json uses version '^11.0'.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "5257988d-8a6e-5309-942e-05107e8be71d",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP002",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency uses a dynamic version"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "composer"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "laravel/framework in composer.json uses version '^11.0'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "laravel/framework in composer.json uses version '^11.0'.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "6c0d7eb0-c7b6-5028-b45b-a5f266141790",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP002",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency uses a dynamic version"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "composer"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "illuminate/database in composer.json uses version '^11.0'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "illuminate/database in composer.json uses version '^11.0'.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "cdc65334-644a-501a-a591-2e03d80da579",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP002",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency uses a dynamic version"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "composer"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "composer dependency locking is not configured for: composer.json.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "composer dependency locking is not configured for: composer.json.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "ed110554-842f-521a-b77f-6f9e444441db",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP003",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency locking is not configured"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud_readiness",
+        "customer_visibility": null,
+        "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "436d4b2b-636c-5e80-b3d9-73c9a7f64ed1",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "CLOUD009",
+        "severity": "low",
+        "source": "static_analysis",
+        "title": "No cloud deployment assets detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected 1 API-related files",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 API-related files",
+            "file_path": "src/App/Controllers/UserController.php",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "b622de48-0316-50e6-b572-eae78073a184",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH002",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "API layer detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected 1 files under test-related directories",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 files under test-related directories",
+            "file_path": "tests/UserTest.php",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "94880bbd-b043-5a65-bef5-de38e6dba360",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH005",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "Test structure detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Architectural components appear within one repository application structure",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Architectural components appear within one repository application structure",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH007",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "Single-application architecture detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "Composer",
+          "Laravel",
+          "PHP",
+          "PHPUnit"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Detected build systems: composer.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Repository artifact used to detect the build system.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "601ca83c-9b2e-5b87-8b3b-877e0aac5206",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "build.system.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "title": "Build System"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "Composer",
+          "Laravel",
+          "PHP",
+          "PHPUnit"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Collected structural metrics for repository 'sample-php-app'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": "composer.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "0f84f608-5aaf-591a-b754-e8bfb22a1a6c",
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "repository.metrics.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "title": "Repository Metrics"
+      }
+    ],
+    "generated_at": "2026-07-26T17:19:59.596769Z",
+    "mode": "deterministic",
+    "organization_name": null,
+    "report_title": "Modernization Assessment",
+    "repository": {
+      "default_branch": null,
+      "file_count": 6,
+      "name": "sample-php-app",
+      "reference": "examples/sample-php-app",
+      "source_type": "local"
+    },
+    "repository_facts": {
+      "architecture": {
+        "has_api_layer": true,
+        "has_domain_layer": true,
+        "has_persistence_layer": false,
+        "has_service_layer": false,
+        "is_multi_application": false
+      },
+      "build": {
+        "build_files": [
+          "composer.json"
+        ],
+        "build_systems": [
+          "composer"
+        ],
+        "inferred_commands": [
+          "composer install",
+          "composer test"
+        ],
+        "java_source_versions": [],
+        "java_target_versions": [],
+        "lock_files": [],
+        "modules": [],
+        "multi_module": false,
+        "multiple_build_systems": false,
+        "packaging_types": [],
+        "plugins": [],
+        "wrapper_files": []
+      },
+      "cicd": {
+        "ci_platforms": [],
+        "has_build": false,
+        "has_ci": false,
+        "has_deployment": false,
+        "has_deployment_workflow": false,
+        "has_security_scanning": false,
+        "has_tests": false,
+        "job_count": 0,
+        "pipeline_count": 0,
+        "pipeline_files": [],
+        "pipelines": [],
+        "providers": [],
+        "uses_artifacts": false,
+        "uses_caching": false,
+        "uses_containers": false,
+        "uses_matrix_builds": false
+      },
+      "cloud": {
+        "cloud_capabilities": [],
+        "has_cloudformation": false,
+        "has_devcontainer": false,
+        "has_docker": false,
+        "has_docker_compose": false,
+        "has_helm": false,
+        "has_kubernetes": false,
+        "has_serverless": false,
+        "has_terraform": false
+      },
+      "dependencies": {
+        "cloud_sdks": [],
+        "database_drivers": [
+          "illuminate/database"
+        ],
+        "dependencies": [
+          {
+            "categories": [
+              "database"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "composer",
+            "manifest_path": "composer.json",
+            "name": "illuminate/database",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^11.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "composer",
+            "manifest_path": "composer.json",
+            "name": "laravel/framework",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^11.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "logging"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "composer",
+            "manifest_path": "composer.json",
+            "name": "monolog/monolog",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^3.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "testing"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "composer",
+            "manifest_path": "composer.json",
+            "name": "phpunit/phpunit",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^11.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          }
+        ],
+        "dependency_count": 4,
+        "development_dependency_count": 1,
+        "direct_dependency_count": 4,
+        "dynamic_version_dependencies": [
+          "illuminate/database",
+          "laravel/framework",
+          "monolog/monolog",
+          "phpunit/phpunit"
+        ],
+        "framework_dependencies": [
+          "laravel/framework"
+        ],
+        "logging_libraries": [
+          "monolog/monolog"
+        ],
+        "manifests": [
+          {
+            "ecosystem": "composer",
+            "has_version_management": false,
+            "lockfile": false,
+            "manifest_type": "manifest",
+            "path": "composer.json",
+            "version_management_source": null
+          }
+        ],
+        "outdated_dependencies": [],
+        "security_libraries": [],
+        "test_dependency_count": 0,
+        "testing_libraries": [
+          "phpunit/phpunit"
+        ],
+        "unmanaged_version_dependencies": []
+      },
+      "security": {
+        "dangerous_execution_count": 0,
+        "secret_finding_count": 0,
+        "sensitive_file_count": 0,
+        "weak_crypto_count": 0
+      },
+      "structure": {
+        "application_count": 1,
+        "architecture_layers": [
+          "api",
+          "domain",
+          "tests"
+        ],
+        "file_count": 6,
+        "has_tests": true,
+        "source_file_count": 3,
+        "test_file_count": 1
+      },
+      "technology": {
+        "build_tools": [
+          "Composer"
+        ],
+        "detected_technologies": [
+          "Composer",
+          "Laravel",
+          "PHP",
+          "PHPUnit"
+        ],
+        "frameworks": [
+          "Laravel"
+        ],
+        "programming_languages": [
+          "PHP"
+        ],
+        "test_frameworks": [
+          "PHPUnit"
+        ]
+      }
+    },
+    "static_analysis": {
+      "duration_ms": null,
+      "eligible_file_count": 0,
+      "files_analyzed": 0,
+      "finding_count": 0,
+      "grouped_finding_count": 0,
+      "groups": [],
+      "informational_count": 0,
+      "message": "PMD static analysis was disabled for this assessment.",
+      "observations": [],
+      "primary_count": 0,
+      "profile": null,
+      "provider": "PMD",
+      "provider_version": null,
+      "providers": [
+        {
+          "duration_ms": null,
+          "eligible_file_count": 0,
+          "files_analyzed": 0,
+          "finding_count": 0,
+          "grouped_finding_count": 0,
+          "informational_count": 0,
+          "message": "PMD static analysis was disabled for this assessment.",
+          "primary_count": 0,
+          "profile": null,
+          "provider": "PMD",
+          "provider_id": "pmd",
+          "provider_version": null,
+          "raw_observation_count": 0,
+          "rulesets": null,
+          "status": "disabled",
+          "supporting_count": 0,
+          "suppressed_from_html_count": 0,
+          "warnings": []
+        }
+      ],
+      "raw_observation_count": 0,
+      "rulesets": null,
+      "status": "disabled",
+      "supporting_count": 0,
+      "suppressed_from_html_count": 0
+    },
+    "summary": {
+      "ai_executed": false,
+      "ai_recommendation_count": 0,
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 0,
+      "deterministic_recommendation_count": 2,
+      "finding_count": 11,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 0,
+        "info": 5,
+        "low": 1,
+        "medium": 5
+      },
+      "phase_count": 0,
+      "recommendation_count": 2,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 1,
+        "low": 0,
+        "medium": 1
+      },
+      "static_analysis_status": "disabled",
+      "summary_text": "Analyzed repository 'sample-php-app' with 6 scanned file(s). Detected 11 finding(s) (0 critical) and 2 recommendation(s) (1 critical/high priority). Automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 4,
+      "tests_detected": true
+    },
+    "technologies": [
+      {
+        "category": "build_tool",
+        "confidence": 1.0,
+        "name": "Composer",
+        "source": "composer.json",
+        "version": null
+      },
+      {
+        "category": "framework",
+        "confidence": 1.0,
+        "name": "Laravel",
+        "source": "composer.json",
+        "version": "^11.0"
+      },
+      {
+        "category": "language",
+        "confidence": 1.0,
+        "name": "PHP",
+        "source": "file_extension_or_composer.json",
+        "version": null
+      },
+      {
+        "category": "testing",
+        "confidence": 1.0,
+        "name": "PHPUnit",
+        "source": "composer.json",
+        "version": "^11.0"
+      }
+    ],
+    "timing": {
+      "ai_ms": null,
+      "analysis_ms": 2.73,
+      "cache_hits": 0,
+      "cache_misses": 3,
+      "evidence_ms": null,
+      "files_loaded": 3,
+      "files_skipped": 0,
+      "graph_ms": 38.82,
+      "knowledge_ms": null,
+      "peak_rss_mb": 117.95,
+      "report_ms": 4.36,
+      "rules_ms": 93.76,
+      "scan_ms": 0.62,
+      "static_analysis_ms": null,
+      "total_ms": 155.48
+    },
+    "warnings": []
+  },
+  "manifest": {
+    "codestrata_version": "0.1.0",
+    "contract_version": "1.0.0",
+    "enabled_sections": [
+      "executive_summary",
+      "technologies",
+      "findings",
+      "recommendations"
+    ],
+    "generated_at": "2026-07-26T17:19:59.596769Z",
+    "generation_mode": "deterministic",
+    "html_report_version": "2.1",
+    "report_version": "1.2",
+    "repository_id": "ed2f5e4c-0afb-42e1-9db4-7c24ad62fef9",
+    "scan_id": "6cdbb0db-7293-425f-b5ae-bbdd2bb5995f",
+    "schema_version": "1.2",
+    "volatile_fields": [
+      "assessment.generated_at",
+      "assessment.timing",
+      "assessment.ai.latency_ms",
+      "assessment.static_analysis",
+      "manifest.generated_at"
+    ]
+  },
+  "report_version": "1.2",
+  "schema_version": "1.2"
+}

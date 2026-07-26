@@ -1,0 +1,183 @@
+{
+  "finding_count": 6,
+  "findings": [
+    {
+      "affected_assessment_node_ids": [
+        "ag:knowledge-concept-ref:71e158b08e73715c0dc646c7acbb980fe20d0f91b27498f45a5ce862f443973a",
+        "ag:repository-entity-ref:a93884b3cdf42e81ba2a671b0276d0d64701b88f95efaf7849e1dd4561465ed9",
+        "ag:repository-entity-ref:f4a277a06df5302272b8b84bc19a2039d3fa649058df25a2cbb242bd27706f74"
+      ],
+      "category": "modernization",
+      "description": "Java is present and Maven declares language level 17.",
+      "evidence": [
+        {
+          "evidence_type": "knowledge_binding",
+          "excerpt": "matched_key=java",
+          "node_id": null,
+          "path": null,
+          "source_id": "kb:exact_canonical_key:repo:sample-java-app:dependency:jvm:_:java=>ekg:language:java:java"
+        },
+        {
+          "evidence_type": "knowledge_binding",
+          "excerpt": "matched_key=java",
+          "node_id": null,
+          "path": null,
+          "source_id": "kb:exact_canonical_key:repo:sample-java-app:file:src/main/java/com/example/sample/SampleApplication.java=>ekg:language:java:java"
+        },
+        {
+          "evidence_type": "dependency_version",
+          "excerpt": "java.version=17",
+          "node_id": null,
+          "path": null,
+          "source_id": "dependency:jvm:java"
+        }
+      ],
+      "id": "finding:codestrata-rule-java-detected:96fee315b6119540",
+      "metadata": {
+        "is_java_8": false,
+        "java_major": 17,
+        "java_version": "17",
+        "matched_binding_count": 2
+      },
+      "rule_id": "codestrata-rule-java-detected",
+      "severity": "informational",
+      "source": "rule",
+      "title": "Java 17 detected"
+    },
+    {
+      "affected_assessment_node_ids": [],
+      "category": "build",
+      "description": "A Maven project was detected, but mvnw / mvnw.cmd were not found in the repository inventory.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "pom.xml or maven binding present without Maven Wrapper",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-java-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-maven-wrapper-missing:6718e1b98ef2f402",
+      "metadata": {},
+      "rule_id": "codestrata-rule-maven-wrapper-missing",
+      "severity": "medium",
+      "source": "rule",
+      "title": "Maven Wrapper missing"
+    },
+    {
+      "affected_assessment_node_ids": [],
+      "category": "build",
+      "description": "No GitHub Actions workflow paths were found under .github/workflows/.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "no paths under .github/workflows/",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-java-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-missing-ci-workflow:89455742e5d5e76d",
+      "metadata": {},
+      "rule_id": "codestrata-rule-missing-ci-workflow",
+      "severity": "low",
+      "source": "rule",
+      "title": "Missing CI workflow"
+    },
+    {
+      "affected_assessment_node_ids": [],
+      "category": "governance",
+      "description": "No LICENSE file was found in the repository inventory.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "LICENSE basename not present in inventory paths",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-java-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-missing-license:47ea37891dc20bfa",
+      "metadata": {},
+      "rule_id": "codestrata-rule-missing-license",
+      "severity": "medium",
+      "source": "rule",
+      "title": "Missing LICENSE"
+    },
+    {
+      "affected_assessment_node_ids": [],
+      "category": "testing",
+      "description": "No test files or conventional test directories were found while source files are present.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "source_files=1 test_files=0",
+          "node_id": null,
+          "path": null,
+          "source_id": "sample-java-app"
+        }
+      ],
+      "id": "finding:codestrata-rule-missing-tests:e26b588cba029aeb",
+      "metadata": {
+        "source_file_count": 1
+      },
+      "rule_id": "codestrata-rule-missing-tests",
+      "severity": "medium",
+      "source": "rule",
+      "title": "Missing tests"
+    },
+    {
+      "affected_assessment_node_ids": [
+        "ag:knowledge-concept-ref:62c11df24710271eb3f49118e4a9fc5fbe2e3df285d873f0885097859eecc4f5",
+        "ag:repository-entity-ref:e5aa8cc832a4d9eb6c9006842dc27c5c7335210308762b811d432d42c4f95450"
+      ],
+      "category": "modernization",
+      "description": "Spring Boot is present at version 3.3.0.",
+      "evidence": [
+        {
+          "evidence_type": "knowledge_binding",
+          "excerpt": "matched_key=spring-boot",
+          "node_id": null,
+          "path": null,
+          "source_id": "kb:exact_canonical_key:repo:sample-java-app:dependency:maven:org.springframework.boot:spring-boot=>ekg:framework:spring-boot:spring-boot"
+        },
+        {
+          "evidence_type": "dependency_version",
+          "excerpt": "spring-boot=3.3.0",
+          "node_id": null,
+          "path": null,
+          "source_id": "dependency:maven:spring-boot"
+        }
+      ],
+      "id": "finding:codestrata-rule-spring-boot-detected:f029ee9e5e6dd93d",
+      "metadata": {
+        "matched_binding_count": 1,
+        "spring_boot_major": 3,
+        "spring_boot_version": "3.3.0"
+      },
+      "rule_id": "codestrata-rule-spring-boot-detected",
+      "severity": "informational",
+      "source": "rule",
+      "title": "Spring Boot 3.3.0 detected"
+    }
+  ],
+  "rules_evaluated": [
+    "codestrata-rule-java-detected",
+    "codestrata-rule-large-repository",
+    "codestrata-rule-maven-wrapper-missing",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-missing-readme",
+    "codestrata-rule-missing-tests",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing",
+    "codestrata-rule-spring-boot-detected",
+    "codestrata-rule-unsupported-spring-boot-version"
+  ],
+  "rules_skipped": [
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing"
+  ]
+}
