@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: codestrata
+      POSTGRES_USER: codestrata
+      POSTGRES_PASSWORD: codestrata
+    ports:
+      - "5432:5432"
+    volumes:
+      - codestrata_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codestrata -d codestrata"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  codestrata_pgdata:

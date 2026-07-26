@@ -103,7 +103,7 @@ temp/
 *.db
 
 # ==========================================
-# AI Artifacts (Future)
+# Local caches / embeddings
 # ==========================================
 
 vector_store/
@@ -128,10 +128,10 @@ artifacts/models/
 .ruff_cache/
 
 # ==========================================
-# AIMF Workspace
+# CodeStrata Workspace
 # ==========================================
 
-.aimf-workspace/
+.codestrata-workspace/
 
 # ==========================================
 # GitHub Repositories (optional)
@@ -139,8 +139,12 @@ artifacts/models/
 
 repositories/
 
-# AIMF local workspace
-.aimf/
+# CodeStrata local workspace
+.codestrata/
+.codestrata-test-knowledge/
 
 # Generated analysis reports
 reports/
+
+# Public export staging
+.export-staging/

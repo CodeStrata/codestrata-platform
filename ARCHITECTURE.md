@@ -1,479 +1,416 @@
-# AI Modernization Factory (AIMF) Architecture
+# CodeStrata Architecture
+
+**Version:** 0.1.0
+
+## Monorepo layout (Phase 5.23)
+
+```text
+codestrata-platform/          # private source of truth
+├── engine/                   # Community Engine → public codestrata-engine
+├── examples/                 # samples/reports → public codestrata-examples
+├── cursor-plugin/            # placeholder → codestrata-cursor
+├── vscode-plugin/            # placeholder → codestrata-vscode
+├── platform/                 # private Platform / Enterprise examples & docs
+├── scripts/                  # export + validate + dogfood harnesses
+├── public-export-manifest.yaml
+├── docs/                     # monorepo sync docs
+└── tests/architecture/       # engine↔platform boundary tests
+```
+
+Public mirrors are generated; see [docs/public-export.md](docs/public-export.md).
+Engine runtime must not depend on `platform/`. Security posture:
+[engine/docs/security/threat-model.md](engine/docs/security/threat-model.md).
 
 ## Purpose
 
-AI Modernization Factory (AIMF) analyzes enterprise application repositories and produces evidence-based modernization assessments.
+CodeStrata analyzes application repositories and produces evidence-based modernization
+assessments. Deterministic analysis discovers technologies, graphs, findings, and
+recommendations. Optional AI enrichment adds a narrative over that evidence—never
+inventing facts.
 
-AIMF first performs deterministic analysis to discover technologies, build systems, dependencies, CI/CD configuration, architecture, security, and cloud-readiness characteristics. Structured facts, findings, and deterministic recommendations are the primary product. Optional AI interpretation runs over a budgeted, normalized evidence contract and augments the same HTML/JSON assessment report.
-
-## Engineering Philosophy
+## Engineering philosophy
 
 > **Deterministic analysis first. AI reasoning second.**
 
-Large language models are useful for reasoning over structured information, but less reliable at inventing facts from large codebases.
+Benefits: repeatable analysis, explainable findings, lower hallucination risk,
+budgeted token use, clear separation between facts and interpretation, and useful
+output when AI is unavailable or fails.
 
-Instead of asking an LLM to “analyze this repository,” AIMF asks:
+## End-to-end assess pipeline
 
-> Here is everything we discovered about this application. Based on these facts, what modernization strategy would you recommend?
+```text
+                    codestrata.toml / CLI
+                           │
+                           ▼
+              Local path or GitHub clone
+                           │
+                           ▼
+         Phase 1 AnalysisService (detect + analyzers + optional PMD)
+                           │
+                           ▼
+              Repository Inventory → Repository Graph
+                           │
+                           ▼
+         Knowledge Pipeline ← Engineering Knowledge Graph
+                           │
+                           ▼
+                   Assessment Graph
+                           │
+                           ▼
+              Rule Engine → findings.json
+                           │
+                           ▼
+         Recommendation Engine → recommendations.json
+                           │
+              ┌────────────┴────────────┐
+              ▼                         ▼
+     HTML Report v2 + report.json   optional AI enrichment
+                                        │
+                                        ▼
+                                 ai-enrichment.json
+```
 
-Benefits:
+Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
+[engine/docs/runtime-performance.md](engine/docs/runtime-performance.md), and siblings under
+[engine/docs/](engine/docs/).
 
-* Repeatable analysis
-* Explainable findings
-* Lower hallucination risk
-* Lower token cost (budgeted normalized context, not raw repositories or all PMD observations)
-* Easier unit testing
-* Clear separation between facts and interpretation
-* Deterministic usefulness when AI is unavailable or fails
-
-## Design Principles
+## Design principles
 
 ### Separation of responsibilities
 
 | Layer | Responsibility |
 | ----- | -------------- |
-| Scanners | Acquire source and inventory files |
-| Detectors | Identify languages, frameworks, and tools |
-| Analyzers | Produce facts and findings |
-| CompositeAnalyzer | Run analyzers sequentially and merge facts |
-| StaticAnalysisService | Orchestrate external providers (PMD today) |
-| RecommendationEngine | Deterministic recommendations from findings |
-| AnalysisService | Orchestrate detection + native analysis + providers + recommendations |
-| AI contracts / prompts / providers / agents | Build budgeted context, invoke model once, validate output |
-| Reporters (`reporters/`) | Present `AnalysisResult` for `aimf scan` |
-| Reporting (`reporting/`) | Customer assess HTML/JSON modernization reports |
-| CLI | Load config, invoke pipeline, write output |
+| Scanners | Acquire source (local / GitHub) |
+| Detectors / analyzers | Phase 1 facts and analyzer findings |
+| StaticAnalysisService | External providers (PMD today) |
+| Inventory / graphs | Repository Graph, EKG, Assessment Graph |
+| Rule Engine | Deterministic Phase 3 findings |
+| Recommendation Engine | Deterministic Phase 3 recommendations |
+| AI enrichment | Exactly one Bedrock call; narrative only |
+| Knowledge store | Durable repository identity, snapshots, runs, immutable artifacts (SQLite) |
+| Reporting | HTML Report v2 + JSON artifacts |
+| Application | `AssessmentApplicationService` orchestration; knowledge ports/session; Agent Framework |
+| CLI | Config, thin adapters, artifact retention |
+| MCP | FastMCP tools/resources/prompts over application services |
 
-### Composable components
+### Evidence and immutability
 
-New scanners, detectors, analyzers, providers, and reporters can be added without rewriting the orchestration layer. Analyzers implement a shared protocol and return deltas; the composite merges them.
+* Findings and recommendations carry structured evidence and stable IDs.
+* Graphs are immutable projections; rules never mutate them.
+* AI may reference finding/recommendation IDs; it must not rewrite those artifacts.
 
-### Evidence-based findings
+## Modes
 
-Findings include title, description, category, severity, source, and structured evidence (file paths and supporting details). Deterministic and AI recommendations remain traceable to finding and group IDs.
+| Mode | AI calls | Artifacts |
+| ---- | -------- | --------- |
+| Deterministic (`--no-ai`) | 0 | Graphs, findings, recommendations, HTML/JSON |
+| AI (`--with-ai`) | exactly 1 | Same + `ai-enrichment.json` on success |
 
-## Runtime Pipelines
+AI enrichment failure warns and keeps deterministic output (CLI exit 0).
 
-### Shared analysis
+## Phase 1 analysis (shared)
 
 ```text
-                    aimf.toml / CLI flags
-                        │
-                        ▼
-                      CLI
-                        │
-                        ▼
-             Local or GitHub scanner
-                        │
-                        ▼
-                   Repository
-                        │
-                        ▼
-                 AnalysisService
-                        │
-          ┌─────────────┼─────────────────────┐
-          ▼             ▼                     ▼
- Technology      CompositeAnalyzer   StaticAnalysisService
- detection              │              └── PMD (profiles)
-          │             ▼                     │
-          │      facts + findings             ▼
-          │             │            normalize → group → visibility
-          └─────────────┴─────────────┬───────┘
-                                      ▼
-                           Recommendation engine
-                                      ▼
-                              AnalysisResult
+Repository
+    → Technology detection
+    → CompositeAnalyzer (ordered analyzers)
+    → optional StaticAnalysisService (PMD)
+    → Phase 1 RecommendationEngine
+    → AnalysisResult
 ```
 
-### `aimf scan` reporting
+`codestrata scan` reports `AnalysisResult` as text/JSON/HTML under `reports/`.
+`codestrata assess` continues into graphs → Phase 3 rules → recommendations → optional
+AI → HTML Report v2.
+
+### Analyzer order
+
+1. RepositoryMetricsAnalyzer
+2. BuildDiscoveryAnalyzer
+3. BuildMetadataAnalyzer
+4. DependencyDiscoveryAnalyzer
+5. DependencyMetadataAnalyzer
+6. DependencyHealthAnalyzer
+7. CicdDiscoveryAnalyzer
+8. SecurityAnalyzer
+9. ArchitectureAnalyzer
+10. CloudReadinessAnalyzer
+
+### Static analysis (PMD)
 
 ```text
-AnalysisResult
-    │
-    ├─ report.txt
-    ├─ report.json
-    └─ report.html
-         │
-         ▼
- retain latest 3 runs (delete older)
+PMD XML → parser → observations → mapping/visibility → groups → Finding cards
 ```
 
-### `aimf assess` reporting
+Profiles: `focused` · `standard` · `comprehensive`. Critical/high findings are
+never suppressed from HTML.
+
+Future providers implement `StaticAnalysisProvider` and normalize into CodeStrata
+observations/findings without changing orchestration ownership.
+
+## Graphs
+
+| Graph | Role |
+| ----- | ---- |
+| Repository Graph | Observations about one repository |
+| Engineering Knowledge Graph | Reusable concepts (no repo identity) |
+| Assessment Graph | Per-run projection/reference join |
+
+See [docs/repository-graph.md](engine/docs/repository-graph.md) and
+[docs/assessment-graph.md](engine/docs/assessment-graph.md).
+
+## Rules and recommendations
 
 ```text
-AnalysisResult
-    │
-    ├─ (deterministic mode) skip AI
-    └─ (AI mode)
-         ├─ LLMAnalysisContextBuilder + token budget
-         ├─ exactly one Bedrock invocation
-         └─ AIRecommendationResult validation
-    │
-    ▼
-ModernizationReportInput
-    │
-    ├─ report.html   (deterministic sections first; AI section appended)
-    └─ report.json   (schema/report version 1.2)
-         │
-         ▼
- prune older completed runs (keep latest 3 per repository; delete older)
+Assessment Graph → Rule Engine → findings.json
+                              → Recommendation Engine → recommendations.json
 ```
 
-AI failure behavior:
+No AI in either engine. Details: [docs/rule-engine.md](engine/docs/rule-engine.md),
+[docs/recommendation-engine.md](engine/docs/recommendation-engine.md).
 
-* Deterministic HTML and JSON are still written
-* `assessment.ai.status = failed` with a sanitized warning
-* No fabricated AI sections; prompts and raw responses are not exposed
-* Retention still runs after successful artifact generation
+## AI enrichment
 
-### Provider boundary
+One Bedrock Converse call over a compact, budgeted context. Output validates
+referenced finding and recommendation IDs. See [docs/ai-enrichment.md](engine/docs/ai-enrichment.md).
 
-AIMF owns:
+Legacy `ModernizationAssessmentAgent` / `AIRecommendationResult` remain for
+compatibility and bridging into report contracts; the assess path uses
+`AiEnrichmentService` for the one-call enrichment artifact.
 
-* provider orchestration and availability checks
-* PMD profile selection and command construction isolation
-* normalization into observations, groups, and customer `Finding` objects
-* modernization interpretation and recommendations
-* reporting and baseline comparison
+## HTML Report v2
 
-PMD owns:
+Presentation-only view-model + renderer. Sections separate deterministic findings
+and recommendations from optional AI enrichment. See
+[docs/report-generation.md](engine/docs/report-generation.md).
 
-* Java language rules
-* source-level issue detection
+## Knowledge store (Phase 2B)
 
-### PMD normalization pipeline
+`AssessmentApplicationService` persists completed assessments side-by-side with
+existing report artifacts:
 
 ```text
-PMD XML report
-    │
-    ▼
-parser (namespace-aware)
-    │
-    ▼
-observations (raw; retained in JSON)
-    │
-    ▼
-rule mapping + visibility + modernization relevance
-    │
-    ▼
-grouping by remediation pattern
-    │
-    ▼
-customer Finding cards (HTML) + grouped evidence
+CLI → AssessmentApplicationService
+        → full assessment pipeline (unchanged)
+        → KnowledgeStore (snapshots, runs, content-addressed blobs)
+        → existing report generation
 ```
 
-Profiles:
+Schema version 2 indexes repositories, snapshots, assessment runs, and artifact
+metadata. Payloads live under `.codestrata/knowledge/blobs/` (SHA-256, atomic write).
+Reports are never read back into the store. Persistence finalization failure
+fails the assessment; incomplete runs are never “latest completed.” Default
+assessment remains full recomputation; incremental execution is opt-in only
+(see Phase 2F below).
 
-| Profile | Role |
-| ------- | ---- |
-| `focused` | Executive/customer assessment with lower stylistic noise |
-| `standard` | Default modernization assessment |
-| `comprehensive` | Broader evidence including lower-priority conventions |
+## Repository Knowledge Layer (Phase 5.1–5.7)
 
-Visibility: `primary` · `supporting` · `informational` · `suppressed_from_html`  
-Critical/high findings are never suppressed from HTML.
+Provider-neutral contracts for canonical knowledge documents, chunks, embeddings,
+dense vector storage, grounded retrieval, citation-bound answers, and MCP exposure.
+Phase 5.7 adds repository-intelligence MCP tools (`repository_*`) over
+`RepositoryRetriever` / `GroundedAnswerEngine` / `KnowledgeQueryService` with
+stdio and streamable-http transports. No production embeddings, production LLMs,
+hybrid search, or reranking.
+See [docs/repository-knowledge/](engine/docs/repository-knowledge/) and
+[docs/mcp/overview.md](engine/docs/mcp/overview.md).
 
-### Adding a future provider
+### Query services (Increment 3)
 
-1. Implement `StaticAnalysisProvider` (`provider_id`, applicability, availability, `analyze`)
-2. Normalize tool output into AIMF observations/groups/`Finding` objects with `FindingSource.EXTERNAL_STATIC_ANALYSIS`
-3. Register the provider in the default pipeline when its config section is enabled
-4. Keep command construction and parsing isolated from `AnalysisService`
+`KnowledgeQueryService` (`codestrata.application.knowledge.queries`) is the
+transport-neutral read API for durable knowledge. Future FastMCP, REST, CLI, and
+agent adapters must call this service — not SQLite, blob paths, or report files.
+Authoritative findings/recommendations are Phase 3 stable IDs. Snapshot
+comparison uses persisted manifests. Graph component queries load immutable
+graph JSON in memory with bounded depth (max 3).
 
-### Repository authentication trust boundary
+### MCP adapter (Phase 2C)
 
-Private GitHub access uses a provider-neutral authentication boundary:
+`codestrata mcp serve` starts a stdio FastMCP server named **CodeStrata**. Tools and
+resources are thin adapters over `KnowledgeQueryService` and
+`AssessmentApplicationService`. See [docs/mcp-server.md](engine/docs/mcp-server.md).
+
+### Agent Framework (Phase 2D / 2E)
+
+`codestrata.application.agents` provides deterministic orchestration
+(`AgentOrchestrator`, Knowledge / Assessment / Validation agents) over the same
+application services. Phase 2E adds thin adapters:
+
+- CLI: `codestrata agent review|assess|validate|compare|modernization-review`
+- MCP: five `*_with_agents` tools
+
+MCP and agents are sibling interfaces — agents must not call MCP internally.
+Existing `codestrata assess` and the 20 granular MCP tools remain unchanged.
+
+See [docs/agent-framework.md](engine/docs/agent-framework.md).
 
 ```text
-Configuration reference
-        ↓
-RepositoryAuthenticationService
-        ↓
-Credential provider
-        ↓
-Runtime-only credential
-        ↓
-Scoped Git execution context
-        ↓
-Git clone
-        ↓
-Cleanup and redaction
+CLI / MCP / REST
+        │
+        ├───────────────┐
+        │               │
+        ▼               ▼
+Agent Framework    Application Services
+        │               ▲
+        └───────────────┘
 ```
 
-Trust rules:
+### Incremental planning (Phase 2F.1)
 
-* AIMF configuration contains credential references only (`token_env`), never secret values
-* Runtime credentials never enter analysis-domain models, reports, or baselines
-* Git subprocess authentication is scoped to a single clone operation via `GIT_ASKPASS`
-* Shared redaction (`aimf.security.redaction`) is defense-in-depth for operational output
-* Future hosted deployments should use short-lived GitHub App installation tokens
-* Future AWS-hosted deployments may resolve references through AWS Secrets Manager
-* Those future capabilities are not implemented in this milestone
+`codestrata.application.incremental` classifies candidate vs previous manifests, analyzes
+bounded impact, applies a conservative reuse policy, and emits a deterministic
+`IncrementalAssessmentPlan`.
 
-Authentication applies only to remote GitHub cloning. Local repository scanning ignores authentication configuration.
+### Incremental execution (Phase 2F.2)
 
-### Analyzer fact pipeline
+`IncrementalAssessmentExecutor` optionally executes eligible plans via inventory
+merge + stage rebuild through the existing assessment pipeline, or falls back to
+a normal full assessment. **`codestrata assess` remains a full rebuild by default**;
+execution requires explicit opt-in.
 
-`CompositeAnalyzer` runs analyzers in order:
+### Incremental operations (Phase 2F.3)
 
-1. Pass accumulated `RepositoryFacts` into the analyzer
-2. Receive new findings and newly produced facts (a delta)
-3. Merge the delta into the accumulated facts
-4. Pass the merged facts to the next analyzer
+Post-execution validation, semantic equivalence, metrics, explainability, and
+persisted `IncrementalExecutionRecord` provenance. Controlled rollout via
+`[incremental].rollout_mode` (default `off`; production target `opt_in`).
 
-Default analyzer order:
+Thin adapters:
 
-1. `RepositoryMetricsAnalyzer`
-2. `BuildDiscoveryAnalyzer`
-3. `BuildMetadataAnalyzer`
-4. `DependencyDiscoveryAnalyzer`
-5. `DependencyMetadataAnalyzer`
-6. `DependencyHealthAnalyzer`
-7. `CicdDiscoveryAnalyzer`
-8. `SecurityAnalyzer`
-9. `ArchitectureAnalyzer`
-10. `CloudReadinessAnalyzer`
-
-### AI assessment architecture
+- CLI: `codestrata incremental plan|assess|explain`
+- MCP: four additive incremental tools
 
 ```text
-AnalysisResult
-    │
-    ▼
-LLMAnalysisContextBuilder
-    ├─ facts summary (compact; no full dependency lists)
-    ├─ static-analysis profile + counts
-    ├─ deterministic recommendations
-    └─ prioritized finding selection (budget.py)
-         │
-         ▼
-ModernizationPromptBuilder
-         │
-         ▼
-create_bedrock_runtime_client()   # single Bedrock Runtime client factory
-         │                         # aws.profile / aws.region → env → boto3 chain
-         ▼
-BedrockAIModelProvider.converse()  (exactly one Converse call; model-family neutral)
-         │
-         ▼
-AIRecommendationResult
-         │
-         ▼
-validate_recommendation_result
-    ├─ AI-REC-001… sequential IDs (not PMD / DET / REC-* IDs)
-    ├─ 5–8 recommendations for evidence-rich assessments
-    ├─ related_finding_ids → findings only; related_deterministic_recommendation_ids for DET IDs
-    ├─ 2–4 non-empty phases; every AI-REC in exactly one phase
-    ├─ reject unsupported severity escalation and invented paths
-    └─ recompute evidence_coverage from unique related_finding_ids
-       (model-supplied coverage arithmetic is untrusted and overwritten)
-         │
-         ▼
-ModernizationAssessmentResult → reporting layer
+IncrementalAssessmentPlan
+        → IncrementalAssessmentExecutor
+        → Complete normal assessment result
+        → Validation + metrics + explanations
+        → IncrementalExecutionRecord → CLI / MCP
 ```
 
-AI context budget priority:
+Details: [docs/incremental-assessment.md](engine/docs/incremental-assessment.md),
+[docs/knowledge-store.md](engine/docs/knowledge-store.md).
 
-1. Critical/high native AIMF findings
-2. Critical/high primary PMD groups
-3. Medium primary PMD groups
-4. Medium supporting PMD groups
-5. Deterministic recommendations / architecture-security-cloud-build facts
-6. Low/informational findings only when space remains
+### Enterprise Knowledge Graph (Phase 3)
 
-Never truncate finding IDs, severity, category, or critical/high evidence. If critical/high evidence cannot fit, fail clearly (`AIContextBudgetError`) rather than silently dropping it.
-
-Budget metadata recorded on the context and mirrored into JSON:
-
-* `candidate_finding_count`
-* `included_finding_count`
-* `omitted_informational_count`
-* `estimated_input_tokens`
-* `static_analysis_profile`
-
-Provider token usage and latency are recorded when the model returns them.
-
-## Package Layout
+YAML-declared enterprise architecture (organizations, applications, ownership,
+standards) linked to CodeStrata repositories and assessments. Optional;
+disabled by default. No graph database.
 
 ```text
-src/aimf/
-├── cli/
-│   ├── __init__.py          # Typer app: version, scan, assess
-│   └── assess.py            # assess command + AI orchestration
+Enterprise YAML → validate → EnterpriseKnowledgeGraph → CLI / MCP queries
+```
+
+Details: [platform/docs/knowledge_graph/README.md](platform/docs/knowledge_graph/README.md),
+[ROADMAP.md](ROADMAP.md).
+
+### Shared Rule Platform (Phase 4.1)
+
+Transport-neutral rule infrastructure for future Analysis Intelligence packs.
+Distinct from the Assessment Graph `RuleEngine` used by `codestrata assess`.
+Disabled by default; not wired into the default assessment pipeline.
+
+```text
+RuleExecutionContext → Registry → Planner → Executor → Finding mapper
+```
+
+Details: [docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analysis-intelligence/shared-rule-platform.md).
+
+### Rule Platform Integration Bridge (Phase 4.1.1)
+
+`LegacyRuleAdapter` and `RuleExecutionFacade` connect the Assessment Graph
+`RuleEngine` to the Shared Rule Platform without changing `codestrata assess`.
+Adapted legacy evaluation preserves Finding IDs. See
+[docs/analysis-intelligence/rule-platform-migration.md](engine/docs/analysis-intelligence/rule-platform-migration.md).
+
+### Assessment Framework (Phase 4.1.2)
+
+Methodology for dimensions, rule taxonomy, evidence/confidence, scoring design,
+business impact vs severity, modernization waves, and CTO report structure.
+Documentation only—no production scoring. See
+[docs/assessment-framework/README.md](engine/docs/assessment-framework/README.md).
+
+### Architecture Intelligence (Phase 4.2.1 / 4.2.1a / 4.2.2)
+
+Initial production pack `architecture.core` (v1.0.0) registers seven SharedRules.
+Phase **4.2.1a** hardens precision: architectural-unit selection (nested packages
+collapsed), dependency normalization (parent/child, type-only, init/registration),
+separated extraction vs classification coverage, and tighter coupling/direction
+applicability. Discoverable via `codestrata rules` / MCP. Merged into `codestrata assess`
+only when `[rules] enabled` and `[rules.architecture] enabled`.
+
+Phase **4.2.2** adds Language Evidence Providers that collect and normalize
+language facts for reuse by shared architecture rules. The provider pipeline is
+**disabled by default** (`[evidence.language] enabled = false`); when disabled,
+assessment behavior is unchanged.
+
+```text
+paths + source texts → ArchitectureAnalysisView
+        → RuleExecutionFacade.execute_shared
+        → RuleFindingMapper → Finding (merged with legacy RuleEngine)
+
+opt-in:
+providers → AggregatedLanguageEvidence → ArchitectureAnalysisView
+```
+
+Details: [docs/analysis-intelligence/architecture/README.md](engine/docs/analysis-intelligence/architecture/README.md)
+and [docs/analysis-intelligence/evidence-providers/README.md](engine/docs/analysis-intelligence/evidence-providers/README.md).
+
+Phase **4.2.3** adds Architecture Conclusions: deterministic grouping and
+interpretation of architecture findings into explainable conclusions and
+consolidated recommendations. Disabled by default
+(`[analysis.architecture_conclusions] enabled = false`). Findings remain
+unchanged. See
+[docs/analysis-intelligence/architecture-conclusions/README.md](engine/docs/analysis-intelligence/architecture-conclusions/README.md).
+
+Phase **4.2.4** adds an optional Architecture Assessment section (`architecture-assessment.json`) composed from existing findings and optional conclusions. Disabled by default (`[assessment.sections.architecture] enabled = false`). See [docs/analysis-intelligence/architecture-assessment/README.md](engine/docs/analysis-intelligence/architecture-assessment/README.md).
+
+Phase **4.2.5** integrates that section into customer `report.json` and HTML via `ArchitectureReportAdapter` (`assessment.architecture`). Disabled by default (`[report.sections.architecture] enabled = false`). Schema remains `1.2` with an optional additive field. No scoring or AI narrative. See [docs/analysis-intelligence/architecture-reporting/README.md](engine/docs/analysis-intelligence/architecture-reporting/README.md).
+
+## Repository authentication
+
+Private GitHub access uses credential **references** in config (`token_env`),
+never secret values in TOML. Runtime credentials stay out of domain models and
+reports. Authentication applies only to remote clones.
+
+## Package layout (simplified)
+
+```text
+src/codestrata/
+├── cli/                 # Typer: version, scan, assess, agent, incremental, mcp
 ├── config/
-│   └── settings.py
-├── repository_auth/
-├── security/
-│   └── redaction.py
-├── models/
-├── reporters/               # scan reporters + shared HTML helpers
-├── reporting/               # assess modernization HTML/JSON
-│   ├── assessment_json.py
-│   ├── modernization_html.py
-│   ├── modernization_models.py
-│   └── ...
-├── ai/
-│   ├── aws_config.py        # centralized AWS profile/region + Bedrock client
-│   ├── contracts/           # LLMAnalysisContext + budgeted builder
-│   ├── prompts/
-│   ├── providers/           # Bedrock + parsing
-│   ├── agents/              # modernization assessment agent
-│   ├── recommendations/     # typed AI result + validation
-│   └── tools/               # optional analysis tools for agents
-├── static_analysis/
-│   ├── service.py
-│   ├── grouping.py
-│   ├── visibility.py
-│   └── providers/           # PMD command/parser/profiles/normalization
-└── services/
-    ├── analysis_service.py
-    ├── default_pipeline.py
-    ├── recommendation_engine.py
-    ├── scan_comparison_service.py
-    ├── analyzers/
-    ├── detectors/
-    └── scanners/
+├── application/         # assessment, knowledge queries, agents, incremental planning
+├── infrastructure/      # SQLite knowledge store, blobs, in-memory vector store
+├── interfaces/          # FastMCP (and future REST) adapters
+├── models/              # Phase 1 domain DTOs
+├── domain/              # graphs, findings, recommendations, repository knowledge
+├── services/            # analysis, inventory, knowledge, assessment
+├── static_analysis/     # PMD provider boundary
+├── ai/                  # enrichment + legacy agent / providers
+├── reporters/           # codestrata scan reporters
+├── reporting/           # assess HTML/JSON (incl. html_v2/)
+└── repository_auth/
 ```
 
-## Component Details
+## Configuration
 
-### Configuration
+Primary file: `codestrata.toml` (repository, AWS, AI, static analysis, reporting).
+Secrets belong in environment / `.env` (gitignored), never in committed config.
 
-`aimf.toml` is loaded into Pydantic settings:
+## Retention
 
-* `repository.url` — GitHub HTTPS or SSH URL
-* `repository.branch` — optional branch
-* `repository.authentication` — optional credential reference (`github_token` or `ssh_agent`)
-* `workspace.directory` — clone workspace
-* `workspace.clean_before_clone` — whether to replace an existing clone
-* `static_analysis.enabled` / `fail_on_provider_error`
-* `static_analysis.pmd.*` — executable, profile, rulesets, priority, timeout
-* `aws.profile` / `aws.region` — optional AWS session for Bedrock (preferred over exporting env vars)
-* `ai.provider` — AI provider name (currently `bedrock`)
-* `ai.bedrock.model_id` — Bedrock model ID (defaults to `amazon.nova-lite-v1:0` when unset)
-* `ai.bedrock.region` — optional legacy region fallback
+Completed assess/scan runs keep the latest **three** per repository name; older
+run directories are pruned after successful writes. Report retention does **not**
+delete knowledge-store rows or blobs (knowledge retention is deferred).
 
-### Scanners
+## Out of scope for v0.1.0
 
-* `LocalRepositoryScanner` — walks a local tree and collects relative file paths
-* `GitHubRepositoryScanner` — shallow-clones a GitHub repo (public or authenticated private), then uses the local scanner
+* Multi-step agent / MCP tool loops for enrichment
+* Lockfile-complete dependency resolution
+* Assisted code refactoring
+* Hosted SaaS control plane
 
-### Technology detectors
+## Related documents
 
-`CompositeTechnologyDetector` combines:
-
-* `JavaTechnologyDetector`
-* `JavaScriptTechnologyDetector`
-* `PhpTechnologyDetector`
-
-### Analyzers
-
-| Analyzer | Produces |
-| -------- | -------- |
-| `RepositoryMetricsAnalyzer` | Structural metrics findings |
-| `BuildDiscoveryAnalyzer` | `BuildFacts` (systems, wrappers, lockfiles) |
-| `BuildMetadataAnalyzer` | Richer `BuildFacts` (modules, packaging, Java versions, commands) |
-| `DependencyDiscoveryAnalyzer` | Dependency manifests / lockfiles |
-| `DependencyMetadataAnalyzer` | Parsed direct dependencies and categories |
-| `DependencyHealthAnalyzer` | Findings such as unmanaged/dynamic versions and missing lockfiles |
-| `CicdDiscoveryAnalyzer` | `CicdFacts` for detected pipeline files |
-| `SecurityAnalyzer` | Security-oriented facts and findings |
-| `ArchitectureAnalyzer` | Architecture facts and layering/design findings |
-| `CloudReadinessAnalyzer` | Cloud-readiness facts and findings |
-
-Supporting parsers:
-
-* `maven_dependency_parser.py` / `maven_version_resolver.py`
-* `github_actions_parser.py` / `yaml_pipeline_loader.py`
-
-### Domain models
-
-`RepositoryFacts` aggregates structure, technology, build, dependencies, CI/CD, security, architecture, and cloud facts.
-
-`AnalysisResult` includes repository, technologies, facts, findings, deterministic recommendations, static-analysis results (observations + groups + counts), optional comparison metadata, and run metadata.
-
-`StaticAnalysisResult` retains:
-
-* raw `observations` (JSON)
-* `groups` and customer-facing `findings`
-* profile, files analyzed, visibility counts
-
-### Deterministic recommendations
-
-`RecommendationEngine` derives modernization recommendations from findings (including at most one deterministic recommendation per high-value PMD group). Recommendations remain in JSON unchanged when AI runs. HTML groups related deterministic recommendations by category for executive readability and keeps them separate from AI recommendations.
-
-### Reporters vs reporting
-
-| Path | Used by | Artifacts | Retention |
-| ---- | ------- | --------- | --------- |
-| `reporters/` | `aimf scan` | `report.txt`, `report.json`, `report.html` | Keep latest 3 completed runs (delete older) |
-| `reporting/` | `aimf assess` | `report.html`, `report.json`; plus `ai-execution.json` when AI was invoked | Keep latest 3 completed runs (delete older; no archive/) |
-
-Assess HTML structure (high level):
-
-1. Executive summary and repository system intelligence
-2. Static analysis summary
-3. Deterministic findings
-4. Deterministic recommendations
-5. Optional comparison section
-6. AI interpretation (`not_requested`, `succeeded`, or an explicit failure status such as `validation_failed`)
-7. Coverage, execution metadata, methodology
-
-When AI was requested, AIMF writes an internal `ai-execution.json` in the run directory for both successful and failed AI attempts. The artifact separates raw model text, pre-acceptance parsed JSON, and the AIMF-accepted recommendation result (including authoritative evidence coverage), plus optional normalization metadata. It is evaluation-oriented observability data (model comparison / regression / benchmarking), not a customer deliverable, and is never linked from HTML. Failure of writing this artifact emits a warning and does not force AI fallback. When AI fails after a successful provider call, reports show deterministic fallback (not “AI not executed”), retain provider/token metadata, and still write `ai-execution.json` with available raw/parsed layers. Unvalidated AI content is never included in customer-facing HTML/JSON.
-
-### AI contracts
-
-* `LLMAnalysisContext` schema version **1.1.0**
-* `AIRecommendationResult` schema version **1.0.0**
-* Assessment JSON schema/report version **1.2**
-
-Assess JSON AI block includes execution status, lifecycle stages, provider/model, executive summary, key risks, recommendations, phases, limitations, evidence coverage, token usage, latency, failure code/detail when applicable, and budget metadata. HTML and JSON must agree on AI status, counts, provider/model, tokens, latency, and evidence references. A successful provider call that later fails contract validation is reported as `validation_failed` (with metadata preserved), not as `executed: false` without invocation context.
-
-## Contracts
-
-Key protocols:
-
-* `TechnologyDetector.detect(repository) -> list[Technology]`
-* `Analyzer.analyze(repository, technologies, facts=None) -> AnalyzerResult`
-* `StaticAnalysisProvider.analyze(context) -> StaticAnalysisResult`
-* `AIModelProvider.invoke(...) -> ModelInvocationResult`
-
-Analyzers should return only facts they produce. They must not echo the full accumulated facts; merging is the composite’s job.
-
-## Current Status
-
-### Completed
-
-* Project packaging and CLI (`aimf version`, `aimf scan`, `aimf assess`)
-* Config loading and private GitHub authentication boundary
-* Local and GitHub scanning
-* Technology detection (Java / JS / PHP)
-* Analysis orchestration with fact-merging composite pipeline
-* Build, dependency, metrics, CI/CD, security, architecture, and cloud analyzers
-* Deterministic recommendation engine
-* PMD provider with profiles, namespace-aware parsing, normalization, grouping, and visibility
-* Scan reporters (text/JSON/HTML) and assess modernization reports (HTML/JSON)
-* Assess report retention (latest 3 completed runs per repository; no local archive)
-* Baseline scan comparison
-* AI evidence contract, token budgeting, Bedrock provider, prompt builder, assessment agent, and output validation
-* Failure-safe AI mode that retains deterministic reports
-* Automated tests and static analysis (pytest / Ruff / MyPy)
-
-### Next milestones
-
-* Additional static-analysis providers (SonarQube / Semgrep / CodeQL)
-* Richer structured AI risk objects (beyond string titles + high-priority recommendation cards)
-* Broader language and repository-source support
-* Assisted refactoring and continuous modernization workflows
-
-## Long-Term Vision
-
-AIMF is intended to grow into a modular enterprise modernization platform covering:
-
-* Repository and architecture assessment
-* Technical debt and dependency risk analysis
-* Cloud and AI readiness
-* Modernization roadmaps and executive reporting
-* Assisted refactoring and continuous monitoring
-
-New capabilities should plug into the existing scan → detect → analyze → (optional AI) → report flow without breaking deterministic guarantees.
+* [README.md](README.md) — product overview and quick start
+* [docs/](engine/docs/) — canonical topic documentation
+* [CHANGELOG.md](CHANGELOG.md) — release notes
+* [examples/README.md](examples/README.md) — commands and expected outputs
