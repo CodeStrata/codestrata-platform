@@ -30,7 +30,7 @@ Use this checklist before tagging a public GitHub Community Edition release.
 ## Examples and docs
 
 - [ ] All five language samples assess cleanly
-- [ ] Sample reports present under `examples/sample-reports/`
+- [ ] Sample reports present under `test-fixtures/sample-reports/`
 - [ ] Quick start / tutorial / CLI reference links resolve (`pytest tests/docs`)
 - [ ] No stale pre-rename wheel / package names in docs
 
@@ -38,7 +38,7 @@ Use this checklist before tagging a public GitHub Community Edition release.
 
 - [ ] `python -m build` produces `codestrata-*.whl` and sdist
 - [ ] Fresh venv: `pip install dist/codestrata-*.whl`
-- [ ] `codestrata version` / `codestrata assess --repo examples/sample-js-app …`
+- [ ] `codestrata version` / `codestrata assess --repo test-fixtures/sample-js-app …`
 - [ ] HTML `report.html` generated
 - [ ] Optional: `pip install 'codestrata[mcp]'` and `codestrata mcp --help`
 - [ ] Optional: `python scripts/clean_install_smoke.py`

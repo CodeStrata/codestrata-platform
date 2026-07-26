@@ -522,7 +522,7 @@ def test_settings_load_answering_defaults(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge.answering]
         enabled = true

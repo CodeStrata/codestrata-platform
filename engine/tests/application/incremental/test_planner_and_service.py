@@ -131,7 +131,7 @@ def test_settings_incremental_defaults(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -147,7 +147,7 @@ def test_settings_incremental_custom_and_invalid(tmp_path: Path) -> None:
     config_file.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [incremental]
         enabled = false
@@ -165,7 +165,7 @@ def test_settings_incremental_custom_and_invalid(tmp_path: Path) -> None:
     bad.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         max_change_ratio = 1.5
         """,
@@ -178,7 +178,7 @@ def test_settings_incremental_custom_and_invalid(tmp_path: Path) -> None:
     bad2.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         dependency_depth = 4
         """,

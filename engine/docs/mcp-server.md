@@ -146,7 +146,8 @@ and graph version compare. Read-only resources under
 `codestrata://enterprise/...` are registered when the enterprise query service
 is configured.
 
-Analysis Intelligence remains Phase 4; GitHub PR review remains Phase 6.
+Analysis Intelligence remains Phase 4; GitHub PR review is Phase 6.1–6.5 MVP
+(see [ROADMAP.md](../../ROADMAP.md)).
 
 ## Next phase
 

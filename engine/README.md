@@ -4,166 +4,121 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
 [![Edition: Community](https://img.shields.io/badge/edition-Community-brightgreen.svg)](docs/community-edition.md)
 
-> **Public mirror of `codestrata-platform/engine`.** Do not edit this repository
-> directly — changes must land in the private monorepo and be re-exported.
-> See the monorepo doc `docs/public-export.md`.
+> The Engine produces structured engineering intelligence.
 
-## What is CodeStrata?
+Open-source CLI that assesses a software repository and produces deterministic
+findings, recommendations, and a self-contained HTML/JSON modernization report.
 
-CodeStrata is a Python CLI that:
+**Audience:** engineers and engineering leaders evaluating a codebase for
+modernization, due diligence, or portfolio discovery.
 
-1. Scans a local or GitHub repository
-2. Detects technologies and extracts structural facts
-3. Builds knowledge graphs (repository, engineering knowledge, assessment)
-4. Runs deterministic rules → findings → recommendations
-5. Optionally calls Amazon Bedrock **once** for narrative enrichment
-6. Writes self-contained HTML Report v2 plus machine-readable JSON artifacts
-
-Use it for modernization discovery, demos, and engineering due diligence.
-
-**Community Edition** is the open-source product in this repository. Enterprise /
-Platform services (SSO, billing, multi-tenancy) are out of scope — see
-[docs/community-edition.md](docs/community-edition.md).
+> **Public mirror.** Prefer changes in the private `codestrata-platform` monorepo;
+> this repository is generated for Community distribution.
 
 ---
 
-## Community vs future Enterprise / Platform
+## Why CodeStrata Engine?
 
-| Capability | Community Edition | Future Enterprise / Platform |
-| ---------- | ----------------- | ---------------------------- |
-| Local / GitHub repository assess | Yes | Yes |
-| Deterministic findings & recommendations | Yes | Yes |
-| HTML Report v2 + JSON artifacts | Yes | Yes |
-| Local knowledge store & MCP | Yes (optional extras) | Yes |
-| Optional Bedrock AI enrichment | Yes | Yes |
-| Execution profiles | Yes | Yes |
-| Enterprise Knowledge Graph (local YAML) | Not in public engine export (Platform/monorepo) | Expanded |
-| Portfolio / multi-repo governance | Placeholder | Planned |
-| SSO / RBAC / audit control plane | Not included | Planned |
-| Billing / hosted multi-tenancy | Not included | Planned |
+| You need | Community Engine delivers |
+| -------- | ------------------------- |
+| A fast read on stack, risks, and next steps | Local or GitHub `codestrata assess` |
+| Evidence you can trust | Deterministic rules (AI optional, never invents findings) |
+| Something you can share | Self-contained HTML Report v2 + JSON artifacts |
+| Automation | CLI, optional MCP, optional Agent Framework |
+
+**Not in Community Engine:** hosted SaaS, SSO/billing, multi-tenant control planes,
+or commercial RAG / persistent Knowledge Graph (those live in the private
+Platform package). Details: [docs/community-edition.md](docs/community-edition.md).
 
 ---
 
-## Features (Community Edition)
+## How CodeStrata fits together
 
-* Local path and public/private GitHub repository assessment
-* Technology detection for **Java**, **JavaScript/TypeScript**, **Python**,
-  **PHP**, and **C# / .NET**
-* Dependency evidence (Maven / npm / Composer / NuGet)
-* Deterministic Rule Engine and Recommendation Engine
-* Self-contained **HTML Report v2** (no CDN) + JSON artifacts
-* Deterministic mode (zero AI calls) and optional AI mode (exactly one Bedrock call)
-* Optional PMD static analysis for Java
-* Execution profiles (`community` / `local` / `bedrock` / `openai`; `enterprise` profile is monorepo/Platform)
-* Local knowledge store, FastMCP server, and Agent Framework
-* Incremental assessment (opt-in)
-* Extension hook for future Platform Enterprise KG (not shipped in public export)
+| Repository | Role | Public? |
+| ---------- | ---- | ------- |
+| **codestrata-engine** (this repo) | Assessment CLI, reports, Engine docs | Yes |
+| **codestrata-examples** | Pinned real-world showcase manifests + fetch scripts | Yes |
+| **Platform** (`platform/` in the monorepo) | RAG + persistent Knowledge Graph | Private |
+
+Product statement: *The Engine produces structured engineering intelligence.
+The Platform stores, connects, retrieves, and reasons over that intelligence.*
 
 ---
 
-## Architecture
+## Quick start
 
-```text
-                    codestrata.toml / CLI
-                           │
-                           ▼
-              Local path or GitHub clone
-                           │
-                           ▼
-              Phase 1 analysis (detect + analyzers)
-                           │
-                           ▼
-         Repository Inventory → Repository Graph
-                           │
-                           ▼
-         Knowledge Pipeline ← Engineering Knowledge Graph
-                           │
-                           ▼
-                   Assessment Graph
-                           │
-                           ▼
-              Rule Engine → findings.json
-                           │
-                           ▼
-         Recommendation Engine → recommendations.json
-                           │
-              ┌────────────┴────────────┐
-              ▼                         ▼
-     Deterministic HTML/JSON    optional AI enrichment
-        (report.html v2)         (one Bedrock call)
-                                        │
-                                        ▼
-                                 ai-enrichment.json
-```
-
-Deeper design notes: [ARCHITECTURE.md](../ARCHITECTURE.md),
-[docs/architecture-guide.md](docs/architecture-guide.md), and [docs/](docs/).
-
----
-
-## Installation
-
-Requires **Python 3.12+**. Full guide: [docs/installation.md](docs/installation.md).
-
-Cloning the repository does **not** install the `codestrata` command. If you see
-`ModuleNotFoundError: No module named 'codestrata'`, create a venv and install the
-package editable from the repo root:
+Requires **Python 3.12+**.
 
 ```bash
-git clone https://github.com/sknampally/codestrata.git
-cd codestrata
+git clone https://github.com/sknampally/codestrata-engine.git
+cd codestrata-engine
 
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
-
 python -m pip install --upgrade pip
+# Cloning does not install the CLI — install the package from this checkout:
 python -m pip install -e .
-# optional Bedrock + MCP + tests:
-python -m pip install -e ".[dev,bedrock,openai,mcp]"
+python -m pip install -e ".[dev,mcp]"
+
+python -c "import codestrata; print(codestrata.__file__)"
+codestrata version
+codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
-Verify the install points at this checkout:
+If you see `ModuleNotFoundError: No module named 'codestrata'`, activate the
+venv and re-run `python -m pip install -e .`.
+
+Open the newest `reports/sample-js-app/<timestamp>/report.html`.
+
+Assess your own tree:
 
 ```bash
-python -c "import codestrata; print(codestrata.__file__)"
-codestrata --version
-codestrata version
-codestrata about
-codestrata assess --help
+codestrata assess --repo /path/to/your-app --output reports --no-ai
 ```
+
+Guides: [docs/quick-start.md](docs/quick-start.md) ·
+[docs/installation.md](docs/installation.md) ·
+[docs/tutorial.md](docs/tutorial.md).
 
 ---
 
-## Quick Start (local repo)
+## What an assessment does
 
-Short path: [docs/quick-start.md](docs/quick-start.md) · full tutorial:
-[docs/tutorial.md](docs/tutorial.md).
-
-```bash
-# Bundled sample apps (JS / Python / Java / PHP / C#)
-codestrata assess --repo examples/sample-js-app --output reports --no-ai
-codestrata assess --repo examples/sample-python-app --output reports --no-ai
-codestrata assess --repo examples/sample-java-app --output reports --no-ai
-codestrata assess --repo examples/sample-php-app --output reports --no-ai
-codestrata assess --repo examples/sample-csharp-app --output reports --no-ai
-
-# Or your checkout
-codestrata assess --repo /path/to/your-app --output reports
+```text
+codestrata.toml / CLI
+        │
+        ▼
+Local path or GitHub clone
+        │
+        ▼
+Detect technologies + extract facts
+        │
+        ▼
+Repository graph → assessment graph
+        │
+        ▼
+Deterministic rules → findings → recommendations
+        │
+        ├──────────────────┐
+        ▼                  ▼
+HTML + JSON reports   optional AI narrative (one Bedrock call)
 ```
 
-Open the newest `reports/<repo-name>/<timestamp>/report.html`.
-How to read it: [docs/report-interpretation.md](docs/report-interpretation.md).
+Default mode is **deterministic** (`--no-ai`: zero provider calls). Optional
+`--with-ai` adds narrative only; it never rewrites findings or recommendations.
 
-Config-driven equivalent (default `codestrata.toml` points at the JS sample):
+---
+
+## Example workflows
+
+**Config-driven assess** (default `codestrata.toml` points at the bundled JS sample):
 
 ```bash
 codestrata config validate --config codestrata.toml
 codestrata assess --config codestrata.toml --output reports --no-ai
 ```
 
----
-
-## Quick Start (GitHub repo)
+**GitHub repository:**
 
 ```toml
 # codestrata.toml
@@ -173,60 +128,22 @@ branch = "main"
 ```
 
 ```bash
-codestrata assess --config codestrata.toml --output reports
+codestrata assess --config codestrata.toml --output reports --no-ai
 ```
 
-### Execution profiles
+**Execution profile** (optional): `--profile local` — see
+[docs/configuration-profiles.md](docs/configuration-profiles.md).
 
-Select secure defaults with an execution profile (`community` by default):
-
-```bash
-codestrata config profile --config codestrata.toml
-codestrata config validate --config codestrata.toml
-codestrata config effective --config codestrata.toml
-codestrata assess --config codestrata.toml --profile local --output reports
-```
-
-See [docs/configuration-profiles.md](docs/configuration-profiles.md) for
-precedence (`CLI > env > TOML > profile defaults`) and provider-specific
-settings.
-
-Private HTTPS repos: set a token in `.env` (never commit secrets) and reference
-it from config—see [examples/README.md](../examples/README.md).
-
----
-
-## AI mode
-
-Deterministic mode is the default (`--no-ai`). AI mode requires AWS credentials
-that can call Bedrock, plus a model ID:
+**Optional AI narrative** (Bedrock; never rewrites findings):
 
 ```bash
 aws sso login --profile <profile-name>
 codestrata assess --config codestrata.toml --output reports --with-ai
 ```
 
-Configure profile/region/model in `codestrata.toml`:
-
-```toml
-[aws]
-profile = "<profile-name>"
-region = "us-east-1"
-
-[ai]
-provider = "bedrock"
-
-[ai.bedrock]
-model_id = "amazon.nova-lite-v1:0"
-```
-
-| Mode | Provider calls | Enrichment artifact |
-| ---- | -------------- | ------------------- |
-| Deterministic | 0 | none |
-| `--with-ai` | exactly 1 | `ai-enrichment.json` on success |
-
-If AI fails, deterministic reports and graphs are kept; the CLI completes with a
-warning (exit 0). AI never modifies `findings.json` or `recommendations.json`.
+**Real-world showcases** (separate public repo): install Engine, then follow
+[codestrata-examples](https://github.com/sknampally/codestrata-examples) for
+pinned third-party applications assessed on demand.
 
 ---
 
@@ -234,138 +151,68 @@ warning (exit 0). AI never modifies `findings.json` or `recommendations.json`.
 
 ```text
 reports/<repository-name>/<YYYYMMDD-HHMMSS>/
-├── report.html              # HTML Report v2
-├── report.json              # machine-readable assessment
-├── findings.json            # deterministic rule findings
-├── recommendations.json     # deterministic recommendations
-├── ai-enrichment.json       # optional (--with-ai success)
-├── ai-execution.json        # optional AI observability
+├── report.html
+├── report.json
+├── findings.json
+├── recommendations.json
+├── ai-enrichment.json      # only with successful --with-ai
 └── graphs/
-    ├── repository-manifest.json
-    ├── repository-graph.json
-    ├── engineering-knowledge-graph.json
-    ├── knowledge-bindings.json
-    ├── assessment-graph.json
-    └── graph-summary.json
 ```
 
-CodeStrata retains the latest **three** completed runs per repository.
+How to read reports: [docs/report-interpretation.md](docs/report-interpretation.md).
 
----
-
-## HTML report
-
-HTML Report v2 is self-contained (embedded CSS, no external assets):
-
-1. Executive Overview
-2. Repository Profile
-3. Technology and Version Summary
-4. Assessment Summary
-5. Findings (deterministic)
-6. Recommendations (deterministic)
-7. AI Enrichment (only when available; labeled AI-generated)
-8. Graph and Artifact References
-9. Assessment Metadata
-
-Deterministic sections are authoritative. AI content is interpretive and kept
-separate.
-
-### Example screenshots
-
-Self-contained demo HTML snapshots live under `docs/images/`:
-
-* [docs/images/report-deterministic-demo.html](docs/images/report-deterministic-demo.html)
-* [docs/images/report-ai-demo.html](docs/images/report-ai-demo.html)
-
-Generate a local report with the Quick Start commands and open `report.html` in
-a browser. Interpretation: [docs/report-interpretation.md](docs/report-interpretation.md).
+Demo HTML snapshots: [docs/images/](docs/images/).
 
 ---
 
 ## Supported technologies
 
-| Area | Community Edition support |
-| ---- | ------------------------- |
+| Area | Support |
+| ---- | ------- |
 | Languages | Java, JavaScript/TypeScript, Python, PHP, C# / .NET |
-| Frameworks (detected) | Spring Boot, Express/Node, Flask, Laravel/Composer stacks, ASP.NET / .NET |
 | Build / deps | Maven, npm, Composer, NuGet / MSBuild |
 | CI | GitHub Actions discovery |
 | Static analysis | Optional PMD (Java) |
-| AI | Amazon Bedrock Converse (optional); OpenAI for knowledge providers |
+| AI enrichment | Optional Amazon Bedrock Converse |
 | Sources | Local filesystem, GitHub HTTPS/SSH |
-| Samples | `examples/sample-{js,python,java,php,csharp}-app` |
-| Sample reports | [examples/sample-reports/](../examples/sample-reports/README.md) |
+
+This public package ships `test-fixtures/sample-js-app` for offline smoke.
+Additional language fixtures live in the private monorepo.
 
 ---
 
-## Roadmap
+## Documentation
 
-**Phase 2** — Core platform foundation (assessment, knowledge graphs, agents,
-incremental assessment).
-
-**Phase 3** — Enterprise Knowledge Graph (Platform/monorepo; excluded from the
-public Community engine export — see [docs/community-edition.md](docs/community-edition.md)).
-
-**Phase 4.1** — Shared Rule Platform (infrastructure; see
-[docs/analysis-intelligence/](docs/analysis-intelligence/)).
-
-**Phase 4.1.2** — Assessment Framework methodology (see
-[docs/assessment-framework/](docs/assessment-framework/)). Packs start at 4.2.
-
-**Phase 4.2+ / 5+** — Analysis Intelligence packs, language expansion, workflow
-intelligence, platform expansion. See [ROADMAP.md](../ROADMAP.md).
+| Doc | Topic |
+| --- | ----- |
+| [docs/README.md](docs/README.md) | Docs index |
+| [docs/community-edition.md](docs/community-edition.md) | Community scope |
+| [docs/cli-reference.md](docs/cli-reference.md) | CLI reference |
+| [docs/architecture-guide.md](docs/architecture-guide.md) | Architecture map |
+| [docs/mcp/setup.md](docs/mcp/setup.md) | MCP setup |
+| [docs/troubleshooting.md](docs/troubleshooting.md) | Troubleshooting |
+| [SUPPORT.md](SUPPORT.md) | How to get help |
+| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
 
 ---
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) and
-[docs/contributor-guide.md](docs/contributor-guide.md). Please follow the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+[docs/contributor-guide.md](docs/contributor-guide.md).
 
 ```bash
 python -m pip install -e ".[dev]"
 pytest
-pytest tests/docs -q
 ruff check .
-ruff format --check .
 mypy src
 ```
-
-Stuck? [docs/troubleshooting.md](docs/troubleshooting.md).
-
----
-
-## Documentation index
-
-| Doc | Topic |
-| --- | ----- |
-| [docs/community-edition.md](docs/community-edition.md) | Community Edition scope |
-| [docs/COMMUNITY_EDITION_CHECKLIST.md](docs/COMMUNITY_EDITION_CHECKLIST.md) | Public release checklist |
-| [docs/RELEASE_NOTES-0.1.0.md](docs/RELEASE_NOTES-0.1.0.md) | 0.1.0 release notes (draft) |
-| [docs/quick-start.md](docs/quick-start.md) | Quick start |
-| [docs/installation.md](docs/installation.md) | Installation |
-| [docs/tutorial.md](docs/tutorial.md) | End-to-end tutorial |
-| [docs/architecture-guide.md](docs/architecture-guide.md) | Architecture guide |
-| [ARCHITECTURE.md](../ARCHITECTURE.md) | System design overview |
-| [docs/cli-reference.md](docs/cli-reference.md) | CLI reference |
-| [docs/configuration-profiles.md](docs/configuration-profiles.md) | Execution profiles |
-| [docs/report-interpretation.md](docs/report-interpretation.md) | Reading reports |
-| [docs/troubleshooting.md](docs/troubleshooting.md) | Troubleshooting |
-| [docs/contributor-guide.md](docs/contributor-guide.md) | Contributor guide |
-| [docs/mcp/setup.md](docs/mcp/setup.md) | MCP setup |
-| [SUPPORT.md](SUPPORT.md) | How to get help |
-| [examples/README.md](../examples/README.md) | Language samples |
-| [examples/sample-reports/README.md](../examples/sample-reports/README.md) | Example HTML/JSON reports |
-| [CHANGELOG.md](../CHANGELOG.md) | Release notes history |
-| [SECURITY.md](SECURITY.md) | Vulnerability reporting |
-| [docs/README.md](docs/README.md) | Full docs index |
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
 ## Author
 

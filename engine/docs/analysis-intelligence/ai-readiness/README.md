@@ -12,7 +12,7 @@ Phase 4.8 of CodeStrata Analysis Intelligence.
 | 4.8.6 Report Integration | Complete (`report.ai_readiness` **1.0.0**; disabled by default) |
 
 Design authority:
-[intelligence-platform.md](../../architecture/intelligence-platform.md).
+[analysis-intelligence-conventions.md](../../architecture/analysis-intelligence-conventions.md).
 
 ## Purpose
 

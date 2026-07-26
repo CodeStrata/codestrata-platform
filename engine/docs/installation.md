@@ -79,7 +79,7 @@ A starter `codestrata.toml` ships in the repository root. Minimum required:
 profile = "community"
 
 [repository]
-path = "examples/sample-js-app"
+path = "test-fixtures/sample-js-app"
 ```
 
 Validate:

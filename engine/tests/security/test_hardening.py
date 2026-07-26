@@ -79,7 +79,7 @@ def test_mcp_factory_skips_enterprise_when_disabled() -> None:
 
     settings = CodestrataSettings.model_validate(
         {
-            "repository": {"path": "examples/sample-js-app"},
+            "repository": {"path": "test-fixtures/sample-js-app"},
             "enterprise": {"enabled": False},
             "mcp": {"enabled": True},
         }

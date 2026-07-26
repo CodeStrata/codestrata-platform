@@ -63,4 +63,6 @@ limitations, not failures.
 
 ## Dogfood
 
-See [PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md](../../reviews/PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md).
+Dogfood against CodeStrata and a Java reference repository. Completed phase
+history: [CHANGELOG.md](../../../../CHANGELOG.md). Current direction:
+[ROADMAP.md](../../../../ROADMAP.md).

@@ -1,0 +1,34 @@
+id: laravel-realworld
+name: Laravel RealWorld (layered architecture)
+owner: yukicountry
+description: >
+  Maintained MIT-licensed Laravel RealWorld backend implementing the RealWorld API
+  with a layered architecture (PHP 8).
+repository_url: https://github.com/yukicountry/realworld-laravel-layered-architecture.git
+commit_sha: "49fb3b2c902475373dc4251a664af1962efe9c90"
+pinned_on: "2026-07-26"
+license_spdx: MIT
+attribution_url: https://github.com/yukicountry/realworld-laravel-layered-architecture
+primary_languages:
+  - PHP
+frameworks:
+  - Laravel
+expected_size_category: small
+expected_approx_size_mb: 5
+supported_capabilities:
+  - assess
+  - scan
+  - architecture
+  - dependency
+  - html_json_reports
+recommended_profile: community
+required_tools:
+  - git
+fetch_destination: laravel-realworld
+allow_submodules: false
+build_instructions: >
+  Optional: composer install (not required for CodeStrata assess).
+runtime_category: fast
+known_limitations:
+  - Composer vendor/ is not fetched; dependency findings rely on lock/manifest files present in source.
+  - Original gothinkster Laravel RealWorld reference is archived; this is a maintained alternative.

@@ -23,10 +23,19 @@ ENGINE_ROOT = Path(__file__).resolve().parents[2]
 REPO_ROOT = ENGINE_ROOT.parent
 ROOT = ENGINE_ROOT
 DOCS = ENGINE_ROOT / "docs"
-# Monorepo keeps samples at <repo>/examples; exported engine may vendor examples/.
-if (REPO_ROOT / "examples" / "sample-js-app").is_dir():
+# Monorepo keeps fixtures at <repo>/test-fixtures; engine export may vendor them.
+if (REPO_ROOT / "test-fixtures" / "sample-js-app").is_dir():
+    FIXTURES = REPO_ROOT / "test-fixtures"
     EXAMPLES = REPO_ROOT / "examples"
+elif (ENGINE_ROOT / "test-fixtures" / "sample-js-app").is_dir():
+    FIXTURES = ENGINE_ROOT / "test-fixtures"
+    EXAMPLES = (
+        ENGINE_ROOT / "examples"
+        if (ENGINE_ROOT / "examples").is_dir()
+        else FIXTURES
+    )
 else:
+    FIXTURES = ENGINE_ROOT / "test-fixtures"
     EXAMPLES = ENGINE_ROOT / "examples"
 
 LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
@@ -36,16 +45,19 @@ CODESTRATA_CMD_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Historical rename documentation may mention AIMF intentionally.
+# Historical phase notes may mention AIMF intentionally.
 AIMF_ALLOWLIST = {
-    (DOCS / "rename-codestrata.md").resolve(),
     (REPO_ROOT / "ROADMAP.md").resolve(),
+    (REPO_ROOT / "CHANGELOG.md").resolve(),
 }
 
 
 def _markdown_files() -> list[Path]:
     files = list(DOCS.rglob("*.md"))
-    files.extend(EXAMPLES.rglob("*.md"))
+    if EXAMPLES.is_dir():
+        files.extend(EXAMPLES.rglob("*.md"))
+    if FIXTURES.is_dir():
+        files.extend(FIXTURES.rglob("*.md"))
     files.append(ROOT / "README.md")
     files.append(ROOT / "CONTRIBUTING.md")
     monorepo_architecture = REPO_ROOT / "ARCHITECTURE.md"
@@ -88,11 +100,11 @@ def test_relative_markdown_links_resolve() -> None:
 
 def test_example_sample_directories_exist() -> None:
     required = [
-        EXAMPLES / "sample-js-app",
-        EXAMPLES / "sample-python-app",
-        EXAMPLES / "sample-java-app",
-        EXAMPLES / "sample-php-app",
-        EXAMPLES / "sample-csharp-app",
+        FIXTURES / "sample-js-app",
+        FIXTURES / "sample-python-app",
+        FIXTURES / "sample-java-app",
+        FIXTURES / "sample-php-app",
+        FIXTURES / "sample-csharp-app",
     ]
     missing = []
     for path in required:
@@ -102,7 +114,7 @@ def test_example_sample_directories_exist() -> None:
             missing.append(str(path.relative_to(ROOT)))
         except ValueError:
             missing.append(str(path.relative_to(REPO_ROOT)))
-    assert not missing, f"Missing example apps: {missing}"
+    assert not missing, f"Missing fixture apps: {missing}"
 
 
 def test_required_developer_docs_exist() -> None:
@@ -133,7 +145,7 @@ def test_required_developer_docs_exist() -> None:
 
 
 def test_sample_reports_exist_for_all_languages() -> None:
-    base = EXAMPLES / "sample-reports"
+    base = FIXTURES / "sample-reports"
     for lang in ("javascript", "python", "java", "php", "csharp"):
         directory = base / lang
         assert (directory / "report.html").is_file(), f"missing {lang}/report.html"

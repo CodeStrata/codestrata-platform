@@ -1,5 +1,10 @@
 # Architecture notes (Engine)
 
+## Analysis Intelligence conventions
+
+Shared Engine conventions for Analysis Intelligence verticals:
+[analysis-intelligence-conventions.md](analysis-intelligence-conventions.md).
+
 ## Platform inventory
 
 Detailed Platform architecture documents are maintained in the private

@@ -12,7 +12,7 @@ Phase 4.5 of CodeStrata Analysis Intelligence.
 | 4.5.6 Report Integration | Complete (`report.security` 1.0.0) |
 
 Design authority and architecture conventions:
-[intelligence-platform.md](../../architecture/intelligence-platform.md).
+[analysis-intelligence-conventions.md](../../architecture/analysis-intelligence-conventions.md).
 
 ## Guiding principle
 

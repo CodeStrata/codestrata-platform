@@ -146,5 +146,11 @@ repositories/
 # Generated analysis reports
 reports/
 
+# Fetched real-world showcase checkouts (never vendor upstream)
+.codestrata-examples/
+
 # Public export staging
 .export-staging/
+
+# Nested clone workspaces under local knowledge dirs
+**/.codestrata/workspace/**

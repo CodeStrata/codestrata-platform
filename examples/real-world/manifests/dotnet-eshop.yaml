@@ -1,0 +1,35 @@
+id: dotnet-eshop
+name: .NET eShop Reference Application
+owner: dotnet
+description: >
+  Microsoft .NET reference e-commerce application (Aspire-oriented microservices sample).
+repository_url: https://github.com/dotnet/eShop.git
+commit_sha: "9b4f9434f46fdc5c1a6e9e936af2868340cdbc48"
+pinned_on: "2026-07-26"
+license_spdx: MIT
+attribution_url: https://github.com/dotnet/eShop
+primary_languages:
+  - C#
+frameworks:
+  - .NET
+  - .NET Aspire
+expected_size_category: large
+expected_approx_size_mb: 40
+supported_capabilities:
+  - assess
+  - scan
+  - architecture
+  - dependency
+  - html_json_reports
+recommended_profile: community
+required_tools:
+  - git
+fetch_destination: dotnet-eshop
+allow_submodules: false
+build_instructions: >
+  Optional: follow upstream README (Docker Desktop / Aspire). Not required for assess.
+runtime_category: slow
+known_limitations:
+  - Larger working tree; allow longer assess duration.
+  - Aspire/Docker orchestration is not executed by CodeStrata.
+  - Some cloud-native packaging may surface as unsupported tooling gaps.

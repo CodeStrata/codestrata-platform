@@ -1,0 +1,36 @@
+id: spring-petclinic
+name: Spring PetClinic
+owner: spring-projects
+description: >
+  Canonical Spring Boot sample application used widely for Java modernization demos.
+repository_url: https://github.com/spring-projects/spring-petclinic.git
+commit_sha: "f182358d02e4a68e52bdbabf55ca7800288511e7"
+pinned_on: "2026-07-26"
+license_spdx: Apache-2.0
+attribution_url: https://github.com/spring-projects/spring-petclinic
+primary_languages:
+  - Java
+frameworks:
+  - Spring Boot
+  - Spring MVC
+  - Thymeleaf
+expected_size_category: medium
+expected_approx_size_mb: 15
+supported_capabilities:
+  - assess
+  - scan
+  - architecture
+  - dependency
+  - technical_debt
+  - html_json_reports
+recommended_profile: community
+required_tools:
+  - git
+fetch_destination: spring-petclinic
+allow_submodules: false
+build_instructions: >
+  Optional: ./mvnw package (not required for CodeStrata assess).
+runtime_category: moderate
+known_limitations:
+  - Assessment is source-static; runtime Spring profiles and databases are not executed.
+  - Optional AI enrichment requires separate credentials and is not part of the baseline showcase.

@@ -1,0 +1,25 @@
+{
+  "example_id": "dotnet-eshop",
+  "repository_url": "https://github.com/dotnet/eShop.git",
+  "commit_sha": "9b4f9434f46fdc5c1a6e9e936af2868340cdbc48",
+  "license_spdx": "MIT",
+  "profile": "community",
+  "status": "pending_live_refresh",
+  "technologies": ["C#", ".NET", ".NET Aspire"],
+  "finding_count": null,
+  "recommendation_count": null,
+  "findings_by_severity": {},
+  "findings_by_category": {},
+  "top_findings": [],
+  "top_recommendations": [],
+  "architecture_summary": {
+    "notes": "Microsoft .NET eShop reference; Aspire/Docker not executed."
+  },
+  "roadmap_summary": {},
+  "elapsed_seconds": null,
+  "known_false_positives": [],
+  "known_unsupported_areas": [
+    "Aspire/Docker orchestration is not executed",
+    "Larger working tree; allow longer assess duration"
+  ]
+}

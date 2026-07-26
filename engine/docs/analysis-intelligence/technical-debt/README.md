@@ -12,14 +12,8 @@ Phase 4.3 of CodeStrata Analysis Intelligence.
 | 4.3.5 Assessment Synthesis | Complete |
 | 4.3.6 Report Integration | Complete |
 
-Design authority:
-[PHASE_4_3_TECHNICAL_DEBT_INTELLIGENCE.md](../../design/PHASE_4_3_TECHNICAL_DEBT_INTELLIGENCE.md).
-
-Dogfood review:
-[PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md](../../reviews/PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md).
-
-Acceptance review:
-[PHASE_4_3_ACCEPTANCE_REVIEW.md](../../reviews/PHASE_4_3_ACCEPTANCE_REVIEW.md).
+Canonical docs for this vertical live in this directory. Phase status:
+[ROADMAP.md](../../../../ROADMAP.md).
 
 CTO report integration:
 [technical-debt-reporting/README.md](../technical-debt-reporting/README.md).
@@ -81,8 +75,7 @@ See: [complexity-rules.md](complexity-rules.md), [rule-pack.md](rule-pack.md).
 - Deterministic source-unit hotspots (no composite score)
 - Test/fixture parse failures do not force `partially_succeeded`
 
-See: [complexity-assessment.md](complexity-assessment.md),
-[PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md](../../reviews/PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md).
+See: [complexity-assessment.md](complexity-assessment.md).
 
 ## 4.3.5 Assessment Synthesis
 

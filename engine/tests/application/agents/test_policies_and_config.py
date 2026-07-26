@@ -35,7 +35,7 @@ def test_missing_agents_section_uses_defaults(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -51,7 +51,7 @@ def test_custom_agents_section(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [agents]
         max_steps = 8
@@ -73,7 +73,7 @@ def test_invalid_agents_toml_rejected(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [agents]
         dependency_depth = 9

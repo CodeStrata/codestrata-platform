@@ -35,8 +35,9 @@ def test_platform_directory_exists() -> None:
     assert not (PLATFORM / "enterprise").exists()
 
 
-def test_university_workspace_deleted() -> None:
-    assert not (PLATFORM / "enterprise" / "examples" / "university").exists()
+def test_root_has_no_legacy_aimf_package() -> None:
+    assert not (REPO_ROOT / "src" / "aimf").exists()
+    assert not (REPO_ROOT / "src").exists()
 
 
 def test_no_university_references_in_source_tests_docs_manifest() -> None:

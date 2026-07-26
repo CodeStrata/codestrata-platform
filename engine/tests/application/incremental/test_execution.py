@@ -298,7 +298,7 @@ def test_settings_execution_defaults(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )
@@ -314,7 +314,7 @@ def test_settings_rejects_ai_reuse(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         allow_ai_reuse = true
         """,

@@ -8,14 +8,16 @@ Phase 4 of CodeStrata.
 | 4.1.1 Rule Platform Integration Bridge | Complete |
 | 4.1.2 CodeStrata Assessment Framework | Complete (methodology) |
 | 4.2 Architecture Intelligence | Complete (4.2.1–4.2.5) |
-| 4.3 Technical Debt Intelligence | In Progress (4.3.1–4.3.3; assess/report not started) |
-| 4.4 Dependency Intelligence | In Progress |
-| 4.5 Security Intelligence | In Progress |
-| 4.6 Test Intelligence | In Progress |
+| 4.3 Technical Debt Intelligence | Complete (4.3.1–4.3.6) |
+| 4.4 Dependency Intelligence | Complete through report integration |
+| 4.5 Security Intelligence | Complete through report integration |
+| 4.6 Test Intelligence | Complete through report integration |
 | 4.7 Cloud Intelligence | Complete (4.7.1–4.7.6) |
 | 4.8 AI Readiness Intelligence | Complete (4.8.1–4.8.6) |
-| 4.9 Performance Intelligence | In Progress (4.9.1–4.9.5; report not started) |
-| 4.10 Modernization Intelligence | Not started |
+| 4.9 Performance Intelligence | Complete through report integration |
+| 4.10 Modernization Intelligence | See Phase 5.10 modernization roadmap |
+
+Canonical phase status: [ROADMAP.md](../../../ROADMAP.md).
 
 ## Phase 4.1
 
@@ -73,8 +75,7 @@ Architecture CTO report integration: assessment section → report adapter →
 
 Technical Debt domain foundation: taxonomy, assessment section contracts,
 feature gates, empty/disabled sections. No production debt rules yet. See
-[technical-debt/README.md](technical-debt/README.md) and
-[../design/PHASE_4_3_TECHNICAL_DEBT_INTELLIGENCE.md](../design/PHASE_4_3_TECHNICAL_DEBT_INTELLIGENCE.md).
+[technical-debt/README.md](technical-debt/README.md).
 
 ## Phase 4.3.2
 
@@ -92,9 +93,7 @@ evidence and emit deterministic findings. See
 
 Technical Debt complexity assessment vertical: assess orchestration, feature
 gates, section artifact, and dogfood review. See
-[technical-debt/complexity-assessment.md](technical-debt/complexity-assessment.md)
-and
-[../reviews/PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md](../reviews/PHASE_4_3_COMPLEXITY_DOGFOOD_REVIEW.md).
+[technical-debt/complexity-assessment.md](technical-debt/complexity-assessment.md).
 
 ## Phase 4.3.5
 
@@ -106,16 +105,14 @@ conclusions, and recommendations from the production-primary inventory. See
 
 Technical Debt CTO report integration: assessment section → report adapter →
 `report.json` / HTML. See
-[technical-debt-reporting/README.md](technical-debt-reporting/README.md) and
-[../reviews/PHASE_4_3_ACCEPTANCE_REVIEW.md](../reviews/PHASE_4_3_ACCEPTANCE_REVIEW.md).
+[technical-debt-reporting/README.md](technical-debt-reporting/README.md).
 
 ## Phase 4.4.1
 
 Dependency Intelligence domain foundation: engineering-role taxonomy,
 assessment section contracts, feature gates, empty/disabled sections. No
 manifest parsing or production dependency rules yet. See
-[dependency/README.md](dependency/README.md) and
-[../design/PHASE_4_4_DEPENDENCY_INTELLIGENCE.md](../design/PHASE_4_4_DEPENDENCY_INTELLIGENCE.md).
+[dependency/README.md](dependency/README.md).
 
 ## Phase 4.4.2
 
@@ -127,8 +124,7 @@ collectors and `dependency-evidence.json`. See
 
 Dependency CTO report integration: assessment section → report adapter →
 `report.json` / HTML (`assessment.dependency`, anchor `dependency-assessment`).
-See [dependency/report.md](dependency/report.md) and
-[../reviews/PHASE_4_4_ACCEPTANCE_REVIEW.md](../reviews/PHASE_4_4_ACCEPTANCE_REVIEW.md).
+See [dependency/report.md](dependency/report.md).
 
 ## Phase 4.5.1
 
@@ -136,7 +132,7 @@ Security Intelligence domain foundation: taxonomy, assessment lifecycle,
 feature gates, empty/disabled sections, deterministic
 `security-assessment.json`. No security scanning yet. See
 [security/README.md](security/README.md) and
-[../architecture/intelligence-platform.md](../architecture/intelligence-platform.md).
+[../architecture/analysis-intelligence-conventions.md](../architecture/analysis-intelligence-conventions.md).
 
 ## Phase 4.5.3
 
@@ -152,9 +148,7 @@ Security Intelligence report integration: presentation-only
 `report.security` 1.0.0 for optional `assessment.security` in `report.json`
 and HTML `#security-assessment`. Gate
 `[report.sections.security] enabled = false` by default. No re-analysis,
-scores, or compliance claims. See [security/report.md](security/report.md)
-and
-[../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md](../reviews/PHASE_4_5_6_SECURITY_REPORT_INTEGRATION_REVIEW.md).
+scores, or compliance claims. See [security/report.md](security/report.md).
 
 ## Phase 4.6.1
 
@@ -170,17 +164,14 @@ Repository Test Evidence (platform): deterministic
 structure and configuration facts. Disabled by default via
 `[evidence.repository_testing]`. Not owned by Test Intelligence; no Findings,
 rules, assessment, report, or test execution. See
-[repository-test-evidence.md](repository-test-evidence.md) and
-[../reviews/PHASE_4_6_2_REPOSITORY_TEST_EVIDENCE_REVIEW.md](../reviews/PHASE_4_6_2_REPOSITORY_TEST_EVIDENCE_REVIEW.md).
+[repository-test-evidence.md](repository-test-evidence.md).
 
 ## Phase 4.6.3
 
 Test Hygiene rules (`testing.core` 1.0.0) consume repository-testing evidence
 and emit shared Findings into `testing-assessment` **1.0.0**. Four rules
 registered (TEST-001/002/003/005); TEST-004 deferred. No inventory, synthesis,
-or CTO report integration. See [testing/hygiene-rules.md](testing/hygiene-rules.md)
-and
-[../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md](../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md).
+or CTO report integration. See [testing/hygiene-rules.md](testing/hygiene-rules.md).
 
 ## Phase 4.9.1
 
@@ -188,8 +179,7 @@ Performance Intelligence domain foundation: taxonomy, assessment lifecycle,
 feature gates, empty/disabled sections, deterministic
 `performance-assessment.json`. No evidence, rules, Findings, inventory
 population, synthesis, or reporting yet. See
-[performance/README.md](performance/README.md) and
-[../reviews/PHASE_4_9_1_PERFORMANCE_DOMAIN_FOUNDATION_REVIEW.md](../reviews/PHASE_4_9_1_PERFORMANCE_DOMAIN_FOUNDATION_REVIEW.md).
+[performance/README.md](performance/README.md).
 
 ## Phase 4.9.2
 
@@ -198,8 +188,7 @@ Repository Performance Evidence: platform
 performance signals (eight families). Disabled by default; independent of
 `[analysis.performance]`. No Findings, rules, scoring, inventory population,
 synthesis, or reporting. See
-[repository-performance-evidence.md](repository-performance-evidence.md) and
-[../reviews/PHASE_4_9_2_REPOSITORY_PERFORMANCE_EVIDENCE_REVIEW.md](../reviews/PHASE_4_9_2_REPOSITORY_PERFORMANCE_EVIDENCE_REVIEW.md).
+[repository-performance-evidence.md](repository-performance-evidence.md).
 
 ## Phase 4.9.3
 
@@ -208,8 +197,7 @@ only SharedRules (PERF-001 … PERF-072). Consumes in-memory
 `AggregatedRepositoryPerformanceEvidence` only; emits shared Findings with
 `FindingCategory.PERFORMANCE`. Disabled by default. No inventory, synthesis,
 scoring, reporting, or new collectors. See
-[performance/hygiene-rules.md](performance/hygiene-rules.md) and
-[../reviews/PHASE_4_9_3_PERFORMANCE_HYGIENE_RULES_REVIEW.md](../reviews/PHASE_4_9_3_PERFORMANCE_HYGIENE_RULES_REVIEW.md).
+[performance/hygiene-rules.md](performance/hygiene-rules.md).
 
 ## Phase 4.9.4
 
@@ -218,8 +206,7 @@ deterministic inventories (`finding_inventory`, `rule_inventory`,
 `severity_inventory`, `confidence_inventory`, `performance_family_inventory`)
 over Hygiene Findings and rule-execution facts. No synthesis, scoring,
 reporting, new evidence, or new rules. See
-[performance/inventory.md](performance/inventory.md) and
-[../reviews/PHASE_4_9_4_PERFORMANCE_ASSESSMENT_INVENTORY_REVIEW.md](../reviews/PHASE_4_9_4_PERFORMANCE_ASSESSMENT_INVENTORY_REVIEW.md).
+[performance/inventory.md](performance/inventory.md).
 
 ## Phase 4.9.5
 
@@ -227,8 +214,7 @@ Deterministic Performance Synthesis: `performance-assessment` **1.2.0** /
 synthesis **1.0.0** derives themes, conclusions, recommendations, and an
 overall posture summary from inventories, Findings, and rule-execution facts
 only. No report integration, AI, scoring, new evidence, or new rules. See
-[performance/synthesis.md](performance/synthesis.md) and
-[../reviews/PHASE_4_9_5_PERFORMANCE_SYNTHESIS_REVIEW.md](../reviews/PHASE_4_9_5_PERFORMANCE_SYNTHESIS_REVIEW.md).
+[performance/synthesis.md](performance/synthesis.md).
 
 ## Phase 4.9.6
 
@@ -237,5 +223,4 @@ Performance Report Integration: presentation-only `report.performance`
 `assessment.performance` (`report.json`) and HTML **Performance Intelligence**
 (`#performance-assessment`). Disabled by default. No re-analysis, AI, scoring,
 or report-side analytical logic. See
-[performance/report.md](performance/report.md) and
-[../reviews/PHASE_4_9_6_PERFORMANCE_REPORT_INTEGRATION_REVIEW.md](../reviews/PHASE_4_9_6_PERFORMANCE_REPORT_INTEGRATION_REVIEW.md).
+[performance/report.md](performance/report.md).

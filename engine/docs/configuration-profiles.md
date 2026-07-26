@@ -50,7 +50,7 @@ process environment or `.env`.
 profile = "local"
 
 [repository]
-path = "examples/sample-js-app"
+path = "test-fixtures/sample-js-app"
 ```
 
 ```toml

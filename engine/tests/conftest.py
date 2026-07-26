@@ -13,6 +13,11 @@ EXAMPLES_ROOT = (
     if (REPO_ROOT / "examples").is_dir()
     else ENGINE_ROOT / "examples"
 )
+TEST_FIXTURES_ROOT = (
+    REPO_ROOT / "test-fixtures"
+    if (REPO_ROOT / "test-fixtures").is_dir()
+    else ENGINE_ROOT / "test-fixtures"
+)
 
 
 @pytest.fixture(scope="session")
@@ -28,3 +33,8 @@ def repo_root() -> Path:
 @pytest.fixture(scope="session")
 def examples_root() -> Path:
     return EXAMPLES_ROOT
+
+
+@pytest.fixture(scope="session")
+def test_fixtures_root() -> Path:
+    return TEST_FIXTURES_ROOT

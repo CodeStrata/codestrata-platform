@@ -154,4 +154,5 @@ path.
 ## Next phase (deferred)
 
 Phase 3 delivers the Enterprise Knowledge Graph (optional YAML). Analysis
-Intelligence is Phase 4; GitHub PR review remains Phase 6.
+Intelligence is Phase 4; GitHub PR review is Phase 6.1–6.5 MVP
+(see [ROADMAP.md](../../ROADMAP.md)).

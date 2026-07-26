@@ -12,8 +12,8 @@ Phase 4.4 of CodeStrata Analysis Intelligence.
 | 4.4.5 Assessment Synthesis | Complete |
 | 4.4.6 Report Integration | Complete |
 
-Design authority:
-[PHASE_4_4_DEPENDENCY_INTELLIGENCE.md](../../design/PHASE_4_4_DEPENDENCY_INTELLIGENCE.md).
+Canonical docs for this vertical live in this directory. Phase status:
+[ROADMAP.md](../../../../ROADMAP.md).
 
 ## Evidence ownership
 

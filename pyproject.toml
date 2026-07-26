@@ -30,9 +30,11 @@ addopts = [
     "-ra",
     "--strict-markers",
     "--strict-config",
+    "-m not network",
 ]
 markers = [
     "docker: requires Docker Compose and a running daemon (skipped when unavailable)",
+    "network: requires outbound network (GitHub); excluded from default offline CI",
 ]
 
 

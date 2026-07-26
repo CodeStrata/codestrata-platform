@@ -1,7 +1,11 @@
-# Engine examples
+# Examples note (Engine package)
 
-In the **codestrata-platform** monorepo, full sample apps and golden reports live in
-the sibling [`examples/`](../../examples/) directory (exported as `codestrata-examples`).
+The public **codestrata-engine** mirror ships a minimal offline sample at
+`test-fixtures/sample-js-app` for `codestrata assess` smoke.
 
-The public `codestrata-engine` mirror may include a minimal `examples/sample-js-app`
-copy for offline quick-start via `public-export-manifest.yaml` extra_includes.
+Real-world showcases (PetClinic, eShop, Laravel RealWorld) live in the separate
+public repository **codestrata-examples** — manifests and fetch scripts only;
+upstream source is fetched on demand.
+
+In the private monorepo: `examples/` (showcases) and `test-fixtures/` (language
+samples for tests).

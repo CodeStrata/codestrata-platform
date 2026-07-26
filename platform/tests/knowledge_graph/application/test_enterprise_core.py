@@ -256,7 +256,7 @@ def test_enterprise_settings_default(tmp_path: Path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         """,
         encoding="utf-8",
     )

@@ -63,7 +63,7 @@ class RepositorySettings(BaseModel):
         if self.url is None and self.path is None:
             raise ValueError(
                 "Configure repository.url (GitHub) or repository.path (local). "
-                'Example: path = "examples/sample-js-app" or '
+                'Example: path = "test-fixtures/sample-js-app" or '
                 'url = "https://github.com/org/repo"'
             )
         return self

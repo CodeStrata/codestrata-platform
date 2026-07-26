@@ -1,0 +1,14 @@
+# Real-world showcase manifests
+#
+# Each file under manifests/ describes one third-party open-source application.
+# Fetch destinations are always under .codestrata-examples/ (gitignored).
+# Source code is never vendored into this repository.
+
+schema_version: "1.0.0"
+
+# Field requirements (see MANIFEST_SCHEMA.md):
+# - id, name, repository_url, commit_sha (full 40-char hex), license_spdx
+# - attribution_url, primary_languages, frameworks
+# - expected_size_category, supported_capabilities, recommended_profile
+# - fetch_destination (relative under .codestrata-examples/)
+# - runtime_category, known_limitations

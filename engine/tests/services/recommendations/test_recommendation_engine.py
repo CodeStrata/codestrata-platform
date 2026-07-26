@@ -206,7 +206,7 @@ def test_recommendations_artifact_stable(tmp_path: Path) -> None:
 
 
 def test_javascript_fixture_sample() -> None:
-    repo_root = Path(__file__).resolve().parents[4] / "examples" / "sample-js-app"
+    repo_root = Path(__file__).resolve().parents[4] / "test-fixtures" / "sample-js-app"
     files = ["package.json", "README.md", "src/index.js"]
     repository = Repository(
         name="sample-js-app",

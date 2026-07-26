@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Phase 5.19 runtime performance benchmark harness.
+"""Runtime performance benchmark harness.
 
 Runs deterministic assess timings against small/medium/large fixtures and
-optional dogfood workspaces. Emits JSON suitable for before/after comparison.
+optional self-scan workspaces. Emits JSON suitable for before/after comparison.
 
 Run artifacts are written under a temp directory (outside the repo) so that
 self-scans of CodeStrata are not polluted by report output growth.
@@ -67,19 +67,19 @@ def _targets() -> list[BenchTarget]:
     items = [
         BenchTarget(
             "sample-js-app",
-            ROOT / "examples" / "sample-js-app",
+            ROOT / "test-fixtures" / "sample-js-app",
             "small",
             "javascript",
         ),
         BenchTarget(
             "sample-php-app",
-            ROOT / "examples" / "sample-php-app",
+            ROOT / "test-fixtures" / "sample-php-app",
             "small",
             "php",
         ),
         BenchTarget(
             "sample-csharp-app",
-            ROOT / "examples" / "sample-csharp-app",
+            ROOT / "test-fixtures" / "sample-csharp-app",
             "small",
             "csharp",
         ),

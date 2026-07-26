@@ -27,7 +27,7 @@ Expected: profile `community` (or whatever you set), `"ok": true`.
 ## 3. Assess a sample repository
 
 ```bash
-codestrata assess --repo examples/sample-js-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
 Wait for `Modernization assessment completed` and note the run directory under
@@ -83,10 +83,10 @@ Setup details: [mcp/setup.md](mcp/setup.md).
 ## 6. Try another language sample
 
 ```bash
-codestrata assess --repo examples/sample-python-app --output reports --no-ai
-codestrata assess --repo examples/sample-java-app --output reports --no-ai
-codestrata assess --repo examples/sample-php-app --output reports --no-ai
-codestrata assess --repo examples/sample-csharp-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-python-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-java-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-php-app --output reports --no-ai
+codestrata assess --repo test-fixtures/sample-csharp-app --output reports --no-ai
 ```
 
 ## Done

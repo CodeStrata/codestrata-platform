@@ -43,7 +43,7 @@ def test_incremental_plan_blocked_when_rollout_off(tmp_path) -> None:
     config.write_text(
         """
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
         [incremental]
         rollout_mode = "off"
         """,
@@ -54,7 +54,7 @@ def test_incremental_plan_blocked_when_rollout_off(tmp_path) -> None:
         [
             "incremental",
             "plan",
-            "examples/sample-js-app",
+            "test-fixtures/sample-js-app",
             "--config",
             str(config),
         ],

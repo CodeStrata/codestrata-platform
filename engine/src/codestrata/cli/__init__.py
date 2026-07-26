@@ -62,7 +62,7 @@ app = typer.Typer(
         "Analyze repositories and produce evidence-based modernization "
         "assessments.\n\n"
         "Quick start:\n"
-        "  codestrata assess --repo examples/sample-js-app --output reports\n\n"
+        "  codestrata assess --repo test-fixtures/sample-js-app --output reports\n\n"
         "Canonical assessment workflow:\n"
         "  codestrata assess --config codestrata.toml --output reports --with-ai\n\n"
         "Docs: docs/quick-start.md · docs/cli-reference.md · "

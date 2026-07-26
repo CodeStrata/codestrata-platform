@@ -1,10 +1,17 @@
 # CodeStrata Roadmap
 
-See [../ROADMAP.md](../../ROADMAP.md) for the canonical phase list.
+Canonical product direction lives in the monorepo root:
+[ROADMAP.md](../../ROADMAP.md).
 
-Phase 4.1.2 documents the Assessment Framework (dimensions, taxonomy, scoring
-design, CTO report structure). Architecture and other intelligence packs begin
-at 4.2. Phase 5.10 documents the deterministic modernization roadmap engine in
-[modernization-roadmap.md](modernization-roadmap.md). Phase 5.11 documents
-repository onboarding in [repository-onboarding.md](repository-onboarding.md).
-GitHub PR Review remains Phase 6.
+That file covers:
+
+* Phase 5 foundation (complete)
+* Phase 6.1–6.5 Engineering Workflow Intelligence MVP (next)
+* Explicitly deferred post-MVP work
+
+Completed release history: [CHANGELOG.md](../../CHANGELOG.md).
+
+The deterministic **modernization roadmap** report feature (Stabilize → Secure →
+Modernize → Optimize) is documented separately in
+[modernization-roadmap.md](modernization-roadmap.md). Repository onboarding:
+[repository-onboarding.md](repository-onboarding.md).

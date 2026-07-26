@@ -25,7 +25,7 @@ Details: [installation.md](installation.md).
 
 ## 2. Assess a sample repository
 
-Default `codestrata.toml` points at `examples/sample-js-app`:
+Default `codestrata.toml` points at `test-fixtures/sample-js-app`:
 
 ```bash
 codestrata config validate --config codestrata.toml
@@ -35,11 +35,11 @@ codestrata assess --config codestrata.toml --output reports
 Or assess any sample directly:
 
 ```bash
-codestrata assess --repo examples/sample-js-app --output reports
-codestrata assess --repo examples/sample-python-app --output reports
-codestrata assess --repo examples/sample-java-app --output reports
-codestrata assess --repo examples/sample-php-app --output reports
-codestrata assess --repo examples/sample-csharp-app --output reports
+codestrata assess --repo test-fixtures/sample-js-app --output reports
+codestrata assess --repo test-fixtures/sample-python-app --output reports
+codestrata assess --repo test-fixtures/sample-java-app --output reports
+codestrata assess --repo test-fixtures/sample-php-app --output reports
+codestrata assess --repo test-fixtures/sample-csharp-app --output reports
 ```
 
 ## 3. Open the report

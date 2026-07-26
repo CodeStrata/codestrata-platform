@@ -6,4 +6,5 @@ This directory is reserved for the future **codestrata-cursor** public mirror.
 All implementation work must land here in `codestrata-platform` first, then be
 exported via `scripts/export-public-repos.py`.
 
-See [PLACEHOLDER.md](PLACEHOLDER.md) and [docs/public-export.md](../docs/public-export.md).
+See [PLACEHOLDER.md](PLACEHOLDER.md) and the maintainer handbook
+[platform/README.md](../platform/README.md) (public export workflow).

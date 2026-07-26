@@ -46,7 +46,7 @@ def test_production_composition_with_temporary_settings(tmp_path: Path) -> None:
     config.write_text(
         f"""
         [repository]
-        path = "examples/sample-js-app"
+        path = "test-fixtures/sample-js-app"
 
         [knowledge]
         directory = "{knowledge.as_posix()}"
