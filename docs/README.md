@@ -10,6 +10,9 @@ Canonical topic docs for AIMF v0.1.0:
 | [enterprise-knowledge-graph/README.md](enterprise-knowledge-graph/README.md) | Phase 3 Enterprise Knowledge Graph |
 | [analysis-intelligence/README.md](analysis-intelligence/README.md) | Phase 4 Analysis Intelligence |
 | [assessment-framework/README.md](assessment-framework/README.md) | Phase 4.1.2 Assessment Framework methodology |
+| [repository-knowledge/README.md](repository-knowledge/README.md) | Phase 5 Repository Knowledge Layer |
+| [repository-knowledge/projection-and-chunking.md](repository-knowledge/projection-and-chunking.md) | Phase 5.2 projection + deterministic chunking |
+| [repository-knowledge/embedding-and-indexing.md](repository-knowledge/embedding-and-indexing.md) | Phase 5.3 embedding + indexing |
 | [capabilities.md](capabilities.md) | Capability status matrix |
 | [roadmap.md](roadmap.md) | Phase roadmap pointer |
 | [mcp-server.md](mcp-server.md) | Phase 2C/2E CodeStrata FastMCP server |

@@ -17,6 +17,20 @@ from aimf.reporting.ai_status import (
     ai_execution_status_label,
     assessment_mode_display_label,
 )
+from aimf.reporting.contract.identifiers import (
+    build_finding_id_map,
+    stable_finding_id,
+    stable_recommendation_id,
+)
+from aimf.reporting.contract.ordering import (
+    sorted_findings as contract_sorted_findings,
+)
+from aimf.reporting.contract.ordering import (
+    sorted_recommendations as contract_sorted_recommendations,
+)
+from aimf.reporting.contract.ordering import (
+    sorted_technologies as contract_sorted_technologies,
+)
 from aimf.reporting.html_v2.models import (
     AiEnrichmentView,
     AiNextStepView,
@@ -165,6 +179,11 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Html
         technical_debt_report=report_input.technical_debt_report,
         dependency_report=report_input.dependency_report,
         security_report=report_input.security_report,
+        testing_report=report_input.testing_report,
+        cloud_report=report_input.cloud_report,
+        ai_readiness_report=report_input.ai_readiness_report,
+        performance_report=report_input.performance_report,
+        roadmap_report=report_input.roadmap_report,
         artifacts=artifacts,
         metadata=metadata,
     )
@@ -208,6 +227,7 @@ def default_report_artifacts(
         items.append(ReportArtifactInput(label="AI Execution", relative_path="ai-execution.json"))
     return tuple(items)
 
+
 def _build_findings(report_input: ModernizationReportInput) -> tuple[FindingView, ...]:
     evaluation = report_input.assessment_rule_evaluation
     if evaluation is not None:
@@ -225,16 +245,11 @@ def _build_recommendations(
         return tuple(
             _phase3_recommendation_view(item) for item in _sorted_phase3_recommendations(result)
         )
+    findings = list(_sorted_phase1_findings(report_input.analysis_result))
+    finding_id_map = build_finding_id_map(findings)
     return tuple(
-        _phase1_recommendation_view(item)
-        for item in sorted(
-            report_input.analysis_result.recommendations,
-            key=lambda item: (
-                priority_rank(str(getattr(item.priority, "value", item.priority))),
-                item.title.lower(),
-                str(item.id),
-            ),
-        )
+        _phase1_recommendation_view(item, finding_id_map=finding_id_map)
+        for item in contract_sorted_recommendations(report_input.analysis_result.recommendations)
     )
 
 
@@ -269,17 +284,7 @@ def _sorted_phase3_recommendations(
 
 
 def _sorted_phase1_findings(analysis: AnalysisResult) -> tuple[Phase1Finding, ...]:
-    return tuple(
-        sorted(
-            analysis.findings,
-            key=lambda item: (
-                severity_rank(str(getattr(item.severity, "value", item.severity))),
-                str(getattr(item.category, "value", item.category)).lower(),
-                item.title.lower(),
-                str(item.id),
-            ),
-        )
-    )
+    return tuple(contract_sorted_findings(analysis.findings))
 
 
 def _phase3_finding_view(finding: Phase3Finding) -> FindingView:
@@ -306,7 +311,7 @@ def _phase3_finding_view(finding: Phase3Finding) -> FindingView:
 
 def _phase1_finding_view(finding: Phase1Finding) -> FindingView:
     return FindingView(
-        finding_id=str(finding.id),
+        finding_id=stable_finding_id(finding),
         rule_id=finding.rule_id or "unknown",
         title=_safe_text(finding.title),
         description=_safe_text(finding.description),
@@ -358,15 +363,22 @@ def _phase3_recommendation_view(item: Phase3Recommendation) -> RecommendationVie
     )
 
 
-def _phase1_recommendation_view(item: Phase1Recommendation) -> RecommendationView:
+def _phase1_recommendation_view(
+    item: Phase1Recommendation,
+    *,
+    finding_id_map: dict[str, str] | None = None,
+) -> RecommendationView:
+    id_map = finding_id_map or {}
     return RecommendationView(
-        recommendation_id=str(item.id),
+        recommendation_id=stable_recommendation_id(item),
         title=_safe_text(item.title),
         summary=_safe_text(item.description),
         rationale=_safe_text(item.rationale or item.description),
         priority=str(getattr(item.priority, "value", item.priority)),
         category=str(getattr(item.category, "value", item.category)),
-        related_finding_ids=tuple(str(fid) for fid in item.related_finding_ids),
+        related_finding_ids=tuple(
+            id_map.get(str(fid), str(fid)) for fid in item.related_finding_ids
+        ),
         affected_nodes=(),
         actions=tuple(
             RecommendationActionView(
@@ -457,13 +469,7 @@ def _technology_items(analysis: AnalysisResult) -> tuple[TechnologyItemView, ...
             else None,
             version=tech.version,
         )
-        for tech in sorted(
-            analysis.technologies,
-            key=lambda tech: (
-                str(getattr(tech.category, "value", tech.category) or "").lower(),
-                tech.name.lower(),
-            ),
-        )
+        for tech in contract_sorted_technologies(analysis.technologies)
     ]
     return tuple(items)
 

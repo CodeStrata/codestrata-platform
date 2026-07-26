@@ -8,6 +8,11 @@ from aimf.application.agents import AgentOrchestrator
 from aimf.application.assessment import AssessmentApplicationService
 from aimf.application.knowledge.queries import KnowledgeQueryService
 from aimf.config import AimfSettings
+from aimf.interfaces.mcp.context import RepositoryIntelligenceContext
+from aimf.interfaces.mcp.registry import (
+    RepositoryIntelligenceToolRegistry,
+    register_repository_intelligence_tools,
+)
 from aimf.interfaces.mcp.tools.agents import register_agent_tools
 from aimf.interfaces.mcp.tools.architecture_assessment import (
     register_architecture_assessment_tools,
@@ -46,7 +51,8 @@ def register_all_tools(
     rule_analysis_service: object | None = None,
     language_evidence_service: object | None = None,
     architecture_conclusion_service: object | None = None,
-) -> None:
+    repository_intelligence: RepositoryIntelligenceContext | None = None,
+) -> RepositoryIntelligenceToolRegistry | None:
     register_repository_tools(server, queries)
     register_assessment_tools(server, queries)
     register_snapshot_tools(server, queries)
@@ -92,3 +98,7 @@ def register_all_tools(
     )
     register_architecture_assessment_tools(server)
     register_architecture_report_tools(server)
+
+    if repository_intelligence is None:
+        return None
+    return register_repository_intelligence_tools(server, repository_intelligence)

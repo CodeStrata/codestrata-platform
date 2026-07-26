@@ -9,9 +9,13 @@ Phase 4 of CodeStrata.
 | 4.1.2 CodeStrata Assessment Framework | Complete (methodology) |
 | 4.2 Architecture Intelligence | Complete (4.2.1–4.2.5) |
 | 4.3 Technical Debt Intelligence | In Progress (4.3.1–4.3.3; assess/report not started) |
-| 4.4 Security Intelligence | Not started |
-| 4.5 Performance Intelligence | Not started |
-| 4.6 Modernization Intelligence | Not started |
+| 4.4 Dependency Intelligence | In Progress |
+| 4.5 Security Intelligence | In Progress |
+| 4.6 Test Intelligence | In Progress |
+| 4.7 Cloud Intelligence | Complete (4.7.1–4.7.6) |
+| 4.8 AI Readiness Intelligence | Complete (4.8.1–4.8.6) |
+| 4.9 Performance Intelligence | In Progress (4.9.1–4.9.5; report not started) |
+| 4.10 Modernization Intelligence | Not started |
 
 ## Phase 4.1
 
@@ -177,3 +181,61 @@ registered (TEST-001/002/003/005); TEST-004 deferred. No inventory, synthesis,
 or CTO report integration. See [testing/hygiene-rules.md](testing/hygiene-rules.md)
 and
 [../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md](../reviews/PHASE_4_6_3_TEST_HYGIENE_RULES_REVIEW.md).
+
+## Phase 4.9.1
+
+Performance Intelligence domain foundation: taxonomy, assessment lifecycle,
+feature gates, empty/disabled sections, deterministic
+`performance-assessment.json`. No evidence, rules, Findings, inventory
+population, synthesis, or reporting yet. See
+[performance/README.md](performance/README.md) and
+[../reviews/PHASE_4_9_1_PERFORMANCE_DOMAIN_FOUNDATION_REVIEW.md](../reviews/PHASE_4_9_1_PERFORMANCE_DOMAIN_FOUNDATION_REVIEW.md).
+
+## Phase 4.9.2
+
+Repository Performance Evidence: platform
+`repository-performance-evidence` **1.0.0** for repository-observable
+performance signals (eight families). Disabled by default; independent of
+`[analysis.performance]`. No Findings, rules, scoring, inventory population,
+synthesis, or reporting. See
+[repository-performance-evidence.md](repository-performance-evidence.md) and
+[../reviews/PHASE_4_9_2_REPOSITORY_PERFORMANCE_EVIDENCE_REVIEW.md](../reviews/PHASE_4_9_2_REPOSITORY_PERFORMANCE_EVIDENCE_REVIEW.md).
+
+## Phase 4.9.3
+
+Performance Hygiene Rules: `performance.core` **1.0.0** with **20** observation-
+only SharedRules (PERF-001 … PERF-072). Consumes in-memory
+`AggregatedRepositoryPerformanceEvidence` only; emits shared Findings with
+`FindingCategory.PERFORMANCE`. Disabled by default. No inventory, synthesis,
+scoring, reporting, or new collectors. See
+[performance/hygiene-rules.md](performance/hygiene-rules.md) and
+[../reviews/PHASE_4_9_3_PERFORMANCE_HYGIENE_RULES_REVIEW.md](../reviews/PHASE_4_9_3_PERFORMANCE_HYGIENE_RULES_REVIEW.md).
+
+## Phase 4.9.4
+
+Performance Assessment Inventory: `performance-assessment` **1.1.0** projects
+deterministic inventories (`finding_inventory`, `rule_inventory`,
+`severity_inventory`, `confidence_inventory`, `performance_family_inventory`)
+over Hygiene Findings and rule-execution facts. No synthesis, scoring,
+reporting, new evidence, or new rules. See
+[performance/inventory.md](performance/inventory.md) and
+[../reviews/PHASE_4_9_4_PERFORMANCE_ASSESSMENT_INVENTORY_REVIEW.md](../reviews/PHASE_4_9_4_PERFORMANCE_ASSESSMENT_INVENTORY_REVIEW.md).
+
+## Phase 4.9.5
+
+Deterministic Performance Synthesis: `performance-assessment` **1.2.0** /
+synthesis **1.0.0** derives themes, conclusions, recommendations, and an
+overall posture summary from inventories, Findings, and rule-execution facts
+only. No report integration, AI, scoring, new evidence, or new rules. See
+[performance/synthesis.md](performance/synthesis.md) and
+[../reviews/PHASE_4_9_5_PERFORMANCE_SYNTHESIS_REVIEW.md](../reviews/PHASE_4_9_5_PERFORMANCE_SYNTHESIS_REVIEW.md).
+
+## Phase 4.9.6
+
+Performance Report Integration: presentation-only `report.performance`
+**1.0.0** projects in-memory `PerformanceAssessmentSection` into
+`assessment.performance` (`report.json`) and HTML **Performance Intelligence**
+(`#performance-assessment`). Disabled by default. No re-analysis, AI, scoring,
+or report-side analytical logic. See
+[performance/report.md](performance/report.md) and
+[../reviews/PHASE_4_9_6_PERFORMANCE_REPORT_INTEGRATION_REVIEW.md](../reviews/PHASE_4_9_6_PERFORMANCE_REPORT_INTEGRATION_REVIEW.md).

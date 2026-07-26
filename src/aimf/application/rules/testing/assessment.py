@@ -35,7 +35,7 @@ from aimf.services.rule_engine.engine import rule_context_from_pipeline
 
 
 class TestingRuleExecutionFact(BaseModel):
-    """Bounded per-rule execution fact (not a Finding; no inventory yet)."""
+    """Bounded per-rule execution fact (not a Finding)."""
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 from mcp.server.fastmcp import FastMCP
 
@@ -16,6 +16,8 @@ from aimf.infrastructure.knowledge_store.factory import (
     create_knowledge_query_service,
     create_knowledge_store,
 )
+from aimf.interfaces.mcp.composition import compose_repository_intelligence
+from aimf.interfaces.mcp.context import RepositoryIntelligenceContext
 from aimf.interfaces.mcp.server import build_mcp_server
 
 
@@ -33,6 +35,12 @@ def create_mcp_server(
     enterprise_knowledge_service: object | None = None,
     enterprise_query_service: object | None = None,
     rule_analysis_service: object | None = None,
+    repository_intelligence: RepositoryIntelligenceContext | None = None,
+    retriever: Any | None = None,
+    answer_engine: Any | None = None,
+    answer_provider: Any | None = None,
+    embedding_provider: Any | None = None,
+    vector_store: Any | None = None,
 ) -> FastMCP:
     """Create a CodeStrata FastMCP server with injectable application services.
 
@@ -125,6 +133,19 @@ def create_mcp_server(
 
         rules_service = create_rule_analysis_service(settings=resolved_settings)
 
+    ri_context = repository_intelligence
+    if ri_context is None:
+        ri_context = compose_repository_intelligence(
+            queries=queries,
+            settings=resolved_settings,
+            mcp_settings=resolved_settings.mcp if resolved_settings else None,
+            retriever=retriever,
+            answer_engine=answer_engine,
+            answer_provider=answer_provider,
+            embedding_provider=embedding_provider,
+            vector_store=vector_store,
+        )
+
     return build_mcp_server(
         queries=queries,
         assessment_service=assess,
@@ -135,6 +156,7 @@ def create_mcp_server(
         enterprise_knowledge_service=enterprise_knowledge,
         enterprise_query_service=enterprise_queries,
         rule_analysis_service=rules_service,
+        repository_intelligence=ri_context,
     )
 
 

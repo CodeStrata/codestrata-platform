@@ -10,6 +10,28 @@ from typing import Any
 
 from aimf.models import AnalysisResult, Finding, Priority, Recommendation, Severity, Technology
 from aimf.reporting.ai_execution import AI_EXECUTION_FILENAME
+from aimf.reporting.contract.constants import (
+    ASSESSMENT_JSON_REPORT_VERSION,
+    ASSESSMENT_JSON_SCHEMA_VERSION,
+)
+from aimf.reporting.contract.enums import (
+    normalize_effort,
+    normalize_priority,
+    normalize_risk,
+    normalize_severity,
+)
+from aimf.reporting.contract.identifiers import (
+    build_finding_id_map,
+    stable_finding_id,
+    stable_recommendation_id,
+)
+from aimf.reporting.contract.manifest import build_report_manifest
+from aimf.reporting.contract.ordering import (
+    sorted_evidence,
+    sorted_findings,
+    sorted_recommendations,
+    sorted_technologies,
+)
 from aimf.reporting.modernization_models import (
     AIExecutionStatus,
     AssessmentTiming,
@@ -18,12 +40,8 @@ from aimf.reporting.modernization_models import (
 from aimf.reporting.modernization_view import (
     repository_identifier,
     sanitize_display_path,
-    sorted_findings,
 )
 from aimf.static_analysis.models import StaticAnalysisResult, StaticAnalysisStatus
-
-ASSESSMENT_JSON_SCHEMA_VERSION = "1.2"
-ASSESSMENT_JSON_REPORT_VERSION = "1.2"
 
 
 def build_assessment_json_document(
@@ -39,6 +57,16 @@ def build_assessment_json_document(
     executive = _executive_summary_metrics(analysis)
     comparison = _comparison_payload(analysis)
 
+    findings = _dedupe_by_stable_id(
+        sorted_findings(analysis.findings), key=stable_finding_id
+    )
+    recommendations = _dedupe_by_stable_id(
+        sorted_recommendations(analysis.recommendations),
+        key=stable_recommendation_id,
+    )
+    finding_id_map = build_finding_id_map(findings)
+    technologies = sorted_technologies(analysis.technologies)
+
     assessment: dict[str, Any] = {
             "mode": report_input.assessment_mode.value,
             "generated_at": _format_timestamp(report_input.generated_at_utc),
@@ -52,10 +80,10 @@ def build_assessment_json_document(
                 "file_count": analysis.repository.total_files or len(analysis.repository.files),
             },
             "summary": {
-                "technology_count": len(analysis.technologies),
-                "finding_count": len(analysis.findings),
-                "deterministic_recommendation_count": len(analysis.recommendations),
-                "recommendation_count": len(analysis.recommendations),
+                "technology_count": len(technologies),
+                "finding_count": len(findings),
+                "deterministic_recommendation_count": len(recommendations),
+                "recommendation_count": len(recommendations),
                 "ai_recommendation_count": ai_block["recommendation_count"],
                 "phase_count": ai_block["phase_count"],
                 "ai_executed": report_input.ai_executed,
@@ -69,20 +97,12 @@ def build_assessment_json_document(
                 "summary_text": executive["summary_text"],
             },
             "executive_summary": executive,
-            "technologies": [
-                _technology_payload(item)
-                for item in sorted(
-                    analysis.technologies,
-                    key=lambda tech: (
-                        str(getattr(tech.category, "value", tech.category)).lower(),
-                        tech.name.lower(),
-                    ),
-                )
-            ],
+            "technologies": [_technology_payload(item) for item in technologies],
             "repository_facts": _facts_payload(analysis),
-            "findings": [_finding_payload(item) for item in sorted_findings(analysis.findings)],
+            "findings": [_finding_payload(item) for item in findings],
             "deterministic_recommendations": [
-                _recommendation_payload(item) for item in analysis.recommendations
+                _recommendation_payload(item, finding_id_map=finding_id_map)
+                for item in recommendations
             ],
             "comparison": comparison,
             "warnings": list(report_input.warnings),
@@ -126,27 +146,169 @@ def build_assessment_json_document(
                 or AIExecutionStatus.NOT_REQUESTED.value,
             },
         }
-    # Optional Phase 4.2.5 architecture report section (schema remains 1.2; additive key).
-    if report_input.architecture_report is not None:
-        assessment["architecture"] = report_input.architecture_report.model_dump(
-            mode="json"
-        )
-    # Optional Phase 4.3.6 technical debt report section (schema remains 1.2; additive key).
-    if report_input.technical_debt_report is not None:
-        assessment["technical_debt"] = report_input.technical_debt_report.model_dump(
-            mode="json"
-        )
-    # Optional Phase 4.4.6 dependency report section (schema remains 1.2; additive key).
-    if report_input.dependency_report is not None:
-        assessment["dependency"] = report_input.dependency_report.model_dump(mode="json")
-    # Optional Phase 4.5.6 security report section (schema remains 1.2; additive key).
-    if report_input.security_report is not None:
-        assessment["security"] = report_input.security_report.model_dump(mode="json")
+    _attach_optional_section(assessment, "architecture", report_input.architecture_report)
+    _attach_optional_section(assessment, "technical_debt", report_input.technical_debt_report)
+    _attach_optional_section(assessment, "dependency", report_input.dependency_report)
+    _attach_optional_section(assessment, "security", report_input.security_report)
+    _attach_optional_section(assessment, "testing", report_input.testing_report)
+    _attach_optional_section(assessment, "cloud", report_input.cloud_report)
+    _attach_optional_section(assessment, "ai_readiness", report_input.ai_readiness_report)
+    _attach_optional_section(assessment, "performance", report_input.performance_report)
+    _attach_optional_section(assessment, "roadmap", report_input.roadmap_report)
+    _align_roadmap_references(assessment)
+
+    repository_id = (
+        report_input.knowledge_repository_id
+        or f"repo:{analysis.repository.name.strip().lower() or 'repository'}"
+    )
+    manifest = build_report_manifest(
+        generation_mode=report_input.assessment_mode.value,
+        repository_id=repository_id,
+        scan_id=report_input.knowledge_run_id,
+        assessment=assessment,
+        generated_at=report_input.generated_at_utc,
+    )
     return {
         "schema_version": ASSESSMENT_JSON_SCHEMA_VERSION,
         "report_version": ASSESSMENT_JSON_REPORT_VERSION,
+        "manifest": manifest,
         "assessment": assessment,
     }
+
+
+def _attach_optional_section(assessment: dict[str, Any], key: str, section: Any) -> None:
+    """Attach optional report section; omit when disabled or analytically empty."""
+
+    if section is None:
+        return
+    payload = section.model_dump(mode="json")
+    status = str(payload.get("status") or "").lower()
+    if status in {"disabled", "not_requested", "unavailable"}:
+        return
+    if key == "roadmap":
+        initiatives = payload.get("initiatives") or []
+        if not initiatives and int(payload.get("initiatives_total") or 0) == 0:
+            return
+    assessment[key] = payload
+
+
+def _align_roadmap_references(assessment: dict[str, Any]) -> None:
+    """Keep roadmap supporting IDs aligned with report finding/recommendation IDs.
+
+    Roadmap engines may reference Phase-3 graph IDs that are not emitted in the
+    customer findings/recommendations arrays. Filter to IDs present in the
+    report envelope and re-derive initiative IDs from stable keys so repeated
+    runs stay structurally comparable.
+    """
+
+    from aimf.domain.roadmap.identifiers import build_initiative_id
+
+    roadmap = assessment.get("roadmap")
+    if not isinstance(roadmap, dict):
+        return
+    finding_ids = {
+        str(item.get("id"))
+        for item in (assessment.get("findings") or [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    recommendation_ids = {
+        str(item.get("id"))
+        for item in (assessment.get("deterministic_recommendations") or [])
+        if isinstance(item, dict) and item.get("id")
+    }
+
+    def _align_initiative(item: dict[str, Any]) -> tuple[int, str | None, str]:
+        dropped = 0
+        old_id = str(item.get("initiative_id") or "") or None
+        for key, allowed in (
+            ("supporting_finding_ids", finding_ids),
+            ("supporting_recommendation_ids", recommendation_ids),
+        ):
+            original = item.get(key) or []
+            if not isinstance(original, list):
+                continue
+            kept = sorted({str(value) for value in original if str(value) in allowed})
+            dropped += len(original) - len(kept)
+            item[key] = kept
+        phase = str(item.get("phase") or "unknown")
+        category = str(item.get("category") or "unknown")
+        stable_keys = item.get("supporting_recommendation_ids") or []
+        if not stable_keys:
+            title = str(item.get("title") or item.get("summary") or "initiative")
+            stable_keys = [title]
+        new_id = build_initiative_id(
+            phase=phase,
+            category=category,
+            recommendation_ids=[str(value) for value in stable_keys],
+        )
+        item["initiative_id"] = new_id
+        return dropped, old_id, new_id
+
+    dropped = 0
+    id_map: dict[str, str] = {}
+    aligned_items: list[dict[str, Any]] = []
+
+    initiatives = roadmap.get("initiatives")
+    if isinstance(initiatives, list):
+        for item in initiatives:
+            if isinstance(item, dict):
+                count, old_id, new_id = _align_initiative(item)
+                dropped += count
+                if old_id:
+                    id_map[old_id] = new_id
+                aligned_items.append(item)
+
+    phases = roadmap.get("phases")
+    if isinstance(phases, list):
+        for phase in phases:
+            if not isinstance(phase, dict):
+                continue
+            nested = phase.get("initiatives")
+            if not isinstance(nested, list):
+                continue
+            for item in nested:
+                if isinstance(item, dict):
+                    count, old_id, new_id = _align_initiative(item)
+                    dropped += count
+                    if old_id:
+                        id_map[old_id] = new_id
+                    aligned_items.append(item)
+            phase["initiative_ids"] = [
+                str(item.get("initiative_id"))
+                for item in nested
+                if isinstance(item, dict) and item.get("initiative_id")
+            ]
+
+    known_ids = {
+        str(item.get("initiative_id"))
+        for item in aligned_items
+        if item.get("initiative_id")
+    }
+    for item in aligned_items:
+        deps = item.get("depends_on_initiative_ids") or []
+        if not isinstance(deps, list):
+            continue
+        remapped = []
+        for dep in deps:
+            key = str(dep)
+            mapped = id_map.get(key, key)
+            if mapped in known_ids:
+                remapped.append(mapped)
+            else:
+                dropped += 1
+        item["depends_on_initiative_ids"] = sorted(set(remapped))
+
+    if dropped:
+        limitations = list(roadmap.get("limitations") or [])
+        note = (
+            "Some roadmap supporting finding/recommendation IDs were omitted "
+            "because they are not present in the customer report finding/"
+            "recommendation lists."
+        )
+        if note not in limitations:
+            limitations.append(note)
+        roadmap["limitations"] = limitations
+
 
 def assessment_json_to_text(document: dict[str, Any], *, indent: int | None = 2) -> str:
     """Serialize an assessment JSON document with stable formatting."""
@@ -515,17 +677,25 @@ def _technology_payload(tech: Technology) -> dict[str, Any]:
     }
 
 
+def _dedupe_by_stable_id(
+    items: list[Any],
+    *,
+    key: Any,
+) -> list[Any]:
+    seen: set[str] = set()
+    out: list[Any] = []
+    for item in items:
+        sid = str(key(item))
+        if sid in seen:
+            continue
+        seen.add(sid)
+        out.append(item)
+    return out
+
+
 def _finding_payload(finding: Finding) -> dict[str, Any]:
-    return {
-        "id": str(finding.id),
-        "rule_id": finding.rule_id,
-        "title": finding.title,
-        "description": finding.description,
-        "category": str(getattr(finding.category, "value", finding.category)),
-        "severity": str(getattr(finding.severity, "value", finding.severity)),
-        "source": str(getattr(finding.source, "value", finding.source)),
-        "affected_technologies": list(finding.affected_technologies),
-        "evidence": [
+    evidence_items = sorted_evidence(
+        [
             {
                 "file_path": sanitize_display_path(item.file_path),
                 "line_number": item.line_number,
@@ -533,7 +703,34 @@ def _finding_payload(finding: Finding) -> dict[str, Any]:
                 "description": item.description,
             }
             for item in finding.evidence
-        ],
+        ]
+    )
+    # Deduplicate identical evidence rows.
+    deduped_evidence: list[dict[str, Any]] = []
+    seen_evidence: set[tuple[Any, ...]] = set()
+    for item in evidence_items:
+        key = (
+            item.get("file_path"),
+            item.get("line_number"),
+            item.get("column_number"),
+            item.get("description"),
+        )
+        if key in seen_evidence:
+            continue
+        seen_evidence.add(key)
+        deduped_evidence.append(item)
+    return {
+        "id": stable_finding_id(finding),
+        "rule_id": finding.rule_id,
+        "title": finding.title,
+        "description": finding.description,
+        "category": str(getattr(finding.category, "value", finding.category)),
+        "severity": normalize_severity(finding.severity),
+        "source": str(getattr(finding.source, "value", finding.source)),
+        "affected_technologies": sorted(
+            {str(item) for item in finding.affected_technologies}
+        ),
+        "evidence": deduped_evidence,
         "provider_name": finding.metadata.get("provider_name"),
         "customer_visibility": finding.metadata.get("customer_visibility"),
         "modernization_relevance": finding.metadata.get("modernization_relevance"),
@@ -545,18 +742,31 @@ def _finding_payload(finding: Finding) -> dict[str, Any]:
     }
 
 
-def _recommendation_payload(recommendation: Recommendation) -> dict[str, Any]:
+def _recommendation_payload(
+    recommendation: Recommendation,
+    *,
+    finding_id_map: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    id_map = finding_id_map or {}
+    known_finding_ids = set(id_map.values())
+    related = sorted(
+        {
+            mapped
+            for item in recommendation.related_finding_ids
+            if (mapped := id_map.get(str(item))) is not None and mapped in known_finding_ids
+        }
+    )
     return {
-        "id": str(recommendation.id),
+        "id": stable_recommendation_id(recommendation),
         "rule_id": recommendation.rule_id,
         "title": recommendation.title,
         "description": recommendation.description,
         "rationale": recommendation.rationale,
-        "priority": str(getattr(recommendation.priority, "value", recommendation.priority)),
+        "priority": normalize_priority(recommendation.priority),
         "category": str(getattr(recommendation.category, "value", recommendation.category)),
-        "effort": str(getattr(recommendation.effort, "value", recommendation.effort)),
-        "risk": str(getattr(recommendation.risk, "value", recommendation.risk)),
-        "related_finding_ids": list(recommendation.related_finding_ids),
+        "effort": normalize_effort(recommendation.effort),
+        "risk": normalize_risk(recommendation.risk),
+        "related_finding_ids": related,
         "actions": list(recommendation.actions),
         "dependencies": list(recommendation.dependencies),
         "evidence": [
@@ -609,3 +819,12 @@ def _strip_absolute_paths(value: str) -> str:
 
 def _format_timestamp(value: datetime) -> str:
     return value.astimezone(tz=value.tzinfo).isoformat().replace("+00:00", "Z")
+
+
+# Explicit re-exports for callers that import versions from this module.
+__all__ = [
+    "ASSESSMENT_JSON_REPORT_VERSION",
+    "ASSESSMENT_JSON_SCHEMA_VERSION",
+    "assessment_json_to_text",
+    "build_assessment_json_document",
+]

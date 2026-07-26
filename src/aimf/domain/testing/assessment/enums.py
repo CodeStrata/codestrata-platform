@@ -70,4 +70,7 @@ class TestTraceabilityRelation(StrEnum):
     SECTION_TO_FINDING = "section_to_finding"
     SECTION_TO_COVERAGE = "section_to_coverage"
     SECTION_TO_LIMITATION = "section_to_limitation"
+    SECTION_TO_THEME = "section_to_theme"
+    SECTION_TO_CONCLUSION = "section_to_conclusion"
+    SECTION_TO_RECOMMENDATION = "section_to_recommendation"
     PACK_TO_RULE = "pack_to_rule"

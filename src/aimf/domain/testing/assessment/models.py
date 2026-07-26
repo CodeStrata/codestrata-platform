@@ -1,7 +1,7 @@
-"""Test assessment domain models (Phase 4.6.1).
+"""Test assessment domain models (Phase 4.6.5).
 
-Analytically empty foundation section. No inventories, hotspots, synthesis,
-conclusions, recommendations, or report projection fields.
+Additive inventory + synthesis contract on schema 1.2.0. No report projection
+fields.
 """
 
 from __future__ import annotations
@@ -20,6 +20,12 @@ from aimf.domain.testing.assessment.identifiers import (
     SCHEMA_NAME,
     SECTION_ID,
     SECTION_SCHEMA_VERSION,
+)
+from aimf.domain.testing.synthesis.models import (
+    TestConclusion,
+    TestingSynthesisResult,
+    TestRecommendation,
+    TestTheme,
 )
 
 
@@ -42,6 +48,9 @@ class TestExecutionSummary(BaseModel):
     pack_id: str = ""
     pack_version: str = ""
     pack_enabled: bool = False
+    theme_count: int = Field(default=0, ge=0)
+    conclusion_count: int = Field(default=0, ge=0)
+    recommendation_count: int = Field(default=0, ge=0)
 
     @field_validator("findings_by_rule", mode="before")
     @classmethod
@@ -160,11 +169,129 @@ class TestTraceabilityIndex(BaseModel):
         return len(self.edges)
 
 
-class TestAssessmentSection(BaseModel):
-    """First-class Test section of a CodeStrata assessment (schema 1.0.0).
+class TestCountBucket(BaseModel):
+    """Deterministic count bucket for inventory aggregations."""
 
-    Analytically empty foundation. No inventories, hotspots, synthesis, or
-    report projection.
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    key: str
+    count: int = Field(default=0, ge=0)
+
+    @field_validator("key", mode="before")
+    @classmethod
+    def normalize_key(cls, value: object) -> str:
+        return require_nonblank(str(value), label="bucket key")
+
+
+class TestFindingInventory(BaseModel):
+    """Finding ID references and rollup counts (no Finding duplication)."""
+
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    finding_ids: tuple[str, ...] = ()
+    finding_count: int = Field(default=0, ge=0)
+    rule_counts: dict[str, int] = Field(default_factory=dict)
+    severity_counts: dict[str, int] = Field(default_factory=dict)
+    confidence_counts: dict[str, int] = Field(default_factory=dict)
+
+    @field_validator("finding_ids", mode="before")
+    @classmethod
+    def normalize_ids(cls, value: object) -> tuple[str, ...]:
+        return tuple(sorted({str(item).strip() for item in as_tuple(value) if str(item).strip()}))
+
+    @field_validator(
+        "rule_counts",
+        "severity_counts",
+        "confidence_counts",
+        mode="before",
+    )
+    @classmethod
+    def normalize_counts(cls, value: object) -> dict[str, int]:
+        if value is None:
+            return {}
+        if not isinstance(value, dict):
+            raise ValueError("inventory counts must be dictionaries")
+        return {
+            str(key): int(item)
+            for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
+        }
+
+
+class TestRuleInventoryEntry(BaseModel):
+    """Per-rule execution and finding-count inventory entry."""
+
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    rule_id: str
+    enabled: bool = True
+    executed: bool = False
+    evaluation_status: str = "not_executed"
+    finding_count: int = Field(default=0, ge=0)
+    diagnostic_count: int = Field(default=0, ge=0)
+
+    @field_validator("rule_id", "evaluation_status", mode="before")
+    @classmethod
+    def normalize_required(cls, value: object) -> str:
+        return require_nonblank(str(value), label="rule inventory field")
+
+
+class TestRuleInventory(BaseModel):
+    """Registered Test Hygiene rule inventory (applicable vs matched)."""
+
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    entries: tuple[TestRuleInventoryEntry, ...] = ()
+    rules_planned: int = Field(default=0, ge=0)
+    rules_executed: int = Field(default=0, ge=0)
+    rules_matched: int = Field(default=0, ge=0)
+    rules_not_matched: int = Field(default=0, ge=0)
+    rules_not_applicable: int = Field(default=0, ge=0)
+    rules_failed: int = Field(default=0, ge=0)
+
+    @field_validator("entries", mode="before")
+    @classmethod
+    def normalize_entries(cls, value: object) -> tuple[object, ...]:
+        return as_tuple(value)
+
+
+class TestSeverityInventory(BaseModel):
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    buckets: tuple[TestCountBucket, ...] = ()
+
+    @field_validator("buckets", mode="before")
+    @classmethod
+    def normalize_buckets(cls, value: object) -> tuple[object, ...]:
+        return as_tuple(value)
+
+
+class TestConfidenceInventory(BaseModel):
+    __test__ = False
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    buckets: tuple[TestCountBucket, ...] = ()
+
+    @field_validator("buckets", mode="before")
+    @classmethod
+    def normalize_buckets(cls, value: object) -> tuple[object, ...]:
+        return as_tuple(value)
+
+
+class TestAssessmentSection(BaseModel):
+    """First-class Test section of a CodeStrata assessment (schema 1.2.0).
+
+    Inventory + deterministic synthesis. No report projection.
     """
 
     __test__ = False
@@ -184,10 +311,19 @@ class TestAssessmentSection(BaseModel):
     graph_fingerprint: str = ""
     evidence_fingerprint: str = ""
     configuration_fingerprint: str = ""
-    execution_summary: TestExecutionSummary = Field(
-        default_factory=TestExecutionSummary
-    )
+    execution_summary: TestExecutionSummary = Field(default_factory=TestExecutionSummary)
     coverage: TestCoverageSummary = Field(default_factory=TestCoverageSummary)
+    finding_inventory: TestFindingInventory = Field(default_factory=TestFindingInventory)
+    rule_inventory: TestRuleInventory = Field(default_factory=TestRuleInventory)
+    severity_inventory: TestSeverityInventory = Field(default_factory=TestSeverityInventory)
+    confidence_inventory: TestConfidenceInventory = Field(default_factory=TestConfidenceInventory)
+    synthesis: TestingSynthesisResult = Field(default_factory=TestingSynthesisResult)
+    themes: tuple[TestTheme, ...] = ()
+    theme_ids: tuple[str, ...] = ()
+    conclusions: tuple[TestConclusion, ...] = ()
+    conclusion_ids: tuple[str, ...] = ()
+    recommendations: tuple[TestRecommendation, ...] = ()
+    recommendation_ids: tuple[str, ...] = ()
     finding_ids: tuple[str, ...] = ()
     all_finding_ids: tuple[str, ...] = ()
     findings: tuple[str, ...] = ()
@@ -222,13 +358,22 @@ class TestAssessmentSection(BaseModel):
         "all_finding_ids",
         "findings",
         "diagnostics",
+        "theme_ids",
+        "conclusion_ids",
+        "recommendation_ids",
         mode="before",
     )
     @classmethod
     def normalize_id_sequences(cls, value: object) -> tuple[str, ...]:
         return tuple(str(item).strip() for item in as_tuple(value) if str(item).strip())
 
-    @field_validator("limitations", mode="before")
+    @field_validator(
+        "limitations",
+        "themes",
+        "conclusions",
+        "recommendations",
+        mode="before",
+    )
     @classmethod
     def normalize_object_sequences(cls, value: object) -> tuple[object, ...]:
         return as_tuple(value)

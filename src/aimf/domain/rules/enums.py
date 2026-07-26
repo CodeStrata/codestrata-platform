@@ -22,6 +22,8 @@ class RuleCategory(StrEnum):
     DEPENDENCY = "dependency"
     SECURITY = "security"
     TESTING = "testing"
+    CLOUD = "cloud"
+    AI_READINESS = "ai_readiness"
     PERFORMANCE = "performance"
     PLATFORM = "platform"
     EXPERIMENTAL = "experimental"

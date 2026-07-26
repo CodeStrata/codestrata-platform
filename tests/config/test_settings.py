@@ -152,7 +152,7 @@ def test_load_settings_reads_mcp_defaults(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     settings = load_settings(config_file)
-    assert settings.mcp.enabled is True
+    assert settings.mcp.enabled is False
     assert settings.mcp.transport == "stdio"
 
 
@@ -312,6 +312,233 @@ def test_security_gates_disabled_by_default(tmp_path: Path) -> None:
     assert settings.assessment.sections.testing.enabled is False
 
 
+def test_cloud_gates_disabled_by_default(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.analysis.cloud.enabled is False
+    assert settings.analysis.cloud.include_findings is True
+    assert settings.analysis.cloud.include_coverage is True
+    assert settings.report.sections.cloud.enabled is False
+    assert settings.report.sections.cloud.include_findings is True
+    assert settings.report.sections.cloud.include_inventory is True
+    assert settings.report.sections.cloud.include_themes is True
+    assert settings.evidence.repository_cloud.enabled is False
+    assert settings.evidence.repository_ai_readiness.enabled is False
+    assert settings.evidence.repository_performance.enabled is False
+    assert settings.rules.cloud.enabled is False
+    assert settings.rules.ai_readiness.enabled is False
+    assert settings.rules.performance.enabled is False
+    assert settings.rules.testing.enabled is False
+    assert settings.assessment.sections.testing.enabled is False
+    assert settings.report.sections.testing.enabled is False
+    assert settings.analysis.ai_readiness.enabled is False
+    assert settings.report.sections.ai_readiness.enabled is False
+    assert settings.report.sections.ai_readiness.include_inventory is True
+    assert settings.report.sections.ai_readiness.include_themes is True
+    assert settings.report.sections.ai_readiness.include_execution_summary is True
+    assert settings.analysis.performance.enabled is False
+    assert settings.analysis.performance.include_findings is True
+    assert settings.analysis.performance.include_synthesis is True
+    assert settings.report.sections.performance.enabled is False
+    assert settings.report.sections.performance.include_inventory is True
+    assert settings.report.sections.performance.include_themes is True
+    assert settings.report.sections.performance.include_execution_summary is True
+    assert settings.report.sections.roadmap.enabled is False
+    assert settings.report.sections.roadmap.include_assumptions is True
+    assert settings.report.sections.roadmap.include_limitations is True
+    assert settings.report.sections.roadmap.include_evidence is True
+
+
+def test_performance_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [analysis.performance]
+        enabled = true
+        include_limitations = false
+        include_synthesis = true
+
+        [report.sections.performance]
+        enabled = true
+        include_diagnostics = false
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.analysis.performance.enabled is True
+    assert settings.analysis.performance.include_limitations is False
+    assert settings.analysis.performance.include_synthesis is True
+    assert settings.report.sections.performance.enabled is True
+    assert settings.report.sections.performance.include_diagnostics is False
+    assert settings.analysis.ai_readiness.enabled is False
+    assert settings.analysis.cloud.enabled is False
+
+
+def test_ai_readiness_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [analysis.ai_readiness]
+        enabled = true
+        include_limitations = false
+
+        [evidence.repository_ai_readiness]
+        enabled = true
+        max_files = 250
+
+        [report.sections.ai_readiness]
+        enabled = true
+        include_diagnostics = false
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.analysis.ai_readiness.enabled is True
+    assert settings.analysis.ai_readiness.include_limitations is False
+    assert settings.evidence.repository_ai_readiness.enabled is True
+    assert settings.evidence.repository_ai_readiness.max_files == 250
+    assert settings.report.sections.ai_readiness.enabled is True
+    assert settings.report.sections.ai_readiness.include_diagnostics is False
+    assert settings.analysis.cloud.enabled is False
+    assert settings.rules.ai_readiness.enabled is False
+
+
+def test_ai_readiness_rules_gate_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [rules]
+        enabled = true
+
+        [rules.ai_readiness]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.enabled is True
+    assert settings.rules.ai_readiness.enabled is True
+    assert settings.rules.ai_readiness.ai_001.enabled is True
+    assert settings.analysis.ai_readiness.enabled is False
+
+
+def test_performance_rules_gate_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [rules]
+        enabled = true
+
+        [rules.performance]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.rules.enabled is True
+    assert settings.rules.performance.enabled is True
+    assert settings.rules.performance.perf_001.enabled is True
+    assert settings.analysis.performance.enabled is False
+
+
+def test_repository_ai_readiness_evidence_enablement_independent(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [evidence.repository_ai_readiness]
+        enabled = true
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.evidence.repository_ai_readiness.enabled is True
+    assert settings.analysis.ai_readiness.enabled is False
+    assert settings.report.sections.ai_readiness.enabled is False
+
+
+def test_repository_performance_evidence_enablement_independent(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [evidence.repository_performance]
+        enabled = true
+        max_files = 250
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.evidence.repository_performance.enabled is True
+    assert settings.evidence.repository_performance.max_files == 250
+    assert settings.analysis.performance.enabled is False
+    assert settings.report.sections.performance.enabled is False
+
+
+def test_cloud_gates_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [analysis.cloud]
+        enabled = true
+        include_limitations = false
+
+        [evidence.repository_cloud]
+        enabled = true
+        max_files = 250
+
+        [rules]
+        enabled = true
+
+        [rules.cloud]
+        enabled = true
+
+        [report.sections.cloud]
+        enabled = true
+        include_diagnostics = false
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.analysis.cloud.enabled is True
+    assert settings.analysis.cloud.include_limitations is False
+    assert settings.evidence.repository_cloud.enabled is True
+    assert settings.evidence.repository_cloud.max_files == 250
+    assert settings.rules.enabled is True
+    assert settings.rules.cloud.enabled is True
+    assert settings.rules.cloud.cloud_001.enabled is True
+    assert settings.report.sections.cloud.enabled is True
+    assert settings.report.sections.cloud.include_diagnostics is False
+    assert settings.assessment.sections.testing.enabled is False
+    assert settings.report.sections.testing.enabled is False
+
+
 def test_testing_gates_disabled_by_default(tmp_path: Path) -> None:
     config_file = tmp_path / "aimf.toml"
     config_file.write_text(
@@ -325,8 +552,9 @@ def test_testing_gates_disabled_by_default(tmp_path: Path) -> None:
     assert settings.rules.testing.enabled is False
     assert settings.assessment.sections.testing.enabled is False
     assert settings.assessment.sections.testing.include_findings is True
-    assert "include_synthesis" not in type(settings.assessment.sections.testing).model_fields
-    assert "testing" not in type(settings.report.sections).model_fields
+    assert settings.assessment.sections.testing.include_synthesis is True
+    assert settings.report.sections.testing.enabled is False
+    assert settings.report.sections.testing.include_inventory is True
     assert settings.rules.security.enabled is False
     assert settings.assessment.sections.security.enabled is False
 
@@ -354,6 +582,26 @@ def test_testing_gates_can_be_enabled(tmp_path: Path) -> None:
     assert settings.assessment.sections.testing.enabled is True
     assert settings.rules.security.enabled is False
     assert settings.assessment.sections.security.enabled is False
+    assert settings.report.sections.security.enabled is False
+    assert settings.report.sections.testing.enabled is False
+
+
+def test_testing_report_gate_can_be_enabled(tmp_path: Path) -> None:
+    config_file = tmp_path / "aimf.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [report.sections.testing]
+        enabled = true
+        include_themes = false
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.report.sections.testing.enabled is True
+    assert settings.report.sections.testing.include_themes is False
     assert settings.report.sections.security.enabled is False
 
 

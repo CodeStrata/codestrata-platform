@@ -11,6 +11,7 @@ class LocalRepositoryScanner:
 
     DEFAULT_EXCLUDED_DIRECTORIES = frozenset(
         {
+            ".aimf",
             ".git",
             ".idea",
             ".mypy_cache",
@@ -23,6 +24,7 @@ class LocalRepositoryScanner:
             "build",
             "dist",
             "node_modules",
+            "reports",
             "target",
         }
     )

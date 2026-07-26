@@ -6,6 +6,7 @@ Presentation only — no analysis or enrichment business logic.
 from __future__ import annotations
 
 from aimf.reporters.html_rendering import escape_and_wrap, escape_html
+from aimf.reporting.ai_readiness.models import AiReadinessReportSection
 from aimf.reporting.architecture.models import ArchitectureReportSection
 from aimf.reporting.branding import (
     BRAND_FOOTER_LINE,
@@ -14,6 +15,7 @@ from aimf.reporting.branding import (
     BRAND_VERSION,
     logo_data_uri,
 )
+from aimf.reporting.cloud.models import CloudReportSection
 from aimf.reporting.dependency.models import DependencyReportSection
 from aimf.reporting.html_v2.models import (
     AiEnrichmentView,
@@ -21,8 +23,11 @@ from aimf.reporting.html_v2.models import (
     HtmlReportViewModel,
     RecommendationView,
 )
+from aimf.reporting.performance.models import PerformanceReportSection
+from aimf.reporting.roadmap.models import RoadmapReportSection
 from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
+from aimf.reporting.testing.models import TestingReportSection
 
 CONTENT_SECURITY_POLICY = (
     "default-src 'none'; "
@@ -37,7 +42,6 @@ CONTENT_SECURITY_POLICY = (
     "style-src 'unsafe-inline'"
 )
 
-REPORT_HTML_VERSION = "2.1"
 _TOP_FINDINGS = 5
 _SEVERITY_ORDER = ("critical", "high", "medium", "low", "informational")
 
@@ -67,6 +71,10 @@ class HtmlReportRenderer:
                 "Executive Summary",
                 _render_executive_cards(view),
                 section_id="executive",
+                note=(
+                    "Leadership snapshot: counts and readiness signals only. "
+                    "Detailed findings and phased initiatives follow below."
+                ),
             ),
             _section(
                 "Technology Overview",
@@ -77,13 +85,19 @@ class HtmlReportRenderer:
                 "Findings Overview",
                 _render_findings_overview(view),
                 section_id="findings",
-                note="Deterministic Assessment Graph findings.",
+                note=(
+                    "Highest-severity deterministic findings first. "
+                    "Full evidence and IDs are in Technical Details."
+                ),
             ),
             _section(
                 "Modernization Roadmap",
                 _render_roadmap(view.recommendations),
                 section_id="recommendations",
-                note="Deterministic recommendations derived from findings.",
+                note=(
+                    "Priority-ordered deterministic recommendations with links "
+                    "to related findings where available."
+                ),
             ),
         ]
         if view.architecture_report is not None:
@@ -138,6 +152,77 @@ class HtmlReportRenderer:
                         "compliance claims, scores, or exploitability. Zero findings "
                         "do not establish that the repository is secure. Hotspot "
                         "order is presentation order, not priority ranking."
+                    ),
+                )
+            )
+        if view.testing_report is not None:
+            parts.append(
+                _section(
+                    "Test Intelligence",
+                    _render_testing(view.testing_report),
+                    section_id="testing-assessment",
+                    note=(
+                        "Deterministic repository Test Hygiene assessment "
+                        "presentation. Does not invent test-quality scores, "
+                        "pass/fail execution results, or runtime coverage. Zero "
+                        "findings do not certify test sufficiency or readiness "
+                        "for release."
+                    ),
+                )
+            )
+        if view.cloud_report is not None:
+            parts.append(
+                _section(
+                    "Cloud Intelligence",
+                    _render_cloud(view.cloud_report),
+                    section_id="cloud-assessment",
+                    note=(
+                        "Deterministic repository Cloud Hygiene assessment "
+                        "presentation. Does not invent readiness scores, "
+                        "portability verdicts, or provider compliance claims. "
+                        "Zero findings do not establish that the repository is "
+                        "cloud ready."
+                    ),
+                )
+            )
+        if view.ai_readiness_report is not None:
+            parts.append(
+                _section(
+                    "AI Readiness Intelligence",
+                    _render_ai_readiness(view.ai_readiness_report),
+                    section_id="ai-readiness-assessment",
+                    note=(
+                        "Deterministic repository AI Readiness Hygiene assessment "
+                        "presentation. Does not invent readiness scores, agent "
+                        "enablement verdicts, or RAG suitability claims. Zero "
+                        "findings do not certify AI/agent enablement."
+                    ),
+                )
+            )
+        if view.performance_report is not None:
+            parts.append(
+                _section(
+                    "Performance Intelligence",
+                    _render_performance(view.performance_report),
+                    section_id="performance-assessment",
+                    note=(
+                        "Deterministic repository Performance Hygiene assessment "
+                        "presentation. Does not invent performance scores or "
+                        "load suitability claims. Zero findings do not certify "
+                        "load suitability."
+                    ),
+                )
+            )
+        if view.roadmap_report is not None:
+            parts.append(
+                _section(
+                    "Phased Modernization Plan",
+                    _render_phased_roadmap(view.roadmap_report),
+                    section_id="modernization-roadmap-assessment",
+                    note=(
+                        "Deterministic phased plan derived from existing findings "
+                        "and recommendations only. Does not invent initiatives, "
+                        "schedules, cost estimates, or portfolio plans."
                     ),
                 )
             )
@@ -322,7 +407,10 @@ def _stat_card(label: str, value: str, hint: str = "") -> str:
 
 def _render_technology(view: HtmlReportViewModel) -> str:
     if not view.technologies and not view.version_highlights:
-        return '<p class="muted">No technologies detected.</p>'
+        return (
+            '<p class="muted">No technologies were detected in this repository scan. '
+            "Confirm language manifests are present and re-run assessment if needed.</p>"
+        )
     badges = (
         "".join(
             f'<span class="tech-badge">{escape_html(item.name)}'
@@ -375,7 +463,10 @@ def _render_findings_overview(view: HtmlReportViewModel) -> str:
     )
     top = view.findings[:_TOP_FINDINGS]
     if not top:
-        cards = '<p class="muted">No deterministic findings.</p>'
+        cards = (
+            '<p class="muted">No deterministic findings were produced for this run. '
+            "This does not certify that the repository is free of issues.</p>"
+        )
     else:
         cards = (
             '<div class="card-stack">\n'
@@ -432,7 +523,10 @@ def _roadmap_bucket(priority: str) -> str:
 
 def _render_roadmap(items: tuple[RecommendationView, ...]) -> str:
     if not items:
-        return '<p class="muted">No deterministic recommendations.</p>'
+        return (
+            '<p class="muted">No deterministic recommendations are available yet. '
+            "Findings may still appear above when present.</p>"
+        )
     buckets: dict[str, list[RecommendationView]] = {
         "Immediate": [],
         "Near Term": [],
@@ -474,7 +568,7 @@ def _effort_label(item: RecommendationView) -> str:
 
 
 def _render_recommendation_card(item: RecommendationView, *, compact: bool) -> str:
-    related = _id_list(item.related_finding_ids) or '<span class="muted">None</span>'
+    related = _finding_id_links(item.related_finding_ids) or '<span class="muted">None</span>'
     nodes = _id_list(item.affected_nodes) or '<span class="muted">None</span>'
     chips = (
         '<div class="chip-row">\n'
@@ -534,34 +628,40 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
         "<div class='card'>"
         f"<div class='label'>{escape_html(item.label)}</div>"
         f"<div class='value'>{escape_html(item.value)}</div>"
-        f"{f'<p class=\"muted\">{escape_html(item.note)}</p>' if item.note else ''}"
+        f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
         "</div>"
         for item in section.key_metrics
     )
-    conclusions = "".join(
-        "<article class='card'>"
-        f"<h4>{escape_html(item.title)}</h4>"
-        f"<p>{escape_html(item.summary)}</p>"
-        "<p class='muted'>"
-        f"Materiality: {escape_html(item.materiality)} · "
-        f"Confidence: {escape_html(item.confidence)} · "
-        f"Business impact: {escape_html(item.business_impact)} · "
-        f"Wave: {escape_html(item.modernization_relevance)}"
-        "</p>"
-        f"<p class='muted'>{escape_html(item.severity_summary)}</p>"
-        f"<p class='muted'>Scope: {escape_html(', '.join(item.affected_scope) or '—')}</p>"
-        "</article>"
-        for item in section.conclusions
-    ) or "<p class='muted'>No architecture conclusions were generated.</p>"
-    recommendations = "".join(
-        "<article class='card'>"
-        f"<h4>{escape_html(item.title)}</h4>"
-        f"<p><strong>Objective:</strong> {escape_html(item.objective)}</p>"
-        f"<p>{escape_html(item.rationale)}</p>"
-        f"<p class='muted'>Wave: {escape_html(item.modernization_wave)}</p>"
-        "</article>"
-        for item in section.recommendation_groups
-    ) or "<p class='muted'>No consolidated architecture recommendation groups.</p>"
+    conclusions = (
+        "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p>{escape_html(item.summary)}</p>"
+            "<p class='muted'>"
+            f"Materiality: {escape_html(item.materiality)} · "
+            f"Confidence: {escape_html(item.confidence)} · "
+            f"Business impact: {escape_html(item.business_impact)} · "
+            f"Wave: {escape_html(item.modernization_relevance)}"
+            "</p>"
+            f"<p class='muted'>{escape_html(item.severity_summary)}</p>"
+            f"<p class='muted'>Scope: {escape_html(', '.join(item.affected_scope) or '—')}</p>"
+            "</article>"
+            for item in section.conclusions
+        )
+        or "<p class='muted'>No architecture conclusions were generated.</p>"
+    )
+    recommendations = (
+        "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Objective:</strong> {escape_html(item.objective)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>Wave: {escape_html(item.modernization_wave)}</p>"
+            "</article>"
+            for item in section.recommendation_groups
+        )
+        or "<p class='muted'>No consolidated architecture recommendation groups.</p>"
+    )
     findings = "".join(
         "<tr>"
         f"<td>{escape_html(item.title)}</td>"
@@ -595,10 +695,13 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
         if coverage
         else "<p class='muted'>Coverage details unavailable.</p>"
     )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    ) or "<li>None recorded.</li>"
+    limitations = (
+        "".join(
+            f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+            for item in section.limitations
+        )
+        or "<li>None recorded.</li>"
+    )
     trace = (
         f"<p>{escape_html(section.traceability_summary.summary)}</p>"
         "<details><summary>Sample relationships</summary><ul>"
@@ -642,7 +745,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         "<div class='card'>"
         f"<div class='label'>{escape_html(item.label)}</div>"
         f"<div class='value'>{escape_html(item.value)}</div>"
-        f"{f'<p class=\"muted\">{escape_html(item.note)}</p>' if item.note else ''}"
+        f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
         "</div>"
         for item in section.key_metrics
     )
@@ -686,31 +789,37 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         if hotspots
         else "<p class='muted'>No production hotspots to present.</p>"
     )
-    conclusions = "".join(
-        "<article class='card'>"
-        f"<h4>{escape_html(item.title)}</h4>"
-        f"<p>{escape_html(item.summary)}</p>"
-        "<p class='muted'>"
-        f"Kind: {escape_html(item.kind)} · "
-        f"Audience: {escape_html(item.audience)} · "
-        f"Confidence: {escape_html(item.confidence)} · "
-        f"Findings: {item.finding_count} · Hotspots: {item.hotspot_count}"
-        "</p>"
-        "</article>"
-        for item in section.conclusions
-    ) or "<p class='muted'>No production-facing technical debt conclusions.</p>"
-    recommendations = "".join(
-        "<article class='card'>"
-        f"<h4>{escape_html(item.title)}</h4>"
-        f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
-        f"<p>{escape_html(item.rationale)}</p>"
-        f"<p class='muted'>"
-        f"{'Conditional' if item.conditional else 'Direct'} · "
-        f"Audience: {escape_html(item.audience)}"
-        "</p>"
-        "</article>"
-        for item in section.recommendations
-    ) or "<p class='muted'>No production-facing technical debt recommendations.</p>"
+    conclusions = (
+        "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p>{escape_html(item.summary)}</p>"
+            "<p class='muted'>"
+            f"Kind: {escape_html(item.kind)} · "
+            f"Audience: {escape_html(item.audience)} · "
+            f"Confidence: {escape_html(item.confidence)} · "
+            f"Findings: {item.finding_count} · Hotspots: {item.hotspot_count}"
+            "</p>"
+            "</article>"
+            for item in section.conclusions
+        )
+        or "<p class='muted'>No production-facing technical debt conclusions.</p>"
+    )
+    recommendations = (
+        "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"{'Conditional' if item.conditional else 'Direct'} · "
+            f"Audience: {escape_html(item.audience)}"
+            "</p>"
+            "</article>"
+            for item in section.recommendations
+        )
+        or "<p class='muted'>No production-facing technical debt recommendations.</p>"
+    )
     test_obs = section.test_observation
     test_block = (
         "<div class='card td-test-observation'>"
@@ -735,10 +844,13 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         if coverage
         else "<p class='muted'>Coverage details unavailable.</p>"
     )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    ) or "<li>None recorded.</li>"
+    limitations = (
+        "".join(
+            f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+            for item in section.limitations
+        )
+        or "<li>None recorded.</li>"
+    )
     trace = (
         f"<p>{escape_html(section.traceability_summary.summary)}</p>"
         "<details><summary>Sample relationships</summary><ul>"
@@ -800,9 +912,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
     )
     production = section.production_health
     if production.finding_count == 0 and production.none_detected_statement:
-        production_findings = (
-            f"<p>{escape_html(production.none_detected_statement)}</p>"
-        )
+        production_findings = f"<p>{escape_html(production.none_detected_statement)}</p>"
     else:
         production_findings = (
             "".join(
@@ -816,11 +926,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
                 f"Severity: {escape_html(item.severity)} · "
                 f"Confidence: {escape_html(item.confidence)} · "
                 f"Source role: {escape_html(item.source_role)}"
-                + (
-                    f" · Path: <code>{escape_html(item.path)}</code>"
-                    if item.path
-                    else ""
-                )
+                + (f" · Path: <code>{escape_html(item.path)}</code>" if item.path else "")
                 + (
                     f" · Identity: <code>{escape_html(item.normalized_identity)}</code>"
                     if item.normalized_identity
@@ -848,11 +954,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
             f"ID: <code>{escape_html(item.finding_id)}</code> · "
             f"Rule: <code>{escape_html(item.rule_id)}</code> · "
             f"Source role: {escape_html(item.source_role)}"
-            + (
-                f" · Path: <code>{escape_html(item.path)}</code>"
-                if item.path
-                else ""
-            )
+            + (f" · Path: <code>{escape_html(item.path)}</code>" if item.path else "")
             + "</p>"
             "</article>"
             for item in test_obs.findings
@@ -950,11 +1052,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
         "<li>"
         f"<code>{escape_html(item.diagnostic_code)}</code> — "
         f"{escape_html(item.message)}"
-        + (
-            f" (<code>{escape_html(item.path)}</code>)"
-            if item.path
-            else ""
-        )
+        + (f" (<code>{escape_html(item.path)}</code>)" if item.path else "")
         + f" · source role: {escape_html(item.source_role)}"
         "</li>"
         for item in coverage.diagnostic_samples
@@ -969,8 +1067,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
         else ""
     )
     limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — "
-        f"{escape_html(item.summary)}</li>"
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
         for item in section.limitations
     )
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
@@ -1007,8 +1104,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
         parts.extend(
             [
                 "<h3>Test and Fixture Observations</h3>",
-                "<p class='muted'>Test/fixture findings are not production "
-                "health signals.</p>",
+                "<p class='muted'>Test/fixture findings are not production health signals.</p>",
                 test_block,
             ]
         )
@@ -1072,9 +1168,7 @@ def _render_security(section: SecurityReportSection) -> str:
         f"{coverage_table}"
     )
     if finding.production_finding_count == 0 and finding.none_detected_statement:
-        production_findings = (
-            f"<p>{escape_html(finding.none_detected_statement)}</p>"
-        )
+        production_findings = f"<p>{escape_html(finding.none_detected_statement)}</p>"
     else:
         production_findings = (
             "".join(
@@ -1082,8 +1176,7 @@ def _render_security(section: SecurityReportSection) -> str:
                 f"<h4>{escape_html(item.title)}</h4>"
                 f"<p>{escape_html(item.explanation or '')}</p>"
                 + (
-                    f"<p><strong>Remediation:</strong> "
-                    f"{escape_html(item.remediation)}</p>"
+                    f"<p><strong>Remediation:</strong> {escape_html(item.remediation)}</p>"
                     if item.remediation
                     else ""
                 )
@@ -1093,11 +1186,7 @@ def _render_security(section: SecurityReportSection) -> str:
                 f"Severity: {escape_html(item.severity)} · "
                 f"Category: {escape_html(item.category)} · "
                 f"Source role: {escape_html(item.source_role)}"
-                + (
-                    f" · Path: <code>{escape_html(item.path)}</code>"
-                    if item.path
-                    else ""
-                )
+                + (f" · Path: <code>{escape_html(item.path)}</code>" if item.path else "")
                 + "</p></article>"
                 for item in finding.production_findings
             )
@@ -1123,11 +1212,7 @@ def _render_security(section: SecurityReportSection) -> str:
                 f"ID: <code>{escape_html(item.finding_id)}</code> · "
                 f"Rule: <code>{escape_html(item.rule_id)}</code> · "
                 f"Source role: {escape_html(item.source_role)}"
-                + (
-                    f" · Path: <code>{escape_html(item.path)}</code>"
-                    if item.path
-                    else ""
-                )
+                + (f" · Path: <code>{escape_html(item.path)}</code>" if item.path else "")
                 + "</p></article>"
                 for item in finding.additional_observations
             )
@@ -1219,11 +1304,7 @@ def _render_security(section: SecurityReportSection) -> str:
         f"<code>{escape_html(item.origin)}</code> · "
         f"<code>{escape_html(item.diagnostic_code)}</code> — "
         f"{escape_html(item.message)}"
-        + (
-            f" (<code>{escape_html(item.path)}</code>)"
-            if item.path
-            else ""
-        )
+        + (f" (<code>{escape_html(item.path)}</code>)" if item.path else "")
         + "</li>"
         for item in section.diagnostics
     )
@@ -1237,8 +1318,7 @@ def _render_security(section: SecurityReportSection) -> str:
         else ""
     )
     limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — "
-        f"{escape_html(item.summary)}</li>"
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
         for item in section.limitations
     )
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
@@ -1316,6 +1396,1114 @@ def _render_security(section: SecurityReportSection) -> str:
         )
     if diagnostics_block:
         parts.extend(["<h3>Coverage Diagnostics</h3>", diagnostics_block])
+    if limitations_block:
+        parts.extend(["<h3>Limitations</h3>", limitations_block])
+    if trace:
+        parts.extend(["<h3>Traceability</h3>", trace])
+    return "\n".join(parts)
+
+
+def _render_testing(section: TestingReportSection) -> str:
+    coverage = section.coverage_summary
+    execution = section.execution_summary
+    inventory = section.inventory_summary
+    coverage_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(area.area_id)}</code></td>"
+        f"<td>{escape_html(area.status)}</td>"
+        f"<td>{area.numerator if area.numerator is not None else '—'}"
+        f" / {area.denominator if area.denominator is not None else '—'}</td>"
+        f"<td>{escape_html(area.maturity)}</td>"
+        "</tr>"
+        for area in coverage.areas
+    )
+    coverage_table = (
+        "<table><thead><tr><th>Area</th><th>Status</th>"
+        "<th>Numerator / Denominator</th><th>Maturity</th></tr></thead>"
+        f"<tbody>{coverage_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(coverage.note)}</p>"
+    )
+    execution_rows = (
+        "<tr><td>Rules planned / executed</td>"
+        f"<td>{execution.rules_planned} / {execution.rules_executed}</td></tr>"
+        "<tr><td>Matched / not matched / not applicable / failed</td>"
+        f"<td>{execution.rules_matched} / {execution.rules_not_matched} / "
+        f"{execution.rules_not_applicable} / {execution.rules_failed}</td></tr>"
+        "<tr><td>Findings / themes / conclusions / recommendations</td>"
+        f"<td>{execution.total_finding_count} / {execution.theme_count} / "
+        f"{execution.conclusion_count} / {execution.recommendation_count}</td></tr>"
+    )
+    rule_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.rule_id)}</code></td>"
+        f"<td>{'yes' if item.executed else 'no'}</td>"
+        f"<td>{escape_html(item.evaluation_status)}</td>"
+        f"<td>{item.finding_count}</td>"
+        "</tr>"
+        for item in execution.entries
+    )
+    execution_table = (
+        "<table><thead><tr><th>Metric</th><th>Value</th></tr></thead>"
+        f"<tbody>{execution_rows}</tbody></table>"
+        + (
+            "<table><thead><tr><th>Rule</th><th>Executed</th>"
+            "<th>Status</th><th>Findings</th></tr></thead>"
+            f"<tbody>{rule_rows}</tbody></table>"
+            if rule_rows
+            else ""
+        )
+        + f"<p class='muted'>{escape_html(execution.note)}</p>"
+    )
+    bucket_block = (
+        "<p class='muted'>By rule: "
+        + escape_html(", ".join(f"{item.key}={item.count}" for item in inventory.by_rule) or "—")
+        + "</p><p class='muted'>By severity: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_severity) or "—"
+        )
+        + "</p><p class='muted'>By confidence: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_confidence) or "—"
+        )
+        + "</p>"
+    )
+    if inventory.finding_count == 0 and inventory.none_detected_statement:
+        inventory_body = f"<p>{escape_html(inventory.none_detected_statement)}</p>"
+    else:
+        inventory_body = (
+            "<p class='muted'>Finding IDs "
+            f"(showing {inventory.finding_ids_displayed} of "
+            f"{inventory.finding_count}):</p><ul>"
+            + "".join(
+                f"<li><code>{escape_html(finding_id)}</code></li>"
+                for finding_id in inventory.finding_ids
+            )
+            + "</ul>"
+        )
+    themes = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.theme_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Scope: {escape_html(item.scope)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.themes
+    )
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.conclusion_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.conclusions
+    )
+    if section.recommendation_groups:
+        recommendations = "".join(
+            f"<h4>{escape_html(group.group)}</h4>"
+            + "".join(
+                "<article class='card'>"
+                f"<h5>{escape_html(item.title)}</h5>"
+                f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+                f"<p>{escape_html(item.rationale)}</p>"
+                f"<p class='muted'>"
+                f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+                f"{'Conditional' if item.conditional else 'Direct'} · "
+                f"Audience: {escape_html(item.audience)}"
+                + (
+                    " · Findings: "
+                    + ", ".join(f"<code>{escape_html(fid)}</code>" for fid in item.finding_ids)
+                    if item.finding_ids
+                    else ""
+                )
+                + "</p></article>"
+                for item in group.recommendations
+            )
+            for group in section.recommendation_groups
+        )
+    else:
+        recommendations = "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"ID: <code>{escape_html(item.recommendation_id)}</code>"
+            "</p></article>"
+            for item in section.recommendations
+        )
+    diagnostics = "".join(
+        "<li>"
+        f"<code>{escape_html(item.origin)}</code> · "
+        f"<code>{escape_html(item.diagnostic_code)}</code> — "
+        f"{escape_html(item.message)}"
+        "</li>"
+        for item in section.diagnostics
+    )
+    diagnostics_block = (
+        f"<details><summary>Diagnostics "
+        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
+        "</summary><ul>"
+        f"{diagnostics}"
+        "</ul></details>"
+        if section.diagnostics
+        else ""
+    )
+    limitations = "".join(
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+        for item in section.limitations
+    )
+    limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
+    trace = (
+        f"<p>{escape_html(section.traceability.summary)}</p>"
+        "<details><summary>Sample relationships</summary><ul>"
+        + "".join(
+            "<li>"
+            f"{escape_html(edge.relation)}: "
+            f"<code>{escape_html(edge.source_id)}</code> → "
+            f"<code>{escape_html(edge.target_id)}</code>"
+            "</li>"
+            for edge in section.traceability.sample_edges
+        )
+        + "</ul></details>"
+        if section.traceability.sample_edges or section.traceability.summary
+        else ""
+    )
+    pack = (
+        f"{escape_html(section.testing_pack_id or '—')}@"
+        f"{escape_html(section.testing_pack_version or '—')}"
+    )
+    parts = [
+        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p><strong>Pack:</strong> {pack}</p>",
+        "<h3>Overall Test Posture</h3>",
+        f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
+        "<h3>Executive Summary</h3>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+        "<h3>Assessment and Coverage Status</h3>",
+        f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
+        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
+        f"<p class='muted'>Evidence pipeline: "
+        f"{escape_html(coverage.evidence_pipeline or '—')} · "
+        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
+        coverage_table,
+        "<h3>Rule Execution Summary</h3>",
+        execution_table,
+        "<h3>Inventory Summary</h3>",
+        bucket_block,
+        inventory_body,
+    ]
+    if themes:
+        parts.extend(
+            [
+                "<h3>Themes</h3>",
+                f"<p class='muted'>Showing {section.themes_displayed} of "
+                f"{section.themes_total}</p>",
+                themes,
+            ]
+        )
+    if conclusions:
+        parts.extend(
+            [
+                "<h3>Conclusions</h3>",
+                f"<p class='muted'>Showing {section.conclusions_displayed} of "
+                f"{section.conclusions_total}</p>",
+                conclusions,
+            ]
+        )
+    if recommendations:
+        parts.extend(
+            [
+                "<h3>Recommendations</h3>",
+                f"<p class='muted'>Showing {section.recommendations_displayed} of "
+                f"{section.recommendations_total}</p>",
+                recommendations,
+            ]
+        )
+    if diagnostics_block:
+        parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
+    if limitations_block:
+        parts.extend(["<h3>Limitations</h3>", limitations_block])
+    if trace:
+        parts.extend(["<h3>Traceability</h3>", trace])
+    return "\n".join(parts)
+
+
+def _render_cloud(section: CloudReportSection) -> str:
+    coverage = section.coverage_summary
+    execution = section.execution_summary
+    inventory = section.inventory_summary
+    families = section.technology_family_summary
+    coverage_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(area.area_id)}</code></td>"
+        f"<td>{escape_html(area.status)}</td>"
+        f"<td>{area.numerator if area.numerator is not None else '—'}"
+        f" / {area.denominator if area.denominator is not None else '—'}</td>"
+        f"<td>{escape_html(area.maturity)}</td>"
+        "</tr>"
+        for area in coverage.areas
+    )
+    coverage_table = (
+        "<table><thead><tr><th>Area</th><th>Status</th>"
+        "<th>Numerator / Denominator</th><th>Maturity</th></tr></thead>"
+        f"<tbody>{coverage_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(coverage.note)}</p>"
+    )
+    execution_rows = (
+        "<tr><td>Rules planned / executed</td>"
+        f"<td>{execution.rules_planned} / {execution.rules_executed}</td></tr>"
+        "<tr><td>Matched / not matched / not applicable / failed</td>"
+        f"<td>{execution.rules_matched} / {execution.rules_not_matched} / "
+        f"{execution.rules_not_applicable} / {execution.rules_failed}</td></tr>"
+        "<tr><td>Findings / themes / conclusions / recommendations</td>"
+        f"<td>{execution.total_finding_count} / {execution.theme_count} / "
+        f"{execution.conclusion_count} / {execution.recommendation_count}</td></tr>"
+    )
+    rule_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.rule_id)}</code></td>"
+        f"<td>{'yes' if item.executed else 'no'}</td>"
+        f"<td>{escape_html(item.evaluation_status)}</td>"
+        f"<td>{item.finding_count}</td>"
+        "</tr>"
+        for item in execution.entries
+    )
+    execution_table = (
+        "<table><thead><tr><th>Metric</th><th>Value</th></tr></thead>"
+        f"<tbody>{execution_rows}</tbody></table>"
+        + (
+            "<table><thead><tr><th>Rule</th><th>Executed</th>"
+            "<th>Status</th><th>Findings</th></tr></thead>"
+            f"<tbody>{rule_rows}</tbody></table>"
+            if rule_rows
+            else ""
+        )
+        + f"<p class='muted'>{escape_html(execution.note)}</p>"
+    )
+    family_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.family_id)}</code></td>"
+        f"<td>{'yes' if item.observed else 'no'}</td>"
+        f"<td>{item.finding_count}</td>"
+        f"<td>{escape_html(', '.join(item.technologies) or '—')}</td>"
+        "</tr>"
+        for item in families.entries
+    )
+    family_table = (
+        f"<p class='muted'>Observed {families.families_observed} of "
+        f"{families.families_total} technology families.</p>"
+        "<table><thead><tr><th>Family</th><th>Observed</th>"
+        "<th>Findings</th><th>Technologies</th></tr></thead>"
+        f"<tbody>{family_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(families.note)}</p>"
+    )
+    bucket_block = (
+        "<p class='muted'>By rule: "
+        + escape_html(", ".join(f"{item.key}={item.count}" for item in inventory.by_rule) or "—")
+        + "</p><p class='muted'>By severity: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_severity) or "—"
+        )
+        + "</p><p class='muted'>By confidence: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_confidence) or "—"
+        )
+        + "</p>"
+    )
+    if inventory.finding_count == 0 and inventory.none_detected_statement:
+        inventory_body = f"<p>{escape_html(inventory.none_detected_statement)}</p>"
+    else:
+        inventory_body = (
+            "<p class='muted'>Finding IDs "
+            f"(showing {inventory.finding_ids_displayed} of "
+            f"{inventory.finding_count}):</p><ul>"
+            + "".join(
+                f"<li><code>{escape_html(finding_id)}</code></li>"
+                for finding_id in inventory.finding_ids
+            )
+            + "</ul>"
+        )
+    themes = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.theme_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Scope: {escape_html(item.scope)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.themes
+    )
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.conclusion_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.conclusions
+    )
+    if section.recommendation_groups:
+        recommendations = "".join(
+            f"<h4>{escape_html(group.group)}</h4>"
+            + "".join(
+                "<article class='card'>"
+                f"<h5>{escape_html(item.title)}</h5>"
+                f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+                f"<p>{escape_html(item.rationale)}</p>"
+                f"<p class='muted'>"
+                f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+                f"{'Conditional' if item.conditional else 'Direct'} · "
+                f"Audience: {escape_html(item.audience)}"
+                + (
+                    " · Findings: "
+                    + ", ".join(f"<code>{escape_html(fid)}</code>" for fid in item.finding_ids)
+                    if item.finding_ids
+                    else ""
+                )
+                + "</p></article>"
+                for item in group.recommendations
+            )
+            for group in section.recommendation_groups
+        )
+    else:
+        recommendations = "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"ID: <code>{escape_html(item.recommendation_id)}</code>"
+            "</p></article>"
+            for item in section.recommendations
+        )
+    diagnostics = "".join(
+        "<li>"
+        f"<code>{escape_html(item.origin)}</code> · "
+        f"<code>{escape_html(item.diagnostic_code)}</code> — "
+        f"{escape_html(item.message)}"
+        "</li>"
+        for item in section.diagnostics
+    )
+    diagnostics_block = (
+        f"<details><summary>Diagnostics "
+        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
+        "</summary><ul>"
+        f"{diagnostics}"
+        "</ul></details>"
+        if section.diagnostics
+        else ""
+    )
+    limitations = "".join(
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+        for item in section.limitations
+    )
+    limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
+    finding_trace = (
+        "<p class='muted'>Finding IDs: "
+        + (
+            ", ".join(
+                f"<code>{escape_html(finding_id)}</code>"
+                for finding_id in section.traceability.finding_ids
+            )
+            or "—"
+        )
+        + "</p>"
+    )
+    trace = (
+        f"<p>{escape_html(section.traceability.summary)}</p>"
+        f"{finding_trace}"
+        "<details><summary>Sample relationships</summary><ul>"
+        + "".join(
+            "<li>"
+            f"{escape_html(edge.relation)}: "
+            f"<code>{escape_html(edge.source_id)}</code> → "
+            f"<code>{escape_html(edge.target_id)}</code>"
+            "</li>"
+            for edge in section.traceability.sample_edges
+        )
+        + "</ul></details>"
+        if section.traceability.sample_edges
+        or section.traceability.summary
+        or section.traceability.finding_ids
+        else ""
+    )
+    pack = (
+        f"{escape_html(section.cloud_pack_id or '—')}@"
+        f"{escape_html(section.cloud_pack_version or '—')}"
+    )
+    parts = [
+        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p><strong>Pack:</strong> {pack}</p>",
+        "<h3>Overall Cloud Posture</h3>",
+        f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
+        "<h3>Executive Summary</h3>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+        "<h3>Assessment and Coverage Status</h3>",
+        f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
+        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
+        f"<p class='muted'>Evidence pipeline: "
+        f"{escape_html(coverage.evidence_pipeline or '—')} · "
+        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
+        coverage_table,
+        "<h3>Rule Execution Summary</h3>",
+        execution_table,
+        "<h3>Technology Family Inventory</h3>",
+        family_table,
+        "<h3>Finding Inventory Summary</h3>",
+        bucket_block,
+        inventory_body,
+    ]
+    if themes:
+        parts.extend(
+            [
+                "<h3>Themes</h3>",
+                f"<p class='muted'>Showing {section.themes_displayed} of "
+                f"{section.themes_total}</p>",
+                themes,
+            ]
+        )
+    if conclusions:
+        parts.extend(
+            [
+                "<h3>Conclusions</h3>",
+                f"<p class='muted'>Showing {section.conclusions_displayed} of "
+                f"{section.conclusions_total}</p>",
+                conclusions,
+            ]
+        )
+    if recommendations:
+        parts.extend(
+            [
+                "<h3>Recommendations</h3>",
+                f"<p class='muted'>Showing {section.recommendations_displayed} of "
+                f"{section.recommendations_total}</p>",
+                recommendations,
+            ]
+        )
+    if diagnostics_block:
+        parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
+    if limitations_block:
+        parts.extend(["<h3>Limitations</h3>", limitations_block])
+    if trace:
+        parts.extend(["<h3>Traceability</h3>", trace])
+    return "\n".join(parts)
+
+
+def _render_ai_readiness(section: AiReadinessReportSection) -> str:
+    coverage = section.coverage_summary
+    execution = section.execution_summary
+    inventory = section.inventory_summary
+    families = section.capability_family_summary
+    coverage_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(area.area_id)}</code></td>"
+        f"<td>{escape_html(area.status)}</td>"
+        f"<td>{area.numerator if area.numerator is not None else '—'}"
+        f" / {area.denominator if area.denominator is not None else '—'}</td>"
+        f"<td>{escape_html(area.maturity)}</td>"
+        "</tr>"
+        for area in coverage.areas
+    )
+    coverage_table = (
+        "<table><thead><tr><th>Area</th><th>Status</th>"
+        "<th>Numerator / Denominator</th><th>Maturity</th></tr></thead>"
+        f"<tbody>{coverage_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(coverage.note)}</p>"
+    )
+    execution_rows = (
+        "<tr><td>Rules planned / executed</td>"
+        f"<td>{execution.rules_planned} / {execution.rules_executed}</td></tr>"
+        "<tr><td>Matched / not matched / not applicable / failed</td>"
+        f"<td>{execution.rules_matched} / {execution.rules_not_matched} / "
+        f"{execution.rules_not_applicable} / {execution.rules_failed}</td></tr>"
+        "<tr><td>Findings / themes / conclusions / recommendations</td>"
+        f"<td>{execution.total_finding_count} / {execution.theme_count} / "
+        f"{execution.conclusion_count} / {execution.recommendation_count}</td></tr>"
+    )
+    rule_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.rule_id)}</code></td>"
+        f"<td>{'yes' if item.executed else 'no'}</td>"
+        f"<td>{escape_html(item.evaluation_status)}</td>"
+        f"<td>{item.finding_count}</td>"
+        "</tr>"
+        for item in execution.entries
+    )
+    execution_table = (
+        "<table><thead><tr><th>Metric</th><th>Value</th></tr></thead>"
+        f"<tbody>{execution_rows}</tbody></table>"
+        + (
+            "<table><thead><tr><th>Rule</th><th>Executed</th>"
+            "<th>Status</th><th>Findings</th></tr></thead>"
+            f"<tbody>{rule_rows}</tbody></table>"
+            if rule_rows
+            else ""
+        )
+        + f"<p class='muted'>{escape_html(execution.note)}</p>"
+    )
+    family_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.family_id)}</code></td>"
+        f"<td>{'yes' if item.observed else 'no'}</td>"
+        f"<td>{item.finding_count}</td>"
+        f"<td>{escape_html(', '.join(item.signals) or '—')}</td>"
+        "</tr>"
+        for item in families.entries
+    )
+    family_table = (
+        f"<p class='muted'>Observed {families.families_observed} of "
+        f"{families.families_total} capability families.</p>"
+        "<table><thead><tr><th>Family</th><th>Observed</th>"
+        "<th>Findings</th><th>Signals</th></tr></thead>"
+        f"<tbody>{family_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(families.note)}</p>"
+    )
+    bucket_block = (
+        "<p class='muted'>By rule: "
+        + escape_html(", ".join(f"{item.key}={item.count}" for item in inventory.by_rule) or "—")
+        + "</p><p class='muted'>By severity: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_severity) or "—"
+        )
+        + "</p><p class='muted'>By confidence: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_confidence) or "—"
+        )
+        + "</p>"
+    )
+    if inventory.finding_count == 0 and inventory.none_detected_statement:
+        inventory_body = f"<p>{escape_html(inventory.none_detected_statement)}</p>"
+    else:
+        inventory_body = (
+            "<p class='muted'>Finding IDs "
+            f"(showing {inventory.finding_ids_displayed} of "
+            f"{inventory.finding_count}):</p><ul>"
+            + "".join(
+                f"<li><code>{escape_html(finding_id)}</code></li>"
+                for finding_id in inventory.finding_ids
+            )
+            + "</ul>"
+        )
+    themes = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.theme_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Scope: {escape_html(item.scope)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.themes
+    )
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.conclusion_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.conclusions
+    )
+    if section.recommendation_groups:
+        recommendations = "".join(
+            f"<h4>{escape_html(group.group)}</h4>"
+            + "".join(
+                "<article class='card'>"
+                f"<h5>{escape_html(item.title)}</h5>"
+                f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+                f"<p>{escape_html(item.rationale)}</p>"
+                f"<p class='muted'>"
+                f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+                f"{'Conditional' if item.conditional else 'Direct'} · "
+                f"Audience: {escape_html(item.audience)}"
+                + (
+                    " · Findings: "
+                    + ", ".join(f"<code>{escape_html(fid)}</code>" for fid in item.finding_ids)
+                    if item.finding_ids
+                    else ""
+                )
+                + "</p></article>"
+                for item in group.recommendations
+            )
+            for group in section.recommendation_groups
+        )
+    else:
+        recommendations = "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"ID: <code>{escape_html(item.recommendation_id)}</code>"
+            "</p></article>"
+            for item in section.recommendations
+        )
+    diagnostics = "".join(
+        "<li>"
+        f"<code>{escape_html(item.origin)}</code> · "
+        f"<code>{escape_html(item.diagnostic_code)}</code> — "
+        f"{escape_html(item.message)}"
+        "</li>"
+        for item in section.diagnostics
+    )
+    diagnostics_block = (
+        f"<details><summary>Diagnostics "
+        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
+        "</summary><ul>"
+        f"{diagnostics}"
+        "</ul></details>"
+        if section.diagnostics
+        else ""
+    )
+    limitations = "".join(
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+        for item in section.limitations
+    )
+    limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
+    finding_trace = (
+        "<p class='muted'>Finding IDs: "
+        + (
+            ", ".join(
+                f"<code>{escape_html(finding_id)}</code>"
+                for finding_id in section.traceability.finding_ids
+            )
+            or "—"
+        )
+        + "</p>"
+    )
+    trace = (
+        f"<p>{escape_html(section.traceability.summary)}</p>"
+        f"{finding_trace}"
+        "<details><summary>Sample relationships</summary><ul>"
+        + "".join(
+            "<li>"
+            f"{escape_html(edge.relation)}: "
+            f"<code>{escape_html(edge.source_id)}</code> → "
+            f"<code>{escape_html(edge.target_id)}</code>"
+            "</li>"
+            for edge in section.traceability.sample_edges
+        )
+        + "</ul></details>"
+        if section.traceability.sample_edges
+        or section.traceability.summary
+        or section.traceability.finding_ids
+        else ""
+    )
+    pack = (
+        f"{escape_html(section.ai_readiness_pack_id or '—')}@"
+        f"{escape_html(section.ai_readiness_pack_version or '—')}"
+    )
+    parts = [
+        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p><strong>Pack:</strong> {pack}</p>",
+        "<h3>Overall AI Readiness Posture</h3>",
+        f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
+        "<h3>Executive Summary</h3>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+        "<h3>Assessment and Coverage Status</h3>",
+        f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
+        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
+        f"<p class='muted'>Evidence pipeline: "
+        f"{escape_html(coverage.evidence_pipeline or '—')} · "
+        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
+        coverage_table,
+        "<h3>Rule Execution Summary</h3>",
+        execution_table,
+        "<h3>Capability Family Inventory</h3>",
+        family_table,
+        "<h3>Finding Inventory Summary</h3>",
+        bucket_block,
+        inventory_body,
+    ]
+    if themes:
+        parts.extend(
+            [
+                "<h3>Themes</h3>",
+                f"<p class='muted'>Showing {section.themes_displayed} of "
+                f"{section.themes_total}</p>",
+                themes,
+            ]
+        )
+    if conclusions:
+        parts.extend(
+            [
+                "<h3>Conclusions</h3>",
+                f"<p class='muted'>Showing {section.conclusions_displayed} of "
+                f"{section.conclusions_total}</p>",
+                conclusions,
+            ]
+        )
+    if recommendations:
+        parts.extend(
+            [
+                "<h3>Recommendations</h3>",
+                f"<p class='muted'>Showing {section.recommendations_displayed} of "
+                f"{section.recommendations_total}</p>",
+                recommendations,
+            ]
+        )
+    if diagnostics_block:
+        parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
+    if limitations_block:
+        parts.extend(["<h3>Limitations</h3>", limitations_block])
+    if trace:
+        parts.extend(["<h3>Traceability</h3>", trace])
+    return "\n".join(parts)
+
+
+def _render_phased_roadmap(section: RoadmapReportSection) -> str:
+    phase_blocks: list[str] = []
+    for phase in section.phases:
+        cards = (
+            "".join(
+                (
+                    "<article class='card'>"
+                    f"<h4>{escape_html(item.title)}</h4>"
+                    f"<p>{escape_html(item.summary)}</p>"
+                    '<div class="chip-row">'
+                    f'<span class="chip"><em>Priority</em> {escape_html(item.priority)}</span>'
+                    f'<span class="chip"><em>Effort</em> {escape_html(item.effort)}</span>'
+                    f'<span class="chip"><em>Risk</em> {escape_html(item.risk)}</span>'
+                    f'<span class="chip"><em>Confidence</em> {escape_html(item.confidence)}</span>'
+                    "</div>"
+                    f"<p><strong>Expected outcome:</strong> "
+                    f"{escape_html(item.expected_outcome)}</p>"
+                    "<p class='ids'><strong>Recommendations:</strong> "
+                    f"{_id_list(item.supporting_recommendation_ids) or '—'}</p>"
+                    "<p class='ids'><strong>Findings:</strong> "
+                    f"{_id_list(item.supporting_finding_ids) or '—'}</p>"
+                    "<p class='ids'><strong>Depends on:</strong> "
+                    f"{_id_list(item.depends_on_initiative_ids) or '—'}</p>"
+                    "</article>"
+                )
+                for item in phase.initiatives
+            )
+            or "<p class='muted'>No initiatives in this phase.</p>"
+        )
+        phase_blocks.append(
+            "<div class='roadmap-lane'>"
+            f"<h3>{escape_html(phase.title)} "
+            f"<span class='count-pill'>{len(phase.initiatives)}</span></h3>"
+            f"<p class='muted'>{escape_html(phase.objective)}</p>"
+            f"<div class='card-stack'>{cards}</div>"
+            "</div>"
+        )
+    assumptions = "".join(f"<li>{escape_html(item)}</li>" for item in section.assumptions)
+    limitations = "".join(f"<li>{escape_html(item)}</li>" for item in section.limitations)
+    body = (
+        "".join(phase_blocks)
+        if phase_blocks
+        else "<p class='muted'>No phased modernization initiatives were derived.</p>"
+    )
+    truncated = ""
+    if section.initiatives_displayed < section.initiatives_total:
+        truncated = (
+            f"<p class='muted'>Showing {section.initiatives_displayed} of "
+            f"{section.initiatives_total} initiatives.</p>"
+        )
+    return "\n".join(
+        [
+            f"<p><strong>Status:</strong> {escape_html(section.status_label)}</p>",
+            f"<p>{escape_html(section.summary)}</p>",
+            f"<p><strong>Confidence:</strong> {escape_html(section.confidence)}</p>",
+            truncated,
+            f"<div class='roadmap'>{body}</div>",
+            ("<h3>Assumptions</h3><ul>" + assumptions + "</ul>") if assumptions else "",
+            ("<h3>Limitations</h3><ul>" + limitations + "</ul>") if limitations else "",
+        ]
+    )
+
+
+def _render_performance(section: PerformanceReportSection) -> str:
+    coverage = section.coverage_summary
+    execution = section.execution_summary
+    inventory = section.inventory_summary
+    families = section.performance_family_summary
+    coverage_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(area.area_id)}</code></td>"
+        f"<td>{escape_html(area.status)}</td>"
+        f"<td>{area.numerator if area.numerator is not None else '—'}"
+        f" / {area.denominator if area.denominator is not None else '—'}</td>"
+        f"<td>{escape_html(area.maturity)}</td>"
+        "</tr>"
+        for area in coverage.areas
+    )
+    coverage_table = (
+        "<table><thead><tr><th>Area</th><th>Status</th>"
+        "<th>Numerator / Denominator</th><th>Maturity</th></tr></thead>"
+        f"<tbody>{coverage_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(coverage.note)}</p>"
+    )
+    execution_rows = (
+        "<tr><td>Rules planned / executed</td>"
+        f"<td>{execution.rules_planned} / {execution.rules_executed}</td></tr>"
+        "<tr><td>Matched / not matched / not applicable / failed</td>"
+        f"<td>{execution.rules_matched} / {execution.rules_not_matched} / "
+        f"{execution.rules_not_applicable} / {execution.rules_failed}</td></tr>"
+        "<tr><td>Findings / themes / conclusions / recommendations</td>"
+        f"<td>{execution.total_finding_count} / {execution.theme_count} / "
+        f"{execution.conclusion_count} / {execution.recommendation_count}</td></tr>"
+    )
+    rule_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.rule_id)}</code></td>"
+        f"<td>{'yes' if item.executed else 'no'}</td>"
+        f"<td>{escape_html(item.evaluation_status)}</td>"
+        f"<td>{item.finding_count}</td>"
+        "</tr>"
+        for item in execution.entries
+    )
+    execution_table = (
+        "<table><thead><tr><th>Metric</th><th>Value</th></tr></thead>"
+        f"<tbody>{execution_rows}</tbody></table>"
+        + (
+            "<table><thead><tr><th>Rule</th><th>Executed</th>"
+            "<th>Status</th><th>Findings</th></tr></thead>"
+            f"<tbody>{rule_rows}</tbody></table>"
+            if rule_rows
+            else ""
+        )
+        + f"<p class='muted'>{escape_html(execution.note)}</p>"
+    )
+    family_rows = "".join(
+        "<tr>"
+        f"<td><code>{escape_html(item.family_id)}</code></td>"
+        f"<td>{'yes' if item.observed else 'no'}</td>"
+        f"<td>{item.finding_count}</td>"
+        f"<td>{escape_html(', '.join(item.signals) or '—')}</td>"
+        "</tr>"
+        for item in families.entries
+    )
+    family_table = (
+        f"<p class='muted'>Observed {families.families_observed} of "
+        f"{families.families_total} performance families.</p>"
+        "<table><thead><tr><th>Family</th><th>Observed</th>"
+        "<th>Findings</th><th>Signals</th></tr></thead>"
+        f"<tbody>{family_rows or '<tr><td colspan="4">—</td></tr>'}"
+        "</tbody></table>"
+        f"<p class='muted'>{escape_html(families.note)}</p>"
+    )
+    bucket_block = (
+        "<p class='muted'>By rule: "
+        + escape_html(", ".join(f"{item.key}={item.count}" for item in inventory.by_rule) or "—")
+        + "</p><p class='muted'>By severity: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_severity) or "—"
+        )
+        + "</p><p class='muted'>By confidence: "
+        + escape_html(
+            ", ".join(f"{item.key}={item.count}" for item in inventory.by_confidence) or "—"
+        )
+        + "</p>"
+    )
+    if inventory.finding_count == 0 and inventory.none_detected_statement:
+        inventory_body = f"<p>{escape_html(inventory.none_detected_statement)}</p>"
+    else:
+        inventory_body = (
+            "<p class='muted'>Finding IDs "
+            f"(showing {inventory.finding_ids_displayed} of "
+            f"{inventory.finding_count}):</p><ul>"
+            + "".join(
+                f"<li><code>{escape_html(finding_id)}</code></li>"
+                for finding_id in inventory.finding_ids
+            )
+            + "</ul>"
+        )
+    themes = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.theme_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Scope: {escape_html(item.scope)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.themes
+    )
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"ID: <code>{escape_html(item.conclusion_id)}</code> · "
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count}"
+        "</p></article>"
+        for item in section.conclusions
+    )
+    if section.recommendation_groups:
+        recommendations = "".join(
+            f"<h4>{escape_html(group.group)}</h4>"
+            + "".join(
+                "<article class='card'>"
+                f"<h5>{escape_html(item.title)}</h5>"
+                f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+                f"<p>{escape_html(item.rationale)}</p>"
+                f"<p class='muted'>"
+                f"ID: <code>{escape_html(item.recommendation_id)}</code> · "
+                f"{'Conditional' if item.conditional else 'Direct'} · "
+                f"Audience: {escape_html(item.audience)}"
+                + (
+                    " · Findings: "
+                    + ", ".join(f"<code>{escape_html(fid)}</code>" for fid in item.finding_ids)
+                    if item.finding_ids
+                    else ""
+                )
+                + "</p></article>"
+                for item in group.recommendations
+            )
+            for group in section.recommendation_groups
+        )
+    else:
+        recommendations = "".join(
+            "<article class='card'>"
+            f"<h4>{escape_html(item.title)}</h4>"
+            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+            f"<p>{escape_html(item.rationale)}</p>"
+            f"<p class='muted'>"
+            f"ID: <code>{escape_html(item.recommendation_id)}</code>"
+            "</p></article>"
+            for item in section.recommendations
+        )
+    diagnostics = "".join(
+        "<li>"
+        f"<code>{escape_html(item.origin)}</code> · "
+        f"<code>{escape_html(item.diagnostic_code)}</code> — "
+        f"{escape_html(item.message)}"
+        "</li>"
+        for item in section.diagnostics
+    )
+    diagnostics_block = (
+        f"<details><summary>Diagnostics "
+        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
+        "</summary><ul>"
+        f"{diagnostics}"
+        "</ul></details>"
+        if section.diagnostics
+        else ""
+    )
+    limitations = "".join(
+        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+        for item in section.limitations
+    )
+    limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
+    finding_trace = (
+        "<p class='muted'>Finding IDs: "
+        + (
+            ", ".join(
+                f"<code>{escape_html(finding_id)}</code>"
+                for finding_id in section.traceability.finding_ids
+            )
+            or "—"
+        )
+        + "</p>"
+    )
+    trace = (
+        f"<p>{escape_html(section.traceability.summary)}</p>"
+        f"{finding_trace}"
+        "<details><summary>Sample relationships</summary><ul>"
+        + "".join(
+            "<li>"
+            f"{escape_html(edge.relation)}: "
+            f"<code>{escape_html(edge.source_id)}</code> → "
+            f"<code>{escape_html(edge.target_id)}</code>"
+            "</li>"
+            for edge in section.traceability.sample_edges
+        )
+        + "</ul></details>"
+        if section.traceability.sample_edges
+        or section.traceability.summary
+        or section.traceability.finding_ids
+        else ""
+    )
+    pack = (
+        f"{escape_html(section.performance_pack_id or '—')}@"
+        f"{escape_html(section.performance_pack_version or '—')}"
+    )
+    parts = [
+        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p><strong>Pack:</strong> {pack}</p>",
+        "<h3>Overall Performance Posture</h3>",
+        f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
+        "<h3>Executive Summary</h3>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+        "<h3>Assessment and Coverage Status</h3>",
+        f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
+        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
+        f"<p class='muted'>Evidence pipeline: "
+        f"{escape_html(coverage.evidence_pipeline or '—')} · "
+        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
+        coverage_table,
+        "<h3>Rule Execution Summary</h3>",
+        execution_table,
+        "<h3>Performance Family Inventory</h3>",
+        family_table,
+        "<h3>Finding Inventory Summary</h3>",
+        bucket_block,
+        inventory_body,
+    ]
+    if themes:
+        parts.extend(
+            [
+                "<h3>Themes</h3>",
+                f"<p class='muted'>Showing {section.themes_displayed} of "
+                f"{section.themes_total}</p>",
+                themes,
+            ]
+        )
+    if conclusions:
+        parts.extend(
+            [
+                "<h3>Conclusions</h3>",
+                f"<p class='muted'>Showing {section.conclusions_displayed} of "
+                f"{section.conclusions_total}</p>",
+                conclusions,
+            ]
+        )
+    if recommendations:
+        parts.extend(
+            [
+                "<h3>Recommendations</h3>",
+                f"<p class='muted'>Showing {section.recommendations_displayed} of "
+                f"{section.recommendations_total}</p>",
+                recommendations,
+            ]
+        )
+    if diagnostics_block:
+        parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
     if limitations_block:
         parts.extend(["<h3>Limitations</h3>", limitations_block])
     if trace:
@@ -1410,12 +2598,15 @@ def _render_technical_details(view: HtmlReportViewModel) -> str:
     findings_body = (
         "\n".join(_render_finding_card(item, compact=False) for item in view.findings)
         if view.findings
-        else '<p class="muted">No deterministic findings.</p>'
+        else (
+            '<p class="muted">No deterministic findings were produced for this run. '
+            "This does not certify that the repository is free of issues.</p>"
+        )
     )
     recommendations_body = (
         "\n".join(_render_recommendation_card(item, compact=False) for item in view.recommendations)
         if view.recommendations
-        else '<p class="muted">No deterministic recommendations.</p>'
+        else ('<p class="muted">No deterministic recommendations were produced for this run.</p>')
     )
     return (
         '<details class="tech-block" id="repository" open>\n'
@@ -1573,6 +2764,18 @@ def _id_list(values: tuple[str, ...]) -> str:
     if not values:
         return ""
     return " ".join(f"<code>{escape_and_wrap(item)}</code>" for item in values)
+
+
+def _finding_id_links(values: tuple[str, ...]) -> str:
+    """Render related finding IDs as in-page links for leadership traceability."""
+
+    if not values:
+        return ""
+    return " ".join(
+        f'<a class="id-link" href="#finding-{escape_html(item)}">'
+        f"<code>{escape_and_wrap(item)}</code></a>"
+        for item in values
+    )
 
 
 def _definition_list(rows: list[tuple[str, str]]) -> str:

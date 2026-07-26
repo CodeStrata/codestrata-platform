@@ -182,6 +182,17 @@ fails the assessment; incomplete runs are never “latest completed.” Default
 assessment remains full recomputation; incremental execution is opt-in only
 (see Phase 2F below).
 
+## Repository Knowledge Layer (Phase 5.1–5.7)
+
+Provider-neutral contracts for canonical knowledge documents, chunks, embeddings,
+dense vector storage, grounded retrieval, citation-bound answers, and MCP exposure.
+Phase 5.7 adds repository-intelligence MCP tools (`repository_*`) over
+`RepositoryRetriever` / `GroundedAnswerEngine` / `KnowledgeQueryService` with
+stdio and streamable-http transports. No production embeddings, production LLMs,
+hybrid search, or reranking.
+See [docs/repository-knowledge/](docs/repository-knowledge/) and
+[docs/mcp/overview.md](docs/mcp/overview.md).
+
 ### Query services (Increment 3)
 
 `KnowledgeQueryService` (`aimf.application.knowledge.queries`) is the
@@ -346,10 +357,10 @@ src/aimf/
 ├── cli/                 # Typer: version, scan, assess, agent, incremental, mcp
 ├── config/
 ├── application/         # assessment, knowledge queries, agents, incremental planning
-├── infrastructure/      # SQLite knowledge store, blobs, Git revision observer
+├── infrastructure/      # SQLite knowledge store, blobs, in-memory vector store
 ├── interfaces/          # FastMCP (and future REST) adapters
 ├── models/              # Phase 1 domain DTOs
-├── domain/              # graphs, findings, recommendations, AI enrichment
+├── domain/              # graphs, findings, recommendations, repository knowledge
 ├── services/            # analysis, inventory, knowledge, assessment
 ├── static_analysis/     # PMD provider boundary
 ├── ai/                  # enrichment + legacy agent / providers

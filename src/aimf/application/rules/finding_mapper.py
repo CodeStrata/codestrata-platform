@@ -13,7 +13,9 @@ _CATEGORY_MAP: dict[RuleCategory, FindingCategory] = {
     RuleCategory.DEPENDENCY: FindingCategory.DEPENDENCY,
     RuleCategory.SECURITY: FindingCategory.SECURITY,
     RuleCategory.TESTING: FindingCategory.TESTING,
-    RuleCategory.PERFORMANCE: FindingCategory.MODERNIZATION,
+    RuleCategory.CLOUD: FindingCategory.CLOUD,
+    RuleCategory.AI_READINESS: FindingCategory.AI_READINESS,
+    RuleCategory.PERFORMANCE: FindingCategory.PERFORMANCE,
     RuleCategory.PLATFORM: FindingCategory.GOVERNANCE,
     RuleCategory.EXPERIMENTAL: FindingCategory.UNKNOWN,
 }
@@ -86,6 +88,33 @@ class RuleFindingMapper:
 
             metadata.update(enrich_testing_metadata(str(match.rule_id)))
             metadata.update(_testing_evidence_metadata(match))
+        elif match.provenance == "cloud.core" or str(match.rule_id).startswith(
+            "cloud."
+        ):
+            from aimf.application.rules.cloud.helpers import (
+                enrich_finding_metadata as enrich_cloud_metadata,
+            )
+
+            metadata.update(enrich_cloud_metadata(str(match.rule_id)))
+            metadata.update(_cloud_evidence_metadata(match))
+        elif match.provenance == "ai_readiness.core" or str(match.rule_id).startswith(
+            "ai_readiness."
+        ):
+            from aimf.application.rules.ai_readiness.helpers import (
+                enrich_finding_metadata as enrich_ai_readiness_metadata,
+            )
+
+            metadata.update(enrich_ai_readiness_metadata(str(match.rule_id)))
+            metadata.update(_ai_readiness_evidence_metadata(match))
+        elif match.provenance == "performance.core" or str(match.rule_id).startswith(
+            "performance."
+        ):
+            from aimf.application.rules.performance.helpers import (
+                enrich_finding_metadata as enrich_performance_metadata,
+            )
+
+            metadata.update(enrich_performance_metadata(str(match.rule_id)))
+            metadata.update(_performance_evidence_metadata(match))
         return Finding.create(
             rule_id=str(match.rule_id),
             title=match.title,
@@ -262,6 +291,81 @@ _TEST_EVIDENCE_METADATA_KEYS = (
     "testing_category",
 )
 
+_CLOUD_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "path",
+    "confirmation_level",
+    "detail",
+    "platforms",
+    "platform_count",
+    "container_kinds",
+    "orchestration_kinds",
+    "iac_kinds",
+    "iac_kind_count",
+    "serverless_kinds",
+    "deployment_systems",
+    "managed_services",
+    "managed_service_count",
+    "families",
+    "family_count",
+    "technologies",
+    "deployment_asset_kinds",
+    "cloud_category",
+)
+
+_AI_READINESS_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "path",
+    "confirmation_level",
+    "detail",
+    "api_boundary_kinds",
+    "openapi_fact_count",
+    "documentation_kinds",
+    "supporting_documentation_kinds",
+    "data_access_kinds",
+    "search_retrieval_kinds",
+    "vector_embedding_signals",
+    "llm_kinds",
+    "prompt_kinds",
+    "rag_kinds",
+    "tool_mcp_kinds",
+    "workflow_agent_kinds",
+    "observability_governance_kinds",
+    "ai_related_assets",
+    "families",
+    "family_count",
+    "technologies",
+    "ai_readiness_category",
+)
+
+_PERFORMANCE_EVIDENCE_METADATA_KEYS = (
+    "evidence_id",
+    "path",
+    "confirmation_level",
+    "detail",
+    "data_access_kinds",
+    "data_access_kind_count",
+    "data_access_control_kinds",
+    "blocking_sleep_kinds",
+    "sync_io_kinds",
+    "caching_kinds",
+    "concurrency_kinds",
+    "executor_concurrency_kinds",
+    "executor_config_kinds",
+    "resource_kinds",
+    "frontend_bundle_kinds",
+    "frontend_lazy_kinds",
+    "frontend_kinds",
+    "observability_kinds",
+    "configuration_kinds",
+    "data_or_blocking",
+    "performance_assets",
+    "families",
+    "family_count",
+    "technologies",
+    "performance_category",
+)
+
 
 def _testing_evidence_metadata(match: RuleMatch) -> dict[str, str]:
     """Promote first-match repository-testing attributes for Finding metadata."""
@@ -271,6 +375,54 @@ def _testing_evidence_metadata(match: RuleMatch) -> dict[str, str]:
     attrs = match.evidence[0].attributes
     promoted: dict[str, str] = {}
     for key in _TEST_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
+    return promoted
+
+
+def _cloud_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match repository-cloud attributes for Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _CLOUD_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
+    return promoted
+
+
+def _ai_readiness_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match repository AI-readiness attributes for Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _AI_READINESS_EVIDENCE_METADATA_KEYS:
+        value = attrs.get(key)
+        if value:
+            promoted[key] = value
+    if match.evidence[0].line_start is not None:
+        promoted["line_start"] = str(match.evidence[0].line_start)
+    return promoted
+
+
+def _performance_evidence_metadata(match: RuleMatch) -> dict[str, str]:
+    """Promote first-match repository performance attributes for Finding metadata."""
+
+    if not match.evidence:
+        return {}
+    attrs = match.evidence[0].attributes
+    promoted: dict[str, str] = {}
+    for key in _PERFORMANCE_EVIDENCE_METADATA_KEYS:
         value = attrs.get(key)
         if value:
             promoted[key] = value

@@ -1,7 +1,7 @@
-"""Test assessment assembler (Phase 4.6.3).
+"""Test assessment assembler (Phase 4.6.5).
 
-Projects Test Hygiene findings and repository-testing evidence into the
-existing TestAssessmentSection container. No inventory or synthesis.
+Projects Test Hygiene findings, inventories, and deterministic synthesis into
+TestAssessmentSection. No report projection.
 """
 
 from __future__ import annotations
@@ -9,6 +9,16 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from aimf.application.rules.testing.helpers import evidence_is_usable
+from aimf.application.testing.assessment.inventory import (
+    TestingRuleExecutionFact,
+    build_confidence_inventory,
+    build_finding_inventory,
+    build_rule_inventory,
+    build_severity_inventory,
+    coerce_execution_facts,
+    findings_by_rule_counts,
+)
+from aimf.application.testing.synthesis import synthesize_testing
 from aimf.domain.evidence.repository_testing.models import (
     AggregatedRepositoryTestingEvidence,
 )
@@ -32,16 +42,23 @@ from aimf.domain.testing.assessment.identifiers import (
 )
 from aimf.domain.testing.assessment.models import (
     TestAssessmentSection,
+    TestConfidenceInventory,
     TestCoverageArea,
     TestCoverageSummary,
     TestExecutionSummary,
+    TestFindingInventory,
     TestLimitation,
+    TestRuleInventory,
+    TestSeverityInventory,
     TestTraceabilityEdge,
     TestTraceabilityIndex,
 )
 from aimf.domain.testing.ids import HYGIENE_RULE_IDS, PACK_ID, PACK_VERSION
+from aimf.domain.testing.synthesis.enums import TestSynthesisStatus
+from aimf.domain.testing.synthesis.identifiers import SYNTHESIS_VERSION
+from aimf.domain.testing.synthesis.models import TestingSynthesisResult
 
-_MILESTONE = "4.6.3"
+_MILESTONE = "4.6.5"
 _ZERO_FINDINGS_SUMMARY = (
     "No Test Hygiene findings were produced by the enabled rule pack from the "
     "available repository evidence."
@@ -56,9 +73,7 @@ def _limitation(
     importance: str = "contextual",
 ) -> TestLimitation:
     return TestLimitation(
-        limitation_id=build_limitation_id(
-            category=category.value, summary=summary
-        ),
+        limitation_id=build_limitation_id(category=category.value, summary=summary),
         category=category,
         summary=summary,
         affected_capability=affected_capability,
@@ -70,9 +85,7 @@ def _foundation_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]
     items = [
         _limitation(
             category=TestLimitationCategory.FOUNDATION_ONLY,
-            summary=(
-                "Test Intelligence analysis is not implemented in this phase."
-            ),
+            summary=("Test Intelligence analysis is not implemented in this phase."),
             affected_capability="testing_assessment",
             importance="critical",
         ),
@@ -90,19 +103,13 @@ def _foundation_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]
         ),
         _limitation(
             category=TestLimitationCategory.BUILD_INSPECTION_NOT_IMPLEMENTED,
-            summary=(
-                "Build and dependency configuration is not inspected for "
-                "testing tools."
-            ),
+            summary=("Build and dependency configuration is not inspected for testing tools."),
             affected_capability="build_inspection",
             importance="critical",
         ),
         _limitation(
             category=TestLimitationCategory.TEST_EXECUTION_NOT_PERFORMED,
-            summary=(
-                "Test execution is not performed. Test pass/fail status is not "
-                "evaluated."
-            ),
+            summary=("Test execution is not performed. Test pass/fail status is not evaluated."),
             affected_capability="test_execution",
             importance="critical",
         ),
@@ -114,16 +121,12 @@ def _foundation_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]
         ),
         _limitation(
             category=TestLimitationCategory.DISABLED_TEST_DETECTION_NOT_IMPLEMENTED,
-            summary=(
-                "Disabled, ignored, or quarantined tests are not detected."
-            ),
+            summary=("Disabled, ignored, or quarantined tests are not detected."),
             affected_capability="disabled_tests",
         ),
         _limitation(
             category=TestLimitationCategory.TEST_TO_SOURCE_MAPPING_NOT_IMPLEMENTED,
-            summary=(
-                "Test-to-production-code relationships are not evaluated."
-            ),
+            summary=("Test-to-production-code relationships are not evaluated."),
             affected_capability="test_to_source_mapping",
         ),
         _limitation(
@@ -138,18 +141,14 @@ def _foundation_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]
         ),
         _limitation(
             category=TestLimitationCategory.NO_TEST_QUALITY_CONCLUSION,
-            summary=(
-                "No conclusion about test quality or release readiness can be "
-                "drawn."
-            ),
+            summary=("No conclusion about test quality or release readiness can be drawn."),
             affected_capability="test_quality",
             importance="critical",
         ),
         _limitation(
             category=TestLimitationCategory.RULES_NOT_IMPLEMENTED,
             summary=(
-                "Test Intelligence rules are not registered yet; no testing "
-                "rules ran."
+                "Test Intelligence rules are not registered yet; no testing rules ran."
                 if pack_enabled
                 else "Test rule pack is disabled; no testing rules ran."
             ),
@@ -164,10 +163,7 @@ def _hygiene_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]:
     items = [
         _limitation(
             category=TestLimitationCategory.TEST_EXECUTION_NOT_PERFORMED,
-            summary=(
-                "Test execution is not performed. Test pass/fail status is not "
-                "evaluated."
-            ),
+            summary=("Test execution is not performed. Test pass/fail status is not evaluated."),
             affected_capability="test_execution",
             importance="critical",
         ),
@@ -182,9 +178,7 @@ def _hygiene_limitations(*, pack_enabled: bool) -> tuple[TestLimitation, ...]:
         ),
         _limitation(
             category=TestLimitationCategory.TEST_TO_SOURCE_MAPPING_NOT_IMPLEMENTED,
-            summary=(
-                "Test-to-production-code relationships are not evaluated."
-            ),
+            summary=("Test-to-production-code relationships are not evaluated."),
             affected_capability="test_to_source_mapping",
         ),
         _limitation(
@@ -244,9 +238,7 @@ def _coverage(
             ),
             numerator=rules_executed if pack_enabled else 0,
             denominator=planned,
-            ratio=(
-                (rules_executed / planned) if pack_enabled and planned else None
-            ),
+            ratio=((rules_executed / planned) if pack_enabled and planned else None),
             maturity=TestCoverageMaturity.MEDIUM if pack_enabled else TestCoverageMaturity.LOW,
             limitations=() if pack_enabled else ("pack_disabled",),
         ),
@@ -261,14 +253,10 @@ def _coverage(
             denominator=1,
             ratio=1.0 if evidence_available else 0.0,
             maturity=(
-                TestCoverageMaturity.MEDIUM
-                if evidence_available
-                else TestCoverageMaturity.LOW
+                TestCoverageMaturity.MEDIUM if evidence_available else TestCoverageMaturity.LOW
             ),
             limitations=(
-                ()
-                if evidence_available
-                else ("repository_testing_evidence_unavailable",)
+                () if evidence_available else ("repository_testing_evidence_unavailable",)
             ),
         ),
         TestCoverageArea(
@@ -280,10 +268,17 @@ def _coverage(
             maturity=TestCoverageMaturity.MEDIUM if pack_enabled else TestCoverageMaturity.LOW,
             limitations=("hygiene_findings_only",) if pack_enabled else ("analytically_empty",),
         ),
+        TestCoverageArea(
+            area_id="testing_inventory_complete",
+            status=TestCoverageAreaStatus.MEASURED,
+            numerator=1 if pack_enabled else 0,
+            denominator=1,
+            ratio=1.0 if pack_enabled else 0.0,
+            maturity=TestCoverageMaturity.MEDIUM if pack_enabled else TestCoverageMaturity.LOW,
+            limitations=("inventory_only",) if pack_enabled else ("foundation_only",),
+        ),
     ]
-    return TestCoverageSummary(
-        areas=tuple(sorted(areas, key=lambda item: item.area_id))
-    )
+    return TestCoverageSummary(areas=tuple(sorted(areas, key=lambda item: item.area_id)))
 
 
 def _lifecycle_traceability(
@@ -291,6 +286,9 @@ def _lifecycle_traceability(
     pack_id: str,
     limitations: tuple[TestLimitation, ...],
     finding_ids: tuple[str, ...] = (),
+    theme_ids: tuple[str, ...] = (),
+    conclusion_ids: tuple[str, ...] = (),
+    recommendation_ids: tuple[str, ...] = (),
 ) -> TestTraceabilityIndex:
     edges: list[TestTraceabilityEdge] = [
         TestTraceabilityEdge(
@@ -317,6 +315,45 @@ def _lifecycle_traceability(
                 target_id=finding_id,
             )
         )
+    for theme_id in theme_ids:
+        edges.append(
+            TestTraceabilityEdge(
+                edge_id=build_trace_edge_id(
+                    relation=TestTraceabilityRelation.SECTION_TO_THEME.value,
+                    source_id=SECTION_ID,
+                    target_id=theme_id,
+                ),
+                relation=TestTraceabilityRelation.SECTION_TO_THEME,
+                source_id=SECTION_ID,
+                target_id=theme_id,
+            )
+        )
+    for conclusion_id in conclusion_ids:
+        edges.append(
+            TestTraceabilityEdge(
+                edge_id=build_trace_edge_id(
+                    relation=TestTraceabilityRelation.SECTION_TO_CONCLUSION.value,
+                    source_id=SECTION_ID,
+                    target_id=conclusion_id,
+                ),
+                relation=TestTraceabilityRelation.SECTION_TO_CONCLUSION,
+                source_id=SECTION_ID,
+                target_id=conclusion_id,
+            )
+        )
+    for recommendation_id in recommendation_ids:
+        edges.append(
+            TestTraceabilityEdge(
+                edge_id=build_trace_edge_id(
+                    relation=TestTraceabilityRelation.SECTION_TO_RECOMMENDATION.value,
+                    source_id=SECTION_ID,
+                    target_id=recommendation_id,
+                ),
+                relation=TestTraceabilityRelation.SECTION_TO_RECOMMENDATION,
+                source_id=SECTION_ID,
+                target_id=recommendation_id,
+            )
+        )
     for item in limitations:
         edges.append(
             TestTraceabilityEdge(
@@ -335,6 +372,7 @@ def _lifecycle_traceability(
         "testing_rules_enabled",
         "testing_evidence_availability",
         "testing_findings_evaluated",
+        "testing_inventory_complete",
     ):
         edges.append(
             TestTraceabilityEdge(
@@ -350,6 +388,28 @@ def _lifecycle_traceability(
         )
     ordered = tuple(sorted(edges, key=lambda item: item.edge_id))
     return TestTraceabilityIndex(edges=ordered[:MAX_TRACEABILITY_ENTRIES])
+
+
+def _empty_inventories(
+    *,
+    pack_enabled: bool,
+) -> tuple[
+    TestFindingInventory,
+    TestRuleInventory,
+    TestSeverityInventory,
+    TestConfidenceInventory,
+]:
+    rule_inventory = build_rule_inventory(
+        findings=(),
+        execution_facts=(),
+        pack_enabled=pack_enabled,
+    )
+    return (
+        TestFindingInventory(),
+        rule_inventory,
+        TestSeverityInventory(),
+        TestConfidenceInventory(),
+    )
 
 
 def _build_section(
@@ -373,6 +433,12 @@ def _build_section(
         status=status.value,
         configuration_fingerprint=fingerprint,
     )
+    (
+        finding_inventory,
+        rule_inventory,
+        severity_inventory,
+        confidence_inventory,
+    ) = _empty_inventories(pack_enabled=pack_enabled)
     return TestAssessmentSection(
         section_id=SECTION_ID,
         section_version=SECTION_SCHEMA_VERSION,
@@ -394,14 +460,16 @@ def _build_section(
             pack_enabled=pack_enabled,
         ),
         coverage=_coverage(pack_enabled=pack_enabled),
+        finding_inventory=finding_inventory,
+        rule_inventory=rule_inventory,
+        severity_inventory=severity_inventory,
+        confidence_inventory=confidence_inventory,
         finding_ids=(),
         all_finding_ids=(),
         findings=(),
         limitations=limitations,
         diagnostics=(reason,),
-        traceability=_lifecycle_traceability(
-            pack_id=PACK_ID, limitations=limitations
-        ),
+        traceability=_lifecycle_traceability(pack_id=PACK_ID, limitations=limitations),
         metadata={
             "assessment_milestone": "4.6.1",
             "reason": reason,
@@ -414,15 +482,8 @@ def _build_section(
     )
 
 
-def _findings_by_rule(findings: Sequence[Finding]) -> dict[str, int]:
-    counts: dict[str, int] = {}
-    for item in findings:
-        counts[item.rule_id] = counts.get(item.rule_id, 0) + 1
-    return {key: counts[key] for key in sorted(counts)}
-
-
 class TestAssessmentAssembler:
-    """Assemble Test assessment sections (foundation + hygiene findings)."""
+    """Assemble Test assessment sections (foundation + hygiene + inventory)."""
 
     __test__ = False
 
@@ -461,11 +522,7 @@ class TestAssessmentAssembler:
         pack_enabled: bool = True,
         reason: str = "no_testing_rules_registered",
     ) -> TestAssessmentSection:
-        status = (
-            TestAssessmentStatus.SUCCEEDED
-            if pack_enabled
-            else TestAssessmentStatus.DISABLED
-        )
+        status = TestAssessmentStatus.SUCCEEDED if pack_enabled else TestAssessmentStatus.DISABLED
         return _build_section(
             repository_id=repository_id,
             status=status,
@@ -552,6 +609,7 @@ class TestAssessmentAssembler:
         rules_not_matched: int = 0,
         rules_not_applicable: int = 0,
         rules_failed: int = 0,
+        rule_execution_facts: Sequence[object] = (),
         evidence_pipeline: str = "not_configured",
         evidence_fingerprint: str = "",
         configuration_payload: str = "",
@@ -561,8 +619,9 @@ class TestAssessmentAssembler:
         include_limitations: bool = True,
         include_traceability: bool = True,
         include_execution_summary: bool = True,
+        include_synthesis: bool = True,
     ) -> TestAssessmentSection:
-        """Assemble a Test Hygiene assessment section from in-memory facts."""
+        """Assemble a Test Hygiene assessment section with inventories and synthesis."""
 
         if not pack_enabled:
             return self.assemble_disabled(repository_id=repository_id)
@@ -578,15 +637,37 @@ class TestAssessmentAssembler:
         ordered_findings = tuple(
             sorted(findings, key=lambda item: (item.rule_id, item.id, item.title))
         )
-        finding_ids = (
-            tuple(item.id for item in ordered_findings) if include_findings else ()
+        inventory_findings = ordered_findings if include_findings else ()
+        finding_ids = tuple(item.id for item in inventory_findings)
+        planned = rules_planned if rules_planned is not None else len(HYGIENE_RULE_IDS)
+        execution_facts = coerce_execution_facts(rule_execution_facts)
+        if not execution_facts and rules_executed:
+            execution_facts = tuple(
+                TestingRuleExecutionFact(
+                    rule_id=rule_id,
+                    enabled=True,
+                    executed=True,
+                    evaluation_status="not_matched",
+                )
+                for rule_id in HYGIENE_RULE_IDS
+            )
+
+        finding_inventory = build_finding_inventory(inventory_findings)
+        rule_inventory = build_rule_inventory(
+            findings=inventory_findings,
+            execution_facts=execution_facts,
+            pack_enabled=True,
         )
-        planned = (
-            rules_planned if rules_planned is not None else len(HYGIENE_RULE_IDS)
-        )
-        limitations = (
-            _hygiene_limitations(pack_enabled=True) if include_limitations else ()
-        )
+        severity_inventory = build_severity_inventory(inventory_findings)
+        confidence_inventory = build_confidence_inventory(inventory_findings)
+
+        matched = rules_matched or rule_inventory.rules_matched
+        not_matched = rules_not_matched or rule_inventory.rules_not_matched
+        not_applicable = rules_not_applicable or rule_inventory.rules_not_applicable
+        failed = rules_failed or rule_inventory.rules_failed
+        executed = rules_executed or rule_inventory.rules_executed
+
+        limitations = _hygiene_limitations(pack_enabled=True) if include_limitations else ()
         fingerprint = build_configuration_fingerprint(
             configuration_payload
             or (
@@ -600,7 +681,7 @@ class TestAssessmentAssembler:
             status=status.value,
             configuration_fingerprint=fingerprint,
         )
-        by_rule = _findings_by_rule(ordered_findings) if include_findings else {}
+        by_rule = findings_by_rule_counts(inventory_findings)
         summary = (
             _ZERO_FINDINGS_SUMMARY
             if not finding_ids
@@ -610,20 +691,47 @@ class TestAssessmentAssembler:
                 "evidence."
             )
         )
+
+        synthesis = TestingSynthesisResult()
+        synthesis_diagnostics: tuple[str, ...] = ()
+        try:
+            synthesis = synthesize_testing(
+                repository_id=repository_id,
+                pack_enabled=True,
+                section_status=status,
+                findings=inventory_findings,
+                finding_inventory=finding_inventory,
+                rule_inventory=rule_inventory,
+                limitations=limitations,
+                evidence_status=(evidence.status.value if evidence is not None else ""),
+                include_synthesis=include_synthesis,
+            )
+            synthesis_diagnostics = synthesis.diagnostics
+        except Exception as error:  # noqa: BLE001 - isolate synthesis failures
+            synthesis = TestingSynthesisResult(
+                status=TestSynthesisStatus.FAILED,
+                synthesis_version=SYNTHESIS_VERSION,
+                diagnostics=(f"synthesis_failed:{type(error).__name__}",),
+            )
+            synthesis_diagnostics = synthesis.diagnostics
+
         execution = (
             TestExecutionSummary(
                 testing_rules_planned=planned,
-                rules_executed=rules_executed,
-                rules_matched=rules_matched,
-                rules_not_matched=rules_not_matched,
-                rules_not_applicable=rules_not_applicable,
-                rules_failed=rules_failed,
+                rules_executed=executed,
+                rules_matched=matched,
+                rules_not_matched=not_matched,
+                rules_not_applicable=not_applicable,
+                rules_failed=failed,
                 visible_finding_count=len(finding_ids),
                 total_finding_count=len(finding_ids),
                 findings_by_rule=by_rule,
                 pack_id=PACK_ID,
                 pack_version=PACK_VERSION,
                 pack_enabled=True,
+                theme_count=len(synthesis.themes),
+                conclusion_count=len(synthesis.conclusions),
+                recommendation_count=len(synthesis.recommendations),
             )
             if include_execution_summary
             else TestExecutionSummary()
@@ -633,7 +741,7 @@ class TestAssessmentAssembler:
                 pack_enabled=True,
                 evidence_available=True,
                 findings_count=len(finding_ids),
-                rules_executed=rules_executed,
+                rules_executed=executed,
             )
             if include_coverage
             else TestCoverageSummary()
@@ -643,9 +751,21 @@ class TestAssessmentAssembler:
                 pack_id=PACK_ID,
                 limitations=limitations,
                 finding_ids=finding_ids,
+                theme_ids=synthesis.theme_ids,
+                conclusion_ids=synthesis.conclusion_ids,
+                recommendation_ids=synthesis.recommendation_ids,
             )
             if include_traceability
             else TestTraceabilityIndex()
+        )
+        merged_diagnostics = tuple(
+            sorted(
+                {
+                    str(item).strip()
+                    for item in (*diagnostics, *synthesis_diagnostics)
+                    if str(item).strip()
+                }
+            )
         )
         return TestAssessmentSection(
             section_id=SECTION_ID,
@@ -662,17 +782,28 @@ class TestAssessmentAssembler:
             configuration_fingerprint=fingerprint,
             execution_summary=execution,
             coverage=coverage,
+            finding_inventory=finding_inventory,
+            rule_inventory=rule_inventory,
+            severity_inventory=severity_inventory,
+            confidence_inventory=confidence_inventory,
+            synthesis=synthesis,
+            themes=synthesis.themes,
+            theme_ids=synthesis.theme_ids,
+            conclusions=synthesis.conclusions,
+            conclusion_ids=synthesis.conclusion_ids,
+            recommendations=synthesis.recommendations,
+            recommendation_ids=synthesis.recommendation_ids,
             finding_ids=finding_ids,
             all_finding_ids=finding_ids,
             findings=finding_ids,
             limitations=limitations,
-            diagnostics=tuple(
-                sorted({str(item).strip() for item in diagnostics if str(item).strip()})
-            ),
+            diagnostics=merged_diagnostics,
             traceability=traceability,
             metadata={
                 "assessment_milestone": _MILESTONE,
                 "summary": summary,
                 "evidence_status": evidence.status.value,
+                "synthesis_version": SYNTHESIS_VERSION,
+                "overall_posture_summary": synthesis.overall_posture_summary,
             },
         )

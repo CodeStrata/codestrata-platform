@@ -6,7 +6,9 @@ from typing import Annotated
 import typer
 
 from aimf import __version__
+from aimf.cli.acceptance import acceptance_app
 from aimf.cli.agent import agent_app
+from aimf.cli.ai import ai_app
 from aimf.cli.architecture import architecture_app
 from aimf.cli.assess import (
     DEFAULT_ASSESS_MAX_OUTPUT_TOKENS,
@@ -23,6 +25,9 @@ from aimf.cli.enterprise import enterprise_app
 from aimf.cli.evidence import evidence_app
 from aimf.cli.incremental import incremental_app
 from aimf.cli.mcp import mcp_app
+from aimf.cli.onboard import register_onboard_command
+from aimf.cli.report import report_app
+from aimf.cli.roadmap import roadmap_app
 from aimf.cli.rules import rules_app
 from aimf.config import load_settings
 from aimf.logging_config import configure_logging
@@ -198,13 +203,18 @@ def scan(
 
 
 register_assess_command(app)
+register_onboard_command(app)
 app.add_typer(mcp_app, name="mcp")
+app.add_typer(ai_app, name="ai")
 app.add_typer(agent_app, name="agent")
 app.add_typer(incremental_app, name="incremental")
 app.add_typer(enterprise_app, name="enterprise")
 app.add_typer(rules_app, name="rules")
 app.add_typer(evidence_app, name="evidence")
 app.add_typer(architecture_app, name="architecture")
+app.add_typer(roadmap_app, name="roadmap")
+app.add_typer(report_app, name="report")
+app.add_typer(acceptance_app, name="acceptance")
 
 __all__ = [
     "DEFAULT_ASSESS_MAX_OUTPUT_TOKENS",

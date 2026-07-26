@@ -18,6 +18,7 @@ def register_resources(
     queries: KnowledgeQueryService,
     *,
     enterprise_query_service: EnterpriseKnowledgeQueryService | None = None,
+    repository_intelligence: object | None = None,
 ) -> None:
     @server.resource("codestrata://repositories", mime_type="application/json")
     def repositories() -> str:
@@ -54,6 +55,83 @@ def register_resources(
             return json.dumps(to_mcp_payload(item), indent=2, ensure_ascii=False)
 
         return call_tool("resource:latest_assessment", _run)  # type: ignore[return-value]
+
+    @server.resource(
+        "codestrata://repositories/{repository_id}/manifest",
+        mime_type="application/json",
+    )
+    def repository_manifest(repository_id: str) -> str:
+        """Repository summary manifest (tenant scope resolved via knowledge store)."""
+
+        def _run() -> str:
+            item = queries.get_repository(repository_id)
+            payload = {
+                "repository": to_mcp_payload(item),
+                "latest_assessment": to_mcp_payload(
+                    queries.get_latest_completed_run(repository_id)
+                ),
+            }
+            return json.dumps(payload, indent=2, ensure_ascii=False)
+
+        return call_tool("resource:repository_manifest", _run)  # type: ignore[return-value]
+
+    @server.resource(
+        "codestrata://repositories/{repository_id}/assessments",
+        mime_type="application/json",
+    )
+    def repository_assessments(repository_id: str) -> str:
+        """List assessments for a repository."""
+
+        def _run() -> str:
+            items = queries.list_assessment_runs(repository_id)
+            return json.dumps(to_mcp_payload(items), indent=2, ensure_ascii=False)
+
+        return call_tool("resource:repository_assessments", _run)  # type: ignore[return-value]
+
+    @server.resource(
+        "codestrata://repositories/{repository_id}/findings",
+        mime_type="application/json",
+    )
+    def repository_findings(repository_id: str) -> str:
+        """Findings for the latest completed assessment."""
+
+        def _run() -> str:
+            latest = queries.get_latest_completed_run(repository_id)
+            if latest is None:
+                return json.dumps({"findings": []}, indent=2, ensure_ascii=False)
+            items = queries.get_findings(latest.run_id)
+            return json.dumps(to_mcp_payload(items), indent=2, ensure_ascii=False)
+
+        return call_tool("resource:repository_findings", _run)  # type: ignore[return-value]
+
+    @server.resource(
+        "codestrata://repositories/{repository_id}/knowledge-status",
+        mime_type="application/json",
+    )
+    def knowledge_status(repository_id: str) -> str:
+        """Bounded knowledge/retrieval readiness for a repository id."""
+
+        def _run() -> str:
+            _ = repository_id  # URI param; readiness is process-scoped
+            ri = repository_intelligence
+            payload = {
+                "retrieval_available": bool(
+                    getattr(ri, "retriever", None) is not None
+                ),
+                "answering_available": bool(
+                    getattr(ri, "answer_engine", None) is not None
+                ),
+                "vector_store_provider": getattr(ri, "vector_store_provider", None),
+                "vector_store_persistent": bool(
+                    getattr(ri, "vector_store_persistent", False)
+                ),
+                "composition_diagnostics": list(
+                    getattr(ri, "composition_diagnostics", ()) or ()
+                ),
+            }
+            return json.dumps(to_mcp_payload(payload), indent=2, ensure_ascii=False)
+
+        return call_tool("resource:knowledge_status", _run)  # type: ignore[return-value]
 
     @server.resource(
         "codestrata://assessments/{run_id}/findings",
