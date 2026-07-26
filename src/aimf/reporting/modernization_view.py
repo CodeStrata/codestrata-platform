@@ -117,30 +117,12 @@ def sorted_findings(findings: Iterable[Finding]) -> list[Finding]:
     """Return findings in customer-priority order.
 
     Order: severity → native AIMF before PMD → primary → supporting →
-    informational → rule id.
+    informational → rule id. Delegates to the Phase 5.12 report contract.
     """
 
-    visibility_rank = {
-        "primary": 0,
-        "supporting": 1,
-        "informational": 2,
-        "suppressed_from_html": 3,
-    }
+    from aimf.reporting.contract.ordering import sorted_findings as _contract_sorted
 
-    def sort_key(finding: Finding) -> tuple[object, ...]:
-        source = str(getattr(finding.source, "value", finding.source))
-        native_rank = 0 if source != "external_static_analysis" else 1
-        visibility = str(finding.metadata.get("customer_visibility") or "primary")
-        return (
-            SEVERITY_ORDER.get(finding.severity, 99),
-            native_rank,
-            visibility_rank.get(visibility, 1),
-            str(getattr(finding.category, "value", finding.category)).lower(),
-            (finding.rule_id or "").lower(),
-            finding.title.lower(),
-        )
-
-    return sorted(findings, key=sort_key)
+    return list(_contract_sorted(findings))
 
 
 def finding_anchor_id(rule_id: str | None, *, index: int = 0) -> str:

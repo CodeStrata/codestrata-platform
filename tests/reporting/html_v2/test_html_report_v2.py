@@ -250,8 +250,8 @@ def test_ai_enrichment_present_and_absent(tmp_path: Path) -> None:
     assert "fake" in with_ai
     assert "m1" in with_ai
     # Deterministic sections remain labeled distinctly.
-    assert "Deterministic Assessment Graph findings" in with_ai
-    assert "Deterministic recommendations derived from findings" in with_ai
+    assert "deterministic findings" in with_ai.lower()
+    assert "deterministic recommendations" in with_ai.lower()
 
 
 def test_html_escaping_and_no_secret_or_absolute_path_leak(tmp_path: Path) -> None:

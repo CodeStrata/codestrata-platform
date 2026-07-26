@@ -14,10 +14,15 @@ from aimf.domain.findings import RuleEvaluationResult
 from aimf.domain.graph.validation import optional_nonblank, require_nonblank
 from aimf.domain.recommendations import RecommendationResult
 from aimf.models import AnalysisResult
+from aimf.reporting.ai_readiness.models import AiReadinessReportSection
 from aimf.reporting.architecture.models import ArchitectureReportSection
+from aimf.reporting.cloud.models import CloudReportSection
 from aimf.reporting.dependency.models import DependencyReportSection
+from aimf.reporting.performance.models import PerformanceReportSection
+from aimf.reporting.roadmap.models import RoadmapReportSection
 from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
+from aimf.reporting.testing.models import TestingReportSection
 
 
 class AssessmentMode(StrEnum):
@@ -180,6 +185,19 @@ class ModernizationReportInput(BaseModel):
     dependency_report: DependencyReportSection | None = None
     # Phase 4.5.6 — optional security report presentation (additive under assessment).
     security_report: SecurityReportSection | None = None
+    # Phase 4.6.6 — optional testing report presentation (additive under assessment).
+    testing_report: TestingReportSection | None = None
+    # Phase 4.7.6 — optional cloud report presentation (additive under assessment).
+    cloud_report: CloudReportSection | None = None
+    # Phase 4.8.6 — optional AI readiness report presentation (additive under assessment).
+    ai_readiness_report: AiReadinessReportSection | None = None
+    # Phase 4.9.6 — optional performance report presentation (additive under assessment).
+    performance_report: PerformanceReportSection | None = None
+    # Phase 5.10 — optional modernization roadmap (additive under assessment.roadmap).
+    roadmap_report: RoadmapReportSection | None = None
+    # Phase 5.12 — optional knowledge identity for report manifest.
+    knowledge_repository_id: str | None = None
+    knowledge_run_id: str | None = None
 
     @field_validator("generated_at_utc")
     @classmethod

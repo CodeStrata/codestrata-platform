@@ -37,8 +37,11 @@ def create_rule_analysis_service(
     include_technical_debt_pack: bool = True,
     include_dependency_pack: bool = True,
     include_security_pack: bool = True,
+    include_cloud_pack: bool = True,
+    include_ai_readiness_pack: bool = True,
+    include_performance_pack: bool = True,
 ) -> RuleAnalysisService:
-    """Create a service with optional Architecture / TD / Dependency / Security packs.
+    """Create a service with optional Architecture/TD/Dependency/Security/Cloud/AI/Perf packs.
 
     Packs are registered for CLI/MCP discovery even when disabled for assess.
     Execution remains gated by ``rules.enabled`` and per-pack ``enabled`` flags.
@@ -83,6 +86,34 @@ def create_rule_analysis_service(
             )
 
             register_security_pack(
+                resolved,
+                settings=rules_settings,
+                production=True,
+            )
+        if include_cloud_pack:
+            from aimf.application.rules.cloud.registration import register_cloud_pack
+
+            register_cloud_pack(
+                resolved,
+                settings=rules_settings,
+                production=True,
+            )
+        if include_ai_readiness_pack:
+            from aimf.application.rules.ai_readiness.registration import (
+                register_ai_readiness_pack,
+            )
+
+            register_ai_readiness_pack(
+                resolved,
+                settings=rules_settings,
+                production=True,
+            )
+        if include_performance_pack:
+            from aimf.application.rules.performance.registration import (
+                register_performance_pack,
+            )
+
+            register_performance_pack(
                 resolved,
                 settings=rules_settings,
                 production=True,

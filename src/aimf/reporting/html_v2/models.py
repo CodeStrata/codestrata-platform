@@ -12,10 +12,15 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from aimf.domain.graph.validation import as_tuple, require_nonblank
+from aimf.reporting.ai_readiness.models import AiReadinessReportSection
 from aimf.reporting.architecture.models import ArchitectureReportSection
+from aimf.reporting.cloud.models import CloudReportSection
 from aimf.reporting.dependency.models import DependencyReportSection
+from aimf.reporting.performance.models import PerformanceReportSection
+from aimf.reporting.roadmap.models import RoadmapReportSection
 from aimf.reporting.security.models import SecurityReportSection
 from aimf.reporting.technical_debt.models import TechnicalDebtReportSection
+from aimf.reporting.testing.models import TestingReportSection
 
 
 class DashboardMetrics(BaseModel):
@@ -335,6 +340,11 @@ class HtmlReportViewModel(BaseModel):
     technical_debt_report: TechnicalDebtReportSection | None = None
     dependency_report: DependencyReportSection | None = None
     security_report: SecurityReportSection | None = None
+    testing_report: TestingReportSection | None = None
+    cloud_report: CloudReportSection | None = None
+    ai_readiness_report: AiReadinessReportSection | None = None
+    performance_report: PerformanceReportSection | None = None
+    roadmap_report: RoadmapReportSection | None = None
     artifacts: tuple[ArtifactRefView, ...] = ()
     metadata: AssessmentMetadataView
     provenance_note: str = (

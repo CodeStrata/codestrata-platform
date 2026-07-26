@@ -1,0 +1,21 @@
+{
+  "name": "grounded-repository-answer",
+  "version": "1.0.0",
+  "response_schema_version": "1.0.0",
+  "required_variables": {
+    "system": [],
+    "user": [
+      "question",
+      "style",
+      "citation_labels",
+      "evidence_ids",
+      "evidence_blocks",
+      "response_schema"
+    ],
+    "repair": [
+      "error",
+      "citation_labels",
+      "response_schema"
+    ]
+  }
+}

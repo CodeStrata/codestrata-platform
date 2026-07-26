@@ -46,13 +46,23 @@ dependencies = [
 bedrock = [
     "boto3>=1.35,<2.0",
 ]
+openai = [
+    "openai>=1.40,<2.0",
+]
+pgvector = [
+    "psycopg[binary]>=3.2,<4.0",
+    "pgvector>=0.3.6,<1.0",
+]
 dev = [
     "boto3>=1.35,<2.0",
+    "openai>=1.40,<2.0",
     "mypy>=1.14,<2.0",
     "pytest>=8.3,<9.0",
     "pytest-cov>=6.0,<7.0",
     "ruff>=0.9,<1.0",
     "types-PyYAML>=6.0,<7.0",
+    "psycopg[binary]>=3.2,<4.0",
+    "pgvector>=0.3.6,<1.0",
 ]
 
 
@@ -80,6 +90,8 @@ aimf = [
     "resources/**/*.yml",
     "resources/**/*.json",
     "reporting/assets/*.png",
+    "application/knowledge/answering/prompts/**/*.md",
+    "application/knowledge/answering/prompts/**/*.json",
 ]
 
 
@@ -91,6 +103,9 @@ addopts = [
     "-ra",
     "--strict-markers",
     "--strict-config",
+]
+markers = [
+    "docker: requires Docker Compose and a running daemon (skipped when unavailable)",
 ]
 
 
@@ -135,6 +150,7 @@ module = [
     "boto3",
     "botocore.*",
     "mcp.*",
+    "openai",
 ]
 ignore_missing_imports = true
 

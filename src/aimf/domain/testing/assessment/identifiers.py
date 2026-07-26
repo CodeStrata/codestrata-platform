@@ -7,7 +7,7 @@ from collections.abc import Mapping, Sequence
 
 SECTION_ID = "assessment.testing"
 SCHEMA_NAME = "testing-assessment"
-SECTION_SCHEMA_VERSION = "1.0.0"
+SECTION_SCHEMA_VERSION = "1.2.0"
 TESTING_ASSESSMENT_FILENAME = "testing-assessment.json"
 ARTIFACT_SCHEMA_ID = "codestrata.testing_assessment"
 
@@ -71,10 +71,7 @@ def build_empty_section_fingerprint(
 def sorted_mapping(values: Mapping[str, str] | None) -> dict[str, str]:
     if not values:
         return {}
-    return {
-        str(key): str(item)
-        for key, item in sorted(values.items(), key=lambda pair: pair[0])
-    }
+    return {str(key): str(item) for key, item in sorted(values.items(), key=lambda pair: pair[0])}
 
 
 def sorted_ids(values: Sequence[str] | None) -> tuple[str, ...]:

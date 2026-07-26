@@ -5,7 +5,7 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from aimf.config.dotenv import load_dotenv
 from aimf.repository_auth.exceptions import UnsupportedRepositoryUrlError
@@ -176,12 +176,16 @@ class AwsSettings(BaseModel):
 
 
 class BedrockSettings(BaseModel):
-    """Optional AWS Bedrock settings for modernization assessment."""
+    """AWS Bedrock settings for assessment, embeddings, and grounded answers."""
 
     model_id: str | None = None
     region: str | None = None
+    embedding_model: str = "amazon.titan-embed-text-v2:0"
+    answer_model: str = ""
+    timeout_seconds: int = 60
+    max_retries: int = 3
 
-    @field_validator("model_id", "region")
+    @field_validator("model_id", "region", "answer_model")
     @classmethod
     def validate_optional_nonempty(cls, value: str | None) -> str | None:
         if value is None:
@@ -189,53 +193,571 @@ class BedrockSettings(BaseModel):
         compact = value.strip()
         return compact or None
 
+    @field_validator("embedding_model", mode="before")
+    @classmethod
+    def normalize_embedding_model(cls, value: object) -> str:
+        compact = str(value or "").strip()
+        return compact or "amazon.titan-embed-text-v2:0"
+
+    @field_validator("timeout_seconds", "max_retries")
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+
+class OpenAISettings(BaseModel):
+    """OpenAI API settings for embeddings and grounded answers (Phase 5.8)."""
+
+    api_key_env: str = "OPENAI_API_KEY"
+    base_url: str = ""
+    embedding_model: str = "text-embedding-3-small"
+    answer_model: str = "gpt-4o-mini"
+    embedding_dimensions: int = 0
+    timeout_seconds: int = 60
+    max_retries: int = 3
+
+    @field_validator("api_key_env", "embedding_model", "answer_model", mode="before")
+    @classmethod
+    def normalize_required(cls, value: object) -> str:
+        compact = str(value or "").strip()
+        if not compact:
+            raise ValueError("must be a nonempty string")
+        return compact
+
+    @field_validator("base_url", mode="before")
+    @classmethod
+    def normalize_base_url(cls, value: object) -> str:
+        return str(value or "").strip()
+
+    @field_validator("embedding_dimensions")
+    @classmethod
+    def validate_dimensions(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("embedding_dimensions must be >= 0")
+        return value
+
+    @field_validator("timeout_seconds", "max_retries")
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
 
 DEFAULT_BEDROCK_MODEL_ID = "amazon.nova-lite-v1:0"
 DEFAULT_BEDROCK_PROVIDER = "bedrock"
 
 
 class AiSettings(BaseModel):
-    """Optional AI subsystem settings."""
+    """AI subsystem settings (assessment + knowledge providers).
+
+    ``embedding_provider`` and ``answer_provider`` are independently
+    configurable (Phase 5.8). ``provider`` remains the assessment Converse
+    provider selector for ``aimf assess --with-ai``.
+    """
 
     provider: str = "bedrock"
+    embedding_provider: str = "deterministic"
+    answer_provider: str = "deterministic_extractive"
     bedrock: BedrockSettings = Field(default_factory=BedrockSettings)
+    openai: OpenAISettings = Field(default_factory=OpenAISettings)
+
+    @field_validator("provider", "embedding_provider", "answer_provider")
+    @classmethod
+    def validate_provider_tokens(cls, value: str) -> str:
+        compact = value.strip().lower()
+        if not compact:
+            raise ValueError("must be a nonempty string")
+        return compact
+
+    @field_validator("embedding_provider")
+    @classmethod
+    def validate_embedding_provider(cls, value: str) -> str:
+        allowed = {"deterministic", "bedrock", "openai"}
+        if value not in allowed:
+            raise ValueError(
+                f"ai.embedding_provider must be one of {sorted(allowed)}"
+            )
+        return value
+
+    @field_validator("answer_provider")
+    @classmethod
+    def validate_answer_provider(cls, value: str) -> str:
+        # deterministic aliases both accepted
+        allowed = {
+            "deterministic",
+            "deterministic_extractive",
+            "bedrock",
+            "openai",
+        }
+        if value not in allowed:
+            raise ValueError(
+                f"ai.answer_provider must be one of {sorted(allowed)}"
+            )
+        return value
+
+
+class KnowledgeVectorStoreSettings(BaseModel):
+    """Vector-store provider settings for the Repository Knowledge Layer.
+
+    ``memory`` is the default (zero setup, non-persistent). ``pgvector`` is the
+    Phase 5.4+ production provider. Prefer ``CODESTRATA_DATABASE_URL`` for the
+    database URL — do not put real credentials in aimf.toml.
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    provider: str = "memory"
+    # Deprecated: prefer CODESTRATA_DATABASE_URL. Kept for test/programmatic compat.
+    connection_string: str = ""
+    connection_string_env: str = "CODESTRATA_DATABASE_URL"
+    # TOML key remains ``schema``; Python attribute avoids BaseModel.schema clash.
+    schema_name: str = Field(default="codestrata", alias="schema")
+    hnsw: bool = True
+    connect_timeout_seconds: int = 10
 
     @field_validator("provider")
     @classmethod
     def validate_provider(cls, value: str) -> str:
         compact = value.strip().lower()
+        allowed = {"memory", "pgvector"}
+        if compact not in allowed:
+            raise ValueError(
+                f"knowledge.vector_store.provider must be one of {sorted(allowed)}"
+            )
+        return compact
+
+    @field_validator("schema_name")
+    @classmethod
+    def validate_schema(cls, value: str) -> str:
+        compact = value.strip().lower()
+        if not compact or not compact.replace("_", "").isalnum():
+            raise ValueError(
+                "knowledge.vector_store.schema must be a nonempty alphanumeric "
+                "identifier (underscores allowed)"
+            )
+        return compact
+
+    @field_validator("connection_string", "connection_string_env")
+    @classmethod
+    def normalize_optional_strings(cls, value: str) -> str:
+        return value.strip()
+
+    @field_validator("connect_timeout_seconds")
+    @classmethod
+    def validate_timeout(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("connect_timeout_seconds must be a positive integer")
+        return value
+
+
+class KnowledgeProjectionSettings(BaseModel):
+    """In-memory knowledge document projection settings (Phase 5.2)."""
+
+    enabled: bool = False
+    include_repository_files: bool = True
+    include_findings: bool = True
+    include_recommendations: bool = True
+    include_evidence: bool = True
+    include_assessments: bool = True
+    include_report_sections: bool = True
+    write_corpus_artifact: bool = False
+
+
+class KnowledgeChunkingSettings(BaseModel):
+    """Deterministic knowledge chunking settings (Phase 5.2)."""
+
+    enabled: bool = False
+    strategy: str = "deterministic"
+    max_characters: int = 4000
+    overlap_characters: int = 400
+    preserve_logical_units: bool = True
+
+    @field_validator("strategy")
+    @classmethod
+    def validate_strategy(cls, value: str) -> str:
+        compact = value.strip().lower()
+        if compact != "deterministic":
+            raise ValueError("knowledge.chunking.strategy currently supports only 'deterministic'")
+        return compact
+
+    @field_validator("max_characters")
+    @classmethod
+    def validate_max_characters(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("knowledge.chunking.max_characters must be positive")
+        return value
+
+    @field_validator("overlap_characters")
+    @classmethod
+    def validate_overlap(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("knowledge.chunking.overlap_characters must be non-negative")
+        return value
+
+    @model_validator(mode="after")
+    def validate_overlap_bound(self) -> KnowledgeChunkingSettings:
+        if self.overlap_characters >= self.max_characters:
+            raise ValueError(
+                "knowledge.chunking.overlap_characters must be less than max_characters"
+            )
+        return self
+
+
+class KnowledgeEmbeddingSettings(BaseModel):
+    """Embedding provider settings (Phase 5.3 / 5.8).
+
+    ``provider`` selects the embedding backend. Prefer aligning with
+    ``[ai].embedding_provider``. Production providers: ``bedrock``, ``openai``.
+    """
+
+    enabled: bool = False
+    provider: str = "deterministic"
+    model: str = "deterministic-test-embedding"
+    model_version: str = "1.0.0"
+    dimension: int = 384
+    batch_size: int = 32
+    max_input_characters: int = 12_000
+
+    @field_validator("provider")
+    @classmethod
+    def validate_provider(cls, value: str) -> str:
+        compact = value.strip().lower()
+        allowed = {
+            "deterministic",
+            "bedrock",
+            "openai",
+            "local_sentence_transformer",
+        }
+        if compact not in allowed:
+            raise ValueError(
+                f"knowledge.embedding.provider must be one of {sorted(allowed)}"
+            )
+        return compact
+
+    @field_validator("model", "model_version")
+    @classmethod
+    def validate_nonempty(cls, value: str) -> str:
+        compact = value.strip()
         if not compact:
-            raise ValueError("ai.provider must be a nonempty string")
+            raise ValueError("must be a nonempty string")
+        return compact
+
+    @field_validator("dimension", "batch_size", "max_input_characters")
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+
+class KnowledgeIndexingSettings(BaseModel):
+    """Knowledge vector indexing settings (Phase 5.3)."""
+
+    enabled: bool = False
+    delete_stale_records: bool = True
+    write_manifest: bool = False
+    manifest_filename: str = "repository-knowledge-index.json"
+
+    @field_validator("manifest_filename")
+    @classmethod
+    def validate_filename(cls, value: str) -> str:
+        compact = value.strip()
+        if not compact or "/" in compact or "\\" in compact:
+            raise ValueError("manifest_filename must be a basename without path separators")
+        return compact
+
+
+class KnowledgeRetrievalSettings(BaseModel):
+    """Repository knowledge retrieval settings (Phase 5.5 / 5.9)."""
+
+    enabled: bool = False
+    mode: str = "vector"  # vector | lexical | hybrid
+    vector_weight: float = 1.0
+    lexical_weight: float = 1.0
+    top_k: int = 10
+    # Prefer ``result_limit`` in new configs; falls back to ``top_k`` when unset.
+    result_limit: int | None = None
+    candidate_limit: int = 30
+    minimum_score: float = 0.0
+    rrf_k: int = 60
+    max_query_characters: int = 4000
+    max_context_characters: int = 30_000
+    max_chunks_per_document: int = 3
+    max_chunks_per_file: int = 3
+    max_chunks_per_source_type: int = 5
+    include_content: bool = True
+    include_metadata: bool = True
+    include_traceability: bool = True
+    write_result_artifact: bool = False
+    result_filename: str = "repository-retrieval-result.json"
+
+    @field_validator("mode", mode="before")
+    @classmethod
+    def normalize_mode(cls, value: object) -> str:
+        compact = str(value or "vector").strip().lower()
+        allowed = {"vector", "lexical", "hybrid"}
+        if compact not in allowed:
+            raise ValueError(
+                f"knowledge.retrieval.mode must be one of {sorted(allowed)}"
+            )
+        return compact
+
+    @field_validator("vector_weight", "lexical_weight")
+    @classmethod
+    def validate_weights(cls, value: float) -> float:
+        if value < 0:
+            raise ValueError("retrieval weights must be >= 0")
+        return float(value)
+
+    @field_validator(
+        "top_k",
+        "candidate_limit",
+        "rrf_k",
+        "max_query_characters",
+        "max_context_characters",
+        "max_chunks_per_document",
+        "max_chunks_per_file",
+        "max_chunks_per_source_type",
+    )
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+    @field_validator("result_limit")
+    @classmethod
+    def validate_result_limit(cls, value: int | None) -> int | None:
+        if value is None:
+            return None
+        if value <= 0:
+            raise ValueError("result_limit must be a positive integer")
+        return value
+
+    @field_validator("result_filename")
+    @classmethod
+    def validate_filename(cls, value: str) -> str:
+        compact = value.strip()
+        if not compact or "/" in compact or "\\" in compact:
+            raise ValueError("result_filename must be a basename without path separators")
+        return compact
+
+    def resolve_result_limit(self) -> int:
+        """Final hit count: ``result_limit`` when set, otherwise ``top_k``."""
+
+        return self.result_limit if self.result_limit is not None else self.top_k
+
+
+class KnowledgeAnsweringDeterministicExtractiveSettings(BaseModel):
+    """Deterministic extractive answer-provider settings (Phase 5.6)."""
+
+    max_excerpt_characters: int = 800
+    max_statements_per_source: int = 2
+    preserve_source_sentences: bool = True
+
+    @field_validator("max_excerpt_characters", "max_statements_per_source")
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+
+class KnowledgeAnsweringSettings(BaseModel):
+    """Grounded repository answering settings (Phase 5.6)."""
+
+    enabled: bool = False
+    provider: str = "deterministic_extractive"
+    style: str = "concise"
+    max_answer_characters: int = 12_000
+    max_statements: int = 20
+    minimum_supporting_sources: int = 1
+    require_citations: bool = True
+    fail_on_insufficient_evidence: bool = False
+    include_evidence: bool = True
+    include_retrieval_context: bool = False
+    include_diagnostics: bool = True
+    write_answer_artifact: bool = False
+    answer_filename: str = "repository-grounded-answer.json"
+    deterministic_extractive: KnowledgeAnsweringDeterministicExtractiveSettings = Field(
+        default_factory=KnowledgeAnsweringDeterministicExtractiveSettings
+    )
+
+    @field_validator("provider", "style", mode="before")
+    @classmethod
+    def normalize_tokens(cls, value: object) -> str:
+        return str(value).strip().lower()
+
+    @field_validator("provider")
+    @classmethod
+    def validate_provider(cls, value: str) -> str:
+        allowed = {
+            "deterministic",
+            "deterministic_extractive",
+            "bedrock",
+            "openai",
+            "anthropic",
+            "local_model",
+        }
+        if value not in allowed:
+            raise ValueError(
+                "knowledge.answering.provider must be one of "
+                f"{sorted(allowed)}"
+            )
+        return value
+
+    @field_validator("style")
+    @classmethod
+    def validate_style(cls, value: str) -> str:
+        allowed = {
+            "concise",
+            "detailed",
+            "findings_summary",
+            "recommendation_summary",
+            "architecture_explanation",
+            "evidence_only",
+        }
+        if value not in allowed:
+            raise ValueError(
+                "knowledge.answering.style must be one of "
+                f"{sorted(allowed)}"
+            )
+        return value
+
+    @field_validator(
+        "max_answer_characters",
+        "max_statements",
+        "minimum_supporting_sources",
+    )
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+    @field_validator("answer_filename")
+    @classmethod
+    def validate_filename(cls, value: str) -> str:
+        compact = value.strip()
+        if not compact or "/" in compact or "\\" in compact:
+            raise ValueError("answer_filename must be a basename without path separators")
         return compact
 
 
 class KnowledgeSettings(BaseModel):
-    """Local engineering knowledge store settings.
+    """Knowledge subsystem settings.
 
-    The knowledge store is independent of report retention under ``reports/``.
+    ``directory`` configures the Phase 2 engineering knowledge store (SQLite +
+    blobs). Phase 5 Repository Knowledge Layer settings:
+
+    * ``enabled`` — reserved overall gate (Phase 5.1)
+    * ``projection`` / ``chunking`` — Phase 5.2 document projection and chunking
+    * ``embedding`` / ``indexing`` — Phase 5.3 embed + vector upsert
+    * ``vector_store`` — memory or pgvector (Phase 5.4+)
+    * ``retrieval`` — grounded context retrieval (Phase 5.5; default off)
+    * ``answering`` — grounded answer engine (Phase 5.6; default off)
+
+    Independent of report retention under ``reports/``.
     """
 
     directory: Path = Path(".aimf/knowledge")
+    enabled: bool = False
+    projection: KnowledgeProjectionSettings = Field(
+        default_factory=KnowledgeProjectionSettings
+    )
+    chunking: KnowledgeChunkingSettings = Field(default_factory=KnowledgeChunkingSettings)
+    embedding: KnowledgeEmbeddingSettings = Field(
+        default_factory=KnowledgeEmbeddingSettings
+    )
+    indexing: KnowledgeIndexingSettings = Field(default_factory=KnowledgeIndexingSettings)
+    vector_store: KnowledgeVectorStoreSettings = Field(
+        default_factory=KnowledgeVectorStoreSettings
+    )
+    retrieval: KnowledgeRetrievalSettings = Field(
+        default_factory=KnowledgeRetrievalSettings
+    )
+    answering: KnowledgeAnsweringSettings = Field(
+        default_factory=KnowledgeAnsweringSettings
+    )
+
+
+class McpToolsSettings(BaseModel):
+    """Per-tool enablement for repository-intelligence MCP tools (Phase 5.7)."""
+
+    repository_search: bool = True
+    repository_answer: bool = True
+    repository_findings: bool = True
+    repository_recommendations: bool = True
+    repository_assessments: bool = True
+    repository_files: bool = True
+    repository_architecture: bool = True
+    repository_security: bool = True
+    repository_dependencies: bool = True
+    repository_tests: bool = True
+    repository_cloud: bool = True
+    repository_ai_readiness: bool = True
+    repository_performance: bool = True
+    repository_health: bool = True
 
 
 class McpSettings(BaseModel):
-    """Optional FastMCP server settings.
+    """FastMCP server settings (Phase 2C + Phase 5.7).
 
-    Omitted ``[mcp]`` sections use these defaults. The server is a local
-    developer tool (stdio); it is not intended for untrusted public exposure.
+    Defaults keep the server disabled and bound to localhost. Not intended for
+    untrusted public exposure or multi-user remote hosting in this phase.
     """
 
-    enabled: bool = True
+    enabled: bool = False
     transport: str = "stdio"
+    host: str = "127.0.0.1"
+    port: int = 8765
+    server_name: str = "codestrata"
+    server_version: str | None = None
+    max_result_characters: int = 50_000
+    include_diagnostics: bool = True
+    include_traceability: bool = True
+    allow_artifact_paths: bool = False
     log_level: str = "INFO"
+    tools: McpToolsSettings = Field(default_factory=McpToolsSettings)
 
     @field_validator("transport")
     @classmethod
     def validate_transport(cls, value: str) -> str:
         compact = value.strip().lower()
-        if compact != "stdio":
-            raise ValueError("mcp.transport currently supports only 'stdio'")
+        # Accept "http" as an alias for streamable-http.
+        if compact == "http":
+            return "streamable-http"
+        allowed = {"stdio", "sse", "streamable-http"}
+        if compact not in allowed:
+            raise ValueError(
+                "mcp.transport must be one of: stdio, streamable-http (http), sse"
+            )
         return compact
+
+    @field_validator("host", "server_name", mode="before")
+    @classmethod
+    def normalize_required_text(cls, value: object) -> str:
+        compact = str(value).strip()
+        if not compact:
+            raise ValueError("must be a nonempty string")
+        return compact
+
+    @field_validator("port")
+    @classmethod
+    def validate_port(cls, value: int) -> int:
+        if value < 1 or value > 65535:
+            raise ValueError("mcp.port must be between 1 and 65535")
+        return value
+
+    @field_validator("max_result_characters")
+    @classmethod
+    def validate_max_chars(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("mcp.max_result_characters must be positive")
+        return value
 
     @field_validator("log_level")
     @classmethod
@@ -773,6 +1295,72 @@ class TestingRulesSettings(BaseModel):
     test_005: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
 
 
+class CloudRulesSettings(BaseModel):
+    """Cloud Intelligence pack settings (disabled by default; Phase 4.7.3)."""
+
+    enabled: bool = False
+    cloud_001: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_002: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_010: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_011: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_020: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_021: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_030: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_040: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_050: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_060: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    cloud_061: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+
+
+class AiReadinessRulesSettings(BaseModel):
+    """AI Readiness Intelligence pack settings (disabled by default; Phase 4.8.3)."""
+
+    enabled: bool = False
+    ai_001: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_002: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_003: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_010: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_011: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_020: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_021: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_022: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_030: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_031: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_032: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_040: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_041: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_050: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_051: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_060: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    ai_061: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+
+
+class PerformanceRulesSettings(BaseModel):
+    """Performance Intelligence pack settings (disabled by default; Phase 4.9.3)."""
+
+    enabled: bool = False
+    perf_001: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_002: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_003: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_010: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_011: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_020: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_021: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_030: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_031: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_032: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_040: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_041: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_050: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_051: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_052: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_060: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_061: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_070: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_071: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+    perf_072: DependencyRuleToggle = Field(default_factory=DependencyRuleToggle)
+
+
 class RulesSettings(BaseModel):
     """Shared Rule Platform settings (disabled by default; Phase 4.1)."""
 
@@ -790,6 +1378,13 @@ class RulesSettings(BaseModel):
     dependency: DependencyRulesSettings = Field(default_factory=DependencyRulesSettings)
     security: SecurityRulesSettings = Field(default_factory=SecurityRulesSettings)
     testing: TestingRulesSettings = Field(default_factory=TestingRulesSettings)
+    cloud: CloudRulesSettings = Field(default_factory=CloudRulesSettings)
+    ai_readiness: AiReadinessRulesSettings = Field(
+        default_factory=AiReadinessRulesSettings
+    )
+    performance: PerformanceRulesSettings = Field(
+        default_factory=PerformanceRulesSettings
+    )
 
     @field_validator(
         "max_rules_per_run",
@@ -825,6 +1420,9 @@ class RulesSettings(BaseModel):
         _ = self.dependency
         _ = self.security
         _ = self.testing
+        _ = self.cloud
+        _ = self.ai_readiness
+        _ = self.performance
         return self
 
 
@@ -1026,6 +1624,117 @@ class RepositoryTestingEvidenceSettings(BaseModel):
         return value
 
 
+class RepositoryCloudEvidenceSettings(BaseModel):
+    """Repository-observable cloud technology evidence (Phase 4.7.2).
+
+    Platform evidence — not owned by Cloud Intelligence. Disabled by default.
+    Collects technology and deployment signals only; no Findings or readiness.
+    """
+
+    enabled: bool = False
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    max_file_bytes: int = 2_000_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+            "/reports/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars", "max_file_bytes")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("repository-cloud evidence bounds must be positive")
+        return value
+
+
+class RepositoryAiReadinessEvidenceSettings(BaseModel):
+    """Repository-observable AI-readiness evidence (Phase 4.8.2).
+
+    Platform evidence — not owned by AI Readiness Intelligence. Disabled by
+    default. Collects readiness signals only; no Findings or readiness scores.
+    """
+
+    enabled: bool = False
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    max_file_bytes: int = 2_000_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+            "/reports/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars", "max_file_bytes")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("repository-ai-readiness evidence bounds must be positive")
+        return value
+
+
+class RepositoryPerformanceEvidenceSettings(BaseModel):
+    """Repository-observable performance evidence (Phase 4.9.2).
+
+    Platform evidence — not owned by Performance Intelligence. Disabled by
+    default. Collects performance signals only; no Findings or performance scores.
+    """
+
+    enabled: bool = False
+    max_files: int = 500
+    max_file_chars: int = 500_000
+    max_file_bytes: int = 2_000_000
+    ignore_path_markers: list[str] = Field(
+        default_factory=lambda: [
+            "/generated/",
+            "/.generated/",
+            "/vendor/",
+            "/.aimf/",
+            "/node_modules/",
+            "/.git/",
+            "/target/",
+            "/dist/",
+            "/build/",
+            "/.venv/",
+            "/venv/",
+            "/__pycache__/",
+            "/reports/",
+        ]
+    )
+
+    @field_validator("max_files", "max_file_chars", "max_file_bytes")
+    @classmethod
+    def validate_positive_bounds(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("repository-performance evidence bounds must be positive")
+        return value
+
+
 class EvidenceSettings(BaseModel):
     """Evidence collection settings."""
 
@@ -1041,6 +1750,15 @@ class EvidenceSettings(BaseModel):
     )
     repository_testing: RepositoryTestingEvidenceSettings = Field(
         default_factory=RepositoryTestingEvidenceSettings
+    )
+    repository_cloud: RepositoryCloudEvidenceSettings = Field(
+        default_factory=RepositoryCloudEvidenceSettings
+    )
+    repository_ai_readiness: RepositoryAiReadinessEvidenceSettings = Field(
+        default_factory=RepositoryAiReadinessEvidenceSettings
+    )
+    repository_performance: RepositoryPerformanceEvidenceSettings = Field(
+        default_factory=RepositoryPerformanceEvidenceSettings
     )
 
 
@@ -1074,11 +1792,54 @@ class ArchitectureConclusionsSettings(BaseModel):
     )
 
 
+class CloudAnalysisSettings(BaseModel):
+    """Cloud Intelligence analysis gate (disabled by default; Phase 4.7.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+    include_synthesis: bool = True
+
+
+class AiReadinessAnalysisSettings(BaseModel):
+    """AI Readiness Intelligence analysis gate (disabled by default; Phase 4.8.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+    include_synthesis: bool = True
+
+
+class PerformanceAnalysisSettings(BaseModel):
+    """Performance Intelligence analysis gate (disabled by default; Phase 4.9.1)."""
+
+    enabled: bool = False
+    include_findings: bool = True
+    include_coverage: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+    include_execution_summary: bool = True
+    include_synthesis: bool = True
+
+
 class AnalysisSettings(BaseModel):
     """Analysis enrichment settings (optional layers)."""
 
     architecture_conclusions: ArchitectureConclusionsSettings = Field(
         default_factory=ArchitectureConclusionsSettings
+    )
+    cloud: CloudAnalysisSettings = Field(default_factory=CloudAnalysisSettings)
+    ai_readiness: AiReadinessAnalysisSettings = Field(
+        default_factory=AiReadinessAnalysisSettings
+    )
+    performance: PerformanceAnalysisSettings = Field(
+        default_factory=PerformanceAnalysisSettings
     )
 
 
@@ -1140,6 +1901,7 @@ class TestingAssessmentSectionSettings(BaseModel):
     include_limitations: bool = True
     include_traceability: bool = True
     include_execution_summary: bool = True
+    include_synthesis: bool = True
 
 
 class AssessmentSectionsSettings(BaseModel):
@@ -1231,6 +1993,82 @@ class SecurityReportSectionSettings(BaseModel):
     include_traceability: bool = True
 
 
+class TestingReportSectionSettings(BaseModel):
+    """Test section in HTML/JSON reports (disabled by default; Phase 4.6.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_coverage: bool = True
+    include_inventory: bool = True
+    include_execution_summary: bool = True
+    include_themes: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_diagnostics: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
+class CloudReportSectionSettings(BaseModel):
+    """Cloud section in HTML/JSON reports (disabled by default; Phase 4.7.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_coverage: bool = True
+    include_inventory: bool = True
+    include_execution_summary: bool = True
+    include_themes: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_findings: bool = True
+    include_diagnostics: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
+class AiReadinessReportSectionSettings(BaseModel):
+    """AI Readiness section in HTML/JSON reports (disabled by default; Phase 4.8.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_coverage: bool = True
+    include_inventory: bool = True
+    include_execution_summary: bool = True
+    include_themes: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_findings: bool = True
+    include_diagnostics: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
+class PerformanceReportSectionSettings(BaseModel):
+    """Performance section in HTML/JSON reports (disabled by default; Phase 4.9.6)."""
+
+    enabled: bool = False
+    include_executive_summary: bool = True
+    include_coverage: bool = True
+    include_inventory: bool = True
+    include_execution_summary: bool = True
+    include_themes: bool = True
+    include_conclusions: bool = True
+    include_recommendations: bool = True
+    include_findings: bool = True
+    include_diagnostics: bool = True
+    include_limitations: bool = True
+    include_traceability: bool = True
+
+
+class RoadmapReportSectionSettings(BaseModel):
+    """Modernization roadmap section in HTML/JSON reports (disabled by default; Phase 5.10)."""
+
+    enabled: bool = False
+    include_assumptions: bool = True
+    include_limitations: bool = True
+    include_evidence: bool = True
+
+
 class ReportSectionsSettings(BaseModel):
     architecture: ArchitectureReportSectionSettings = Field(
         default_factory=ArchitectureReportSectionSettings
@@ -1243,6 +2081,19 @@ class ReportSectionsSettings(BaseModel):
     )
     security: SecurityReportSectionSettings = Field(
         default_factory=SecurityReportSectionSettings
+    )
+    testing: TestingReportSectionSettings = Field(
+        default_factory=TestingReportSectionSettings
+    )
+    cloud: CloudReportSectionSettings = Field(default_factory=CloudReportSectionSettings)
+    ai_readiness: AiReadinessReportSectionSettings = Field(
+        default_factory=AiReadinessReportSectionSettings
+    )
+    performance: PerformanceReportSectionSettings = Field(
+        default_factory=PerformanceReportSectionSettings
+    )
+    roadmap: RoadmapReportSectionSettings = Field(
+        default_factory=RoadmapReportSectionSettings
     )
 
 

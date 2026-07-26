@@ -121,6 +121,12 @@ class RuleExecutionContext(BaseModel):
     repository_sensitive_evidence: Any | None = None
     # Optional AggregatedRepositoryTestingEvidence for Test Intelligence (Phase 4.6.3).
     repository_testing_evidence: Any | None = None
+    # Optional AggregatedRepositoryCloudEvidence for Cloud Intelligence (Phase 4.7.3).
+    repository_cloud_evidence: Any | None = None
+    # Optional AggregatedRepositoryAiReadinessEvidence for AI Readiness (Phase 4.8.3).
+    repository_ai_readiness_evidence: Any | None = None
+    # Optional AggregatedRepositoryPerformanceEvidence for Performance (Phase 4.9.3).
+    repository_performance_evidence: Any | None = None
     incremental: IncrementalChangeView = Field(default_factory=IncrementalChangeView)
     policy: RuleExecutionPolicy = Field(default_factory=RuleExecutionPolicy)
     provenance: dict[str, str] = Field(default_factory=dict)

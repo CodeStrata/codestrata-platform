@@ -180,12 +180,45 @@ class AssessmentCommandResult(BaseModel):
         default=None, ge=0
     )
     repository_testing_evidence_artifact_path: Path | None = None
+    repository_cloud_evidence_status: str | None = None
+    repository_cloud_evidence_candidate_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_cloud_evidence_technology_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_cloud_evidence_artifact_path: Path | None = None
+    repository_ai_readiness_evidence_status: str | None = None
+    repository_ai_readiness_evidence_candidate_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_ai_readiness_evidence_technology_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_ai_readiness_evidence_artifact_path: Path | None = None
+    repository_performance_evidence_status: str | None = None
+    repository_performance_evidence_candidate_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_performance_evidence_technology_count: int | None = Field(
+        default=None, ge=0
+    )
+    repository_performance_evidence_artifact_path: Path | None = None
     security_assessment_status: str | None = None
     security_assessment_finding_count: int | None = Field(default=None, ge=0)
     security_assessment_artifact_path: Path | None = None
     testing_assessment_status: str | None = None
     testing_assessment_finding_count: int | None = Field(default=None, ge=0)
     testing_assessment_artifact_path: Path | None = None
+    cloud_assessment_status: str | None = None
+    cloud_assessment_finding_count: int | None = Field(default=None, ge=0)
+    cloud_assessment_artifact_path: Path | None = None
+    ai_readiness_assessment_status: str | None = None
+    ai_readiness_assessment_finding_count: int | None = Field(default=None, ge=0)
+    ai_readiness_assessment_artifact_path: Path | None = None
+    performance_assessment_status: str | None = None
+    performance_assessment_finding_count: int | None = Field(default=None, ge=0)
+    performance_assessment_artifact_path: Path | None = None
     architecture_report_enabled: bool | None = None
     architecture_report_status: str | None = None
     architecture_report_section_version: str | None = None
@@ -216,9 +249,47 @@ class AssessmentCommandResult(BaseModel):
     security_report_conclusion_count: int | None = Field(default=None, ge=0)
     security_report_hotspot_count: int | None = Field(default=None, ge=0)
     security_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    testing_report_enabled: bool | None = None
+    testing_report_status: str | None = None
+    testing_report_section_version: str | None = None
+    testing_report_finding_count: int | None = Field(default=None, ge=0)
+    testing_report_conclusion_count: int | None = Field(default=None, ge=0)
+    testing_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    cloud_report_enabled: bool | None = None
+    cloud_report_status: str | None = None
+    cloud_report_section_version: str | None = None
+    cloud_report_finding_count: int | None = Field(default=None, ge=0)
+    cloud_report_conclusion_count: int | None = Field(default=None, ge=0)
+    cloud_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    ai_readiness_report_enabled: bool | None = None
+    ai_readiness_report_status: str | None = None
+    ai_readiness_report_section_version: str | None = None
+    ai_readiness_report_finding_count: int | None = Field(default=None, ge=0)
+    ai_readiness_report_conclusion_count: int | None = Field(default=None, ge=0)
+    ai_readiness_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    performance_report_enabled: bool | None = None
+    performance_report_status: str | None = None
+    performance_report_section_version: str | None = None
+    performance_report_finding_count: int | None = Field(default=None, ge=0)
+    performance_report_conclusion_count: int | None = Field(default=None, ge=0)
+    performance_report_adapter_ms: float | None = Field(default=None, ge=0.0)
+    roadmap_report_enabled: bool | None = None
+    roadmap_report_status: str | None = None
+    roadmap_report_section_version: str | None = None
+    roadmap_report_initiative_count: int | None = Field(default=None, ge=0)
+    roadmap_report_phase_count: int | None = Field(default=None, ge=0)
+    roadmap_report_adapter_ms: float | None = Field(default=None, ge=0.0)
     knowledge_repository_id: str | None = None
     knowledge_run_id: str | None = None
     knowledge_snapshot_id: str | None = None
+    knowledge_corpus_id: str | None = None
+    knowledge_document_count: int | None = Field(default=None, ge=0)
+    knowledge_chunk_count: int | None = Field(default=None, ge=0)
+    knowledge_corpus_artifact_path: Path | None = None
+    knowledge_index_status: str | None = None
+    knowledge_vector_count: int | None = Field(default=None, ge=0)
+    knowledge_index_artifact_path: Path | None = None
+    knowledge_index_fingerprint: str | None = None
 
     @model_validator(mode="after")
     def populate_report_path_alias(self) -> AssessmentCommandResult:
@@ -275,6 +346,8 @@ class AssessmentApplicationService:
         verbose: bool = False,
         knowledge_store: KnowledgeStore | None = None,
         scanned_repository: Repository | None = None,
+        write_reports: bool = True,
+        force_reindex: bool = False,
     ) -> AssessmentCommandResult:
         """Orchestrate scan → analysis → graph pipeline → optional AI → HTML+JSON reports.
 
@@ -287,6 +360,9 @@ class AssessmentApplicationService:
 
         When ``scanned_repository`` is provided, the scan stage is skipped and that
         repository object is used (Phase 2F.2 incremental stage rebuild).
+
+        ``write_reports`` controls HTML/JSON report file writes (onboarding may skip).
+        ``force_reindex`` clears the vector-store scope before indexing when enabled.
         """
 
         active_console = console or Console(stderr=False)
@@ -400,6 +476,8 @@ class AssessmentApplicationService:
                         warn=warn,
                         verbose=verbose,
                         knowledge_session=knowledge_session,
+                        write_reports=write_reports,
+                        force_reindex=force_reindex,
                     )
                 except AssessmentCommandError as error:
                     knowledge_session.fail(
@@ -537,6 +615,8 @@ class AssessmentApplicationService:
         warn: Callable[[str], None],
         verbose: bool,
         knowledge_session: AssessmentKnowledgeSession,
+        write_reports: bool = True,
+        force_reindex: bool = False,
     ) -> AssessmentCommandResult:
         stage("Detecting technologies")
         stage("Running deterministic analysis")
@@ -624,6 +704,7 @@ class AssessmentApplicationService:
         dependency_evidence_artifact = None
         dependency_evidence_status = None
         dependency_evidence_declaration_count = None
+        dependency_evidence = None
         repository_sensitive_evidence_artifact = None
         repository_sensitive_evidence_status = None
         repository_sensitive_evidence_artifact_count = None
@@ -634,9 +715,25 @@ class AssessmentApplicationService:
         repository_testing_evidence_candidate_count = None
         repository_testing_evidence_framework_count = None
         repository_testing_evidence = None
+        repository_cloud_evidence_artifact = None
+        repository_cloud_evidence_status = None
+        repository_cloud_evidence_candidate_count = None
+        repository_cloud_evidence_technology_count = None
+        repository_cloud_evidence = None
+        repository_ai_readiness_evidence_artifact = None
+        repository_ai_readiness_evidence_status = None
+        repository_ai_readiness_evidence_candidate_count = None
+        repository_ai_readiness_evidence_technology_count = None
+        repository_ai_readiness_evidence = None
+        repository_performance_evidence_artifact = None
+        repository_performance_evidence_status = None
+        repository_performance_evidence_candidate_count = None
+        repository_performance_evidence_technology_count = None
+        repository_performance_evidence = None
         dependency_pack_result = None
         security_pack_result = None
         testing_pack_result = None
+        cloud_pack_result = None
         try:
             rule_evaluation = active_rule_engine.evaluate_pipeline_result(graph_pipeline_result)
             from aimf.application.rules.architecture.assessment import (
@@ -1370,6 +1467,332 @@ class AssessmentApplicationService:
                 f"Details: {sanitize_provider_text(str(error))}"
             )
 
+        # Phase 4.7.2 — repository-cloud evidence (technology/deployment signals only).
+        try:
+            from aimf.application.evidence.repository_cloud.artifacts import (
+                write_repository_cloud_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_cloud.io import (
+                load_repository_cloud_inputs,
+            )
+            from aimf.application.evidence.repository_cloud.service import (
+                create_repository_cloud_evidence_service,
+                repository_cloud_evidence_collection_enabled,
+            )
+
+            if repository_cloud_evidence_collection_enabled(loaded_settings):
+                rc_settings = loaded_settings.evidence.repository_cloud
+                rc_service = create_repository_cloud_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                if not inventory_paths:
+                    from aimf.application.evidence.repository_cloud.limitations import (
+                        standard_limitations,
+                    )
+                    from aimf.domain.evidence.repository_cloud.enums import (
+                        RepositoryCloudParseStatus,
+                    )
+                    from aimf.domain.evidence.repository_cloud.identifiers import (
+                        make_bundle_id,
+                    )
+                    from aimf.domain.evidence.repository_cloud.models import (
+                        AggregatedRepositoryCloudEvidence,
+                    )
+
+                    repo_id = str(
+                        getattr(repository, "name", None) or repository.path
+                    )
+                    repository_cloud_evidence = AggregatedRepositoryCloudEvidence(
+                        bundle_id=make_bundle_id(
+                            repository_id=repo_id, fingerprint="insufficient"
+                        ),
+                        repository_id=repo_id,
+                        status=RepositoryCloudParseStatus.INSUFFICIENT_EVIDENCE,
+                        limitations=standard_limitations(),
+                        evidence_fingerprint="insufficient",
+                    )
+                else:
+                    _rc_meta, rc_texts, rc_load_errors = (
+                        load_repository_cloud_inputs(
+                            relative_paths=inventory_paths,
+                            repository_root=Path(repository.path),
+                            ignore_path_markers=rc_settings.ignore_path_markers,
+                            max_files=rc_settings.max_files,
+                            max_file_chars=rc_settings.max_file_chars,
+                            max_file_bytes=rc_settings.max_file_bytes,
+                        )
+                    )
+                    repository_cloud_evidence = rc_service.collect(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        relative_paths=inventory_paths,
+                        file_texts=rc_texts,
+                        load_errors=rc_load_errors,
+                        configuration_fingerprint=(
+                            f"evidence.repository_cloud.enabled="
+                            f"{rc_settings.enabled}"
+                        ),
+                    )
+                rc_write = write_repository_cloud_evidence_artifact(
+                    repository_cloud_evidence,
+                    report_paths.run_directory,
+                )
+                repository_cloud_evidence_artifact = rc_write.path
+                repository_cloud_evidence_status = (
+                    repository_cloud_evidence.status.value
+                )
+                repository_cloud_evidence_candidate_count = rc_write.candidate_count
+                repository_cloud_evidence_technology_count = rc_write.technology_count
+        except Exception as error:  # noqa: BLE001 - isolate evidence failures
+            repository_cloud_evidence_artifact = None
+            repository_cloud_evidence_status = "failed"
+            repository_cloud_evidence_candidate_count = None
+            repository_cloud_evidence_technology_count = None
+            repository_cloud_evidence = None
+            warn(
+                "Repository-cloud evidence could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.8.2 — repository AI-readiness evidence (signals only).
+        try:
+            from aimf.application.evidence.repository_ai_readiness.artifacts import (
+                write_repository_ai_readiness_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_ai_readiness.io import (
+                load_repository_ai_readiness_inputs,
+            )
+            from aimf.application.evidence.repository_ai_readiness.service import (
+                create_repository_ai_readiness_evidence_service,
+                repository_ai_readiness_evidence_collection_enabled,
+            )
+
+            if repository_ai_readiness_evidence_collection_enabled(loaded_settings):
+                rar_settings = loaded_settings.evidence.repository_ai_readiness
+                rar_service = create_repository_ai_readiness_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                if not inventory_paths:
+                    from aimf.application.evidence.repository_ai_readiness.limitations import (
+                        standard_limitations,
+                    )
+                    from aimf.domain.evidence.repository_ai_readiness.enums import (
+                        RepositoryAiReadinessParseStatus,
+                    )
+                    from aimf.domain.evidence.repository_ai_readiness.identifiers import (
+                        make_bundle_id,
+                    )
+                    from aimf.domain.evidence.repository_ai_readiness.models import (
+                        AggregatedRepositoryAiReadinessEvidence,
+                    )
+
+                    repo_id = str(
+                        getattr(repository, "name", None) or repository.path
+                    )
+                    repository_ai_readiness_evidence = (
+                        AggregatedRepositoryAiReadinessEvidence(
+                            bundle_id=make_bundle_id(
+                                repository_id=repo_id, fingerprint="insufficient"
+                            ),
+                            repository_id=repo_id,
+                            status=RepositoryAiReadinessParseStatus.INSUFFICIENT_EVIDENCE,
+                            limitations=standard_limitations(),
+                            evidence_fingerprint="insufficient",
+                        )
+                    )
+                else:
+                    _rar_meta, rar_texts, rar_load_errors = (
+                        load_repository_ai_readiness_inputs(
+                            relative_paths=inventory_paths,
+                            repository_root=Path(repository.path),
+                            ignore_path_markers=rar_settings.ignore_path_markers,
+                            max_files=rar_settings.max_files,
+                            max_file_chars=rar_settings.max_file_chars,
+                            max_file_bytes=rar_settings.max_file_bytes,
+                        )
+                    )
+                    repository_ai_readiness_evidence = rar_service.collect(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        relative_paths=inventory_paths,
+                        file_texts=rar_texts,
+                        load_errors=rar_load_errors,
+                        configuration_fingerprint=(
+                            f"evidence.repository_ai_readiness.enabled="
+                            f"{rar_settings.enabled}"
+                        ),
+                    )
+                rar_write = write_repository_ai_readiness_evidence_artifact(
+                    repository_ai_readiness_evidence,
+                    report_paths.run_directory,
+                )
+                repository_ai_readiness_evidence_artifact = rar_write.path
+                repository_ai_readiness_evidence_status = (
+                    repository_ai_readiness_evidence.status.value
+                )
+                repository_ai_readiness_evidence_candidate_count = (
+                    rar_write.candidate_count
+                )
+                repository_ai_readiness_evidence_technology_count = (
+                    rar_write.technology_count
+                )
+        except Exception as error:  # noqa: BLE001 - isolate evidence failures
+            repository_ai_readiness_evidence_artifact = None
+            repository_ai_readiness_evidence_status = "failed"
+            repository_ai_readiness_evidence_candidate_count = None
+            repository_ai_readiness_evidence_technology_count = None
+            repository_ai_readiness_evidence = None
+            warn(
+                "Repository AI-readiness evidence could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.9.2 — repository performance evidence (signals only).
+        try:
+            from aimf.application.evidence.repository_performance.artifacts import (
+                write_repository_performance_evidence_artifact,
+            )
+            from aimf.application.evidence.repository_performance.io import (
+                load_repository_performance_inputs,
+            )
+            from aimf.application.evidence.repository_performance.service import (
+                create_repository_performance_evidence_service,
+                repository_performance_evidence_collection_enabled,
+            )
+
+            if repository_performance_evidence_collection_enabled(loaded_settings):
+                rpe_settings = loaded_settings.evidence.repository_performance
+                rpe_service = create_repository_performance_evidence_service(
+                    loaded_settings
+                )
+                inventory_paths = tuple(
+                    str(path)
+                    for path in getattr(repository, "files", ()) or ()
+                )
+                if not inventory_paths:
+                    from aimf.application.evidence.repository_performance.limitations import (
+                        standard_limitations,
+                    )
+                    from aimf.domain.evidence.repository_performance.enums import (
+                        RepositoryPerformanceParseStatus,
+                    )
+                    from aimf.domain.evidence.repository_performance.identifiers import (
+                        make_bundle_id,
+                    )
+                    from aimf.domain.evidence.repository_performance.models import (
+                        AggregatedRepositoryPerformanceEvidence,
+                    )
+
+                    repo_id = str(
+                        getattr(repository, "name", None) or repository.path
+                    )
+                    repository_performance_evidence = (
+                        AggregatedRepositoryPerformanceEvidence(
+                            bundle_id=make_bundle_id(
+                                repository_id=repo_id, fingerprint="insufficient"
+                            ),
+                            repository_id=repo_id,
+                            status=RepositoryPerformanceParseStatus.INSUFFICIENT_EVIDENCE,
+                            limitations=standard_limitations(),
+                            evidence_fingerprint="insufficient",
+                        )
+                    )
+                else:
+                    _rpe_meta, rpe_texts, rpe_load_errors = (
+                        load_repository_performance_inputs(
+                            relative_paths=inventory_paths,
+                            repository_root=Path(repository.path),
+                            ignore_path_markers=rpe_settings.ignore_path_markers,
+                            max_files=rpe_settings.max_files,
+                            max_file_chars=rpe_settings.max_file_chars,
+                            max_file_bytes=rpe_settings.max_file_bytes,
+                        )
+                    )
+                    repository_performance_evidence = rpe_service.collect(
+                        repository_id=str(
+                            getattr(repository, "name", None) or repository.path
+                        ),
+                        relative_paths=inventory_paths,
+                        file_texts=rpe_texts,
+                        load_errors=rpe_load_errors,
+                        configuration_fingerprint=(
+                            f"evidence.repository_performance.enabled="
+                            f"{rpe_settings.enabled}"
+                        ),
+                    )
+                rpe_write = write_repository_performance_evidence_artifact(
+                    repository_performance_evidence,
+                    report_paths.run_directory,
+                )
+                repository_performance_evidence_artifact = rpe_write.path
+                repository_performance_evidence_status = (
+                    repository_performance_evidence.status.value
+                )
+                repository_performance_evidence_candidate_count = (
+                    rpe_write.candidate_count
+                )
+                repository_performance_evidence_technology_count = (
+                    rpe_write.technology_count
+                )
+        except Exception as error:  # noqa: BLE001 - isolate evidence failures
+            repository_performance_evidence_artifact = None
+            repository_performance_evidence_status = "failed"
+            repository_performance_evidence_candidate_count = None
+            repository_performance_evidence_technology_count = None
+            repository_performance_evidence = None
+            warn(
+                "Repository performance evidence could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.7.3 — Cloud Hygiene rules against in-memory repository-cloud evidence.
+        cloud_pack_result = None
+        try:
+            from aimf.application.cloud.assessment.factory import (
+                cloud_pack_enabled as cloud_rules_pack_enabled,
+            )
+            from aimf.application.rules.architecture.assessment import (
+                merge_rule_evaluations,
+            )
+            from aimf.application.rules.cloud.assessment import (
+                evaluate_cloud_pack_detailed,
+            )
+
+            if cloud_rules_pack_enabled(loaded_settings):
+                cloud_pack_result = evaluate_cloud_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_cloud_evidence=repository_cloud_evidence,
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    cloud_pack_result.evaluation,
+                )
+                findings_artifact = write_findings_artifact(
+                    rule_evaluation,
+                    report_paths.run_directory,
+                )
+        except Exception as error:  # noqa: BLE001 - isolate cloud rule failures
+            cloud_pack_result = None
+            warn(
+                "Cloud Hygiene rules could not be evaluated; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         # Phase 4.6.3 — Test Hygiene rules against in-memory repository-testing evidence.
         testing_pack_result = None
         try:
@@ -1401,6 +1824,76 @@ class AssessmentApplicationService:
             testing_pack_result = None
             warn(
                 "Test Hygiene rules could not be evaluated; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.8.3 — AI Readiness Hygiene rules against in-memory evidence.
+        ai_readiness_pack_result = None
+        try:
+            from aimf.application.ai_readiness.assessment.factory import (
+                ai_readiness_pack_enabled as ai_readiness_rules_pack_enabled,
+            )
+            from aimf.application.rules.ai_readiness.assessment import (
+                evaluate_ai_readiness_pack_detailed,
+            )
+            from aimf.application.rules.architecture.assessment import (
+                merge_rule_evaluations,
+            )
+
+            if ai_readiness_rules_pack_enabled(loaded_settings):
+                ai_readiness_pack_result = evaluate_ai_readiness_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_ai_readiness_evidence=repository_ai_readiness_evidence,
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    ai_readiness_pack_result.evaluation,
+                )
+                findings_artifact = write_findings_artifact(
+                    rule_evaluation,
+                    report_paths.run_directory,
+                )
+        except Exception as error:  # noqa: BLE001 - isolate AI readiness rule failures
+            ai_readiness_pack_result = None
+            warn(
+                "AI Readiness Hygiene rules could not be evaluated; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.9.3 — Performance Hygiene rules against in-memory evidence.
+        performance_pack_result = None
+        try:
+            from aimf.application.performance.assessment.factory import (
+                performance_pack_enabled as performance_rules_pack_enabled,
+            )
+            from aimf.application.rules.architecture.assessment import (
+                merge_rule_evaluations,
+            )
+            from aimf.application.rules.performance.assessment import (
+                evaluate_performance_pack_detailed,
+            )
+
+            if performance_rules_pack_enabled(loaded_settings):
+                performance_pack_result = evaluate_performance_pack_detailed(
+                    pipeline_result=graph_pipeline_result,
+                    settings=loaded_settings,
+                    repository_performance_evidence=repository_performance_evidence,
+                )
+                rule_evaluation = merge_rule_evaluations(
+                    rule_evaluation,
+                    performance_pack_result.evaluation,
+                )
+                findings_artifact = write_findings_artifact(
+                    rule_evaluation,
+                    report_paths.run_directory,
+                )
+        except Exception as error:  # noqa: BLE001 - isolate performance rule failures
+            performance_pack_result = None
+            warn(
+                "Performance Hygiene rules could not be evaluated; "
                 "remaining assessment content was kept. "
                 f"Details: {sanitize_provider_text(str(error))}"
             )
@@ -1530,6 +2023,7 @@ class AssessmentApplicationService:
         testing_assessment_artifact = None
         testing_assessment_status = None
         testing_assessment_finding_count = None
+        testing_section_for_report = None
         try:
             from aimf.application.testing.assessment.artifacts import (
                 write_testing_assessment_artifact,
@@ -1587,6 +2081,11 @@ class AssessmentApplicationService:
                         rules_not_matched=not_matched,
                         rules_not_applicable=not_applicable,
                         rules_failed=failed,
+                        rule_execution_facts=(
+                            testing_pack_result.rule_execution_facts
+                            if testing_pack_result is not None
+                            else ()
+                        ),
                         evidence_pipeline=(
                             testing_pack_result.evidence_pipeline
                             if testing_pack_result is not None
@@ -1620,6 +2119,7 @@ class AssessmentApplicationService:
                         include_limitations=test_cfg.include_limitations,
                         include_traceability=test_cfg.include_traceability,
                         include_execution_summary=test_cfg.include_execution_summary,
+                        include_synthesis=test_cfg.include_synthesis,
                     )
                 test_write = write_testing_assessment_artifact(
                     testing_section,
@@ -1628,12 +2128,374 @@ class AssessmentApplicationService:
                 testing_assessment_artifact = test_write.path
                 testing_assessment_status = testing_section.status.value
                 testing_assessment_finding_count = test_write.finding_count
+                testing_section_for_report = testing_section
         except Exception as error:  # noqa: BLE001 - isolate testing failures
             testing_assessment_artifact = None
             testing_assessment_status = "failed"
             testing_assessment_finding_count = None
+            testing_section_for_report = None
             warn(
                 "Test assessment could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.7.4 — Cloud Intelligence assessment inventory.
+        cloud_assessment_artifact = None
+        cloud_assessment_status = None
+        cloud_assessment_finding_count = None
+        cloud_section_for_report = None
+        try:
+            from aimf.application.cloud.assessment.artifacts import (
+                write_cloud_assessment_artifact,
+            )
+            from aimf.application.cloud.assessment.factory import (
+                cloud_analysis_enabled,
+                cloud_analysis_settings,
+                cloud_pack_enabled,
+                create_cloud_assessment_assembler,
+            )
+            from aimf.domain.cloud.ids import HYGIENE_RULE_IDS
+
+            if cloud_analysis_enabled(loaded_settings):
+                cloud_assembler = create_cloud_assessment_assembler()
+                repo_id = str(getattr(repository, "name", None) or repository.path)
+                cloud_cfg = cloud_analysis_settings(loaded_settings)
+                pack_on = cloud_pack_enabled(loaded_settings)
+                if not pack_on:
+                    cloud_section = cloud_assembler.assemble_disabled(
+                        repository_id=repo_id,
+                        reason="cloud_pack_disabled",
+                    )
+                else:
+                    pack_findings = (
+                        cloud_pack_result.evaluation.findings
+                        if cloud_pack_result is not None
+                        else ()
+                    )
+                    executed = 0
+                    matched = 0
+                    not_matched = 0
+                    not_applicable = 0
+                    failed = 0
+                    if cloud_pack_result is not None:
+                        for fact in cloud_pack_result.rule_execution_facts:
+                            if fact.executed:
+                                executed += 1
+                            status = fact.evaluation_status
+                            if status == "matched":
+                                matched += 1
+                            elif status == "not_matched":
+                                not_matched += 1
+                            elif status == "not_applicable":
+                                not_applicable += 1
+                            elif status == "failed":
+                                failed += 1
+                    cloud_section = cloud_assembler.assemble(
+                        repository_id=repo_id,
+                        findings=pack_findings,
+                        pack_enabled=True,
+                        rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=not_matched,
+                        rules_not_applicable=not_applicable,
+                        rules_failed=failed,
+                        rule_execution_facts=(
+                            cloud_pack_result.rule_execution_facts
+                            if cloud_pack_result is not None
+                            else ()
+                        ),
+                        evidence_pipeline=(
+                            cloud_pack_result.evidence_pipeline
+                            if cloud_pack_result is not None
+                            else (
+                                "repository_cloud"
+                                if repository_cloud_evidence is not None
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            cloud_pack_result.evidence_fingerprint
+                            if cloud_pack_result is not None
+                            else (
+                                repository_cloud_evidence.evidence_fingerprint
+                                if repository_cloud_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=(
+                            f"rules.cloud.enabled=true|"
+                            f"evidence.repository_cloud.enabled="
+                            f"{loaded_settings.evidence.repository_cloud.enabled}"
+                        ),
+                        diagnostics=(
+                            cloud_pack_result.diagnostics
+                            if cloud_pack_result is not None
+                            else ()
+                        ),
+                        include_findings=cloud_cfg.include_findings,
+                        include_coverage=cloud_cfg.include_coverage,
+                        include_limitations=cloud_cfg.include_limitations,
+                        include_traceability=cloud_cfg.include_traceability,
+                        include_execution_summary=cloud_cfg.include_execution_summary,
+                        include_synthesis=cloud_cfg.include_synthesis,
+                    )
+                cloud_write = write_cloud_assessment_artifact(
+                    cloud_section,
+                    report_paths.run_directory,
+                )
+                cloud_assessment_artifact = cloud_write.path
+                cloud_assessment_status = cloud_section.status.value
+                cloud_assessment_finding_count = cloud_write.finding_count
+                cloud_section_for_report = cloud_section
+        except Exception as error:  # noqa: BLE001 - isolate cloud failures
+            cloud_assessment_artifact = None
+            cloud_assessment_status = "failed"
+            cloud_assessment_finding_count = None
+            cloud_section_for_report = None
+            warn(
+                "Cloud assessment could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.8.4 — AI Readiness Intelligence inventory (+ synthesis when enabled).
+        ai_readiness_assessment_artifact = None
+        ai_readiness_assessment_status = None
+        ai_readiness_assessment_finding_count = None
+        ai_readiness_section_for_report = None
+        try:
+            from aimf.application.ai_readiness.assessment.artifacts import (
+                write_ai_readiness_assessment_artifact,
+            )
+            from aimf.application.ai_readiness.assessment.factory import (
+                ai_readiness_analysis_enabled,
+                ai_readiness_analysis_settings,
+                ai_readiness_pack_enabled,
+                create_ai_readiness_assessment_assembler,
+            )
+            from aimf.domain.ai_readiness.ids import HYGIENE_RULE_IDS
+
+            if ai_readiness_analysis_enabled(loaded_settings):
+                ai_readiness_assembler = create_ai_readiness_assessment_assembler()
+                repo_id = str(getattr(repository, "name", None) or repository.path)
+                ai_readiness_cfg = ai_readiness_analysis_settings(loaded_settings)
+                pack_on = ai_readiness_pack_enabled(loaded_settings)
+                if not pack_on:
+                    ai_readiness_section = ai_readiness_assembler.assemble_disabled(
+                        repository_id=repo_id,
+                        reason="ai_readiness_pack_disabled",
+                    )
+                else:
+                    pack_findings = (
+                        ai_readiness_pack_result.evaluation.findings
+                        if ai_readiness_pack_result is not None
+                        else ()
+                    )
+                    executed = 0
+                    matched = 0
+                    not_matched = 0
+                    not_applicable = 0
+                    failed = 0
+                    if ai_readiness_pack_result is not None:
+                        for fact in ai_readiness_pack_result.rule_execution_facts:
+                            if fact.executed:
+                                executed += 1
+                            status = fact.evaluation_status
+                            if status == "matched":
+                                matched += 1
+                            elif status == "not_matched":
+                                not_matched += 1
+                            elif status == "not_applicable":
+                                not_applicable += 1
+                            elif status == "failed":
+                                failed += 1
+                    ai_readiness_section = ai_readiness_assembler.assemble(
+                        repository_id=repo_id,
+                        findings=pack_findings,
+                        pack_enabled=True,
+                        rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=not_matched,
+                        rules_not_applicable=not_applicable,
+                        rules_failed=failed,
+                        rule_execution_facts=(
+                            ai_readiness_pack_result.rule_execution_facts
+                            if ai_readiness_pack_result is not None
+                            else ()
+                        ),
+                        evidence_pipeline=(
+                            ai_readiness_pack_result.evidence_pipeline
+                            if ai_readiness_pack_result is not None
+                            else (
+                                "repository_ai_readiness"
+                                if repository_ai_readiness_evidence is not None
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            ai_readiness_pack_result.evidence_fingerprint
+                            if ai_readiness_pack_result is not None
+                            else (
+                                repository_ai_readiness_evidence.evidence_fingerprint
+                                if repository_ai_readiness_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=(
+                            f"rules.ai_readiness.enabled=true|"
+                            f"evidence.repository_ai_readiness.enabled="
+                            f"{loaded_settings.evidence.repository_ai_readiness.enabled}"
+                        ),
+                        diagnostics=(
+                            ai_readiness_pack_result.diagnostics
+                            if ai_readiness_pack_result is not None
+                            else ()
+                        ),
+                        include_findings=ai_readiness_cfg.include_findings,
+                        include_coverage=ai_readiness_cfg.include_coverage,
+                        include_limitations=ai_readiness_cfg.include_limitations,
+                        include_traceability=ai_readiness_cfg.include_traceability,
+                        include_execution_summary=ai_readiness_cfg.include_execution_summary,
+                        include_synthesis=ai_readiness_cfg.include_synthesis,
+                    )
+                ai_readiness_write = write_ai_readiness_assessment_artifact(
+                    ai_readiness_section,
+                    report_paths.run_directory,
+                )
+                ai_readiness_assessment_artifact = ai_readiness_write.path
+                ai_readiness_assessment_status = ai_readiness_section.status.value
+                ai_readiness_assessment_finding_count = ai_readiness_write.finding_count
+                ai_readiness_section_for_report = ai_readiness_section
+        except Exception as error:  # noqa: BLE001 - isolate ai readiness failures
+            ai_readiness_assessment_artifact = None
+            ai_readiness_assessment_status = "failed"
+            ai_readiness_assessment_finding_count = None
+            ai_readiness_section_for_report = None
+            warn(
+                "AI Readiness assessment could not be built; "
+                "remaining assessment content was kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
+        # Phase 4.9.4 — Performance Intelligence inventory (+ synthesis when enabled).
+        performance_assessment_artifact = None
+        performance_assessment_status = None
+        performance_assessment_finding_count = None
+        performance_section_for_report = None
+        try:
+            from aimf.application.performance.assessment.artifacts import (
+                write_performance_assessment_artifact,
+            )
+            from aimf.application.performance.assessment.factory import (
+                create_performance_assessment_assembler,
+                performance_analysis_enabled,
+                performance_analysis_settings,
+                performance_pack_enabled,
+            )
+            from aimf.domain.performance.ids import HYGIENE_RULE_IDS
+
+            if performance_analysis_enabled(loaded_settings):
+                performance_assembler = create_performance_assessment_assembler()
+                repo_id = str(getattr(repository, "name", None) or repository.path)
+                performance_cfg = performance_analysis_settings(loaded_settings)
+                pack_on = performance_pack_enabled(loaded_settings)
+                if not pack_on:
+                    performance_section = performance_assembler.assemble_disabled(
+                        repository_id=repo_id,
+                        reason="performance_pack_disabled",
+                    )
+                else:
+                    pack_findings = (
+                        performance_pack_result.evaluation.findings
+                        if performance_pack_result is not None
+                        else ()
+                    )
+                    executed = 0
+                    matched = 0
+                    not_matched = 0
+                    not_applicable = 0
+                    failed = 0
+                    if performance_pack_result is not None:
+                        for fact in performance_pack_result.rule_execution_facts:
+                            if fact.executed:
+                                executed += 1
+                            status = fact.evaluation_status
+                            if status == "matched":
+                                matched += 1
+                            elif status == "not_matched":
+                                not_matched += 1
+                            elif status == "not_applicable":
+                                not_applicable += 1
+                            elif status == "failed":
+                                failed += 1
+                    performance_section = performance_assembler.assemble(
+                        repository_id=repo_id,
+                        findings=pack_findings,
+                        pack_enabled=True,
+                        rules_planned=len(HYGIENE_RULE_IDS),
+                        rules_executed=executed,
+                        rules_matched=matched,
+                        rules_not_matched=not_matched,
+                        rules_not_applicable=not_applicable,
+                        rules_failed=failed,
+                        rule_execution_facts=(
+                            performance_pack_result.rule_execution_facts
+                            if performance_pack_result is not None
+                            else ()
+                        ),
+                        evidence_pipeline=(
+                            performance_pack_result.evidence_pipeline
+                            if performance_pack_result is not None
+                            else (
+                                "repository_performance"
+                                if repository_performance_evidence is not None
+                                else "not_configured"
+                            )
+                        ),
+                        evidence_fingerprint=(
+                            performance_pack_result.evidence_fingerprint
+                            if performance_pack_result is not None
+                            else (
+                                repository_performance_evidence.evidence_fingerprint
+                                if repository_performance_evidence is not None
+                                else ""
+                            )
+                        ),
+                        configuration_payload=(
+                            f"rules.performance.enabled=true|"
+                            f"evidence.repository_performance.enabled="
+                            f"{loaded_settings.evidence.repository_performance.enabled}"
+                        ),
+                        diagnostics=(
+                            performance_pack_result.diagnostics
+                            if performance_pack_result is not None
+                            else ()
+                        ),
+                        include_findings=performance_cfg.include_findings,
+                        include_coverage=performance_cfg.include_coverage,
+                        include_limitations=performance_cfg.include_limitations,
+                        include_traceability=performance_cfg.include_traceability,
+                        include_execution_summary=performance_cfg.include_execution_summary,
+                        include_synthesis=performance_cfg.include_synthesis,
+                    )
+                performance_write = write_performance_assessment_artifact(
+                    performance_section,
+                    report_paths.run_directory,
+                )
+                performance_assessment_artifact = performance_write.path
+                performance_assessment_status = performance_section.status.value
+                performance_assessment_finding_count = performance_write.finding_count
+                performance_section_for_report = performance_section
+        except Exception as error:  # noqa: BLE001 - isolate performance failures
+            performance_assessment_artifact = None
+            performance_assessment_status = "failed"
+            performance_assessment_finding_count = None
+            performance_section_for_report = None
+            warn(
+                "Performance assessment could not be built; "
                 "remaining assessment content was kept. "
                 f"Details: {sanitize_provider_text(str(error))}"
             )
@@ -2067,6 +2929,309 @@ class AssessmentApplicationService:
                 "Security report section enabled, but no security assessment "
                 "section was available for this run."
             )
+        testing_report_section = None
+        testing_report_enabled = loaded_settings.report.sections.testing.enabled
+        testing_report_status = None
+        testing_report_section_version = None
+        testing_report_finding_count = None
+        testing_report_conclusion_count = None
+        testing_report_adapter_ms = None
+        report_testing_cfg = loaded_settings.report.sections.testing
+        if (
+            report_testing_cfg.enabled
+            and testing_section_for_report is not None
+        ):
+            from aimf.reporting.testing.adapter import TestingReportAdapter
+
+            test_adapter_started = perf_counter()
+            try:
+                testing_report_section = TestingReportAdapter().adapt(
+                    testing_section_for_report,
+                    include_executive_summary=(
+                        report_testing_cfg.include_executive_summary
+                    ),
+                    include_coverage=report_testing_cfg.include_coverage,
+                    include_inventory=report_testing_cfg.include_inventory,
+                    include_execution_summary=(
+                        report_testing_cfg.include_execution_summary
+                    ),
+                    include_themes=report_testing_cfg.include_themes,
+                    include_conclusions=report_testing_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_testing_cfg.include_recommendations
+                    ),
+                    include_diagnostics=report_testing_cfg.include_diagnostics,
+                    include_limitations=report_testing_cfg.include_limitations,
+                    include_traceability=report_testing_cfg.include_traceability,
+                )
+                testing_report_adapter_ms = round(
+                    (perf_counter() - test_adapter_started) * 1000, 2
+                )
+                testing_report_status = testing_report_section.status
+                testing_report_section_version = (
+                    testing_report_section.section_version
+                )
+                testing_report_finding_count = int(
+                    testing_report_section.metadata.get("finding_count", "0") or "0"
+                )
+                testing_report_conclusion_count = len(
+                    testing_report_section.conclusions
+                )
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                testing_report_section = None
+                testing_report_adapter_ms = round(
+                    (perf_counter() - test_adapter_started) * 1000, 2
+                )
+                testing_report_status = "failed"
+                warn(
+                    "Test report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_testing_cfg.enabled:
+            testing_report_status = "unavailable"
+            warn(
+                "Test report section enabled, but no testing assessment "
+                "section was available for this run."
+            )
+        cloud_report_section = None
+        cloud_report_enabled = loaded_settings.report.sections.cloud.enabled
+        cloud_report_status = None
+        cloud_report_section_version = None
+        cloud_report_finding_count = None
+        cloud_report_conclusion_count = None
+        cloud_report_adapter_ms = None
+        report_cloud_cfg = loaded_settings.report.sections.cloud
+        if report_cloud_cfg.enabled and cloud_section_for_report is not None:
+            from aimf.reporting.cloud.adapter import CloudReportAdapter
+
+            cloud_adapter_started = perf_counter()
+            try:
+                include_inventory = (
+                    report_cloud_cfg.include_inventory and report_cloud_cfg.include_findings
+                )
+                cloud_report_section = CloudReportAdapter().adapt(
+                    cloud_section_for_report,
+                    include_executive_summary=(
+                        report_cloud_cfg.include_executive_summary
+                    ),
+                    include_coverage=report_cloud_cfg.include_coverage,
+                    include_inventory=include_inventory,
+                    include_execution_summary=(
+                        report_cloud_cfg.include_execution_summary
+                    ),
+                    include_themes=report_cloud_cfg.include_themes,
+                    include_conclusions=report_cloud_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_cloud_cfg.include_recommendations
+                    ),
+                    include_diagnostics=report_cloud_cfg.include_diagnostics,
+                    include_limitations=report_cloud_cfg.include_limitations,
+                    include_traceability=report_cloud_cfg.include_traceability,
+                )
+                cloud_report_adapter_ms = round(
+                    (perf_counter() - cloud_adapter_started) * 1000, 2
+                )
+                cloud_report_status = cloud_report_section.status
+                cloud_report_section_version = cloud_report_section.section_version
+                cloud_report_finding_count = int(
+                    cloud_report_section.metadata.get("finding_count", "0") or "0"
+                )
+                cloud_report_conclusion_count = len(cloud_report_section.conclusions)
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                cloud_report_section = None
+                cloud_report_adapter_ms = round(
+                    (perf_counter() - cloud_adapter_started) * 1000, 2
+                )
+                cloud_report_status = "failed"
+                warn(
+                    "Cloud report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_cloud_cfg.enabled:
+            cloud_report_status = "unavailable"
+            warn(
+                "Cloud report section enabled, but no cloud assessment "
+                "section was available for this run."
+            )
+        ai_readiness_report_section = None
+        ai_readiness_report_enabled = (
+            loaded_settings.report.sections.ai_readiness.enabled
+        )
+        ai_readiness_report_status = None
+        ai_readiness_report_section_version = None
+        ai_readiness_report_finding_count = None
+        ai_readiness_report_conclusion_count = None
+        ai_readiness_report_adapter_ms = None
+        report_ai_cfg = loaded_settings.report.sections.ai_readiness
+        if report_ai_cfg.enabled and ai_readiness_section_for_report is not None:
+            from aimf.reporting.ai_readiness.adapter import AiReadinessReportAdapter
+
+            ai_adapter_started = perf_counter()
+            try:
+                include_inventory = (
+                    report_ai_cfg.include_inventory and report_ai_cfg.include_findings
+                )
+                ai_readiness_report_section = AiReadinessReportAdapter().adapt(
+                    ai_readiness_section_for_report,
+                    include_executive_summary=(
+                        report_ai_cfg.include_executive_summary
+                    ),
+                    include_coverage=report_ai_cfg.include_coverage,
+                    include_inventory=include_inventory,
+                    include_execution_summary=(
+                        report_ai_cfg.include_execution_summary
+                    ),
+                    include_themes=report_ai_cfg.include_themes,
+                    include_conclusions=report_ai_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_ai_cfg.include_recommendations
+                    ),
+                    include_diagnostics=report_ai_cfg.include_diagnostics,
+                    include_limitations=report_ai_cfg.include_limitations,
+                    include_traceability=report_ai_cfg.include_traceability,
+                )
+                ai_readiness_report_adapter_ms = round(
+                    (perf_counter() - ai_adapter_started) * 1000, 2
+                )
+                ai_readiness_report_status = ai_readiness_report_section.status
+                ai_readiness_report_section_version = (
+                    ai_readiness_report_section.section_version
+                )
+                ai_readiness_report_finding_count = int(
+                    ai_readiness_report_section.metadata.get("finding_count", "0") or "0"
+                )
+                ai_readiness_report_conclusion_count = len(
+                    ai_readiness_report_section.conclusions
+                )
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                ai_readiness_report_section = None
+                ai_readiness_report_adapter_ms = round(
+                    (perf_counter() - ai_adapter_started) * 1000, 2
+                )
+                ai_readiness_report_status = "failed"
+                warn(
+                    "AI Readiness report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_ai_cfg.enabled:
+            ai_readiness_report_status = "unavailable"
+            warn(
+                "AI Readiness report section enabled, but no AI Readiness "
+                "assessment section was available for this run."
+            )
+        performance_report_section = None
+        performance_report_enabled = (
+            loaded_settings.report.sections.performance.enabled
+        )
+        performance_report_status = None
+        performance_report_section_version = None
+        performance_report_finding_count = None
+        performance_report_conclusion_count = None
+        performance_report_adapter_ms = None
+        report_perf_cfg = loaded_settings.report.sections.performance
+        if report_perf_cfg.enabled and performance_section_for_report is not None:
+            from aimf.reporting.performance.adapter import PerformanceReportAdapter
+
+            perf_adapter_started = perf_counter()
+            try:
+                include_inventory = (
+                    report_perf_cfg.include_inventory and report_perf_cfg.include_findings
+                )
+                performance_report_section = PerformanceReportAdapter().adapt(
+                    performance_section_for_report,
+                    include_executive_summary=(
+                        report_perf_cfg.include_executive_summary
+                    ),
+                    include_coverage=report_perf_cfg.include_coverage,
+                    include_inventory=include_inventory,
+                    include_execution_summary=(
+                        report_perf_cfg.include_execution_summary
+                    ),
+                    include_themes=report_perf_cfg.include_themes,
+                    include_conclusions=report_perf_cfg.include_conclusions,
+                    include_recommendations=(
+                        report_perf_cfg.include_recommendations
+                    ),
+                    include_diagnostics=report_perf_cfg.include_diagnostics,
+                    include_limitations=report_perf_cfg.include_limitations,
+                    include_traceability=report_perf_cfg.include_traceability,
+                )
+                performance_report_adapter_ms = round(
+                    (perf_counter() - perf_adapter_started) * 1000, 2
+                )
+                performance_report_status = performance_report_section.status
+                performance_report_section_version = (
+                    performance_report_section.section_version
+                )
+                performance_report_finding_count = int(
+                    performance_report_section.metadata.get("finding_count", "0") or "0"
+                )
+                performance_report_conclusion_count = len(
+                    performance_report_section.conclusions
+                )
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                performance_report_section = None
+                performance_report_adapter_ms = round(
+                    (perf_counter() - perf_adapter_started) * 1000, 2
+                )
+                performance_report_status = "failed"
+                warn(
+                    "Performance report section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
+        elif report_perf_cfg.enabled:
+            performance_report_status = "unavailable"
+            warn(
+                "Performance report section enabled, but no Performance "
+                "assessment section was available for this run."
+            )
+        roadmap_report_section = None
+        roadmap_report_enabled = loaded_settings.report.sections.roadmap.enabled
+        roadmap_report_status = None
+        roadmap_report_section_version = None
+        roadmap_report_initiative_count = None
+        roadmap_report_phase_count = None
+        roadmap_report_adapter_ms = None
+        report_roadmap_cfg = loaded_settings.report.sections.roadmap
+        if report_roadmap_cfg.enabled:
+            from aimf.application.roadmap import ModernizationRoadmapEngine
+            from aimf.reporting.roadmap.adapter import RoadmapReportAdapter
+
+            roadmap_adapter_started = perf_counter()
+            try:
+                roadmap_domain = ModernizationRoadmapEngine().generate_from_artifacts(
+                    recommendation_result=recommendation_result,
+                    rule_evaluation=rule_evaluation,
+                    analysis_result=analysis_result,
+                )
+                roadmap_report_section = RoadmapReportAdapter().adapt(
+                    roadmap_domain,
+                    include_assumptions=report_roadmap_cfg.include_assumptions,
+                    include_limitations=report_roadmap_cfg.include_limitations,
+                    include_evidence=report_roadmap_cfg.include_evidence,
+                )
+                roadmap_report_adapter_ms = round(
+                    (perf_counter() - roadmap_adapter_started) * 1000, 2
+                )
+                roadmap_report_status = roadmap_report_section.status
+                roadmap_report_section_version = roadmap_report_section.section_version
+                roadmap_report_initiative_count = roadmap_report_section.initiatives_total
+                roadmap_report_phase_count = len(roadmap_report_section.phases)
+            except Exception as error:  # noqa: BLE001 - isolate report adapter failures
+                roadmap_report_section = None
+                roadmap_report_adapter_ms = round(
+                    (perf_counter() - roadmap_adapter_started) * 1000, 2
+                )
+                roadmap_report_status = "failed"
+                warn(
+                    "Modernization roadmap section could not be built; "
+                    "remaining report content was kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
         report_input = ModernizationReportInput(
             analysis_result=analysis_result,
             assessment_mode=mode,
@@ -2101,23 +3266,35 @@ class AssessmentApplicationService:
             technical_debt_report=technical_debt_report_section,
             dependency_report=dependency_report_section,
             security_report=security_report_section,
+            testing_report=testing_report_section,
+            cloud_report=cloud_report_section,
+            ai_readiness_report=ai_readiness_report_section,
+            performance_report=performance_report_section,
+            roadmap_report=roadmap_report_section,
+            knowledge_repository_id=knowledge_session.repository_id,
+            knowledge_run_id=knowledge_session.run_id,
         )
         try:
-            written_paths = write_modernization_assessment_reports(
-                report_input,
-                report_paths,
-            )
-            if ai_execution_document is not None:
-                written = try_write_ai_execution_artifact(
-                    written_paths.run_directory,
-                    ai_execution_document,
+            if write_reports:
+                written_paths = write_modernization_assessment_reports(
+                    report_input,
+                    report_paths,
                 )
-                if written is None:
-                    warn(
-                        "AI execution artifact could not be written; "
-                        "customer HTML and JSON reports were kept. "
-                        f"Expected file: {AI_EXECUTION_FILENAME}"
+                if ai_execution_document is not None:
+                    written = try_write_ai_execution_artifact(
+                        written_paths.run_directory,
+                        ai_execution_document,
                     )
+                    if written is None:
+                        warn(
+                            "AI execution artifact could not be written; "
+                            "customer HTML and JSON reports were kept. "
+                            f"Expected file: {AI_EXECUTION_FILENAME}"
+                        )
+            else:
+                report_paths.run_directory.mkdir(parents=True, exist_ok=True)
+                written_paths = report_paths
+                warn("Report file generation skipped (write_reports=false).")
         except ModernizationReportValidationError as error:
             raise AssessmentCommandError(
                 f"Report validation or write failure: {sanitize_provider_text(str(error))}"
@@ -2131,18 +3308,170 @@ class AssessmentApplicationService:
                 f"Report validation or write failure: {sanitize_provider_text(str(error))}"
             ) from error
 
-        try:
-            deleted = prune_excess_report_runs(written_paths.run_directory.parent)
-            if deleted:
-                for path in deleted:
-                    active_console.print(f"Removed aged report run: {path.name}")
-        except Exception as error:  # noqa: BLE001 - retention must not fail assessment
-            warn(
-                "Report retention cleanup failed; the current assessment reports were kept. "
-                f"Details: {sanitize_provider_text(str(error))}"
-            )
+        if write_reports:
+            try:
+                deleted = prune_excess_report_runs(written_paths.run_directory.parent)
+                if deleted:
+                    for path in deleted:
+                        active_console.print(f"Removed aged report run: {path.name}")
+            except Exception as error:  # noqa: BLE001 - retention must not fail assessment
+                warn(
+                    "Report retention cleanup failed; the current assessment reports were kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
 
         total_ms = round((perf_counter() - total_started) * 1000, 2)
+
+        knowledge_corpus_id = None
+        knowledge_document_count = None
+        knowledge_chunk_count = None
+        knowledge_corpus_artifact_path = None
+        knowledge_index_status = None
+        knowledge_vector_count = None
+        knowledge_index_artifact_path = None
+        knowledge_index_fingerprint = None
+        if loaded_settings.knowledge.projection.enabled:
+            try:
+                from aimf.application.knowledge.projection import (
+                    KnowledgeProjectionRequest,
+                    ProjectionContext,
+                    build_knowledge_corpus,
+                    write_knowledge_corpus_artifact,
+                )
+                from aimf.services.inventory.content_reader import (
+                    LocalFilesystemContentReader,
+                )
+
+                revision = graph_pipeline_result.manifest.revision
+                content_reader = LocalFilesystemContentReader(Path(repository.path))
+                evidence_items = tuple(
+                    item
+                    for item in (
+                        dependency_evidence,
+                        repository_sensitive_evidence,
+                        repository_testing_evidence,
+                        repository_cloud_evidence,
+                        repository_ai_readiness_evidence,
+                        repository_performance_evidence,
+                    )
+                    if item is not None
+                )
+                corpus = build_knowledge_corpus(
+                    KnowledgeProjectionRequest(
+                        context=ProjectionContext(
+                            tenant_id=None,
+                            repository_id=knowledge_session.repository_id,
+                            scan_id=knowledge_session.run_id,
+                            branch=revision.branch or resolved_branch,
+                            commit_sha=revision.revision_id,
+                            assessment_version=None,
+                        ),
+                        repository_root=Path(repository.path),
+                        manifest=graph_pipeline_result.manifest,
+                        content_reader=content_reader,
+                        findings=rule_evaluation.findings,
+                        recommendations=recommendation_result.recommendations,
+                        evidence_items=evidence_items,
+                        assessment_sections={
+                            "architecture": architecture_section_for_report,
+                            "technical_debt": technical_debt_section_for_report,
+                            "dependency": dependency_section_for_report,
+                            "security": security_section_for_report,
+                            "test": testing_section_for_report,
+                            "cloud": cloud_section_for_report,
+                            "ai_readiness": ai_readiness_section_for_report,
+                            "performance": performance_section_for_report,
+                        },
+                        report_sections={
+                            "architecture": architecture_report_section,
+                            "technical_debt": technical_debt_report_section,
+                            "dependency": dependency_report_section,
+                            "security": security_report_section,
+                            "testing": testing_report_section,
+                            "cloud": cloud_report_section,
+                            "ai_readiness": ai_readiness_report_section,
+                            "performance": performance_report_section,
+                            "roadmap": roadmap_report_section,
+                        },
+                    ),
+                    projection=loaded_settings.knowledge.projection,
+                    chunking=loaded_settings.knowledge.chunking,
+                )
+                knowledge_corpus_id = corpus.corpus_id
+                knowledge_document_count = corpus.coverage.document_count
+                knowledge_chunk_count = corpus.coverage.chunk_count
+                knowledge_corpus_artifact_path = write_knowledge_corpus_artifact(
+                    corpus,
+                    written_paths.run_directory,
+                    enabled=loaded_settings.knowledge.projection.write_corpus_artifact,
+                )
+                if (
+                    loaded_settings.knowledge.indexing.enabled
+                    and loaded_settings.knowledge.embedding.enabled
+                ):
+                    from aimf.application.knowledge.indexing import (
+                        KnowledgeIndexRequest,
+                        create_knowledge_indexer,
+                        write_knowledge_index_artifact,
+                    )
+                    from aimf.domain.knowledge.vector import IndexScope
+                    from aimf.infrastructure.embedding.factory import (
+                        create_embedding_provider,
+                    )
+                    from aimf.infrastructure.vector_store.factory import (
+                        create_vector_store,
+                    )
+
+                    index_scope = IndexScope(
+                        tenant_id=None,
+                        repository_id=knowledge_session.repository_id,
+                        scan_id=knowledge_session.run_id,
+                    )
+                    vector_store = create_vector_store(loaded_settings.knowledge)
+                    if force_reindex:
+                        clear_scope = IndexScope(
+                            tenant_id=None,
+                            repository_id=knowledge_session.repository_id,
+                            scan_id=None,
+                        )
+                        try:
+                            vector_store.delete_scope(clear_scope)
+                        except Exception as error:  # noqa: BLE001 - continue with upsert
+                            warn(
+                                "Force reindex could not clear prior vector scope; "
+                                "continuing with upsert. "
+                                f"Details: {sanitize_provider_text(str(error))}"
+                            )
+                    indexer = create_knowledge_indexer(
+                        embedding_settings=loaded_settings.knowledge.embedding,
+                        indexing_settings=loaded_settings.knowledge.indexing,
+                        vector_store=vector_store,
+                        embedding_provider=create_embedding_provider(
+                            loaded_settings.knowledge.embedding,
+                            aimf_settings=loaded_settings,
+                        ),
+                    )
+                    index_result = indexer.index(
+                        KnowledgeIndexRequest(
+                            corpus=corpus,
+                            scope=index_scope,
+                            prior_manifest=None,
+                        )
+                    )
+                    knowledge_index_status = index_result.status.value
+                    knowledge_vector_count = index_result.manifest.coverage.vector_count
+                    knowledge_index_fingerprint = index_result.manifest.fingerprint
+                    knowledge_index_artifact_path = write_knowledge_index_artifact(
+                        index_result,
+                        written_paths.run_directory,
+                        enabled=loaded_settings.knowledge.indexing.write_manifest,
+                        filename=loaded_settings.knowledge.indexing.manifest_filename,
+                    )
+            except Exception as error:  # noqa: BLE001 - isolate projection failures
+                warn(
+                    "Repository knowledge projection failed; assessment reports were kept. "
+                    f"Details: {sanitize_provider_text(str(error))}"
+                )
 
         result = _build_command_result(
             repository_name=repository.name,
@@ -2192,12 +3521,55 @@ class AssessmentApplicationService:
             repository_testing_evidence_artifact=(
                 repository_testing_evidence_artifact
             ),
+            repository_cloud_evidence_status=repository_cloud_evidence_status,
+            repository_cloud_evidence_candidate_count=(
+                repository_cloud_evidence_candidate_count
+            ),
+            repository_cloud_evidence_technology_count=(
+                repository_cloud_evidence_technology_count
+            ),
+            repository_cloud_evidence_artifact=(
+                repository_cloud_evidence_artifact
+            ),
+            repository_ai_readiness_evidence_status=(
+                repository_ai_readiness_evidence_status
+            ),
+            repository_ai_readiness_evidence_candidate_count=(
+                repository_ai_readiness_evidence_candidate_count
+            ),
+            repository_ai_readiness_evidence_technology_count=(
+                repository_ai_readiness_evidence_technology_count
+            ),
+            repository_ai_readiness_evidence_artifact=(
+                repository_ai_readiness_evidence_artifact
+            ),
+            repository_performance_evidence_status=(
+                repository_performance_evidence_status
+            ),
+            repository_performance_evidence_candidate_count=(
+                repository_performance_evidence_candidate_count
+            ),
+            repository_performance_evidence_technology_count=(
+                repository_performance_evidence_technology_count
+            ),
+            repository_performance_evidence_artifact=(
+                repository_performance_evidence_artifact
+            ),
             security_assessment_status=security_assessment_status,
             security_assessment_finding_count=security_assessment_finding_count,
             security_assessment_artifact=security_assessment_artifact,
             testing_assessment_status=testing_assessment_status,
             testing_assessment_finding_count=testing_assessment_finding_count,
             testing_assessment_artifact=testing_assessment_artifact,
+            cloud_assessment_status=cloud_assessment_status,
+            cloud_assessment_finding_count=cloud_assessment_finding_count,
+            cloud_assessment_artifact=cloud_assessment_artifact,
+            ai_readiness_assessment_status=ai_readiness_assessment_status,
+            ai_readiness_assessment_finding_count=ai_readiness_assessment_finding_count,
+            ai_readiness_assessment_artifact=ai_readiness_assessment_artifact,
+            performance_assessment_status=performance_assessment_status,
+            performance_assessment_finding_count=performance_assessment_finding_count,
+            performance_assessment_artifact=performance_assessment_artifact,
             architecture_report_enabled=architecture_report_enabled,
             architecture_report_status=architecture_report_status,
             architecture_report_section_version=architecture_report_section_version,
@@ -2228,6 +3600,36 @@ class AssessmentApplicationService:
             security_report_conclusion_count=security_report_conclusion_count,
             security_report_hotspot_count=security_report_hotspot_count,
             security_report_adapter_ms=security_report_adapter_ms,
+            testing_report_enabled=testing_report_enabled,
+            testing_report_status=testing_report_status,
+            testing_report_section_version=testing_report_section_version,
+            testing_report_finding_count=testing_report_finding_count,
+            testing_report_conclusion_count=testing_report_conclusion_count,
+            testing_report_adapter_ms=testing_report_adapter_ms,
+            cloud_report_enabled=cloud_report_enabled,
+            cloud_report_status=cloud_report_status,
+            cloud_report_section_version=cloud_report_section_version,
+            cloud_report_finding_count=cloud_report_finding_count,
+            cloud_report_conclusion_count=cloud_report_conclusion_count,
+            cloud_report_adapter_ms=cloud_report_adapter_ms,
+            ai_readiness_report_enabled=ai_readiness_report_enabled,
+            ai_readiness_report_status=ai_readiness_report_status,
+            ai_readiness_report_section_version=ai_readiness_report_section_version,
+            ai_readiness_report_finding_count=ai_readiness_report_finding_count,
+            ai_readiness_report_conclusion_count=ai_readiness_report_conclusion_count,
+            ai_readiness_report_adapter_ms=ai_readiness_report_adapter_ms,
+            performance_report_enabled=performance_report_enabled,
+            performance_report_status=performance_report_status,
+            performance_report_section_version=performance_report_section_version,
+            performance_report_finding_count=performance_report_finding_count,
+            performance_report_conclusion_count=performance_report_conclusion_count,
+            performance_report_adapter_ms=performance_report_adapter_ms,
+            roadmap_report_enabled=roadmap_report_enabled,
+            roadmap_report_status=roadmap_report_status,
+            roadmap_report_section_version=roadmap_report_section_version,
+            roadmap_report_initiative_count=roadmap_report_initiative_count,
+            roadmap_report_phase_count=roadmap_report_phase_count,
+            roadmap_report_adapter_ms=roadmap_report_adapter_ms,
         )
         _print_success_summary(active_console, result)
         try:
@@ -2253,6 +3655,14 @@ class AssessmentApplicationService:
                 "knowledge_repository_id": knowledge_session.repository_id,
                 "knowledge_run_id": knowledge_session.run_id,
                 "knowledge_snapshot_id": snapshot_id,
+                "knowledge_corpus_id": knowledge_corpus_id,
+                "knowledge_document_count": knowledge_document_count,
+                "knowledge_chunk_count": knowledge_chunk_count,
+                "knowledge_corpus_artifact_path": knowledge_corpus_artifact_path,
+                "knowledge_index_status": knowledge_index_status,
+                "knowledge_vector_count": knowledge_vector_count,
+                "knowledge_index_artifact_path": knowledge_index_artifact_path,
+                "knowledge_index_fingerprint": knowledge_index_fingerprint,
             }
         )
 
@@ -2283,10 +3693,12 @@ def run_assessment(
     graph_pipeline: GraphAssessmentPipeline | None = None,
     rule_engine: RuleEngine | None = None,
     recommendation_engine: RecommendationEngine | None = None,
-        console: Console | None = None,
-        clock: Callable[[], datetime] | None = None,
-        verbose: bool = False,
-        knowledge_store: KnowledgeStore | None = None,
+    console: Console | None = None,
+    clock: Callable[[], datetime] | None = None,
+    verbose: bool = False,
+    knowledge_store: KnowledgeStore | None = None,
+    write_reports: bool = True,
+    force_reindex: bool = False,
 ) -> AssessmentCommandResult:
     """Orchestrate scan → analysis → graph pipeline → optional AI → HTML+JSON reports.
 
@@ -2327,6 +3739,8 @@ def run_assessment(
         clock=clock,
         verbose=verbose,
         knowledge_store=knowledge_store,
+        write_reports=write_reports,
+        force_reindex=force_reindex,
     )
 
 
@@ -2794,12 +4208,33 @@ def _build_command_result(
     repository_testing_evidence_candidate_count: int | None = None,
     repository_testing_evidence_framework_count: int | None = None,
     repository_testing_evidence_artifact: Path | None = None,
+    repository_cloud_evidence_status: str | None = None,
+    repository_cloud_evidence_candidate_count: int | None = None,
+    repository_cloud_evidence_technology_count: int | None = None,
+    repository_cloud_evidence_artifact: Path | None = None,
+    repository_ai_readiness_evidence_status: str | None = None,
+    repository_ai_readiness_evidence_candidate_count: int | None = None,
+    repository_ai_readiness_evidence_technology_count: int | None = None,
+    repository_ai_readiness_evidence_artifact: Path | None = None,
+    repository_performance_evidence_status: str | None = None,
+    repository_performance_evidence_candidate_count: int | None = None,
+    repository_performance_evidence_technology_count: int | None = None,
+    repository_performance_evidence_artifact: Path | None = None,
     security_assessment_status: str | None = None,
     security_assessment_finding_count: int | None = None,
     security_assessment_artifact: Path | None = None,
     testing_assessment_status: str | None = None,
     testing_assessment_finding_count: int | None = None,
     testing_assessment_artifact: Path | None = None,
+    cloud_assessment_status: str | None = None,
+    cloud_assessment_finding_count: int | None = None,
+    cloud_assessment_artifact: Path | None = None,
+    ai_readiness_assessment_status: str | None = None,
+    ai_readiness_assessment_finding_count: int | None = None,
+    ai_readiness_assessment_artifact: Path | None = None,
+    performance_assessment_status: str | None = None,
+    performance_assessment_finding_count: int | None = None,
+    performance_assessment_artifact: Path | None = None,
     architecture_report_enabled: bool | None = None,
     architecture_report_status: str | None = None,
     architecture_report_section_version: str | None = None,
@@ -2828,6 +4263,36 @@ def _build_command_result(
     security_report_conclusion_count: int | None = None,
     security_report_hotspot_count: int | None = None,
     security_report_adapter_ms: float | None = None,
+    testing_report_enabled: bool | None = None,
+    testing_report_status: str | None = None,
+    testing_report_section_version: str | None = None,
+    testing_report_finding_count: int | None = None,
+    testing_report_conclusion_count: int | None = None,
+    testing_report_adapter_ms: float | None = None,
+    cloud_report_enabled: bool | None = None,
+    cloud_report_status: str | None = None,
+    cloud_report_section_version: str | None = None,
+    cloud_report_finding_count: int | None = None,
+    cloud_report_conclusion_count: int | None = None,
+    cloud_report_adapter_ms: float | None = None,
+    ai_readiness_report_enabled: bool | None = None,
+    ai_readiness_report_status: str | None = None,
+    ai_readiness_report_section_version: str | None = None,
+    ai_readiness_report_finding_count: int | None = None,
+    ai_readiness_report_conclusion_count: int | None = None,
+    ai_readiness_report_adapter_ms: float | None = None,
+    performance_report_enabled: bool | None = None,
+    performance_report_status: str | None = None,
+    performance_report_section_version: str | None = None,
+    performance_report_finding_count: int | None = None,
+    performance_report_conclusion_count: int | None = None,
+    performance_report_adapter_ms: float | None = None,
+    roadmap_report_enabled: bool | None = None,
+    roadmap_report_status: str | None = None,
+    roadmap_report_section_version: str | None = None,
+    roadmap_report_initiative_count: int | None = None,
+    roadmap_report_phase_count: int | None = None,
+    roadmap_report_adapter_ms: float | None = None,
 ) -> AssessmentCommandResult:
     deterministic_recommendation_count = len(analysis_result.recommendations)
     graph_fields: dict[str, object] = {}
@@ -2930,6 +4395,54 @@ def _build_command_result(
         graph_fields["repository_testing_evidence_artifact_path"] = (
             repository_testing_evidence_artifact
         )
+    if repository_cloud_evidence_status is not None:
+        graph_fields["repository_cloud_evidence_status"] = (
+            repository_cloud_evidence_status
+        )
+    if repository_cloud_evidence_candidate_count is not None:
+        graph_fields["repository_cloud_evidence_candidate_count"] = (
+            repository_cloud_evidence_candidate_count
+        )
+    if repository_cloud_evidence_technology_count is not None:
+        graph_fields["repository_cloud_evidence_technology_count"] = (
+            repository_cloud_evidence_technology_count
+        )
+    if repository_cloud_evidence_artifact is not None:
+        graph_fields["repository_cloud_evidence_artifact_path"] = (
+            repository_cloud_evidence_artifact
+        )
+    if repository_ai_readiness_evidence_status is not None:
+        graph_fields["repository_ai_readiness_evidence_status"] = (
+            repository_ai_readiness_evidence_status
+        )
+    if repository_ai_readiness_evidence_candidate_count is not None:
+        graph_fields["repository_ai_readiness_evidence_candidate_count"] = (
+            repository_ai_readiness_evidence_candidate_count
+        )
+    if repository_ai_readiness_evidence_technology_count is not None:
+        graph_fields["repository_ai_readiness_evidence_technology_count"] = (
+            repository_ai_readiness_evidence_technology_count
+        )
+    if repository_ai_readiness_evidence_artifact is not None:
+        graph_fields["repository_ai_readiness_evidence_artifact_path"] = (
+            repository_ai_readiness_evidence_artifact
+        )
+    if repository_performance_evidence_status is not None:
+        graph_fields["repository_performance_evidence_status"] = (
+            repository_performance_evidence_status
+        )
+    if repository_performance_evidence_candidate_count is not None:
+        graph_fields["repository_performance_evidence_candidate_count"] = (
+            repository_performance_evidence_candidate_count
+        )
+    if repository_performance_evidence_technology_count is not None:
+        graph_fields["repository_performance_evidence_technology_count"] = (
+            repository_performance_evidence_technology_count
+        )
+    if repository_performance_evidence_artifact is not None:
+        graph_fields["repository_performance_evidence_artifact_path"] = (
+            repository_performance_evidence_artifact
+        )
     if security_assessment_status is not None:
         graph_fields["security_assessment_status"] = security_assessment_status
     if security_assessment_finding_count is not None:
@@ -2946,6 +4459,32 @@ def _build_command_result(
         )
     if testing_assessment_artifact is not None:
         graph_fields["testing_assessment_artifact_path"] = testing_assessment_artifact
+    if cloud_assessment_status is not None:
+        graph_fields["cloud_assessment_status"] = cloud_assessment_status
+    if cloud_assessment_finding_count is not None:
+        graph_fields["cloud_assessment_finding_count"] = cloud_assessment_finding_count
+    if cloud_assessment_artifact is not None:
+        graph_fields["cloud_assessment_artifact_path"] = cloud_assessment_artifact
+    if ai_readiness_assessment_status is not None:
+        graph_fields["ai_readiness_assessment_status"] = ai_readiness_assessment_status
+    if ai_readiness_assessment_finding_count is not None:
+        graph_fields["ai_readiness_assessment_finding_count"] = (
+            ai_readiness_assessment_finding_count
+        )
+    if ai_readiness_assessment_artifact is not None:
+        graph_fields["ai_readiness_assessment_artifact_path"] = (
+            ai_readiness_assessment_artifact
+        )
+    if performance_assessment_status is not None:
+        graph_fields["performance_assessment_status"] = performance_assessment_status
+    if performance_assessment_finding_count is not None:
+        graph_fields["performance_assessment_finding_count"] = (
+            performance_assessment_finding_count
+        )
+    if performance_assessment_artifact is not None:
+        graph_fields["performance_assessment_artifact_path"] = (
+            performance_assessment_artifact
+        )
     if architecture_report_enabled is not None:
         graph_fields["architecture_report_enabled"] = architecture_report_enabled
     if architecture_report_status is not None:
@@ -3032,6 +4571,80 @@ def _build_command_result(
         graph_fields["security_report_hotspot_count"] = security_report_hotspot_count
     if security_report_adapter_ms is not None:
         graph_fields["security_report_adapter_ms"] = security_report_adapter_ms
+    if testing_report_enabled is not None:
+        graph_fields["testing_report_enabled"] = testing_report_enabled
+    if testing_report_status is not None:
+        graph_fields["testing_report_status"] = testing_report_status
+    if testing_report_section_version is not None:
+        graph_fields["testing_report_section_version"] = testing_report_section_version
+    if testing_report_finding_count is not None:
+        graph_fields["testing_report_finding_count"] = testing_report_finding_count
+    if testing_report_conclusion_count is not None:
+        graph_fields["testing_report_conclusion_count"] = (
+            testing_report_conclusion_count
+        )
+    if testing_report_adapter_ms is not None:
+        graph_fields["testing_report_adapter_ms"] = testing_report_adapter_ms
+    if cloud_report_enabled is not None:
+        graph_fields["cloud_report_enabled"] = cloud_report_enabled
+    if cloud_report_status is not None:
+        graph_fields["cloud_report_status"] = cloud_report_status
+    if cloud_report_section_version is not None:
+        graph_fields["cloud_report_section_version"] = cloud_report_section_version
+    if cloud_report_finding_count is not None:
+        graph_fields["cloud_report_finding_count"] = cloud_report_finding_count
+    if cloud_report_conclusion_count is not None:
+        graph_fields["cloud_report_conclusion_count"] = cloud_report_conclusion_count
+    if cloud_report_adapter_ms is not None:
+        graph_fields["cloud_report_adapter_ms"] = cloud_report_adapter_ms
+    if ai_readiness_report_enabled is not None:
+        graph_fields["ai_readiness_report_enabled"] = ai_readiness_report_enabled
+    if ai_readiness_report_status is not None:
+        graph_fields["ai_readiness_report_status"] = ai_readiness_report_status
+    if ai_readiness_report_section_version is not None:
+        graph_fields["ai_readiness_report_section_version"] = (
+            ai_readiness_report_section_version
+        )
+    if ai_readiness_report_finding_count is not None:
+        graph_fields["ai_readiness_report_finding_count"] = (
+            ai_readiness_report_finding_count
+        )
+    if ai_readiness_report_conclusion_count is not None:
+        graph_fields["ai_readiness_report_conclusion_count"] = (
+            ai_readiness_report_conclusion_count
+        )
+    if ai_readiness_report_adapter_ms is not None:
+        graph_fields["ai_readiness_report_adapter_ms"] = ai_readiness_report_adapter_ms
+    if performance_report_enabled is not None:
+        graph_fields["performance_report_enabled"] = performance_report_enabled
+    if performance_report_status is not None:
+        graph_fields["performance_report_status"] = performance_report_status
+    if performance_report_section_version is not None:
+        graph_fields["performance_report_section_version"] = (
+            performance_report_section_version
+        )
+    if performance_report_finding_count is not None:
+        graph_fields["performance_report_finding_count"] = (
+            performance_report_finding_count
+        )
+    if performance_report_conclusion_count is not None:
+        graph_fields["performance_report_conclusion_count"] = (
+            performance_report_conclusion_count
+        )
+    if performance_report_adapter_ms is not None:
+        graph_fields["performance_report_adapter_ms"] = performance_report_adapter_ms
+    if roadmap_report_enabled is not None:
+        graph_fields["roadmap_report_enabled"] = roadmap_report_enabled
+    if roadmap_report_status is not None:
+        graph_fields["roadmap_report_status"] = roadmap_report_status
+    if roadmap_report_section_version is not None:
+        graph_fields["roadmap_report_section_version"] = roadmap_report_section_version
+    if roadmap_report_initiative_count is not None:
+        graph_fields["roadmap_report_initiative_count"] = roadmap_report_initiative_count
+    if roadmap_report_phase_count is not None:
+        graph_fields["roadmap_report_phase_count"] = roadmap_report_phase_count
+    if roadmap_report_adapter_ms is not None:
+        graph_fields["roadmap_report_adapter_ms"] = roadmap_report_adapter_ms
     if (
         mode == AssessmentMode.AI_ENHANCED
         and ai_status == AIExecutionStatus.SUCCEEDED
@@ -3270,6 +4883,66 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
             "Repository-testing evidence artifact: "
             f"{_display_path(result.repository_testing_evidence_artifact_path)}"
         )
+    if result.repository_cloud_evidence_status is not None:
+        console.print(
+            "Repository-cloud evidence: "
+            f"{result.repository_cloud_evidence_status}"
+        )
+    if result.repository_cloud_evidence_candidate_count is not None:
+        console.print(
+            "Repository-cloud evidence candidates: "
+            f"{result.repository_cloud_evidence_candidate_count}"
+        )
+    if result.repository_cloud_evidence_technology_count is not None:
+        console.print(
+            "Repository-cloud evidence technologies: "
+            f"{result.repository_cloud_evidence_technology_count}"
+        )
+    if result.repository_cloud_evidence_artifact_path is not None:
+        console.print(
+            "Repository-cloud evidence artifact: "
+            f"{_display_path(result.repository_cloud_evidence_artifact_path)}"
+        )
+    if result.repository_ai_readiness_evidence_status is not None:
+        console.print(
+            "Repository AI-readiness evidence: "
+            f"{result.repository_ai_readiness_evidence_status}"
+        )
+    if result.repository_ai_readiness_evidence_candidate_count is not None:
+        console.print(
+            "Repository AI-readiness evidence candidates: "
+            f"{result.repository_ai_readiness_evidence_candidate_count}"
+        )
+    if result.repository_ai_readiness_evidence_technology_count is not None:
+        console.print(
+            "Repository AI-readiness evidence technologies: "
+            f"{result.repository_ai_readiness_evidence_technology_count}"
+        )
+    if result.repository_ai_readiness_evidence_artifact_path is not None:
+        console.print(
+            "Repository AI-readiness evidence artifact: "
+            f"{_display_path(result.repository_ai_readiness_evidence_artifact_path)}"
+        )
+    if result.repository_performance_evidence_status is not None:
+        console.print(
+            "Repository performance evidence: "
+            f"{result.repository_performance_evidence_status}"
+        )
+    if result.repository_performance_evidence_candidate_count is not None:
+        console.print(
+            "Repository performance evidence candidates: "
+            f"{result.repository_performance_evidence_candidate_count}"
+        )
+    if result.repository_performance_evidence_technology_count is not None:
+        console.print(
+            "Repository performance evidence technologies: "
+            f"{result.repository_performance_evidence_technology_count}"
+        )
+    if result.repository_performance_evidence_artifact_path is not None:
+        console.print(
+            "Repository performance evidence artifact: "
+            f"{_display_path(result.repository_performance_evidence_artifact_path)}"
+        )
     if result.security_assessment_status is not None:
         console.print(f"Security assessment: {result.security_assessment_status}")
     if result.security_assessment_finding_count is not None:
@@ -3294,6 +4967,42 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
             "Test assessment artifact: "
             f"{_display_path(result.testing_assessment_artifact_path)}"
         )
+    if result.cloud_assessment_status is not None:
+        console.print(f"Cloud assessment: {result.cloud_assessment_status}")
+    if result.cloud_assessment_finding_count is not None:
+        console.print(
+            "Cloud assessment findings: "
+            f"{result.cloud_assessment_finding_count}"
+        )
+    if result.cloud_assessment_artifact_path is not None:
+        console.print(
+            "Cloud assessment artifact: "
+            f"{_display_path(result.cloud_assessment_artifact_path)}"
+        )
+    if result.ai_readiness_assessment_status is not None:
+        console.print(f"AI Readiness assessment: {result.ai_readiness_assessment_status}")
+    if result.ai_readiness_assessment_finding_count is not None:
+        console.print(
+            "AI Readiness assessment findings: "
+            f"{result.ai_readiness_assessment_finding_count}"
+        )
+    if result.ai_readiness_assessment_artifact_path is not None:
+        console.print(
+            "AI Readiness assessment artifact: "
+            f"{_display_path(result.ai_readiness_assessment_artifact_path)}"
+        )
+    if result.performance_assessment_status is not None:
+        console.print(f"Performance assessment: {result.performance_assessment_status}")
+    if result.performance_assessment_finding_count is not None:
+        console.print(
+            "Performance assessment findings: "
+            f"{result.performance_assessment_finding_count}"
+        )
+    if result.performance_assessment_artifact_path is not None:
+        console.print(
+            "Performance assessment artifact: "
+            f"{_display_path(result.performance_assessment_artifact_path)}"
+        )
     if result.architecture_report_enabled:
         console.print(
             "Architecture report section: "
@@ -3313,6 +5022,11 @@ def _print_success_summary(console: Console, result: AssessmentCommandResult) ->
         console.print(
             "Security report section: "
             f"{result.security_report_status or 'unavailable'}"
+        )
+    if result.testing_report_enabled:
+        console.print(
+            "Test report section: "
+            f"{result.testing_report_status or 'unavailable'}"
         )
     if result.architecture_conclusion_count is not None:
         console.print(f"Architecture conclusions: {result.architecture_conclusion_count}")

@@ -47,12 +47,114 @@ YAML-based enterprise architecture model.
   - **4.6.1** Test Intelligence Domain Foundation — Complete
   - **4.6.2** Repository Test Evidence Foundation — Complete (platform evidence; disabled by default)
   - **4.6.3** Test Hygiene Rules — Complete (`testing.core`; TEST-004 deferred)
-- **4.7 Performance Intelligence** — not started
-- **4.8 Modernization Intelligence** — not started
+  - **4.6.4** Test Assessment Inventory — Complete (`testing-assessment` 1.1.0)
+  - **4.6.5** Deterministic Test Synthesis — Complete (`testing-assessment` 1.2.0)
+  - **4.6.6** Test Report Integration — Complete (`report.testing` 1.0.0; default off)
+- **4.7 Cloud Intelligence** — In Progress
+  - **4.7.1** Cloud Intelligence Domain Foundation — Complete (`cloud-assessment` 1.0.0; analytically empty; default off)
+  - **4.7.2** Cloud Repository Evidence — Complete (`repository-cloud-evidence` 1.0.0; platform evidence; default off)
+  - **4.7.3** Cloud Intelligence Rules — Complete (`cloud.core` 1.0.0; 11 hygiene rules; default off)
+  - **4.7.4** Cloud Assessment Inventory — Complete (`cloud-assessment` 1.1.0; default off)
+  - **4.7.5** Deterministic Cloud Synthesis — Complete (`cloud-assessment` 1.2.0; default off)
+  - **4.7.6** Cloud Report Integration — Complete (`report.cloud` 1.0.0; default off)
+- **4.8 AI Readiness Intelligence** — Complete
+  - **4.8.1** AI Readiness Intelligence Domain Foundation — Complete (`ai-readiness-assessment` 1.0.0; analytically empty; default off)
+  - **4.8.2** AI Readiness Repository Evidence — Complete (`repository-ai-readiness-evidence` 1.0.0; platform evidence; default off)
+  - **4.8.3** AI Readiness Intelligence Rules — Complete (`ai_readiness.core` 1.0.0; 17 hygiene rules; default off)
+  - **4.8.4** AI Readiness Assessment Inventory — Complete (`ai-readiness-assessment` 1.1.0; default off)
+  - **4.8.5** Deterministic AI Readiness Synthesis — Complete (`ai-readiness-assessment` 1.2.0; default off)
+  - **4.8.6** AI Readiness Report Integration — Complete (`report.ai_readiness` 1.0.0; default off)
+- **4.9 Performance Intelligence** — Complete
+  - **4.9.1** Performance Intelligence Domain Foundation — Complete (`performance-assessment` 1.0.0; analytically empty; default off)
+  - **4.9.2** Performance Repository Evidence — Complete (`repository-performance-evidence` 1.0.0; platform evidence; default off)
+  - **4.9.3** Performance Intelligence Rules — Complete (`performance.core` 1.0.0; 20 hygiene rules; default off)
+  - **4.9.4** Performance Assessment Inventory — Complete (`performance-assessment` 1.1.0; default off)
+  - **4.9.5** Deterministic Performance Synthesis — Complete (`performance-assessment` 1.2.0; default off)
+  - **4.9.6** Performance Report Integration — Complete (`report.performance` 1.0.0; default off)
+- **4.10 Modernization Intelligence** — not started
 
-## Phase 5 — Language and Build Ecosystem Expansion
+## Phase 5 — Repository Knowledge Layer
 
-Broader language/build coverage.
+Canonical knowledge documents, chunks, and provider-neutral vector storage for
+future indexing and retrieval. Independent of the Phase 2 engineering knowledge
+store (SQLite).
+
+- **5.1 Repository Knowledge Foundation** — Complete
+  (`knowledge-document` / `knowledge-chunk` / `vector-record` 1.0.0;
+  `InMemoryVectorStore`; `[knowledge].enabled` default off; no embeddings,
+  pgvector, indexing, or retrieval yet)
+- **5.2 Knowledge Document Projection and Deterministic Chunking** — Complete
+  (`knowledge-corpus` / `knowledge-projection` / `deterministic-chunker` 1.0.0;
+  in-memory projectors + chunker; `[knowledge.projection]` / `[knowledge.chunking]`
+  default off; optional `repository-knowledge-corpus.json`; no embeddings or
+  vector-store writes)
+- **5.3 Embedding and Knowledge Indexing Pipeline** — Complete
+  (`embedding-result` / `knowledge-index-manifest` / `knowledge-index-result` 1.0.0;
+  `DeterministicEmbeddingProvider`; `KnowledgeIndexer` + incremental manifests;
+  in-memory `VectorStore` upserts; `[knowledge.embedding]` / `[knowledge.indexing]`
+  default off; no Bedrock/OpenAI, retrieval, or RAG)
+- **5.4 PostgreSQL + pgvector Provider** — Complete
+  (`PgVectorStore`; schema `knowledge_documents` / `knowledge_chunks` /
+  `knowledge_vectors`; HNSW cosine index; `[knowledge.vector_store]` supports
+  `provider = "pgvector"`; storage-only swap; no retrieval, hybrid search,
+  reranking, or RAG)
+- **5.4.1 Pgvector Local Operations and Configuration Hardening** — Complete
+  (Docker Compose `pgvector/pgvector:pg16`; `CODESTRATA_*` env resolution;
+  secret redaction; no silent memory fallback; persistence validation;
+  [vector-store-setup.md](docs/repository-knowledge/vector-store-setup.md))
+- **5.5 Repository Retrieval Engine** — Complete
+  (`repository-retrieval-request/result` 1.0.0; `RepositoryRetriever`;
+  deterministic query prep, filters, dedupe, diversity, citations;
+  `[knowledge.retrieval]` default off; memory/pgvector parity; no answers,
+  hybrid search, reranking, RAG, MCP, or production embeddings)
+- **5.6 Grounded Repository Answer Engine** — Complete
+  (`grounded-answer-*` / `answer-statement` / `answer-citation` 1.0.0;
+  `GroundedAnswerEngine`; `AnswerProvider` + `DeterministicExtractiveAnswerProvider`;
+  citation/grounding validation; `[knowledge.answering]` default off;
+  no Bedrock/OpenAI/Anthropic/local LLM, hybrid retrieval, reranking, MCP,
+  or production embeddings)
+- **5.7 Repository Intelligence MCP Server** — Complete
+  (`mcp-tool-response` / `mcp-health-response` / `mcp-server-manifest` 1.0.0;
+  `repository_*` tools over retriever/answer engine/knowledge queries;
+  stdio + streamable-http; `[mcp]` default off; localhost HTTP; read-only;
+  no production AI, hybrid retrieval, mutation, public hosting, or auth)
+- **5.8 Production AI Providers (Bedrock + OpenAI)** — Complete
+  (`Bedrock`/`OpenAI` embedding + answer providers; independent
+  `[ai].embedding_provider` / `[ai].answer_provider`; `AIProviderRegistry`;
+  shared grounded-answer prompts; index embedding fingerprints; `aimf ai *`;
+  MCP uses factories; no Anthropic/Azure/Gemini/Ollama, hybrid, rerank,
+  memory, agents, UI, REST, mutation, or silent provider fallback)
+- **5.8.1 Externalize and Version AI Prompts** — Complete
+  (versioned `prompts/grounded-repository-answer/1.0.0/` resources;
+  deterministic loader/renderer; prompt text removed from Python)
+- **5.9 Hybrid Retrieval** — Complete
+  (`mode = vector|lexical|hybrid`; BM25-lite lexical over chunk text;
+  Reciprocal Rank Fusion; diagnostics; default remains vector-only;
+  no reranking, graph expansion, or conversational memory)
+- **5.10 Modernization Roadmap Engine** — Complete
+  (`modernization-roadmap` / `report.roadmap` 1.0.0; Stabilize→Secure→Modernize→Optimize;
+  groups existing findings/recommendations into initiatives; deterministic
+  priority/effort/risk/dependencies; `[report.sections.roadmap]` default off;
+  `aimf roadmap inspect|phases|initiatives|generate`; no AI generation, Jira,
+  dates, cost estimates, portfolio planning, UI, or repository mutation)
+- **5.11 Repository Onboarding** — Complete
+  (`repository-onboarding-manifest` 1.0.0; `aimf onboard <repository>`;
+  orchestrates existing assess → findings/recs → knowledge → embed/index →
+  reports; persists onboarding manifest; `--force-reindex` / `--skip-report` /
+  `--skip-index` / `--provider`; no duplicated assessment logic)
+- **5.12 Report Contract Hardening** — Complete
+  (stable ordering/dedupe; top-level report `manifest`; volatile-field isolation;
+  enum normalization; `aimf report validate`; golden + repeated-run tests;
+  leadership HTML empty-state/hierarchy polish; schema remains 1.2 additive)
+- **5.13 End-to-End MVP Acceptance Harness** — Complete
+  (`aimf acceptance run|status`; live onboard → validate → grounded Q&A → MCP
+  health → determinism for CodeStrata / Spring Petclinic / synthetic-multilang;
+  `scripts/mvp_acceptance.py`; `reports/mvp-acceptance/summary.{json,md}`;
+  non-zero exit on any repository failure; no new assessment logic)
+
+## Phase 5 (deferred) — Language and Build Ecosystem Expansion
+
+Broader language/build coverage (deferred while Repository Knowledge lands).
 
 ## Phase 6 — Engineering Workflow Intelligence
 

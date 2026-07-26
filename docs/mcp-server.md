@@ -1,83 +1,53 @@
 # CodeStrata MCP server
 
-**Status:** Phase 2C (FastMCP adapter).
+**Status:** Phase 2C knowledge-store tools + Phase 5.7 repository-intelligence tools.
 
-CodeStrata exposes durable modernization knowledge and assessment execution to
-MCP clients through a thin FastMCP adapter.
+See the Phase 5.7 guides:
+
+- [docs/mcp/overview.md](mcp/overview.md)
+- [docs/mcp/setup.md](mcp/setup.md)
+- [docs/mcp/tools.md](mcp/tools.md)
+- [docs/mcp/client-examples.md](mcp/client-examples.md)
+- [docs/mcp/security.md](mcp/security.md)
+- [docs/mcp/troubleshooting.md](mcp/troubleshooting.md)
 
 ## Architecture
 
 ```text
 MCP client (Cursor, etc.)
         ↓
-aimf mcp serve  (stdio)
+aimf mcp serve  (stdio | streamable-http)
         ↓
 CodeStrata FastMCP tools / resources / prompts
         ↓
-KnowledgeQueryService / AssessmentApplicationService
+KnowledgeQueryService / RepositoryRetriever / GroundedAnswerEngine
         ↓
-KnowledgeStore ports → SQLite + verified blobs
+KnowledgeStore + VectorStore
 ```
 
-MCP never executes SQL, opens blob files, or reads `report.json` / `report.html`.
+MCP never executes SQL, opens blob files, or reads `report.json` / `report.html`
+outside application ports.
 
-Sibling adapters (CLI, REST, Agent Framework CLI/MCP tools) call the same
-application services. Agents must **not** call the MCP server internally.
-
-## Dependency
-
-Official MCP Python SDK:
-
-```text
-mcp>=1.27,<2
-```
-
-FastMCP API: `mcp.server.fastmcp.FastMCP`.
-
-## Start the server
+## Start
 
 ```bash
+# Enable [mcp].enabled = true in aimf.toml first
 aimf mcp serve --config aimf.toml
+aimf mcp tools --config aimf.toml
+aimf mcp health --config aimf.toml
 ```
 
-Transport: **stdio** only in this phase.
+Transport defaults to **stdio**. HTTP (`--transport http`) binds to `127.0.0.1`
+by default.
 
-Logs go to **stderr** so MCP protocol traffic on stdout stays clean.
+## Repository intelligence tools
 
-Optional config (all fields optional; existing `aimf.toml` files remain valid):
+Registered names use underscores (`repository_search`, `repository_answer`, …).
+Dotted aliases (`repository.search`, …) are documented in
+[mcp/overview.md](mcp/overview.md).
 
-```toml
-[mcp]
-enabled = true
-transport = "stdio"
-log_level = "INFO"
-```
+`repository_answer` uses **deterministic extractive** answering — not generative AI.
 
-## Example Cursor MCP config
-
-```json
-{
-  "mcpServers": {
-    "codestrata": {
-      "command": "/path/to/ai-modernization-factory/.venv/bin/aimf",
-      "args": ["mcp", "serve", "--config", "/path/to/project/aimf.toml"]
-    }
-  }
-}
-```
-
-Do not embed credentials in MCP configuration.
-
-## Tools
-
-| Tool | Purpose |
-| ---- | ------- |
-| `list_repositories` / `get_repository` | Repository discovery |
-| `list_assessments` / `get_assessment` / `get_latest_assessment` | Assessment history |
-| `list_snapshots` / `get_snapshot` / `compare_snapshots` | Snapshot history + diff |
-| `list_findings` / `get_finding` / `explain_finding` | Phase 3 findings |
-| `list_recommendations` / `get_recommendation` / `explain_recommendation` | Phase 3 recommendations |
-| `list_components` / `get_component` / `get_component_dependencies` | Graph components |
 | `get_ai_execution` / `get_ai_enrichment` | Optional AI artifacts |
 | `run_assessment` | Execute assessment + persist knowledge |
 

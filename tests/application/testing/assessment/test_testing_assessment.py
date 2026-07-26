@@ -62,8 +62,7 @@ def test_defaults_disabled(tmp_path: Path) -> None:
     assert settings.assessment.sections.technical_debt.enabled is False
     assert settings.assessment.sections.dependency.enabled is False
     assert settings.assessment.sections.security.enabled is False
-    # No report.sections.testing in foundation phase.
-    assert "testing" not in type(settings.report.sections).model_fields
+    assert settings.report.sections.testing.enabled is False
 
 
 def test_configuration_enablement(tmp_path: Path) -> None:
@@ -132,8 +131,7 @@ def test_lifecycle_states() -> None:
         assert section.findings == ()
         assert section.assessment_id.startswith("test-assessment:")
         assert any(
-            "not implemented" in item.summary.lower()
-            or "foundation" in item.summary.lower()
+            "not implemented" in item.summary.lower() or "foundation" in item.summary.lower()
             for item in section.limitations
         )
         summary = section.metadata.get("summary", "").lower()
@@ -143,9 +141,7 @@ def test_lifecycle_states() -> None:
 
 
 def test_succeeded_empty_states_no_rules_evaluated() -> None:
-    section = TestAssessmentAssembler().assemble_empty(
-        repository_id="repo:demo", pack_enabled=True
-    )
+    section = TestAssessmentAssembler().assemble_empty(repository_id="repo:demo", pack_enabled=True)
     assert section.status is TestAssessmentStatus.SUCCEEDED
     assert section.execution_summary.testing_rules_planned == 0
     assert section.execution_summary.rules_executed == 0
@@ -162,19 +158,20 @@ def test_artifact_write_round_trip(tmp_path: Path) -> None:
     payload = loads_stable_json(text)
     assert payload["artifact_schema_id"] == ARTIFACT_SCHEMA_ID
     assert payload["schema_name"] == "testing-assessment"
-    assert payload["section_version"] == "1.0.0"
+    assert payload["section_version"] == "1.2.0"
     restored = TestAssessmentSection.model_validate(
         {key: value for key, value in payload.items() if key != "artifact_schema_id"}
     )
     assert restored == section
     assert dumps_stable_json(build_testing_assessment_payload(section)) == text
     assert "/Users/" not in text
-    assert '"themes"' not in text
-    assert '"conclusions"' not in text
-    assert '"recommendations"' not in text
     assert '"hotspots"' not in text
     assert '"coverage_score"' not in text
     assert '"release_readiness"' not in text
+    # Synthesis fields exist on schema 1.2.0 but remain empty on foundation paths.
+    assert section.themes == ()
+    assert section.conclusions == ()
+    assert section.recommendations == ()
 
 
 def test_deterministic_disabled_fingerprint() -> None:
@@ -260,7 +257,16 @@ def test_assemble_with_hygiene_findings(tmp_path: Path) -> None:
     assert finding.id in section.all_finding_ids
     assert section.execution_summary.total_finding_count == 1
     assert section.execution_summary.rules_executed == 4
-    assert section.metadata.get("assessment_milestone") == "4.6.3"
+    assert section.metadata.get("assessment_milestone") == "4.6.5"
+    assert section.finding_inventory.finding_count == 1
+    assert finding.id in section.finding_inventory.finding_ids
+    assert section.severity_inventory.buckets
+    assert section.rule_inventory.rules_planned == 4
+    assert section.synthesis.themes
+    assert section.themes
+    assert section.conclusions
+    assert section.recommendations
+    assert section.metadata.get("overall_posture_summary")
     assert "well tested" not in section.metadata.get("summary", "").lower() or (
         "does not" in " ".join(item.summary.lower() for item in section.limitations)
     )

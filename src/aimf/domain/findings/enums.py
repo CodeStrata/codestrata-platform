@@ -31,6 +31,9 @@ class FindingCategory(StrEnum):
     BUILD = "build"
     GOVERNANCE = "governance"
     SECURITY = "security"
+    CLOUD = "cloud"
+    AI_READINESS = "ai_readiness"
+    PERFORMANCE = "performance"
     MODERNIZATION = "modernization"
     UNKNOWN = "unknown"
 

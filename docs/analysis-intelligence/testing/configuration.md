@@ -25,10 +25,29 @@ enabled = false
 # include_limitations = true
 # include_traceability = true
 # include_execution_summary = true
+# include_synthesis = true
 ```
 
-There is **no** `[report.sections.testing]` yet and **no** `include_synthesis`
-option yet. There is no `test_004` toggle (deferred rule).
+Report presentation (independent; default off):
+
+```toml
+[report.sections.testing]
+enabled = false
+# include_executive_summary = true
+# include_coverage = true
+# include_inventory = true
+# include_execution_summary = true
+# include_themes = true
+# include_conclusions = true
+# include_recommendations = true
+# include_diagnostics = true
+# include_limitations = true
+# include_traceability = true
+```
+
+There is no `test_004` toggle (deferred rule). `include_synthesis` defaults to
+**true** when the assessment section is enabled. Enabling the report gate does
+not run assessment, rules, or evidence collection.
 
 Platform repository test evidence is independent of these Test Intelligence
 gates:
