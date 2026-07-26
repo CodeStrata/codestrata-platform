@@ -16,17 +16,17 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.domain.knowledge import IndexScope, VectorQuery, VectorRecord  # noqa: E402
-from aimf.infrastructure.vector_store.pgvector import PgVectorStore  # noqa: E402
-from aimf.security.database_url import redact_database_url  # noqa: E402
+from codestrata.security.database_url import redact_database_url  # noqa: E402
+from codestrata_platform.rag.domain import IndexScope, VectorQuery, VectorRecord  # noqa: E402
+from codestrata_platform.rag.vector_store.pgvector import PgVectorStore  # noqa: E402
 
 
 def _url() -> str:
     return (
         os.environ.get("CODESTRATA_DATABASE_URL", "").strip()
-        or os.environ.get("AIMF_PGVECTOR_URL", "").strip()
+        or os.environ.get("CODESTRATA_PGVECTOR_URL", "").strip()
     )
 
 

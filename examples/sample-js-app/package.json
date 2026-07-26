@@ -1,7 +1,7 @@
 {
   "name": "sample-js-app",
   "version": "1.0.0",
-  "description": "Minimal JavaScript sample used by AIMF onboarding and tests",
+  "description": "Minimal JavaScript sample used by CodeStrata onboarding and tests",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

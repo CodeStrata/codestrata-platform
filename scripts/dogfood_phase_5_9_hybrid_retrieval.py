@@ -11,12 +11,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aimf.application.knowledge.retrieval import RepositoryRetriever
-from aimf.config.settings import KnowledgeEmbeddingSettings, KnowledgeRetrievalSettings
-from aimf.domain.knowledge import RetrievalRequest, RetrievalScope
-from aimf.domain.knowledge.vector import VectorRecord
-from aimf.infrastructure.embedding import DeterministicEmbeddingProvider
-from aimf.infrastructure.vector_store import InMemoryVectorStore
+from codestrata.config.settings import KnowledgeEmbeddingSettings, KnowledgeRetrievalSettings
+from codestrata_platform.rag.application.retrieval import RepositoryRetriever
+from codestrata_platform.rag.domain import RetrievalRequest, RetrievalScope
+from codestrata_platform.rag.domain.vector import VectorRecord
+from codestrata_platform.rag.embedding import DeterministicEmbeddingProvider
+from codestrata_platform.rag.vector_store import InMemoryVectorStore
 
 CORPORA: dict[str, list[tuple[str, str]]] = {
     "codestrata": [

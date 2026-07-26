@@ -10,12 +10,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from aimf.application.roadmap import (
+from codestrata.application.roadmap import (
     ModernizationRoadmapEngine,
     RoadmapSourceFinding,
     RoadmapSourceRecommendation,
 )
-from aimf.reporting.roadmap.adapter import RoadmapReportAdapter
+from codestrata.reporting.roadmap.adapter import RoadmapReportAdapter
 
 PROFILES: dict[str, dict[str, object]] = {
     "codestrata": {
@@ -39,7 +39,7 @@ PROFILES: dict[str, dict[str, object]] = {
             ("pc-build", "Keep Maven wrapper current", "build", "medium", ("f-pc-build",), 1),
             ("pc-test", "Stabilize controller tests", "testing", "high", ("f-pc-test",), 2),
             ("pc-dep", "Review Spring Boot starters", "dependency", "medium", ("f-pc-dep",), 3),
-            ("pc-mod", "Modernize persistence patterns", "modernization", "medium", ("f-pc-mod",), 5),
+            ("pc-mod", "Modernize persistence patterns", "modernization", "medium", ("f-pc-mod",), 5),  # noqa: E501
         ],
         "findings": [
             ("f-pc-build", "build", "low"),

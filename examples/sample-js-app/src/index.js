@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Minimal Express-style entrypoint for AIMF JavaScript detection demos.
+ * Minimal Express-style entrypoint for CODESTRATA JavaScript detection demos.
  * This is intentionally small and does not require `npm install` to assess.
  */
 

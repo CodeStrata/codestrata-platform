@@ -99,7 +99,7 @@ store (SQLite).
   `provider = "pgvector"`; storage-only swap; no retrieval, hybrid search,
   reranking, or RAG)
 - **5.4.1 Pgvector Local Operations and Configuration Hardening** — Complete
-  (Docker Compose `pgvector/pgvector:pg16`; `CODESTRATA_*` env resolution;
+  (Docker Compose `pgvector/pgvector:pg16`; `CodeStrata_*` env resolution;
   secret redaction; no silent memory fallback; persistence validation;
   [vector-store-setup.md](docs/repository-knowledge/vector-store-setup.md))
 - **5.5 Repository Retrieval Engine** — Complete
@@ -121,7 +121,7 @@ store (SQLite).
 - **5.8 Production AI Providers (Bedrock + OpenAI)** — Complete
   (`Bedrock`/`OpenAI` embedding + answer providers; independent
   `[ai].embedding_provider` / `[ai].answer_provider`; `AIProviderRegistry`;
-  shared grounded-answer prompts; index embedding fingerprints; `aimf ai *`;
+  shared grounded-answer prompts; index embedding fingerprints; `codestrata ai *`;
   MCP uses factories; no Anthropic/Azure/Gemini/Ollama, hybrid, rerank,
   memory, agents, UI, REST, mutation, or silent provider fallback)
 - **5.8.1 Externalize and Version AI Prompts** — Complete
@@ -135,26 +135,82 @@ store (SQLite).
   (`modernization-roadmap` / `report.roadmap` 1.0.0; Stabilize→Secure→Modernize→Optimize;
   groups existing findings/recommendations into initiatives; deterministic
   priority/effort/risk/dependencies; `[report.sections.roadmap]` default off;
-  `aimf roadmap inspect|phases|initiatives|generate`; no AI generation, Jira,
+  `codestrata roadmap inspect|phases|initiatives|generate`; no AI generation, Jira,
   dates, cost estimates, portfolio planning, UI, or repository mutation)
 - **5.11 Repository Onboarding** — Complete
-  (`repository-onboarding-manifest` 1.0.0; `aimf onboard <repository>`;
+  (`repository-onboarding-manifest` 1.0.0; `codestrata onboard <repository>`;
   orchestrates existing assess → findings/recs → knowledge → embed/index →
   reports; persists onboarding manifest; `--force-reindex` / `--skip-report` /
   `--skip-index` / `--provider`; no duplicated assessment logic)
 - **5.12 Report Contract Hardening** — Complete
   (stable ordering/dedupe; top-level report `manifest`; volatile-field isolation;
-  enum normalization; `aimf report validate`; golden + repeated-run tests;
+  enum normalization; `codestrata report validate`; golden + repeated-run tests;
   leadership HTML empty-state/hierarchy polish; schema remains 1.2 additive)
 - **5.13 End-to-End MVP Acceptance Harness** — Complete
-  (`aimf acceptance run|status`; live onboard → validate → grounded Q&A → MCP
+  (`codestrata acceptance run|status`; live onboard → validate → grounded Q&A → MCP
   health → determinism for CodeStrata / Spring Petclinic / synthetic-multilang;
   `scripts/mvp_acceptance.py`; `reports/mvp-acceptance/summary.{json,md}`;
   non-zero exit on any repository failure; no new assessment logic)
+- **5.14 MVP Packaging and Release Readiness** — Complete
+  (hardened `pyproject.toml`; packaged schemas/prompts/defaults/assets;
+  optional extras `bedrock`/`openai`/`mcp`/`development`; wheel+sdist;
+  `scripts/clean_install_smoke.py`; `codestrata release check`;
+  `docs/release-readiness.md`; no PyPI publish)
+- **5.15 Full Regression Suite Stabilization** — Complete
+  (full `pytest` / `ruff check .` / `mypy src` green; testing-assessment
+  schema docs/tests aligned to **1.2.0**; report related_finding_id remapping
+  parity; `docs/mvp-regression.md`; `reports/mvp-regression/summary.json`)
+- **5.16 Complete CodeStrata Rename** — Complete
+  (`src/aimf` → `src/codestrata`; CLI `codestrata`; `codestrata.toml`;
+  `.codestrata/`; `CODESTRATA_*`; dist name `codestrata`; knowledge schema v3
+  `codestrata_version`; `docs/rename-codestrata.md`; no AIMF CLI/package)
+- **5.17 PHP Support** — Complete
+  (Composer metadata + Dependency Evidence; `language.php.core`; Laravel /
+  Symfony / CodeIgniter / Laminas detection; architecture import graph for
+  `.php`; PHPUnit testing evidence; Architecture/Security/Testing packs include
+  `php`; `examples/sample-php-app`; dogfood vs open-source PHP repos)
+- **5.17.1 PHP Assessment Parity** — Complete
+  (`language.php.complexity` brace-scan collector; Technical Debt + Dependency
+  hygiene packs include `php`; Composer unbounded `*` + `dev-*` mutable
+  hygiene; assess loads `.php` for complexity; docs/limitations updated)
+- **5.18 C# / .NET Support** — Complete
+  (NuGet PackageReference / packages.config / Directory.Packages.props metadata
+  + Dependency Evidence; `language.csharp.core` + `language.csharp.complexity`;
+  .NET Framework / .NET Core / modern .NET, ASP.NET MVC/Core, Web API, Blazor,
+  EF/EF Core, WCF, xUnit/NUnit/MSTest detection; architecture `using`/namespace
+  graph for `.cs`; Architecture/Security/Testing/TD/Dependency packs include
+  `csharp`; `examples/sample-csharp-app`; dogfood vs open-source .NET repos)
+- **5.19 Performance and Scalability** — Complete
+  (deterministic bench harness for small/medium/large + JS/PHP/C#/Java/Python;
+  shared source-text cache + bounded `max_read_workers`; single HTML render;
+  additive timing telemetry; configurable `analysis.runtime` limits;
+  `docs/runtime-performance.md`; `reports/performance-benchmark/`)
+- **5.20 Configuration and Execution Profiles** — Complete
+  (profiles: community / local / enterprise / bedrock / openai; precedence
+  CLI > env > TOML > profile defaults; `codestrata config profile|validate|
+  effective`; secret-safe effective dumps; docs/configuration-profiles.md)
+- **5.21 Documentation and Developer Experience** — Complete
+  (quick start, installation, architecture, CLI, MCP, report interpretation,
+  troubleshooting, contributor guide, end-to-end tutorial; Java/Python
+  samples; doc validation tests; DX help/exit-code polish)
+- **5.22 Community Edition Packaging** — Complete
+  (CE scope doc + checklist; NOTICE/SUPPORT; release notes draft; README
+  badges/feature matrix; sample reports for five languages; release-readiness
+  wheel-name fix; packaging validation)
+- **5.23 Monorepo Organization and Public Export Automation** — Complete
+  (`engine/` / `examples/` / `platform/` / plugin placeholders;
+  `public-export-manifest.yaml`; export + validate scripts; engine↔platform
+  boundary tests; sync documentation)
+- **5.24 Security and Production Hardening** — Complete
+- **5.24.1 Platform Capability Reconciliation** — Complete (RAG/KG owned by
+  `platform/`; university workspace deleted; Engine↔Platform entry points)
+  (dependency audit; security_check script; symlink-safe scanning; AI/Enterprise
+  defaults; Community export excludes Enterprise KG runtime; threat model +
+  SECURITY.md; hardening tests)
 
 ## Phase 5 (deferred) — Language and Build Ecosystem Expansion
 
-Broader language/build coverage (deferred while Repository Knowledge lands).
+Broader language/build coverage beyond PHP and C# / .NET (deferred).
 
 ## Phase 6 — Engineering Workflow Intelligence
 

@@ -1,0 +1,11 @@
+[project]
+name = "sample-python-app"
+version = "0.1.0"
+description = "Minimal Python sample for CodeStrata"
+requires-python = ">=3.12"
+dependencies = [
+  "flask>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]

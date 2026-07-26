@@ -11,41 +11,48 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.application.knowledge.indexing import (  # noqa: E402
-    KnowledgeIndexRequest,
-    KnowledgeIndexer,
-    write_knowledge_index_artifact,
-)
-from aimf.application.knowledge.projection import (  # noqa: E402
-    KnowledgeProjectionRequest,
-    ProjectionContext,
-    build_knowledge_corpus,
-)
-from aimf.config.settings import (  # noqa: E402
+from codestrata.config.settings import (  # noqa: E402
     KnowledgeChunkingSettings,
     KnowledgeEmbeddingSettings,
     KnowledgeIndexingSettings,
     KnowledgeProjectionSettings,
 )
-from aimf.domain.findings.enums import FindingCategory, FindingSeverity  # noqa: E402
-from aimf.domain.findings.models import Finding, FindingEvidence  # noqa: E402
-from aimf.domain.knowledge.vector import IndexScope, VectorFilter, VectorQuery  # noqa: E402
-from aimf.domain.repository.enums import (  # noqa: E402
+from codestrata.domain.findings.enums import FindingCategory, FindingSeverity  # noqa: E402
+from codestrata.domain.findings.models import Finding, FindingEvidence  # noqa: E402
+from codestrata.domain.repository.enums import (  # noqa: E402
     HashAlgorithm,
     RepositoryFileKind,
     RepositoryRevisionType,
     RepositorySourceType,
 )
-from aimf.domain.repository.files import RepositoryFileEntry  # noqa: E402
-from aimf.domain.repository.fingerprints import hash_bytes  # noqa: E402
-from aimf.domain.repository.identities import RepositoryIdentity, RepositoryRevision  # noqa: E402
-from aimf.domain.repository.manifests import RepositoryManifest  # noqa: E402
-from aimf.domain.repository.paths import RepositoryPath  # noqa: E402
-from aimf.infrastructure.embedding import DeterministicEmbeddingProvider  # noqa: E402
-from aimf.infrastructure.vector_store import InMemoryVectorStore  # noqa: E402
-from aimf.services.inventory.content_reader import LocalFilesystemContentReader  # noqa: E402
+from codestrata.domain.repository.files import RepositoryFileEntry  # noqa: E402
+from codestrata.domain.repository.fingerprints import hash_bytes  # noqa: E402
+from codestrata.domain.repository.identities import (  # noqa: E402
+    RepositoryIdentity,
+    RepositoryRevision,
+)
+from codestrata.domain.repository.manifests import RepositoryManifest  # noqa: E402
+from codestrata.domain.repository.paths import RepositoryPath  # noqa: E402
+from codestrata.services.inventory.content_reader import LocalFilesystemContentReader  # noqa: E402
+from codestrata_platform.rag.application.indexing import (  # noqa: E402
+    KnowledgeIndexer,
+    KnowledgeIndexRequest,
+    write_knowledge_index_artifact,
+)
+from codestrata_platform.rag.application.projection import (  # noqa: E402
+    KnowledgeProjectionRequest,
+    ProjectionContext,
+    build_knowledge_corpus,
+)
+from codestrata_platform.rag.domain.vector import (  # noqa: E402
+    IndexScope,
+    VectorFilter,
+    VectorQuery,
+)
+from codestrata_platform.rag.embedding import DeterministicEmbeddingProvider  # noqa: E402
+from codestrata_platform.rag.vector_store import InMemoryVectorStore  # noqa: E402
 
 TEXT_SUFFIXES = {
     ".py",
@@ -234,7 +241,7 @@ def main() -> int:
     targets = [
         ("synthetic-multi-lang", synthetic),
         ("codestrata", ROOT),
-        ("spring-petclinic", ROOT / ".aimf" / "workspace" / "spring-petclinic"),
+        ("spring-petclinic", ROOT / ".codestrata" / "workspace" / "spring-petclinic"),
     ]
     summaries = []
     for label, root in targets:

@@ -1,104 +1,31 @@
+# Monorepo workspace tooling for codestrata-platform.
+# The installable Community Engine package lives in ./engine (see engine/pyproject.toml).
+# Implemented commercial capabilities live in ./platform (see platform/pyproject.toml).
+#
+# Development install:
+#   pip install -e "./engine[dev,mcp]"
+#   pip install -e "./platform[dev,mcp,pgvector]"
+#
+# Public exports are defined in public-export-manifest.yaml.
+
 [build-system]
-requires = ["setuptools>=75.0"]
+requires = ["setuptools>=75.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "ai-modernization-factory"
+name = "codestrata-platform-workspace"
 version = "0.1.0"
-description = "Production-grade AI platform for analyzing, understanding, and modernizing legacy enterprise applications."
-readme = "README.md"
+description = "Private monorepo workspace for CodeStrata (not published)."
 requires-python = ">=3.12"
-license = { file = "LICENSE" }
-authors = [
-    { name = "Satish Nampally" }
-]
-keywords = [
-    "artificial-intelligence",
-    "application-modernization",
-    "legacy-code",
-    "static-analysis",
-    "software-architecture",
-    "developer-tools",
-]
-
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Environment :: Console",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Quality Assurance",
-]
-
-dependencies = [
-    "pydantic>=2.10,<3.0",
-    "PyYAML>=6.0,<7.0",
-    "rich>=13.9,<15.0",
-    "typer>=0.15,<1.0",
-    "mcp>=1.27,<2",
-]
-
-
-[project.optional-dependencies]
-bedrock = [
-    "boto3>=1.35,<2.0",
-]
-openai = [
-    "openai>=1.40,<2.0",
-]
-pgvector = [
-    "psycopg[binary]>=3.2,<4.0",
-    "pgvector>=0.3.6,<1.0",
-]
-dev = [
-    "boto3>=1.35,<2.0",
-    "openai>=1.40,<2.0",
-    "mypy>=1.14,<2.0",
-    "pytest>=8.3,<9.0",
-    "pytest-cov>=6.0,<7.0",
-    "ruff>=0.9,<1.0",
-    "types-PyYAML>=6.0,<7.0",
-    "psycopg[binary]>=3.2,<4.0",
-    "pgvector>=0.3.6,<1.0",
-]
-
-
-[project.scripts]
-aimf = "aimf.cli:app"
-
-
-[project.urls]
-Homepage = "https://github.com/sknampally/ai-modernization-factory"
-Repository = "https://github.com/sknampally/ai-modernization-factory"
-Issues = "https://github.com/sknampally/ai-modernization-factory/issues"
-
-
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-
-[tool.setuptools.package-data]
-aimf = [
-    "resources/**/*.yaml",
-    "resources/**/*.yml",
-    "resources/**/*.json",
-    "reporting/assets/*.png",
-    "application/knowledge/answering/prompts/**/*.md",
-    "application/knowledge/answering/prompts/**/*.json",
-]
+readme = "README.md"
+dependencies = []
 
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src", "."]
-norecursedirs = [".git", ".venv", "fixtures", "__pycache__", "*.egg-info"]
+testpaths = ["engine/tests", "platform/tests", "tests"]
+pythonpath = ["engine/src", "platform/src", "platform/tests", "."]
+norecursedirs = [".git", ".venv", ".codestrata", "fixtures", "__pycache__", "*.egg-info"]
 addopts = [
     "-ra",
     "--strict-markers",
@@ -112,9 +39,10 @@ markers = [
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["src", "tests"]
+src = ["engine/src", "engine/tests", "platform/src", "platform/tests", "tests", "scripts"]
 exclude = [
     "**/complexity/fixtures/**",
+    ".export-staging",
 ]
 
 
@@ -138,8 +66,8 @@ line-ending = "auto"
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["src"]
-mypy_path = ["src"]
+files = ["engine/src"]
+mypy_path = ["engine/src"]
 explicit_package_bases = true
 pretty = true
 show_error_codes = true
@@ -153,14 +81,3 @@ module = [
     "openai",
 ]
 ignore_missing_imports = true
-
-
-[tool.coverage.run]
-source = ["amf"]
-branch = true
-
-
-[tool.coverage.report]
-show_missing = true
-skip_covered = true
-fail_under = 80

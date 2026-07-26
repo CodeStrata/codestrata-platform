@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run the live MVP acceptance harness (Phase 5.13).
 
-Equivalent to ``aimf acceptance run``. Uses real repositories — not report fixtures.
+Equivalent to ``codestrata acceptance run``. Uses real repositories — not report fixtures.
 """
 
 from __future__ import annotations
@@ -10,16 +10,16 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.application.acceptance import run_mvp_acceptance  # noqa: E402
+from codestrata.application.acceptance import run_mvp_acceptance  # noqa: E402
 
 
 def main() -> int:
     output = ROOT / "reports" / "mvp-acceptance"
     result = run_mvp_acceptance(
         output_directory=output,
-        config_path=ROOT / "aimf.toml",
+        config_path=ROOT / "codestrata.toml",
     )
     print(f"mvp acceptance: {'PASS' if result.ok else 'FAIL'}")
     print(f"summary: {output / 'summary.json'}")

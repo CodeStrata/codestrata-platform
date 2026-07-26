@@ -1,8 +1,0 @@
-apiVersion: codestrata.io/v1alpha1
-kind: Environment
-metadata:
-  id: test
-  name: Test
-spec:
-  environmentClass: test
-  lifecycle: active

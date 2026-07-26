@@ -13,26 +13,26 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.application.assessment.service import AssessmentCommandResult  # noqa: E402
-from aimf.application.onboarding import OnboardingApplicationService  # noqa: E402
-from aimf.application.onboarding.validation import (  # noqa: E402
+from codestrata.application.assessment.service import AssessmentCommandResult  # noqa: E402
+from codestrata.application.onboarding import OnboardingApplicationService  # noqa: E402
+from codestrata.application.onboarding.validation import (  # noqa: E402
     validate_output_directory,
     validate_repository_source,
 )
-from aimf.config.settings import AimfSettings  # noqa: E402
-from aimf.reporting.modernization_models import AssessmentMode  # noqa: E402
+from codestrata.config.settings import CodestrataSettings  # noqa: E402
+from codestrata.reporting.modernization_models import AssessmentMode  # noqa: E402
 
 TARGETS = (
     ("codestrata", ROOT),
-    ("spring-petclinic", ROOT / ".aimf" / "workspace" / "spring-petclinic"),
+    ("spring-petclinic", ROOT / ".codestrata" / "workspace" / "spring-petclinic"),
     ("synthetic-multilang", ROOT / "examples" / "sample-js-app"),
 )
 
 
-def _settings(tmp: Path, repo: Path) -> AimfSettings:
-    return AimfSettings.model_validate(
+def _settings(tmp: Path, repo: Path) -> CodestrataSettings:
+    return CodestrataSettings.model_validate(
         {
             "repository": {"path": str(repo)},
             "workspace": {"directory": str(tmp / "ws")},

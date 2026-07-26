@@ -1,99 +1,51 @@
 # Examples
 
-Sample repositories and command recipes for AIMF v0.1.0.
+Language sample repositories for CodeStrata onboarding, docs, and dogfood.
 
-## Bundled sample: `sample-js-app`
+| Sample | Language | Assess |
+| ------ | -------- | ------ |
+| [`sample-js-app`](sample-js-app/) | JavaScript | `codestrata assess --repo examples/sample-js-app --output reports` |
+| [`sample-python-app`](sample-python-app/) | Python | `codestrata assess --repo examples/sample-python-app --output reports` |
+| [`sample-java-app`](sample-java-app/) | Java | `codestrata assess --repo examples/sample-java-app --output reports` |
+| [`sample-php-app`](sample-php-app/) | PHP | `codestrata assess --repo examples/sample-php-app --output reports` |
+| [`sample-csharp-app`](sample-csharp-app/) | C# / .NET | `codestrata assess --repo examples/sample-csharp-app --output reports` |
 
-Tiny Node.js app used for onboarding and tests.
+Golden HTML/JSON reports: [sample-reports/README.md](sample-reports/README.md).
 
-### Deterministic assess (local)
+Default `codestrata.toml` points at `sample-js-app`:
 
 ```bash
-# from repository root, with the package installed editable
-aimf assess --repo examples/sample-js-app --output reports
+codestrata config validate --config codestrata.toml
+codestrata assess --config codestrata.toml --output reports --no-ai
+# Optional: --profile local|community|enterprise|bedrock|openai
 ```
 
-**Expected:**
+## Expected artifacts (deterministic)
 
 * Exit code `0`
-* New directory: `reports/sample-js-app/<YYYYMMDD-HHMMSS>/`
-* Files present:
-  * `report.html`
-  * `report.json`
-  * `findings.json`
-  * `recommendations.json`
-  * `graphs/repository-graph.json`
-  * `graphs/assessment-graph.json`
-  * `graphs/graph-summary.json`
-* `ai-enrichment.json` **absent**
-* Console mentions HTML report path and deterministic completion
+* `reports/<name>/<YYYYMMDD-HHMMSS>/report.html`
+* `report.json`, `findings.json`, `recommendations.json`, `graphs/`
+* No `ai-enrichment.json` unless `--with-ai` succeeded
 
-### Config-driven assess
+## Private GitHub HTTPS clones
 
-Default `aimf.toml` points at `examples/sample-js-app`:
-
-```bash
-aimf assess --config aimf.toml --output reports
-```
-
-Same artifact expectations as above.
-
-### AI mode (optional)
-
-Requires AWS credentials and Bedrock model configuration in `aimf.toml`:
-
-```bash
-aimf assess --repo examples/sample-js-app --output reports --with-ai
-```
-
-**Expected on success:**
-
-* Same deterministic artifacts as above
-* Plus `ai-enrichment.json` (and typically `ai-execution.json`)
-* Exactly one provider call
-* HTML Report v2 includes an **AI Enrichment** section
-
-**Expected on AI failure:**
-
-* Deterministic artifacts still present
-* Warning about AI enrichment; exit code still `0`
-* No fabricated `ai-enrichment.json`
-
-## GitHub repository (template)
+Set a token in `.env` (never commit secrets) and reference it from
+`codestrata.toml`:
 
 ```toml
-# aimf.toml (excerpt)
-[repository]
-url = "https://github.com/OWNER/REPO"
-branch = "main"
+[repository.authentication]
+type = "github_token"
+token_env = "CODESTRATA_GITHUB_TOKEN"
 ```
+
+## AI mode (optional)
+
+Requires AWS credentials and Bedrock configuration:
 
 ```bash
-aimf assess --config aimf.toml --output reports
+aws sso login --profile <profile-name>
+codestrata assess --config codestrata.toml --output reports --with-ai
 ```
 
-Private HTTPS clone: set a token in the environment and reference it via
-`token_env` in config (never put the secret in TOML). See [SECURITY.md](../SECURITY.md).
-
-## Inspecting HTML Report v2
-
-Open `report.html` in a browser. Confirm section headings:
-
-1. Executive Overview  
-2. Repository Profile  
-3. Technology and Version Summary  
-4. Assessment Summary  
-5. Findings  
-6. Recommendations  
-7. AI Enrichment (AI runs only)  
-8. Graph and Artifact References  
-9. Assessment Metadata  
-
-## Screenshot placeholders
-
-Add PNGs under `docs/images/` when capturing UI for the README:
-
-* `docs/images/report-executive-overview.png`
-* `docs/images/report-findings.png`
-* `docs/images/report-recommendations.png`
-* `docs/images/report-ai-enrichment.png`
+See [docs/configuration-profiles.md](../engine/docs/configuration-profiles.md) and
+[docs/tutorial.md](../engine/docs/tutorial.md).
