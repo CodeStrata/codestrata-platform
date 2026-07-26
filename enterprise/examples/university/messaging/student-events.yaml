@@ -1,9 +1,0 @@
-apiVersion: codestrata.io/v1alpha1
-kind: MessageChannel
-metadata:
-  id: student-events
-  name: Student Events
-spec:
-  brokerType: kafka
-  channelType: topic
-  lifecycle: active

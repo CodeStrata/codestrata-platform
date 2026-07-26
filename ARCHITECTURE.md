@@ -1,10 +1,29 @@
-# AI Modernization Factory (AIMF) Architecture
+# CodeStrata Architecture
 
 **Version:** 0.1.0
 
+## Monorepo layout (Phase 5.23)
+
+```text
+codestrata-platform/          # private source of truth
+├── engine/                   # Community Engine → public codestrata-engine
+├── examples/                 # samples/reports → public codestrata-examples
+├── cursor-plugin/            # placeholder → codestrata-cursor
+├── vscode-plugin/            # placeholder → codestrata-vscode
+├── platform/                 # private Platform / Enterprise examples & docs
+├── scripts/                  # export + validate + dogfood harnesses
+├── public-export-manifest.yaml
+├── docs/                     # monorepo sync docs
+└── tests/architecture/       # engine↔platform boundary tests
+```
+
+Public mirrors are generated; see [docs/public-export.md](docs/public-export.md).
+Engine runtime must not depend on `platform/`. Security posture:
+[engine/docs/security/threat-model.md](engine/docs/security/threat-model.md).
+
 ## Purpose
 
-AIMF analyzes application repositories and produces evidence-based modernization
+CodeStrata analyzes application repositories and produces evidence-based modernization
 assessments. Deterministic analysis discovers technologies, graphs, findings, and
 recommendations. Optional AI enrichment adds a narrative over that evidence—never
 inventing facts.
@@ -20,7 +39,7 @@ output when AI is unavailable or fails.
 ## End-to-end assess pipeline
 
 ```text
-                    aimf.toml / CLI
+                    codestrata.toml / CLI
                            │
                            ▼
               Local path or GitHub clone
@@ -51,7 +70,9 @@ output when AI is unavailable or fails.
                                  ai-enrichment.json
 ```
 
-Topic docs: [docs/runtime.md](docs/runtime.md) and siblings under [docs/](docs/).
+Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
+[engine/docs/runtime-performance.md](engine/docs/runtime-performance.md), and siblings under
+[engine/docs/](engine/docs/).
 
 ## Design principles
 
@@ -98,22 +119,22 @@ Repository
     → AnalysisResult
 ```
 
-`aimf scan` reports `AnalysisResult` as text/JSON/HTML under `reports/`.
-`aimf assess` continues into graphs → Phase 3 rules → recommendations → optional
+`codestrata scan` reports `AnalysisResult` as text/JSON/HTML under `reports/`.
+`codestrata assess` continues into graphs → Phase 3 rules → recommendations → optional
 AI → HTML Report v2.
 
 ### Analyzer order
 
-1. RepositoryMetricsAnalyzer  
-2. BuildDiscoveryAnalyzer  
-3. BuildMetadataAnalyzer  
-4. DependencyDiscoveryAnalyzer  
-5. DependencyMetadataAnalyzer  
-6. DependencyHealthAnalyzer  
-7. CicdDiscoveryAnalyzer  
-8. SecurityAnalyzer  
-9. ArchitectureAnalyzer  
-10. CloudReadinessAnalyzer  
+1. RepositoryMetricsAnalyzer
+2. BuildDiscoveryAnalyzer
+3. BuildMetadataAnalyzer
+4. DependencyDiscoveryAnalyzer
+5. DependencyMetadataAnalyzer
+6. DependencyHealthAnalyzer
+7. CicdDiscoveryAnalyzer
+8. SecurityAnalyzer
+9. ArchitectureAnalyzer
+10. CloudReadinessAnalyzer
 
 ### Static analysis (PMD)
 
@@ -124,7 +145,7 @@ PMD XML → parser → observations → mapping/visibility → groups → Findin
 Profiles: `focused` · `standard` · `comprehensive`. Critical/high findings are
 never suppressed from HTML.
 
-Future providers implement `StaticAnalysisProvider` and normalize into AIMF
+Future providers implement `StaticAnalysisProvider` and normalize into CodeStrata
 observations/findings without changing orchestration ownership.
 
 ## Graphs
@@ -135,8 +156,8 @@ observations/findings without changing orchestration ownership.
 | Engineering Knowledge Graph | Reusable concepts (no repo identity) |
 | Assessment Graph | Per-run projection/reference join |
 
-See [docs/repository-graph.md](docs/repository-graph.md) and
-[docs/assessment-graph.md](docs/assessment-graph.md).
+See [docs/repository-graph.md](engine/docs/repository-graph.md) and
+[docs/assessment-graph.md](engine/docs/assessment-graph.md).
 
 ## Rules and recommendations
 
@@ -145,13 +166,13 @@ Assessment Graph → Rule Engine → findings.json
                               → Recommendation Engine → recommendations.json
 ```
 
-No AI in either engine. Details: [docs/rule-engine.md](docs/rule-engine.md),
-[docs/recommendation-engine.md](docs/recommendation-engine.md).
+No AI in either engine. Details: [docs/rule-engine.md](engine/docs/rule-engine.md),
+[docs/recommendation-engine.md](engine/docs/recommendation-engine.md).
 
 ## AI enrichment
 
 One Bedrock Converse call over a compact, budgeted context. Output validates
-referenced finding and recommendation IDs. See [docs/ai-enrichment.md](docs/ai-enrichment.md).
+referenced finding and recommendation IDs. See [docs/ai-enrichment.md](engine/docs/ai-enrichment.md).
 
 Legacy `ModernizationAssessmentAgent` / `AIRecommendationResult` remain for
 compatibility and bridging into report contracts; the assess path uses
@@ -161,7 +182,7 @@ compatibility and bridging into report contracts; the assess path uses
 
 Presentation-only view-model + renderer. Sections separate deterministic findings
 and recommendations from optional AI enrichment. See
-[docs/report-generation.md](docs/report-generation.md).
+[docs/report-generation.md](engine/docs/report-generation.md).
 
 ## Knowledge store (Phase 2B)
 
@@ -176,7 +197,7 @@ CLI → AssessmentApplicationService
 ```
 
 Schema version 2 indexes repositories, snapshots, assessment runs, and artifact
-metadata. Payloads live under `.aimf/knowledge/blobs/` (SHA-256, atomic write).
+metadata. Payloads live under `.codestrata/knowledge/blobs/` (SHA-256, atomic write).
 Reports are never read back into the store. Persistence finalization failure
 fails the assessment; incomplete runs are never “latest completed.” Default
 assessment remains full recomputation; incremental execution is opt-in only
@@ -190,12 +211,12 @@ Phase 5.7 adds repository-intelligence MCP tools (`repository_*`) over
 `RepositoryRetriever` / `GroundedAnswerEngine` / `KnowledgeQueryService` with
 stdio and streamable-http transports. No production embeddings, production LLMs,
 hybrid search, or reranking.
-See [docs/repository-knowledge/](docs/repository-knowledge/) and
-[docs/mcp/overview.md](docs/mcp/overview.md).
+See [docs/repository-knowledge/](engine/docs/repository-knowledge/) and
+[docs/mcp/overview.md](engine/docs/mcp/overview.md).
 
 ### Query services (Increment 3)
 
-`KnowledgeQueryService` (`aimf.application.knowledge.queries`) is the
+`KnowledgeQueryService` (`codestrata.application.knowledge.queries`) is the
 transport-neutral read API for durable knowledge. Future FastMCP, REST, CLI, and
 agent adapters must call this service — not SQLite, blob paths, or report files.
 Authoritative findings/recommendations are Phase 3 stable IDs. Snapshot
@@ -204,23 +225,23 @@ graph JSON in memory with bounded depth (max 3).
 
 ### MCP adapter (Phase 2C)
 
-`aimf mcp serve` starts a stdio FastMCP server named **CodeStrata**. Tools and
+`codestrata mcp serve` starts a stdio FastMCP server named **CodeStrata**. Tools and
 resources are thin adapters over `KnowledgeQueryService` and
-`AssessmentApplicationService`. See [docs/mcp-server.md](docs/mcp-server.md).
+`AssessmentApplicationService`. See [docs/mcp-server.md](engine/docs/mcp-server.md).
 
 ### Agent Framework (Phase 2D / 2E)
 
-`aimf.application.agents` provides deterministic orchestration
+`codestrata.application.agents` provides deterministic orchestration
 (`AgentOrchestrator`, Knowledge / Assessment / Validation agents) over the same
 application services. Phase 2E adds thin adapters:
 
-- CLI: `aimf agent review|assess|validate|compare|modernization-review`
+- CLI: `codestrata agent review|assess|validate|compare|modernization-review`
 - MCP: five `*_with_agents` tools
 
 MCP and agents are sibling interfaces — agents must not call MCP internally.
-Existing `aimf assess` and the 20 granular MCP tools remain unchanged.
+Existing `codestrata assess` and the 20 granular MCP tools remain unchanged.
 
-See [docs/agent-framework.md](docs/agent-framework.md).
+See [docs/agent-framework.md](engine/docs/agent-framework.md).
 
 ```text
 CLI / MCP / REST
@@ -235,7 +256,7 @@ Agent Framework    Application Services
 
 ### Incremental planning (Phase 2F.1)
 
-`aimf.application.incremental` classifies candidate vs previous manifests, analyzes
+`codestrata.application.incremental` classifies candidate vs previous manifests, analyzes
 bounded impact, applies a conservative reuse policy, and emits a deterministic
 `IncrementalAssessmentPlan`.
 
@@ -243,7 +264,7 @@ bounded impact, applies a conservative reuse policy, and emits a deterministic
 
 `IncrementalAssessmentExecutor` optionally executes eligible plans via inventory
 merge + stage rebuild through the existing assessment pipeline, or falls back to
-a normal full assessment. **`aimf assess` remains a full rebuild by default**;
+a normal full assessment. **`codestrata assess` remains a full rebuild by default**;
 execution requires explicit opt-in.
 
 ### Incremental operations (Phase 2F.3)
@@ -254,7 +275,7 @@ persisted `IncrementalExecutionRecord` provenance. Controlled rollout via
 
 Thin adapters:
 
-- CLI: `aimf incremental plan|assess|explain`
+- CLI: `codestrata incremental plan|assess|explain`
 - MCP: four additive incremental tools
 
 ```text
@@ -265,8 +286,8 @@ IncrementalAssessmentPlan
         → IncrementalExecutionRecord → CLI / MCP
 ```
 
-Details: [docs/incremental-assessment.md](docs/incremental-assessment.md),
-[docs/knowledge-store.md](docs/knowledge-store.md).
+Details: [docs/incremental-assessment.md](engine/docs/incremental-assessment.md),
+[docs/knowledge-store.md](engine/docs/knowledge-store.md).
 
 ### Enterprise Knowledge Graph (Phase 3)
 
@@ -278,34 +299,34 @@ disabled by default. No graph database.
 Enterprise YAML → validate → EnterpriseKnowledgeGraph → CLI / MCP queries
 ```
 
-Details: [docs/enterprise-knowledge-graph/README.md](docs/enterprise-knowledge-graph/README.md),
+Details: [platform/docs/knowledge_graph/README.md](platform/docs/knowledge_graph/README.md),
 [ROADMAP.md](ROADMAP.md).
 
 ### Shared Rule Platform (Phase 4.1)
 
 Transport-neutral rule infrastructure for future Analysis Intelligence packs.
-Distinct from the Assessment Graph `RuleEngine` used by `aimf assess`.
+Distinct from the Assessment Graph `RuleEngine` used by `codestrata assess`.
 Disabled by default; not wired into the default assessment pipeline.
 
 ```text
 RuleExecutionContext → Registry → Planner → Executor → Finding mapper
 ```
 
-Details: [docs/analysis-intelligence/shared-rule-platform.md](docs/analysis-intelligence/shared-rule-platform.md).
+Details: [docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analysis-intelligence/shared-rule-platform.md).
 
 ### Rule Platform Integration Bridge (Phase 4.1.1)
 
 `LegacyRuleAdapter` and `RuleExecutionFacade` connect the Assessment Graph
-`RuleEngine` to the Shared Rule Platform without changing `aimf assess`.
+`RuleEngine` to the Shared Rule Platform without changing `codestrata assess`.
 Adapted legacy evaluation preserves Finding IDs. See
-[docs/analysis-intelligence/rule-platform-migration.md](docs/analysis-intelligence/rule-platform-migration.md).
+[docs/analysis-intelligence/rule-platform-migration.md](engine/docs/analysis-intelligence/rule-platform-migration.md).
 
 ### Assessment Framework (Phase 4.1.2)
 
 Methodology for dimensions, rule taxonomy, evidence/confidence, scoring design,
 business impact vs severity, modernization waves, and CTO report structure.
 Documentation only—no production scoring. See
-[docs/assessment-framework/README.md](docs/assessment-framework/README.md).
+[docs/assessment-framework/README.md](engine/docs/assessment-framework/README.md).
 
 ### Architecture Intelligence (Phase 4.2.1 / 4.2.1a / 4.2.2)
 
@@ -313,7 +334,7 @@ Initial production pack `architecture.core` (v1.0.0) registers seven SharedRules
 Phase **4.2.1a** hardens precision: architectural-unit selection (nested packages
 collapsed), dependency normalization (parent/child, type-only, init/registration),
 separated extraction vs classification coverage, and tighter coupling/direction
-applicability. Discoverable via `aimf rules` / MCP. Merged into `aimf assess`
+applicability. Discoverable via `codestrata rules` / MCP. Merged into `codestrata assess`
 only when `[rules] enabled` and `[rules.architecture] enabled`.
 
 Phase **4.2.2** adds Language Evidence Providers that collect and normalize
@@ -330,19 +351,19 @@ opt-in:
 providers → AggregatedLanguageEvidence → ArchitectureAnalysisView
 ```
 
-Details: [docs/analysis-intelligence/architecture/README.md](docs/analysis-intelligence/architecture/README.md)
-and [docs/analysis-intelligence/evidence-providers/README.md](docs/analysis-intelligence/evidence-providers/README.md).
+Details: [docs/analysis-intelligence/architecture/README.md](engine/docs/analysis-intelligence/architecture/README.md)
+and [docs/analysis-intelligence/evidence-providers/README.md](engine/docs/analysis-intelligence/evidence-providers/README.md).
 
 Phase **4.2.3** adds Architecture Conclusions: deterministic grouping and
 interpretation of architecture findings into explainable conclusions and
 consolidated recommendations. Disabled by default
 (`[analysis.architecture_conclusions] enabled = false`). Findings remain
 unchanged. See
-[docs/analysis-intelligence/architecture-conclusions/README.md](docs/analysis-intelligence/architecture-conclusions/README.md).
+[docs/analysis-intelligence/architecture-conclusions/README.md](engine/docs/analysis-intelligence/architecture-conclusions/README.md).
 
-Phase **4.2.4** adds an optional Architecture Assessment section (`architecture-assessment.json`) composed from existing findings and optional conclusions. Disabled by default (`[assessment.sections.architecture] enabled = false`). See [docs/analysis-intelligence/architecture-assessment/README.md](docs/analysis-intelligence/architecture-assessment/README.md).
+Phase **4.2.4** adds an optional Architecture Assessment section (`architecture-assessment.json`) composed from existing findings and optional conclusions. Disabled by default (`[assessment.sections.architecture] enabled = false`). See [docs/analysis-intelligence/architecture-assessment/README.md](engine/docs/analysis-intelligence/architecture-assessment/README.md).
 
-Phase **4.2.5** integrates that section into customer `report.json` and HTML via `ArchitectureReportAdapter` (`assessment.architecture`). Disabled by default (`[report.sections.architecture] enabled = false`). Schema remains `1.2` with an optional additive field. No scoring or AI narrative. See [docs/analysis-intelligence/architecture-reporting/README.md](docs/analysis-intelligence/architecture-reporting/README.md).
+Phase **4.2.5** integrates that section into customer `report.json` and HTML via `ArchitectureReportAdapter` (`assessment.architecture`). Disabled by default (`[report.sections.architecture] enabled = false`). Schema remains `1.2` with an optional additive field. No scoring or AI narrative. See [docs/analysis-intelligence/architecture-reporting/README.md](engine/docs/analysis-intelligence/architecture-reporting/README.md).
 
 ## Repository authentication
 
@@ -353,7 +374,7 @@ reports. Authentication applies only to remote clones.
 ## Package layout (simplified)
 
 ```text
-src/aimf/
+src/codestrata/
 ├── cli/                 # Typer: version, scan, assess, agent, incremental, mcp
 ├── config/
 ├── application/         # assessment, knowledge queries, agents, incremental planning
@@ -364,14 +385,14 @@ src/aimf/
 ├── services/            # analysis, inventory, knowledge, assessment
 ├── static_analysis/     # PMD provider boundary
 ├── ai/                  # enrichment + legacy agent / providers
-├── reporters/           # aimf scan reporters
+├── reporters/           # codestrata scan reporters
 ├── reporting/           # assess HTML/JSON (incl. html_v2/)
 └── repository_auth/
 ```
 
 ## Configuration
 
-Primary file: `aimf.toml` (repository, AWS, AI, static analysis, reporting).
+Primary file: `codestrata.toml` (repository, AWS, AI, static analysis, reporting).
 Secrets belong in environment / `.env` (gitignored), never in committed config.
 
 ## Retention
@@ -389,7 +410,7 @@ delete knowledge-store rows or blobs (knowledge retention is deferred).
 
 ## Related documents
 
-* [README.md](README.md) — product overview and quick start  
-* [docs/](docs/) — canonical topic documentation  
-* [CHANGELOG.md](CHANGELOG.md) — release notes  
-* [examples/README.md](examples/README.md) — commands and expected outputs  
+* [README.md](README.md) — product overview and quick start
+* [docs/](engine/docs/) — canonical topic documentation
+* [CHANGELOG.md](CHANGELOG.md) — release notes
+* [examples/README.md](examples/README.md) — commands and expected outputs

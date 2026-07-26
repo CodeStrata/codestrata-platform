@@ -1,0 +1,66 @@
+# Private commercial Platform package (not published as Community).
+# Depends on the Community Engine: Platform → Engine only.
+
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "codestrata-platform"
+version = "0.1.0"
+description = "CodeStrata Platform: RAG retrieval and persistent Knowledge Graph capabilities."
+requires-python = ">=3.12"
+dependencies = [
+    "codestrata>=0.1.0",
+    "pydantic>=2.10,<3.0",
+    "PyYAML>=6.0,<7.0",
+    "typer>=0.15,<1.0",
+]
+
+[project.optional-dependencies]
+bedrock = ["boto3>=1.35,<2.0"]
+openai = ["openai>=1.40,<2.0"]
+mcp = ["mcp>=1.27,<2"]
+pgvector = [
+    "psycopg[binary]>=3.2,<4.0",
+    "pgvector>=0.3.6,<1.0",
+]
+dev = [
+    "boto3>=1.35,<2.0",
+    "openai>=1.40,<2.0",
+    "mcp>=1.27,<2",
+    "psycopg[binary]>=3.2,<4.0",
+    "pgvector>=0.3.6,<1.0",
+    "pytest>=9.0.3,<10.0",
+    "mypy>=1.14,<2.0",
+    "ruff>=0.9,<1.0",
+]
+
+[project.entry-points."codestrata.cli_extensions"]
+ai = "codestrata_platform.extensions.cli:register_ai_cli"
+enterprise = "codestrata_platform.extensions.cli:register_enterprise_cli"
+repository = "codestrata_platform.extensions.cli:register_repository_cli"
+
+[project.entry-points."codestrata.mcp_extensions"]
+platform = "codestrata_platform.extensions.mcp:register_platform_mcp"
+
+[project.entry-points."codestrata.ai_provider_extensions"]
+rag = "codestrata_platform.extensions.ai_providers:register_rag_ai_providers"
+
+[project.entry-points."codestrata.acceptance_extensions"]
+rag = "codestrata_platform.rag.acceptance:helpers"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["codestrata_platform*"]
+
+[tool.setuptools.package-data]
+codestrata_platform = [
+    "knowledge_graph/schemas/**/*.json",
+    "rag/application/answering/prompts/**/*.md",
+    "rag/application/answering/prompts/**/*.json",
+]

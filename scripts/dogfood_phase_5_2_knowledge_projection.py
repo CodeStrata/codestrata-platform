@@ -11,30 +11,38 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.application.knowledge.projection import (  # noqa: E402
-    KnowledgeProjectionRequest,
-    ProjectionContext,
-    build_knowledge_corpus,
-    write_knowledge_corpus_artifact,
+from codestrata.config.settings import (  # noqa: E402
+    KnowledgeChunkingSettings,
+    KnowledgeProjectionSettings,
 )
-from aimf.config.settings import KnowledgeChunkingSettings, KnowledgeProjectionSettings
-from aimf.domain.findings.enums import FindingCategory, FindingSeverity
-from aimf.domain.findings.models import Finding, FindingEvidence
-from aimf.domain.repository.enums import (  # noqa: E402
+from codestrata.domain.findings.enums import FindingCategory, FindingSeverity  # noqa: E402
+from codestrata.domain.findings.models import Finding, FindingEvidence  # noqa: E402
+from codestrata.domain.repository.enums import (  # noqa: E402
     HashAlgorithm,
     RepositoryFileKind,
     RepositoryRevisionType,
     RepositorySourceType,
 )
-from aimf.domain.repository.files import RepositoryFileEntry
-from aimf.domain.repository.fingerprints import hash_bytes
-from aimf.domain.repository.identities import RepositoryIdentity, RepositoryRevision
-from aimf.domain.repository.manifests import RepositoryManifest
-from aimf.domain.repository.paths import RepositoryPath
-from aimf.services.artifact_serialization import dumps_stable_json
-from aimf.services.inventory.content_reader import LocalFilesystemContentReader
+from codestrata.domain.repository.files import RepositoryFileEntry  # noqa: E402
+from codestrata.domain.repository.fingerprints import hash_bytes  # noqa: E402
+from codestrata.domain.repository.identities import (  # noqa: E402
+    RepositoryIdentity,
+    RepositoryRevision,
+)
+from codestrata.domain.repository.manifests import RepositoryManifest  # noqa: E402
+from codestrata.domain.repository.paths import RepositoryPath  # noqa: E402
+from codestrata.services.artifact_serialization import dumps_stable_json  # noqa: E402
+from codestrata.services.inventory.content_reader import (  # noqa: E402
+    LocalFilesystemContentReader,
+)
+from codestrata_platform.rag.application.projection import (  # noqa: E402
+    KnowledgeProjectionRequest,
+    ProjectionContext,
+    build_knowledge_corpus,
+    write_knowledge_corpus_artifact,
+)
 
 TEXT_SUFFIXES = {
     ".py",
@@ -212,7 +220,14 @@ def _project(root: Path, *, label: str, out_dir: Path) -> dict[str, object]:
 def _make_synthetic(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
     (path / "app.py").write_text(
-        "import sys\n\nclass Service:\n    def run(self):\n        return 1\n\ndef main():\n    print(Service().run())\n",
+        (
+            "import sys\n\n"
+            "class Service:\n"
+            "    def run(self):\n"
+            "        return 1\n\n"
+            "def main():\n"
+            "    print(Service().run())\n"
+        ),
         encoding="utf-8",
     )
     (path / "App.java").write_text(
@@ -235,7 +250,7 @@ def main() -> int:
     targets = [
         ("synthetic-multi-lang", synthetic),
         ("codestrata", ROOT),
-        ("spring-petclinic", ROOT / ".aimf" / "workspace" / "spring-petclinic"),
+        ("spring-petclinic", ROOT / ".codestrata" / "workspace" / "spring-petclinic"),
     ]
     summaries = []
     for label, root in targets:

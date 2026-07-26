@@ -9,9 +9,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "engine" / "src"))
 
-from aimf.models import (  # noqa: E402
+from codestrata.models import (  # noqa: E402
     AnalysisResult,
     Effort,
     Evidence,
@@ -29,11 +29,11 @@ from aimf.models import (  # noqa: E402
     Technology,
     TechnologyCategory,
 )
-from aimf.reporting.assessment_json import build_assessment_json_document  # noqa: E402
-from aimf.reporting.contract import reports_structurally_equal  # noqa: E402
-from aimf.reporting.html_v2.builder import build_html_report_view_model  # noqa: E402
-from aimf.reporting.html_v2.renderer import HtmlReportRenderer  # noqa: E402
-from aimf.reporting.modernization_models import (  # noqa: E402
+from codestrata.reporting.assessment_json import build_assessment_json_document  # noqa: E402
+from codestrata.reporting.contract import reports_structurally_equal  # noqa: E402
+from codestrata.reporting.html_v2.builder import build_html_report_view_model  # noqa: E402
+from codestrata.reporting.html_v2.renderer import HtmlReportRenderer  # noqa: E402
+from codestrata.reporting.modernization_models import (  # noqa: E402
     AssessmentMode,
     ModernizationReportInput,
 )

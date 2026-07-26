@@ -1,9 +1,0 @@
-apiVersion: codestrata.io/v1alpha1
-kind: ArchitectureStandard
-metadata:
-  id: api-security-standard
-  name: API Security Standard
-spec:
-  status: approved
-  scope: apis
-  guidance: Authenticate all internal APIs; no secrets in manifests.
