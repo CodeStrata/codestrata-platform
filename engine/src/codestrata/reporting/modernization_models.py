@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -208,6 +209,8 @@ class ModernizationReportInput(BaseModel):
     # Phase 5.12 — optional knowledge identity for report manifest.
     knowledge_repository_id: str | None = None
     knowledge_run_id: str | None = None
+    # Phase 7.1.1 — smart default assessment activation plan (JSON explainability).
+    assessment_activation: dict[str, Any] | None = None
 
     @field_validator("generated_at_utc")
     @classmethod

@@ -11,7 +11,8 @@ reports/<repository-name>/<YYYYMMDD-HHMMSS>/
   findings.json            # Deterministic findings
   recommendations.json     # Deterministic recommendations
   graphs/                  # Repository + assessment graphs
-  ai-enrichment.json       # Present only after successful --with-ai
+  advisor.json             # Present only after successful --with-ai
+  advisor-execution.json   # Provider/model/status when AI was requested
   dependency-evidence.json # When dependency evidence ran
   …
 ```
@@ -57,7 +58,7 @@ as prioritization aids for engineering planning, not as automated remediation.
 | Mode | Flag | Provider calls | Enrichment file |
 | ---- | ---- | -------------- | --------------- |
 | Deterministic | `--no-ai` (default) | 0 | absent |
-| AI-enhanced | `--with-ai` | exactly 1 (Bedrock) | `ai-enrichment.json` on success |
+| AI-enhanced | `--with-ai` | exactly 1 (Bedrock) | `advisor.json` on success |
 
 AI enrichment is **interpretive only**. It must not invent findings IDs or
 recommendations that are absent from deterministic artifacts.

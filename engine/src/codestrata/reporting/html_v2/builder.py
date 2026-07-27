@@ -28,10 +28,23 @@ from codestrata.reporting.contract.ordering import (
     sorted_findings as contract_sorted_findings,
 )
 from codestrata.reporting.contract.ordering import (
-    sorted_recommendations as contract_sorted_recommendations,
-)
-from codestrata.reporting.contract.ordering import (
     sorted_technologies as contract_sorted_technologies,
+)
+from codestrata.reporting.customer_universe import (
+    CustomerFinding,
+    CustomerRecommendation,
+    resolve_customer_findings,
+    resolve_customer_recommendations,
+)
+from codestrata.reporting.html_v2.leadership import (
+    build_assessment_scope,
+    build_engineering_risks,
+    build_executive_summary_narrative,
+    build_leadership_key_takeaways,
+    build_leadership_roadmap,
+    build_leadership_verdict,
+    build_modernization_opportunities,
+    build_priority_actions_for_leadership,
 )
 from codestrata.reporting.html_v2.models import (
     AiEnrichmentView,
@@ -41,9 +54,11 @@ from codestrata.reporting.html_v2.models import (
     AiThemeView,
     ArtifactRefView,
     AssessmentMetadataView,
+    AssessmentScopeView,
     AssessmentSummaryView,
     CustomerReportDocument,
     DashboardMetrics,
+    EngineeringRiskThemeView,
     EvidenceView,
     FindingView,
     RecommendationActionView,
@@ -175,13 +190,65 @@ def build_customer_report_document(
         advisor_version=advisor_version,
         repository_name=repo_name,
     )
-    key_takeaways = _build_key_takeaways(
+    assessed, not_assessed = build_assessment_scope(report_input.assessment_activation)
+    assessment_scope = (
+        AssessmentScopeView(assessed_packs=assessed, not_assessed_packs=not_assessed)
+        if assessed or not_assessed
+        else None
+    )
+    priority_actions = build_priority_actions_for_leadership(
         findings=findings,
         recommendations=recommendations,
-        ai_view=ai_view,
-        summary=summary,
-        metrics=metrics,
     )
+    assessment_summary = assessment_summary.model_copy(
+        update={
+            "recommendations_count": len(priority_actions),
+            "summary_text": _assessment_summary_text(
+                findings_count=len(findings),
+                recommendations_count=len(priority_actions),
+                ai_available=ai_view is not None,
+            ),
+        }
+    )
+    key_takeaways = build_leadership_key_takeaways(
+        findings=findings,
+        recommendations=priority_actions,
+        metrics=metrics,
+        summary=summary,
+        activation=report_input.assessment_activation,
+        architecture_present=report_input.architecture_report is not None,
+        cloud_present=report_input.cloud_report is not None,
+        testing_present=report_input.testing_report is not None,
+    )
+    risk_themes = build_engineering_risks(findings)
+    engineering_risks = tuple(
+        EngineeringRiskThemeView(theme=theme, items=items) for theme, items in risk_themes
+    )
+    risk_titles = frozenset(
+        item.rsplit(" (", 1)[0]
+        for _theme, items in risk_themes
+        for item in items
+    )
+    modernization_opportunities = build_modernization_opportunities(
+        findings=findings,
+        recommendations=priority_actions,
+        risk_titles=risk_titles,
+    )
+    leadership_verdict = build_leadership_verdict(
+        findings=findings,
+        priority_actions=priority_actions,
+        metrics=metrics,
+        highest_severity=highest_severity,
+    )
+    executive_summary = build_executive_summary_narrative(
+        findings=findings,
+        priority_actions=priority_actions,
+        metrics=metrics,
+        highest_severity=highest_severity,
+        technologies=tuple(item.name for item in technologies),
+    )
+    leadership_roadmap = build_leadership_roadmap(priority_actions)
+    roadmap_report = leadership_roadmap or report_input.roadmap_report
     document = CustomerReportDocument(
         summary=summary,
         repository=repository,
@@ -190,6 +257,7 @@ def build_customer_report_document(
         assessment_summary=assessment_summary,
         findings=findings,
         recommendations=recommendations,
+        priority_actions=priority_actions,
         ai_enrichment=ai_view,
         architecture_report=report_input.architecture_report,
         technical_debt_report=report_input.technical_debt_report,
@@ -199,10 +267,15 @@ def build_customer_report_document(
         cloud_report=report_input.cloud_report,
         ai_readiness_report=report_input.ai_readiness_report,
         performance_report=report_input.performance_report,
-        roadmap_report=report_input.roadmap_report,
+        roadmap_report=roadmap_report,
         artifacts=artifacts,
         metadata=metadata,
+        leadership_verdict=leadership_verdict,
+        executive_summary=executive_summary,
         key_takeaways=key_takeaways,
+        engineering_risks=engineering_risks,
+        modernization_opportunities=modernization_opportunities,
+        assessment_scope=assessment_scope,
         outline=(),  # filled below once presence is known
     )
     outline = _build_outline(document)
@@ -215,64 +288,17 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Cust
     return build_customer_report_document(report_input)
 
 
-def _build_key_takeaways(
-    *,
-    findings: tuple[FindingView, ...],
-    recommendations: tuple[RecommendationView, ...],
-    ai_view: AiEnrichmentView | None,
-    summary: ReportSummary,
-    metrics: DashboardMetrics,
-) -> tuple[str, ...]:
-    """Compose 3–5 leadership takeaways from deterministic (+ Advisor) evidence."""
-
-    bullets: list[str] = []
-    if findings:
-        bullets.append(
-            f"Highest finding severity is {summary.highest_finding_severity} "
-            f"across {len(findings)} deterministic finding(s)."
-        )
-        lead = findings[0]
-        bullets.append(f"Lead finding: {lead.title} ({lead.severity}).")
-    else:
-        bullets.append("No deterministic findings were produced for this assessment.")
-
-    if recommendations:
-        top = recommendations[0]
-        bullets.append(
-            f"Top priority action: {top.title} ({top.priority})."
-        )
-    else:
-        bullets.append("No deterministic recommendations were produced for this assessment.")
-
-    if ai_view is not None:
-        bullets.append(f"Modernization Advisor: {ai_view.headline}")
-        if ai_view.priorities:
-            bullets.append(f"Advisor priority: {ai_view.priorities[0].title}.")
-    elif metrics.cicd_label and metrics.cicd_label != "Unknown":
-        bullets.append(f"CI/CD posture: {metrics.cicd_label}.")
-
-    if (
-        len(bullets) < 3
-        and metrics.cloud_signals_primary
-        and metrics.cloud_signals_primary != "Unknown"
-    ):
-        bullets.append(
-            f"Cloud enablement signals: {metrics.cloud_signals_primary} "
-            f"({metrics.cloud_signals_status})."
-        )
-
-    # Prefer 3–5; allow fewer only when evidence is thin.
-    return tuple(bullets[:5])
-
-
 def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry, ...]:
     """Stable TOC entries for sections that will appear in the rendered report."""
 
     entries: list[ReportOutlineEntry] = [
+        ReportOutlineEntry(section_id="leadership-verdict", title="Leadership Verdict"),
         ReportOutlineEntry(section_id="key-takeaways", title="Key Takeaways"),
+        ReportOutlineEntry(section_id="executive-summary", title="Executive Summary"),
+        ReportOutlineEntry(section_id="engineering-risks", title="Engineering Risks"),
         ReportOutlineEntry(
-            section_id="engineering-modernization-assessment",
-            title="Engineering Modernization Assessment",
+            section_id="modernization-opportunities",
+            title="Modernization Opportunities",
         ),
         ReportOutlineEntry(section_id="priority-actions", title="Priority Actions"),
         ReportOutlineEntry(section_id="findings", title="Findings"),
@@ -281,11 +307,11 @@ def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry
         ("architecture-assessment", "Architecture Assessment", document.architecture_report),
         ("technical-debt-assessment", "Technical Debt Assessment", document.technical_debt_report),
         ("dependency-assessment", "Dependency Assessment", document.dependency_report),
-        ("security-assessment", "Security Intelligence", document.security_report),
-        ("testing-assessment", "Test Intelligence", document.testing_report),
-        ("cloud-assessment", "Cloud Intelligence", document.cloud_report),
-        ("ai-readiness-assessment", "AI Readiness Intelligence", document.ai_readiness_report),
-        ("performance-assessment", "Performance Intelligence", document.performance_report),
+        ("security-assessment", "Security Assessment", document.security_report),
+        ("testing-assessment", "Testing Assessment", document.testing_report),
+        ("cloud-assessment", "Cloud Assessment", document.cloud_report),
+        ("ai-readiness-assessment", "AI Readiness Assessment", document.ai_readiness_report),
+        ("performance-assessment", "Performance Assessment", document.performance_report),
     )
     for section_id, title, present in capability_packs:
         if present is not None:
@@ -346,36 +372,125 @@ def default_report_artifacts(
         items.append(
             ReportArtifactInput(
                 label="Modernization Advisor",
-                relative_path="ai-enrichment.json",
+                relative_path="advisor.json",
             )
         )
     if include_ai_execution:
-        items.append(ReportArtifactInput(label="AI Execution", relative_path="ai-execution.json"))
+        items.append(
+            ReportArtifactInput(label="Advisor Execution", relative_path="advisor-execution.json")
+        )
     return tuple(items)
 
 
 def _build_findings(report_input: ModernizationReportInput) -> tuple[FindingView, ...]:
-    evaluation = report_input.assessment_rule_evaluation
-    if evaluation is not None:
-        return tuple(_phase3_finding_view(item) for item in _sorted_phase3_findings(evaluation))
     return tuple(
-        _phase1_finding_view(item) for item in _sorted_phase1_findings(report_input.analysis_result)
+        _customer_finding_view(item) for item in resolve_customer_findings(report_input)
     )
 
 
 def _build_recommendations(
     report_input: ModernizationReportInput,
 ) -> tuple[RecommendationView, ...]:
-    result = report_input.assessment_recommendation_result
-    if result is not None:
-        return tuple(
-            _phase3_recommendation_view(item) for item in _sorted_phase3_recommendations(result)
-        )
-    findings = list(_sorted_phase1_findings(report_input.analysis_result))
-    finding_id_map = build_finding_id_map(findings)
+    findings = resolve_customer_findings(report_input)
+    finding_titles = {item.id: item.title for item in findings}
+    finding_id_map = build_finding_id_map(list(report_input.analysis_result.findings))
     return tuple(
-        _phase1_recommendation_view(item, finding_id_map=finding_id_map)
-        for item in contract_sorted_recommendations(report_input.analysis_result.recommendations)
+        _customer_recommendation_view(
+            item,
+            finding_id_map=finding_id_map,
+            finding_titles=finding_titles,
+        )
+        for item in resolve_customer_recommendations(report_input)
+    )
+
+
+def _customer_finding_view(item: CustomerFinding) -> FindingView:
+    if item.phase1 is not None:
+        return _phase1_finding_view(item.phase1)
+    return FindingView(
+        finding_id=item.id,
+        rule_id=item.rule_id,
+        title=_safe_text(item.title),
+        description=_safe_text(item.description),
+        severity=item.severity,
+        category=item.category,
+        affected_nodes=(),
+        evidence=tuple(
+            EvidenceView(
+                evidence_type=str(row.get("evidence_type") or "file"),
+                source_id=str(row.get("source_id") or row.get("file_path") or ""),
+                path=_safe_path(str(row.get("path") or row.get("file_path") or "")),
+                excerpt=_safe_optional_text(
+                    row.get("excerpt") if row.get("excerpt") is not None else row.get("description")
+                ),
+                node_id=str(row["node_id"]) if row.get("node_id") else None,
+            )
+            for row in item.evidence
+            if isinstance(row, dict)
+        ),
+    )
+
+
+def _customer_recommendation_view(
+    item: CustomerRecommendation,
+    *,
+    finding_id_map: dict[str, str] | None = None,
+    finding_titles: dict[str, str] | None = None,
+) -> RecommendationView:
+    titles = finding_titles or {}
+    related_titles = tuple(
+        titles[fid] for fid in item.related_finding_ids if fid in titles
+    )
+    if item.phase1 is not None:
+        view = _phase1_recommendation_view(item.phase1, finding_id_map=finding_id_map or {})
+        return view.model_copy(
+            update={
+                "related_finding_ids": tuple(item.related_finding_ids) or view.related_finding_ids,
+                "related_finding_titles": related_titles or view.related_finding_titles,
+                "effort": item.effort,
+                "risk": item.risk,
+                "dependencies": tuple(item.dependencies),
+                "priority_score": item.priority_score,
+                "presentation_bucket": item.presentation_bucket,
+            }
+        )
+    return RecommendationView(
+        recommendation_id=item.id,
+        title=_safe_text(item.title),
+        summary=_safe_text(item.description),
+        rationale=_safe_text(item.rationale or item.description),
+        priority=item.priority,
+        category=item.category,
+        related_finding_ids=tuple(item.related_finding_ids),
+        related_finding_titles=related_titles,
+        affected_nodes=(),
+        actions=tuple(
+            RecommendationActionView(
+                order=index,
+                title=_safe_text(action),
+                description=_safe_text(action),
+                command=None,
+            )
+            for index, action in enumerate(item.actions, start=1)
+        ),
+        evidence=tuple(
+            EvidenceView(
+                evidence_type=str(row.get("evidence_type") or "file"),
+                source_id=str(row.get("source_id") or row.get("file_path") or ""),
+                path=_safe_path(str(row.get("path") or row.get("file_path") or "")),
+                excerpt=_safe_optional_text(
+                    row.get("excerpt") if row.get("excerpt") is not None else row.get("description")
+                ),
+                node_id=None,
+            )
+            for row in item.evidence
+            if isinstance(row, dict)
+        ),
+        effort=item.effort,
+        risk=item.risk,
+        dependencies=tuple(item.dependencies),
+        priority_score=item.priority_score,
+        presentation_bucket=item.presentation_bucket,
     )
 
 
@@ -639,8 +754,8 @@ def _assessment_summary_text(
     ai_available: bool,
 ) -> str:
     base = (
-        f"{findings_count} deterministic finding(s) and "
-        f"{recommendations_count} deterministic recommendation(s)."
+        f"{findings_count} finding(s) and "
+        f"{recommendations_count} Priority Action(s) in this assessment."
     )
     if ai_available:
         return base + " Modernization Advisor narrative is included separately."

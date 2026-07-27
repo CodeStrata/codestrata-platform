@@ -11,9 +11,7 @@ from typing import Any
 from codestrata.models import (
     AnalysisResult,
     Finding,
-    Priority,
     Recommendation,
-    Severity,
     Technology,
 )
 from codestrata.reporting.ai_execution import AI_EXECUTION_FILENAME
@@ -28,7 +26,6 @@ from codestrata.reporting.contract.enums import (
     normalize_severity,
 )
 from codestrata.reporting.contract.identifiers import (
-    build_finding_id_map,
     remap_related_finding_ids,
     stable_finding_id,
     stable_recommendation_id,
@@ -36,9 +33,15 @@ from codestrata.reporting.contract.identifiers import (
 from codestrata.reporting.contract.manifest import build_report_manifest
 from codestrata.reporting.contract.ordering import (
     sorted_evidence,
-    sorted_findings,
-    sorted_recommendations,
     sorted_technologies,
+)
+from codestrata.reporting.customer_universe import (
+    CustomerFinding,
+    CustomerRecommendation,
+    customer_finding_json,
+    customer_recommendation_json,
+    resolve_customer_findings,
+    resolve_customer_recommendations,
 )
 from codestrata.reporting.modernization_models import (
     AIExecutionStatus,
@@ -62,17 +65,15 @@ def build_assessment_json_document(
     static_analysis = _static_analysis_block(analysis.static_analysis_results)
     timing = _timing_block(report_input.timing)
     repository_reference = report_input.repository_reference or repository_identifier(report_input)
-    executive = _executive_summary_metrics(analysis)
+    customer_findings = resolve_customer_findings(report_input)
+    customer_recommendations = resolve_customer_recommendations(report_input)
+    executive = _executive_summary_metrics(
+        analysis,
+        findings=customer_findings,
+        recommendations=customer_recommendations,
+    )
     comparison = _comparison_payload(analysis)
 
-    findings = _dedupe_by_stable_id(
-        sorted_findings(analysis.findings), key=stable_finding_id
-    )
-    recommendations = _dedupe_by_stable_id(
-        sorted_recommendations(analysis.recommendations),
-        key=stable_recommendation_id,
-    )
-    finding_id_map = build_finding_id_map(findings)
     technologies = sorted_technologies(analysis.technologies)
 
     assessment: dict[str, Any] = {
@@ -89,9 +90,9 @@ def build_assessment_json_document(
             },
             "summary": {
                 "technology_count": len(technologies),
-                "finding_count": len(findings),
-                "deterministic_recommendation_count": len(recommendations),
-                "recommendation_count": len(recommendations),
+                "finding_count": len(customer_findings),
+                "deterministic_recommendation_count": len(customer_recommendations),
+                "recommendation_count": len(customer_recommendations),
                 "ai_recommendation_count": ai_block["recommendation_count"],
                 "phase_count": ai_block["phase_count"],
                 "ai_executed": report_input.ai_executed,
@@ -107,10 +108,9 @@ def build_assessment_json_document(
             "executive_summary": executive,
             "technologies": [_technology_payload(item) for item in technologies],
             "repository_facts": _facts_payload(analysis),
-            "findings": [_finding_payload(item) for item in findings],
+            "findings": [customer_finding_json(item) for item in customer_findings],
             "deterministic_recommendations": [
-                _recommendation_payload(item, finding_id_map=finding_id_map)
-                for item in recommendations
+                customer_recommendation_json(item) for item in customer_recommendations
             ],
             "comparison": comparison,
             "warnings": list(report_input.warnings),
@@ -155,6 +155,8 @@ def build_assessment_json_document(
                 or AIExecutionStatus.NOT_REQUESTED.value,
             },
         }
+    if report_input.assessment_activation is not None:
+        assessment["activation"] = report_input.assessment_activation
     _attach_optional_section(assessment, "architecture", report_input.architecture_report)
     _attach_optional_section(assessment, "technical_debt", report_input.technical_debt_report)
     _attach_optional_section(assessment, "dependency", report_input.dependency_report)
@@ -335,30 +337,37 @@ def assessment_json_to_text(document: dict[str, Any], *, indent: int | None = 2)
     return text if text.endswith("\n") else f"{text}\n"
 
 
-def _executive_summary_metrics(analysis: AnalysisResult) -> dict[str, Any]:
+def _executive_summary_metrics(
+    analysis: AnalysisResult,
+    *,
+    findings: tuple[CustomerFinding, ...],
+    recommendations: tuple[CustomerRecommendation, ...],
+) -> dict[str, Any]:
     severity_counts = Counter(
-        str(getattr(finding.severity, "value", finding.severity)).lower()
-        for finding in analysis.findings
+        "info" if item.severity.lower() == "informational" else item.severity.lower()
+        for item in findings
     )
     priority_counts = Counter(
-        str(getattr(item.priority, "value", item.priority)).lower()
-        for item in analysis.recommendations
+        "critical" if item.priority.lower() == "immediate" else item.priority.lower()
+        for item in recommendations
     )
     structure = analysis.facts.structure
     cicd = analysis.facts.cicd
     cloud = analysis.facts.cloud
     critical_high = sum(
-        1 for finding in analysis.findings if finding.severity in {Severity.CRITICAL, Severity.HIGH}
+        1 for item in findings if item.severity.lower() in {"critical", "high"}
     )
     tests_detected = structure.has_tests if structure is not None else None
     ci_detected = cicd.has_ci if cicd is not None else None
     cloud_capabilities = list(cloud.cloud_capabilities) if cloud is not None else []
 
-    finding_count = len(analysis.findings)
-    recommendation_count = len(analysis.recommendations)
-    critical_findings = sum(finding.severity == Severity.CRITICAL for finding in analysis.findings)
+    finding_count = len(findings)
+    recommendation_count = len(recommendations)
+    critical_findings = sum(1 for item in findings if item.severity.lower() == "critical")
     high_recommendations = sum(
-        item.priority in {Priority.CRITICAL, Priority.HIGH} for item in analysis.recommendations
+        1
+        for item in recommendations
+        if item.priority.lower() in {"critical", "high", "immediate"}
     )
     parts = [
         (

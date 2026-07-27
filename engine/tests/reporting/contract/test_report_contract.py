@@ -202,12 +202,14 @@ def test_golden_json_and_html(tmp_path: Path) -> None:
     assert canonical == expected
 
     html = HtmlReportRenderer().render(build_html_report_view_model(report_input))
-    assert 'id="engineering-modernization-assessment"' in html
-    assert "Engineering Modernization Assessment" in html
-    assert "Leadership snapshot" in html
+    assert 'id="executive-summary"' in html
+    assert "Executive Summary" in html
+    assert "Should I care?" in html
+    assert "Leadership Verdict" in html
     golden_html = GOLDENS / "sample_report.fragments.txt"
     fragments = [
-        'id="engineering-modernization-assessment"',
+        'id="executive-summary"',
+        'id="leadership-verdict"',
         'id="findings"',
         'id="priority-actions"',
         "Urgent rec",

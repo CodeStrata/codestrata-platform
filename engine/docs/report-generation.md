@@ -23,7 +23,8 @@ report.html (self-contained, branded, HTML report version 3.0)
 | `report.json` | Machine-readable assessment contract (schema 1.2) |
 | `findings.json` | Deterministic findings (unchanged by HTML) |
 | `recommendations.json` | Deterministic recommendations |
-| `ai-enrichment.json` | Optional Modernization Advisor narrative |
+| `advisor.json` | Optional Modernization Advisor narrative |
+| `advisor-execution.json` | Internal Advisor provider/model/status/errors |
 
 ## Sections (HTML v3)
 

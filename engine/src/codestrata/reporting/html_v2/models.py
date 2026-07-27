@@ -187,9 +187,15 @@ class RecommendationView(BaseModel):
     priority: str
     category: str
     related_finding_ids: tuple[str, ...] = ()
+    related_finding_titles: tuple[str, ...] = ()
     affected_nodes: tuple[str, ...] = ()
     actions: tuple[RecommendationActionView, ...] = ()
     evidence: tuple[EvidenceView, ...] = ()
+    effort: str = "unknown"
+    risk: str = "medium"
+    dependencies: tuple[str, ...] = ()
+    priority_score: float = 0.0
+    presentation_bucket: str = "future"
 
     @field_validator(
         "recommendation_id",
@@ -206,9 +212,11 @@ class RecommendationView(BaseModel):
 
     @field_validator(
         "related_finding_ids",
+        "related_finding_titles",
         "affected_nodes",
         "actions",
         "evidence",
+        "dependencies",
         mode="before",
     )
     @classmethod
@@ -280,8 +288,8 @@ class AiEnrichmentView(BaseModel):
     output_tokens: int | None = None
     limitations: tuple[str, ...] = ()
     disclaimer: str = (
-        "Modernization Advisor interpretation. Deterministic findings and "
-        "recommendations remain the source of truth."
+        "Modernization Advisor interpretation. Findings and Priority Actions "
+        "from the assessment remain the source of truth."
     )
 
 
@@ -343,6 +351,54 @@ class ReportOutlineEntry(BaseModel):
         return require_nonblank(str(value), label="outline entry field")
 
 
+class EngineeringRiskThemeView(BaseModel):
+    """One themed risk group for leadership Engineering Risks."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    theme: str
+    items: tuple[str, ...] = ()
+
+    @field_validator("theme", mode="before")
+    @classmethod
+    def normalize_theme(cls, value: object) -> str:
+        return require_nonblank(str(value), label="risk theme")
+
+    @field_validator("items", mode="before")
+    @classmethod
+    def normalize_items(cls, value: object) -> tuple[Any, ...]:
+        return as_tuple(value)
+
+
+class ExecutiveSummaryNarrative(BaseModel):
+    """VP-facing executive summary answers (Phase 7.3)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    should_i_care: str
+    why_now: str
+    what_next: str
+
+    @field_validator("should_i_care", "why_now", "what_next", mode="before")
+    @classmethod
+    def normalize_required(cls, value: object) -> str:
+        return require_nonblank(str(value), label="executive summary field")
+
+
+class AssessmentScopeView(BaseModel):
+    """Compact Assessment Scope for the technical appendix only."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    assessed_packs: tuple[str, ...] = ()
+    not_assessed_packs: tuple[tuple[str, str], ...] = ()
+
+    @field_validator("assessed_packs", "not_assessed_packs", mode="before")
+    @classmethod
+    def normalize_sequences(cls, value: object) -> tuple[Any, ...]:
+        return as_tuple(value)
+
+
 class CustomerReportDocument(BaseModel):
     """Renderer-neutral customer presentation document (Phase 6.3).
 
@@ -359,6 +415,7 @@ class CustomerReportDocument(BaseModel):
     assessment_summary: AssessmentSummaryView
     findings: tuple[FindingView, ...] = ()
     recommendations: tuple[RecommendationView, ...] = ()
+    priority_actions: tuple[RecommendationView, ...] = ()
     ai_enrichment: AiEnrichmentView | None = None
     architecture_report: ArchitectureReportSection | None = None
     technical_debt_report: TechnicalDebtReportSection | None = None
@@ -372,11 +429,15 @@ class CustomerReportDocument(BaseModel):
     artifacts: tuple[ArtifactRefView, ...] = ()
     metadata: AssessmentMetadataView
     outline: tuple[ReportOutlineEntry, ...] = ()
+    leadership_verdict: str = ""
+    executive_summary: ExecutiveSummaryNarrative | None = None
     key_takeaways: tuple[str, ...] = ()
+    engineering_risks: tuple[EngineeringRiskThemeView, ...] = ()
+    modernization_opportunities: tuple[str, ...] = ()
+    assessment_scope: AssessmentScopeView | None = None
     provenance_note: str = (
-        "Deterministic findings and recommendations are produced by CodeStrata "
-        "rules and recommendation engines. Modernization Advisor, when present, "
-        "is interpretive only and does not modify deterministic results."
+        "Findings and Priority Actions reflect repository evidence from this assessment. "
+        "Modernization Advisor, when present, is interpretive commentary only."
     )
 
     @field_validator(
@@ -384,9 +445,12 @@ class CustomerReportDocument(BaseModel):
         "version_highlights",
         "findings",
         "recommendations",
+        "priority_actions",
         "artifacts",
         "outline",
         "key_takeaways",
+        "engineering_risks",
+        "modernization_opportunities",
         mode="before",
     )
     @classmethod

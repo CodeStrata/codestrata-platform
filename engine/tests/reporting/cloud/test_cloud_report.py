@@ -223,7 +223,7 @@ def test_json_and_html_integration_and_determinism() -> None:
     assert view.cloud_report is not None
     html = HtmlReportRenderer().render(view)
     assert 'id="cloud-assessment"' in html
-    assert "Cloud Intelligence" in html
+    assert "Cloud Assessment" in html
     assert "Overall Cloud Posture" in html
     assert "Rule Execution Summary" in html
     assert "Technology Family Inventory" in html

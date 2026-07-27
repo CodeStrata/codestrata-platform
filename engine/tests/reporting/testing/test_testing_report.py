@@ -255,7 +255,7 @@ def test_json_and_html_integration_and_determinism() -> None:
     assert view.testing_report is not None
     html = HtmlReportRenderer().render(view)
     assert 'id="testing-assessment"' in html
-    assert "Test Intelligence" in html
+    assert "Testing Assessment" in html
     assert "Overall Test Posture" in html
     assert "Rule Execution Summary" in html
     assert "Inventory Summary" in html

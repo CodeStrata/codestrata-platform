@@ -416,13 +416,14 @@ def test_executive_summary_metrics_html_and_json(tmp_path: Path) -> None:
     document = build_assessment_json_document(report_input)
     executive = document["assessment"]["executive_summary"]
 
-    assert "Engineering Modernization Assessment" in html
+    assert "Executive Summary" in html
+    assert "Leadership Verdict" in html
     assert "Assessment Summary" in html
     assert "Priority findings" in html
     assert "Technology Overview" in html
     assert "severity-critical" in html
     assert "Findings" in html
-    assert "Technologies" in html
+    assert "Should I care?" in html
     assert executive["finding_count"] == 3
     assert executive["recommendation_count"] == 3
     assert executive["file_count"] == 3

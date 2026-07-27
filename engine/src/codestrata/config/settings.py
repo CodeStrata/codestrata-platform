@@ -1957,9 +1957,21 @@ class AssessmentSectionsSettings(BaseModel):
 class AssessmentSettings(BaseModel):
     """Formal assessment composition settings."""
 
+    activation: str = "default"
     sections: AssessmentSectionsSettings = Field(
         default_factory=AssessmentSectionsSettings
     )
+
+    @field_validator("activation")
+    @classmethod
+    def validate_activation(cls, value: str) -> str:
+        compact = str(value or "").strip().lower()
+        allowed = {"default", "minimal", "full", "custom"}
+        if compact not in allowed:
+            raise ValueError(
+                f"assessment.activation must be one of {sorted(allowed)}, got {value!r}"
+            )
+        return compact
 
 
 class ArchitectureReportSectionSettings(BaseModel):

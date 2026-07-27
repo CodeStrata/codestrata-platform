@@ -24,7 +24,6 @@ from codestrata.reporting.html_v2.models import (
     RecommendationView,
 )
 from codestrata.reporting.performance.models import PerformanceReportSection
-from codestrata.reporting.roadmap.models import RoadmapReportSection
 from codestrata.reporting.security.models import SecurityReportSection
 from codestrata.reporting.technical_debt.models import TechnicalDebtReportSection
 from codestrata.reporting.testing.models import TestingReportSection
@@ -67,32 +66,44 @@ class HtmlReportRenderer:
             "<body>",
             '<div class="page">',
             _render_hero(view),
+            _render_leadership_verdict(view),
             _render_toc(view),
             _section(
                 "Key Takeaways",
                 _render_key_takeaways(view),
                 section_id="key-takeaways",
-                note=(
-                    "Concise leadership bullets derived from deterministic findings "
-                    "and Modernization Advisor output when available."
-                ),
+                note="Concise leadership bullets for scanning and handoff.",
             ),
             _section(
-                "Engineering Modernization Assessment",
-                _render_engineering_modernization_assessment(view),
-                section_id="engineering-modernization-assessment",
+                "Executive Summary",
+                _render_executive_summary(view),
+                section_id="executive-summary",
+                note="Should I care, why now, and what the team should do next.",
+            ),
+            _section(
+                "Engineering Risks",
+                _render_engineering_risks(view),
+                section_id="engineering-risks",
+                note="Meaningful risks grouped by theme.",
+            ),
+            _section(
+                "Modernization Opportunities",
+                _render_modernization_opportunities(view),
+                section_id="modernization-opportunities",
                 note=(
-                    "Leadership snapshot: repository posture, readiness signals, "
-                    "and technology footprint. Detailed findings follow below."
+                    "Improvement opportunities distinct from Priority Actions. "
+                    "Priority Actions remain the authoritative action list."
                 ),
             ),
             _section(
                 "Priority Actions",
-                _render_roadmap(view.recommendations),
+                _render_roadmap(
+                    view.priority_actions if view.priority_actions else view.recommendations
+                ),
                 section_id="priority-actions",
                 note=(
-                    "Priority-ordered deterministic recommendations with links "
-                    "to related findings where available."
+                    "Priority-ordered actions linked to findings. "
+                    "Order matches the Phased Modernization Plan below."
                 ),
             ),
             _section(
@@ -100,8 +111,8 @@ class HtmlReportRenderer:
                 _render_findings_overview(view),
                 section_id="findings",
                 note=(
-                    "Highest-severity deterministic findings first. "
-                    "Full evidence and IDs are in the Technical Appendix."
+                    "Highest-severity findings first. "
+                    "Full evidence is in the Technical Appendix."
                 ),
             ),
         ]
@@ -112,10 +123,7 @@ class HtmlReportRenderer:
                     "Architecture Assessment",
                     _render_architecture(view.architecture_report),
                     section_id="architecture-assessment",
-                    note=(
-                        "Deterministic architecture assessment presentation. "
-                        "Does not invent scores, business impact, or strengths."
-                    ),
+                    note="Structural findings and conclusions from repository evidence.",
                 )
             )
         if view.technical_debt_report is not None:
@@ -124,12 +132,7 @@ class HtmlReportRenderer:
                     "Technical Debt Assessment",
                     _render_technical_debt(view.technical_debt_report),
                     section_id="technical-debt-assessment",
-                    note=(
-                        "Deterministic technical debt assessment presentation. "
-                        "Does not invent composite scores, financial cost, or "
-                        "remediation-hour estimates. Hotspot order is presentation "
-                        "order, not priority ranking."
-                    ),
+                    note="Maintainability hotspots and debt themes from repository evidence.",
                 )
             )
         if view.dependency_report is not None:
@@ -138,93 +141,62 @@ class HtmlReportRenderer:
                     "Dependency Assessment",
                     _render_dependency(view.dependency_report),
                     section_id="dependency-assessment",
-                    note=(
-                        "Deterministic declared-dependency assessment presentation. "
-                        "Does not invent health scores, vulnerability verdicts, "
-                        "license assessments, or latest-version advice. Hotspot "
-                        "order is presentation order, not priority ranking."
-                    ),
+                    note="Declared dependency posture from repository manifests.",
                 )
             )
         if view.security_report is not None:
             capability_parts.append(
                 _subsection(
-                    "Security Intelligence",
+                    "Security Assessment",
                     _render_security(view.security_report),
                     section_id="security-assessment",
                     note=(
-                        "Deterministic repository Security hygiene assessment "
-                        "presentation. Does not invent vulnerability verdicts, "
-                        "compliance claims, scores, or exploitability. Zero findings "
-                        "do not establish that the repository is secure. Hotspot "
-                        "order is presentation order, not priority ranking."
+                        "Repository security signals from available evidence. "
+                        "Absence of findings is not a security certification."
                     ),
                 )
             )
         if view.testing_report is not None:
             capability_parts.append(
                 _subsection(
-                    "Test Intelligence",
+                    "Testing Assessment",
                     _render_testing(view.testing_report),
                     section_id="testing-assessment",
-                    note=(
-                        "Deterministic repository Test Hygiene assessment "
-                        "presentation. Does not invent test-quality scores, "
-                        "pass/fail execution results, or runtime coverage. Zero "
-                        "findings do not certify test sufficiency or readiness "
-                        "for release."
-                    ),
+                    note="Test presence and hygiene signals from repository evidence.",
                 )
             )
         if view.cloud_report is not None:
             capability_parts.append(
                 _subsection(
-                    "Cloud Intelligence",
+                    "Cloud Assessment",
                     _render_cloud(view.cloud_report),
                     section_id="cloud-assessment",
-                    note=(
-                        "Deterministic repository Cloud Hygiene assessment "
-                        "presentation. Does not invent readiness scores, "
-                        "portability verdicts, or provider compliance claims. "
-                        "Zero findings do not establish that the repository is "
-                        "cloud ready."
-                    ),
+                    note="Cloud and deployment readiness signals from repository evidence.",
                 )
             )
         if view.ai_readiness_report is not None:
             capability_parts.append(
                 _subsection(
-                    "AI Readiness Intelligence",
+                    "AI Readiness Assessment",
                     _render_ai_readiness(view.ai_readiness_report),
                     section_id="ai-readiness-assessment",
-                    note=(
-                        "Deterministic repository AI Readiness Hygiene assessment "
-                        "presentation. Does not invent readiness scores, agent "
-                        "enablement verdicts, or RAG suitability claims. Zero "
-                        "findings do not certify AI/agent enablement."
-                    ),
+                    note="AI/agent readiness signals from repository evidence.",
                 )
             )
         if view.performance_report is not None:
             capability_parts.append(
                 _subsection(
-                    "Performance Intelligence",
+                    "Performance Assessment",
                     _render_performance(view.performance_report),
                     section_id="performance-assessment",
-                    note=(
-                        "Deterministic repository Performance Hygiene assessment "
-                        "presentation. Does not invent performance scores or "
-                        "load suitability claims. Zero findings do not certify "
-                        "load suitability."
-                    ),
+                    note="Performance hygiene signals from repository evidence.",
                 )
             )
         if capability_parts:
             parts.append(
                 '<section class="section section-capability" id="capability-assessments">\n'
                 '<div class="section-head"><h2>Capability Assessments</h2></div>\n'
-                '<p class="section-note">Optional Analysis Intelligence packs. '
-                "Each subsection is deterministic evidence only.</p>\n"
+                '<p class="section-note">Detailed assessment packs for engineering follow-up.</p>\n'
                 f"{''.join(capability_parts)}\n"
                 "</section>"
             )
@@ -232,12 +204,11 @@ class HtmlReportRenderer:
             parts.append(
                 _section(
                     "Phased Modernization Plan",
-                    _render_phased_roadmap(view.roadmap_report),
+                    _render_phased_roadmap(view),
                     section_id="phased-modernization-plan",
                     note=(
-                        "Deterministic phased plan derived from existing findings "
-                        "and recommendations only. Does not invent initiatives, "
-                        "schedules, cost estimates, or portfolio plans."
+                        "Same Priority Actions, sequenced Stabilize → Secure → "
+                        "Modernize → Optimize."
                     ),
                 )
             )
@@ -324,11 +295,102 @@ def _render_toc(view: HtmlReportViewModel) -> str:
     )
 
 
+def _render_leadership_verdict(view: HtmlReportViewModel) -> str:
+    text = (view.leadership_verdict or "").strip()
+    if not text:
+        return ""
+    return (
+        '<section class="section section-verdict" id="leadership-verdict">\n'
+        '<div class="section-head"><h2>Leadership Verdict</h2></div>\n'
+        f'<p class="verdict-body">{escape_html(text)}</p>\n'
+        "</section>"
+    )
+
+
+def _render_executive_summary(view: HtmlReportViewModel) -> str:
+    narrative = view.executive_summary
+    if narrative is None:
+        return (
+            '<p class="muted">No executive summary was produced for this assessment.</p>\n'
+            f"{_render_technology(view)}"
+        )
+    return (
+        '<div class="exec-narrative">\n'
+        "<h3>Should I care?</h3>\n"
+        f"<p>{escape_html(narrative.should_i_care)}</p>\n"
+        "<h3>Why now?</h3>\n"
+        f"<p>{escape_html(narrative.why_now)}</p>\n"
+        "<h3>What should my team do next?</h3>\n"
+        f"<p>{escape_html(narrative.what_next)}</p>\n"
+        "</div>\n"
+        "<h3>Technology Overview</h3>\n"
+        f"{_render_technology(view)}"
+    )
+
+
 def _render_key_takeaways(view: HtmlReportViewModel) -> str:
     if not view.key_takeaways:
         return '<p class="muted">No key takeaways were available for this assessment.</p>'
     items = "".join(f"<li>{escape_html(item)}</li>\n" for item in view.key_takeaways)
     return f'<ul class="takeaways">\n{items}</ul>'
+
+
+def _render_engineering_risks(view: HtmlReportViewModel) -> str:
+    if not view.engineering_risks:
+        return (
+            '<p class="muted">No significant engineering risks were identified '
+            "under the activated assessment checks.</p>"
+        )
+    blocks: list[str] = []
+    for theme in view.engineering_risks:
+        items = "".join(f"<li>{escape_html(item)}</li>" for item in theme.items)
+        blocks.append(
+            f'<div class="risk-theme"><h3>{escape_html(theme.theme)}</h3>'
+            f'<ul class="plain">{items}</ul></div>'
+        )
+    return "\n".join(blocks)
+
+
+def _render_modernization_opportunities(view: HtmlReportViewModel) -> str:
+    if not view.modernization_opportunities:
+        return (
+            '<p class="muted">No additional modernization opportunities were '
+            "identified beyond Priority Actions and capability assessments.</p>"
+        )
+    items = "".join(
+        f"<li>{escape_html(item)}</li>" for item in view.modernization_opportunities
+    )
+    return f'<ul class="plain">{items}</ul>'
+
+
+def _render_assessment_scope(view: HtmlReportViewModel) -> str:
+    scope = view.assessment_scope
+    if scope is None:
+        return '<p class="muted">Assessment scope was not recorded for this run.</p>'
+    assessed = (
+        "".join(f"<li>{escape_html(label)}</li>" for label in scope.assessed_packs)
+        or "<li>None</li>"
+    )
+    skipped_rows = "".join(
+        "<tr>"
+        f"<td>{escape_html(label)}</td>"
+        f"<td>{escape_html(reason)}</td>"
+        "</tr>"
+        for label, reason in scope.not_assessed_packs
+    ) or '<tr><td colspan="2">None</td></tr>'
+    return (
+        "<p>Packs included in this assessment and packs intentionally not assessed.</p>\n"
+        '<div class="split">\n'
+        "<div>\n<h3>Assessed</h3>\n"
+        f'<ul class="plain">{assessed}</ul>\n'
+        "</div>\n"
+        "<div>\n<h3>Not assessed</h3>\n"
+        '<div class="table-wrap"><table>\n'
+        "<thead><tr><th>Area</th><th>Reason</th></tr></thead>\n"
+        f"<tbody>{skipped_rows}</tbody>\n</table></div>\n"
+        "</div>\n"
+        "</div>"
+    )
 
 
 def _render_engineering_modernization_assessment(view: HtmlReportViewModel) -> str:
@@ -344,9 +406,20 @@ def _render_engineering_modernization_assessment(view: HtmlReportViewModel) -> s
 def _render_hero(view: HtmlReportViewModel) -> str:
     summary = view.summary
     meta = view.metadata
-    mode_short = _mode_short(summary.assessment_mode_label)
     severity_tone = _severity_tone(summary.highest_finding_severity)
-    advisor = meta.advisor_version or "—"
+    generated = _humanize_timestamp(meta.generated_at_utc)
+    meta_items = [
+        ("Repository", meta.repository_name or summary.repository_name),
+        ("Generated", generated),
+        ("Report version", meta.report_version),
+    ]
+    meta_html = "".join(
+        '<div class="meta-item"><span class="meta-label">'
+        f"{escape_html(label)}</span>"
+        f'<span class="meta-value">{escape_and_wrap(value)}</span></div>\n'
+        for label, value in meta_items
+        if value and str(value).strip() not in {"—", "-", "Unknown"}
+    )
     return (
         '<header class="hero" id="cover">\n'
         '<div class="hero-brand">\n'
@@ -355,32 +428,30 @@ def _render_hero(view: HtmlReportViewModel) -> str:
         f'<p class="brand-name">{escape_html(BRAND_NAME)}</p>\n'
         f'<h1 class="report-title">{escape_html(BRAND_REPORT_NAME)}</h1>\n'
         "</div>\n"
-        '<div class="hero-meta report-identity">\n'
-        '<div class="meta-item"><span class="meta-label">Repository</span>'
-        f'<span class="meta-value">'
-        f"{escape_and_wrap(meta.repository_name or summary.repository_name)}"
-        "</span></div>\n"
-        '<div class="meta-item"><span class="meta-label">Generated</span>'
-        f'<span class="meta-value">{escape_html(meta.generated_at_utc)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Report version</span>'
-        f'<span class="meta-value">{escape_html(meta.report_version)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Engine version</span>'
-        f'<span class="meta-value">{escape_html(meta.engine_version)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Advisor version</span>'
-        f'<span class="meta-value">{escape_html(advisor)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Mode</span>'
-        f'<span class="meta-value">{escape_html(mode_short)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Source</span>'
-        f'<span class="meta-value">{escape_html(view.repository.source_type)}</span></div>\n'
-        "</div>\n"
+        f'<div class="hero-meta report-identity">\n{meta_html}</div>\n'
         '<div class="hero-kpis">\n'
         f"{_kpi('Highest Finding Severity', summary.highest_finding_severity, '', severity_tone)}"
         f"{_kpi('Cloud Enablement Signals', _cloud_primary(view), _cloud_status(view), 'cloud')}"
         f"{_kpi('CI/CD', _cicd_value(view), '', 'cicd')}"
-        f"{_kpi('Assessment mode', summary.assessment_mode_label, '', 'mode')}"
         "</div>\n"
         "</header>"
     )
+
+
+def _humanize_timestamp(value: str) -> str:
+    text = (value or "").strip()
+    if not text:
+        return "—"
+    # Prefer date + time without fractional seconds / Z clutter.
+    if "T" in text:
+        date_part, _, time_part = text.partition("T")
+        time_part = time_part.rstrip("Z")
+        if "." in time_part:
+            time_part = time_part.split(".", 1)[0]
+        if len(time_part) >= 5:
+            return f"{date_part} {time_part[:5]} UTC"
+        return date_part
+    return text
 
 
 def _severity_tone(label: str) -> str:
@@ -443,29 +514,33 @@ def _render_executive_cards(view: HtmlReportViewModel) -> str:
     recommendations = (
         metrics.recommendations_count if metrics else view.summary.total_recommendations
     )
-    tests = metrics.test_files_label if metrics else "Unknown"
-    cicd = metrics.cicd_label if metrics else "Unknown"
-    cloud_primary = metrics.cloud_signals_primary if metrics else "Unknown"
+    tests = metrics.test_files_label if metrics else ""
+    cicd = metrics.cicd_label if metrics else ""
+    cloud_primary = metrics.cloud_signals_primary if metrics else ""
     cloud_status = (
         metrics.cloud_signals_status
-        if metrics and metrics.cloud_signals_primary != "Unknown"
+        if metrics and metrics.cloud_signals_primary not in {"", "Unknown"}
         else ""
     )
     size = metrics.repository_size_label if metrics else f"{file_count} files"
     highest = view.summary.highest_finding_severity
-    return (
-        '<div class="stat-grid">\n'
-        f"{_stat_card('Files', str(file_count))}"
-        f"{_stat_card('Technologies', str(tech_count))}"
-        f"{_stat_card('Findings', str(findings))}"
-        f"{_stat_card('Recommendations', str(recommendations))}"
-        f"{_stat_card('Test Files Detected', tests)}"
-        f"{_stat_card('CI/CD', cicd)}"
-        f"{_stat_card('Cloud Enablement Signals', cloud_primary, cloud_status)}"
-        f"{_stat_card('Repository Size', size)}"
-        f"{_stat_card('Highest Finding Severity', highest)}"
-        "</div>"
-    )
+    cards = [
+        _stat_card("Files", str(file_count)),
+        _stat_card("Technologies", str(tech_count)),
+        _stat_card("Findings", str(findings)),
+        _stat_card("Recommendations", str(recommendations)),
+    ]
+    if tests and tests != "Unknown":
+        cards.append(_stat_card("Test Files Detected", tests))
+    if cicd and cicd != "Unknown":
+        cards.append(_stat_card("CI/CD", cicd))
+    if cloud_primary and cloud_primary != "Unknown":
+        cards.append(_stat_card("Cloud Enablement Signals", cloud_primary, cloud_status))
+    if size and size != "Unknown":
+        cards.append(_stat_card("Repository Size", size))
+    if highest and highest != "Unknown":
+        cards.append(_stat_card("Highest Finding Severity", highest))
+    return '<div class="stat-grid">\n' + "".join(cards) + "</div>"
 
 
 def _stat_card(label: str, value: str, hint: str = "") -> str:
@@ -537,7 +612,7 @@ def _render_findings_overview(view: HtmlReportViewModel) -> str:
     top = view.findings[:_TOP_FINDINGS]
     if not top:
         cards = (
-            '<p class="muted">No deterministic findings were produced for this run. '
+            '<p class="muted">No findings were produced for this run. '
             "This does not certify that the repository is free of issues.</p>"
         )
     else:
@@ -585,8 +660,14 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
     )
 
 
-def _roadmap_bucket(priority: str) -> str:
-    key = priority.lower()
+def _roadmap_bucket(item: RecommendationView) -> str:
+    from codestrata.reporting.prioritization import BUCKET_LABELS
+
+    bucket = (item.presentation_bucket or "").strip().lower()
+    if bucket in BUCKET_LABELS:
+        return BUCKET_LABELS[bucket]
+    # Fallback for older views without presentation_bucket.
+    key = item.priority.lower()
     if key in {"immediate", "critical"}:
         return "Immediate"
     if key in {"high", "medium"}:
@@ -595,9 +676,11 @@ def _roadmap_bucket(priority: str) -> str:
 
 
 def _render_roadmap(items: tuple[RecommendationView, ...]) -> str:
-    if not items:
+    # Leadership display requires finding-backed actions only.
+    display = tuple(item for item in items if item.related_finding_ids)
+    if not display:
         return (
-            '<p class="muted">No deterministic recommendations are available yet. '
+            '<p class="muted">No Priority Actions were produced for this assessment. '
             "Findings may still appear above when present.</p>"
         )
     buckets: dict[str, list[RecommendationView]] = {
@@ -605,8 +688,8 @@ def _render_roadmap(items: tuple[RecommendationView, ...]) -> str:
         "Near Term": [],
         "Future": [],
     }
-    for item in items:
-        buckets[_roadmap_bucket(item.priority)].append(item)
+    for item in display:
+        buckets[_roadmap_bucket(item)].append(item)
     parts: list[str] = ['<div class="roadmap">']
     for name, group in buckets.items():
         if not group:
@@ -622,16 +705,30 @@ def _render_roadmap(items: tuple[RecommendationView, ...]) -> str:
     return "\n".join(parts)
 
 
-def _business_value(priority: str) -> str:
-    key = priority.lower()
-    if key in {"immediate", "critical", "high"}:
+def _business_value(item: RecommendationView) -> str:
+    risk = (item.risk or "").lower()
+    if risk == "high" or item.priority.lower() in {"immediate", "critical", "high"}:
         return "High"
-    if key == "medium":
+    if risk == "medium" or item.priority.lower() == "medium":
         return "Medium"
     return "Incremental"
 
 
 def _effort_label(item: RecommendationView) -> str:
+    effort = (item.effort or "").lower()
+    labels = {
+        "small": "Small",
+        "xs": "Small",
+        "s": "Small",
+        "medium": "Medium",
+        "m": "Medium",
+        "large": "Larger",
+        "l": "Larger",
+        "extra_large": "Larger",
+        "xl": "Larger",
+    }
+    if effort in labels:
+        return labels[effort]
     actions = len(item.actions)
     if actions <= 1:
         return "Small"
@@ -643,14 +740,27 @@ def _effort_label(item: RecommendationView) -> str:
 def _render_recommendation_card(item: RecommendationView, *, compact: bool) -> str:
     related = _finding_id_links(item.related_finding_ids) or '<span class="muted">None</span>'
     nodes = _id_list(item.affected_nodes) or '<span class="muted">None</span>'
+    related_titles = ""
+    if item.related_finding_titles:
+        related_titles = (
+            '<p class="related-findings"><em>Related findings</em> '
+            + escape_html("; ".join(item.related_finding_titles[:3]))
+            + (
+                f" (+{len(item.related_finding_titles) - 3} more)"
+                if len(item.related_finding_titles) > 3
+                else ""
+            )
+            + "</p>\n"
+        )
     chips = (
         '<div class="chip-row">\n'
-        f'<span class="chip"><em>Priority</em> {escape_html(item.priority)}</span>\n'
-        f'<span class="chip"><em>Business Value</em> '
-        f"{escape_html(_business_value(item.priority))}</span>\n"
+        f'<span class="chip"><em>Horizon</em> {escape_html(_roadmap_bucket(item))}</span>\n'
+        f'<span class="chip"><em>Business impact</em> '
+        f"{escape_html(_business_value(item))}</span>\n"
         f'<span class="chip"><em>Effort</em> {escape_html(_effort_label(item))}</span>\n'
         "</div>\n"
-        f'<p class="outcome"><em>Expected Outcome</em> {escape_html(item.summary)}</p>\n'
+        f'<p class="outcome"><em>Business outcome</em> {escape_html(item.summary)}</p>\n'
+        f"{related_titles}"
     )
     detail = ""
     if not compact:
@@ -686,14 +796,100 @@ def _render_recommendation_card(item: RecommendationView, *, compact: bool) -> s
         f'<article class="item-card recommendation" '
         f'id="recommendation-{escape_html(item.recommendation_id)}">\n'
         f'<header class="item-header">'
-        f'<span class="badge priority-{escape_html(item.priority)}">'
-        f"{escape_html(item.priority)}</span> "
+        f'<span class="badge priority-{escape_html(item.presentation_bucket or item.priority)}">'
+        f"{escape_html(_roadmap_bucket(item))}</span> "
         f"<strong>{escape_html(item.title)}</strong>"
         f"</header>\n"
         f"{chips}"
         f"{detail}"
         "</article>"
     )
+
+
+def _is_blank_or_unknown(value: object) -> bool:
+    text = str(value or "").strip().lower()
+    return text in {"", "unavailable", "unknown", "not_assessed", "—", "-"}
+
+
+def _limitation_items(limitations: object) -> str:
+    """Render limitation rows; omit diagnostic unavailable/unknown category noise."""
+
+    rows: tuple[object, ...]
+    if limitations is None:
+        rows = ()
+    elif isinstance(limitations, tuple):
+        rows = limitations
+    else:
+        rows = tuple(limitations)  # type: ignore[arg-type]
+    items = []
+    for item in rows:
+        category = str(getattr(item, "category", "") or "")
+        summary = str(getattr(item, "summary", "") or "")
+        cat_l = category.lower()
+        if "unavailable" in cat_l or cat_l in {"unknown", "not_assessed"}:
+            continue
+        if _is_blank_or_unknown(summary):
+            continue
+        summary_l = summary.lower()
+        if "business impact remains unknown" in summary_l or "business impact unknown" in cat_l:
+            continue
+        if "phase " in summary_l and ("collector" in summary_l or "unsupported" in summary_l):
+            continue
+        if "deterministic" in summary_l or "phase 4" in summary_l or "phase 5" in summary_l:
+            continue
+        if "inventory does not re-run rules" in summary_l:
+            continue
+        label = category.replace("-", " ").replace("_", " ").strip().title() or "Note"
+        items.append(
+            f"<li><strong>{escape_html(label)}</strong> — {escape_html(summary)}</li>"
+        )
+    return "".join(items)
+
+
+def _architecture_conclusion_meta(item: object) -> str:
+    bits: list[str] = []
+    confidence = getattr(item, "confidence", None)
+    business_impact = getattr(item, "business_impact", None)
+    if not _is_blank_or_unknown(confidence):
+        bits.append(f"Confidence: {confidence}")
+    if not _is_blank_or_unknown(business_impact) and str(business_impact).lower() not in {
+        "unknown",
+        "not assessed",
+        "not_assessed",
+    }:
+        bits.append(f"Business impact: {business_impact}")
+    return escape_html(" · ".join(bits)) if bits else ""
+
+
+def _architecture_conclusion_card(item: object) -> str:
+    meta = _architecture_conclusion_meta(item)
+    meta_html = f"<p class='muted'>{meta}</p>" if meta else ""
+    scope_values = tuple(getattr(item, "affected_scope", ()) or ())
+    # Prefer package/module roots over exhaustive file lists for leadership readability.
+    scope = ", ".join(scope_values[:4]) or "—"
+    if len(scope_values) > 4:
+        scope = f"{scope} (+{len(scope_values) - 4} more)"
+    return (
+        "<article class='card'>"
+        f"<h4>{escape_html(getattr(item, 'title', ''))}</h4>"
+        f"<p>{escape_html(getattr(item, 'summary', ''))}</p>"
+        f"{meta_html}"
+        f"<p class='muted'>{escape_html(getattr(item, 'severity_summary', ''))}</p>"
+        f"<p class='muted'>Scope: {escape_html(scope)}</p>"
+        "</article>"
+    )
+
+
+def _dedupe_architecture_conclusions(items: tuple[object, ...]) -> tuple[object, ...]:
+    seen: set[str] = set()
+    out: list[object] = []
+    for item in items:
+        title = str(getattr(item, "title", "") or "").strip().lower()
+        if not title or title in seen:
+            continue
+        seen.add(title)
+        out.append(item)
+    return tuple(out)
 
 
 def _render_architecture(section: ArchitectureReportSection) -> str:
@@ -704,113 +900,76 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
         f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
         "</div>"
         for item in section.key_metrics
+        if str(item.value).strip().lower() not in {"unavailable", "unknown", "—", "-"}
+        and "coverage" not in item.label.lower()
     )
-    conclusions = (
-        "".join(
-            "<article class='card'>"
-            f"<h4>{escape_html(item.title)}</h4>"
-            f"<p>{escape_html(item.summary)}</p>"
-            "<p class='muted'>"
-            f"Materiality: {escape_html(item.materiality)} · "
-            f"Confidence: {escape_html(item.confidence)} · "
-            f"Business impact: {escape_html(item.business_impact)} · "
-            f"Wave: {escape_html(item.modernization_relevance)}"
-            "</p>"
-            f"<p class='muted'>{escape_html(item.severity_summary)}</p>"
-            f"<p class='muted'>Scope: {escape_html(', '.join(item.affected_scope) or '—')}</p>"
-            "</article>"
-            for item in section.conclusions
+    conclusions = _dedupe_architecture_conclusions(tuple(section.conclusions))
+    conclusions_body = "".join(_architecture_conclusion_card(item) for item in conclusions)
+    recommendations_body = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p><strong>Objective:</strong> {escape_html(item.objective)}</p>"
+        f"<p>{escape_html(item.rationale)}</p>"
+        "</article>"
+        for item in section.recommendation_groups
+    )
+    # Collapse supporting findings by title for customer readability.
+    finding_rows: list[str] = []
+    seen_findings: set[str] = set()
+    for item in section.findings:
+        key = item.title.strip().lower()
+        if key in seen_findings:
+            continue
+        seen_findings.add(key)
+        finding_rows.append(
+            "<tr>"
+            f"<td>{escape_html(item.title)}</td>"
+            f"<td>{escape_html(item.severity)}</td>"
+            f"<td>{escape_html(', '.join(item.affected_scope[:3]) or '—')}</td>"
+            "</tr>"
         )
-        or "<p class='muted'>No architecture conclusions were generated.</p>"
-    )
-    recommendations = (
-        "".join(
-            "<article class='card'>"
-            f"<h4>{escape_html(item.title)}</h4>"
-            f"<p><strong>Objective:</strong> {escape_html(item.objective)}</p>"
-            f"<p>{escape_html(item.rationale)}</p>"
-            f"<p class='muted'>Wave: {escape_html(item.modernization_wave)}</p>"
-            "</article>"
-            for item in section.recommendation_groups
-        )
-        or "<p class='muted'>No consolidated architecture recommendation groups.</p>"
-    )
-    findings = "".join(
-        "<tr>"
-        f"<td>{escape_html(item.title)}</td>"
-        f"<td>{escape_html(item.severity)}</td>"
-        f"<td>{escape_html(item.confidence)}</td>"
-        f"<td>{escape_html(', '.join(item.affected_scope) or '—')}</td>"
-        f"<td>{'Yes' if item.linked_to_conclusion else 'No'}</td>"
-        "</tr>"
-        for item in section.findings
-    )
-    findings_table = (
-        "<table><thead><tr>"
-        "<th>Finding</th><th>Severity</th><th>Confidence</th>"
-        "<th>Scope</th><th>Linked conclusion</th>"
-        "</tr></thead><tbody>"
-        f"{findings}</tbody></table>"
-        if findings
-        else "<p class='muted'>No visible architecture findings.</p>"
-    )
-    coverage = "".join(
-        "<tr>"
-        f"<td>{escape_html(item.label)}</td>"
-        f"<td>{escape_html(item.status)}</td>"
-        f"<td>{escape_html(item.display)}</td>"
-        "</tr>"
-        for item in section.coverage_summary
-    )
-    coverage_table = (
-        "<table><thead><tr><th>Area</th><th>Status</th><th>Detail</th></tr></thead>"
-        f"<tbody>{coverage}</tbody></table>"
-        if coverage
-        else "<p class='muted'>Coverage details unavailable.</p>"
-    )
-    limitations = (
-        "".join(
-            f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
+    findings = "".join(finding_rows)
+    limitations = _limitation_items(
+        tuple(
+            item
             for item in section.limitations
+            if "business impact unknown" not in str(getattr(item, "summary", item)).lower()
+            and "phase " not in str(getattr(item, "summary", item)).lower()
         )
-        or "<li>None recorded.</li>"
     )
-    trace = (
-        f"<p>{escape_html(section.traceability_summary.summary)}</p>"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability_summary.sample_edges
+    has_substance = bool(conclusions_body or recommendations_body or findings or limitations)
+    if not has_substance and not metrics:
+        return (
+            f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+            f"{escape_html(section.status_summary)}</p>"
+            "<p class='muted'>Architecture was assessed; no significant architecture "
+            "risks were identified for this repository.</p>"
         )
-        + "</ul></details>"
-    )
-    pack = (
-        f"{escape_html(section.architecture_pack_id or '—')}@"
-        f"{escape_html(section.architecture_pack_version or '—')}"
-    )
-    return (
+    parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>"
-        f"<p><strong>Pack:</strong> {pack}</p>"
-        f"<p>{escape_html(section.executive_summary)}</p>"
-        f"<div class='grid'>{metrics}</div>"
-        "<h3>Architecture conclusions</h3>"
-        f"{conclusions}"
-        "<h3>Recommended actions</h3>"
-        f"{recommendations}"
-        "<h3>Supporting findings</h3>"
-        f"{findings_table}"
-        "<h3>Coverage</h3>"
-        f"{coverage_table}"
-        "<h3>Limitations</h3>"
-        f"<ul>{limitations}</ul>"
-        "<h3>Traceability</h3>"
-        f"{trace}"
-    )
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+    ]
+    if metrics:
+        parts.append(f"<div class='grid'>{metrics}</div>")
+    if conclusions_body:
+        parts.extend(["<h3>Architecture conclusions</h3>", conclusions_body])
+    if recommendations_body:
+        parts.extend(["<h3>Recommended actions</h3>", recommendations_body])
+    if findings:
+        parts.extend(
+            [
+                "<h3>Supporting findings</h3>",
+                "<table><thead><tr>"
+                "<th>Finding</th><th>Severity</th>"
+                "<th>Scope</th>"
+                "</tr></thead><tbody>"
+                f"{findings}</tbody></table>",
+            ]
+        )
+    if limitations:
+        parts.extend(["<h3>Limitations</h3>", f"<ul>{limitations}</ul>"])
+    return "\n".join(parts)
 
 
 def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
@@ -821,6 +980,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
         "</div>"
         for item in section.key_metrics
+        if str(item.value).strip().lower() not in {"unavailable", "unknown", "—", "-"}
     )
     themes = "".join(
         "<tr>"
@@ -831,15 +991,6 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         f"<td>{item.medium_severity_count}</td>"
         "</tr>"
         for item in section.significant_themes
-    )
-    themes_table = (
-        "<table><thead><tr>"
-        "<th>Theme</th><th>Rule</th><th>Findings</th>"
-        "<th>High</th><th>Medium</th>"
-        "</tr></thead><tbody>"
-        f"{themes}</tbody></table>"
-        if themes
-        else "<p class='muted'>No significant production themes.</p>"
     )
     hotspots = "".join(
         "<tr>"
@@ -853,45 +1004,30 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         "</tr>"
         for item in section.top_production_hotspots
     )
-    hotspots_table = (
-        "<table><thead><tr>"
-        "<th>#</th><th>Path</th><th>Unit</th><th>Highest severity</th>"
-        "<th>Findings</th><th>Rules</th><th>Metrics</th>"
-        "</tr></thead><tbody>"
-        f"{hotspots}</tbody></table>"
-        if hotspots
-        else "<p class='muted'>No production hotspots to present.</p>"
+    conclusions = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p>{escape_html(item.summary)}</p>"
+        "<p class='muted'>"
+        f"Kind: {escape_html(item.kind)} · "
+        f"Audience: {escape_html(item.audience)} · "
+        f"Confidence: {escape_html(item.confidence)} · "
+        f"Findings: {item.finding_count} · Hotspots: {item.hotspot_count}"
+        "</p>"
+        "</article>"
+        for item in section.conclusions
     )
-    conclusions = (
-        "".join(
-            "<article class='card'>"
-            f"<h4>{escape_html(item.title)}</h4>"
-            f"<p>{escape_html(item.summary)}</p>"
-            "<p class='muted'>"
-            f"Kind: {escape_html(item.kind)} · "
-            f"Audience: {escape_html(item.audience)} · "
-            f"Confidence: {escape_html(item.confidence)} · "
-            f"Findings: {item.finding_count} · Hotspots: {item.hotspot_count}"
-            "</p>"
-            "</article>"
-            for item in section.conclusions
-        )
-        or "<p class='muted'>No production-facing technical debt conclusions.</p>"
-    )
-    recommendations = (
-        "".join(
-            "<article class='card'>"
-            f"<h4>{escape_html(item.title)}</h4>"
-            f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
-            f"<p>{escape_html(item.rationale)}</p>"
-            f"<p class='muted'>"
-            f"{'Conditional' if item.conditional else 'Direct'} · "
-            f"Audience: {escape_html(item.audience)}"
-            "</p>"
-            "</article>"
-            for item in section.recommendations
-        )
-        or "<p class='muted'>No production-facing technical debt recommendations.</p>"
+    recommendations = "".join(
+        "<article class='card'>"
+        f"<h4>{escape_html(item.title)}</h4>"
+        f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
+        f"<p>{escape_html(item.rationale)}</p>"
+        f"<p class='muted'>"
+        f"{'Conditional' if item.conditional else 'Direct'} · "
+        f"Audience: {escape_html(item.audience)}"
+        "</p>"
+        "</article>"
+        for item in section.recommendations
     )
     test_obs = section.test_observation
     test_block = (
@@ -901,7 +1037,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         f"<p class='muted'>Test findings: {test_obs.finding_count}</p>"
         "</div>"
         if test_obs.present
-        else "<p class='muted'>No separate test-maintainability observation.</p>"
+        else ""
     )
     coverage = "".join(
         "<tr>"
@@ -910,62 +1046,75 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         f"<td>{escape_html(item.display)}</td>"
         "</tr>"
         for item in section.coverage_summary
+        if str(item.status).strip().lower() not in {"unavailable", "unknown"}
+        and str(item.display).strip().lower() not in {"unavailable", "unknown"}
     )
-    coverage_table = (
-        "<table><thead><tr><th>Area</th><th>Status</th><th>Detail</th></tr></thead>"
-        f"<tbody>{coverage}</tbody></table>"
-        if coverage
-        else "<p class='muted'>Coverage details unavailable.</p>"
+    limitations = _limitation_items(section.limitations)
+    has_substance = bool(
+        themes
+        or hotspots
+        or conclusions
+        or recommendations
+        or test_block
+        or coverage
+        or limitations
     )
-    limitations = (
-        "".join(
-            f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-            for item in section.limitations
+    if not has_substance and not metrics:
+        return (
+            f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
+            f"{escape_html(section.status_summary)}</p>"
+            "<p class='muted'>Technical debt was assessed; no significant "
+            "production-facing debt signals were identified.</p>"
         )
-        or "<li>None recorded.</li>"
-    )
-    trace = (
-        f"<p>{escape_html(section.traceability_summary.summary)}</p>"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability_summary.sample_edges
-        )
-        + "</ul></details>"
-    )
-    pack = (
-        f"{escape_html(section.technical_debt_pack_id or '—')}@"
-        f"{escape_html(section.technical_debt_pack_version or '—')}"
-    )
-    return (
+    parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>"
-        f"<p><strong>Pack:</strong> {pack}</p>"
-        f"<p>{escape_html(section.executive_summary)}</p>"
-        f"<div class='grid'>{metrics}</div>"
-        "<h3>Significant production themes</h3>"
-        f"{themes_table}"
-        "<h3>Top production hotspots</h3>"
-        f"<p class='muted'>{escape_html(section.hotspot_presentation_note)}</p>"
-        f"{hotspots_table}"
-        "<h3>Production conclusions</h3>"
-        f"{conclusions}"
-        "<h3>Recommended actions</h3>"
-        f"{recommendations}"
-        "<h3>Test-maintainability observation</h3>"
-        "<p class='muted'>Test findings are not production health signals.</p>"
-        f"{test_block}"
-        "<h3>Coverage</h3>"
-        f"{coverage_table}"
-        "<h3>Limitations</h3>"
-        f"<ul>{limitations}</ul>"
-        "<h3>Traceability</h3>"
-        f"{trace}"
-    )
+        f"{escape_html(section.status_summary)}</p>",
+        f"<p>{escape_html(section.executive_summary)}</p>",
+    ]
+    if metrics:
+        parts.append(f"<div class='grid'>{metrics}</div>")
+    if themes:
+        parts.extend(
+            [
+                "<h3>Significant production themes</h3>",
+                "<table><thead><tr>"
+                "<th>Theme</th><th>Rule</th><th>Findings</th>"
+                "<th>High</th><th>Medium</th>"
+                "</tr></thead><tbody>"
+                f"{themes}</tbody></table>",
+            ]
+        )
+    if hotspots:
+        parts.extend(
+            [
+                "<h3>Top production hotspots</h3>",
+                "<table><thead><tr>"
+                "<th>#</th><th>Path</th><th>Unit</th><th>Highest severity</th>"
+                "<th>Findings</th><th>Rules</th><th>Metrics</th>"
+                "</tr></thead><tbody>"
+                f"{hotspots}</tbody></table>",
+            ]
+        )
+    if conclusions:
+        parts.extend(["<h3>Conclusions</h3>", conclusions])
+    if recommendations:
+        parts.extend(["<h3>Recommendations</h3>", recommendations])
+    if test_block:
+        parts.extend(["<h3>Test-maintainability observation</h3>", test_block])
+        parts.append(
+            "<p class='muted'>Test findings are not production health signals.</p>"
+        )
+    if coverage:
+        parts.extend(
+            [
+                "<h3>Coverage</h3>",
+                "<table><thead><tr><th>Area</th><th>Status</th><th>Detail</th></tr></thead>"
+                f"<tbody>{coverage}</tbody></table>",
+            ]
+        )
+    if limitations:
+        parts.extend(["<h3>Limitations</h3>", f"<ul>{limitations}</ul>"])
+    return "\n".join(parts)
 
 
 def _render_dependency(section: DependencyReportSection) -> str:
@@ -1096,10 +1245,6 @@ def _render_dependency(section: DependencyReportSection) -> str:
     )
     coverage = section.coverage
     coverage_rows = (
-        "<tr><td>Evidence schema</td>"
-        f"<td>{escape_html(coverage.evidence_schema_version or '—')}</td></tr>"
-        "<tr><td>Evidence fingerprint</td>"
-        f"<td><code>{escape_html(coverage.evidence_fingerprint or '—')}</code></td></tr>"
         "<tr><td>Manifests discovered / supported / parsed / failed</td>"
         f"<td>{coverage.manifests_discovered} / {coverage.manifests_supported} / "
         f"{coverage.manifests_parsed} / {coverage.manifests_failed}</td></tr>"
@@ -1139,34 +1284,12 @@ def _render_dependency(section: DependencyReportSection) -> str:
         if coverage.diagnostic_total
         else ""
     )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges or section.traceability.summary
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.dependency_pack_id or '—')}@"
-        f"{escape_html(section.dependency_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
     ]
@@ -1209,10 +1332,7 @@ def _render_security(section: SecurityReportSection) -> str:
     coverage_rows = (
         "<tr><td>Evidence status</td>"
         f"<td>{escape_html(coverage.evidence_status or '—')}</td></tr>"
-        "<tr><td>Evidence schema</td>"
-        f"<td>{escape_html(coverage.evidence_schema_name or '—')}@"
-        f"{escape_html(coverage.evidence_schema_version or '—')}</td></tr>"
-        "<tr><td>Candidate artifacts discovered / inspected</td>"
+                "<tr><td>Candidate artifacts discovered / inspected</td>"
         f"<td>{coverage.candidate_artifacts_discovered} / "
         f"{coverage.artifacts_inspected}</td></tr>"
         "<tr><td>Structured files parsed / configuration facts</td>"
@@ -1236,9 +1356,7 @@ def _render_security(section: SecurityReportSection) -> str:
     status_block = (
         f"<p><strong>Assessment status:</strong> "
         f"{escape_html(section.assessment_status)}</p>"
-        f"<p><strong>Synthesis status:</strong> "
-        f"{escape_html(section.synthesis_status)}</p>"
-        f"{coverage_table}"
+f"{coverage_table}"
     )
     if finding.production_finding_count == 0 and finding.none_detected_statement:
         production_findings = f"<p>{escape_html(finding.none_detected_statement)}</p>"
@@ -1372,52 +1490,13 @@ def _render_security(section: SecurityReportSection) -> str:
             "</p></article>"
             for item in section.recommendations
         )
-    diagnostics = "".join(
-        "<li>"
-        f"<code>{escape_html(item.origin)}</code> · "
-        f"<code>{escape_html(item.diagnostic_code)}</code> — "
-        f"{escape_html(item.message)}"
-        + (f" (<code>{escape_html(item.path)}</code>)" if item.path else "")
-        + "</li>"
-        for item in section.diagnostics
-    )
-    diagnostics_block = (
-        f"<details><summary>Coverage diagnostics "
-        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
-        "</summary><ul>"
-        f"{diagnostics}"
-        "</ul></details>"
-        if section.diagnostics
-        else ""
-    )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    diagnostics_block = ""
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges or section.traceability.summary
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.security_pack_id or '—')}@"
-        f"{escape_html(section.security_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
@@ -1613,62 +1692,20 @@ def _render_testing(section: TestingReportSection) -> str:
             "</p></article>"
             for item in section.recommendations
         )
-    diagnostics = "".join(
-        "<li>"
-        f"<code>{escape_html(item.origin)}</code> · "
-        f"<code>{escape_html(item.diagnostic_code)}</code> — "
-        f"{escape_html(item.message)}"
-        "</li>"
-        for item in section.diagnostics
-    )
-    diagnostics_block = (
-        f"<details><summary>Diagnostics "
-        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
-        "</summary><ul>"
-        f"{diagnostics}"
-        "</ul></details>"
-        if section.diagnostics
-        else ""
-    )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    diagnostics_block = ""
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges or section.traceability.summary
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.testing_pack_id or '—')}@"
-        f"{escape_html(section.testing_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Overall Test Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
-        f"<p class='muted'>Evidence pipeline: "
-        f"{escape_html(coverage.evidence_pipeline or '—')} · "
-        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
-        coverage_table,
+coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Inventory Summary</h3>",
@@ -1867,76 +1904,20 @@ def _render_cloud(section: CloudReportSection) -> str:
             "</p></article>"
             for item in section.recommendations
         )
-    diagnostics = "".join(
-        "<li>"
-        f"<code>{escape_html(item.origin)}</code> · "
-        f"<code>{escape_html(item.diagnostic_code)}</code> — "
-        f"{escape_html(item.message)}"
-        "</li>"
-        for item in section.diagnostics
-    )
-    diagnostics_block = (
-        f"<details><summary>Diagnostics "
-        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
-        "</summary><ul>"
-        f"{diagnostics}"
-        "</ul></details>"
-        if section.diagnostics
-        else ""
-    )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    diagnostics_block = ""
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    finding_trace = (
-        "<p class='muted'>Finding IDs: "
-        + (
-            ", ".join(
-                f"<code>{escape_html(finding_id)}</code>"
-                for finding_id in section.traceability.finding_ids
-            )
-            or "—"
-        )
-        + "</p>"
-    )
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        f"{finding_trace}"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges
-        or section.traceability.summary
-        or section.traceability.finding_ids
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.cloud_pack_id or '—')}@"
-        f"{escape_html(section.cloud_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Overall Cloud Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
-        f"<p class='muted'>Evidence pipeline: "
-        f"{escape_html(coverage.evidence_pipeline or '—')} · "
-        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
-        coverage_table,
+coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Technology Family Inventory</h3>",
@@ -2137,76 +2118,20 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
             "</p></article>"
             for item in section.recommendations
         )
-    diagnostics = "".join(
-        "<li>"
-        f"<code>{escape_html(item.origin)}</code> · "
-        f"<code>{escape_html(item.diagnostic_code)}</code> — "
-        f"{escape_html(item.message)}"
-        "</li>"
-        for item in section.diagnostics
-    )
-    diagnostics_block = (
-        f"<details><summary>Diagnostics "
-        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
-        "</summary><ul>"
-        f"{diagnostics}"
-        "</ul></details>"
-        if section.diagnostics
-        else ""
-    )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    diagnostics_block = ""
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    finding_trace = (
-        "<p class='muted'>Finding IDs: "
-        + (
-            ", ".join(
-                f"<code>{escape_html(finding_id)}</code>"
-                for finding_id in section.traceability.finding_ids
-            )
-            or "—"
-        )
-        + "</p>"
-    )
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        f"{finding_trace}"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges
-        or section.traceability.summary
-        or section.traceability.finding_ids
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.ai_readiness_pack_id or '—')}@"
-        f"{escape_html(section.ai_readiness_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Overall AI Readiness Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
-        f"<p class='muted'>Evidence pipeline: "
-        f"{escape_html(coverage.evidence_pipeline or '—')} · "
-        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
-        coverage_table,
+coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Capability Family Inventory</h3>",
@@ -2251,66 +2176,108 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
     return "\n".join(parts)
 
 
-def _render_phased_roadmap(section: RoadmapReportSection) -> str:
+def _render_phased_roadmap(view: HtmlReportViewModel) -> str:
+    section = view.roadmap_report
+    if section is None:
+        return '<p class="muted">No phased modernization plan was produced.</p>'
+
+    finding_titles = {item.finding_id: item.title for item in view.findings}
+    action_pool = view.priority_actions or view.recommendations
+    recommendation_titles = {
+        item.recommendation_id: item.title for item in action_pool
+    }
+
     phase_blocks: list[str] = []
     for phase in section.phases:
-        cards = (
-            "".join(
-                (
-                    "<article class='card'>"
-                    f"<h4>{escape_html(item.title)}</h4>"
-                    f"<p>{escape_html(item.summary)}</p>"
-                    '<div class="chip-row">'
-                    f'<span class="chip"><em>Priority</em> {escape_html(item.priority)}</span>'
-                    f'<span class="chip"><em>Effort</em> {escape_html(item.effort)}</span>'
-                    f'<span class="chip"><em>Risk</em> {escape_html(item.risk)}</span>'
-                    f'<span class="chip"><em>Confidence</em> {escape_html(item.confidence)}</span>'
-                    "</div>"
-                    f"<p><strong>Expected outcome:</strong> "
-                    f"{escape_html(item.expected_outcome)}</p>"
-                    "<p class='ids'><strong>Recommendations:</strong> "
-                    f"{_id_list(item.supporting_recommendation_ids) or '—'}</p>"
-                    "<p class='ids'><strong>Findings:</strong> "
-                    f"{_id_list(item.supporting_finding_ids) or '—'}</p>"
-                    "<p class='ids'><strong>Depends on:</strong> "
-                    f"{_id_list(item.depends_on_initiative_ids) or '—'}</p>"
-                    "</article>"
-                )
-                for item in phase.initiatives
+        initiatives = tuple(
+            item for item in phase.initiatives if item.supporting_recommendation_ids
+        )
+        if not initiatives:
+            continue
+        cards = "".join(
+            _roadmap_initiative_card(
+                item,
+                finding_titles=finding_titles,
+                recommendation_titles=recommendation_titles,
             )
-            or "<p class='muted'>No initiatives in this phase.</p>"
+            for item in initiatives
         )
         phase_blocks.append(
             "<div class='roadmap-lane'>"
             f"<h3>{escape_html(phase.title)} "
-            f"<span class='count-pill'>{len(phase.initiatives)}</span></h3>"
+            f"<span class='count-pill'>{len(initiatives)}</span></h3>"
             f"<p class='muted'>{escape_html(phase.objective)}</p>"
             f"<div class='card-stack'>{cards}</div>"
             "</div>"
         )
-    assumptions = "".join(f"<li>{escape_html(item)}</li>" for item in section.assumptions)
-    limitations = "".join(f"<li>{escape_html(item)}</li>" for item in section.limitations)
     body = (
         "".join(phase_blocks)
         if phase_blocks
         else "<p class='muted'>No phased modernization initiatives were derived.</p>"
     )
-    truncated = ""
-    if section.initiatives_displayed < section.initiatives_total:
-        truncated = (
-            f"<p class='muted'>Showing {section.initiatives_displayed} of "
-            f"{section.initiatives_total} initiatives.</p>"
-        )
     return "\n".join(
         [
-            f"<p><strong>Status:</strong> {escape_html(section.status_label)}</p>",
             f"<p>{escape_html(section.summary)}</p>",
-            f"<p><strong>Confidence:</strong> {escape_html(section.confidence)}</p>",
-            truncated,
             f"<div class='roadmap'>{body}</div>",
-            ("<h3>Assumptions</h3><ul>" + assumptions + "</ul>") if assumptions else "",
-            ("<h3>Limitations</h3><ul>" + limitations + "</ul>") if limitations else "",
         ]
+    )
+
+
+def _roadmap_initiative_card(
+    item: object,
+    *,
+    finding_titles: dict[str, str],
+    recommendation_titles: dict[str, str],
+) -> str:
+    """Compact leadership card: short title, outcome, related titles (no raw IDs)."""
+
+    title = str(getattr(item, "summary", "") or "").strip()
+    rec_ids = tuple(getattr(item, "supporting_recommendation_ids", ()) or ())
+    if rec_ids and rec_ids[0] in recommendation_titles:
+        title = recommendation_titles[rec_ids[0]]
+    elif not title:
+        raw = str(getattr(item, "title", "")).strip()
+        title = raw.split(" — ", 1)[-1].strip() if " — " in raw else raw
+    if not title:
+        title = "Modernization initiative"
+
+    outcome = str(getattr(item, "expected_outcome", "") or "").strip()
+    related_recs = [
+        recommendation_titles[rid] for rid in rec_ids if rid in recommendation_titles
+    ]
+    related_findings = [
+        finding_titles[fid]
+        for fid in tuple(getattr(item, "supporting_finding_ids", ()) or ())
+        if fid in finding_titles
+    ]
+    related_bits: list[str] = []
+    if related_recs:
+        related_bits.append(
+            "Actions: "
+            + "; ".join(related_recs[:3])
+            + (f" (+{len(related_recs) - 3} more)" if len(related_recs) > 3 else "")
+        )
+    if related_findings:
+        related_bits.append(
+            "Findings: "
+            + "; ".join(related_findings[:3])
+            + (
+                f" (+{len(related_findings) - 3} more)"
+                if len(related_findings) > 3
+                else ""
+            )
+        )
+    related_html = (
+        f"<p class='muted'>{escape_html(' · '.join(related_bits))}</p>"
+        if related_bits
+        else ""
+    )
+    return (
+        "<article class='card'>"
+        f"<h4>{escape_html(title)}</h4>"
+        f"<p><strong>Business outcome:</strong> {escape_html(outcome)}</p>"
+        f"{related_html}"
+        "</article>"
     )
 
 
@@ -2470,76 +2437,20 @@ def _render_performance(section: PerformanceReportSection) -> str:
             "</p></article>"
             for item in section.recommendations
         )
-    diagnostics = "".join(
-        "<li>"
-        f"<code>{escape_html(item.origin)}</code> · "
-        f"<code>{escape_html(item.diagnostic_code)}</code> — "
-        f"{escape_html(item.message)}"
-        "</li>"
-        for item in section.diagnostics
-    )
-    diagnostics_block = (
-        f"<details><summary>Diagnostics "
-        f"({section.diagnostics_displayed} of {section.diagnostics_total})"
-        "</summary><ul>"
-        f"{diagnostics}"
-        "</ul></details>"
-        if section.diagnostics
-        else ""
-    )
-    limitations = "".join(
-        f"<li><strong>{escape_html(item.category)}</strong> — {escape_html(item.summary)}</li>"
-        for item in section.limitations
-    )
+    diagnostics_block = ""
+    limitations = _limitation_items(section.limitations)
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
-    finding_trace = (
-        "<p class='muted'>Finding IDs: "
-        + (
-            ", ".join(
-                f"<code>{escape_html(finding_id)}</code>"
-                for finding_id in section.traceability.finding_ids
-            )
-            or "—"
-        )
-        + "</p>"
-    )
-    trace = (
-        f"<p>{escape_html(section.traceability.summary)}</p>"
-        f"{finding_trace}"
-        "<details><summary>Sample relationships</summary><ul>"
-        + "".join(
-            "<li>"
-            f"{escape_html(edge.relation)}: "
-            f"<code>{escape_html(edge.source_id)}</code> → "
-            f"<code>{escape_html(edge.target_id)}</code>"
-            "</li>"
-            for edge in section.traceability.sample_edges
-        )
-        + "</ul></details>"
-        if section.traceability.sample_edges
-        or section.traceability.summary
-        or section.traceability.finding_ids
-        else ""
-    )
-    pack = (
-        f"{escape_html(section.performance_pack_id or '—')}@"
-        f"{escape_html(section.performance_pack_version or '—')}"
-    )
+    trace = ""
     parts = [
         f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
         f"{escape_html(section.status_summary)}</p>",
-        f"<p><strong>Pack:</strong> {pack}</p>",
         "<h3>Overall Performance Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-        f"<p><strong>Synthesis status:</strong> {escape_html(section.synthesis_status)}</p>",
-        f"<p class='muted'>Evidence pipeline: "
-        f"{escape_html(coverage.evidence_pipeline or '—')} · "
-        f"Evidence status: {escape_html(coverage.evidence_status or '—')}</p>",
-        coverage_table,
+coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Performance Family Inventory</h3>",
@@ -2678,14 +2589,14 @@ def _render_technical_details(view: HtmlReportViewModel) -> str:
         "\n".join(_render_finding_card(item, compact=False) for item in view.findings)
         if view.findings
         else (
-            '<p class="muted">No deterministic findings were produced for this run. '
+            '<p class="muted">No findings were produced for this run. '
             "This does not certify that the repository is free of issues.</p>"
         )
     )
     recommendations_body = (
         "\n".join(_render_recommendation_card(item, compact=False) for item in view.recommendations)
         if view.recommendations
-        else ('<p class="muted">No deterministic recommendations were produced for this run.</p>')
+        else ('<p class="muted">No Priority Actions were produced for this run.</p>')
     )
     return (
         '<details class="tech-block" id="repository" open>\n'
@@ -2695,6 +2606,10 @@ def _render_technical_details(view: HtmlReportViewModel) -> str:
         '<details class="tech-block" id="assessment-summary">\n'
         "<summary>Assessment Summary</summary>\n"
         f"{_render_assessment_summary(view)}\n"
+        "</details>\n"
+        '<details class="tech-block" id="assessment-scope">\n'
+        "<summary>Assessment Scope</summary>\n"
+        f"{_render_assessment_scope(view)}\n"
         "</details>\n"
         '<details class="tech-block" id="findings-full">\n'
         "<summary>All Findings (with evidence)</summary>\n"
@@ -2749,7 +2664,7 @@ def _render_assessment_summary(view: HtmlReportViewModel) -> str:
         f"<p>{escape_html(summary.summary_text)}</p>\n"
         '<div class="split">\n'
         "<div>\n"
-        f"<p><strong>Rules evaluated:</strong> {summary.rules_evaluated}</p>\n"
+        f"<p><strong>Hygiene and quality checks assessed:</strong> {summary.rules_evaluated}</p>\n"
         f"<p><strong>Findings:</strong> {summary.findings_count}</p>\n"
         f"<p><strong>Recommendations:</strong> {summary.recommendations_count}</p>\n"
         "</div>\n"
@@ -2790,6 +2705,7 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
         ("Engine version", escape_html(meta.engine_version)),
         ("Advisor version", escape_html(meta.advisor_version or "—")),
         ("Repository", escape_html(meta.repository_name or view.summary.repository_name)),
+        ("Assessment mode", escape_html(view.summary.assessment_mode_label)),
         ("AI status", escape_html(meta.ai_status)),
         ("Model ID", escape_html(meta.model_id or "—")),
         ("Total ms", _fmt_ms(meta.timing_total_ms)),
@@ -2934,6 +2850,25 @@ body {
   margin: 0.45rem 0;
   line-height: 1.5;
   max-width: 62rem;
+}
+.section-verdict {
+  margin: 1.25rem 0 0;
+}
+.verdict-body {
+  margin: 0.35rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  max-width: 46rem;
+  color: var(--ink);
+}
+.exec-narrative h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 1rem;
+}
+.exec-narrative p {
+  margin: 0;
+  max-width: 46rem;
+  line-height: 1.55;
 }
 .ema-lede {
   margin: 0 0 1rem;

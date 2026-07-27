@@ -342,6 +342,7 @@ class AssessmentApplicationService:
         static_analysis_enabled: bool | None = None,
         config_path: Path = Path("codestrata.toml"),
         profile: str | None = None,
+        assessment_activation: str | None = None,
         settings: CodestrataSettings | None = None,
         analysis_service: AnalysisService | None = None,
         provider: AIModelProvider | None = None,
@@ -515,6 +516,8 @@ class AssessmentApplicationService:
                             knowledge_session=knowledge_session,
                             write_reports=write_reports,
                             force_reindex=force_reindex,
+                            config_path=config_path,
+                            assessment_activation=assessment_activation,
                         )
                     except AssessmentCommandError as error:
                         knowledge_session.fail(
@@ -661,6 +664,8 @@ class AssessmentApplicationService:
         force_reindex: bool = False,
         quiet: bool = False,
         json_summary: bool = False,
+        config_path: Path | None = None,
+        assessment_activation: str | None = None,
     ) -> AssessmentCommandResult:
         stage("Detecting technologies")
         stage("Running deterministic analysis")
@@ -692,6 +697,45 @@ class AssessmentApplicationService:
         for message in warnings:
             warn(message)
         _print_static_analysis_success(active_console, analysis_result)
+
+        from codestrata.application.activation import (
+            apply_activation_plan,
+            build_activation_plan,
+            collect_explicit_activation_overrides,
+            load_raw_toml_dict,
+            resolve_activation_mode,
+        )
+
+        stage("Resolving assessment activation")
+        raw_config = load_raw_toml_dict(config_path)
+        activation_overrides = collect_explicit_activation_overrides(
+            raw_config,
+            cli_activation=assessment_activation,
+        )
+        activation_mode = resolve_activation_mode(
+            settings_mode=loaded_settings.assessment.activation,
+            overrides=activation_overrides,
+            cli_mode=assessment_activation,
+        )
+        activation_plan = build_activation_plan(
+            analysis_result,
+            mode=activation_mode,
+            overrides=activation_overrides,
+        )
+        loaded_settings = apply_activation_plan(
+            loaded_settings,
+            activation_plan,
+            overrides=activation_overrides,
+        )
+        activation_coverage = activation_plan.to_coverage_payload()
+        if verbose:
+            enabled_ids = ", ".join(
+                item.pack_id.value for item in activation_plan.packs if item.enabled
+            ) or "(none)"
+            active_console.print(
+                f"[dim]Assessment activation mode={activation_mode.value}; "
+                f"enabled packs: {enabled_ids}[/dim]"
+            )
 
         stage("Building knowledge graphs")
         graph_started = perf_counter()
@@ -3348,6 +3392,7 @@ class AssessmentApplicationService:
             roadmap_report=roadmap_report_section,
             knowledge_repository_id=knowledge_session.repository_id,
             knowledge_run_id=knowledge_session.run_id,
+            assessment_activation=activation_coverage,
         )
         try:
             if write_reports:
@@ -3619,6 +3664,7 @@ def run_assessment(
     static_analysis_enabled: bool | None = None,
     config_path: Path = Path("codestrata.toml"),
     profile: str | None = None,
+    assessment_activation: str | None = None,
     settings: CodestrataSettings | None = None,
     analysis_service: AnalysisService | None = None,
     provider: AIModelProvider | None = None,
@@ -3664,6 +3710,7 @@ def run_assessment(
         static_analysis_enabled=static_analysis_enabled,
         config_path=config_path,
         profile=profile,
+        assessment_activation=assessment_activation,
         settings=settings,
         analysis_service=analysis_service,
         provider=provider,
@@ -4261,7 +4308,31 @@ def _build_command_result(
     roadmap_report_phase_count: int | None = None,
     roadmap_report_adapter_ms: float | None = None,
 ) -> AssessmentCommandResult:
-    deterministic_recommendation_count = len(analysis_result.recommendations)
+    from codestrata.domain.findings import RuleEvaluationResult
+    from codestrata.domain.recommendations import RecommendationResult
+    from codestrata.reporting.contract.identifiers import build_finding_id_map
+    from codestrata.reporting.customer_universe import (
+        merge_customer_findings,
+        merge_customer_recommendations,
+    )
+
+    evaluation = rule_evaluation if isinstance(rule_evaluation, RuleEvaluationResult) else None
+    phase3_recommendations = (
+        recommendation_result
+        if isinstance(recommendation_result, RecommendationResult)
+        else None
+    )
+    customer_findings = merge_customer_findings(
+        analysis_result.findings,
+        evaluation=evaluation,
+    )
+    customer_recommendations = merge_customer_recommendations(
+        analysis_result.recommendations,
+        result=phase3_recommendations,
+        finding_id_map=build_finding_id_map(list(analysis_result.findings)),
+    )
+    findings_count = len(customer_findings)
+    deterministic_recommendation_count = len(customer_recommendations)
     graph_fields: dict[str, object] = {}
     if graph_artifacts is not None:
         summary = graph_artifacts.summary
@@ -4626,7 +4697,7 @@ def _build_command_result(
             json_report_path=report_paths.json_report_path,
             report_path=report_paths.html_report_path,
             mode=mode,
-            findings_count=len(analysis_result.findings),
+            findings_count=findings_count,
             technologies_count=len(analysis_result.technologies),
             recommendations_count=deterministic_recommendation_count,
             phases_count=len(recommendation.modernization_phases),
@@ -4646,7 +4717,7 @@ def _build_command_result(
         json_report_path=report_paths.json_report_path,
         report_path=report_paths.html_report_path,
         mode=mode,
-        findings_count=len(analysis_result.findings),
+        findings_count=findings_count,
         technologies_count=len(analysis_result.technologies),
         recommendations_count=deterministic_recommendation_count,
         phases_count=0,
