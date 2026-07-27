@@ -137,7 +137,10 @@ artifacts/models/
 # GitHub Repositories (optional)
 # ==========================================
 
-repositories/
+# Optional local GitHub checkouts at the monorepo root only.
+# Do not use a bare "repositories/" rule — it also matches
+# platform/.../persistence/repositories/.
+/repositories/
 
 # CodeStrata local workspace
 .codestrata/

@@ -14,6 +14,9 @@ from codestrata_platform.application.answering import EngineeringAnswerOrchestra
 from codestrata_platform.application.artifact import DefaultArtifactService
 from codestrata_platform.application.assessment import DefaultAssessmentService
 from codestrata_platform.application.engineering import EngineeringNormalizationService
+from codestrata_platform.application.executive_intelligence import (
+    ExecutiveIntelligenceAggregationService,
+)
 from codestrata_platform.application.intelligence import DefaultAssessmentIntelligenceService
 from codestrata_platform.application.intelligence.service import DefaultAssessmentArtifactReader
 from codestrata_platform.application.knowledge_graph import EngineeringGraphProjectionService
@@ -38,6 +41,7 @@ from codestrata_platform.infrastructure.memory import (
     InMemoryAssessmentIntelligenceRepository,
     InMemoryAssessmentRepository,
     InMemoryEngineeringSnapshotRepository,
+    InMemoryExecutiveIntelligenceRepository,
     InMemoryFindingRepository,
     InMemoryGraphIntelligenceRepository,
     InMemoryKnowledgeGraphRepository,
@@ -64,6 +68,7 @@ from codestrata_platform.infrastructure.persistence.repositories import (
     SqlAlchemyAssessmentIntelligenceRepository,
     SqlAlchemyAssessmentRepository,
     SqlAlchemyEngineeringSnapshotRepository,
+    SqlAlchemyExecutiveIntelligenceRepository,
     SqlAlchemyFindingRepository,
     SqlAlchemyGraphIntelligenceRepository,
     SqlAlchemyKnowledgeGraphRepository,
@@ -106,6 +111,7 @@ class ApiServices:
     portfolio: PortfolioServiceFacade
     portfolio_retrieval: PortfolioRetrievalIndexingService
     portfolio_answering: PortfolioAnswerOrchestrationService
+    executive_intelligence: ExecutiveIntelligenceAggregationService
     _session: Session | None = None
     _committed: bool = False
 
@@ -224,6 +230,10 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
         if portfolio_snapshot_store is None:
             portfolio_snapshot_store = InMemoryPortfolioSnapshotRepository()
             state.memory_portfolio_snapshots = portfolio_snapshot_store
+        executive_intelligence_store = getattr(state, "memory_executive_intelligence", None)
+        if executive_intelligence_store is None:
+            executive_intelligence_store = InMemoryExecutiveIntelligenceRepository()
+            state.memory_executive_intelligence = executive_intelligence_store
         portfolio_retrieval_store = getattr(state, "memory_portfolio_retrieval_indexes", None)
         if portfolio_retrieval_store is None:
             portfolio_retrieval_store = InMemoryPortfolioRetrievalRepository(
@@ -274,6 +284,13 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
             workspaces=workspace_store,
             repositories=repository_store,
             on_snapshot_completed=portfolio_retrieval.maybe_auto_index_for_portfolio_snapshot,
+        )
+        executive_intelligence = ExecutiveIntelligenceAggregationService(
+            executive_intelligence=executive_intelligence_store,
+            portfolio_snapshots=portfolio_snapshot_store,
+            portfolios=portfolio_store,
+            organizations=org_store,
+            workspaces=workspace_store,
         )
         services = ApiServices(
             organizations=DefaultOrganizationService(organizations=org_store),
@@ -332,6 +349,7 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
             portfolio=portfolio,
             portfolio_retrieval=portfolio_retrieval,
             portfolio_answering=portfolio_answering,
+            executive_intelligence=executive_intelligence,
             _session=None,
         )
         try:
@@ -358,6 +376,7 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
     portfolio_answer_repo = SqlAlchemyPortfolioAnswerRunRepository(session)
     portfolio_repo = SqlAlchemyPortfolioRepository(session)
     portfolio_snapshot_repo = SqlAlchemyPortfolioSnapshotRepository(session)
+    executive_intelligence_repo = SqlAlchemyExecutiveIntelligenceRepository(session)
     portfolio_retrieval_repo = SqlAlchemyPortfolioRetrievalRepository(
         session,
         embeddings=portfolio_embeddings,
@@ -403,6 +422,13 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
         workspaces=workspace_repo,
         repositories=repository_repo,
         on_snapshot_completed=portfolio_retrieval.maybe_auto_index_for_portfolio_snapshot,
+    )
+    executive_intelligence = ExecutiveIntelligenceAggregationService(
+        executive_intelligence=executive_intelligence_repo,
+        portfolio_snapshots=portfolio_snapshot_repo,
+        portfolios=portfolio_repo,
+        organizations=org_repo,
+        workspaces=workspace_repo,
     )
     services = ApiServices(
         organizations=DefaultOrganizationService(organizations=org_repo),
@@ -461,6 +487,7 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
         portfolio=portfolio,
         portfolio_retrieval=portfolio_retrieval,
         portfolio_answering=portfolio_answering,
+        executive_intelligence=executive_intelligence,
         _session=session,
     )
     try:
@@ -499,6 +526,7 @@ def install_memory_stores(
     app_state.memory_portfolios = InMemoryPortfolioRepository()  # type: ignore[attr-defined]
     app_state.memory_portfolio_snapshots = InMemoryPortfolioSnapshotRepository()  # type: ignore[attr-defined]
     app_state.memory_portfolio_retrieval_indexes = InMemoryPortfolioRetrievalRepository()  # type: ignore[attr-defined]
+    app_state.memory_executive_intelligence = InMemoryExecutiveIntelligenceRepository()  # type: ignore[attr-defined]
     app_state.artifact_storage = artifact_storage or InMemoryArtifactStorage()  # type: ignore[attr-defined]
 
 
