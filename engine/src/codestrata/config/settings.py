@@ -782,6 +782,75 @@ class McpSettings(BaseModel):
         return compact
 
 
+class PlatformArtifactPublishingSettings(BaseModel):
+    """Opt-in assessment artifact publishing (Engine → Platform).
+
+    Disabled by default. Each artifact type requires explicit enablement.
+    Independent from anonymous telemetry settings.
+    """
+
+    enabled: bool = False
+    publish_summary: bool = True
+    publish_report_json: bool = False
+    publish_report_html: bool = False
+    publish_findings: bool = False
+    publish_evidence_manifest: bool = False
+    publish_knowledge_export: bool = False
+    process_intelligence: bool = False
+    max_artifact_bytes: int = 10_485_760
+
+    @field_validator("max_artifact_bytes")
+    @classmethod
+    def validate_max_bytes(cls, value: int) -> int:
+        if value < 1:
+            raise ValueError("platform.artifacts.max_artifact_bytes must be >= 1")
+        return value
+
+
+class PlatformIntegrationSettings(BaseModel):
+    """Optional Commercial Platform ingestion (Engine → Platform).
+
+    Disabled by default. When enabled, the Engine publishes repository and
+    assessment metadata through the Platform REST ingestion contract after a
+    successful local assessment. Failures never block report generation.
+    """
+
+    enabled: bool = False
+    base_url: str = "http://127.0.0.1:8000"
+    organization_id: str = ""
+    workspace_id: str = ""
+    auth_token: str | None = None
+    auth_token_env: str | None = "CODESTRATA_PLATFORM_TOKEN"
+    timeout_seconds: float = 10.0
+    max_retries: int = 2
+    retry_backoff_seconds: float = 0.5
+    artifacts: PlatformArtifactPublishingSettings = Field(
+        default_factory=PlatformArtifactPublishingSettings
+    )
+
+    @field_validator("base_url", mode="before")
+    @classmethod
+    def normalize_base_url(cls, value: object) -> str:
+        compact = str(value).strip().rstrip("/")
+        if not compact:
+            raise ValueError("platform.base_url must be a nonempty string")
+        return compact
+
+    @field_validator("timeout_seconds", "retry_backoff_seconds")
+    @classmethod
+    def validate_positive_float(cls, value: float) -> float:
+        if value <= 0:
+            raise ValueError("must be positive")
+        return value
+
+    @field_validator("max_retries")
+    @classmethod
+    def validate_retries(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("platform.max_retries must be >= 0")
+        return value
+
+
 class AgentsSettings(BaseModel):
     """Optional Agent Framework bounds.
 
@@ -2202,6 +2271,9 @@ class CodestrataSettings(BaseModel):
     aws: AwsSettings = Field(default_factory=AwsSettings)
     ai: AiSettings = Field(default_factory=AiSettings)
     mcp: McpSettings = Field(default_factory=McpSettings)
+    platform: PlatformIntegrationSettings = Field(
+        default_factory=PlatformIntegrationSettings,
+    )
     agents: AgentsSettings = Field(default_factory=AgentsSettings)
     incremental: IncrementalSettings = Field(default_factory=IncrementalSettings)
     enterprise: EnterpriseSettings = Field(default_factory=EnterpriseSettings)

@@ -1,0 +1,115 @@
+"""OpenAPI generation tests for the Platform REST API."""
+
+from __future__ import annotations
+
+from fastapi.testclient import TestClient
+
+REQUIRED_PATHS = {
+    "/api/v1/organizations",
+    "/api/v1/organizations/{organization_id}",
+    "/api/v1/organizations/{organization_id}/workspaces",
+    "/api/v1/workspaces",
+    "/api/v1/workspaces/{workspace_id}",
+    "/api/v1/workspaces/{workspace_id}/repositories",
+    "/api/v1/repositories",
+    "/api/v1/repositories/{repository_id}",
+    "/api/v1/repositories/{repository_id}/assessments",
+    "/api/v1/assessments",
+    "/api/v1/assessments/{assessment_id}",
+    "/api/v1/ingestion/repositories",
+    "/api/v1/ingestion/repositories/lookup",
+    "/api/v1/ingestion/assessments",
+    "/api/v1/ingestion/assessments/{assessment_id}/artifacts",
+    "/api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}",
+    "/api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}/complete",
+    "/api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}/fail",
+    "/api/v1/ingestion/assessments/{assessment_id}/intelligence",
+    "/api/v1/ingestion/assessments/{assessment_id}/intelligence/process",
+    "/api/v1/assessments/{assessment_id}/findings",
+    "/api/v1/assessments/{assessment_id}/findings/{finding_id}",
+    "/api/v1/assessments/{assessment_id}/metrics",
+    "/api/v1/assessments/{assessment_id}/recommendations",
+    "/api/v1/assessments/{assessment_id}/recommendations/{recommendation_id}",
+    "/api/v1/engineering/snapshots",
+    "/api/v1/engineering/snapshots/{snapshot_id}",
+    "/api/v1/engineering/technologies",
+    "/api/v1/engineering/findings",
+    "/api/v1/engineering/recommendations",
+    "/api/v1/engineering/metrics",
+    "/api/v1/knowledge-graphs",
+    "/api/v1/knowledge-graphs/{graph_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/rebuild",
+    "/api/v1/knowledge-graphs/{graph_id}/nodes",
+    "/api/v1/knowledge-graphs/{graph_id}/nodes/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/nodes/{node_id}/neighbors",
+    "/api/v1/knowledge-graphs/{graph_id}/edges",
+    "/api/v1/knowledge-graphs/{graph_id}/paths",
+    "/api/v1/repositories/{repository_id}/knowledge-graphs",
+    "/api/v1/repositories/{repository_id}/knowledge-graphs/latest",
+    "/api/v1/knowledge-graphs/{graph_id}/overview",
+    "/api/v1/knowledge-graphs/{graph_id}/impact/components/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/impact/technologies/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/impact/findings/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/impact/recommendations/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/traceability/findings/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/traceability/recommendations/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/traceability/evidence/{node_id}",
+    "/api/v1/knowledge-graphs/{graph_id}/coverage",
+    "/api/v1/knowledge-graphs/{graph_id}/dependencies",
+    "/api/v1/knowledge-graphs/{graph_id}/risks",
+    "/api/v1/knowledge-graphs/{graph_id}/recommendation-analysis",
+    "/api/v1/knowledge-graphs/{graph_id}/integrity",
+    "/api/v1/repositories/{repository_id}/engineering-overview",
+    "/api/v1/retrieval/indexes",
+    "/api/v1/retrieval/indexes/{index_id}",
+    "/api/v1/retrieval/indexes/{index_id}/rebuild",
+    "/api/v1/retrieval/indexes/{index_id}/documents",
+    "/api/v1/retrieval/indexes/{index_id}/documents/{document_id}",
+    "/api/v1/retrieval/indexes/{index_id}/chunks/{chunk_id}",
+    "/api/v1/retrieval/indexes/{index_id}/search",
+    "/api/v1/retrieval/indexes/{index_id}/context",
+    "/api/v1/retrieval/indexes/{index_id}/statistics",
+    "/api/v1/repositories/{repository_id}/retrieval-indexes",
+    "/api/v1/repositories/{repository_id}/retrieval-indexes/latest",
+    "/api/v1/answers",
+    "/api/v1/answers/{answer_run_id}",
+    "/api/v1/answers/{answer_run_id}/feedback",
+    "/api/v1/repositories/{repository_id}/answers",
+    "/api/v1/repositories/{repository_id}/ask",
+    "/api/v1/portfolios",
+    "/api/v1/portfolios/{portfolio_id}",
+    "/api/v1/portfolios/{portfolio_id}/repositories",
+    "/api/v1/portfolios/{portfolio_id}/repositories/{repository_id}",
+    "/api/v1/portfolios/{portfolio_id}/snapshots",
+    "/api/v1/portfolios/{portfolio_id}/snapshots/rebuild",
+    "/api/v1/portfolios/{portfolio_id}/snapshots/latest",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/technologies",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/findings",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/recommendations",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/risks",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/modernization",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/coverage",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles",
+    "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/overview",
+    "/api/v1/portfolio-answers",
+    "/api/v1/portfolio-answers/{answer_id}",
+    "/api/v1/portfolio-answers/{answer_id}/feedback",
+    "/api/v1/portfolios/{portfolio_id}/ask",
+    "/api/v1/portfolios/{portfolio_id}/answers",
+}
+
+
+def test_openapi_documents_all_endpoints(client: TestClient) -> None:
+    response = client.get("/openapi.json")
+    assert response.status_code == 200
+    spec = response.json()
+    assert spec["info"]["title"]
+    assert spec["info"]["version"] == "v1"
+    paths = set(spec["paths"])
+    missing = REQUIRED_PATHS - paths
+    assert missing == set()
+
+    org_post = spec["paths"]["/api/v1/organizations"]["post"]
+    assert "responses" in org_post
+    assert "201" in org_post["responses"] or "200" in org_post["responses"]
