@@ -16,9 +16,9 @@ MIGRATIONS = (
 )
 
 
-def test_alembic_head_is_portfolio_answering() -> None:
+def test_alembic_head_is_executive_intelligence() -> None:
     script = ScriptDirectory(str(MIGRATIONS))
-    assert script.get_heads() == ["0010_portfolio_answering"]
+    assert script.get_heads() == ["0011_executive_intelligence"]
 
 
 def test_portfolio_answering_migration_fk_targets() -> None:

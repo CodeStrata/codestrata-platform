@@ -97,6 +97,13 @@ REQUIRED_PATHS = {
     "/api/v1/portfolio-answers/{answer_id}/feedback",
     "/api/v1/portfolios/{portfolio_id}/ask",
     "/api/v1/portfolios/{portfolio_id}/answers",
+    "/api/v1/portfolios/{portfolio_id}/executive-intelligence",
+    "/api/v1/portfolios/{portfolio_id}/executive-intelligence/latest",
+    "/api/v1/executive-intelligence/{executive_intelligence_id}",
+    "/api/v1/executive-intelligence/{executive_intelligence_id}/metrics",
+    "/api/v1/executive-intelligence/{executive_intelligence_id}/findings",
+    "/api/v1/executive-intelligence/{executive_intelligence_id}/recommendations",
+    "/api/v1/executive-intelligence/{executive_intelligence_id}/overview",
 }
 
 

@@ -80,7 +80,7 @@ def test_migrations_upgrade_and_downgrade(postgres_url: str) -> None:
         connection.execute(text("DROP SCHEMA IF EXISTS public CASCADE"))
         connection.execute(text("CREATE SCHEMA public"))
     upgrade_head(engine)
-    assert current_revision(engine) == "0010_portfolio_answering"
+    assert current_revision(engine) == "0011_executive_intelligence"
     with engine.connect() as connection:
         tables = {
             row[0]
@@ -114,6 +114,11 @@ def test_migrations_upgrade_and_downgrade(postgres_url: str) -> None:
     assert "engineering_answer_runs" in tables
     assert "engineering_answer_citations" in tables
     assert "engineering_answer_feedback" in tables
+    assert "engineering_executive_intelligence_snapshots" in tables
+    assert "engineering_executive_metrics" in tables
+    assert "engineering_executive_findings" in tables
+    assert "engineering_executive_recommendations" in tables
+    assert "engineering_executive_observations" in tables
     try:
         with engine.begin() as connection:
             connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))

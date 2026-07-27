@@ -9,6 +9,9 @@ from codestrata_platform.infrastructure.memory.engineering import (
     InMemoryEngineeringSnapshotRepository,
     InMemoryEngineeringTaxonomyRepository,
 )
+from codestrata_platform.infrastructure.memory.executive_intelligence import (
+    InMemoryExecutiveIntelligenceRepository,
+)
 from codestrata_platform.infrastructure.memory.graph_intelligence import (
     InMemoryGraphIntelligenceRepository,
 )
@@ -45,6 +48,7 @@ __all__ = [
     "InMemoryAssessmentRepository",
     "InMemoryEngineeringSnapshotRepository",
     "InMemoryEngineeringTaxonomyRepository",
+    "InMemoryExecutiveIntelligenceRepository",
     "InMemoryFindingRepository",
     "InMemoryGraphIntelligenceRepository",
     "InMemoryKnowledgeGraphRepository",

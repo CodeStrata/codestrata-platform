@@ -18,7 +18,7 @@ def test_portfolio_migration_creates_tables(postgres_url: str) -> None:
         connection.execute(text("DROP SCHEMA IF EXISTS public CASCADE"))
         connection.execute(text("CREATE SCHEMA public"))
     upgrade_head(engine)
-    assert current_revision(engine) == "0010_portfolio_answering"
+    assert current_revision(engine) == "0011_executive_intelligence"
     with engine.connect() as connection:
         tables = {
             row[0]
@@ -44,5 +44,10 @@ def test_portfolio_migration_creates_tables(postgres_url: str) -> None:
         "engineering_portfolio_answer_runs",
         "engineering_portfolio_answer_citations",
         "engineering_portfolio_answer_feedback",
+        "engineering_executive_intelligence_snapshots",
+        "engineering_executive_metrics",
+        "engineering_executive_findings",
+        "engineering_executive_recommendations",
+        "engineering_executive_observations",
     }
     assert expected.issubset(tables)

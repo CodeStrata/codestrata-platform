@@ -24,6 +24,7 @@ ALLOWED_ROOTS = {
     "json",
     "os",
     "re",
+    "statistics",
     "typing",
     "codestrata_platform",
 }

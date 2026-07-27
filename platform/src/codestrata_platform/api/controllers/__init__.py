@@ -11,6 +11,7 @@ from codestrata_platform.api.controllers.intelligence import router as intellige
 from codestrata_platform.api.controllers.organizations import router as organizations_router
 from codestrata_platform.api.controllers.repositories import router as repositories_router
 from codestrata_platform.api.controllers.workspaces import router as workspaces_router
+from codestrata_platform.api.executive_intelligence import router as executive_intelligence_router
 from codestrata_platform.api.ingestion.artifacts import router as ingestion_artifacts_router
 from codestrata_platform.api.ingestion.controllers import router as ingestion_router
 from codestrata_platform.api.ingestion.intelligence import router as ingestion_intelligence_router
@@ -35,6 +36,7 @@ def build_api_router() -> APIRouter:
     api.include_router(portfolio_router)
     api.include_router(portfolio_retrieval_router)
     api.include_router(portfolio_answering_router)
+    api.include_router(executive_intelligence_router)
     api.include_router(ingestion_router)
     api.include_router(ingestion_artifacts_router)
     api.include_router(ingestion_intelligence_router)

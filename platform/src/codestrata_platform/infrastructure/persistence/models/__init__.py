@@ -32,6 +32,13 @@ from codestrata_platform.infrastructure.persistence.models.engineering_records i
 from codestrata_platform.infrastructure.persistence.models.evidence_reference_record import (
     EvidenceReferenceRecord,
 )
+from codestrata_platform.infrastructure.persistence.models.executive_intelligence_records import (
+    EngineeringExecutiveFindingRecord,
+    EngineeringExecutiveIntelligenceSnapshotRecord,
+    EngineeringExecutiveMetricRecord,
+    EngineeringExecutiveObservationRecord,
+    EngineeringExecutiveRecommendationRecord,
+)
 from codestrata_platform.infrastructure.persistence.models.finding_record import FindingRecord
 from codestrata_platform.infrastructure.persistence.models.graph_intelligence_records import (
     GraphIntegrityResultRecord,
@@ -102,6 +109,11 @@ __all__ = [
     "EngineeringAnswerRunRecord",
     "EngineeringComponentRecord",
     "EngineeringEvidenceRecord",
+    "EngineeringExecutiveFindingRecord",
+    "EngineeringExecutiveIntelligenceSnapshotRecord",
+    "EngineeringExecutiveMetricRecord",
+    "EngineeringExecutiveObservationRecord",
+    "EngineeringExecutiveRecommendationRecord",
     "EngineeringFindingRecord",
     "EngineeringGraphEdgeRecord",
     "EngineeringGraphNodeRecord",
