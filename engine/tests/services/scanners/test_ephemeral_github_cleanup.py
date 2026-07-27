@@ -165,6 +165,9 @@ def test_github_scanner_ephemeral_marks_repository_and_uses_temp(
         repository = scanner.scan("https://github.com/example/sample-app.git")
 
     assert repository.ephemeral is True
+    assert repository.name == "sample-app"
+    assert Path(repository.path).name != repository.name
+    assert "codestrata-github-sample-app-" in Path(repository.path).name
     assert str(repository.path).startswith(str(tmp_path))
     assert "durable-workspace" not in str(repository.path)
     assert run_mock.call_args_list[0].args[0][:4] == ["git", "clone", "--depth", "1"]

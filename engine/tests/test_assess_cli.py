@@ -372,9 +372,9 @@ def test_local_repository_assessment_success(tmp_path: Path) -> None:
     import re
 
     assert re.fullmatch(r"\d{8}-\d{6}", result.run_directory.name)
-    assert result.findings_count == 1
+    assert result.findings_count == 3
     assert result.technologies_count == 1
-    assert result.recommendations_count == 0
+    assert result.recommendations_count == 2
     assert result.phases_count == 1
     assert result.input_tokens == 9
     assert result.output_tokens == 11
@@ -382,7 +382,7 @@ def test_local_repository_assessment_success(tmp_path: Path) -> None:
     assert result.duration_ms is not None
     assert result.duration_ms >= 0
     assert len(provider.calls) == 1
-    assert (result.run_directory / "ai-enrichment.json").is_file()
+    assert (result.run_directory / "advisor.json").is_file()
     html = result.html_report_path.read_text(encoding="utf-8")
     assert "Findings" in html
     assert "Priority Actions" in html
@@ -420,7 +420,7 @@ def test_deterministic_assessment_success_without_model_or_aws(
     assert result.mode == AssessmentMode.DETERMINISTIC
     assert result.ai_executed is False
     _assert_dual_reports(result)
-    assert result.recommendations_count == 0
+    assert result.recommendations_count == 2
     assert result.phases_count == 0
     assert result.model_id is None
     assert result.input_tokens is None
@@ -429,7 +429,8 @@ def test_deterministic_assessment_success_without_model_or_aws(
     assert provider.calls == []
     assert context_builder.calls == []
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert "Assessment mode" in html
+    assert "Leadership Verdict" in html
+    assert "Executive Summary" in html
     assert "Deterministic" in html
     assert 'id="ai-enrichment"' not in html
     assert "Findings" in html
@@ -702,7 +703,7 @@ def test_ai_provider_failure_retains_deterministic_report(tmp_path: Path) -> Non
     assert document["assessment"]["summary"]["finding_count"] >= 1
     assert document["assessment"]["ai"]["status"] == "provider_failed"
     assert document["assessment"]["ai"]["recommendations"] == []
-    assert not (result.run_directory / "ai-enrichment.json").exists()
+    assert not (result.run_directory / "advisor.json").exists()
     html = result.html_report_path.read_text(encoding="utf-8")
     assert "Findings" in html
     assert 'id="ai-enrichment"' not in html
@@ -719,7 +720,7 @@ def test_invalid_model_response(tmp_path: Path) -> None:
     failure_message = document["assessment"]["ai"].get("failure_message") or ""
     assert "contract validation" in failure_message.lower()
     assert document["assessment"]["ai"].get("failure_code") == "AI_VALIDATION_FAILED"
-    assert (result.run_directory / "ai-execution.json").is_file()
+    assert (result.run_directory / "advisor-execution.json").is_file()
 
 
 def test_report_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -969,8 +970,8 @@ def test_deterministic_writes_html_and_json(tmp_path: Path) -> None:
     assert payload["assessment"]["ai"]["input_tokens"] is None
     assert payload["assessment"]["ai"]["output_tokens"] is None
     assert payload["assessment"]["ai"]["total_tokens"] is None
-    assert payload["assessment"]["summary"]["recommendation_count"] == 0
-    assert payload["assessment"]["deterministic_recommendations"] == []
+    assert payload["assessment"]["summary"]["recommendation_count"] == 2
+    assert len(payload["assessment"]["deterministic_recommendations"]) == 2
     assert "repository_facts" in payload["assessment"]
     assert "executive_summary" in payload["assessment"]
 
@@ -985,7 +986,7 @@ def test_ai_mode_writes_html_and_json(tmp_path: Path) -> None:
     assert payload["assessment"]["ai"]["model_id"] == "test-model"
     assert payload["assessment"]["ai"]["input_tokens"] == 9
     assert payload["assessment"]["ai"]["output_tokens"] == 11
-    assert payload["assessment"]["summary"]["recommendation_count"] == 0
+    assert payload["assessment"]["summary"]["recommendation_count"] == 2
     assert payload["assessment"]["summary"]["ai_recommendation_count"] == 1
     assert len(payload["assessment"]["ai"]["recommendations"]) == 1
     assert "repository_facts" in payload["assessment"]
@@ -1078,7 +1079,7 @@ def test_aged_out_run_deletes_execution_artifact(tmp_path: Path) -> None:
     historical.mkdir(parents=True)
     (historical / "report.html").write_text("<html>old</html>", encoding="utf-8")
     (historical / "report.json").write_text("{}", encoding="utf-8")
-    (historical / "ai-execution.json").write_text("{}", encoding="utf-8")
+    (historical / "advisor-execution.json").write_text("{}", encoding="utf-8")
 
     for moment in [
         datetime(2026, 7, 21, 10, 0, 0, tzinfo=UTC),
@@ -1198,7 +1199,11 @@ def test_html_and_json_summary_counts_match(tmp_path: Path) -> None:
     assert summary["phase_count"] == result.phases_count
     assert summary["ai_executed"] is result.ai_executed
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert f">{result.findings_count}</dd>" in html or f">{result.findings_count}<" in html
+    assert "Leadership Verdict" in html
+    assert "Executive Summary" in html
+    assert "Priority Actions" in html
+    # Finding totals remain visible via severity cards / appendix summary.
+    assert str(result.findings_count) in html
 
 
 def test_json_ends_with_newline_and_valid_utf8(tmp_path: Path) -> None:

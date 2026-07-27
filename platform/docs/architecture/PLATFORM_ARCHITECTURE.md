@@ -528,7 +528,7 @@ Classification: **local / artifact-embedded / production-capable with limitation
 | `architecture-assessment.json` | assessment artifacts writer | Yes + atomic replace | yes |
 | `report.json` / `report.html` | reporting serialization | JSON stable; HTML render | yes |
 | `graphs/*.json` | graph assessment artifacts | Yes | yes |
-| `ai-enrichment.json` / `ai-execution.json` | AI/reporting | Yes | yes |
+| `advisor.json` / `advisor-execution.json` | AI/reporting | Yes | yes |
 | Knowledge SQLite | infrastructure knowledge store | N/A | workspace gitignored |
 
 `reports/` is gitignored (`.gitignore`).

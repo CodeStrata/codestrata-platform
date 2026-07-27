@@ -158,7 +158,7 @@ reports/<repository-name>/<YYYYMMDD-HHMMSS>/
 ├── report.json
 ├── findings.json
 ├── recommendations.json
-├── ai-enrichment.json      # only with successful --with-ai
+├── advisor.json      # only with successful --with-ai
 └── graphs/
 ```
 

@@ -14,6 +14,7 @@ from codestrata.reporting.assessment_json import (
     assessment_json_to_text,
     build_assessment_json_document,
 )
+from codestrata.reporting.customer_universe import write_customer_finding_artifacts
 from codestrata.reporting.modernization_html import ModernizationHTMLReportRenderer
 from codestrata.reporting.modernization_models import (
     AssessmentTiming,
@@ -116,6 +117,7 @@ def write_modernization_assessment_reports(
 
     validated = validate_modernization_report_input(report_input)
     started = perf_counter()
+    artifact_input = validated
 
     if validated.timing is None:
         html, json_text = _render_artifacts(validated)
@@ -164,6 +166,7 @@ def write_modernization_assessment_reports(
             timing_payload["report_ms"] = report_ms
             timing_payload["total_ms"] = total_ms
         json_text = assessment_json_to_text(document)
+        artifact_input = finalized
 
     run_directory = report_paths.run_directory
     pairs = (
@@ -182,6 +185,9 @@ def write_modernization_assessment_reports(
             os.replace(temp_path, final_path)
             renamed_paths.append(final_path)
         temp_paths.clear()
+        # Align findings.json / recommendations.json with the same customer universe
+        # used by HTML and report.json (overwrite earlier Phase-3-only writes).
+        write_customer_finding_artifacts(artifact_input, run_directory)
     except Exception:
         for renamed in renamed_paths:
             try:

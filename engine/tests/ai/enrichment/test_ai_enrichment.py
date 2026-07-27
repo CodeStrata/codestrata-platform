@@ -590,7 +590,7 @@ def test_provider_failure_does_not_fabricate_enrichment(tmp_path: Path) -> None:
             model_options=ModelInvocationOptions(model_id="m"),
         )
     assert len(provider.calls) == 1
-    assert not (tmp_path / "ai-enrichment.json").exists()
+    assert not (tmp_path / "advisor.json").exists()
     assert rules.findings
     assert recs.recommendations
 

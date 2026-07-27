@@ -1,4 +1,4 @@
-"""Tests for the internal ai-execution.json artifact."""
+"""Tests for the internal advisor-execution.json artifact."""
 
 from __future__ import annotations
 
@@ -72,7 +72,7 @@ def test_successful_ai_invocation_creates_execution_artifact(tmp_path: Path) -> 
     path = result.run_directory / AI_EXECUTION_FILENAME
     assert path.is_file()
     document = json.loads(path.read_text(encoding="utf-8"))
-    assert document["artifact"] == "ai-execution"
+    assert document["artifact"] == "advisor-execution"
     assert document["schema_version"] == "1.0.0"
     assert document["execution_status"] == "succeeded"
     assert document["failure"] is None
@@ -83,7 +83,7 @@ def test_successful_ai_invocation_creates_execution_artifact(tmp_path: Path) -> 
     report_json = json.loads(result.json_report_path.read_text(encoding="utf-8"))
     assert report_json["assessment"]["ai"]["internal_execution_artifact"] == AI_EXECUTION_FILENAME
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert "ai-execution.json" not in html
+    assert "advisor-execution.json" not in html
     assert "internal_execution_artifact" not in html
 
 
@@ -247,4 +247,4 @@ def test_try_write_returns_none_on_failure(tmp_path: Path, monkeypatch: pytest.M
         "codestrata.reporting.ai_execution.write_ai_execution_artifact",
         lambda *_a, **_k: (_ for _ in ()).throw(OSError("disk full")),
     )
-    assert try_write_ai_execution_artifact(tmp_path, {"artifact": "ai-execution"}) is None
+    assert try_write_ai_execution_artifact(tmp_path, {"artifact": "advisor-execution"}) is None

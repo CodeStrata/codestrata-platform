@@ -119,7 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Dependency and version extraction (Maven / npm manifests)
 * Deterministic Rule Engine → `findings.json`
 * Deterministic Recommendation Engine → `recommendations.json`
-* Optional one-call Bedrock AI enrichment → `ai-enrichment.json`
+* Optional one-call Bedrock AI enrichment → `advisor.json`
 * HTML Report v2 (`report.html`) and companion `report.json`
 * Deterministic mode (zero AI calls) and AI mode (exactly one call)
 * Open-source documentation, examples, and community files for the MVP release

@@ -9,7 +9,7 @@ findings.json + recommendations.json + compact repo summary
         ↓
 Modernization Advisor (exactly one provider call: Bedrock or OpenAI)
         ↓
-ai-enrichment.json  (+ report HTML/JSON from AiEnrichmentResult)
+advisor.json  (+ report HTML/JSON from AiEnrichmentResult)
 ```
 
 ## Boundary
@@ -54,7 +54,7 @@ CLI exit code remains 0 for enrichment-only failure.
 
 ## Artifact
 
-`ai-enrichment.json` (written only on successful enrichment).
+`advisor.json` (written only on successful enrichment).
 
 See also [architecture/ai-enrichment.md](architecture/ai-enrichment.md) and
 [report-generation.md](report-generation.md).

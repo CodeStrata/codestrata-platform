@@ -562,7 +562,7 @@ def test_html_section_placement_and_zero_state() -> None:
     view = build_html_report_view_model(_report_input(security_report=report))
     html = HtmlReportRenderer().render(view)
     assert 'id="security-assessment"' in html
-    assert "Security Intelligence" in html
+    assert "Security Assessment" in html
     assert "no production-role findings" in html.lower()
     assert "security passed" not in html.lower()
     assert "vulnerability-free" not in html.lower()
@@ -603,10 +603,10 @@ def test_html_partial_evidence_and_separation() -> None:
     html = HtmlReportRenderer().render(
         build_html_report_view_model(_report_input(security_report=report))
     )
-    assert "malformed_yaml" in html
     assert "Production-Primary Findings" in html
     assert "Additional Test/Fixture/Unknown Observations" in html
     assert "partially_succeeded" in html
+    # Diagnostic codes remain in report artifacts / coverage counts, not leadership HTML.
 
 
 def test_html_hidden_when_disabled() -> None:
@@ -614,7 +614,7 @@ def test_html_hidden_when_disabled() -> None:
         build_html_report_view_model(_report_input(security_report=None))
     )
     assert 'id="security-assessment"' not in html
-    assert "Security Intelligence" not in html
+    assert "Security Assessment" not in html
 
 
 def test_assessment_unchanged_after_adapt() -> None:

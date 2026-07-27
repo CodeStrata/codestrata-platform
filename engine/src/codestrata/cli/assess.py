@@ -188,6 +188,17 @@ def register_assess_command(app: typer.Typer) -> None:
                 ),
             ),
         ] = None,
+        assessment_activation: Annotated[
+            str | None,
+            typer.Option(
+                "--assessment-activation",
+                help=(
+                    "Assessment pack activation mode: default, minimal, full, or "
+                    "custom. Overrides assessment.activation from --config. "
+                    "Explicit pack toggles in TOML still win over smart defaults."
+                ),
+            ),
+        ] = None,
         verbose: Annotated[
             bool,
             typer.Option(
@@ -252,6 +263,7 @@ def register_assess_command(app: typer.Typer) -> None:
                 static_analysis_enabled=static_override,
                 config_path=config,
                 profile=profile,
+                assessment_activation=assessment_activation,
                 verbose=verbose,
                 quiet=quiet,
                 json_summary=json_summary,

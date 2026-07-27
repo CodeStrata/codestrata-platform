@@ -220,6 +220,35 @@ def test_architecture_conclusions_disabled_by_default(tmp_path: Path) -> None:
     assert policies.positive_boundary_conformance is False
 
 
+def test_assessment_activation_defaults_to_default(tmp_path: Path) -> None:
+    config_file = tmp_path / "codestrata.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.assessment.activation == "default"
+
+
+def test_assessment_activation_accepts_known_modes(tmp_path: Path) -> None:
+    config_file = tmp_path / "codestrata.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [assessment]
+        activation = "minimal"
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.assessment.activation == "minimal"
+
+
 def test_architecture_assessment_section_disabled_by_default(tmp_path: Path) -> None:
     config_file = tmp_path / "codestrata.toml"
     config_file.write_text(

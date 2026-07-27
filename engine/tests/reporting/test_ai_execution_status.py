@@ -161,7 +161,7 @@ def test_validation_failure_writes_execution_artifact_without_credentials(tmp_pa
     path = write_ai_execution_artifact(tmp_path, document)
     assert path.name == AI_EXECUTION_FILENAME
     loaded = json.loads(path.read_text(encoding="utf-8"))
-    assert loaded["artifact"] == "ai-execution"
+    assert loaded["artifact"] == "advisor-execution"
     assert loaded["schema_version"] == "1.0.0"
     assert loaded["execution_status"] == "validation_failed"
     assert loaded["raw_model_text"].startswith('{"recommendations"')
@@ -246,7 +246,8 @@ def test_successful_ai_result_status(tmp_path: Path) -> None:
     assert document["assessment"]["ai"]["status"] == "succeeded"
     assert document["assessment"]["ai"]["executed"] is True
     assert document["assessment"]["ai"]["result_included"] is True
-    assert "AI Enhanced" in html
+    assert "Leadership Verdict" in html
+    assert "Modernization Advisor" in html or "AI status" in html
     assert 'id="ai-enrichment"' not in html
 
 
@@ -301,10 +302,10 @@ def test_assess_validation_failure_writes_execution_artifact_and_preserves_metad
     assert ai["failure_code"] == "AI_VALIDATION_FAILED"
     assert "contract validation" in (ai["failure_message"] or "").lower()
     assert "REC-999" in (ai["failure_detail"] or "")
-    assert ai["internal_execution_artifact"] == "ai-execution.json"
+    assert ai["internal_execution_artifact"] == "advisor-execution.json"
     assert 'id="ai-enrichment"' not in html
     assert "validation_failed" in html
-    assert "ai-execution.json" not in html
+    assert "advisor-execution.json" not in html
 
     execution_path = result.run_directory / AI_EXECUTION_FILENAME
     assert execution_path.is_file()

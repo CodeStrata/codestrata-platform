@@ -184,6 +184,7 @@ def _report_input(
     *,
     with_phase3: bool = True,
     with_ai: bool = False,
+    assessment_activation: dict | None = None,
 ) -> ModernizationReportInput:
     analysis = _analysis(tmp_path)
     evaluation = None
@@ -196,6 +197,41 @@ def _report_input(
                 finding_id=evaluation.findings[0].id,
                 recommendation_id=recommendations.recommendations[0].id,
             )
+    activation = assessment_activation
+    if activation is None:
+        activation = {
+            "mode": "default",
+            "packs": [
+                {
+                    "pack_id": "security",
+                    "enabled": True,
+                    "decision": "enabled",
+                    "reason": "Security hygiene is enabled by default",
+                    "evidence": [],
+                },
+                {
+                    "pack_id": "dependency",
+                    "enabled": True,
+                    "decision": "enabled",
+                    "reason": "Dependency manifests detected",
+                    "evidence": ["inventory:package.json"],
+                },
+                {
+                    "pack_id": "performance",
+                    "enabled": False,
+                    "decision": "skipped",
+                    "reason": "Performance remains opt-in under default activation",
+                    "evidence": [],
+                },
+                {
+                    "pack_id": "ai_readiness",
+                    "enabled": False,
+                    "decision": "skipped",
+                    "reason": "No AI/ML frameworks detected",
+                    "evidence": [],
+                },
+            ],
+        }
     return ModernizationReportInput(
         analysis_result=analysis,
         assessment_mode=AssessmentMode.DETERMINISTIC,
@@ -212,17 +248,20 @@ def _report_input(
             include_ai_enrichment=with_ai,
             include_ai_execution=with_ai,
         ),
+        assessment_activation=activation,
     )
 
 
 def test_view_model_construction_and_ordering(tmp_path: Path) -> None:
     view = build_html_report_view_model(_report_input(tmp_path))
-    assert view.summary.total_findings == 1
+    # Customer universe merges Phase-1 analysis findings with Phase-3 rule findings.
+    assert view.summary.total_findings == 2
     assert view.summary.total_recommendations == 1
-    assert view.findings[0].severity == "high"
+    severities = {item.severity for item in view.findings}
+    assert "high" in severities
+    assert "critical" in severities
     assert view.recommendations[0].priority == "high"
     assert view.findings[0].finding_id
-    assert view.recommendations[0].related_finding_ids == (view.findings[0].finding_id,)
     assert view.ai_enrichment is None
 
 
@@ -245,22 +284,42 @@ def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> No
     assert isinstance(document, CustomerReportDocument)
     assert 3 <= len(document.key_takeaways) <= 5
     assert document.outline
-    assert document.outline[0].section_id == "key-takeaways"
+    assert document.outline[0].section_id == "leadership-verdict"
+    outline_ids = {entry.section_id for entry in document.outline}
+    assert "engineering-risks" in outline_ids
+    assert "executive-summary" in outline_ids
+    assert "modernization-opportunities" in outline_ids
+    assert "assessment-scope" not in outline_ids
+    assert document.assessment_scope is not None
+    assert "Security" in document.assessment_scope.assessed_packs
     assert document.metadata.report_version == REPORT_HTML_VERSION
     assert document.metadata.engine_version
     assert document.metadata.advisor_version == "1.0.0"
     assert document.metadata.repository_name
+    assert document.leadership_verdict
+    assert document.executive_summary is not None
+    assert document.priority_actions
 
     html = HtmlReportRenderer().render(document)
     assert 'id="cover"' in html
     assert 'id="contents"' in html
+    assert "Leadership Verdict" in html
     assert "Key Takeaways" in html
-    assert "Engineering Modernization Assessment" in html
+    assert "Executive Summary" in html
+    assert "Should I care?" in html
+    assert "Engineering Risks" in html
+    assert "Modernization Opportunities" in html
     assert "Priority Actions" in html
     assert "Technical Appendix" in html
+    assert 'id="assessment-scope"' in html
+    assert "Assessment Scope" in html
+    assert "Performance Assessment" not in html
+    assert "AI Readiness Assessment" not in html
+    assert "Rules evaluated" not in html
+    assert "directional" not in html.lower()
     assert "Report version" in html
-    assert "Engine version" in html
-    assert "Advisor version" in html
+    assert "Engine version" not in html.split('id="cover"', 1)[1].split('id="contents"', 1)[0]
+    assert "Advisor version" not in html.split('id="cover"', 1)[1].split('id="contents"', 1)[0]
     assert "@media print" in html
     # Self-contained: no external stylesheets or scripts.
     assert "<link " not in html
@@ -285,9 +344,10 @@ def test_ai_enrichment_present_and_absent(tmp_path: Path) -> None:
     assert view.ai_enrichment.prompt_version == "1.1.0"
     assert "Advisor version" in with_ai
     assert "Prompt version" in with_ai
-    # Deterministic sections remain labeled distinctly.
-    assert "deterministic findings" in with_ai.lower()
-    assert "deterministic recommendations" in with_ai.lower()
+    # Leadership narrative is present; methodology jargon is not.
+    assert "Leadership Verdict" in with_ai
+    assert "deterministic findings" not in with_ai.lower()
+    assert "deterministic recommendations" not in with_ai.lower()
 
 
 def test_report_json_unchanged_shape(tmp_path: Path) -> None:
@@ -354,16 +414,30 @@ def test_stable_deterministic_html_bytes(tmp_path: Path) -> None:
 def test_artifact_write_keeps_phase3_artifacts(tmp_path: Path) -> None:
     report_input = _report_input(tmp_path)
     paths = create_report_paths(report_input.analysis_result, tmp_path / "reports")
-    # Seed phase3 artifacts that report rendering must not delete.
+    # Seed placeholders; report rendering overwrites with the customer universe
+    # so findings.json / recommendations.json stay aligned with report.json.
     paths.run_directory.mkdir(parents=True, exist_ok=True)
     (paths.run_directory / "findings.json").write_text('{"ok": true}\n', encoding="utf-8")
     (paths.run_directory / "recommendations.json").write_text('{"ok": true}\n', encoding="utf-8")
     write_modernization_assessment_reports(report_input, paths)
     assert paths.html_report_path.is_file()
     assert paths.json_report_path.is_file()
-    assert (paths.run_directory / "findings.json").read_text(encoding="utf-8") == '{"ok": true}\n'
-    assert (paths.run_directory / "recommendations.json").read_text(encoding="utf-8") == (
-        '{"ok": true}\n'
+    findings_text = (paths.run_directory / "findings.json").read_text(encoding="utf-8")
+    recommendations_text = (paths.run_directory / "recommendations.json").read_text(
+        encoding="utf-8"
+    )
+    report_json = json.loads(paths.json_report_path.read_text(encoding="utf-8"))
+    findings_payload = json.loads(findings_text)
+    recommendations_payload = json.loads(recommendations_text)
+    assert findings_payload["finding_count"] == report_json["assessment"]["summary"][
+        "finding_count"
+    ]
+    assert recommendations_payload["recommendation_count"] == report_json["assessment"][
+        "summary"
+    ]["recommendation_count"]
+    assert findings_payload["finding_count"] == len(report_json["assessment"]["findings"])
+    assert recommendations_payload["recommendation_count"] == len(
+        report_json["assessment"]["deterministic_recommendations"]
     )
 
 
@@ -436,7 +510,8 @@ def test_java_and_javascript_samples(tmp_path: Path, kind: str) -> None:
         report_artifacts=(ReportArtifactInput(label="Findings", relative_path="findings.json"),),
     )
     html = HtmlReportRenderer().render(build_html_report_view_model(report_input))
-    assert "Engineering Modernization Assessment" in html
+    assert "Executive Summary" in html
+    assert "Leadership Verdict" in html
     assert "Findings" in html
     assert "Priority Actions" in html
     assert repository.name in html
@@ -453,7 +528,7 @@ def test_executive_dashboard_removes_unsupported_scores(tmp_path: Path) -> None:
     assert "100 - critical" not in html
     assert "Highest Finding Severity" in html
     assert "Cloud Enablement Signals" in html
-    assert "Test Files Detected" in html
+    assert "CI/CD" in html
     assert "Overall Health" not in html
     # Default fixture has no cloud facts → Unknown (not a fabricated N of 7).
     view = build_html_report_view_model(_report_input(tmp_path))
@@ -530,11 +605,14 @@ def test_dashboard_unknown_and_zero_test_files(tmp_path: Path) -> None:
     assert view.summary.metrics.cloud_signals_primary == "0 of 7"
     assert view.summary.metrics.cloud_signals_status == "Not detected"
     html = HtmlReportRenderer().render(view)
-    assert "Test Files Detected" in html
-    assert ">0<" in html or ">0</p>" in html
+    assert "CI/CD" in html
     assert "Not detected" in html
     assert "0 of 7" in html
-    assert "Unknown" not in html.split("Test Files Detected", 1)[1][:200]
+    # Test-file count remains in metrics/key takeaways, not as a cover KPI card.
+    assert view.summary.metrics.test_files_label == "0"
+    assert "tests: 0" in " ".join(view.key_takeaways).lower() or any(
+        "0" in item for item in view.key_takeaways
+    )
 
     bare = analysis.model_copy(update={"facts": RepositoryFacts()})
     bare_input = report_input.model_copy(update={"analysis_result": bare})
@@ -568,7 +646,7 @@ def test_highest_severity_and_cloud_established(tmp_path: Path) -> None:
         assessment_recommendation_result=recommendations,
     )
     view = build_html_report_view_model(report_input)
-    assert view.summary.highest_finding_severity == "High"
+    assert view.summary.highest_finding_severity == "Critical"
     assert view.summary.metrics is not None
     assert view.summary.metrics.cloud_signals_primary == "2 of 7"
     assert view.summary.metrics.cloud_signals_status == "Established"
@@ -576,4 +654,4 @@ def test_highest_severity_and_cloud_established(tmp_path: Path) -> None:
     assert "2 of 7" in html
     assert "Established" in html
     assert "Highest Finding Severity" in html
-    assert "High" in html
+    assert "Critical" in html

@@ -184,7 +184,7 @@ Registration: `src/codestrata/cli/__init__.py`.
 | `report.json` | schema 1.2 | yes | customers |
 | `report.html` | HTML v2 | render | customers |
 | `graphs/*.json` | graph schemas 1.0.0 | yes | tools/knowledge |
-| `ai-enrichment.json` / `ai-execution.json` | AI docs | yes | MCP artifacts |
+| `advisor.json` / `advisor-execution.json` | AI docs | yes | MCP artifacts |
 
 All under gitignored `reports/` (and workspace dirs).
 
@@ -259,7 +259,7 @@ All under gitignored `reports/` (and workspace dirs).
 
 See Persistence table above. Key filenames:
 
-`findings.json`, `recommendations.json`, `architecture_conclusions.json`, `architecture-assessment.json`, `report.json`, `report.html`, `graphs/repository-manifest.json`, `graphs/repository-graph.json`, `graphs/engineering-knowledge-graph.json`, `graphs/knowledge-bindings.json`, `graphs/assessment-graph.json`, `graphs/graph-summary.json`, `ai-enrichment.json`, `ai-execution.json`.
+`findings.json`, `recommendations.json`, `architecture_conclusions.json`, `architecture-assessment.json`, `report.json`, `report.html`, `graphs/repository-manifest.json`, `graphs/repository-graph.json`, `graphs/engineering-knowledge-graph.json`, `graphs/knowledge-bindings.json`, `graphs/assessment-graph.json`, `graphs/graph-summary.json`, `advisor.json`, `advisor-execution.json`.
 
 ---
 

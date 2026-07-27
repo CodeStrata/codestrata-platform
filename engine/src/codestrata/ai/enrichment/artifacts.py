@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict
 
 from codestrata.domain.ai_enrichment import AiEnrichmentResult
 
-AI_ENRICHMENT_FILENAME = "ai-enrichment.json"
+AI_ENRICHMENT_FILENAME = "advisor.json"
 
 
 class AiEnrichmentArtifactWriteResult(BaseModel):
@@ -23,7 +23,7 @@ def write_ai_enrichment_artifact(
     result: AiEnrichmentResult,
     run_directory: Path,
 ) -> AiEnrichmentArtifactWriteResult:
-    """Write validated ai-enrichment.json (no fabricated fallback content)."""
+    """Write validated advisor.json (no fabricated fallback content)."""
 
     run_directory.mkdir(parents=True, exist_ok=True)
     path = run_directory / AI_ENRICHMENT_FILENAME

@@ -20,10 +20,10 @@ Rule Engine → findings.json
      ↓
 Recommendation Engine → recommendations.json
      ↓
-optional AI Enrichment (exactly one provider call) → ai-enrichment.json
+optional AI Enrichment (exactly one provider call) → advisor.json
      ↓
 HTML Report v2 (report.html) + report.json
-     (+ optional ai-execution.json)
+     (+ optional advisor-execution.json)
 ```
 
 ## Modes

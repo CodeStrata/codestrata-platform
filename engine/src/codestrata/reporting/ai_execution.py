@@ -23,9 +23,9 @@ from codestrata.reporting.modernization_models import AIAttemptInfo, AIExecution
 
 logger = logging.getLogger(__name__)
 
-AI_EXECUTION_FILENAME = "ai-execution.json"
+AI_EXECUTION_FILENAME = "advisor-execution.json"
 AI_EXECUTION_SCHEMA_VERSION = "1.0.0"
-AI_EXECUTION_ARTIFACT = "ai-execution"
+AI_EXECUTION_ARTIFACT = "advisor-execution"
 
 _CREDENTIAL_KEY_FRAGMENTS = (
     "credential",
@@ -82,7 +82,7 @@ def build_ai_execution_document(
     failure_stage: str | None = None,
     timestamp: datetime | None = None,
 ) -> dict[str, Any]:
-    """Build the internal ``ai-execution.json`` document.
+    """Build the internal ``advisor-execution.json`` document.
 
     Distinguishes raw provider text, pre-acceptance parsed JSON, and the final
     CodeStrata-accepted recommendation result. Does not persist full prompt bodies.
@@ -235,7 +235,7 @@ def build_ai_execution_document(
 
 
 def write_ai_execution_artifact(run_directory: Path, document: dict[str, Any]) -> Path:
-    """Write ``ai-execution.json`` under the assessment run directory."""
+    """Write ``advisor-execution.json`` under the assessment run directory."""
 
     run_directory.mkdir(parents=True, exist_ok=True)
     path = run_directory / AI_EXECUTION_FILENAME

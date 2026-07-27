@@ -133,7 +133,15 @@ def test_config_driven_javascript_assessment(tmp_path: Path) -> None:
     assert result.phase3_recommendation_count is not None
     assert result.phase3_recommendation_count >= 1
     recommendations = json.loads(result.recommendations_artifact_path.read_text(encoding="utf-8"))
-    assert recommendations["recommendation_count"] == result.phase3_recommendation_count
+    findings = json.loads(result.findings_artifact_path.read_text(encoding="utf-8"))
+    report = json.loads(result.json_report_path.read_text(encoding="utf-8"))
+    # Customer universe: findings.json / recommendations.json / report.json / summary agree.
+    assert recommendations["recommendation_count"] == result.recommendations_count
+    assert findings["finding_count"] == result.findings_count
+    assert report["assessment"]["summary"]["recommendation_count"] == result.recommendations_count
+    assert report["assessment"]["summary"]["finding_count"] == result.findings_count
+    assert result.recommendations_count >= result.phase3_recommendation_count
+    assert result.findings_count >= result.rule_finding_count
 
 
 def test_config_driven_javascript_assessment_with_fake_ai(tmp_path: Path) -> None:
@@ -246,7 +254,7 @@ def test_config_driven_javascript_assessment_with_fake_ai(tmp_path: Path) -> Non
     assert result.recommendations_artifact_path.is_file()
     assert result.phase3_recommendation_count is not None
     assert result.phase3_recommendation_count >= 1
-    assert (result.run_directory / "ai-enrichment.json").is_file()
+    assert (result.run_directory / "advisor.json").is_file()
     assert "spring-petclinic" not in result.html_report_path.read_text(encoding="utf-8").lower()
 
 
@@ -270,7 +278,7 @@ def test_config_driven_javascript_zero_ai_calls_deterministic(tmp_path: Path) ->
     assert result.graphs_directory is not None
     assert result.recommendations_artifact_path is not None
     assert result.recommendations_artifact_path.is_file()
-    assert not (result.run_directory / "ai-enrichment.json").exists()
+    assert not (result.run_directory / "advisor.json").exists()
 
 
 def test_cli_help_mentions_canonical_workflow() -> None:

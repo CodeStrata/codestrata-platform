@@ -71,7 +71,7 @@ output when AI is unavailable or fails.
      HTML Report v2 + report.json   optional AI enrichment
                                         │
                                         ▼
-                                 ai-enrichment.json
+                                 advisor.json
 ```
 
 Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
@@ -108,7 +108,7 @@ Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
 | Mode | AI calls | Artifacts |
 | ---- | -------- | --------- |
 | Deterministic (`--no-ai`) | 0 | Graphs, findings, recommendations, HTML/JSON |
-| AI (`--with-ai`) | exactly 1 | Same + `ai-enrichment.json` on success |
+| AI (`--with-ai`) | exactly 1 | Same + `advisor.json` on success |
 
 AI enrichment failure warns and keeps deterministic output (CLI exit 0).
 

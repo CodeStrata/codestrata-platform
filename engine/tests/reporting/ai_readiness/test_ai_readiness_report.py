@@ -239,7 +239,7 @@ def test_json_and_html_integration_and_determinism() -> None:
     assert view.ai_readiness_report is not None
     html = HtmlReportRenderer().render(view)
     assert 'id="ai-readiness-assessment"' in html
-    assert "AI Readiness Intelligence" in html
+    assert "AI Readiness Assessment" in html
     assert "Overall AI Readiness Posture" in html
     assert "Rule Execution Summary" in html
     assert "Capability Family Inventory" in html

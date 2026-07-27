@@ -265,7 +265,7 @@ def test_json_and_html_integration_and_determinism() -> None:
     assert view.performance_report is not None
     html = HtmlReportRenderer().render(view)
     assert 'id="performance-assessment"' in html
-    assert "Performance Intelligence" in html
+    assert "Performance Assessment" in html
     assert "Overall Performance Posture" in html
     assert "Rule Execution Summary" in html
     assert "Performance Family Inventory" in html

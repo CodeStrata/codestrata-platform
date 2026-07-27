@@ -126,6 +126,7 @@ class GitHubRepositoryScanner:
         repository = self._local_scanner.scan(clone_directory)
         return repository.model_copy(
             update={
+                "name": repository_name,
                 "source_url": clone_url,
                 "default_branch": self._branch,
                 "ephemeral": self._ephemeral,
