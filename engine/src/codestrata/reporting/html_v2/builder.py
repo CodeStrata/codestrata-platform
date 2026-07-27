@@ -1,9 +1,10 @@
-"""Build HtmlReportViewModel from validated report input and Phase 3 artifacts."""
+"""Build CustomerReportDocument from validated report input and Phase 3 artifacts."""
 
 from __future__ import annotations
 
 from collections import Counter
 
+from codestrata import __version__ as ENGINE_VERSION
 from codestrata.domain.ai_enrichment import AiEnrichmentResult
 from codestrata.domain.findings import Finding as Phase3Finding
 from codestrata.domain.findings import RuleEvaluationResult
@@ -16,6 +17,7 @@ from codestrata.reporting.ai_status import (
     ai_execution_status_label,
     assessment_mode_display_label,
 )
+from codestrata.reporting.contract.constants import REPORT_HTML_VERSION
 from codestrata.reporting.contract.identifiers import (
     build_finding_id_map,
     remap_related_finding_ids,
@@ -40,12 +42,13 @@ from codestrata.reporting.html_v2.models import (
     ArtifactRefView,
     AssessmentMetadataView,
     AssessmentSummaryView,
+    CustomerReportDocument,
     DashboardMetrics,
     EvidenceView,
     FindingView,
-    HtmlReportViewModel,
     RecommendationActionView,
     RecommendationView,
+    ReportOutlineEntry,
     ReportSummary,
     RepositoryProfileView,
     TechnologyItemView,
@@ -64,8 +67,10 @@ from codestrata.reporting.modernization_view import repository_identifier, sanit
 from codestrata.security.redaction import redact_secrets
 
 
-def build_html_report_view_model(report_input: ModernizationReportInput) -> HtmlReportViewModel:
-    """Assemble a presentation view-model. No analysis re-run."""
+def build_customer_report_document(
+    report_input: ModernizationReportInput,
+) -> CustomerReportDocument:
+    """Assemble the renderer-neutral customer presentation document."""
 
     analysis = report_input.analysis_result
     findings = _build_findings(report_input)
@@ -141,6 +146,9 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Html
         ),
     )
     timing = report_input.timing
+    advisor_version = None
+    if ai_view is not None:
+        advisor_version = ai_view.advisor_version
     metadata = AssessmentMetadataView(
         generated_at_utc=report_input.generated_at_utc.isoformat().replace("+00:00", "Z"),
         report_title=report_input.report_title,
@@ -162,8 +170,19 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Html
             )
         ),
         confidentiality_notice=_safe_optional_text(report_input.confidentiality_notice),
+        report_version=REPORT_HTML_VERSION,
+        engine_version=ENGINE_VERSION,
+        advisor_version=advisor_version,
+        repository_name=repo_name,
     )
-    return HtmlReportViewModel(
+    key_takeaways = _build_key_takeaways(
+        findings=findings,
+        recommendations=recommendations,
+        ai_view=ai_view,
+        summary=summary,
+        metrics=metrics,
+    )
+    document = CustomerReportDocument(
         summary=summary,
         repository=repository,
         technologies=technologies,
@@ -183,7 +202,112 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Html
         roadmap_report=report_input.roadmap_report,
         artifacts=artifacts,
         metadata=metadata,
+        key_takeaways=key_takeaways,
+        outline=(),  # filled below once presence is known
     )
+    outline = _build_outline(document)
+    return document.model_copy(update={"outline": outline})
+
+
+def build_html_report_view_model(report_input: ModernizationReportInput) -> CustomerReportDocument:
+    """Backward-compatible alias for :func:`build_customer_report_document`."""
+
+    return build_customer_report_document(report_input)
+
+
+def _build_key_takeaways(
+    *,
+    findings: tuple[FindingView, ...],
+    recommendations: tuple[RecommendationView, ...],
+    ai_view: AiEnrichmentView | None,
+    summary: ReportSummary,
+    metrics: DashboardMetrics,
+) -> tuple[str, ...]:
+    """Compose 3–5 leadership takeaways from deterministic (+ Advisor) evidence."""
+
+    bullets: list[str] = []
+    if findings:
+        bullets.append(
+            f"Highest finding severity is {summary.highest_finding_severity} "
+            f"across {len(findings)} deterministic finding(s)."
+        )
+        lead = findings[0]
+        bullets.append(f"Lead finding: {lead.title} ({lead.severity}).")
+    else:
+        bullets.append("No deterministic findings were produced for this assessment.")
+
+    if recommendations:
+        top = recommendations[0]
+        bullets.append(
+            f"Top priority action: {top.title} ({top.priority})."
+        )
+    else:
+        bullets.append("No deterministic recommendations were produced for this assessment.")
+
+    if ai_view is not None:
+        bullets.append(f"Modernization Advisor: {ai_view.headline}")
+        if ai_view.priorities:
+            bullets.append(f"Advisor priority: {ai_view.priorities[0].title}.")
+    elif metrics.cicd_label and metrics.cicd_label != "Unknown":
+        bullets.append(f"CI/CD posture: {metrics.cicd_label}.")
+
+    if (
+        len(bullets) < 3
+        and metrics.cloud_signals_primary
+        and metrics.cloud_signals_primary != "Unknown"
+    ):
+        bullets.append(
+            f"Cloud enablement signals: {metrics.cloud_signals_primary} "
+            f"({metrics.cloud_signals_status})."
+        )
+
+    # Prefer 3–5; allow fewer only when evidence is thin.
+    return tuple(bullets[:5])
+
+
+def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry, ...]:
+    """Stable TOC entries for sections that will appear in the rendered report."""
+
+    entries: list[ReportOutlineEntry] = [
+        ReportOutlineEntry(section_id="key-takeaways", title="Key Takeaways"),
+        ReportOutlineEntry(
+            section_id="engineering-modernization-assessment",
+            title="Engineering Modernization Assessment",
+        ),
+        ReportOutlineEntry(section_id="priority-actions", title="Priority Actions"),
+        ReportOutlineEntry(section_id="findings", title="Findings"),
+    ]
+    capability_packs = (
+        ("architecture-assessment", "Architecture Assessment", document.architecture_report),
+        ("technical-debt-assessment", "Technical Debt Assessment", document.technical_debt_report),
+        ("dependency-assessment", "Dependency Assessment", document.dependency_report),
+        ("security-assessment", "Security Intelligence", document.security_report),
+        ("testing-assessment", "Test Intelligence", document.testing_report),
+        ("cloud-assessment", "Cloud Intelligence", document.cloud_report),
+        ("ai-readiness-assessment", "AI Readiness Intelligence", document.ai_readiness_report),
+        ("performance-assessment", "Performance Intelligence", document.performance_report),
+    )
+    for section_id, title, present in capability_packs:
+        if present is not None:
+            entries.append(ReportOutlineEntry(section_id=section_id, title=title))
+    if document.roadmap_report is not None:
+        entries.append(
+            ReportOutlineEntry(
+                section_id="phased-modernization-plan",
+                title="Phased Modernization Plan",
+            )
+        )
+    if document.ai_enrichment is not None:
+        entries.append(
+            ReportOutlineEntry(
+                section_id="modernization-advisor",
+                title="Modernization Advisor",
+            )
+        )
+    entries.append(
+        ReportOutlineEntry(section_id="technical-appendix", title="Technical Appendix")
+    )
+    return tuple(entries)
 
 
 def default_report_artifacts(
@@ -519,7 +643,7 @@ def _assessment_summary_text(
         f"{recommendations_count} deterministic recommendation(s)."
     )
     if ai_available:
-        return base + " AI executive summary is included separately."
+        return base + " Modernization Advisor narrative is included separately."
     return base
 
 

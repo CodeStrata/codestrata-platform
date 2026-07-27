@@ -8,7 +8,7 @@ from __future__ import annotations
 from codestrata.reporting.html_v2 import (
     CONTENT_SECURITY_POLICY,
     HtmlReportRenderer,
-    build_html_report_view_model,
+    build_customer_report_document,
 )
 from codestrata.reporting.modernization_models import ModernizationReportInput
 from codestrata.reporting.modernization_view import validate_modernization_report_input
@@ -28,8 +28,8 @@ class ModernizationHTMLReportRenderer:
         """Return a complete self-contained HTML document."""
 
         validated = validate_modernization_report_input(report_input)
-        view = build_html_report_view_model(validated)
-        return HtmlReportRenderer().render(view)
+        document = build_customer_report_document(validated)
+        return HtmlReportRenderer().render(document)
 
 
 __all__ = [

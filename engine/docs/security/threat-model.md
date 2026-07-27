@@ -40,6 +40,7 @@
 | Unbounded resource use | `max_source_files`, char limits, timeouts, MCP result caps |
 | Enterprise / Platform bleed into CE | Export excludes Enterprise KG runtime; lazy CLI stubs |
 | AI provider abuse | `--no-ai` default; profiles gate external LLM |
+| Malicious third-party extension package | Entry points run in-process; analyzer extensions require `[extensions.analyzers].enabled` allowlist; reserved namespaces documented |
 
 ## Out of scope (current CE)
 
@@ -53,4 +54,5 @@
   appear in source excerpts. Paths/line references are preserved.
 * Absolute output paths chosen by the operator are trusted
 * Optional extras (`bedrock`, `openai`, `mcp`, `pgvector`) expand the attack surface when installed
+* Extension entry points execute with CLI privileges; only enable packages you trust
 * Hosted multi-tenant isolation still out of CE scope

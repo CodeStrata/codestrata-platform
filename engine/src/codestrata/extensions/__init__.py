@@ -6,9 +6,16 @@ CLI groups and MCP tool registrars through ``importlib.metadata`` entry points:
 * ``codestrata.cli_extensions`` — callables ``(root: typer.Typer) -> None``
 * ``codestrata.mcp_extensions`` — callables matching
   ``register_platform_mcp(server, **services) -> None``
+* ``codestrata.ai_provider_extensions`` — RAG embed/answer registrar
+* ``codestrata.assess_ai_provider_extensions`` — assess AI provider factories
+* ``codestrata.analyzer_extensions`` — opt-in Phase 1 analyzer contributions
+* ``codestrata.report_renderer_extensions`` — CustomerReportDocument renderers
+* ``codestrata.acceptance_extensions`` — acceptance helpers
 
 Discovery uses entry-point metadata only; Engine source must not import
 ``codestrata_platform``.
+
+Extension API version: see ``EXTENSION_API_VERSION``.
 """
 
 from __future__ import annotations
@@ -16,6 +23,18 @@ from __future__ import annotations
 from collections.abc import Callable, Iterator
 from importlib.metadata import entry_points
 from typing import Any, Protocol, runtime_checkable
+
+from codestrata.extensions.version import EXTENSION_API_VERSION
+
+__all__ = [
+    "EXTENSION_API_VERSION",
+    "EnterpriseExtension",
+    "enterprise_runtime_available",
+    "load_acceptance_rag_helpers",
+    "load_cli_extensions",
+    "load_mcp_extensions",
+    "platform_rag_runtime_available",
+]
 
 
 @runtime_checkable

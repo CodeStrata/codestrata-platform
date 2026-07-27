@@ -229,12 +229,42 @@ def test_view_model_construction_and_ordering(tmp_path: Path) -> None:
 def test_findings_and_recommendations_render(tmp_path: Path) -> None:
     view = build_html_report_view_model(_report_input(tmp_path))
     html = HtmlReportRenderer().render(view)
-    assert "Findings Overview" in html
-    assert "Modernization Roadmap" in html
+    assert "Findings" in html
+    assert "Priority Actions" in html
     assert view.findings[0].finding_id in html
     assert view.recommendations[0].recommendation_id in html
     assert "missing-lockfile" in html
     assert "Add a lockfile" in html
+
+
+def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> None:
+    from codestrata.reporting.contract.constants import REPORT_HTML_VERSION
+    from codestrata.reporting.html_v2 import CustomerReportDocument, build_customer_report_document
+
+    document = build_customer_report_document(_report_input(tmp_path, with_ai=True))
+    assert isinstance(document, CustomerReportDocument)
+    assert 3 <= len(document.key_takeaways) <= 5
+    assert document.outline
+    assert document.outline[0].section_id == "key-takeaways"
+    assert document.metadata.report_version == REPORT_HTML_VERSION
+    assert document.metadata.engine_version
+    assert document.metadata.advisor_version == "1.0.0"
+    assert document.metadata.repository_name
+
+    html = HtmlReportRenderer().render(document)
+    assert 'id="cover"' in html
+    assert 'id="contents"' in html
+    assert "Key Takeaways" in html
+    assert "Engineering Modernization Assessment" in html
+    assert "Priority Actions" in html
+    assert "Technical Appendix" in html
+    assert "Report version" in html
+    assert "Engine version" in html
+    assert "Advisor version" in html
+    assert "@media print" in html
+    # Self-contained: no external stylesheets or scripts.
+    assert "<link " not in html
+    assert "<script" not in html
 
 
 def test_ai_enrichment_present_and_absent(tmp_path: Path) -> None:
@@ -406,9 +436,9 @@ def test_java_and_javascript_samples(tmp_path: Path, kind: str) -> None:
         report_artifacts=(ReportArtifactInput(label="Findings", relative_path="findings.json"),),
     )
     html = HtmlReportRenderer().render(build_html_report_view_model(report_input))
-    assert "Executive Summary" in html
-    assert "Findings Overview" in html
-    assert "Modernization Roadmap" in html
+    assert "Engineering Modernization Assessment" in html
+    assert "Findings" in html
+    assert "Priority Actions" in html
     assert repository.name in html
     assert str(repository.path) not in html
 

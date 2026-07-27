@@ -1,79 +1,77 @@
 # Quick Start
 
-Get from zero to a modernization report in a few minutes.
-
-For a full walkthrough (install → scan → report → findings → MCP), see
-[tutorial.md](tutorial.md).
+Get from zero to a modernization report in under five minutes.
 
 ## Prerequisites
 
 * Python **3.12+**
-* Git
-* A local clone of CodeStrata (or an installed wheel)
+* Git (for GitHub URL acquisition)
 
-## 1. Install
+## Canonical install (Community Engine)
+
+From a published package (when available):
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+python -m pip install codestrata
 codestrata version
 ```
 
-Details: [installation.md](installation.md).
-
-## 2. Assess a sample repository
-
-Default `codestrata.toml` points at `test-fixtures/sample-js-app`:
+From a `codestrata-engine` checkout (or monorepo `engine/`):
 
 ```bash
-codestrata config validate --config codestrata.toml
-codestrata assess --config codestrata.toml --output reports
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+codestrata version
 ```
 
-Or assess any sample directly:
+> Monorepo contributors: install from `./engine`, not the repository root
+> workspace package.
+
+## Assess in three commands
 
 ```bash
-codestrata assess --repo test-fixtures/sample-js-app --output reports
-codestrata assess --repo test-fixtures/sample-python-app --output reports
-codestrata assess --repo test-fixtures/sample-java-app --output reports
-codestrata assess --repo test-fixtures/sample-php-app --output reports
-codestrata assess --repo test-fixtures/sample-csharp-app --output reports
+codestrata init
+codestrata doctor
+codestrata assess --repo . --output reports --no-ai
 ```
 
-## 3. Open the report
-
-Each run writes:
-
-```text
-reports/<repo-name>/<YYYYMMDD-HHMMSS>/
-  report.html
-  report.json
-  findings.json
-  recommendations.json
-  graphs/
-```
-
-Open `report.html` in a browser. How to read it:
-[report-interpretation.md](report-interpretation.md).
-
-## 4. Optional next steps
+Or assess the bundled sample (Engine checkout with fixtures):
 
 ```bash
-# Show active execution profile (no secrets)
-codestrata config profile --config codestrata.toml
-
-# Enable MCP (edit [mcp].enabled = true), then:
-codestrata mcp tools --config codestrata.toml
-codestrata mcp health --config codestrata.toml
+codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
-MCP guide: [mcp/setup.md](mcp/setup.md). Profiles:
-[configuration-profiles.md](configuration-profiles.md).
+Open the newest `reports/<repo>/<timestamp>/report.html`.
 
-## If something fails
+## CI (optional)
 
-* Missing package → [installation.md](installation.md)
-* Config errors → [configuration-profiles.md](configuration-profiles.md)
-* General symptoms → [troubleshooting.md](troubleshooting.md)
+Copy [examples/github-actions/codestrata-assess.yml](../examples/github-actions/codestrata-assess.yml)
+into your app’s `.github/workflows/`. It runs a deterministic assess with
+`--quiet --json-summary` and uploads report artifacts.
+
+## Useful flags
+
+| Flag | Purpose |
+| ---- | ------- |
+| `--no-ai` | Deterministic only (default; no cloud provider) |
+| `--with-ai` | Optional Modernization Advisor |
+| `--quiet` | Suppress stage progress |
+| `--json-summary` | Machine-readable completion JSON on stdout |
+
+```bash
+codestrata assess --repo . --output reports --no-ai --quiet --json-summary
+```
+
+## Next steps
+
+* `codestrata examples` — official samples and doc links
+* [installation.md](installation.md) · [cli-reference.md](cli-reference.md)
+* [report-interpretation.md](report-interpretation.md)
+* [troubleshooting.md](troubleshooting.md)
+
+Legacy/advanced: `codestrata scan` (prefer `assess`).

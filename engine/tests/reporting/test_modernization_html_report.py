@@ -310,11 +310,11 @@ def test_complete_report_rendering(tmp_path: Path) -> None:
     assert "Example Org" in html
     assert "Internal use only" in html
     for section in (
-        "Executive Summary",
+        "Engineering Modernization Assessment",
         "Technology Overview",
-        "Findings Overview",
-        "Modernization Roadmap",
-        "Technical Details",
+        "Findings",
+        "Priority Actions",
+        "Technical Appendix",
         "Repository Profile",
         "Graph and Artifact References",
         "Assessment Metadata",
@@ -352,8 +352,8 @@ def test_deterministic_report_without_ai(tmp_path: Path) -> None:
     assert "Assessment mode" in html
     assert "Deterministic" in html
     assert 'id="ai-enrichment"' not in html
-    assert "Modernization Roadmap" in html
-    assert "Findings Overview" in html
+    assert "Priority Actions" in html
+    assert "Findings" in html
     assert "Critical finding" in html
     assert "Java" in html
     assert "AI-REC-001" not in html
@@ -385,7 +385,7 @@ def test_executive_summary_and_ai_label(tmp_path: Path) -> None:
 
 def test_repository_overview_technology_and_metrics(tmp_path: Path) -> None:
     html = ModernizationHTMLReportRenderer().render(_report_input(tmp_path))
-    assert "Findings Overview" in html
+    assert "Findings" in html
     assert "Java" in html
     assert "Maven" in html
     assert "Findings" in html
@@ -410,8 +410,8 @@ def test_deterministic_findings_and_anchors(tmp_path: Path) -> None:
 
 def test_evidence_coverage_limitations_and_validation_note(tmp_path: Path) -> None:
     html = ModernizationHTMLReportRenderer().render(_report_input(tmp_path, truncated=True))
-    assert "Findings Overview" in html
-    assert "Modernization Roadmap" in html
+    assert "Findings" in html
+    assert "Priority Actions" in html
     assert 'id="ai-enrichment"' not in html
 
 
@@ -424,7 +424,7 @@ def test_execution_metadata(tmp_path: Path) -> None:
 
 def test_methodology_toc_print_css_and_csp(tmp_path: Path) -> None:
     html = ModernizationHTMLReportRenderer().render(_report_input(tmp_path))
-    assert 'id="executive"' in html
+    assert 'id="engineering-modernization-assessment"' in html
     assert 'id="metadata"' in html
     assert "@media print" in html
     assert "Content-Security-Policy" in html

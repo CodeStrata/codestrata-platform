@@ -8,6 +8,7 @@ Owner: `engine/` (exported as `codestrata-engine`).
 | Document | Description |
 | -------- | ----------- |
 | [community-edition.md](community-edition.md) | Community Edition scope |
+| [extension-architecture.md](extension-architecture.md) | Extension API, entry points, namespaces |
 | [quick-start.md](quick-start.md) | Fast path to a report |
 | [installation.md](installation.md) | Install and extras |
 | [tutorial.md](tutorial.md) | Install → assess → findings → MCP |

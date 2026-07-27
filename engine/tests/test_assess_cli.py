@@ -384,8 +384,8 @@ def test_local_repository_assessment_success(tmp_path: Path) -> None:
     assert len(provider.calls) == 1
     assert (result.run_directory / "ai-enrichment.json").is_file()
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert "Findings Overview" in html
-    assert "Modernization Roadmap" in html
+    assert "Findings" in html
+    assert "Priority Actions" in html
     assert "Modernization Advisor" in html
     assert 'id="modernization-advisor"' in html
     assert "Modernization Advisor interpretation" in html or "Rotate secrets" in html
@@ -432,8 +432,8 @@ def test_deterministic_assessment_success_without_model_or_aws(
     assert "Assessment mode" in html
     assert "Deterministic" in html
     assert 'id="ai-enrichment"' not in html
-    assert "Findings Overview" in html
-    assert "Modernization Roadmap" in html
+    assert "Findings" in html
+    assert "Priority Actions" in html
     assert "AKIAIOSFODNN7EXAMPLE" not in html
 
 
@@ -535,6 +535,50 @@ def test_ai_enhanced_orchestration_order(tmp_path: Path) -> None:
     assert "Assessment mode: AI Enhanced" in joined
     assert "Deterministic recommendations:" in joined
     assert "Model ID:" in joined
+
+
+def test_quiet_suppresses_stages_and_json_summary(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    console = RecordingConsole()
+    result, _, _ = _run(
+        tmp_path,
+        mode=AssessmentMode.DETERMINISTIC,
+        model_id=None,
+        console=console,
+        quiet=True,
+        json_summary=True,
+    )
+    joined = "\n".join(console.messages)
+    assert "Scanning repository" not in joined
+    # Quiet + json-summary: machine JSON on stdout only (no human completion dump).
+    assert "Modernization assessment completed" not in joined
+    assert "Deterministic recommendations:" not in joined
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out.strip().splitlines()[-1])
+    assert payload["repository"] == result.repository_name
+    assert payload["ai_status"] == "not_requested"
+    assert "html_report" in payload
+    assert "duration_ms" in payload
+    assert "findings" in payload
+
+
+def test_quiet_prints_compact_completion_summary(tmp_path: Path) -> None:
+    console = RecordingConsole()
+    _run(
+        tmp_path,
+        mode=AssessmentMode.DETERMINISTIC,
+        model_id=None,
+        console=console,
+        quiet=True,
+    )
+    joined = "\n".join(console.messages)
+    assert "Scanning repository" not in joined
+    assert "Modernization assessment completed" in joined
+    assert "Repository:" in joined
+    assert "AI status:" in joined
+    assert "Report location:" in joined
+    assert "Deterministic recommendations:" not in joined
 
 
 def test_output_directory_creation_and_sanitized_filename(tmp_path: Path) -> None:
@@ -660,7 +704,7 @@ def test_ai_provider_failure_retains_deterministic_report(tmp_path: Path) -> Non
     assert document["assessment"]["ai"]["recommendations"] == []
     assert not (result.run_directory / "ai-enrichment.json").exists()
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert "Findings Overview" in html
+    assert "Findings" in html
     assert 'id="ai-enrichment"' not in html
     assert "raw_response" not in html.lower()
 
@@ -946,7 +990,7 @@ def test_ai_mode_writes_html_and_json(tmp_path: Path) -> None:
     assert len(payload["assessment"]["ai"]["recommendations"]) == 1
     assert "repository_facts" in payload["assessment"]
     html = result.html_report_path.read_text(encoding="utf-8")
-    assert "Modernization Roadmap" in html
+    assert "Priority Actions" in html
     assert "Modernization Advisor" in html
     assert 'id="modernization-advisor"' in html
 

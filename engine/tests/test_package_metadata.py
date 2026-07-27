@@ -41,10 +41,14 @@ def test_about_info_matches_project_urls() -> None:
     assert f"GitHub: {info.github}" in about
 
 
-def test_format_version_details_is_concise() -> None:
+def test_format_version_details_includes_engine_report_ai() -> None:
     text = format_version_details()
     lines = text.splitlines()
-    assert len(lines) == 3
     assert lines[0].startswith("CodeStrata ")
-    assert lines[1].startswith("Python: ")
-    assert lines[2].startswith("Platform: ")
+    assert any(line.startswith("CLI: ") for line in lines)
+    assert any(line.startswith("Engine: ") for line in lines)
+    assert any(line.startswith("Extension API: ") for line in lines)
+    assert any(line.startswith("Report HTML: ") for line in lines)
+    assert any(line.startswith("AI provider") for line in lines)
+    assert any(line.startswith("Python: ") for line in lines)
+    assert any(line.startswith("Platform: ") for line in lines)

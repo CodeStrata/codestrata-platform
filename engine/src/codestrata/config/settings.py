@@ -279,9 +279,10 @@ class AiSettings(BaseModel):
     @field_validator("provider")
     @classmethod
     def validate_assess_provider(cls, value: str) -> str:
-        allowed = {"bedrock", "openai"}
-        if value not in allowed:
-            raise ValueError(f"ai.provider must be one of {sorted(allowed)}")
+        # Built-ins: bedrock, openai. Additional names resolve via
+        # AssessAIProviderRegistry at assess time (Phase 6.5).
+        if not value:
+            raise ValueError("ai.provider must be a nonempty string")
         return value
 
     @field_validator("embedding_provider")
@@ -2134,6 +2135,44 @@ class ReportSettings(BaseModel):
     sections: ReportSectionsSettings = Field(default_factory=ReportSectionsSettings)
 
 
+class AnalyzerExtensionsSettings(BaseModel):
+    """Opt-in third-party Phase 1 analyzers (empty = built-ins only)."""
+
+    enabled: list[str] = Field(default_factory=list)
+
+
+class RendererExtensionsSettings(BaseModel):
+    """Opt-in report renderers beyond built-in HTML (empty = HTML default)."""
+
+    enabled: list[str] = Field(default_factory=list)
+
+
+class CliExtensionsSettings(BaseModel):
+    """Optional deny list for discovered CLI extension entry points."""
+
+    disabled: list[str] = Field(default_factory=list)
+
+
+class McpExtensionsSettings(BaseModel):
+    """Optional deny list for discovered MCP extension entry points."""
+
+    disabled: list[str] = Field(default_factory=list)
+
+
+class ExtensionsSettings(BaseModel):
+    """Community-light extension configuration (absent section = CE defaults)."""
+
+    api_version: str = "1"
+    analyzers: AnalyzerExtensionsSettings = Field(
+        default_factory=AnalyzerExtensionsSettings,
+    )
+    renderers: RendererExtensionsSettings = Field(
+        default_factory=RendererExtensionsSettings,
+    )
+    cli: CliExtensionsSettings = Field(default_factory=CliExtensionsSettings)
+    mcp: McpExtensionsSettings = Field(default_factory=McpExtensionsSettings)
+
+
 class CodestrataSettings(BaseModel):
     """Top-level CodeStrata application settings."""
 
@@ -2159,6 +2198,7 @@ class CodestrataSettings(BaseModel):
     analysis: AnalysisSettings = Field(default_factory=AnalysisSettings)
     assessment: AssessmentSettings = Field(default_factory=AssessmentSettings)
     report: ReportSettings = Field(default_factory=ReportSettings)
+    extensions: ExtensionsSettings = Field(default_factory=ExtensionsSettings)
 
     @field_validator("profile")
     @classmethod

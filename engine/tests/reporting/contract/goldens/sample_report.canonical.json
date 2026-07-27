@@ -235,7 +235,7 @@
       "recommendations"
     ],
     "generation_mode": "deterministic",
-    "html_report_version": "2.1",
+    "html_report_version": "3.0",
     "report_version": "1.2",
     "repository_id": "repo-sample",
     "scan_id": "run-sample",

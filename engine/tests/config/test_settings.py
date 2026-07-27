@@ -698,3 +698,35 @@ def test_technical_debt_report_section_can_be_enabled(tmp_path: Path) -> None:
     assert settings.report.sections.technical_debt.enabled is True
     assert settings.report.sections.technical_debt.include_hotspots is False
     assert settings.report.sections.technical_debt.include_themes is True
+
+
+def test_extensions_default_to_empty_analyzer_allowlist(tmp_path: Path) -> None:
+    config_file = tmp_path / "codestrata.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.extensions.analyzers.enabled == []
+    assert settings.extensions.renderers.enabled == []
+    assert settings.extensions.cli.disabled == []
+    assert settings.extensions.mcp.disabled == []
+
+
+def test_extensions_analyzers_allowlist_loads(tmp_path: Path) -> None:
+    config_file = tmp_path / "codestrata.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [extensions.analyzers]
+        enabled = ["com.example.license_scan"]
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.extensions.analyzers.enabled == ["com.example.license_scan"]

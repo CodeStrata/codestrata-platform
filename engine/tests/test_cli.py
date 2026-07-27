@@ -24,12 +24,14 @@ def test_root_version_option() -> None:
 
 
 def test_version_command() -> None:
-    """The version command should display version, Python, and platform."""
+    """The version command should display version, report, AI, Python, and platform."""
 
     result = runner.invoke(app, ["version"])
 
     assert result.exit_code == 0
     assert f"CodeStrata {get_package_version()}" in result.stdout
+    assert "Report HTML:" in result.stdout
+    assert "AI provider" in result.stdout
     assert f"Python: {platform.python_version()}" in result.stdout
     assert f"Platform: {platform.system()}" in result.stdout
     assert "aimf" not in result.stdout.lower()

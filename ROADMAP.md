@@ -13,9 +13,11 @@
 | ----- | ------ |
 | **1–4** Analysis foundation & Analysis Intelligence packs | Complete (see CHANGELOG) |
 | **5** Repository Knowledge, packaging, monorepo, showcases, docs hygiene | **Complete** |
-| **6.1** Modernization Advisor (BYO LLM narrative) | **In progress** |
-| **6.2** GitHub Repository Acquisition (ephemeral public checkouts) | Next after 6.1 |
-| Beyond 6.2 | Deferred pending engineering-leader feedback |
+| **6.1** Modernization Advisor | **Complete** |
+| **6.2** GitHub Repository Acquisition | **Complete** |
+| **6.3** Customer Report Experience | **Complete** |
+| **6.4** Developer Workflow / CI | **Complete** |
+| **6.5** Extensibility & Integration | **Complete** |
 
 ---
 
@@ -35,48 +37,34 @@ Detailed phase logs were retired from this file; see [CHANGELOG.md](CHANGELOG.md
 
 ## Phase 6 — Engineering Workflow Intelligence
 
-**Goal:** Bring CodeStrata intelligence into day-to-day engineering leadership
-and workflows. Engine remains the deterministic source of truth; optional AI
-and acquisition paths are fail-soft and bounded.
-
 | Subphase | Intent |
 | -------- | ------ |
-| **6.1** | **Modernization Advisor** — unified `AiEnrichmentResult` narrative for CTOs/VPs over deterministic assessment; Bedrock + OpenAI providers; renderer-independent domain model; fail-soft |
-| **6.2** | **GitHub Repository Acquisition** — secure ephemeral checkouts for public repositories |
+| **6.1** | Modernization Advisor |
+| **6.2** | GitHub Repository Acquisition (ephemeral public checkouts) |
+| **6.3** | Customer Report Experience |
+| **6.4** | Developer Workflow — `init` / `doctor` / quiet assess / sample GHA / Quick start |
+| **6.5** | Extensibility & Integration — versioned contracts, assess AI registry, analyzer allowlist, `extensions list` |
 
-**6.1 exit criteria (directional):**
+**6.5 exit criteria (directional):**
 
-* `--with-ai` produces Modernization Advisor output from one provider call
-* Advisor never invents findings; citations stay within allowed IDs
-* HTML and JSON consume the same enrichment domain model
-* AI failure never blocks deterministic reports
-
-**Out of 6.1:** RAG, Knowledge Graph chat, agents, Platform hosting, GitHub
-acquisition (those belong elsewhere or in 6.2+).
+* `EXTENSION_API_VERSION` published; CE needs no Platform
+* Built-in assess AI providers unchanged via registry
+* Empty analyzer allowlist ⇒ built-ins only
+* `extensions list` + `doctor --extensions` diagnose load/version/duplicates
 
 ---
 
 ## Deferred (post-MVP)
 
-Explicitly **out of current Phase 6 MVP** until engineering-leader feedback
-prioritizes them:
-
-* Broader language / build ecosystem expansion beyond current JS, Java, Python,
-  PHP, and C# / .NET coverage
-* Modernization Intelligence pack (former Phase 4.10 direction)
-* Hosted multi-tenancy, SSO, billing, commercial dashboards
-* Additional AI providers, hybrid-retrieval productization beyond current
-  Platform capabilities
-* Cursor / VS Code plugin implementation (placeholders only today)
-* Automated public-mirror publish/sync bots (export staging exists; publish is
-  intentional and separate)
-* Diff-aware PR review surfacing and CI check annotations (post-6.2)
+* Broader language / build ecosystem expansion
+* Hosted multi-tenancy, SSO, billing
+* Diff-aware PR review / check annotations
+* Cursor / VS Code plugin implementation
 
 ---
 
 ## How to use this file
 
 * Update Phase 6 rows as subphases start or complete
-* Do **not** reintroduce long historical checklists here
 * Record shipped work in [CHANGELOG.md](CHANGELOG.md)
 * Operational how-to: [platform/README.md](platform/README.md)

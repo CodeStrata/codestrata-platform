@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Phase 6.2 GitHub Repository Acquisition: assess clones GitHub URLs into a
+  unique ephemeral temp workspace (shallow `--depth 1`); always cleanup in
+  `finally` (success, failure, interrupt); local checkouts never deleted —
+  Engine assessment pipeline unchanged
+* Phase 6.5 Extensibility & Integration: `EXTENSION_API_VERSION`; Analyzer /
+  Assess AI / ReportRenderer contracts; registry-backed assess providers
+  (Bedrock/OpenAI parity); `[extensions.analyzers].enabled` allowlist;
+  `codestrata extensions list`; `doctor --extensions`; reserved namespaces
+  docs — Engine deterministic pipeline unchanged
+* Phase 6.4 Developer Workflow: `codestrata init`, `codestrata doctor`,
+  `codestrata examples`; assess `--quiet` / `--json-summary`; richer
+  `codestrata version`; sample GitHub Action; Quick start docs — Engine
+  assessment pipeline unchanged
+* Phase 6.3 Customer Report Experience: `CustomerReportDocument` presentation
+  model; Key Takeaways; Engineering Modernization Assessment; Priority Actions;
+  TOC; cover metadata (report/engine/advisor versions); print stylesheet; HTML
+  report version 3.0 — Engine assessment pipeline unchanged
 * Phase 6.1 Modernization Advisor: unify assess `--with-ai` on
   `AiEnrichmentResult`; Bedrock + OpenAI provider factory; advisor metadata
   (model, provider, advisor/prompt version, generated timestamp); HTML/JSON

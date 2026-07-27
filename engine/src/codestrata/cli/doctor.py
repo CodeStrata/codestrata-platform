@@ -1,0 +1,270 @@
+"""Environment and configuration diagnostics for Community Edition."""
+
+from __future__ import annotations
+
+import shutil
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Annotated
+
+import typer
+
+from codestrata.config.settings import CodestrataSettings, load_settings
+from codestrata.extensions.inventory import build_extension_inventory
+from codestrata.extensions.version import EXTENSION_API_VERSION
+
+
+@dataclass(frozen=True, slots=True)
+class DoctorCheck:
+    """One diagnostic result."""
+
+    name: str
+    ok: bool
+    detail: str
+    fix: str | None = None
+
+
+def _extension_doctor_checks(settings: CodestrataSettings | None) -> list[DoctorCheck]:
+    """Diagnose loaded / disabled / version / duplicate extension issues."""
+
+    enabled: list[str] = []
+    disabled_cli: list[str] = []
+    disabled_mcp: list[str] = []
+    if settings is not None:
+        enabled = list(settings.extensions.analyzers.enabled)
+        disabled_cli = list(settings.extensions.cli.disabled)
+        disabled_mcp = list(settings.extensions.mcp.disabled)
+
+    items = build_extension_inventory(
+        enabled_analyzers=enabled,
+        disabled_cli=disabled_cli,
+        disabled_mcp=disabled_mcp,
+    )
+    checks: list[DoctorCheck] = [
+        DoctorCheck(
+            name="extensions_api",
+            ok=True,
+            detail=f"Extension API {EXTENSION_API_VERSION}",
+        )
+    ]
+
+    problem_statuses = {"version_mismatch", "duplicate", "error", "not_found"}
+    for item in items:
+        if item.status in problem_statuses:
+            checks.append(
+                DoctorCheck(
+                    name=f"extensions.{item.kind}.{item.extension_id}",
+                    ok=False,
+                    detail=f"[{item.status}] {item.detail}",
+                    fix=(
+                        "Fix [extensions.analyzers].enabled, upgrade the extension "
+                        f"package for API {EXTENSION_API_VERSION}, or remove duplicates."
+                    ),
+                )
+            )
+        elif item.status == "loaded" and item.kind in {
+            "cli",
+            "mcp",
+            "assess_ai",
+            "renderer",
+            "analyzer",
+            "engine",
+        }:
+            checks.append(
+                DoctorCheck(
+                    name=f"extensions.{item.kind}.{item.extension_id}",
+                    ok=True,
+                    detail=item.detail,
+                )
+            )
+        elif item.status == "disabled":
+            checks.append(
+                DoctorCheck(
+                    name=f"extensions.{item.kind}.{item.extension_id}",
+                    ok=True,
+                    detail=f"disabled — {item.detail}",
+                )
+            )
+
+    return checks
+
+
+def run_doctor_checks(
+    *,
+    config_path: Path = Path("codestrata.toml"),
+    output_directory: Path = Path("reports"),
+    include_extensions: bool = False,
+) -> list[DoctorCheck]:
+    """Collect actionable environment and configuration checks."""
+
+    checks: list[DoctorCheck] = []
+    loaded_settings: CodestrataSettings | None = None
+
+    py_ok = sys.version_info >= (3, 12)
+    checks.append(
+        DoctorCheck(
+            name="python",
+            ok=py_ok,
+            detail=f"Python {sys.version_info.major}.{sys.version_info.minor}."
+            f"{sys.version_info.micro}",
+            fix=None
+            if py_ok
+            else "Install Python 3.12+ and recreate your virtual environment.",
+        )
+    )
+
+    git_path = shutil.which("git")
+    checks.append(
+        DoctorCheck(
+            name="git",
+            ok=git_path is not None,
+            detail=f"git executable: {git_path}" if git_path else "git not found on PATH",
+            fix=None
+            if git_path
+            else "Install Git and ensure it is available on PATH "
+            "(required for GitHub URL acquisition).",
+        )
+    )
+
+    config = config_path.expanduser()
+    if not config.is_file():
+        checks.append(
+            DoctorCheck(
+                name="config",
+                ok=False,
+                detail=f"Missing configuration file: {config}",
+                fix="Run: codestrata init",
+            )
+        )
+    else:
+        try:
+            settings = load_settings(config)
+            loaded_settings = settings
+            source = settings.repository.path or settings.repository.url or "(unset)"
+            checks.append(
+                DoctorCheck(
+                    name="config",
+                    ok=True,
+                    detail=f"Loaded {config} (profile={settings.profile}; "
+                    f"repository={source})",
+                )
+            )
+            if settings.repository.path:
+                repo_path = Path(settings.repository.path)
+                if not repo_path.is_absolute():
+                    repo_path = (config.parent / repo_path).resolve()
+                path_ok = repo_path.is_dir()
+                checks.append(
+                    DoctorCheck(
+                        name="repository_path",
+                        ok=path_ok,
+                        detail=f"repository.path → {repo_path}",
+                        fix=None
+                        if path_ok
+                        else "Set [repository].path to an existing directory, "
+                        "or pass --repo to assess.",
+                    )
+                )
+        except (FileNotFoundError, ValueError, OSError) as error:
+            checks.append(
+                DoctorCheck(
+                    name="config",
+                    ok=False,
+                    detail=str(error),
+                    fix="Run: codestrata config validate --config "
+                    f"{config} · or codestrata init --force",
+                )
+            )
+
+    out = output_directory.expanduser()
+    try:
+        out.mkdir(parents=True, exist_ok=True)
+        probe = out / ".codestrata-doctor-write-probe"
+        probe.write_text("ok\n", encoding="utf-8")
+        probe.unlink(missing_ok=True)
+        checks.append(
+            DoctorCheck(
+                name="output",
+                ok=True,
+                detail=f"Writable output directory: {out.resolve()}",
+            )
+        )
+    except OSError as error:
+        checks.append(
+            DoctorCheck(
+                name="output",
+                ok=False,
+                detail=f"Cannot write to {out}: {error}",
+                fix="Choose a writable --output directory or fix permissions.",
+            )
+        )
+
+    if include_extensions:
+        checks.extend(_extension_doctor_checks(loaded_settings))
+
+    return checks
+
+
+def register_doctor_command(app: typer.Typer) -> None:
+    """Register ``codestrata doctor``."""
+
+    @app.command("doctor")
+    def doctor_command(
+        config: Annotated[
+            Path,
+            typer.Option("--config", "-c", help="Path to codestrata.toml."),
+        ] = Path("codestrata.toml"),
+        output: Annotated[
+            Path,
+            typer.Option(
+                "--output",
+                "-o",
+                help="Report output directory to probe for write access.",
+            ),
+        ] = Path("reports"),
+        extensions: Annotated[
+            bool,
+            typer.Option(
+                "--extensions",
+                help="Include extension load / version / duplicate diagnostics.",
+            ),
+        ] = False,
+    ) -> None:
+        """Diagnose environment and configuration for Community assess.
+
+        Exit code 0 when all checks pass; 1 when any check fails.
+        """
+
+        checks = run_doctor_checks(
+            config_path=config,
+            output_directory=output,
+            include_extensions=extensions,
+        )
+        failed = 0
+        for check in checks:
+            status = "OK" if check.ok else "FAIL"
+            color = typer.colors.GREEN if check.ok else typer.colors.RED
+            typer.secho(f"[{status}] {check.name}: {check.detail}", fg=color)
+            if not check.ok:
+                failed += 1
+                if check.fix:
+                    typer.echo(f"       Fix: {check.fix}")
+
+        if failed:
+            typer.secho(
+                f"\n{failed} check(s) failed. See Fix lines above.",
+                fg=typer.colors.RED,
+                err=True,
+            )
+            raise typer.Exit(code=1)
+
+        typer.secho("\nAll doctor checks passed.", fg=typer.colors.GREEN)
+        typer.echo("Next: codestrata assess --repo . --output reports --no-ai")
+
+
+__all__ = [
+    "DoctorCheck",
+    "register_doctor_command",
+    "run_doctor_checks",
+]

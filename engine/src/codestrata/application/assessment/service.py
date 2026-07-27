@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
@@ -70,7 +71,10 @@ from codestrata.services.rule_engine import (
     format_rule_console_summary,
     write_findings_artifact,
 )
-from codestrata.services.scanners.github_repository_scanner import GitHubRepositoryScanner
+from codestrata.services.scanners.github_repository_scanner import (
+    GitHubRepositoryScanner,
+    dispose_ephemeral_repository,
+)
 from codestrata.services.scanners.local_repository_scanner import LocalRepositoryScanner
 from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 from codestrata.static_analysis.models import StaticAnalysisStatus
@@ -94,6 +98,8 @@ DEFAULT_ASSESS_REPORT_TITLE = "Modernization Assessment"
 DEFAULT_ASSESS_TEMPERATURE = 0.0
 DEFAULT_ASSESS_MAX_OUTPUT_TOKENS = 5000
 CODESTRATA_BEDROCK_MODEL_ID_ENV = "CODESTRATA_BEDROCK_MODEL_ID"
+
+logger = logging.getLogger(__name__)
 
 
 class AssessmentCommandError(Exception):
@@ -349,6 +355,8 @@ class AssessmentApplicationService:
         console: Console | None = None,
         clock: Callable[[], datetime] | None = None,
         verbose: bool = False,
+        quiet: bool = False,
+        json_summary: bool = False,
         knowledge_store: KnowledgeStore | None = None,
         scanned_repository: Repository | None = None,
         write_reports: bool = True,
@@ -368,6 +376,8 @@ class AssessmentApplicationService:
 
         ``write_reports`` controls HTML/JSON report file writes (onboarding may skip).
         ``force_reindex`` clears the vector-store scope before indexing when enabled.
+        ``quiet`` suppresses stage progress lines.
+        ``json_summary`` emits a machine-readable completion object to stdout.
         """
 
         active_console = console or Console(stderr=False)
@@ -375,7 +385,8 @@ class AssessmentApplicationService:
         total_started = perf_counter()
 
         def stage(message: str) -> None:
-            active_console.print(f"[bold]{message}[/bold]")
+            if not quiet:
+                active_console.print(f"[bold]{message}[/bold]")
 
         def warn(message: str) -> None:
             active_console.print(f"[yellow]Warning:[/yellow] {message}")
@@ -416,107 +427,115 @@ class AssessmentApplicationService:
 
         stage("Scanning repository")
         scan_started = perf_counter()
+        repository: Repository | None = None
         try:
-            if scanned_repository is not None:
-                repository = scanned_repository
-            else:
-                repository = _scan_repository(
-                    resolved_repo,
-                    settings=loaded_settings,
-                    branch=resolved_branch,
-                    scanner=scanner,
-                )
-        except AssessmentCommandError:
-            raise
-        except (
-            FileNotFoundError,
-            NotADirectoryError,
-            UnsupportedRepositoryUrlError,
-            RepositoryAccessError,
-            OSError,
-            ValueError,
-        ) as error:
-            raise AssessmentCommandError(
-                f"Invalid repository path or URL: {sanitize_provider_text(str(error))}"
-            ) from error
-        scan_ms = round((perf_counter() - scan_started) * 1000, 2)
+            try:
+                if scanned_repository is not None:
+                    repository = scanned_repository
+                else:
+                    repository = _scan_repository(
+                        resolved_repo,
+                        settings=loaded_settings,
+                        branch=resolved_branch,
+                        scanner=scanner,
+                    )
+            except AssessmentCommandError:
+                raise
+            except (
+                FileNotFoundError,
+                NotADirectoryError,
+                UnsupportedRepositoryUrlError,
+                RepositoryAccessError,
+                OSError,
+                ValueError,
+            ) as error:
+                raise AssessmentCommandError(
+                    f"Invalid repository path or URL: {sanitize_provider_text(str(error))}"
+                ) from error
+            scan_ms = round((perf_counter() - scan_started) * 1000, 2)
 
-        from codestrata.infrastructure.knowledge_store.factory import create_knowledge_store
-        from codestrata.infrastructure.knowledge_store.git_revision import (
-            observe_repository_revision,
-        )
-
-        owned_store = False
-        active_knowledge_store: KnowledgeStore
-        if knowledge_store is None:
-            active_knowledge_store = cast(
-                KnowledgeStore,
-                create_knowledge_store(settings=loaded_settings),
+            from codestrata.infrastructure.knowledge_store.factory import create_knowledge_store
+            from codestrata.infrastructure.knowledge_store.git_revision import (
+                observe_repository_revision,
             )
-            owned_store = True
-        else:
-            active_knowledge_store = knowledge_store
 
-        try:
-            with AssessmentKnowledgeSession(
-                store=active_knowledge_store,
-                repository=repository,
-                mode=mode,
-                owns_store=owned_store,
-                revision_observer=observe_repository_revision,
-            ) as knowledge_session:
-                try:
-                    return self._run_assessment_pipeline(
-                        repository=repository,
-                        loaded_settings=loaded_settings,
-                        mode=mode,
-                        model_id=model_id,
-                        resolved_branch=resolved_branch,
-                        report_title=report_title,
-                        organization_name=organization_name,
-                        max_output_tokens=max_output_tokens,
-                        temperature=temperature,
-                        max_context_characters=max_context_characters,
-                        pmd_path=pmd_path,
-                        pmd_profile=pmd_profile,
-                        static_analysis_enabled=static_analysis_enabled,
-                        analysis_service=analysis_service,
-                        provider=provider,
-                        prompt_builder=prompt_builder,
-                        agent=agent,
-                        context_builder=context_builder,
-                        graph_pipeline=graph_pipeline,
-                        rule_engine=rule_engine,
-                        recommendation_engine=recommendation_engine,
-                        output_directory=output_directory,
-                        repository_reference=repository_reference,
-                        scan_ms=scan_ms,
-                        total_started=total_started,
-                        active_console=active_console,
-                        now=now,
-                        stage=stage,
-                        warn=warn,
-                        verbose=verbose,
-                        knowledge_session=knowledge_session,
-                        write_reports=write_reports,
-                        force_reindex=force_reindex,
-                    )
-                except AssessmentCommandError as error:
-                    knowledge_session.fail(
-                        error_code="ASSESSMENT_FAILED",
-                        error_message=sanitize_provider_text(str(error)),
-                    )
-                    raise
-                except Exception as error:  # noqa: BLE001 - application boundary
-                    knowledge_session.fail(
-                        error_code="ASSESSMENT_FAILED",
-                        error_message=sanitize_provider_text(str(error)),
-                    )
-                    raise
-        except KnowledgeStoreError as error:
-            raise AssessmentCommandError(
-                f"Knowledge store failure: {sanitize_provider_text(str(error))}"
-            ) from error
+            owned_store = False
+            active_knowledge_store: KnowledgeStore
+            if knowledge_store is None:
+                active_knowledge_store = cast(
+                    KnowledgeStore,
+                    create_knowledge_store(settings=loaded_settings),
+                )
+                owned_store = True
+            else:
+                active_knowledge_store = knowledge_store
+
+            try:
+                with AssessmentKnowledgeSession(
+                    store=active_knowledge_store,
+                    repository=repository,
+                    mode=mode,
+                    owns_store=owned_store,
+                    revision_observer=observe_repository_revision,
+                ) as knowledge_session:
+                    try:
+                        return self._run_assessment_pipeline(
+                            repository=repository,
+                            loaded_settings=loaded_settings,
+                            mode=mode,
+                            model_id=model_id,
+                            resolved_branch=resolved_branch,
+                            report_title=report_title,
+                            organization_name=organization_name,
+                            max_output_tokens=max_output_tokens,
+                            temperature=temperature,
+                            max_context_characters=max_context_characters,
+                            pmd_path=pmd_path,
+                            pmd_profile=pmd_profile,
+                            static_analysis_enabled=static_analysis_enabled,
+                            analysis_service=analysis_service,
+                            provider=provider,
+                            prompt_builder=prompt_builder,
+                            agent=agent,
+                            context_builder=context_builder,
+                            graph_pipeline=graph_pipeline,
+                            rule_engine=rule_engine,
+                            recommendation_engine=recommendation_engine,
+                            output_directory=output_directory,
+                            repository_reference=repository_reference,
+                            scan_ms=scan_ms,
+                            total_started=total_started,
+                            active_console=active_console,
+                            now=now,
+                            stage=stage,
+                            warn=warn,
+                            verbose=verbose,
+                            quiet=quiet,
+                            json_summary=json_summary,
+                            knowledge_session=knowledge_session,
+                            write_reports=write_reports,
+                            force_reindex=force_reindex,
+                        )
+                    except AssessmentCommandError as error:
+                        knowledge_session.fail(
+                            error_code="ASSESSMENT_FAILED",
+                            error_message=sanitize_provider_text(str(error)),
+                        )
+                        raise
+                    except Exception as error:  # noqa: BLE001 - application boundary
+                        knowledge_session.fail(
+                            error_code="ASSESSMENT_FAILED",
+                            error_message=sanitize_provider_text(str(error)),
+                        )
+                        raise
+            except KnowledgeStoreError as error:
+                raise AssessmentCommandError(
+                    f"Knowledge store failure: {sanitize_provider_text(str(error))}"
+                ) from error
+        finally:
+            # Phase 6.2: always dispose ephemeral GitHub clones; never touch local repos.
+            if repository is not None:
+                _cleanup_ephemeral_github_clone(repository, warn=warn)
 
     def assess_incrementally_if_safe(
         self,
@@ -640,6 +659,8 @@ class AssessmentApplicationService:
         knowledge_session: AssessmentKnowledgeSession,
         write_reports: bool = True,
         force_reindex: bool = False,
+        quiet: bool = False,
+        json_summary: bool = False,
     ) -> AssessmentCommandResult:
         stage("Detecting technologies")
         stage("Running deterministic analysis")
@@ -3545,7 +3566,7 @@ class AssessmentApplicationService:
             roadmap_report_phase_count=roadmap_report_phase_count,
             roadmap_report_adapter_ms=roadmap_report_adapter_ms,
         )
-        _print_success_summary(active_console, result)
+        _print_success_summary(active_console, result, quiet=quiet, json_summary=json_summary)
         try:
             snapshot_id = knowledge_session.complete(
                 graph_pipeline_result=graph_pipeline_result,
@@ -3611,6 +3632,8 @@ def run_assessment(
     console: Console | None = None,
     clock: Callable[[], datetime] | None = None,
     verbose: bool = False,
+    quiet: bool = False,
+    json_summary: bool = False,
     knowledge_store: KnowledgeStore | None = None,
     write_reports: bool = True,
     force_reindex: bool = False,
@@ -3654,6 +3677,8 @@ def run_assessment(
         console=console,
         clock=clock,
         verbose=verbose,
+        quiet=quiet,
+        json_summary=json_summary,
         knowledge_store=knowledge_store,
         write_reports=write_reports,
         force_reindex=force_reindex,
@@ -4658,6 +4683,7 @@ def _scan_repository(
             branch=branch,
             clean_before_clone=settings.workspace.clean_before_clone,
             authentication=settings.repository.authentication,
+            ephemeral=True,
         )
         return github_scanner.scan(compact)
 
@@ -4705,6 +4731,29 @@ def _safe_repository_reference(repo: str) -> str:
         return str(path)
 
 
+def _cleanup_ephemeral_github_clone(
+    repository: Repository,
+    *,
+    warn: Callable[[str], None] | None = None,
+) -> None:
+    """Remove ephemeral GitHub clones after assess; never delete local checkouts."""
+
+    if not repository.ephemeral:
+        return
+    try:
+        removed = dispose_ephemeral_repository(repository)
+    except OSError as error:
+        message = (
+            f"Failed to clean up ephemeral GitHub clone at {repository.path}: {error}"
+        )
+        logger.warning(message)
+        if warn is not None:
+            warn(message)
+        return
+    if removed:
+        logger.info("Ephemeral GitHub clone removed: %s", repository.path)
+
+
 def _display_path(path: Path) -> str:
     try:
         return str(path.resolve().relative_to(Path.cwd().resolve()))
@@ -4712,18 +4761,66 @@ def _display_path(path: Path) -> str:
         return str(path)
 
 
-def _print_success_summary(console: Console, result: AssessmentCommandResult) -> None:
+def _ai_status_for_summary(result: AssessmentCommandResult) -> str:
+    if result.mode == AssessmentMode.DETERMINISTIC:
+        return "not_requested"
+    if result.ai_executed:
+        return "succeeded"
+    return "fallback"
+
+
+def _assessment_json_summary(result: AssessmentCommandResult) -> dict[str, object]:
+    return {
+        "repository": result.repository_name,
+        "mode": result.mode.value,
+        "duration_ms": result.duration_ms,
+        "findings": result.findings_count,
+        "recommendations": result.recommendations_count,
+        "technologies": result.technologies_count,
+        "ai_status": _ai_status_for_summary(result),
+        "ai_executed": result.ai_executed,
+        "model_id": result.model_id,
+        "html_report": _display_path(result.html_report_path),
+        "json_report": _display_path(result.json_report_path),
+        "run_directory": _display_path(result.run_directory),
+    }
+
+
+def _print_success_summary(
+    console: Console,
+    result: AssessmentCommandResult,
+    *,
+    quiet: bool = False,
+    json_summary: bool = False,
+) -> None:
+    if json_summary:
+        import json
+
+        # Machine summary on stdout for CI piping.
+        print(json.dumps(_assessment_json_summary(result), sort_keys=True), flush=True)
+        if quiet:
+            return
+
+    ai_status = _ai_status_for_summary(result)
     if result.mode == AssessmentMode.AI_ENHANCED and result.ai_executed:
         mode_label = "AI Enhanced"
     elif result.mode == AssessmentMode.AI_ENHANCED:
         mode_label = "AI requested, deterministic fallback"
     else:
         mode_label = "Deterministic"
+
     console.print()
     console.print("[green]Modernization assessment completed[/green]")
-    console.print(f"Assessment mode: {mode_label}")
     console.print(f"Repository: {result.repository_name}")
+    if result.duration_ms is not None:
+        console.print(f"Duration: {result.duration_ms / 1000:.1f}s")
     console.print(f"Findings: {result.findings_count}")
+    console.print(f"AI status: {ai_status}")
+    console.print(f"Report location: {_display_path(result.html_report_path)}")
+    if quiet:
+        return
+
+    console.print(f"Assessment mode: {mode_label}")
     console.print(f"Technologies: {result.technologies_count}")
     console.print(f"Deterministic recommendations: {result.recommendations_count}")
     if result.graphs_directory is not None:
