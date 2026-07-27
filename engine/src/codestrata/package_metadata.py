@@ -103,11 +103,36 @@ def format_version_line() -> str:
 
 
 def format_version_details() -> str:
-    """Return concise version details for ``codestrata version``."""
+    """Return version details for ``codestrata version`` (CLI / Engine / Report / AI)."""
+
+    from codestrata.config.settings import DEFAULT_BEDROCK_MODEL_ID
+    from codestrata.extensions.version import EXTENSION_API_VERSION
+    from codestrata.reporting.contract.constants import REPORT_HTML_VERSION
+
+    try:
+        from codestrata.config.settings import CodestrataSettings
+
+        settings = CodestrataSettings.model_validate(
+            {"repository": {"path": "."}, "ai": {}}
+        )
+        ai_provider = settings.ai.provider
+        if ai_provider == "openai":
+            ai_model = settings.ai.openai.answer_model or "gpt-4o-mini"
+        else:
+            ai_model = settings.ai.bedrock.model_id or DEFAULT_BEDROCK_MODEL_ID
+    except Exception:  # noqa: BLE001 - metadata must not fail
+        ai_provider = "bedrock"
+        ai_model = DEFAULT_BEDROCK_MODEL_ID
 
     return "\n".join(
         (
             format_version_line(),
+            f"CLI: {get_package_version()}",
+            f"Engine: {get_package_version()}",
+            f"Extension API: {EXTENSION_API_VERSION}",
+            f"Report HTML: {REPORT_HTML_VERSION}",
+            f"AI provider (default): {ai_provider}",
+            f"AI model (default): {ai_model}",
             f"Python: {platform.python_version()}",
             f"Platform: {platform.system()}",
         )

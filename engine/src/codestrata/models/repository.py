@@ -24,3 +24,6 @@ class Repository(BaseModel):
     total_files: int | None = Field(default=None, ge=0)
     total_lines: int | None = Field(default=None, ge=0)
     metadata: dict[str, Any] = Field(default_factory=dict)
+    # True when path is a temporary GitHub clone owned by CodeStrata (Phase 6.2).
+    # Local user checkouts must remain False so assess never deletes them.
+    ephemeral: bool = False

@@ -196,15 +196,27 @@ def register_assess_command(app: typer.Typer) -> None:
                 help="Enable diagnostic logging and display stack traces for failures.",
             ),
         ] = False,
+        quiet: Annotated[
+            bool,
+            typer.Option(
+                "--quiet",
+                "-q",
+                help="Suppress stage progress; print a compact completion summary.",
+            ),
+        ] = False,
+        json_summary: Annotated[
+            bool,
+            typer.Option(
+                "--json-summary",
+                help="Emit a machine-readable JSON completion summary to stdout (CI-friendly).",
+            ),
+        ] = False,
     ) -> None:
         """Assess a repository and write HTML + JSON reports.
 
-        Canonical workflow:
+        Primary Community workflow:
 
-            codestrata assess --config codestrata.toml --output reports --with-ai
-
-        Repository selection: --repo, then repository.path, then
-        repository.url from the config file.
+            codestrata assess --repo . --output reports --no-ai
         """
 
         configure_logging(level="DEBUG" if verbose else "WARNING")
@@ -241,6 +253,8 @@ def register_assess_command(app: typer.Typer) -> None:
                 config_path=config,
                 profile=profile,
                 verbose=verbose,
+                quiet=quiet,
+                json_summary=json_summary,
             )
         except AssessmentCommandError as error:
             typer.secho(str(error), fg=typer.colors.RED, err=True)

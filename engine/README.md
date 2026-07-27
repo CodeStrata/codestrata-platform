@@ -47,26 +47,27 @@ The Platform stores, connects, retrieves, and reasons over that intelligence.*
 
 ## Quick start
 
-Requires **Python 3.12+**.
+Requires **Python 3.12+**. Full guide: [docs/quick-start.md](docs/quick-start.md).
 
 ```bash
-git clone https://github.com/sknampally/codestrata-engine.git
-cd codestrata-engine
-
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-# Cloning does not install the CLI — install the package from this checkout:
-python -m pip install -e .
-python -m pip install -e ".[dev,mcp]"
-
-python -c "import codestrata; print(codestrata.__file__)"
+python -m pip install -e .   # from this Engine checkout (not monorepo root)
 codestrata version
+codestrata init
+codestrata doctor
 codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
-If you see `ModuleNotFoundError: No module named 'codestrata'`, activate the
-venv and re-run `python -m pip install -e .`.
+> Monorepo tip: installing the workspace root package does **not** install the
+> Community CLI. Always `pip install -e .` from `engine/` (or this Engine
+> checkout). If you see `ModuleNotFoundError: codestrata`, verify the active
+> interpreter with:
+>
+> ```bash
+> python -c "import codestrata; print(codestrata.__file__)"
+> ```
 
 Open the newest `reports/sample-js-app/<timestamp>/report.html`.
 
@@ -75,6 +76,8 @@ Assess your own tree:
 ```bash
 codestrata assess --repo /path/to/your-app --output reports --no-ai
 ```
+
+CI sample: [examples/github-actions/codestrata-assess.yml](examples/github-actions/codestrata-assess.yml).
 
 Guides: [docs/quick-start.md](docs/quick-start.md) ·
 [docs/installation.md](docs/installation.md) ·

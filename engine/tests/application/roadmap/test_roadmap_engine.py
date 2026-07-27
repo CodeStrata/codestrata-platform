@@ -316,7 +316,7 @@ def test_json_serialization_html_and_schema_compatibility(tmp_path: Path) -> Non
 
     view = build_html_report_view_model(report_input)
     html = HtmlReportRenderer().render(view)
-    assert 'id="modernization-roadmap-assessment"' in html
+    assert 'id="phased-modernization-plan"' in html
     assert "Phased Modernization Plan" in html
     assert "Stabilize" in html
     assert "Secure" in html

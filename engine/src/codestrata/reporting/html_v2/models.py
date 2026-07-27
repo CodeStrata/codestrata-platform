@@ -312,7 +312,10 @@ class AssessmentMetadataView(BaseModel):
     timing_report_ms: float | None = None
     ai_status: str
     model_id: str | None = None
-    report_version: str = "2.0"
+    report_version: str = "3.0"
+    engine_version: str = "0.1.0"
+    advisor_version: str | None = None
+    repository_name: str | None = None
 
 
 class AssessmentSummaryView(BaseModel):
@@ -326,8 +329,26 @@ class AssessmentSummaryView(BaseModel):
     summary_text: str
 
 
-class HtmlReportViewModel(BaseModel):
-    """Complete presentation model for HTML Report v2."""
+class ReportOutlineEntry(BaseModel):
+    """Single table-of-contents entry for a customer report section."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    section_id: str
+    title: str
+
+    @field_validator("section_id", "title", mode="before")
+    @classmethod
+    def normalize_required(cls, value: object) -> str:
+        return require_nonblank(str(value), label="outline entry field")
+
+
+class CustomerReportDocument(BaseModel):
+    """Renderer-neutral customer presentation document (Phase 6.3).
+
+    Assembled once from assessment artifacts; HTML/PDF/Markdown renderers
+    consume this model without re-running analysis.
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -350,10 +371,12 @@ class HtmlReportViewModel(BaseModel):
     roadmap_report: RoadmapReportSection | None = None
     artifacts: tuple[ArtifactRefView, ...] = ()
     metadata: AssessmentMetadataView
+    outline: tuple[ReportOutlineEntry, ...] = ()
+    key_takeaways: tuple[str, ...] = ()
     provenance_note: str = (
         "Deterministic findings and recommendations are produced by CodeStrata "
-        "rules and recommendation engines. AI enrichment, when present, is "
-        "interpretive only and does not modify deterministic results."
+        "rules and recommendation engines. Modernization Advisor, when present, "
+        "is interpretive only and does not modify deterministic results."
     )
 
     @field_validator(
@@ -362,11 +385,17 @@ class HtmlReportViewModel(BaseModel):
         "findings",
         "recommendations",
         "artifacts",
+        "outline",
+        "key_takeaways",
         mode="before",
     )
     @classmethod
     def normalize_sequences(cls, value: object) -> tuple[Any, ...]:
         return as_tuple(value)
+
+
+# Backward-compatible alias used by existing imports and tests.
+HtmlReportViewModel = CustomerReportDocument
 
 
 def severity_rank(severity: str) -> int:

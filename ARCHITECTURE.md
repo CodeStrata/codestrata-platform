@@ -84,7 +84,7 @@ Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
 
 | Layer | Responsibility |
 | ----- | -------------- |
-| Scanners | Acquire source (local / GitHub) |
+| Scanners | Acquire source (local / GitHub). Assess uses ephemeral temp clones for GitHub URLs and always cleans them up; local paths are never deleted. |
 | Detectors / analyzers | Phase 1 facts and analyzer findings |
 | StaticAnalysisService | External providers (PMD today) |
 | Inventory / graphs | Repository Graph, EKG, Assessment Graph |
@@ -212,6 +212,11 @@ assessment remains full recomputation; incremental execution is opt-in only
 RAG projection, embeddings, vector storage, retrieval, and grounded answering
 are implemented in the private **Platform** package. Community Engine keeps
 assessment contracts and extension entry points only.
+
+Phase 6.5 formalizes Community-light extension contracts (`EXTENSION_API_VERSION`),
+opt-in analyzer allowlists, registry-backed assess AI providers, and the
+`ReportRenderer` protocol over `CustomerReportDocument`. See
+[engine/docs/extension-architecture.md](engine/docs/extension-architecture.md).
 
 See [platform/docs/rag/](platform/docs/rag/) (monorepo) and
 [engine/docs/mcp/overview.md](engine/docs/mcp/overview.md) for assessment MCP.

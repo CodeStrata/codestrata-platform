@@ -20,8 +20,11 @@ from codestrata.cli.assess import (
     run_assessment,
 )
 from codestrata.cli.config_cmd import config_app
+from codestrata.cli.doctor import register_doctor_command
 from codestrata.cli.evidence import evidence_app
+from codestrata.cli.examples_cmd import register_examples_command
 from codestrata.cli.incremental import incremental_app
+from codestrata.cli.init_cmd import register_init_command
 from codestrata.cli.onboard import register_onboard_command
 from codestrata.cli.release import release_app
 from codestrata.cli.report import report_app
@@ -29,6 +32,7 @@ from codestrata.cli.roadmap import roadmap_app
 from codestrata.cli.rules import rules_app
 from codestrata.config import load_settings
 from codestrata.extensions import load_cli_extensions
+from codestrata.extensions.cli_cmd import register_extensions_command
 from codestrata.logging_config import configure_logging
 from codestrata.output_format import OutputFormat
 from codestrata.package_metadata import (
@@ -54,7 +58,7 @@ from codestrata.services.scanners.github_repository_scanner import (
 )
 from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 
-_METADATA_SUBCOMMANDS = frozenset({"version", "about"})
+_METADATA_SUBCOMMANDS = frozenset({"version", "about", "examples", "extensions"})
 
 app = typer.Typer(
     name="codestrata",
@@ -62,9 +66,12 @@ app = typer.Typer(
         "Analyze repositories and produce evidence-based modernization "
         "assessments.\n\n"
         "Quick start:\n"
-        "  codestrata assess --repo test-fixtures/sample-js-app --output reports\n\n"
-        "Canonical assessment workflow:\n"
+        "  codestrata init\n"
+        "  codestrata doctor\n"
+        "  codestrata assess --repo . --output reports --no-ai\n"
         "  codestrata assess --config codestrata.toml --output reports --with-ai\n\n"
+        "Primary workflow: assess (HTML + JSON modernization report).\n"
+        "Legacy/advanced: scan (clone+analyze; prefer assess).\n\n"
         "Docs: docs/quick-start.md · docs/cli-reference.md · "
         "docs/troubleshooting.md"
     ),
@@ -151,7 +158,15 @@ def scan(
         ),
     ] = False,
 ) -> None:
-    """Clone and analyze the GitHub repository configured in codestrata.toml."""
+    """[Legacy/advanced] Clone and analyze a GitHub repository from codestrata.toml.
+
+    Prefer the primary workflow:
+
+        codestrata assess --repo <path-or-url> --output reports --no-ai
+
+    ``scan`` requires ``[repository].url`` and writes text/json/html via the
+    older analysis reporters.
+    """
 
     try:
         settings = load_settings(config)
@@ -322,6 +337,10 @@ def _register_platform_cli_extensions(root: typer.Typer) -> None:
 
 
 register_assess_command(app)
+register_init_command(app)
+register_doctor_command(app)
+register_examples_command(app)
+register_extensions_command(app)
 register_onboard_command(app)
 _register_mcp_group(app)
 app.add_typer(config_app, name="config")

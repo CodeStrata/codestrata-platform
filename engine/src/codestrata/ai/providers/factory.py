@@ -5,12 +5,20 @@ from __future__ import annotations
 import os
 
 from codestrata.ai.providers.base import AIModelProvider
-from codestrata.ai.providers.exceptions import AIProviderConfigurationError
 from codestrata.config.settings import DEFAULT_BEDROCK_MODEL_ID, CodestrataSettings
+from codestrata.extensions.assess_ai import get_assess_ai_provider_registry
 
 CODESTRATA_BEDROCK_MODEL_ID_ENV = "CODESTRATA_BEDROCK_MODEL_ID"
 CODESTRATA_OPENAI_MODEL_ID_ENV = "CODESTRATA_OPENAI_MODEL_ID"
 
+
+def supported_assess_ai_providers() -> frozenset[str]:
+    """Return currently registered assess AI provider names."""
+
+    return frozenset(get_assess_ai_provider_registry().list_providers())
+
+
+# Back-compat: historically a frozenset constant of built-ins.
 SUPPORTED_ASSESS_AI_PROVIDERS = frozenset({"bedrock", "openai"})
 
 
@@ -18,18 +26,7 @@ def create_assess_ai_provider(settings: CodestrataSettings) -> AIModelProvider:
     """Create the AI model provider selected by ``[ai].provider`` for assess."""
 
     provider_name = (settings.ai.provider or "bedrock").strip().lower()
-    if provider_name == "bedrock":
-        from codestrata.ai.providers.bedrock import BedrockAIModelProvider
-
-        return BedrockAIModelProvider(settings=settings)
-    if provider_name == "openai":
-        from codestrata.ai.providers.openai_provider import OpenAIAIModelProvider
-
-        return OpenAIAIModelProvider(settings=settings)
-    raise AIProviderConfigurationError(
-        f"Unsupported assess AI provider '{settings.ai.provider}'. "
-        f"Supported: {', '.join(sorted(SUPPORTED_ASSESS_AI_PROVIDERS))}."
-    )
+    return get_assess_ai_provider_registry().create(provider_name, settings)
 
 
 def resolve_assess_model_id(
@@ -71,4 +68,5 @@ __all__ = [
     "create_assess_ai_provider",
     "resolve_assess_model_id",
     "resolve_bedrock_model_id",
+    "supported_assess_ai_providers",
 ]

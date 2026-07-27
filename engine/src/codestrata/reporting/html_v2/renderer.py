@@ -67,42 +67,48 @@ class HtmlReportRenderer:
             "<body>",
             '<div class="page">',
             _render_hero(view),
+            _render_toc(view),
             _section(
-                "Executive Summary",
-                _render_executive_cards(view),
-                section_id="executive",
+                "Key Takeaways",
+                _render_key_takeaways(view),
+                section_id="key-takeaways",
                 note=(
-                    "Leadership snapshot: counts and readiness signals only. "
-                    "Detailed findings and phased initiatives follow below."
+                    "Concise leadership bullets derived from deterministic findings "
+                    "and Modernization Advisor output when available."
                 ),
             ),
             _section(
-                "Technology Overview",
-                _render_technology(view),
-                section_id="technology",
-            ),
-            _section(
-                "Findings Overview",
-                _render_findings_overview(view),
-                section_id="findings",
+                "Engineering Modernization Assessment",
+                _render_engineering_modernization_assessment(view),
+                section_id="engineering-modernization-assessment",
                 note=(
-                    "Highest-severity deterministic findings first. "
-                    "Full evidence and IDs are in Technical Details."
+                    "Leadership snapshot: repository posture, readiness signals, "
+                    "and technology footprint. Detailed findings follow below."
                 ),
             ),
             _section(
-                "Modernization Roadmap",
+                "Priority Actions",
                 _render_roadmap(view.recommendations),
-                section_id="recommendations",
+                section_id="priority-actions",
                 note=(
                     "Priority-ordered deterministic recommendations with links "
                     "to related findings where available."
                 ),
             ),
+            _section(
+                "Findings",
+                _render_findings_overview(view),
+                section_id="findings",
+                note=(
+                    "Highest-severity deterministic findings first. "
+                    "Full evidence and IDs are in the Technical Appendix."
+                ),
+            ),
         ]
+        capability_parts: list[str] = []
         if view.architecture_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Architecture Assessment",
                     _render_architecture(view.architecture_report),
                     section_id="architecture-assessment",
@@ -113,8 +119,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.technical_debt_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Technical Debt Assessment",
                     _render_technical_debt(view.technical_debt_report),
                     section_id="technical-debt-assessment",
@@ -127,8 +133,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.dependency_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Dependency Assessment",
                     _render_dependency(view.dependency_report),
                     section_id="dependency-assessment",
@@ -141,8 +147,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.security_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Security Intelligence",
                     _render_security(view.security_report),
                     section_id="security-assessment",
@@ -156,8 +162,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.testing_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Test Intelligence",
                     _render_testing(view.testing_report),
                     section_id="testing-assessment",
@@ -171,8 +177,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.cloud_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Cloud Intelligence",
                     _render_cloud(view.cloud_report),
                     section_id="cloud-assessment",
@@ -186,8 +192,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.ai_readiness_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "AI Readiness Intelligence",
                     _render_ai_readiness(view.ai_readiness_report),
                     section_id="ai-readiness-assessment",
@@ -200,8 +206,8 @@ class HtmlReportRenderer:
                 )
             )
         if view.performance_report is not None:
-            parts.append(
-                _section(
+            capability_parts.append(
+                _subsection(
                     "Performance Intelligence",
                     _render_performance(view.performance_report),
                     section_id="performance-assessment",
@@ -213,12 +219,21 @@ class HtmlReportRenderer:
                     ),
                 )
             )
+        if capability_parts:
+            parts.append(
+                '<section class="section section-capability" id="capability-assessments">\n'
+                '<div class="section-head"><h2>Capability Assessments</h2></div>\n'
+                '<p class="section-note">Optional Analysis Intelligence packs. '
+                "Each subsection is deterministic evidence only.</p>\n"
+                f"{''.join(capability_parts)}\n"
+                "</section>"
+            )
         if view.roadmap_report is not None:
             parts.append(
                 _section(
                     "Phased Modernization Plan",
                     _render_phased_roadmap(view.roadmap_report),
-                    section_id="modernization-roadmap-assessment",
+                    section_id="phased-modernization-plan",
                     note=(
                         "Deterministic phased plan derived from existing findings "
                         "and recommendations only. Does not invent initiatives, "
@@ -240,15 +255,15 @@ class HtmlReportRenderer:
             )
         parts.append(
             _section(
-                "Technical Details",
+                "Technical Appendix",
                 _render_technical_details(view),
-                section_id="technical-details",
+                section_id="technical-appendix",
                 note="Engineering reference: evidence, graphs, artifacts, and metadata.",
             )
         )
         parts.extend(
             [
-                _render_footer(),
+                _render_footer(view),
                 "</div>",
                 "</body>",
                 "</html>",
@@ -256,6 +271,7 @@ class HtmlReportRenderer:
             ]
         )
         return "\n".join(parts)
+
 
 
 def _section(
@@ -276,25 +292,82 @@ def _section(
     )
 
 
+def _subsection(
+    title: str,
+    body: str,
+    *,
+    section_id: str,
+    note: str | None = None,
+) -> str:
+    note_html = f'<p class="section-note">{escape_html(note)}</p>' if note else ""
+    return (
+        f'<section class="subsection" id="{escape_html(section_id)}">\n'
+        f'<div class="section-head"><h3>{escape_html(title)}</h3></div>\n'
+        f"{note_html}"
+        f"{body}\n"
+        "</section>"
+    )
+
+
+def _render_toc(view: HtmlReportViewModel) -> str:
+    if not view.outline:
+        return ""
+    items = "".join(
+        f'<li><a href="#{escape_html(entry.section_id)}">{escape_html(entry.title)}</a></li>\n'
+        for entry in view.outline
+    )
+    return (
+        '<nav class="toc" id="contents" aria-label="Table of contents">\n'
+        '<div class="section-head"><h2>Contents</h2></div>\n'
+        f"<ol>\n{items}</ol>\n"
+        "</nav>"
+    )
+
+
+def _render_key_takeaways(view: HtmlReportViewModel) -> str:
+    if not view.key_takeaways:
+        return '<p class="muted">No key takeaways were available for this assessment.</p>'
+    items = "".join(f"<li>{escape_html(item)}</li>\n" for item in view.key_takeaways)
+    return f'<ul class="takeaways">\n{items}</ul>'
+
+
+def _render_engineering_modernization_assessment(view: HtmlReportViewModel) -> str:
+    summary_text = escape_html(view.assessment_summary.summary_text)
+    return (
+        f'<p class="ema-lede">{summary_text}</p>\n'
+        f"{_render_executive_cards(view)}\n"
+        "<h3>Technology Overview</h3>\n"
+        f"{_render_technology(view)}"
+    )
+
+
 def _render_hero(view: HtmlReportViewModel) -> str:
     summary = view.summary
+    meta = view.metadata
     mode_short = _mode_short(summary.assessment_mode_label)
     severity_tone = _severity_tone(summary.highest_finding_severity)
+    advisor = meta.advisor_version or "—"
     return (
-        '<header class="hero" id="hero">\n'
+        '<header class="hero" id="cover">\n'
         '<div class="hero-brand">\n'
         f'<img class="brand-logo" src="{logo_data_uri()}" '
         f'alt="{escape_html(BRAND_NAME)}" width="140" height="40">\n'
         f'<p class="brand-name">{escape_html(BRAND_NAME)}</p>\n'
         f'<h1 class="report-title">{escape_html(BRAND_REPORT_NAME)}</h1>\n'
         "</div>\n"
-        '<div class="hero-meta">\n'
+        '<div class="hero-meta report-identity">\n'
         '<div class="meta-item"><span class="meta-label">Repository</span>'
-        f'<span class="meta-value">{escape_and_wrap(summary.repository_name)}</span></div>\n'
+        f'<span class="meta-value">'
+        f"{escape_and_wrap(meta.repository_name or summary.repository_name)}"
+        "</span></div>\n"
         '<div class="meta-item"><span class="meta-label">Generated</span>'
-        f'<span class="meta-value">{escape_html(view.metadata.generated_at_utc)}</span></div>\n'
-        '<div class="meta-item"><span class="meta-label">Version</span>'
-        f'<span class="meta-value">v{escape_html(BRAND_VERSION)}</span></div>\n'
+        f'<span class="meta-value">{escape_html(meta.generated_at_utc)}</span></div>\n'
+        '<div class="meta-item"><span class="meta-label">Report version</span>'
+        f'<span class="meta-value">{escape_html(meta.report_version)}</span></div>\n'
+        '<div class="meta-item"><span class="meta-label">Engine version</span>'
+        f'<span class="meta-value">{escape_html(meta.engine_version)}</span></div>\n'
+        '<div class="meta-item"><span class="meta-label">Advisor version</span>'
+        f'<span class="meta-value">{escape_html(advisor)}</span></div>\n'
         '<div class="meta-item"><span class="meta-label">Mode</span>'
         f'<span class="meta-value">{escape_html(mode_short)}</span></div>\n'
         '<div class="meta-item"><span class="meta-label">Source</span>'
@@ -2714,6 +2787,9 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
         ("Generated at (UTC)", escape_html(meta.generated_at_utc)),
         ("Report title", escape_html(BRAND_REPORT_NAME)),
         ("Report version", escape_html(meta.report_version)),
+        ("Engine version", escape_html(meta.engine_version)),
+        ("Advisor version", escape_html(meta.advisor_version or "—")),
+        ("Repository", escape_html(meta.repository_name or view.summary.repository_name)),
         ("AI status", escape_html(meta.ai_status)),
         ("Model ID", escape_html(meta.model_id or "—")),
         ("Total ms", _fmt_ms(meta.timing_total_ms)),
@@ -2729,11 +2805,13 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
     return _definition_list(rows) + f"\n<h3>Warnings</h3>\n<ul>{warnings}</ul>"
 
 
-def _render_footer() -> str:
+def _render_footer(view: HtmlReportViewModel | None = None) -> str:
+    engine = view.metadata.engine_version if view is not None else BRAND_VERSION
+    report_version = view.metadata.report_version if view is not None else "3.0"
     return (
         '<footer class="site-footer">\n'
         f"<p>{escape_html(BRAND_FOOTER_LINE)}</p>\n"
-        f"<p>Version {escape_html(BRAND_VERSION)}</p>\n"
+        f"<p>Report {escape_html(report_version)} · Engine {escape_html(engine)}</p>\n"
         f'<p class="copyright">© {escape_html(BRAND_NAME)}</p>\n'
         "</footer>"
     )
@@ -2827,6 +2905,51 @@ body {
   font: 15px/1.55 "Source Sans 3", "IBM Plex Sans", "Segoe UI", sans-serif;
 }
 .page { max-width: 1120px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.35rem 1.2rem;
+  margin-bottom: 1.25rem;
+}
+.toc ol {
+  margin: 0.35rem 0 0;
+  padding-left: 1.25rem;
+  columns: 2;
+  column-gap: 2rem;
+}
+.toc li { break-inside: avoid; margin: 0.25rem 0; }
+.toc a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.toc a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+.takeaways {
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+.takeaways li {
+  margin: 0.45rem 0;
+  line-height: 1.5;
+  max-width: 62rem;
+}
+.ema-lede {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 46rem;
+  color: var(--ink);
+}
+.subsection {
+  margin: 1.1rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--border);
+}
+.subsection:first-of-type { border-top: 0; padding-top: 0; }
+.section-capability > .section-head h2 { margin-bottom: 0.25rem; }
+.report-identity { margin-bottom: 1rem; }
 .hero {
   background: linear-gradient(180deg, #fff 0%, #fbfcfd 100%);
   border: 1px solid var(--border);
@@ -3160,8 +3283,17 @@ th { color: var(--muted); font-weight: 650; }
   .page { padding: 1rem 0.85rem 2rem; }
 }
 @media print {
-  body { background: #fff; }
+  @page { margin: 1.4cm; }
+  body { background: #fff; color: #000; }
   .page { max-width: none; padding: 0; }
-  .section, .hero, .item-card { break-inside: avoid; box-shadow: none; }
+  .toc { box-shadow: none; columns: 1; break-after: page; }
+  .toc a { text-decoration: none; color: #000; }
+  .hero { box-shadow: none; break-after: page; }
+  .section, .subsection, .item-card, .stat-card, .kpi {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+  .hero-kpis { break-inside: avoid; }
+  .site-footer { border-top: 1px solid #ccc; }
 }
 """

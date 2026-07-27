@@ -184,7 +184,7 @@ def test_validation_failure_keeps_deterministic_reports(tmp_path: Path) -> None:
     assert written.json_report_path.is_file()
     html = written.html_report_path.read_text(encoding="utf-8")
     payload = json.loads(written.json_report_path.read_text(encoding="utf-8"))
-    assert "Findings Overview" in html
+    assert "Findings" in html
     assert payload["assessment"]["ai"]["recommendations"] == []
     assert payload["assessment"]["ai"]["phases"] == []
     assert 'id="ai-enrichment"' not in html

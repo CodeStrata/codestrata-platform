@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from codestrata import __version__
 from codestrata.config.settings import CodestrataSettings
+from codestrata.extensions.analyzers import resolve_enabled_analyzers
 from codestrata.services.analysis_service import AnalysisService
 from codestrata.services.analyzers import (
     ArchitectureAnalyzer,
@@ -18,6 +19,7 @@ from codestrata.services.analyzers import (
     RepositoryMetricsAnalyzer,
     SecurityAnalyzer,
 )
+from codestrata.services.contracts import Analyzer
 from codestrata.services.detectors.composite_technology_detector import (
     CompositeTechnologyDetector,
 )
@@ -29,6 +31,23 @@ from codestrata.services.detectors.javascript_technology_detector import (
 from codestrata.services.detectors.php_technology_detector import PhpTechnologyDetector
 from codestrata.static_analysis.providers import PmdProvider
 from codestrata.static_analysis.service import StaticAnalysisService
+
+
+def builtin_analyzers() -> list[Analyzer]:
+    """Return the first-party Phase 1 analyzer list (Community default)."""
+
+    return [
+        RepositoryMetricsAnalyzer(),
+        BuildDiscoveryAnalyzer(),
+        BuildMetadataAnalyzer(),
+        DependencyDiscoveryAnalyzer(),
+        DependencyMetadataAnalyzer(),
+        DependencyHealthAnalyzer(),
+        CicdDiscoveryAnalyzer(),
+        SecurityAnalyzer(),
+        ArchitectureAnalyzer(),
+        CloudReadinessAnalyzer(),
+    ]
 
 
 def create_default_analysis_service(
@@ -74,22 +93,17 @@ def create_default_analysis_service(
         fail_on_provider_error=static_analysis_settings.fail_on_provider_error,
     )
 
+    analyzers: list[Analyzer] = builtin_analyzers()
+    analyzers.extend(
+        resolve_enabled_analyzers(
+            settings.extensions.analyzers.enabled,
+            strict=True,
+        )
+    )
+
     return AnalysisService(
         technology_detector=technology_detector,
-        analyzer=CompositeAnalyzer(
-            analyzers=[
-                RepositoryMetricsAnalyzer(),
-                BuildDiscoveryAnalyzer(),
-                BuildMetadataAnalyzer(),
-                DependencyDiscoveryAnalyzer(),
-                DependencyMetadataAnalyzer(),
-                DependencyHealthAnalyzer(),
-                CicdDiscoveryAnalyzer(),
-                SecurityAnalyzer(),
-                ArchitectureAnalyzer(),
-                CloudReadinessAnalyzer(),
-            ]
-        ),
+        analyzer=CompositeAnalyzer(analyzers=analyzers),
         analyzer_version=__version__,
         static_analysis_service=static_analysis_service,
     )
