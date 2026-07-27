@@ -295,6 +295,12 @@ class AssessmentCommandResult(BaseModel):
     knowledge_vector_count: int | None = Field(default=None, ge=0)
     knowledge_index_artifact_path: Path | None = None
     knowledge_index_fingerprint: str | None = None
+    platform_ingest_status: str | None = None
+    platform_organization_id: str | None = None
+    platform_workspace_id: str | None = None
+    platform_repository_id: str | None = None
+    platform_assessment_id: str | None = None
+    engine_assessment_id: str | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -3630,6 +3636,111 @@ class AssessmentApplicationService:
                 f"Knowledge persistence failed: {sanitize_provider_text(str(error))}"
             ) from error
 
+        platform_ingest_status = "disabled"
+        platform_organization_id = None
+        platform_workspace_id = None
+        platform_repository_id = None
+        platform_assessment_id = None
+        engine_assessment_id = None
+        try:
+            from codestrata.integration.commercial.artifacts.policy import (
+                ArtifactPublishingPolicy,
+            )
+            from codestrata.integration.commercial.artifacts.publisher import (
+                publish_artifacts_to_platform,
+            )
+            from codestrata.integration.commercial.configuration import (
+                platform_client_from_settings,
+                platform_config_from_settings,
+            )
+            from codestrata.integration.commercial.publisher import (
+                publish_assessment_to_platform,
+            )
+
+            platform_config = platform_config_from_settings(loaded_settings)
+            if platform_config.enabled:
+                platform_client = platform_client_from_settings(loaded_settings)
+                publish = publish_assessment_to_platform(
+                    client=platform_client,
+                    config=platform_config,
+                    repository=repository,
+                    configured_repository_url=loaded_settings.repository.url,
+                    html_report_path=result.html_report_path if write_reports else None,
+                    json_report_path=result.json_report_path if write_reports else None,
+                )
+                platform_ingest_status = publish.status
+                platform_organization_id = publish.organization_id
+                platform_workspace_id = publish.workspace_id
+                platform_repository_id = publish.repository_id
+                platform_assessment_id = publish.assessment_id
+                engine_assessment_id = publish.engine_assessment_id
+                if publish.status == "failed" and publish.message:
+                    warn(
+                        "Platform ingestion failed; local assessment reports were kept. "
+                        f"Details: {sanitize_provider_text(publish.message)}"
+                    )
+                elif publish.status == "succeeded":
+                    active_console.print(
+                        "[green]Platform ingestion succeeded[/green] "
+                        f"(assessment_id={publish.assessment_id})"
+                    )
+                    artifact_policy = ArtifactPublishingPolicy.from_settings(loaded_settings)
+                    if (
+                        artifact_policy.publishing_active()
+                        and publish.assessment_id
+                        and publish.engine_assessment_id
+                    ):
+                        artifact_batch = publish_artifacts_to_platform(
+                            client=platform_client,
+                            policy=artifact_policy,
+                            engine_assessment_id=publish.engine_assessment_id,
+                            platform_assessment_id=publish.assessment_id,
+                            repository_name=repository.name,
+                            html_report_path=(
+                                result.html_report_path if write_reports else None
+                            ),
+                            json_report_path=(
+                                result.json_report_path if write_reports else None
+                            ),
+                        )
+                        if (
+                            artifact_batch.status in {"failed", "partial"}
+                            and artifact_batch.message
+                        ):
+                            warn(
+                                "Platform artifact publishing failed; local reports were kept. "
+                                f"Details: {sanitize_provider_text(artifact_batch.message)}"
+                            )
+                        elif artifact_batch.status == "succeeded":
+                            active_console.print(
+                                "[green]Platform artifact publishing succeeded[/green] "
+                                f"({len(artifact_batch.published)} artifact(s))"
+                            )
+                            if artifact_policy.intelligence_processing_active():
+                                try:
+                                    intelligence = (
+                                        platform_client.process_assessment_intelligence(
+                                            assessment_id=publish.assessment_id,
+                                        )
+                                    )
+                                    status = str(intelligence.get("status", "unknown"))
+                                    active_console.print(
+                                        "[green]Platform intelligence ingestion[/green] "
+                                        f"(status={status})"
+                                    )
+                                except Exception as intelligence_error:  # noqa: BLE001
+                                    warn(
+                                        "Platform intelligence ingestion failed; "
+                                        "artifacts were kept. Details: "
+                                        f"{sanitize_provider_text(str(intelligence_error))}"
+                                    )
+        except Exception as error:  # noqa: BLE001 - never fail Community assess
+            platform_ingest_status = "failed"
+            warn(
+                "Platform ingestion failed unexpectedly; local assessment reports were kept. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         return result.model_copy(
             update={
                 "knowledge_repository_id": knowledge_session.repository_id,
@@ -3643,6 +3754,12 @@ class AssessmentApplicationService:
                 "knowledge_vector_count": knowledge_vector_count,
                 "knowledge_index_artifact_path": knowledge_index_artifact_path,
                 "knowledge_index_fingerprint": knowledge_index_fingerprint,
+                "platform_ingest_status": platform_ingest_status,
+                "platform_organization_id": platform_organization_id,
+                "platform_workspace_id": platform_workspace_id,
+                "platform_repository_id": platform_repository_id,
+                "platform_assessment_id": platform_assessment_id,
+                "engine_assessment_id": engine_assessment_id,
             }
         )
 

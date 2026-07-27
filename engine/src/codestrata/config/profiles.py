@@ -175,6 +175,29 @@ def apply_environment_overlays(
         out["ai"].setdefault("openai", {})
         out["ai"]["openai"]["api_key_env"] = openai_env_name
 
+    platform_enabled = str(env.get("CODESTRATA_PLATFORM_ENABLED", "") or "").strip().lower()
+    if platform_enabled in {"1", "true", "yes", "on"}:
+        out.setdefault("platform", {})
+        out["platform"]["enabled"] = True
+    elif platform_enabled in {"0", "false", "no", "off"}:
+        out.setdefault("platform", {})
+        out["platform"]["enabled"] = False
+
+    platform_url = str(env.get("CODESTRATA_PLATFORM_URL", "") or "").strip()
+    if platform_url:
+        out.setdefault("platform", {})
+        out["platform"]["base_url"] = platform_url
+
+    platform_org = str(env.get("CODESTRATA_PLATFORM_ORGANIZATION_ID", "") or "").strip()
+    if platform_org:
+        out.setdefault("platform", {})
+        out["platform"]["organization_id"] = platform_org
+
+    platform_ws = str(env.get("CODESTRATA_PLATFORM_WORKSPACE_ID", "") or "").strip()
+    if platform_ws:
+        out.setdefault("platform", {})
+        out["platform"]["workspace_id"] = platform_ws
+
     return out
 
 
