@@ -133,9 +133,11 @@ def register_exception_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(ValueError)
     async def value_error_handler(_request: Request, exc: ValueError) -> JSONResponse:
+        from codestrata.security.redaction import redact_secrets
+
         return JSONResponse(
             status_code=400,
-            content=_error_body(code="value_error", message=str(exc)),
+            content=_error_body(code="value_error", message=redact_secrets(str(exc))),
         )
 
     @app.exception_handler(Exception)

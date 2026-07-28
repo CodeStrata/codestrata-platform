@@ -196,14 +196,17 @@ def test_portfolio_answering_api_flow(client: TestClient, monkeypatch: pytest.Mo
     assert isinstance(body["limitations"], list)
     answer_id = body["answer_run_id"]
 
-    got = client.get(f"/api/v1/portfolio-answers/{answer_id}")
+    scope_params = {"organization_id": org_id, "workspace_id": workspace_id}
+
+    got = client.get(f"/api/v1/portfolio-answers/{answer_id}", params=scope_params)
     assert got.status_code == 200
-    listed = client.get(f"/api/v1/portfolios/{portfolio_id}/answers")
+    listed = client.get(f"/api/v1/portfolios/{portfolio_id}/answers", params=scope_params)
     assert listed.status_code == 200
     assert any(item["answer_run_id"] == answer_id for item in listed.json())
 
     feedback = client.post(
         f"/api/v1/portfolio-answers/{answer_id}/feedback",
+        params=scope_params,
         json={"rating": 4, "feedback_category": "useful", "comment": "good"},
     )
     assert feedback.status_code == 200
@@ -239,3 +242,12 @@ def test_portfolio_answering_disabled(client: TestClient, monkeypatch: pytest.Mo
     body = asked.json()
     code = body.get("code") or (body.get("error") or {}).get("code")
     assert code == "portfolio_answering_disabled"
+
+
+def test_get_portfolio_answer_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CODESTRATA_PORTFOLIO_ANSWERING_ENABLED", "true")
+    response = client.get("/api/v1/portfolio-answers/answer-run:missing")
+    assert response.status_code == 422, response.text

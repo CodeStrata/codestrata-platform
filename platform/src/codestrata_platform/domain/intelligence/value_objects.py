@@ -34,6 +34,25 @@ _ENV_FILE_MARKERS = (".env", ".env.local", ".env.production")
 _MAX_METADATA_KEYS = 50
 _MAX_STRING = 4000
 _MAX_EXCERPT = 500
+_EXCERPT_REDACTED = "[REDACTED]"
+_EXCERPT_SECRET_PATTERNS = (
+    re.compile(
+        r"(?i)\b("
+        r"password|passwd|pwd|secret|token|api[_-]?key|access[_-]?key|"
+        r"private[_-]?key|client[_-]?secret|auth[_-]?token"
+        r")\b(\s*[=:]\s*)(?:'[^']+'|\"[^\"]+\"|[^\s'\"#,;]+)"
+    ),
+    re.compile(r"(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"(?i)(Authorization:\s*(?:Bearer|Basic)\s+)\S+"),
+)
+
+
+def _sanitize_redacted_excerpt(excerpt: str) -> str:
+    sanitized = excerpt
+    for pattern in _EXCERPT_SECRET_PATTERNS:
+        sanitized = pattern.sub(_EXCERPT_REDACTED, sanitized)
+    return sanitized
 
 
 def _validate_metadata(attributes: Mapping[str, str]) -> dict[str, str]:
@@ -288,7 +307,11 @@ class EvidenceReference:
                     reason_code="excerpt_too_long",
                 )
             else:
-                object.__setattr__(self, "redacted_excerpt", excerpt)
+                object.__setattr__(
+                    self,
+                    "redacted_excerpt",
+                    _sanitize_redacted_excerpt(excerpt),
+                )
 
 
 @dataclass(frozen=True, slots=True)

@@ -319,6 +319,8 @@ def test_repository_filter_rejects_outside_portfolio(monkeypatch: pytest.MonkeyP
                     query_text="debt",
                     repository_ids=(RepositoryId("repo:outside"),),
                 ),
+                organization_id=org_id,
+                workspace_id=workspace_id,
             )
         )
     assert exc.value.reason_code == "portfolio_retrieval_repository_outside_portfolio"
@@ -374,6 +376,8 @@ def test_balance_applied_once_and_contributions_present(monkeypatch: pytest.Monk
                 top_k=10,
                 repository_balance_mode=RepositoryBalanceMode.DIVERSIFIED,
             ),
+            organization_id=org_id,
+            workspace_id=workspace_id,
         )
     )
     assert result.hits
@@ -515,6 +519,8 @@ def test_force_rebuild_replaces_completed_index(monkeypatch: pytest.MonkeyPatch)
     rebuilt = service.rebuild_index(
         RebuildPortfolioRetrievalIndexCommand(
             index_id=PortfolioRetrievalIndexId(first.index.index_id),
+            organization_id=org_id,
+            workspace_id=workspace_id,
             force=True,
         )
     )

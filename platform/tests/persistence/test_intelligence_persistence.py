@@ -140,11 +140,17 @@ def _complete_artifact(
     artifact_s.upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
-    artifact_s.complete_artifact(CompleteArtifactCommand(artifact_id=registered.artifact_id))
+    artifact_s.complete_artifact(
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
+    )
     return registered.artifact_id.value
 
 

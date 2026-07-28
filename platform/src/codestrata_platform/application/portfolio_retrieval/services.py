@@ -279,7 +279,11 @@ class PortfolioRetrievalIndexingService:
         self,
         command: RebuildPortfolioRetrievalIndexCommand,
     ) -> PortfolioRetrievalBuildResult:
-        current = self._require_index(command.index_id)
+        current = self._require_owned_index(
+            command.index_id,
+            command.organization_id,
+            command.workspace_id,
+        )
         return self.build_index(
             BuildPortfolioRetrievalIndexCommand(
                 portfolio_id=current.portfolio_id,
@@ -318,14 +322,21 @@ class PortfolioRetrievalIndexingService:
         return PortfolioRetrievalIndexDetails.from_aggregate(index)
 
     def get(self, query: GetPortfolioRetrievalIndexQuery) -> PortfolioRetrievalIndexDetails:
-        return PortfolioRetrievalIndexDetails.from_aggregate(self._require_index(query.index_id))
+        index = self._require_owned_index(
+            query.index_id, query.organization_id, query.workspace_id
+        )
+        return PortfolioRetrievalIndexDetails.from_aggregate(index)
 
     def get_latest(
         self,
         query: GetLatestPortfolioRetrievalIndexQuery,
     ) -> PortfolioRetrievalIndexDetails:
+        self._require_owned_portfolio(query.portfolio_id, query.organization_id, query.workspace_id)
         index = self._indexes.get_latest_completed(query.portfolio_id)
-        if index is None:
+        if index is None or (
+            index.organization_id != query.organization_id
+            or index.workspace_id != query.workspace_id
+        ):
             raise NotFoundError(
                 f"Portfolio retrieval index not found for portfolio {query.portfolio_id.value}",
                 reason_code="portfolio_retrieval_index_not_found",
@@ -336,6 +347,7 @@ class PortfolioRetrievalIndexingService:
         self,
         query: ListPortfolioRetrievalIndexesQuery,
     ) -> tuple[PortfolioRetrievalIndexSummary, ...]:
+        self._require_owned_portfolio(query.portfolio_id, query.organization_id, query.workspace_id)
         items = self._indexes.list_by_portfolio(query.portfolio_id)
         return tuple(PortfolioRetrievalIndexSummary.from_aggregate(item) for item in items)
 
@@ -389,7 +401,9 @@ class PortfolioRetrievalIndexingService:
         self,
         query: SearchPortfolioRetrievalIndexQuery,
     ) -> PortfolioRetrievalSearchResultModel:
-        index = self._require_completed(query.index_id)
+        index = self._require_owned_completed(
+            query.index_id, query.organization_id, query.workspace_id
+        )
         if self._queries is None:
             raise ValidationError(
                 "Portfolio retrieval query repository is not configured",
@@ -412,7 +426,9 @@ class PortfolioRetrievalIndexingService:
         self,
         query: BuildPortfolioRetrievalContextQuery,
     ) -> PortfolioRetrievalContext:
-        index = self._require_completed(query.index_id)
+        index = self._require_owned_completed(
+            query.index_id, query.organization_id, query.workspace_id
+        )
         if self._queries is None:
             raise ValidationError(
                 "Portfolio retrieval query repository is not configured",
@@ -516,9 +532,9 @@ class PortfolioRetrievalIndexingService:
             portfolio.organization_id != command.organization_id
             or portfolio.workspace_id != command.workspace_id
         ):
-            raise ValidationError(
-                "Portfolio does not belong to the requested organization/workspace",
-                reason_code="portfolio_tenant_mismatch",
+            raise NotFoundError(
+                f"Portfolio '{command.portfolio_id.value}' was not found",
+                reason_code="portfolio_not_found",
             )
         if command.portfolio_snapshot_id is not None:
             snapshot = self._portfolio_snapshots.get(command.portfolio_snapshot_id)
@@ -529,18 +545,14 @@ class PortfolioRetrievalIndexingService:
                 "Portfolio snapshot not found",
                 reason_code="portfolio_snapshot_not_found",
             )
-        if snapshot.portfolio_id != command.portfolio_id:
-            raise ValidationError(
-                "Portfolio snapshot does not belong to the requested portfolio",
-                reason_code="portfolio_snapshot_portfolio_mismatch",
-            )
         if (
-            snapshot.organization_id != command.organization_id
+            snapshot.portfolio_id != command.portfolio_id
+            or snapshot.organization_id != command.organization_id
             or snapshot.workspace_id != command.workspace_id
         ):
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
+            raise NotFoundError(
+                "Portfolio snapshot not found",
+                reason_code="portfolio_snapshot_not_found",
             )
         if snapshot.status is not PortfolioSnapshotStatus.COMPLETED:
             raise PortfolioRetrievalNotReadyError(
@@ -558,8 +570,44 @@ class PortfolioRetrievalIndexingService:
             )
         return index
 
+    def _require_owned_index(
+        self,
+        index_id,
+        organization_id,
+        workspace_id,
+    ) -> PortfolioRetrievalIndex:
+        index = self._require_index(index_id)
+        if index.organization_id != organization_id or index.workspace_id != workspace_id:
+            raise NotFoundError(
+                f"Portfolio retrieval index not found: {index_id.value}",
+                reason_code="portfolio_retrieval_index_not_found",
+            )
+        return index
+
+    def _require_owned_portfolio(self, portfolio_id, organization_id, workspace_id) -> None:
+        portfolio = self._portfolios.get(portfolio_id)
+        if portfolio is None or (
+            portfolio.organization_id != organization_id
+            or portfolio.workspace_id != workspace_id
+        ):
+            raise NotFoundError(
+                f"Portfolio '{portfolio_id.value}' was not found",
+                reason_code="portfolio_not_found",
+            )
+
     def _require_completed(self, index_id) -> PortfolioRetrievalIndex:
         index = self._require_index(index_id)
+        if index.status is not PortfolioRetrievalIndexStatus.COMPLETED:
+            raise PortfolioRetrievalNotReadyError(
+                f"Portfolio retrieval index {index_id.value} is not completed",
+                reason_code="portfolio_retrieval_index_not_completed",
+            )
+        return index
+
+    def _require_owned_completed(
+        self, index_id, organization_id, workspace_id
+    ) -> PortfolioRetrievalIndex:
+        index = self._require_owned_index(index_id, organization_id, workspace_id)
         if index.status is not PortfolioRetrievalIndexStatus.COMPLETED:
             raise PortfolioRetrievalNotReadyError(
                 f"Portfolio retrieval index {index_id.value} is not completed",

@@ -25,6 +25,8 @@ class BuildPortfolioRetrievalIndexCommand:
 @dataclass(frozen=True, slots=True)
 class RebuildPortfolioRetrievalIndexCommand:
     index_id: PortfolioRetrievalIndexId
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
     embedding_provider: str | None = None
     embedding_model: str | None = None
     embedding_dimension: int | None = None

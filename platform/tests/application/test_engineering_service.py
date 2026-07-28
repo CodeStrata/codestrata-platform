@@ -144,12 +144,16 @@ def _complete(stack, assessment, artifact_type: ArtifactType, payload: object) -
     stack["artifact"].upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
     stack["artifact"].complete_artifact(
-        CompleteArtifactCommand(artifact_id=registered.artifact_id)
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
     )
 
 

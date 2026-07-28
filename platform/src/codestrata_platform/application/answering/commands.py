@@ -7,8 +7,10 @@ from dataclasses import dataclass
 from codestrata_platform.domain.answering.identifiers import AnswerRunId
 from codestrata_platform.domain.answering.lifecycle import QuestionType
 from codestrata_platform.domain.answering.question import QuestionScope
+from codestrata_platform.domain.organization.ids import OrganizationId
 from codestrata_platform.domain.repository.ids import RepositoryId
 from codestrata_platform.domain.retrieval.identifiers import RetrievalIndexId
+from codestrata_platform.domain.workspace.ids import WorkspaceId
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,6 +26,8 @@ class AskEngineeringQuestionCommand:
 @dataclass(frozen=True, slots=True)
 class SubmitAnswerFeedbackCommand:
     answer_run_id: AnswerRunId
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
     rating: int
     feedback_category: str
     comment: str = ""
@@ -32,9 +36,13 @@ class SubmitAnswerFeedbackCommand:
 @dataclass(frozen=True, slots=True)
 class GetAnswerRunQuery:
     answer_run_id: AnswerRunId
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
 
 
 @dataclass(frozen=True, slots=True)
 class ListRepositoryAnswersQuery:
     repository_id: RepositoryId
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
     limit: int = 50

@@ -268,10 +268,7 @@ class PortfolioManagementService:
             portfolio.organization_id != organization_id
             or portfolio.workspace_id != workspace_id
         ):
-            raise ValidationError(
-                "Portfolio does not belong to the requested organization/workspace",
-                reason_code="portfolio_tenant_mismatch",
-            )
+            raise PortfolioNotFoundError(portfolio_id.value)
         return portfolio
 
     def _assert_org_workspace(
@@ -406,16 +403,11 @@ class PortfolioIntelligenceAggregationService:
         snapshot = self._snapshots.get(query.portfolio_snapshot_id)
         if snapshot is None:
             raise PortfolioSnapshotNotFoundError(query.portfolio_snapshot_id.value)
-        if query.organization_id is not None and snapshot.organization_id != query.organization_id:
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
-            )
-        if query.workspace_id is not None and snapshot.workspace_id != query.workspace_id:
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
-            )
+        if (
+            snapshot.organization_id != query.organization_id
+            or snapshot.workspace_id != query.workspace_id
+        ):
+            raise PortfolioSnapshotNotFoundError(query.portfolio_snapshot_id.value)
         return self._snapshot_details(snapshot)
 
     def get_latest_snapshot(
@@ -438,12 +430,16 @@ class PortfolioIntelligenceAggregationService:
             query.organization_id,
             query.workspace_id,
         )
+        bounded = max(1, min(int(query.limit), 500))
+        start = max(0, query.offset)
+        total = self._snapshots.count_by_portfolio(query.portfolio_id)
         items = self._snapshots.list_by_portfolio(
             query.portfolio_id,
-            limit=max(query.limit, 1) + query.offset,
+            offset=start,
+            limit=bounded,
         )
         summaries = tuple(self._snapshot_summary(item) for item in items)
-        return _page(summaries, offset=query.offset, limit=query.limit)
+        return PageResult(items=summaries, offset=start, limit=bounded, total=total)
 
     def get_technologies(self, query: PortfolioInventoryQuery) -> PortfolioTechnologySummaryModel:
         snapshot = self._require_completed(query)
@@ -662,17 +658,8 @@ class PortfolioIntelligenceAggregationService:
             command.aggregation_policy_version or PORTFOLIO_AGGREGATION_POLICY_VERSION
         )
         memberships = portfolio.active_memberships
-        selections = self._selector.select(memberships)
-
-        intelligence: dict[str, object] = {}
-        for membership in memberships:
-            intel = self._sources.load_latest_published(
-                organization_id=membership.organization_id,
-                workspace_id=membership.workspace_id,
-                repository_id=membership.repository_id,
-            )
-            if intel is not None:
-                intelligence[membership.repository_id.value] = intel
+        selections, intelligence_loaded = self._selector.select_with_sources(memberships)
+        intelligence: dict[str, object] = dict(intelligence_loaded)
 
         selected_snaps = tuple(
             (
@@ -706,6 +693,19 @@ class PortfolioIntelligenceAggregationService:
         if existing is not None:
             # Same projection is idempotent; force rebuild cannot diverge deterministically.
             return self._snapshot_details(existing)
+
+        # Free any FAILED row that still occupies this unique projection key.
+        for prior_failed in self._snapshots.list_by_portfolio(
+            portfolio.portfolio_id,
+            status=PortfolioSnapshotStatus.FAILED,
+            limit=100,
+        ):
+            if prior_failed.projection_key.value == projection_key.value:
+                prior_failed.projection_key = PortfolioProjectionKey(
+                    f"{projection_key.value}:f{prior_failed.version.value}"[:128]
+                )
+                self._snapshots.save(prior_failed)
+                break
 
         version = self._snapshots.latest_version_for_portfolio(portfolio.portfolio_id) + 1
         snapshot = PortfolioSnapshot.create_pending(
@@ -765,6 +765,10 @@ class PortfolioIntelligenceAggregationService:
             snapshot.complete()
         except Exception as exc:
             snapshot.fail(str(exc)[:2000])
+            # Free the unique projection_key so deterministic retries can rebuild.
+            snapshot.projection_key = PortfolioProjectionKey(
+                f"{projection_key.value}:f{snapshot.version.value}"[:128]
+            )
             self._snapshots.save(snapshot)
             raise
 
@@ -790,16 +794,11 @@ class PortfolioIntelligenceAggregationService:
         snapshot = self._snapshots.get(query.portfolio_snapshot_id)
         if snapshot is None:
             raise PortfolioSnapshotNotFoundError(query.portfolio_snapshot_id.value)
-        if query.organization_id is not None and snapshot.organization_id != query.organization_id:
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
-            )
-        if query.workspace_id is not None and snapshot.workspace_id != query.workspace_id:
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
-            )
+        if (
+            snapshot.organization_id != query.organization_id
+            or snapshot.workspace_id != query.workspace_id
+        ):
+            raise PortfolioSnapshotNotFoundError(query.portfolio_snapshot_id.value)
         if snapshot.status is not PortfolioSnapshotStatus.COMPLETED:
             raise ValidationError(
                 "Portfolio snapshot is not completed",
@@ -820,10 +819,7 @@ class PortfolioIntelligenceAggregationService:
             portfolio.organization_id != organization_id
             or portfolio.workspace_id != workspace_id
         ):
-            raise ValidationError(
-                "Portfolio does not belong to the requested organization/workspace",
-                reason_code="portfolio_tenant_mismatch",
-            )
+            raise PortfolioNotFoundError(portfolio_id.value)
         return portfolio
 
     def _load_snapshot_owned(
@@ -839,10 +835,7 @@ class PortfolioIntelligenceAggregationService:
             snapshot.organization_id != organization_id
             or snapshot.workspace_id != workspace_id
         ):
-            raise ValidationError(
-                "Portfolio snapshot tenant mismatch",
-                reason_code="portfolio_snapshot_tenant_mismatch",
-            )
+            raise PortfolioSnapshotNotFoundError(portfolio_snapshot_id.value)
         return snapshot
 
     def _envelope(self, snapshot: PortfolioSnapshot) -> PortfolioAggregateEnvelope:

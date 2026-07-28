@@ -240,6 +240,7 @@ class SqlAlchemyPortfolioSnapshotRepository:
         portfolio_id: PortfolioId,
         *,
         status: PortfolioSnapshotStatus | None = None,
+        offset: int = 0,
         limit: int = 50,
     ) -> tuple[PortfolioSnapshot, ...]:
         stmt = select(EngineeringPortfolioSnapshotRecord).where(
@@ -247,12 +248,29 @@ class SqlAlchemyPortfolioSnapshotRepository:
         )
         if status is not None:
             stmt = stmt.where(EngineeringPortfolioSnapshotRecord.status == status.value)
-        records = self._session.scalars(
-            stmt.order_by(EngineeringPortfolioSnapshotRecord.snapshot_version.desc()).limit(
-                max(1, limit)
-            )
-        ).all()
-        return tuple(self._to_domain(record) for record in records)
+        records = list(
+            self._session.scalars(
+                stmt.order_by(EngineeringPortfolioSnapshotRecord.snapshot_version.desc())
+                .offset(max(0, offset))
+                .limit(max(1, limit))
+            ).all()
+        )
+        return self._to_domain_many(records)
+
+    def count_by_portfolio(
+        self,
+        portfolio_id: PortfolioId,
+        *,
+        status: PortfolioSnapshotStatus | None = None,
+    ) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(EngineeringPortfolioSnapshotRecord)
+            .where(EngineeringPortfolioSnapshotRecord.portfolio_id == portfolio_id.value)
+        )
+        if status is not None:
+            stmt = stmt.where(EngineeringPortfolioSnapshotRecord.status == status.value)
+        return int(self._session.scalar(stmt) or 0)
 
     def latest_version_for_portfolio(self, portfolio_id: PortfolioId) -> int:
         value = self._session.scalar(
@@ -295,62 +313,92 @@ class SqlAlchemyPortfolioSnapshotRepository:
         )
 
     def _to_domain(self, record: EngineeringPortfolioSnapshotRecord) -> PortfolioSnapshot:
-        snap_id = record.portfolio_snapshot_id
-        repository_records = list(
-            self._session.scalars(
-                select(EngineeringPortfolioRepositorySnapshotRecord).where(
-                    EngineeringPortfolioRepositorySnapshotRecord.portfolio_snapshot_id == snap_id
-                )
-            ).all()
-        )
-        technology_records = list(
-            self._session.scalars(
-                select(EngineeringPortfolioTechnologyRecord).where(
-                    EngineeringPortfolioTechnologyRecord.portfolio_snapshot_id == snap_id
-                )
-            ).all()
-        )
-        finding_records = list(
-            self._session.scalars(
-                select(EngineeringPortfolioFindingRecord).where(
-                    EngineeringPortfolioFindingRecord.portfolio_snapshot_id == snap_id
-                )
-            ).all()
-        )
-        recommendation_records = list(
-            self._session.scalars(
-                select(EngineeringPortfolioRecommendationRecord).where(
-                    EngineeringPortfolioRecommendationRecord.portfolio_snapshot_id == snap_id
-                )
-            ).all()
-        )
-        risk_record = self._session.scalars(
+        return self._to_domain_many([record])[0]
+
+    def _to_domain_many(
+        self,
+        records: list[EngineeringPortfolioSnapshotRecord],
+    ) -> tuple[PortfolioSnapshot, ...]:
+        if not records:
+            return ()
+        ids = [record.portfolio_snapshot_id for record in records]
+        repos_by_id: dict[str, list[EngineeringPortfolioRepositorySnapshotRecord]] = {
+            item: [] for item in ids
+        }
+        techs_by_id: dict[str, list[EngineeringPortfolioTechnologyRecord]] = {
+            item: [] for item in ids
+        }
+        findings_by_id: dict[str, list[EngineeringPortfolioFindingRecord]] = {
+            item: [] for item in ids
+        }
+        recommendations_by_id: dict[str, list[EngineeringPortfolioRecommendationRecord]] = {
+            item: [] for item in ids
+        }
+        risks_by_id: dict[str, EngineeringPortfolioRiskRecord | None] = {
+            item: None for item in ids
+        }
+        modernization_by_id: dict[
+            str, list[EngineeringPortfolioModernizationCandidateRecord]
+        ] = {item: [] for item in ids}
+        analysis_by_id: dict[str, EngineeringPortfolioAnalysisRunRecord | None] = {
+            item: None for item in ids
+        }
+
+        for row in self._session.scalars(
+            select(EngineeringPortfolioRepositorySnapshotRecord).where(
+                EngineeringPortfolioRepositorySnapshotRecord.portfolio_snapshot_id.in_(ids)
+            )
+        ).all():
+            repos_by_id[row.portfolio_snapshot_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringPortfolioTechnologyRecord).where(
+                EngineeringPortfolioTechnologyRecord.portfolio_snapshot_id.in_(ids)
+            )
+        ).all():
+            techs_by_id[row.portfolio_snapshot_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringPortfolioFindingRecord).where(
+                EngineeringPortfolioFindingRecord.portfolio_snapshot_id.in_(ids)
+            )
+        ).all():
+            findings_by_id[row.portfolio_snapshot_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringPortfolioRecommendationRecord).where(
+                EngineeringPortfolioRecommendationRecord.portfolio_snapshot_id.in_(ids)
+            )
+        ).all():
+            recommendations_by_id[row.portfolio_snapshot_id].append(row)
+        for row in self._session.scalars(
             select(EngineeringPortfolioRiskRecord).where(
-                EngineeringPortfolioRiskRecord.portfolio_snapshot_id == snap_id
+                EngineeringPortfolioRiskRecord.portfolio_snapshot_id.in_(ids)
             )
-        ).first()
-        modernization_records = list(
-            self._session.scalars(
-                select(EngineeringPortfolioModernizationCandidateRecord).where(
-                    EngineeringPortfolioModernizationCandidateRecord.portfolio_snapshot_id
-                    == snap_id
-                )
-            ).all()
-        )
-        analysis_run = self._session.scalars(
+        ).all():
+            risks_by_id[row.portfolio_snapshot_id] = row
+        for row in self._session.scalars(
+            select(EngineeringPortfolioModernizationCandidateRecord).where(
+                EngineeringPortfolioModernizationCandidateRecord.portfolio_snapshot_id.in_(ids)
+            )
+        ).all():
+            modernization_by_id[row.portfolio_snapshot_id].append(row)
+        for row in self._session.scalars(
             select(EngineeringPortfolioAnalysisRunRecord).where(
-                EngineeringPortfolioAnalysisRunRecord.portfolio_snapshot_id == snap_id
+                EngineeringPortfolioAnalysisRunRecord.portfolio_snapshot_id.in_(ids)
             )
-        ).first()
-        return PortfolioMapper.from_snapshot_records(
-            record,
-            repository_records=repository_records,
-            technology_records=technology_records,
-            finding_records=finding_records,
-            recommendation_records=recommendation_records,
-            risk_record=risk_record,
-            modernization_records=modernization_records,
-            analysis_run=analysis_run,
+        ).all():
+            analysis_by_id[row.portfolio_snapshot_id] = row
+
+        return tuple(
+            PortfolioMapper.from_snapshot_records(
+                record,
+                repository_records=repos_by_id[record.portfolio_snapshot_id],
+                technology_records=techs_by_id[record.portfolio_snapshot_id],
+                finding_records=findings_by_id[record.portfolio_snapshot_id],
+                recommendation_records=recommendations_by_id[record.portfolio_snapshot_id],
+                risk_record=risks_by_id[record.portfolio_snapshot_id],
+                modernization_records=modernization_by_id[record.portfolio_snapshot_id],
+                analysis_run=analysis_by_id[record.portfolio_snapshot_id],
+            )
+            for record in records
         )
 
 

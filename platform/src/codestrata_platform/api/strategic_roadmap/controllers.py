@@ -41,14 +41,14 @@ router = APIRouter(tags=["Strategic Portfolio Roadmap"])
 def get_strategic_roadmap(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> StrategicRoadmapResponse:
     model = services.strategic_roadmap.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return roadmap_response(model)
@@ -61,16 +61,16 @@ def get_strategic_roadmap(
 def get_strategic_roadmap_initiatives(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     category: Annotated[str | None, Query()] = None,
     wave: Annotated[str | None, Query()] = None,
 ) -> RoadmapInitiativesResponse:
     model = services.strategic_roadmap.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return initiatives_response(model, category=category, wave=wave)
@@ -83,14 +83,14 @@ def get_strategic_roadmap_initiatives(
 def get_strategic_roadmap_waves(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> RoadmapWavesResponse:
     model = services.strategic_roadmap.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return waves_response(model)
@@ -103,14 +103,14 @@ def get_strategic_roadmap_waves(
 def get_strategic_roadmap_summary(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> RoadmapSummaryResponse:
     model = services.strategic_roadmap.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return summary_response(model)

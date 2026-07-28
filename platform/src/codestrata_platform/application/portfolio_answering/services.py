@@ -150,9 +150,9 @@ class PortfolioAnswerOrchestrationService:
             or command.scope.workspace_id != resolved.workspace_id.value
             or command.scope.portfolio_id != resolved.portfolio_id.value
         ):
-            raise ValidationError(
-                "Question scope does not match portfolio retrieval index ownership",
-                reason_code="portfolio_answer_scope_mismatch",
+            raise NotFoundError(
+                f"Portfolio '{command.scope.portfolio_id}' was not found",
+                reason_code="portfolio_not_found",
             )
         question = PortfolioQuestion(
             text=command.question,
@@ -213,6 +213,8 @@ class PortfolioAnswerOrchestrationService:
                 BuildPortfolioRetrievalContextQuery(
                     index_id=resolved.index_id,
                     query_text=question.text,
+                    organization_id=resolved.organization_id,
+                    workspace_id=resolved.workspace_id,
                     mode=plan.mode,
                     top_k=plan.top_k,
                     content_types=plan.content_types,
@@ -369,7 +371,10 @@ class PortfolioAnswerOrchestrationService:
 
     def get_answer(self, query: GetPortfolioAnswerRunQuery) -> PortfolioAnswerModel:
         run = self._answers.get(query.answer_run_id)
-        if run is None:
+        if run is None or (
+            run.organization_id != query.organization_id
+            or run.workspace_id != query.workspace_id
+        ):
             raise NotFoundError(
                 f"Portfolio answer run not found: {query.answer_run_id.value}",
                 reason_code="portfolio_answer_run_not_found",
@@ -381,14 +386,23 @@ class PortfolioAnswerOrchestrationService:
         query: ListPortfolioAnswersQuery,
     ) -> tuple[PortfolioAnswerModel, ...]:
         items = self._answers.list_by_portfolio(query.portfolio_id, limit=query.limit)
-        return tuple(PortfolioAnswerModel.from_aggregate(item) for item in items)
+        owned = tuple(
+            item
+            for item in items
+            if item.organization_id == query.organization_id
+            and item.workspace_id == query.workspace_id
+        )
+        return tuple(PortfolioAnswerModel.from_aggregate(item) for item in owned)
 
     def submit_feedback(
         self,
         command: SubmitPortfolioAnswerFeedbackCommand,
     ) -> dict[str, object]:
         run = self._answers.get(command.answer_run_id)
-        if run is None:
+        if run is None or (
+            run.organization_id != command.organization_id
+            or run.workspace_id != command.workspace_id
+        ):
             raise NotFoundError(
                 f"Portfolio answer run not found: {command.answer_run_id.value}",
                 reason_code="portfolio_answer_run_not_found",
@@ -413,14 +427,22 @@ class PortfolioAnswerOrchestrationService:
         return payload
 
     def _resolve_index(self, command: AskPortfolioQuestionCommand) -> _ResolvedIndex:
+        organization_id = OrganizationId(command.scope.organization_id)
+        workspace_id = WorkspaceId(command.scope.workspace_id)
         if command.portfolio_retrieval_index_id is not None:
             details = self._portfolio_retrieval.get(
-                GetPortfolioRetrievalIndexQuery(index_id=command.portfolio_retrieval_index_id)
+                GetPortfolioRetrievalIndexQuery(
+                    index_id=command.portfolio_retrieval_index_id,
+                    organization_id=organization_id,
+                    workspace_id=workspace_id,
+                )
             )
         else:
             details = self._portfolio_retrieval.get_latest(
                 GetLatestPortfolioRetrievalIndexQuery(
-                    portfolio_id=PortfolioId(command.scope.portfolio_id)
+                    portfolio_id=PortfolioId(command.scope.portfolio_id),
+                    organization_id=organization_id,
+                    workspace_id=workspace_id,
                 )
             )
         if details.status is not PortfolioRetrievalIndexStatus.COMPLETED:

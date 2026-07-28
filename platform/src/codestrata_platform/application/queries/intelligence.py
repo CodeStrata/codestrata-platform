@@ -42,8 +42,10 @@ class ListAssessmentRecommendationsQuery:
 @dataclass(frozen=True, slots=True)
 class GetFindingQuery:
     finding_id: FindingId
+    assessment_id: AssessmentId
 
 
 @dataclass(frozen=True, slots=True)
 class GetRecommendationQuery:
     recommendation_id: RecommendationId
+    assessment_id: AssessmentId

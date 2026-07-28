@@ -47,7 +47,10 @@ def test_roadmap_requires_feature_flag(
     )
     assert built.status_code == 201, built.text
     executive_id = built.json()["summary"]["executive_intelligence_id"]
-    response = client.get(f"/api/v1/executive-intelligence/{executive_id}/roadmap")
+    response = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/roadmap",
+        params={"organization_id": org_id, "workspace_id": workspace_id},
+    )
     assert response.status_code == 422, response.text
 
 
@@ -59,7 +62,11 @@ def test_roadmap_full_route_flow(
         client, monkeypatch
     )
 
-    full = client.get(f"/api/v1/executive-intelligence/{executive_id}/roadmap")
+    scope_params = {"organization_id": org_id, "workspace_id": workspace_id}
+
+    full = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/roadmap", params=scope_params
+    )
     assert full.status_code == 200, full.text
     payload = full.json()
     assert payload["identity"]["executive_intelligence_id"] == executive_id
@@ -69,7 +76,8 @@ def test_roadmap_full_route_flow(
     assert payload["limitations"] == payload["summary"]["limitations"]
 
     initiatives = client.get(
-        f"/api/v1/executive-intelligence/{executive_id}/roadmap/initiatives"
+        f"/api/v1/executive-intelligence/{executive_id}/roadmap/initiatives",
+        params=scope_params,
     )
     assert initiatives.status_code == 200, initiatives.text
     assert initiatives.json()["total"] == len(initiatives.json()["initiatives"])
@@ -78,16 +86,20 @@ def test_roadmap_full_route_flow(
         category = initiatives.json()["initiatives"][0]["category"]
         filtered = client.get(
             f"/api/v1/executive-intelligence/{executive_id}/roadmap/initiatives",
-            params={"category": category},
+            params={**scope_params, "category": category},
         )
         assert filtered.status_code == 200, filtered.text
         assert all(item["category"] == category for item in filtered.json()["initiatives"])
 
-    waves = client.get(f"/api/v1/executive-intelligence/{executive_id}/roadmap/waves")
+    waves = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/roadmap/waves", params=scope_params
+    )
     assert waves.status_code == 200, waves.text
     assert len(waves.json()["waves"]) == 4
 
-    summary = client.get(f"/api/v1/executive-intelligence/{executive_id}/roadmap/summary")
+    summary = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/roadmap/summary", params=scope_params
+    )
     assert summary.status_code == 200, summary.text
     assert "initiative_count" in summary.json()["summary"]
 
@@ -109,5 +121,17 @@ def test_missing_roadmap_source_returns_404(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _enable_flags(monkeypatch)
-    response = client.get("/api/v1/executive-intelligence/exec:missing/roadmap")
+    response = client.get(
+        "/api/v1/executive-intelligence/exec:missing/roadmap",
+        params={"organization_id": "org:missing", "workspace_id": "workspace:missing"},
+    )
     assert response.status_code == 404, response.text
+
+
+def test_get_strategic_roadmap_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_flags(monkeypatch)
+    response = client.get("/api/v1/executive-intelligence/exec:missing/roadmap")
+    assert response.status_code == 422, response.text

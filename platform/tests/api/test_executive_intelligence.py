@@ -198,27 +198,36 @@ def test_executive_intelligence_full_route_flow(
     assert latest.status_code == 200, latest.text
     assert latest.json()["summary"]["executive_intelligence_id"] == executive_intelligence_id
 
-    detail = client.get(f"/api/v1/executive-intelligence/{executive_intelligence_id}")
+    scope_params = {"organization_id": org_id, "workspace_id": workspace_id}
+
+    detail = client.get(
+        f"/api/v1/executive-intelligence/{executive_intelligence_id}",
+        params=scope_params,
+    )
     assert detail.status_code == 200, detail.text
 
     metrics = client.get(
-        f"/api/v1/executive-intelligence/{executive_intelligence_id}/metrics"
+        f"/api/v1/executive-intelligence/{executive_intelligence_id}/metrics",
+        params=scope_params,
     )
     assert metrics.status_code == 200, metrics.text
     assert metrics.json()["metrics"]
 
     findings = client.get(
-        f"/api/v1/executive-intelligence/{executive_intelligence_id}/findings"
+        f"/api/v1/executive-intelligence/{executive_intelligence_id}/findings",
+        params=scope_params,
     )
     assert findings.status_code == 200, findings.text
 
     recommendations = client.get(
-        f"/api/v1/executive-intelligence/{executive_intelligence_id}/recommendations"
+        f"/api/v1/executive-intelligence/{executive_intelligence_id}/recommendations",
+        params=scope_params,
     )
     assert recommendations.status_code == 200, recommendations.text
 
     overview = client.get(
-        f"/api/v1/executive-intelligence/{executive_intelligence_id}/overview"
+        f"/api/v1/executive-intelligence/{executive_intelligence_id}/overview",
+        params=scope_params,
     )
     assert overview.status_code == 200, overview.text
     assert overview.json()["summary"]["executive_intelligence_id"] == executive_intelligence_id
@@ -229,6 +238,18 @@ def test_missing_executive_intelligence_returns_404(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setenv("CODESTRATA_EXECUTIVE_INTELLIGENCE_ENABLED", "true")
-    response = client.get("/api/v1/executive-intelligence/exec:does-not-exist")
+    response = client.get(
+        "/api/v1/executive-intelligence/exec:does-not-exist",
+        params={"organization_id": "org:missing", "workspace_id": "workspace:missing"},
+    )
     assert response.status_code == 404, response.text
     assert response.json()["error"]["code"] == "executive_intelligence_not_found"
+
+
+def test_get_executive_intelligence_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CODESTRATA_EXECUTIVE_INTELLIGENCE_ENABLED", "true")
+    response = client.get("/api/v1/executive-intelligence/exec:does-not-exist")
+    assert response.status_code == 422, response.text

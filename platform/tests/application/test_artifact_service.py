@@ -170,6 +170,7 @@ def test_upload_complete_and_payload_limits() -> None:
     uploaded = artifact_s.upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
@@ -182,7 +183,10 @@ def test_upload_complete_and_payload_limits() -> None:
         ).ArtifactReference(uploaded.storage_key)
     )
     completed = artifact_s.complete_artifact(
-        CompleteArtifactCommand(artifact_id=registered.artifact_id)
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
     )
     assert completed.status is ArtifactStatus.COMPLETED
 
@@ -219,6 +223,7 @@ def test_checksum_mismatch_on_upload() -> None:
         artifact_s.upload_artifact(
             UploadArtifactCommand(
                 artifact_id=registered.artifact_id,
+                assessment_id=assessment.assessment_id,
                 content=content,
                 declared_checksum=_checksum(b"tampered"),
             )

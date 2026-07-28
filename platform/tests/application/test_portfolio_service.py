@@ -270,7 +270,13 @@ def test_portfolio_build_aggregates_deterministically() -> None:
     assert unavailable[0].repository_id.value == "repo:empty"
 
     snapshot_id = PortfolioSnapshotId(first.summary.portfolio_snapshot_id)
-    techs = aggregation.get_technologies(PortfolioInventoryQuery(portfolio_snapshot_id=snapshot_id))
+    techs = aggregation.get_technologies(
+        PortfolioInventoryQuery(
+            portfolio_snapshot_id=snapshot_id,
+            organization_id=org.organization_id,
+            workspace_id=workspace.workspace_id,
+        )
+    )
     by_key = {item.canonical_key: item for item in techs.items}
     assert "docker" in by_key
     assert by_key["docker"].repository_count == 2
@@ -279,11 +285,23 @@ def test_portfolio_build_aggregates_deterministically() -> None:
         or by_key["podman"].standardization_status is TechnologyStandardizationStatus.FRAGMENTED
     )
 
-    findings = aggregation.get_findings(PortfolioInventoryQuery(portfolio_snapshot_id=snapshot_id))
+    findings = aggregation.get_findings(
+        PortfolioInventoryQuery(
+            portfolio_snapshot_id=snapshot_id,
+            organization_id=org.organization_id,
+            workspace_id=workspace.workspace_id,
+        )
+    )
     assert findings.summary.recurring_patterns
     assert findings.summary.recurring_patterns[0].repository_count >= 2
 
-    overview = aggregation.get_overview(PortfolioInventoryQuery(portfolio_snapshot_id=snapshot_id))
+    overview = aggregation.get_overview(
+        PortfolioInventoryQuery(
+            portfolio_snapshot_id=snapshot_id,
+            organization_id=org.organization_id,
+            workspace_id=workspace.workspace_id,
+        )
+    )
     assert overview.coverage.repositories_unavailable == 1
     shared = [
         signal

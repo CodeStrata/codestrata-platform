@@ -399,7 +399,7 @@ class DefaultAssessmentIntelligenceService:
 
     def get_finding(self, query: GetFindingQuery) -> FindingDetails:
         finding = self._findings.get(query.finding_id)
-        if finding is None:
+        if finding is None or finding.assessment_id != query.assessment_id:
             raise NotFoundError(
                 f"Finding not found: {query.finding_id.value}",
                 reason_code="finding_not_found",
@@ -408,7 +408,7 @@ class DefaultAssessmentIntelligenceService:
 
     def get_recommendation(self, query: GetRecommendationQuery) -> RecommendationView:
         recommendation = self._recommendations.get(query.recommendation_id)
-        if recommendation is None:
+        if recommendation is None or recommendation.assessment_id != query.assessment_id:
             raise NotFoundError(
                 f"Recommendation not found: {query.recommendation_id.value}",
                 reason_code="recommendation_not_found",

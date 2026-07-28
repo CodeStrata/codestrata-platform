@@ -131,6 +131,7 @@ class InMemoryPortfolioSnapshotRepository:
         portfolio_id: PortfolioId,
         *,
         status: PortfolioSnapshotStatus | None = None,
+        offset: int = 0,
         limit: int = 50,
     ) -> tuple[PortfolioSnapshot, ...]:
         items = [
@@ -139,7 +140,20 @@ class InMemoryPortfolioSnapshotRepository:
             if item.portfolio_id == portfolio_id and (status is None or item.status is status)
         ]
         items.sort(key=lambda item: item.version.value, reverse=True)
-        return tuple(items[: max(1, limit)])
+        start = max(0, offset)
+        return tuple(items[start : start + max(1, limit)])
+
+    def count_by_portfolio(
+        self,
+        portfolio_id: PortfolioId,
+        *,
+        status: PortfolioSnapshotStatus | None = None,
+    ) -> int:
+        return sum(
+            1
+            for item in self._items.values()
+            if item.portfolio_id == portfolio_id and (status is None or item.status is status)
+        )
 
     def latest_version_for_portfolio(self, portfolio_id: PortfolioId) -> int:
         versions = [

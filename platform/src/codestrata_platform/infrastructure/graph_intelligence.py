@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from codestrata_platform.application.common.errors import NotFoundError
-from codestrata_platform.application.knowledge_graph.intelligence.errors import GraphNotReadyError
+from codestrata_platform.application.knowledge_graph.intelligence.errors import (
+    GraphNotFoundError,
+    GraphNotReadyError,
+)
 from codestrata_platform.domain.knowledge_graph.analysis.context import (
     GraphQueryContext,
     GraphQueryLimits,
@@ -36,10 +38,7 @@ class GraphIntelligenceRepositoryBase:
     ) -> EngineeringKnowledgeGraph:
         graph = self._graphs.get(graph_id)
         if graph is None:
-            raise NotFoundError(
-                f"Knowledge graph not found: {graph_id.value}",
-                reason_code="knowledge_graph_not_found",
-            )
+            raise GraphNotFoundError(graph_id.value)
         if graph.status is not GraphStatus.COMPLETED:
             raise GraphNotReadyError(
                 f"Knowledge graph {graph_id.value} is not completed",
@@ -50,10 +49,7 @@ class GraphIntelligenceRepositoryBase:
             or graph.workspace_id != scope.workspace_id
             or graph.repository_id != scope.repository_id
         ):
-            raise GraphNotReadyError(
-                "Graph ownership mismatch",
-                reason_code="graph_tenant_mismatch",
-            )
+            raise GraphNotFoundError(graph_id.value)
         return graph
 
     def get_graph_context(

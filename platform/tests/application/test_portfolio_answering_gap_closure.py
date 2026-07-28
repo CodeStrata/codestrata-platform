@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from codestrata_platform.application.common.errors import ValidationError
+from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 from codestrata_platform.application.portfolio_answering.citations import (
     PortfolioContextSufficiencyPolicy,
 )
@@ -294,6 +294,8 @@ def test_feedback_persists_without_mutating_answer(
     feedback = answering.submit_feedback(
         SubmitPortfolioAnswerFeedbackCommand(
             answer_run_id=PortfolioAnswerRunId(result.answer_run_id),
+            organization_id=org_id,
+            workspace_id=workspace_id,
             rating=4,
             feedback_category="useful",
             comment="solid",
@@ -340,7 +342,7 @@ def test_scope_mismatch_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CODESTRATA_PORTFOLIO_RETRIEVAL_ENABLED", "true")
     monkeypatch.setenv("CODESTRATA_LLM_PROVIDER", "deterministic")
     answering, org_id, workspace_id, portfolio_id, index_id, _ = _seed()
-    with pytest.raises(ValidationError) as exc:
+    with pytest.raises(NotFoundError) as exc:
         answering.ask(
             AskPortfolioQuestionCommand(
                 question="What is the portfolio overview?",
@@ -353,7 +355,7 @@ def test_scope_mismatch_rejected(monkeypatch: pytest.MonkeyPatch) -> None:
                 use_cache=False,
             )
         )
-    assert exc.value.reason_code == "portfolio_answer_scope_mismatch"
+    assert exc.value.reason_code == "portfolio_not_found"
 
 
 def test_provider_mismatch_fails_clearly(monkeypatch: pytest.MonkeyPatch) -> None:
