@@ -222,3 +222,13 @@ def test_executive_intelligence_full_route_flow(
     )
     assert overview.status_code == 200, overview.text
     assert overview.json()["summary"]["executive_intelligence_id"] == executive_intelligence_id
+
+
+def test_missing_executive_intelligence_returns_404(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CODESTRATA_EXECUTIVE_INTELLIGENCE_ENABLED", "true")
+    response = client.get("/api/v1/executive-intelligence/exec:does-not-exist")
+    assert response.status_code == 404, response.text
+    assert response.json()["error"]["code"] == "executive_intelligence_not_found"

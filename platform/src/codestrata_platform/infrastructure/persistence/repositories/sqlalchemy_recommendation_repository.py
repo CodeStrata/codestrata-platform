@@ -11,13 +11,14 @@ from codestrata_platform.domain.intelligence.value_objects import Recommendation
 from codestrata_platform.infrastructure.persistence.mappers.assessment_intelligence_mapper import (
     AssessmentIntelligenceMapper,
 )
-from codestrata_platform.infrastructure.persistence.models.recommendation_finding_link_record import (
+from codestrata_platform.infrastructure.persistence.models.recommendation_finding_link_record import (  # noqa: E501
     RecommendationFindingLinkRecord,
 )
 from codestrata_platform.infrastructure.persistence.models.recommendation_record import (
     RecommendationRecord,
 )
-from codestrata_platform.infrastructure.persistence.repositories.sqlalchemy_assessment_intelligence_repository import (
+
+from .sqlalchemy_assessment_intelligence_repository import (
     SqlAlchemyAssessmentIntelligenceRepository,
 )
 

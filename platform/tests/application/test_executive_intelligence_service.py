@@ -84,6 +84,7 @@ def _published(
     assessment_id: str,
     snapshot_id: str,
     tech_key: str,
+    category: EngineeringCategory = EngineeringCategory.CLOUD,
 ) -> tuple[Assessment, EngineeringSnapshot]:
     assessment = Assessment.create(
         repository_id=repo,
@@ -114,7 +115,7 @@ def _published(
                 technology_id=EngineeringTechnologyId(f"eng-tech:{snapshot_id}"),
                 canonical_key=tech_key,
                 display_name=tech_key.title(),
-                category=EngineeringCategory.CLOUD,
+                category=category,
                 metadata={"capability": "runtime"},
             ),
         ),
@@ -213,11 +214,19 @@ def _stack():
         "engineering": engineering,
         "management": management,
         "portfolio_aggregation": portfolio_aggregation,
+        "portfolio_snapshots": portfolio_snapshots,
+        "executive_intelligence": executive_intelligence,
         "exec_service": exec_service,
     }
 
 
-def _seed_repository(stack, *, idx: int, tech_key: str) -> RepositoryId:
+def _seed_repository(
+    stack,
+    *,
+    idx: int,
+    tech_key: str,
+    category: EngineeringCategory = EngineeringCategory.CLOUD,
+) -> RepositoryId:
     repo = Repository.register(
         organization_id=stack["org"].organization_id,
         workspace_id=stack["workspace"].workspace_id,
@@ -234,6 +243,7 @@ def _seed_repository(stack, *, idx: int, tech_key: str) -> RepositoryId:
         assessment_id=f"assessment:{idx}",
         snapshot_id=f"eng-snapshot:{idx}",
         tech_key=tech_key,
+        category=category,
     )
     stack["assessments"].save(assessment)
     stack["engineering"].save(snapshot)

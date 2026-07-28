@@ -11,7 +11,8 @@ from codestrata_platform.infrastructure.persistence.mappers.assessment_intellige
     AssessmentIntelligenceMapper,
 )
 from codestrata_platform.infrastructure.persistence.models.metric_record import MetricRecord
-from codestrata_platform.infrastructure.persistence.repositories.sqlalchemy_assessment_intelligence_repository import (
+
+from .sqlalchemy_assessment_intelligence_repository import (
     SqlAlchemyAssessmentIntelligenceRepository,
 )
 

@@ -1066,6 +1066,15 @@ def _build_recommendations(
     cloud_technologies = tuple(item for item in ctx.technologies if "cloud" in item.categories)
     if cloud_technologies and 0 < cloud_metric.score < 80:
         priority = max(0, 100 - cloud_metric.score)
+        affected = tuple(
+            sorted(
+                {
+                    ref.value
+                    for item in cloud_technologies
+                    for ref in item.repository_references
+                }
+            )
+        )
         recommendations.append(
             _recommendation(
                 ctx,
@@ -1076,7 +1085,7 @@ def _build_recommendations(
                     f"Cloud adoption metric is {cloud_metric.score}/100 despite existing cloud "
                     "technology usage; broadening adoption reduces operational inconsistency."
                 ),
-                affected_repository_ids=(),
+                affected_repository_ids=affected,
                 confidence=0.6,
                 expected_impact=_impact_band(priority),
                 priority_score=priority,
@@ -1086,6 +1095,29 @@ def _build_recommendations(
     ai_metric = metrics[ExecutiveMetricKey.AI_READINESS]
     if ctx.has_repositories and ai_metric.score < 50:
         priority = max(0, 100 - ai_metric.score)
+        ai_technologies = tuple(
+            item for item in ctx.technologies if "ai_readiness" in item.categories
+        )
+        affected = tuple(
+            sorted(
+                {
+                    ref.value
+                    for item in ai_technologies
+                    for ref in item.repository_references
+                }
+            )
+        )
+        if not affected:
+            # Fall back to all selected repositories when AI tagging is absent.
+            affected = tuple(
+                sorted(
+                    {
+                        ref.value
+                        for item in ctx.technologies
+                        for ref in item.repository_references
+                    }
+                )
+            )
         recommendations.append(
             _recommendation(
                 ctx,
@@ -1097,7 +1129,7 @@ def _build_recommendations(
                     "engineering tooling in a subset of repositories can establish a baseline "
                     "for broader adoption."
                 ),
-                affected_repository_ids=(),
+                affected_repository_ids=affected,
                 confidence=0.5,
                 expected_impact=_impact_band(priority),
                 priority_score=priority,
@@ -1229,6 +1261,23 @@ def run_executive_aggregation(portfolio_snapshot: PortfolioSnapshot) -> Executiv
     limitations: list[str] = []
     if not ctx.has_repositories:
         limitations.append(_EMPTY_PORTFOLIO_LIMITATION)
+    unavailable = 0
+    participation = 100.0
+    if ctx.coverage is not None:
+        unavailable = int(getattr(ctx.coverage, "repositories_unavailable", 0) or 0)
+        participation = float(
+            getattr(ctx.coverage, "repository_participation_percentage", 100.0) or 0.0
+        )
+    if unavailable > 0:
+        limitations.append(
+            f"{unavailable} repositories were unavailable in Portfolio Intelligence; "
+            "executive coverage and confidence are reduced accordingly."
+        )
+    if ctx.has_repositories and participation < 100.0:
+        limitations.append(
+            f"Repository participation is {participation:.1f}%; incomplete assessment "
+            "coverage limits executive confidence."
+        )
     if ctx.dependencies is None:
         limitations.append("Dependency signals were unavailable for this portfolio snapshot.")
     limitations.append(_AI_HEURISTIC_LIMITATION)
