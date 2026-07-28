@@ -1,0 +1,157 @@
+paths:
+  /api/v1/assessments:
+    post:
+      tags:
+      - Assessments
+      summary: Register assessment
+      operationId: register_assessment_api_v1_assessments_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterAssessmentRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-assessments
+      x-codestrata-audience: internal
+  /api/v1/assessments/{assessment_id}:
+    get:
+      tags:
+      - Assessments
+      summary: Get assessment
+      operationId: get_assessment_api_v1_assessments__assessment_id__get
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-assessments
+      x-codestrata-audience: internal
+  /api/v1/assessments/{assessment_id}/start:
+    post:
+      tags:
+      - Assessments
+      summary: Start assessment
+      operationId: start_assessment_api_v1_assessments__assessment_id__start_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-assessments
+      x-codestrata-audience: internal
+  /api/v1/assessments/{assessment_id}/complete:
+    post:
+      tags:
+      - Assessments
+      summary: Complete assessment
+      operationId: complete_assessment_api_v1_assessments__assessment_id__complete_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteAssessmentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-assessments
+      x-codestrata-audience: internal
+  /api/v1/assessments/{assessment_id}/fail:
+    post:
+      tags:
+      - Assessments
+      summary: Fail assessment
+      operationId: fail_assessment_api_v1_assessments__assessment_id__fail_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FailAssessmentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-assessments
+      x-codestrata-audience: internal

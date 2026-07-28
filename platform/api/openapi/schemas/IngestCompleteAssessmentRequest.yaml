@@ -1,0 +1,21 @@
+IngestCompleteAssessmentRequest:
+  properties:
+    generated_reports:
+      items:
+        $ref: '#/components/schemas/IngestReportPointer'
+      type: array
+      title: Generated Reports
+    references:
+      items:
+        $ref: '#/components/schemas/IngestReferencePointer'
+      type: array
+      title: References
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+  additionalProperties: false
+  type: object
+  title: IngestCompleteAssessmentRequest

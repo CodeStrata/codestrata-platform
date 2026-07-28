@@ -1,0 +1,42 @@
+ImpactRequest:
+  properties:
+    direction:
+      type: string
+      maxLength: 16
+      title: Direction
+      default: both
+    max_depth:
+      type: integer
+      maximum: 10.0
+      minimum: 1.0
+      title: Max Depth
+      default: 5
+    maximum_nodes:
+      type: integer
+      maximum: 5000.0
+      minimum: 1.0
+      title: Maximum Nodes
+      default: 500
+    maximum_edges:
+      type: integer
+      maximum: 10000.0
+      minimum: 1.0
+      title: Maximum Edges
+      default: 1000
+    maximum_paths:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Maximum Paths
+      default: 25
+    include_paths:
+      type: boolean
+      title: Include Paths
+      default: false
+    include_diagnostics:
+      type: boolean
+      title: Include Diagnostics
+      default: false
+  additionalProperties: false
+  type: object
+  title: ImpactRequest

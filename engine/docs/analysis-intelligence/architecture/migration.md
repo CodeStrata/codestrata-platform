@@ -5,7 +5,7 @@
 - No third rule engine
 - Finding IDs for legacy rules unchanged
 - Reports remain renderable; architecture findings enter the same findings artifact
-- Enterprise Knowledge Graph remains optional
+- Engineering Knowledge Graph remains optional (Platform)
 - Package name stays `codestrata`; CLI stays `codestrata` (rebrand deferred)
 
 ## Incremental invalidation

@@ -264,7 +264,7 @@ Invariants commonly enforced via Pydantic `frozen=True`, `extra="forbid"`, and v
 | Engineering Knowledge Graph | Builtin catalog | `graphs/engineering-knowledge-graph.json` | Bindings | Production-capable |
 | Knowledge bindings | Match observations | `graphs/knowledge-bindings.json` | Assessment graph | Production-capable |
 | Assessment Graph | Assessment nodes/edges | `graphs/assessment-graph.json` | Phase 3 rules/recommendations | Production-capable |
-| Enterprise Knowledge Graph | Declared YAML enterprise model | File repo under knowledge dir | Enterprise CLI/MCP; optional architecture enterprise rule | Optional / production-capable with limitations |
+| Engineering Knowledge Graph | Declared YAML organization model | File repo under knowledge dir | Platform CLI/MCP (`enterprise` group); optional architecture rule | Optional / production-capable with limitations |
 
 Builders: `services/graph_assessment/` (`GraphAssessmentPipeline`, assemblers, extractors); enterprise: `application/enterprise/graph_builder.py`.
 

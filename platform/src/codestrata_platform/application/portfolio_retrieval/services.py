@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 from codestrata_platform.application.portfolio_retrieval.commands import (
     ArchivePortfolioRetrievalIndexCommand,
@@ -250,7 +251,7 @@ class PortfolioRetrievalIndexingService:
                 index.add_chunk(replace(chunk, embedding=vector))
             index.complete()
         except Exception as error:  # noqa: BLE001 - indexing boundary
-            index.fail(reason=str(error)[:1000])
+            index.fail(reason=safe_failure_summary(error, limit=1000))
             # Keep unique projection_key free for prior restore / future retries.
             index.projection_key = PortfolioRetrievalProjectionKey(
                 f"{projection_key.value}:f{index_version}"[:128]
@@ -259,7 +260,7 @@ class PortfolioRetrievalIndexingService:
             if prior_completed is not None:
                 self._indexes.save(prior_completed)
             raise ValidationError(
-                f"Portfolio retrieval indexing failed: {error}",
+                f"Portfolio retrieval indexing failed: {safe_failure_summary(error)}",
                 reason_code="portfolio_retrieval_indexing_failed",
             ) from error
 

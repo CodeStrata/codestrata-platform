@@ -1,0 +1,18 @@
+GeneratedReportRequest:
+  properties:
+    report_type:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Report Type
+    location:
+      type: string
+      maxLength: 2048
+      minLength: 1
+      title: Location
+  additionalProperties: false
+  type: object
+  required:
+  - report_type
+  - location
+  title: GeneratedReportRequest

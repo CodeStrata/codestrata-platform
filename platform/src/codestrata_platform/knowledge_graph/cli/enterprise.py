@@ -1,4 +1,4 @@
-"""Thin Typer adapter for Enterprise Knowledge Graph commands."""
+"""Thin Typer adapter for Platform Engineering Knowledge Graph commands."""
 
 from __future__ import annotations
 
@@ -37,9 +37,14 @@ from codestrata_platform.knowledge_graph.infrastructure.workspace import Enterpr
 enterprise_app = typer.Typer(
     name="enterprise",
     help=(
-        "CodeStrata Enterprise Knowledge Graph (YAML workspace).\n\n"
-        "Optional enterprise context above repositories. Disabled by default. "
-        "`codestrata assess` remains unchanged."
+        "CodeStrata Platform — Engineering Knowledge Graph (YAML workspace).\n\n"
+        "Platform capability (not required for Community Engine assess). "
+        "Optional declared enterprise context above repositories. "
+        "Disabled by default. `codestrata assess` remains unchanged.\n\n"
+        "Note: the CLI group name is `enterprise` for compatibility; "
+        "the product capability is Engineering Knowledge Graph on "
+        "CodeStrata Platform. Distinct from Engine assess roadmap "
+        "(`codestrata roadmap`) and Platform Strategic Roadmap."
     ),
     no_args_is_help=True,
 )
@@ -144,7 +149,7 @@ def build_command(
         typer.Option("--link-assessments/--no-link-assessments"),
     ] = None,
 ) -> None:
-    """Build and persist a complete Enterprise Knowledge Graph."""
+    """Build and persist a complete Engineering Knowledge Graph."""
 
     settings = _load_settings_or_exit(config)
     policy = _policy_for_build(settings)

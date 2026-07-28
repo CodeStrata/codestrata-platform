@@ -1,0 +1,244 @@
+{
+  "name": "codestrata-cursor",
+  "displayName": "CodeStrata Cursor Extension",
+  "description": "Bring CodeStrata Engine Engineering Assessments into Cursor. Generates grounded .cursor/rules context from public findings. Requires CodeStrata Engine (Community). Thin client — not Platform.",
+  "version": "0.2.0",
+  "publisher": "codestrata",
+  "license": "MIT",
+  "icon": "media/codestrata-icon.png",
+  "galleryBanner": {
+    "color": "#0f1216",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sknampally/codestrata-cursor"
+  },
+  "homepage": "https://docs.codestrata.ai/extensions/cursor",
+  "bugs": {
+    "url": "https://github.com/sknampally/codestrata-cursor/issues"
+  },
+  "qna": "marketplace",
+  "funding": {
+    "url": "https://github.com/sponsors/sknampally",
+    "type": "github"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Linters",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "codestrata",
+    "codestrata engine",
+    "cursor",
+    "engineering assessment",
+    "engineering intelligence",
+    "community edition",
+    "findings",
+    "recommendations",
+    "cursor rules"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codestrata.assess",
+        "title": "Engineering Assessment",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.assessWithAi",
+        "title": "Engineering Assessment with AI",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.refreshAssessment",
+        "title": "Refresh Assessment",
+        "icon": "$(refresh)",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.clearAssessment",
+        "title": "Clear Assessment",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.installEngine",
+        "title": "Install CodeStrata Engine",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.checkEnvironment",
+        "title": "Check CodeStrata Environment",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.showWelcome",
+        "title": "Show Welcome / First Run",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.missingAssessmentHelp",
+        "title": "Assessment Required Help",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.openHtmlReport",
+        "title": "Open Report",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.showFindings",
+        "title": "Show Findings",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.showRecommendations",
+        "title": "Show Recommendations",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.copyConversationPrompt",
+        "title": "Copy Conversation Prompt",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.askSuggested",
+        "title": "Ask Suggested Question",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.openOutput",
+        "title": "Open CodeStrata Output",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.openDocumentation",
+        "title": "Open Documentation",
+        "category": "CodeStrata"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codestrata",
+          "title": "CodeStrata",
+          "icon": "media/codestrata-activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "codestrata": [
+        {
+          "id": "codestrata.assessmentStatus",
+          "name": "Assessment",
+          "contextualTitle": "CodeStrata Assessment Status"
+        },
+        {
+          "id": "codestrata.suggestedQuestions",
+          "name": "Suggested Questions",
+          "contextualTitle": "CodeStrata Conversation Starters"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "codestrata.refreshAssessment",
+          "when": "view == codestrata.assessmentStatus",
+          "group": "navigation"
+        },
+        {
+          "command": "codestrata.openHtmlReport",
+          "when": "view == codestrata.assessmentStatus",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "codestrata.askSuggested",
+          "when": "false"
+        },
+        {
+          "command": "codestrata.missingAssessmentHelp",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CodeStrata",
+      "properties": {
+        "codestrata.engine.executable": {
+          "type": "string",
+          "default": "codestrata",
+          "scope": "window",
+          "markdownDescription": "CodeStrata Engine CLI. Discovery: setting → workspace `.venv` → active Python → `PATH`."
+        },
+        "codestrata.assessment.outputDirectory": {
+          "type": "string",
+          "default": "reports",
+          "scope": "resource",
+          "description": "Output directory for Engineering Assessment reports (--output)."
+        },
+        "codestrata.assessment.configPath": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "Optional `codestrata.toml`. Engine remains the configuration source of truth."
+        },
+        "codestrata.assessment.defaultNoAi": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Deterministic Engineering Assessment by default (--no-ai)."
+        },
+        "codestrata.assessment.extraArgs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "scope": "resource",
+          "markdownDescription": "Extra CLI args (protected flags stripped)."
+        },
+        "codestrata.findings.groupBy": {
+          "type": "string",
+          "enum": ["domain", "severity", "file", "rule"],
+          "default": "severity",
+          "scope": "resource",
+          "description": "Reserved grouping preference (parity with VS Code client)."
+        },
+        "codestrata.ai.providerHint": {
+          "type": "string",
+          "enum": ["auto", "bedrock", "openai", "none"],
+          "default": "auto",
+          "scope": "window",
+          "markdownDescription": "UX hint only. Configure Bedrock/OpenAI/Azure OpenAI/Anthropic in Engine — never store credentials here."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "tsc -p ./ --noEmit",
+    "test": "npm run compile && node --test ./out/test/extensionCore.test.js",
+    "test:host": "npm run compile && node ./out/test/runHostTests.js",
+    "package": "npm run compile && npx --yes @vscode/vsce package --no-dependencies",
+    "package:dry": "npm run compile && npx --yes @vscode/vsce ls --no-dependencies",
+    "publish:vsce:dry": "npm run package && npx --yes @vscode/vsce publish --packagePath ./codestrata-cursor-${npm_package_version}.vsix --dry-run",
+    "publish:ovsx:dry": "npm run package && npx --yes ovsx publish ./codestrata-cursor-${npm_package_version}.vsix --no-wait --help"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^3.1.0",
+    "typescript": "^5.3.3"
+  }
+}

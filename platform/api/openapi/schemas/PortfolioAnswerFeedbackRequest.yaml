@@ -1,0 +1,24 @@
+PortfolioAnswerFeedbackRequest:
+  properties:
+    rating:
+      type: integer
+      maximum: 5.0
+      minimum: 1.0
+      title: Rating
+    feedback_category:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Feedback Category
+    comment:
+      anyOf:
+      - type: string
+        maxLength: 1000
+      - type: 'null'
+      title: Comment
+  additionalProperties: false
+  type: object
+  required:
+  - rating
+  - feedback_category
+  title: PortfolioAnswerFeedbackRequest

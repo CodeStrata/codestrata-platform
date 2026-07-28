@@ -1,0 +1,12 @@
+RoadmapSummaryResponse:
+  properties:
+    identity:
+      $ref: '#/components/schemas/RoadmapIdentityDto'
+    summary:
+      $ref: '#/components/schemas/RoadmapSummaryDto'
+  additionalProperties: false
+  type: object
+  required:
+  - identity
+  - summary
+  title: RoadmapSummaryResponse

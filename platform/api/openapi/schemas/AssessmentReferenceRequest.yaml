@@ -1,0 +1,18 @@
+AssessmentReferenceRequest:
+  properties:
+    artifact_uri:
+      type: string
+      maxLength: 2048
+      minLength: 1
+      title: Artifact Uri
+    label:
+      anyOf:
+      - type: string
+        maxLength: 256
+      - type: 'null'
+      title: Label
+  additionalProperties: false
+  type: object
+  required:
+  - artifact_uri
+  title: AssessmentReferenceRequest

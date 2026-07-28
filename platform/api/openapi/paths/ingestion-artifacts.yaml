@@ -1,0 +1,219 @@
+paths:
+  /api/v1/ingestion/assessments/{assessment_id}/artifacts:
+    post:
+      tags:
+      - Ingestion Artifacts
+      summary: Register assessment artifact
+      operationId: register_artifact_api_v1_ingestion_assessments__assessment_id__artifacts_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterArtifactRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterArtifactResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Ingestion Artifacts
+      summary: List assessment artifacts
+      operationId: list_artifacts_api_v1_ingestion_assessments__assessment_id__artifacts_get
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtifactSummaryResponse'
+                title: Response List Artifacts Api V1 Ingestion Assessments  Assessment
+                  Id  Artifacts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}:
+    put:
+      tags:
+      - Ingestion Artifacts
+      summary: Upload artifact content
+      operationId: upload_artifact_api_v1_ingestion_assessments__assessment_id__artifacts__artifact_id__put
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      - name: X-CodeStrata-Checksum
+        in: header
+        required: true
+        schema:
+          type: string
+          title: X-Codestrata-Checksum
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadArtifactResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Ingestion Artifacts
+      summary: Get artifact metadata
+      operationId: get_artifact_api_v1_ingestion_assessments__assessment_id__artifacts__artifact_id__get
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}/complete:
+    post:
+      tags:
+      - Ingestion Artifacts
+      summary: Complete artifact ingestion
+      operationId: complete_artifact_api_v1_ingestion_assessments__assessment_id__artifacts__artifact_id__complete_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/artifacts/{artifact_id}/fail:
+    post:
+      tags:
+      - Ingestion Artifacts
+      summary: Fail artifact ingestion
+      operationId: fail_artifact_api_v1_ingestion_assessments__assessment_id__artifacts__artifact_id__fail_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      - name: artifact_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Artifact Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FailArtifactRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal

@@ -1,0 +1,62 @@
+KnowledgeGraphSummaryResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    repository_id:
+      type: string
+      title: Repository Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    engineering_snapshot_version:
+      type: integer
+      title: Engineering Snapshot Version
+    graph_version:
+      type: integer
+      title: Graph Version
+    status:
+      type: string
+      title: Status
+    projection_key:
+      type: string
+      title: Projection Key
+    projector_version:
+      type: string
+      title: Projector Version
+    node_count:
+      type: integer
+      title: Node Count
+    edge_count:
+      type: integer
+      title: Edge Count
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - repository_id
+  - assessment_id
+  - engineering_snapshot_id
+  - engineering_snapshot_version
+  - graph_version
+  - status
+  - projection_key
+  - projector_version
+  - node_count
+  - edge_count
+  - created_at
+  - completed_at
+  title: KnowledgeGraphSummaryResponse

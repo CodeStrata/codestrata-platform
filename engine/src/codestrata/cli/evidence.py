@@ -22,7 +22,7 @@ from codestrata.domain.evidence.language.capability_catalog import (
 evidence_app = typer.Typer(
     name="evidence",
     help=(
-        "Language Evidence Providers (Phase 4.2.2).\n\n"
+        "Language evidence providers used during assess.\n\n"
         "Providers collect and normalize facts; Shared Architecture rules interpret them. "
         "The provider pipeline is disabled by default "
         "(`[evidence.language] enabled = false`)."

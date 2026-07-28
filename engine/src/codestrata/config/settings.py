@@ -6,7 +6,7 @@ import tomllib
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
 from codestrata.config.dotenv import load_dotenv
 from codestrata.repository_auth.exceptions import UnsupportedRepositoryUrlError
@@ -185,17 +185,27 @@ class BedrockSettings(BaseModel):
     model_id: str | None = None
     region: str | None = None
     embedding_model: str = "amazon.titan-embed-text-v2:0"
+    # Blank / omitted means unset — do not coerce to None (breaks str typing).
     answer_model: str = ""
     timeout_seconds: int = 60
     max_retries: int = 3
 
-    @field_validator("model_id", "region", "answer_model")
+    @field_validator("model_id", "region")
     @classmethod
     def validate_optional_nonempty(cls, value: str | None) -> str | None:
         if value is None:
             return None
         compact = value.strip()
         return compact or None
+
+    @field_validator("answer_model", mode="before")
+    @classmethod
+    def normalize_answer_model(cls, value: object) -> str:
+        """Treat blank values as unset (empty string), never None."""
+
+        if value is None:
+            return ""
+        return str(value).strip()
 
     @field_validator("embedding_model", mode="before")
     @classmethod
@@ -2292,6 +2302,65 @@ class CodestrataSettings(BaseModel):
         return normalize_profile_name(value)
 
 
+def _location_category(location: tuple[str | int, ...]) -> str:
+    """Classify a validation location for user-facing guidance."""
+
+    parts = [str(part).lower() for part in location if isinstance(part, str)]
+    if not parts:
+        return "required"
+    if parts[0] in {"ai", "aws"} or "bedrock" in parts or "openai" in parts:
+        return "ai-only"
+    if parts[0] in {"platform", "enterprise"}:
+        return "platform-only"
+    if parts[0] in {
+        "knowledge",
+        "mcp",
+        "static_analysis",
+        "extensions",
+        "report",
+        "incremental",
+    }:
+        return "optional"
+    return "required"
+
+
+def format_configuration_validation_error(
+    error: Exception,
+    *,
+    config_path: Path,
+) -> str:
+    """Build an actionable configuration error message for CLI users."""
+
+    if isinstance(error, ValidationError):
+        lines: list[str] = [f"Invalid configuration in {config_path}:"]
+        for item in error.errors():
+            location = tuple(item.get("loc") or ())
+            path = ".".join(str(part) for part in location) or "(root)"
+            category = _location_category(location)
+            message = str(item.get("msg") or "invalid value")
+            lines.append(f"  • [{category}] {path}: {message}")
+        lines.extend(
+            (
+                "",
+                "Categories:",
+                "  required     — needed for assess / doctor",
+                "  optional     — subsystem toggles (safe defaults exist)",
+                "  ai-only      — used only with assess --with-ai",
+                "  platform-only — CodeStrata Platform deployments",
+                "",
+                "Fix: run `codestrata doctor` or `codestrata config validate`, "
+                "or recreate defaults with `codestrata init --force`.",
+            )
+        )
+        return "\n".join(lines)
+
+    return (
+        f"Invalid configuration in {config_path}: {error}\n\n"
+        "Fix: check [repository] url/path and profile settings, then run "
+        "`codestrata doctor` or `codestrata config validate`."
+    )
+
+
 def load_settings(
     config_path: Path,
     *,
@@ -2346,9 +2415,7 @@ def load_settings(
         raise
     except Exception as error:
         raise ValueError(
-            f"Invalid configuration in {resolved_config}: {error}\n\n"
-            "Fix: check [repository] url/path, profile, and other settings against "
-            "docs/configuration-profiles.md and docs/troubleshooting.md."
+            format_configuration_validation_error(error, config_path=resolved_config)
         ) from error
 
     if validate_profile:
@@ -2408,8 +2475,7 @@ def load_settings_resolution(
         raise
     except Exception as error:
         raise ValueError(
-            f"Invalid configuration in {resolved_config}: {error}\n\n"
-            "Fix: check profile and settings against docs/configuration-profiles.md."
+            format_configuration_validation_error(error, config_path=resolved_config)
         ) from error
 
     issues = validate_profile_settings(

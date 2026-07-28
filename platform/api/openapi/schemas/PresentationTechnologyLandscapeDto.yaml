@@ -1,0 +1,36 @@
+PresentationTechnologyLandscapeDto:
+  properties:
+    fragmentation:
+      items:
+        $ref: '#/components/schemas/PresentationTechnologyItemDto'
+      type: array
+      title: Fragmentation
+    duplicated_stacks:
+      items:
+        $ref: '#/components/schemas/PresentationTechnologyItemDto'
+      type: array
+      title: Duplicated Stacks
+    unsupported_technologies:
+      items:
+        $ref: '#/components/schemas/PresentationTechnologyItemDto'
+      type: array
+      title: Unsupported Technologies
+    standardization_opportunities:
+      items:
+        $ref: '#/components/schemas/PresentationTechnologyItemDto'
+      type: array
+      title: Standardization Opportunities
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - fragmentation
+  - duplicated_stacks
+  - unsupported_technologies
+  - standardization_opportunities
+  - limitations
+  title: PresentationTechnologyLandscapeDto

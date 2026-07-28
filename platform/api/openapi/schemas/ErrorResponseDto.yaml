@@ -1,0 +1,14 @@
+ErrorResponseDto:
+  type: object
+  description: Standard Platform API error envelope
+  properties:
+    error:
+      $ref: '#/components/schemas/ErrorDetailDto'
+  required:
+  - error
+  example:
+    error:
+      code: unauthorized
+      message: 'Missing or invalid Authorization header. Send Authorization: Bearer
+        <key> using CODESTRATA_PLATFORM_API_KEY.'
+      details: null

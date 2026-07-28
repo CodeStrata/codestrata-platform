@@ -1,0 +1,53 @@
+PortfolioSummaryResponse:
+  properties:
+    portfolio_id:
+      type: string
+      title: Portfolio Id
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    name:
+      type: string
+      title: Name
+    description:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Description
+    status:
+      type: string
+      title: Status
+    repository_count:
+      type: integer
+      title: Repository Count
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+    archived_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Archived At
+  additionalProperties: false
+  type: object
+  required:
+  - portfolio_id
+  - organization_id
+  - workspace_id
+  - name
+  - description
+  - status
+  - repository_count
+  - created_at
+  - updated_at
+  - archived_at
+  title: PortfolioSummaryResponse

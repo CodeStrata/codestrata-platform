@@ -1,0 +1,15 @@
+ExecutiveFindingsResponse:
+  properties:
+    summary:
+      $ref: '#/components/schemas/ExecutiveIntelligenceSummaryResponse'
+    findings:
+      items:
+        $ref: '#/components/schemas/ExecutiveFindingResponse'
+      type: array
+      title: Findings
+  additionalProperties: false
+  type: object
+  required:
+  - summary
+  - findings
+  title: ExecutiveFindingsResponse

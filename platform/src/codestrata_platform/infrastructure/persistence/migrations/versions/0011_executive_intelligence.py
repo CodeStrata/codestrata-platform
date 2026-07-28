@@ -68,7 +68,6 @@ def upgrade() -> None:
         ["projection_key"],
         unique=True,
         postgresql_where=sa.text("status = 'completed'"),
-        sqlite_where=sa.text("status = 'completed'"),
     )
     op.create_index(
         "ix_engineering_executive_intelligence_portfolio_id",

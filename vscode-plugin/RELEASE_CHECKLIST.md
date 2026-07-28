@@ -1,0 +1,43 @@
+# Community release checklist (CodeStrata VS Code Extension)
+
+**Version:** 0.2.0  
+**Do not publish** until a human explicitly requests Marketplace publish.
+
+## Packaging
+
+- [ ] `npm install`
+- [ ] `npm test`
+- [ ] `npm run test:host` (where Extension Host is available)
+- [ ] `npm run package` produces `.vsix`
+- [ ] `package.json` metadata: displayName, description, publisher, icon, license, repository, homepage, bugs, engines, categories, keywords
+- [ ] CHANGELOG entry for the release version
+
+## Product
+
+- [ ] First-run welcome when Engine missing
+- [ ] Guided Engine install (uv / pipx / pip)
+- [ ] `codestrata version` verification
+- [ ] `codestrata doctor` after install
+- [ ] Deterministic Engineering Assessment works
+- [ ] Findings + HTML report open
+- [ ] Optional AI remains opt-in; no secrets in settings
+- [ ] No Platform dependency
+- [ ] Thin-client architecture preserved
+
+## Compatibility
+
+- [ ] VS Code `^1.85.0`
+- [ ] Engine `>=0.1.0 <2.0.0`
+- [ ] Report schema `1.2` (major `1.x`)
+
+## Marketplace assets
+
+- [ ] Icon 128×128
+- [ ] Screenshot(s) under `media/`
+- [ ] README marketplace-ready
+- [ ] SECURITY / PRIVACY / SUPPORT / CODE_OF_CONDUCT / LICENSE
+
+## Extraction
+
+- [ ] EXTRACTION.md reviewed
+- [ ] Public export manifest entry validated

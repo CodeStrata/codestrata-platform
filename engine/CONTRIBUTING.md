@@ -3,7 +3,7 @@
 Thanks for contributing to the Community Engine.
 
 Full workflow: [docs/contributor-guide.md](docs/contributor-guide.md).
-Monorepo contribution entry: [../CONTRIBUTING.md](../CONTRIBUTING.md).
+Public docs portal: [https://docs.codestrata.ai](https://docs.codestrata.ai).
 
 ## Development setup
 
@@ -46,6 +46,11 @@ In the monorepo, prefer `mypy engine/src` and root `pytest`.
 * Match existing package layout (`src/codestrata/…`, tests under `tests/`).
 * Do not commit secrets, `.env` files, or large generated `reports/` trees.
 * Update Engine docs under `docs/` when behavior or artifacts change.
+* **Documentation visibility:** every new Markdown doc must declare or clearly
+  imply whether it is public Community, public contributor, or private
+  Platform/internal documentation (prefer
+  `<!-- documentation-visibility: public-community|public-contributor|public-contract|private-internal -->`).
+  Private classification inventories must not ship in Community exports.
 * Platform RAG / Knowledge Graph docs belong under `platform/docs/` in the monorepo.
 * Never reintroduce pre-rename package/CLI/config identifiers in user-facing surfaces.
 * Follow the [Code of Conduct](CODE_OF_CONDUCT.md).

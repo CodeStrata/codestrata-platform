@@ -1,0 +1,97 @@
+IntelligenceDetailsResponse:
+  properties:
+    intelligence_id:
+      type: string
+      title: Intelligence Id
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    repository_id:
+      type: string
+      title: Repository Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    engine_assessment_id:
+      type: string
+      title: Engine Assessment Id
+    schema_version:
+      type: string
+      title: Schema Version
+    parser_version:
+      type: string
+      title: Parser Version
+    revision:
+      type: integer
+      title: Revision
+    idempotency_key:
+      type: string
+      title: Idempotency Key
+    status:
+      type: string
+      title: Status
+    source_artifact_ids:
+      items:
+        type: string
+      type: array
+      title: Source Artifact Ids
+    finding_count:
+      type: integer
+      title: Finding Count
+    metric_count:
+      type: integer
+      title: Metric Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+    diagnostics:
+      items:
+        type: string
+      type: array
+      title: Diagnostics
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+  additionalProperties: false
+  type: object
+  required:
+  - intelligence_id
+  - organization_id
+  - workspace_id
+  - repository_id
+  - assessment_id
+  - engine_assessment_id
+  - schema_version
+  - parser_version
+  - revision
+  - idempotency_key
+  - status
+  - source_artifact_ids
+  - finding_count
+  - metric_count
+  - recommendation_count
+  - failure_reason
+  - diagnostics
+  - created_at
+  - updated_at
+  - completed_at
+  title: IntelligenceDetailsResponse

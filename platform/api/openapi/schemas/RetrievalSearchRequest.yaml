@@ -1,0 +1,67 @@
+RetrievalSearchRequest:
+  properties:
+    query_text:
+      type: string
+      maxLength: 4000
+      minLength: 1
+      title: Query Text
+    mode:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Mode
+      default: hybrid
+    top_k:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Top K
+      default: 10
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+    canonical_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Canonical Types
+    canonical_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Canonical Ids
+    graph_node_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Graph Node Ids
+    minimum_score:
+      anyOf:
+      - type: number
+        maximum: 1.0
+        minimum: 0.0
+      - type: 'null'
+      title: Minimum Score
+    include_source_references:
+      type: boolean
+      title: Include Source References
+      default: true
+    include_score_breakdown:
+      type: boolean
+      title: Include Score Breakdown
+      default: true
+  additionalProperties: false
+  type: object
+  required:
+  - query_text
+  title: RetrievalSearchRequest

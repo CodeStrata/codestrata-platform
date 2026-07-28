@@ -1,0 +1,283 @@
+paths:
+  /api/v1/executive-intelligence/{executive_intelligence_id}/roadmap:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Strategic Roadmap
+      operationId: get_strategic_roadmap_api_v1_executive_intelligence__executive_intelligence_id__roadmap_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrategicRoadmapResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/roadmap/initiatives:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Strategic Roadmap Initiatives
+      operationId: get_strategic_roadmap_initiatives_api_v1_executive_intelligence__executive_intelligence_id__roadmap_initiatives_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+      - name: wave
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wave
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapInitiativesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/roadmap/waves:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Strategic Roadmap Waves
+      operationId: get_strategic_roadmap_waves_api_v1_executive_intelligence__executive_intelligence_id__roadmap_waves_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapWavesResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/roadmap/summary:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Strategic Roadmap Summary
+      operationId: get_strategic_roadmap_summary_api_v1_executive_intelligence__executive_intelligence_id__roadmap_summary_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoadmapSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/roadmap/latest:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Latest Strategic Roadmap
+      operationId: get_latest_strategic_roadmap_api_v1_portfolios__portfolio_id__roadmap_latest_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrategicRoadmapResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/roadmap:
+    get:
+      tags:
+      - Strategic Portfolio Roadmap
+      summary: Get Strategic Roadmap By Portfolio Snapshot
+      operationId: get_strategic_roadmap_by_portfolio_snapshot_api_v1_portfolio_snapshots__portfolio_snapshot_id__roadmap_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: portfolio_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Portfolio Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrategicRoadmapResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal

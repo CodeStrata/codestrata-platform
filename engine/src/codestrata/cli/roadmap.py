@@ -11,10 +11,11 @@ import typer
 roadmap_app = typer.Typer(
     name="roadmap",
     help=(
-        "Modernization Roadmap helpers (Phase 5.10).\n\n"
-        "Inspect phased plans from report.json. Generation runs during assess when "
-        "`[report.sections.roadmap] enabled = true` (disabled by default). "
-        "Does not re-run assessments."
+        "Engine assess modernization roadmap section helpers.\n\n"
+        "Inspect phased plans from report.json produced by Community Engine "
+        "assess when `[report.sections.roadmap] enabled = true` "
+        "(disabled by default). Does not re-run assessments.\n\n"
+        "Distinct from CodeStrata Platform Strategic Roadmap."
     ),
     no_args_is_help=True,
 )

@@ -1,0 +1,12 @@
+FailArtifactRequest:
+  properties:
+    reason:
+      type: string
+      maxLength: 2000
+      minLength: 1
+      title: Reason
+  additionalProperties: false
+  type: object
+  required:
+  - reason
+  title: FailArtifactRequest

@@ -1,0 +1,49 @@
+AddRepositoryRequest:
+  properties:
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    repository_id:
+      type: string
+      minLength: 1
+      title: Repository Id
+    criticality:
+      type: string
+      title: Criticality
+      default: unspecified
+    business_capability:
+      anyOf:
+      - type: string
+        maxLength: 256
+      - type: 'null'
+      title: Business Capability
+    owner_reference:
+      anyOf:
+      - type: string
+        maxLength: 256
+      - type: 'null'
+      title: Owner Reference
+    lifecycle_status:
+      anyOf:
+      - type: string
+        maxLength: 64
+      - type: 'null'
+      title: Lifecycle Status
+    tags:
+      items:
+        type: string
+      type: array
+      maxItems: 32
+      title: Tags
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  - repository_id
+  title: AddRepositoryRequest

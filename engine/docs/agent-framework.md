@@ -215,6 +215,5 @@ explainability, and `codestrata incremental` / MCP tools) is complete for contro
 opt-in use. Agent workflows are unchanged. See
 [incremental-assessment.md](incremental-assessment.md).
 
-Next major phase after agents: Enterprise Knowledge Graph (Phase 3; optional).
-Analysis Intelligence is Phase 4; GitHub PR review is Phase 6.1–6.5 MVP
-(see [ROADMAP.md](../../ROADMAP.md)).
+Advanced organizational capabilities after local agents are available in
+CodeStrata Platform. See [community-vs-platform.md](community-vs-platform.md).

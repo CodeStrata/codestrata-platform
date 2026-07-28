@@ -7,9 +7,8 @@ Shared Engine conventions for Analysis Intelligence verticals:
 
 ## Platform inventory
 
-Detailed Platform architecture documents are maintained in the private
-`codestrata-platform` monorepo under `platform/docs/architecture/` and are
-**not** published in the Community engine mirror.
+Detailed Platform architecture documents remain private and are **not**
+published in the Community Engine mirror.
 
 ## Historical notes
 

@@ -1,0 +1,216 @@
+paths:
+  /api/v1/portfolio-answers:
+    post:
+      tags:
+      - Portfolio Answering
+      summary: Ask a portfolio question
+      description: Grounded Portfolio Answering across repositories in a portfolio.
+        Platform capability — requires portfolio answering to be enabled.
+      operationId: ask_portfolio_answer_api_v1_portfolio_answers_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskPortfolioAnswerRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/ask:
+    post:
+      tags:
+      - Portfolio Answering
+      summary: Ask a question for a portfolio
+      description: Portfolio-scoped grounded answering. Same capability as POST /portfolio-answers
+        with portfolio_id taken from the path.
+      operationId: ask_portfolio_api_v1_portfolios__portfolio_id__ask_post
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskPortfolioAnswerRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-answers/{answer_id}:
+    get:
+      tags:
+      - Portfolio Answering
+      summary: Get Portfolio Answer
+      operationId: get_portfolio_answer_api_v1_portfolio_answers__answer_id__get
+      parameters:
+      - name: answer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/answers:
+    get:
+      tags:
+      - Portfolio Answering
+      summary: List Portfolio Answers
+      operationId: list_portfolio_answers_api_v1_portfolios__portfolio_id__answers_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioAnswerResponse'
+                title: Response List Portfolio Answers Api V1 Portfolios  Portfolio
+                  Id  Answers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-answers/{answer_id}/feedback:
+    post:
+      tags:
+      - Portfolio Answering
+      summary: Submit Portfolio Answer Feedback
+      operationId: submit_portfolio_answer_feedback_api_v1_portfolio_answers__answer_id__feedback_post
+      parameters:
+      - name: answer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioAnswerFeedbackRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioAnswerFeedbackResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal

@@ -1,0 +1,58 @@
+PortfolioMembershipResponse:
+  properties:
+    membership_id:
+      type: string
+      title: Membership Id
+    repository_id:
+      type: string
+      title: Repository Id
+    criticality:
+      type: string
+      title: Criticality
+    business_capability:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Business Capability
+    owner_reference:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Owner Reference
+    lifecycle_status:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Lifecycle Status
+    tags:
+      items:
+        type: string
+      type: array
+      title: Tags
+    added_at:
+      type: string
+      format: date-time
+      title: Added At
+    removed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Removed At
+    active:
+      type: boolean
+      title: Active
+  additionalProperties: false
+  type: object
+  required:
+  - membership_id
+  - repository_id
+  - criticality
+  - business_capability
+  - owner_reference
+  - lifecycle_status
+  - tags
+  - added_at
+  - removed_at
+  - active
+  title: PortfolioMembershipResponse

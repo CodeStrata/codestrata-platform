@@ -1,0 +1,28 @@
+OrganizationResponse:
+  properties:
+    id:
+      type: string
+      title: Id
+    name:
+      type: string
+      title: Name
+    status:
+      type: string
+      title: Status
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+  additionalProperties: false
+  type: object
+  required:
+  - id
+  - name
+  - status
+  - created_at
+  - updated_at
+  title: OrganizationResponse

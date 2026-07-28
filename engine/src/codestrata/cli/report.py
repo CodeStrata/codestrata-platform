@@ -16,7 +16,7 @@ from codestrata.application.report_validation import (
 report_app = typer.Typer(
     name="report",
     help=(
-        "Report contract helpers (Phase 5.12).\n\n"
+        "Report contract helpers for assess HTML/JSON outputs.\n\n"
         "Validate report.json schema, references, duplicates, evidence links, "
         "and roadmap traceability without re-running assessment."
     ),

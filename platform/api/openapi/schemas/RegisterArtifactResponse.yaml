@@ -1,0 +1,34 @@
+RegisterArtifactResponse:
+  properties:
+    artifact_id:
+      type: string
+      title: Artifact Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    artifact_type:
+      type: string
+      title: Artifact Type
+    checksum:
+      type: string
+      title: Checksum
+    status:
+      type: string
+      title: Status
+    version:
+      type: integer
+      title: Version
+    created:
+      type: boolean
+      title: Created
+  additionalProperties: false
+  type: object
+  required:
+  - artifact_id
+  - assessment_id
+  - artifact_type
+  - checksum
+  - status
+  - version
+  - created
+  title: RegisterArtifactResponse

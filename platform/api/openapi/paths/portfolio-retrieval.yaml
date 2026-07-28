@@ -1,0 +1,470 @@
+paths:
+  /api/v1/portfolio-retrieval/indexes:
+    post:
+      tags:
+      - Portfolio Retrieval
+      summary: Build Portfolio Retrieval Index
+      operationId: build_portfolio_retrieval_index_api_v1_portfolio_retrieval_indexes_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildPortfolioRetrievalIndexRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/rebuild:
+    post:
+      tags:
+      - Portfolio Retrieval
+      summary: Rebuild Portfolio Retrieval Index
+      operationId: rebuild_portfolio_retrieval_index_api_v1_portfolio_retrieval_indexes__index_id__rebuild_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/RebuildPortfolioRetrievalIndexRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: Get Portfolio Retrieval Index
+      operationId: get_portfolio_retrieval_index_api_v1_portfolio_retrieval_indexes__index_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/retrieval-indexes:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: List Portfolio Retrieval Indexes
+      operationId: list_portfolio_retrieval_indexes_api_v1_portfolios__portfolio_id__retrieval_indexes_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioRetrievalIndexSummaryResponse'
+                title: Response List Portfolio Retrieval Indexes Api V1 Portfolios  Portfolio
+                  Id  Retrieval Indexes Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/retrieval-indexes/latest:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: Get Latest Portfolio Retrieval Index
+      operationId: get_latest_portfolio_retrieval_index_api_v1_portfolios__portfolio_id__retrieval_indexes_latest_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/documents:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: List Portfolio Retrieval Documents
+      operationId: list_portfolio_retrieval_documents_api_v1_portfolio_retrieval_indexes__index_id__documents_get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: content_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Content Type
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioRetrievalDocumentSummaryResponse'
+                title: Response List Portfolio Retrieval Documents Api V1 Portfolio
+                  Retrieval Indexes  Index Id  Documents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/documents/{document_id}:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: Get Portfolio Retrieval Document
+      operationId: get_portfolio_retrieval_document_api_v1_portfolio_retrieval_indexes__index_id__documents__document_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Document Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalDocumentSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/chunks/{chunk_id}:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: Get Portfolio Retrieval Chunk
+      operationId: get_portfolio_retrieval_chunk_api_v1_portfolio_retrieval_indexes__index_id__chunks__chunk_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: chunk_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chunk Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalChunkSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/search:
+    post:
+      tags:
+      - Portfolio Retrieval
+      summary: Search Portfolio Retrieval Index
+      operationId: search_portfolio_retrieval_index_api_v1_portfolio_retrieval_indexes__index_id__search_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioRetrievalSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalSearchResultResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/context:
+    post:
+      tags:
+      - Portfolio Retrieval
+      summary: Assemble Portfolio Retrieval Context
+      operationId: assemble_portfolio_retrieval_context_api_v1_portfolio_retrieval_indexes__index_id__context_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioRetrievalContextRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalContextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-retrieval/indexes/{index_id}/statistics:
+    get:
+      tags:
+      - Portfolio Retrieval
+      summary: Get Portfolio Retrieval Index Statistics
+      operationId: get_portfolio_retrieval_index_statistics_api_v1_portfolio_retrieval_indexes__index_id__statistics_get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioRetrievalIndexStatisticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal

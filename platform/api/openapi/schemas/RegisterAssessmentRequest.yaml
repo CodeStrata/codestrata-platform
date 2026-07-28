@@ -1,0 +1,30 @@
+RegisterAssessmentRequest:
+  properties:
+    repository_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Repository Id
+    workspace_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Workspace Id
+    engine_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Engine Version
+    assessment_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Assessment Version
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - workspace_id
+  - engine_version
+  - assessment_version
+  title: RegisterAssessmentRequest

@@ -1,0 +1,17 @@
+PageResponseDto_WorkspaceResponse_:
+  properties:
+    items:
+      items:
+        $ref: '#/components/schemas/WorkspaceResponse'
+      type: array
+      title: Items
+      description: Page items
+    pagination:
+      $ref: '#/components/schemas/PageMetaDto'
+      description: Pagination metadata
+  additionalProperties: false
+  type: object
+  required:
+  - items
+  - pagination
+  title: PageResponseDto[WorkspaceResponse]

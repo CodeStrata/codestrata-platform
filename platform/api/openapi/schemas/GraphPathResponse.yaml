@@ -1,0 +1,12 @@
+GraphPathResponse:
+  properties:
+    node_ids:
+      items:
+        type: string
+      type: array
+      title: Node Ids
+  additionalProperties: false
+  type: object
+  required:
+  - node_ids
+  title: GraphPathResponse

@@ -1,4 +1,4 @@
-# Technical Debt Complexity Assessment (Phase 4.3.4)
+# Technical Debt Complexity Assessment
 
 Wires complexity evidence and `technical_debt.core` into `codestrata assess`.
 

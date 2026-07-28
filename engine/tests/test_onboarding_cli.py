@@ -284,13 +284,17 @@ def test_config_driven_javascript_zero_ai_calls_deterministic(tmp_path: Path) ->
 def test_cli_help_mentions_canonical_workflow() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "codestrata assess --config codestrata.toml --output reports --with-ai" in result.output
+    assert "codestrata init" in result.output
+    assert "codestrata doctor" in result.output
+    assert "codestrata assess --repo . --output reports --no-ai" in result.output
+    assert "Engineering Assessment" in result.output
 
     assess_help = runner.invoke(app, ["assess", "--help"])
     assert assess_help.exit_code == 0
     assert "--repo" in assess_help.output
     assert "--config" in assess_help.output
     assert "codestrata.toml" in assess_help.output
+    assert "--no-ai" in assess_help.output
 
 
 def test_readme_documents_canonical_workflow() -> None:
@@ -343,7 +347,7 @@ enabled = false
         ],
     )
     assert result.exit_code == 0, result.output
-    assert "Modernization assessment completed" in result.output
+    assert "Engineering assessment completed" in result.output
     runs = list(output.glob("*/*"))
     assert runs
     assert (runs[0] / "report.html").is_file()

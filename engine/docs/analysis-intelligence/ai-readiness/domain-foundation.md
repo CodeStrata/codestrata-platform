@@ -1,4 +1,6 @@
-# AI Readiness Intelligence Domain Foundation (Phase 4.8.1)
+> **Engineering concepts:** see [`knowledge/`](../../../../knowledge/) for the canonical domain Knowledge. This document retains **implementation** contracts (schemas, pack IDs, lifecycle). Do not treat it as the conceptual source of truth.
+
+# AI Readiness Intelligence Domain Foundation
 
 ## Objective
 

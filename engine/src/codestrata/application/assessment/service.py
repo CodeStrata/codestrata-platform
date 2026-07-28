@@ -94,7 +94,7 @@ if TYPE_CHECKING:
     from codestrata.domain.ai_enrichment import AiEnrichmentResult
 
 DEFAULT_ASSESS_OUTPUT_DIRECTORY = Path("reports")
-DEFAULT_ASSESS_REPORT_TITLE = "Modernization Assessment"
+DEFAULT_ASSESS_REPORT_TITLE = "Engineering Assessment"
 DEFAULT_ASSESS_TEMPERATURE = 0.0
 DEFAULT_ASSESS_MAX_OUTPUT_TOKENS = 5000
 CODESTRATA_BEDROCK_MODEL_ID_ENV = "CODESTRATA_BEDROCK_MODEL_ID"
@@ -4129,7 +4129,7 @@ def _map_response_contract_error(
         )
     else:
         attempt = AIAttemptInfo(
-            provider="bedrock",
+            provider=None,
             model_id=model_id,
             stages_completed=stages_for_status(status),
             failure_code=failure_code_for_status(status),
@@ -4177,7 +4177,7 @@ def _map_provider_error(
     if is_auth:
         status = AIExecutionStatus.AUTHENTICATION_FAILED
         attempt = AIAttemptInfo(
-            provider="bedrock",
+            provider=None,
             model_id=model_id,
             stages_completed=stages_for_status(status),
             failure_code=failure_code_for_status(status),
@@ -4206,11 +4206,11 @@ def _map_provider_error(
         or "timeout" in lowered
         or "temporary service failure" in lowered
     ):
-        detail = f"Bedrock timeout or throttling: {message}"
+        detail = f"AI provider timeout or throttling: {message}"
     else:
         detail = f"Model provider failure: {message}"
     attempt = AIAttemptInfo(
-        provider="bedrock",
+        provider=None,
         model_id=model_id,
         stages_completed=stages_for_status(status),
         failure_code=failure_code_for_status(status),
@@ -4998,13 +4998,26 @@ def _print_success_summary(
         mode_label = "Deterministic"
 
     console.print()
-    console.print("[green]Modernization assessment completed[/green]")
+    console.print("[green]Engineering assessment completed[/green]")
     console.print(f"Repository: {result.repository_name}")
     if result.duration_ms is not None:
         console.print(f"Duration: {result.duration_ms / 1000:.1f}s")
     console.print(f"Findings: {result.findings_count}")
-    console.print(f"AI status: {ai_status}")
-    console.print(f"Report location: {_display_path(result.html_report_path)}")
+    if result.mode == AssessmentMode.AI_ENHANCED and not result.ai_executed:
+        console.print(
+            "[yellow]AI enhancements skipped[/yellow] "
+            "(deterministic Engineering Assessment report was still generated)."
+        )
+        console.print(f"AI status: {ai_status}")
+        if result.model_id:
+            console.print(f"AI provider model: {result.model_id}")
+    elif result.mode == AssessmentMode.DETERMINISTIC:
+        console.print("AI status: not requested (deterministic mode)")
+    else:
+        console.print(f"AI status: {ai_status}")
+    console.print(f"Run directory: {_display_path(result.run_directory)}")
+    console.print(f"HTML report: {_display_path(result.html_report_path)}")
+    console.print(f"JSON report: {_display_path(result.json_report_path)}")
     if quiet:
         return
 
@@ -5271,15 +5284,19 @@ def _print_success_summary(
             f"{_display_path(result.architecture_conclusions_artifact_path)}"
         )
     if result.mode == AssessmentMode.AI_ENHANCED and not result.ai_executed:
-        console.print("AI status: fallback (validated AI result not included)")
+        console.print(
+            "AI enhancements: skipped "
+            "(optional AI advisor did not produce a validated result; "
+            "deterministic report is complete)."
+        )
         if result.model_id:
-            console.print(f"Model ID: {result.model_id}")
+            console.print(f"Configured model: {result.model_id}")
         if result.input_tokens is not None:
             console.print(f"Input tokens: {result.input_tokens}")
         if result.output_tokens is not None:
             console.print(f"Output tokens: {result.output_tokens}")
     if result.ai_executed:
-        console.print("AI status: succeeded")
+        console.print("AI enhancements: included")
         console.print(f"Modernization phases: {result.phases_count}")
         console.print(
             f"Input tokens: {result.input_tokens if result.input_tokens is not None else '—'}"

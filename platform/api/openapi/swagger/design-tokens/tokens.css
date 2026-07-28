@@ -1,0 +1,139 @@
+/**
+ * CodeStrata public design tokens
+ * --------------------------------
+ * Source of visual truth: live https://codestrata.ai/assets/styles.css (:root)
+ * Cross-checked: governance/assets/DESIGN-SYSTEM.md
+ *
+ * Copied into docs/ for standalone extraction (codestrata-docs).
+ * Do NOT import from the monorepo or private website repo at build time.
+ *
+ * Sync process: when codestrata.ai tokens change, update this file from the
+ * published :root / [data-theme="light"] blocks and note the date in
+ * WEBSITE_STYLE_ALIGNMENT.md.
+ *
+ * Captured from live site: 2026-07-28
+ */
+
+:root {
+  /* ---- raw palette ---- */
+  --amber: #d98a3d;
+  --amber-bright: #eca860;
+  --amber-deep: #b06a24;
+  --clay: #7a4a2b;
+  --mineral: #4fb3a5;
+  --danger: #e06c5b;
+
+  /* ---- dark theme (default / dark-first) ---- */
+  --bg: #0b0d10;
+  --bg-2: #0f1216;
+  --surface: #14171c;
+  --surface-2: #1a1e25;
+  --border: #232830;
+  --border-2: #333a45;
+  --fg: #edeff2;
+  --fg-muted: #9aa3ae;
+  --fg-dim: #6b7480;
+  --accent: var(--amber);
+  --accent-bright: var(--amber-bright);
+  --accent-fg: #16110a;
+  --hero-glow: color-mix(in srgb, var(--amber) 18%, transparent);
+  --code-bg: #0d1014;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 30px rgba(0, 0, 0, 0.28);
+
+  --fog: #7a8ba6;
+  --fog-surface: #131a24;
+  --fog-border: #263243;
+
+  --good: var(--mineral);
+  --risk: var(--danger);
+
+  /* ---- type ---- */
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+    monospace;
+
+  /* ---- scale / layout ---- */
+  --maxw: 1120px;
+  --maxw-prose: 680px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --pad-section: clamp(4rem, 8vw, 7.5rem);
+  --nav-h: 60px;
+
+  /* ---- spacing scale (Design System) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ---- breakpoints (website observed) ---- */
+  --bp-nav: 820px;
+  --bp-footer: 780px;
+  --bp-tablet: 960px;
+
+  /* ---- transitions ---- */
+  --ease: ease;
+  --t-fast: 0.16s;
+  --t-mid: 0.18s;
+  --t-theme: 0.3s;
+}
+
+/* Light theme — website [data-theme="light"] + VitePress :root:not(.dark) */
+:root:not(.dark),
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-2: #f7f8fa;
+  --surface: #f7f8fa;
+  --surface-2: #eef1f4;
+  --border: #e6e8ec;
+  --border-2: #d3d8de;
+  --fg: #0e1116;
+  --fg-muted: #566069;
+  --fg-dim: #6b7480;
+  --accent: var(--amber-deep);
+  --accent-bright: var(--amber);
+  --accent-fg: #ffffff;
+  --hero-glow: color-mix(in srgb, var(--amber) 13%, transparent);
+  --code-bg: #0f1216;
+  --shadow: 0 1px 2px rgba(16, 20, 26, 0.06), 0 12px 34px rgba(16, 20, 26, 0.08);
+  --fog: #5c6e88;
+  --fog-surface: #eef2f7;
+  --fog-border: #d3dde9;
+  --mineral: #2a7d70;
+  --danger: #b94a38;
+}
+
+/* Dark explicit (VitePress .dark) — restore dark-first values */
+html.dark,
+:root.dark,
+html[data-theme="dark"] {
+  --bg: #0b0d10;
+  --bg-2: #0f1216;
+  --surface: #14171c;
+  --surface-2: #1a1e25;
+  --border: #232830;
+  --border-2: #333a45;
+  --fg: #edeff2;
+  --fg-muted: #9aa3ae;
+  --fg-dim: #6b7480;
+  --accent: var(--amber);
+  --accent-bright: var(--amber-bright);
+  --accent-fg: #16110a;
+  --hero-glow: color-mix(in srgb, var(--amber) 18%, transparent);
+  --code-bg: #0d1014;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 30px rgba(0, 0, 0, 0.28);
+  --fog: #7a8ba6;
+  --fog-surface: #131a24;
+  --fog-border: #263243;
+  --mineral: #4fb3a5;
+  --danger: #e06c5b;
+}

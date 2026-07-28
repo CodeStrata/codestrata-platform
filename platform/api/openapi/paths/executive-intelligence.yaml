@@ -1,0 +1,353 @@
+paths:
+  /api/v1/portfolios/{portfolio_id}/executive-intelligence:
+    post:
+      tags:
+      - Executive Intelligence
+      summary: Build Executive Intelligence
+      operationId: build_executive_intelligence_api_v1_portfolios__portfolio_id__executive_intelligence_post
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildExecutiveIntelligenceRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveIntelligenceDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Executive Intelligence
+      summary: List Executive Intelligence
+      operationId: list_executive_intelligence_api_v1_portfolios__portfolio_id__executive_intelligence_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveIntelligencePageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/executive-intelligence/latest:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Latest Executive Intelligence
+      operationId: latest_executive_intelligence_api_v1_portfolios__portfolio_id__executive_intelligence_latest_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveIntelligenceDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Get Executive Intelligence
+      operationId: get_executive_intelligence_api_v1_executive_intelligence__executive_intelligence_id__get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveIntelligenceDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/metrics:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Get Executive Intelligence Metrics
+      operationId: get_executive_intelligence_metrics_api_v1_executive_intelligence__executive_intelligence_id__metrics_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveMetricsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/findings:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Get Executive Intelligence Findings
+      operationId: get_executive_intelligence_findings_api_v1_executive_intelligence__executive_intelligence_id__findings_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveFindingsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/recommendations:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Get Executive Intelligence Recommendations
+      operationId: get_executive_intelligence_recommendations_api_v1_executive_intelligence__executive_intelligence_id__recommendations_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveRecommendationsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/overview:
+    get:
+      tags:
+      - Executive Intelligence
+      summary: Get Executive Intelligence Overview
+      operationId: get_executive_intelligence_overview_api_v1_executive_intelligence__executive_intelligence_id__overview_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutiveIntelligenceDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal

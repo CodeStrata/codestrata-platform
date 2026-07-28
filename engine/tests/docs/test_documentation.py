@@ -119,11 +119,17 @@ def test_example_sample_directories_exist() -> None:
 
 def test_required_developer_docs_exist() -> None:
     required = [
+        DOCS / "README.md",
+        DOCS / "getting-started.md",
         DOCS / "quick-start.md",
         DOCS / "installation.md",
         DOCS / "architecture-guide.md",
         DOCS / "configuration-profiles.md",
         DOCS / "cli-reference.md",
+        DOCS / "examples.md",
+        DOCS / "public-contracts.md",
+        DOCS / "apis.md",
+        DOCS / "community-vs-platform.md",
         DOCS / "mcp" / "setup.md",
         DOCS / "mcp" / "README.md",
         DOCS / "report-interpretation.md",

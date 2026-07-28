@@ -1,4 +1,4 @@
-# Repository Cloud Evidence (Phase 4.7.2)
+# Repository Cloud Evidence
 
 Platform evidence for repository-observable cloud technologies and deployment
 signals. **Not** owned by Cloud Intelligence assessment.

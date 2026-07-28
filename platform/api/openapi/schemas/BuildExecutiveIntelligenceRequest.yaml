@@ -1,0 +1,22 @@
+BuildExecutiveIntelligenceRequest:
+  properties:
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    portfolio_snapshot_id:
+      anyOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+      title: Portfolio Snapshot Id
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  title: BuildExecutiveIntelligenceRequest

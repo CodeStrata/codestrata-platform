@@ -1,4 +1,4 @@
-# Repository Performance Evidence (Phase 4.9.2)
+# Repository Performance Evidence
 
 Platform evidence for repository-observable performance signals.
 **Not** owned by Performance Intelligence assessment.

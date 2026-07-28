@@ -17,7 +17,7 @@ from codestrata.domain.rules.enums import RuleCategory
 rules_app = typer.Typer(
     name="rules",
     help=(
-        "Shared Rule Platform (Phase 4.1+) and Architecture Intelligence (4.2).\n\n"
+        "Inspect registered engineering rules used during assess.\n\n"
         "Lists and inspects registered production rules. The Architecture pack is "
         "discoverable here; assess merge requires "
         "`[rules] enabled` and `[rules.architecture] enabled`. "

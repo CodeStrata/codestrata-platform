@@ -1,0 +1,40 @@
+PortfolioRetrievalContextResponse:
+  properties:
+    items:
+      items:
+        $ref: '#/components/schemas/PortfolioRetrievalContextItemResponse'
+      type: array
+      title: Items
+    sections:
+      items:
+        type: string
+      type: array
+      title: Sections
+    token_estimate:
+      type: integer
+      title: Token Estimate
+    repository_count:
+      type: integer
+      title: Repository Count
+    policy_version:
+      type: string
+      title: Policy Version
+    truncated:
+      type: boolean
+      title: Truncated
+    diagnostics:
+      items:
+        $ref: '#/components/schemas/PortfolioRetrievalContextDiagnosticResponse'
+      type: array
+      title: Diagnostics
+  additionalProperties: false
+  type: object
+  required:
+  - items
+  - sections
+  - token_estimate
+  - repository_count
+  - policy_version
+  - truncated
+  - diagnostics
+  title: PortfolioRetrievalContextResponse

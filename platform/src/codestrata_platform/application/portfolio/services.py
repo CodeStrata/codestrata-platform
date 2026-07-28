@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import (
     ConflictError,
     NotFoundError,
@@ -764,7 +765,7 @@ class PortfolioIntelligenceAggregationService:
             snapshot.attach_dependency_signals((aggregates["dependencies"],))
             snapshot.complete()
         except Exception as exc:
-            snapshot.fail(str(exc)[:2000])
+            snapshot.fail(safe_failure_summary(exc, limit=2000))
             # Free the unique projection_key so deterministic retries can rebuild.
             snapshot.projection_key = PortfolioProjectionKey(
                 f"{projection_key.value}:f{snapshot.version.value}"[:128]

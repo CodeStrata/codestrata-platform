@@ -1,0 +1,193 @@
+paths:
+  /api/v1/ingestion/repositories:
+    post:
+      tags:
+      - Ingestion
+      summary: Register repository from Engine
+      operationId: ingest_register_repository_api_v1_ingestion_repositories_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestRepositoryRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestRepositoryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/repositories/lookup:
+    get:
+      tags:
+      - Ingestion
+      summary: Lookup repository by workspace and URL
+      operationId: ingest_lookup_repository_api_v1_ingestion_repositories_lookup_get
+      parameters:
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: repository_url
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Repository Url
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestRepositoryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments:
+    post:
+      tags:
+      - Ingestion
+      summary: Register assessment from Engine
+      operationId: ingest_register_assessment_api_v1_ingestion_assessments_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestAssessmentRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestAssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/start:
+    post:
+      tags:
+      - Ingestion
+      summary: Start ingested assessment
+      operationId: ingest_start_assessment_api_v1_ingestion_assessments__assessment_id__start_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestAssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/complete:
+    post:
+      tags:
+      - Ingestion
+      summary: Complete ingested assessment
+      operationId: ingest_complete_assessment_api_v1_ingestion_assessments__assessment_id__complete_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestCompleteAssessmentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestAssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/fail:
+    post:
+      tags:
+      - Ingestion
+      summary: Fail ingested assessment
+      operationId: ingest_fail_assessment_api_v1_ingestion_assessments__assessment_id__fail_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IngestFailAssessmentRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngestAssessmentResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal

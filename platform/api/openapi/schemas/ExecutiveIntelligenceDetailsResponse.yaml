@@ -1,0 +1,39 @@
+ExecutiveIntelligenceDetailsResponse:
+  properties:
+    summary:
+      $ref: '#/components/schemas/ExecutiveIntelligenceSummaryResponse'
+    metrics:
+      items:
+        $ref: '#/components/schemas/ExecutiveMetricResponse'
+      type: array
+      title: Metrics
+    findings:
+      items:
+        $ref: '#/components/schemas/ExecutiveFindingResponse'
+      type: array
+      title: Findings
+    recommendations:
+      items:
+        $ref: '#/components/schemas/ExecutiveRecommendationResponse'
+      type: array
+      title: Recommendations
+    observations:
+      items:
+        $ref: '#/components/schemas/StrategicObservationResponse'
+      type: array
+      title: Observations
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - summary
+  - metrics
+  - findings
+  - recommendations
+  - observations
+  - limitations
+  title: ExecutiveIntelligenceDetailsResponse

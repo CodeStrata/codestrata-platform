@@ -1,4 +1,10 @@
-# Installation Guide
+# Installation
+
+> **Canonical public install journey:** [Install Engine](https://docs.codestrata.ai/getting-started/install)  
+> Monorepo: `docs/getting-started/install.md`
+
+Community install steps are canonical in the public portal. Maintainer-oriented
+install notes (extras, editable installs) remain below.
 
 Install CodeStrata for local development or day-to-day assessment use.
 

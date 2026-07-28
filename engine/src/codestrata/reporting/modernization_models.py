@@ -175,7 +175,7 @@ class ModernizationReportInput(BaseModel):
     ai_failure_message: str | None = None
     ai_attempt: AIAttemptInfo | None = None
     generated_at_utc: datetime
-    report_title: str = "Modernization Assessment"
+    report_title: str = "Engineering Assessment"
     organization_name: str | None = None
     repository_display_name: str | None = None
     repository_reference: str | None = None

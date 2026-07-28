@@ -85,7 +85,7 @@ def register_extensions_command(app: typer.Typer) -> None:
                 f"[{item.status}] {item.kind}/{item.extension_id}{version}: {item.detail}"
             )
 
-    app.add_typer(extensions_app, name="extensions")
+    app.add_typer(extensions_app, name="extensions", rich_help_panel="Advanced")
 
 
 __all__ = ["register_extensions_command"]

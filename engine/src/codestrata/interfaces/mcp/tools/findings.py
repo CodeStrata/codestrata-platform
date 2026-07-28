@@ -25,7 +25,10 @@ def register_finding_tools(server: FastMCP, queries: KnowledgeQueryService) -> N
         category: str | None = None,
         limit: int = FINDINGS_DEFAULT,
     ) -> dict[str, Any]:
-        """List Phase 3 findings for an assessment run."""
+        """List Phase 3 findings for an assessment run.
+
+        Scope: Community Engine (local knowledge store). Deterministic; no AI.
+        """
 
         def _run() -> dict[str, Any]:
             capped = clamp_tool_limit(

@@ -22,7 +22,12 @@ from codestrata_platform.rag.embedding.factory import (
 
 ai_app = typer.Typer(
     name="ai",
-    help="AI embedding and grounded-answer provider commands.",
+    help=(
+        "CodeStrata Platform — AI provider utilities (optional capability).\n\n"
+        "Embeddings and grounded-answer provider health/config helpers. "
+        "AI is not part of the product name. Community assess can use "
+        "optional --with-ai without these Platform commands."
+    ),
     no_args_is_help=True,
 )
 

@@ -60,7 +60,12 @@ class SnapshotDetailsResponse(SnapshotSummaryResponse):
     "/snapshots",
     response_model=SnapshotDetailsResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Build canonical engineering snapshot from assessment intelligence",
+    summary="Build Engineering Snapshot",
+    description=(
+        "Build an Engineering Snapshot from assessment intelligence for Platform "
+        "consumers (Knowledge Graph, retrieval, portfolio). "
+        "Not a Community Engine local assessment run."
+    ),
 )
 def build_snapshot(
     body: BuildSnapshotRequest,

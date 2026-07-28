@@ -73,6 +73,12 @@ def _build_ask_command(
     "/answers",
     response_model=EngineeringAnswerResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="Ask a repository question",
+    description=(
+        "Run grounded Repository Answering for a repository scope. "
+        "Requires answering to be enabled for the deployment. "
+        "Platform capability — not available on Community Engine alone."
+    ),
 )
 def ask_answer(
     body: AskAnswerRequest,
@@ -93,6 +99,11 @@ def ask_answer(
     "/repositories/{repository_id}/ask",
     response_model=EngineeringAnswerResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="Ask a question for a repository",
+    description=(
+        "Repository-scoped grounded answering. Same capability as POST /answers "
+        "with repository_id taken from the path."
+    ),
 )
 def ask_repository_answer(
     repository_id: str,

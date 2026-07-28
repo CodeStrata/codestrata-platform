@@ -1,0 +1,22 @@
+RepositoryContributionResponse:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    contribution_score:
+      type: number
+      title: Contribution Score
+    finding_count:
+      type: integer
+      title: Finding Count
+    is_primary:
+      type: boolean
+      title: Is Primary
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - contribution_score
+  - finding_count
+  - is_primary
+  title: RepositoryContributionResponse

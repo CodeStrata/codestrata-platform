@@ -1,0 +1,227 @@
+paths:
+  /api/v1/answers:
+    post:
+      tags:
+      - Answering
+      summary: Ask a repository question
+      description: Run grounded Repository Answering for a repository scope. Requires
+        answering to be enabled for the deployment. Platform capability — not available
+        on Community Engine alone.
+      operationId: ask_answer_api_v1_answers_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskAnswerRequest'
+            examples:
+              askRepositoryQuestion:
+                summary: Ask a grounded repository question
+                value:
+                  question: What are the highest severity findings?
+                  organization_id: org_example
+                  workspace_id: ws_example
+                  repository_id: repo_example
+                  include_diagnostics: false
+                  use_cache: true
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineeringAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-answering
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/ask:
+    post:
+      tags:
+      - Answering
+      summary: Ask a question for a repository
+      description: Repository-scoped grounded answering. Same capability as POST /answers
+        with repository_id taken from the path.
+      operationId: ask_repository_answer_api_v1_repositories__repository_id__ask_post
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AskAnswerRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineeringAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-answering
+      x-codestrata-audience: internal
+  /api/v1/answers/{answer_run_id}:
+    get:
+      tags:
+      - Answering
+      summary: Get Answer
+      operationId: get_answer_api_v1_answers__answer_run_id__get
+      parameters:
+      - name: answer_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Run Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineeringAnswerResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-answering
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/answers:
+    get:
+      tags:
+      - Answering
+      summary: List Repository Answers
+      operationId: list_repository_answers_api_v1_repositories__repository_id__answers_get
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EngineeringAnswerResponse'
+                title: Response List Repository Answers Api V1 Repositories  Repository
+                  Id  Answers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-answering
+      x-codestrata-audience: internal
+  /api/v1/answers/{answer_run_id}/feedback:
+    post:
+      tags:
+      - Answering
+      summary: Submit Answer Feedback
+      operationId: submit_answer_feedback_api_v1_answers__answer_run_id__feedback_post
+      parameters:
+      - name: answer_run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Answer Run Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerFeedbackRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerFeedbackResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-answering
+      x-codestrata-audience: internal

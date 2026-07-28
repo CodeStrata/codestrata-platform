@@ -37,7 +37,10 @@ def register_execution_tools(
         with_ai: bool = False,
         config_path: str | None = None,
     ) -> dict[str, Any]:
-        """Run a full CodeStrata assessment and persist knowledge artifacts.
+        """Run a CodeStrata Engine assessment and persist knowledge artifacts.
+
+        Scope: Community Engine (local). Optional AI when with_ai=true requires
+        Engine AI provider credentials — not Platform API keys.
 
         Returns concise IDs and counts for follow-up query tools. Does not return
         HTML reports or full graphs.

@@ -1,0 +1,22 @@
+codestrata_platform__api__portfolio__dto__BuildSnapshotRequest:
+  properties:
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    aggregation_policy_version:
+      anyOf:
+      - type: string
+        maxLength: 64
+      - type: 'null'
+      title: Aggregation Policy Version
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  title: BuildSnapshotRequest

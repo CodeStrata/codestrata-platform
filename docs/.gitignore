@@ -1,0 +1,9 @@
+.tmp-home.html
+.tmp-style-*.css
+.tmp-site/
+visual-baselines/.DS_Store
+node_modules/
+.vitepress/dist/
+.vitepress/cache/
+*.log
+.DS_Store

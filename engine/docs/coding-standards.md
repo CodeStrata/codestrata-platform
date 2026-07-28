@@ -1,9 +1,10 @@
 # Coding standards
 
-Follow the practices in [CONTRIBUTING.md](../CONTRIBUTING.md):
+<!-- documentation-visibility: public-contributor -->
 
-* Python 3.12+, type-checked with `mypy src`
-* Lint/format with Ruff (`ruff check .`, `ruff format .`)
-* Prefer focused modules under `src/codestrata/` mirroring existing packages
-* Keep deterministic analysis authoritative; AI must not invent findings
-* Do not commit secrets or generated report trees
+Follow [CONTRIBUTING.md](../CONTRIBUTING.md) for Community Engine contribution
+workflow, quality gates, and review expectations.
+
+Detailed monorepo coding standards live in private governance and are not
+shipped with the Community Engine export. Public contributors should match the
+style of neighboring modules and the expectations in CONTRIBUTING.

@@ -1,0 +1,16 @@
+PresentationScorecardDto:
+  properties:
+    title:
+      type: string
+      title: Title
+    cards:
+      items:
+        $ref: '#/components/schemas/PresentationKpiCardDto'
+      type: array
+      title: Cards
+  additionalProperties: false
+  type: object
+  required:
+  - title
+  - cards
+  title: PresentationScorecardDto

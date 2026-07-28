@@ -1,0 +1,44 @@
+PresentationTechnologyItemDto:
+  properties:
+    key:
+      type: string
+      title: Key
+    title:
+      type: string
+      title: Title
+    category:
+      type: string
+      title: Category
+    summary:
+      type: string
+      title: Summary
+    affected_repository_ids:
+      items:
+        type: string
+      type: array
+      title: Affected Repository Ids
+    confidence:
+      type: number
+      title: Confidence
+    evidence_references:
+      items:
+        type: string
+      type: array
+      title: Evidence References
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+  additionalProperties: false
+  type: object
+  required:
+  - key
+  - title
+  - category
+  - summary
+  - affected_repository_ids
+  - confidence
+  - evidence_references
+  - source_references
+  title: PresentationTechnologyItemDto

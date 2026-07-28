@@ -1,0 +1,69 @@
+DependencyAnalysisResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    direct_dependencies:
+      items:
+        type: string
+      type: array
+      title: Direct Dependencies
+    transitive_dependencies:
+      items:
+        type: string
+      type: array
+      title: Transitive Dependencies
+    upstream_dependencies:
+      items:
+        type: string
+      type: array
+      title: Upstream Dependencies
+    downstream_dependencies:
+      items:
+        type: string
+      type: array
+      title: Downstream Dependencies
+    cycles:
+      items:
+        $ref: '#/components/schemas/DependencyCycleResponse'
+      type: array
+      title: Cycles
+    hotspots:
+      items:
+        $ref: '#/components/schemas/DependencyHotspotResponse'
+      type: array
+      title: Hotspots
+    orphan_component_ids:
+      items:
+        type: string
+      type: array
+      title: Orphan Component Ids
+    maximum_depth:
+      type: integer
+      title: Maximum Depth
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - direct_dependencies
+  - transitive_dependencies
+  - upstream_dependencies
+  - downstream_dependencies
+  - cycles
+  - hotspots
+  - orphan_component_ids
+  - maximum_depth
+  title: DependencyAnalysisResponse

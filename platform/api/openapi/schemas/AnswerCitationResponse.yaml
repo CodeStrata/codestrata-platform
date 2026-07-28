@@ -1,0 +1,60 @@
+AnswerCitationResponse:
+  properties:
+    citation_id:
+      type: string
+      title: Citation Id
+    label:
+      type: string
+      title: Label
+    document_id:
+      type: string
+      title: Document Id
+    chunk_id:
+      type: string
+      title: Chunk Id
+    content_type:
+      type: string
+      title: Content Type
+    canonical_type:
+      type: string
+      title: Canonical Type
+    canonical_id:
+      type: string
+      title: Canonical Id
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+    graph_node_ids:
+      items:
+        type: string
+      type: array
+      title: Graph Node Ids
+    graph_edge_ids:
+      items:
+        type: string
+      type: array
+      title: Graph Edge Ids
+    retrieval_score:
+      type: number
+      title: Retrieval Score
+    excerpt:
+      type: string
+      title: Excerpt
+  additionalProperties: false
+  type: object
+  required:
+  - citation_id
+  - label
+  - document_id
+  - chunk_id
+  - content_type
+  - canonical_type
+  - canonical_id
+  - source_references
+  - graph_node_ids
+  - graph_edge_ids
+  - retrieval_score
+  - excerpt
+  title: AnswerCitationResponse

@@ -1,6 +1,7 @@
 # MCP
 
-Additive tools (existing tools unchanged):
+Additive **CodeStrata Platform** tools for the Engineering Knowledge Graph
+(tool names retain the `enterprise_` prefix for wire stability):
 
 1. validate_enterprise_workspace
 2. build_enterprise_knowledge_graph
@@ -15,7 +16,11 @@ Additive tools (existing tools unchanged):
 11. explain_enterprise_relationship
 12. compare_enterprise_graph_versions
 
-Inject services via `create_mcp_server(...)` for tests.
+Not available on Community Engine alone. Inject services via
+`create_mcp_server(...)` for tests.
+
+Community vs Platform catalog: [engine MCP tools](../../../engine/docs/mcp/tools.md) ·
+[API & MCP experience](../product-experience/API_MCP_EXPERIENCE.md).
 
 ## Resources (when enterprise query service is configured)
 
@@ -26,4 +31,3 @@ Inject services via `create_mcp_server(...)` for tests.
 - `codestrata://enterprise/repositories/{repository_id}/context`
 - `codestrata://enterprise/findings/{finding_id}/impact`
 - `codestrata://enterprise/recommendations/{recommendation_id}/impact`
-

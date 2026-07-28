@@ -1,5 +1,8 @@
 # MVP Regression Suite
 
+> **ARCHIVE CANDIDATE (Phase 12.2.2)** — Retained for history. Do not treat as current public documentation. Prefer CHANGELOG / governance reports / public `docs/` for current guidance. File was **not deleted**.
+
+
 Phase 5.15 stabilizes the full CodeStrata quality gates before declaring the
 MVP engine complete. No new product capabilities were added.
 

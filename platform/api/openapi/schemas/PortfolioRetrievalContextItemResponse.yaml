@@ -1,0 +1,47 @@
+PortfolioRetrievalContextItemResponse:
+  properties:
+    label:
+      type: string
+      title: Label
+    section:
+      type: string
+      title: Section
+    content_type:
+      type: string
+      title: Content Type
+    canonical_type:
+      type: string
+      title: Canonical Type
+    canonical_id:
+      type: string
+      title: Canonical Id
+    title:
+      type: string
+      title: Title
+    text:
+      type: string
+      title: Text
+    score:
+      type: number
+      title: Score
+    repository_ids:
+      items:
+        type: string
+      type: array
+      title: Repository Ids
+    citation:
+      $ref: '#/components/schemas/PortfolioRetrievalCitationResponse'
+  additionalProperties: false
+  type: object
+  required:
+  - label
+  - section
+  - content_type
+  - canonical_type
+  - canonical_id
+  - title
+  - text
+  - score
+  - repository_ids
+  - citation
+  title: PortfolioRetrievalContextItemResponse

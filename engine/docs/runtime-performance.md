@@ -1,4 +1,4 @@
-# Runtime performance and scalability (Phase 5.19)
+# Runtime performance and scalability
 
 CodeStrata keeps assessment semantics deterministic while bounding I/O,
 memory, and concurrency for large repositories.

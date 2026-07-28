@@ -18,11 +18,19 @@ from codestrata.interfaces.mcp.tools import register_all_tools
 
 CODESSTRATA_MCP_NAME = "CodeStrata"
 CODESSTRATA_MCP_INSTRUCTIONS = (
-    "CodeStrata modernization knowledge server. Query durable assessment "
-    "knowledge. Prefer list/get/explain tools for precise queries. Agents "
-    "should call application services directly rather than nesting through "
-    "this MCP server. Platform deployments may add repository_* RAG tools "
-    "and enterprise Knowledge Graph tools via extension entry points."
+    "CodeStrata MCP — Engineering Assessment knowledge for AI clients.\n\n"
+    "Community Engine (local): list/get/explain assessments, findings, "
+    "recommendations, components, rules, evidence, architecture helpers, "
+    "and run_assessment. Optional AI artifacts via get_ai_execution / "
+    "get_ai_enrichment (requires AI provider credentials in Engine config — "
+    "not Platform API keys).\n\n"
+    "CodeStrata Platform extensions (when installed): repository_* retrieval/"
+    "answering tools and enterprise_* Engineering Knowledge Graph tools. "
+    "These are not available on Community Engine alone.\n\n"
+    "Prefer precise list/get/explain tools. Prefer deterministic evidence over "
+    "optional AI. Source code is not retained unless explicitly configured. "
+    "Agents should call application services directly rather than nesting "
+    "through this MCP server when embedding CodeStrata in-process."
 )
 
 

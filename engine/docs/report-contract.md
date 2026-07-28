@@ -1,7 +1,14 @@
-# Report Contract Hardening
+# Report Contract
 
-Phase 5.12 hardens CodeStrata report JSON/HTML for stable, leadership-ready output
-without adding assessment capabilities.
+<!-- documentation-visibility: public-contract -->
+
+Hardens CodeStrata **Community** report JSON/HTML for stable, leadership-ready
+output without adding assessment capabilities.
+
+**Public contract:** `report.json` is an integration surface for CLI, MCP, and
+extensions. Platform may project or extend reports for organizational views;
+those projections are **not** part of the Community `report.json` 1.2 contract
+documented here.
 
 ## Envelope
 
@@ -9,6 +16,7 @@ without adding assessment capabilities.
 
 - report / HTML / contract versions
 - CodeStrata version
+- product metadata (`product_name`, `edition`, `report_type`, `brand_report_name`)
 - repository ID / scan ID
 - enabled sections
 - generation mode
@@ -16,6 +24,14 @@ without adding assessment capabilities.
 
 Versioned schema file:
 `schemas/assessment/codestrata.io/v1.2/AssessmentReport.json`
+(packaged under `codestrata.resources.schemas`).
+
+### Compatibility rules
+
+1. Additive optional fields/sections within schema 1.2 are allowed.
+2. Removing/renaming required fields or changing types is a **new schema version**.
+3. Consumers must ignore unknown properties.
+4. Use `manifest.volatile_fields` when comparing runs.
 
 ## Determinism rules
 
@@ -51,3 +67,13 @@ evidence links, and roadmap traceability.
 - Clear section hierarchy and leadership-oriented empty states
 - Related finding IDs link to in-page finding anchors
 - Machine-readable JSON remains separate from HTML presentation
+
+## Community vs Platform
+
+| Concern | Community (`report.json` 1.2) | Platform |
+| ------- | ----------------------------- | -------- |
+| Stable fields | Schema 1.2 + additive optional sections | May store / project additional organizational views |
+| Consumers | CLI, local MCP, CI, Community extensions | Platform APIs and org experiences |
+| This doc | Authoritative for Community | Does not define Platform-only fields |
+
+Public journeys: [https://docs.codestrata.ai/reports/](https://docs.codestrata.ai/reports/).

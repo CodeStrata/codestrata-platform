@@ -1,0 +1,15 @@
+ExecutiveRecommendationsResponse:
+  properties:
+    summary:
+      $ref: '#/components/schemas/ExecutiveIntelligenceSummaryResponse'
+    recommendations:
+      items:
+        $ref: '#/components/schemas/ExecutiveRecommendationResponse'
+      type: array
+      title: Recommendations
+  additionalProperties: false
+  type: object
+  required:
+  - summary
+  - recommendations
+  title: ExecutiveRecommendationsResponse

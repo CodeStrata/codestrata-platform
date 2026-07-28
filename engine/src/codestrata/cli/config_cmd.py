@@ -20,9 +20,10 @@ from codestrata.config.settings import load_settings_resolution
 config_app = typer.Typer(
     name="config",
     help=(
-        "Execution profile and configuration commands.\n\n"
+        "Validate and inspect CodeStrata Engine configuration.\n\n"
         "Precedence: --profile > CODESTRATA_PROFILE > codestrata.toml > "
         "profile defaults.\n"
+        "AI settings are optional for deterministic assess (--no-ai).\n"
         "See docs/configuration-profiles.md."
     ),
     no_args_is_help=True,
@@ -134,7 +135,11 @@ def validate_cmd(
         ),
     ] = False,
 ) -> None:
-    """Validate configuration and execution-profile compatibility."""
+    """Validate configuration for Community assess and execution profiles.
+
+    Distinguishes required settings from optional / AI-only / Platform-only
+    configuration where validation errors include categorized Fix guidance.
+    """
 
     try:
         settings, active, source, issues = load_settings_resolution(

@@ -19,7 +19,12 @@ from codestrata.security.database_url import sanitize_exception_message
 
 mcp_app = typer.Typer(
     name="mcp",
-    help="CodeStrata Model Context Protocol (MCP) server commands.",
+    help=(
+        "CodeStrata Model Context Protocol (MCP) server commands. "
+        "Community Engine tools query local assessment knowledge; "
+        "Platform extensions add repository_* and enterprise_* tools when installed. "
+        "Requires [mcp].enabled=true. Not required for codestrata assess."
+    ),
     no_args_is_help=True,
 )
 
@@ -91,7 +96,9 @@ def serve(
     settings = _load_or_exit(config, profile=profile)
     if not settings.mcp.enabled:
         print(
-            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).",
+            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).\n"
+            "Fix: set [mcp].enabled = true in codestrata.toml, then re-run this command.\n"
+            "MCP is optional and not required for codestrata assess.",
             file=sys.stderr,
         )
         raise typer.Exit(code=1)
@@ -159,12 +166,19 @@ def tools_command(
         ),
     ] = None,
 ) -> None:
-    """List registered MCP tool names and versions (no long-running transport)."""
+    """List registered MCP tool names and short descriptions.
+
+    Community Engine tools are always listed when MCP is enabled. Platform
+    `repository_*` and `enterprise_*` tools appear when Platform extensions load.
+    """
 
     settings = _load_or_exit(config, profile=profile)
     if not settings.mcp.enabled:
         print(
-            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).",
+            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).\n"
+            "Fix: set [mcp].enabled = true in codestrata.toml, then re-run this command.\n"
+            "MCP is optional and not required for codestrata assess.\n"
+            "Docs: engine/docs/mcp/setup.md",
             file=sys.stderr,
         )
         raise typer.Exit(code=1)
@@ -191,6 +205,20 @@ def tools_command(
         "server_name": settings.mcp.server_name,
         "server_version": settings.mcp.server_version or PACKAGE_VERSION,
         "transport": settings.mcp.transport,
+        "product_boundary": {
+            "community_engine": (
+                "Local assessment knowledge tools (list/get/explain, run_assessment, "
+                "optional AI artifacts)."
+            ),
+            "platform_extensions": (
+                "repository_* Retrieval/Answering and enterprise_* Engineering "
+                "Knowledge Graph tools when Platform is installed."
+            ),
+            "auth_note": (
+                "MCP does not use CODESTRATA_PLATFORM_API_KEY. Optional AI uses "
+                "Engine AI provider credentials only."
+            ),
+        },
         "tools": asyncio.run(_list()),
         "aliases": {
             "repository.search": "repository_search",
@@ -221,7 +249,9 @@ def health_command(
     settings = _load_or_exit(config, profile=profile)
     if not settings.mcp.enabled:
         print(
-            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).",
+            "CodeStrata MCP is disabled in configuration ([mcp].enabled=false).\n"
+            "Fix: set [mcp].enabled = true in codestrata.toml, then re-run this command.\n"
+            "MCP is optional and not required for codestrata assess.",
             file=sys.stderr,
         )
         raise typer.Exit(code=1)

@@ -59,12 +59,6 @@ def postgres_engine(postgres_url: str) -> Iterator[Engine]:
         engine.dispose()
 
 
-# Historical fixture name — now PostgreSQL-backed.
-@pytest.fixture
-def sqlite_engine(postgres_engine: Engine) -> Engine:
-    return postgres_engine
-
-
 @pytest.fixture
 def session_factory(postgres_engine: Engine):
     return create_session_factory(postgres_engine)

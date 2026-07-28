@@ -1,0 +1,12 @@
+GraphNeighborResponse:
+  properties:
+    edge:
+      $ref: '#/components/schemas/GraphEdgeResponse'
+    node:
+      $ref: '#/components/schemas/GraphNodeResponse'
+  additionalProperties: false
+  type: object
+  required:
+  - edge
+  - node
+  title: GraphNeighborResponse

@@ -1,0 +1,26 @@
+DependencyHotspotResponse:
+  properties:
+    node_id:
+      type: string
+      title: Node Id
+    display_name:
+      type: string
+      title: Display Name
+    fan_in:
+      type: integer
+      title: Fan In
+    fan_out:
+      type: integer
+      title: Fan Out
+    kind:
+      type: string
+      title: Kind
+  additionalProperties: false
+  type: object
+  required:
+  - node_id
+  - display_name
+  - fan_in
+  - fan_out
+  - kind
+  title: DependencyHotspotResponse

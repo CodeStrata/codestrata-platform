@@ -1,10 +1,16 @@
 # codestrata-platform
 
-Private **source of truth** monorepo for CodeStrata Community and Commercial
-development. Do not treat this repository as a public product surface.
+Private **source of truth** monorepo for **CodeStrata Engine** (Community) and
+**CodeStrata Platform** development. Do not treat this repository as a public
+product surface.
 
-> The Engine produces structured engineering intelligence.  
+> The Engine produces structured Engineering Intelligence.  
 > The Platform stores, connects, retrieves, and reasons over that intelligence.
+
+Official product names: CodeStrata · CodeStrata Engine · CodeStrata Platform ·
+CodeStrata VS Code Extension · CodeStrata Cursor Extension.  
+AI is a capability, not part of the product name.  
+Visual branding: [`governance/assets/DESIGN-SYSTEM.md`](governance/assets/DESIGN-SYSTEM.md).
 
 | | |
 | --- | --- |
@@ -14,96 +20,87 @@ development. Do not treat this repository as a public product surface.
 
 ---
 
-## Repository layout
+## Start here (developer journey)
 
-```text
-codestrata-platform/
-├── engine/              Community Engine (CLI, MCP, packaging)  → codestrata-engine
-├── examples/            Real-world showcase manifests          → codestrata-examples
-├── test-fixtures/       Internal language samples (not exported as examples)
-├── cursor-plugin/       Placeholder only                       → codestrata-cursor
-├── vscode-plugin/       Placeholder only                       → codestrata-vscode
-├── platform/            Implemented commercial RAG + Knowledge Graph (not exported)
-├── scripts/             Operational: verify_release, export, security, showcase wrappers
-├── public-export-manifest.yaml
-└── tests/architecture/  Engine ↔ Platform boundary tests
-```
+Public product documentation lives in [`docs/`](docs/) (future **codestrata-docs** /
+[docs.codestrata.ai](https://docs.codestrata.ai)). Engine `engine/docs/` is for
+maintainer contracts and architecture.
 
-| Area | Path | Public mirror? |
-| ---- | ---- | -------------- |
-| **Engine** | `engine/` | Yes → `codestrata-engine` |
-| **Examples** | `examples/` | Yes → `codestrata-examples` |
-| **Test fixtures** | `test-fixtures/` | No (Engine smoke may vendor `sample-js-app`) |
-| **Plugins** | `cursor-plugin/`, `vscode-plugin/` | Placeholders only |
-| **Platform** | `platform/` | No |
-
-Related products outside this monorepo: `codestrata-ui`, `codestrata-site`.
-
----
-
-## Engine vs Platform
-
-| Capability | Community Engine | Platform (`platform/`) |
-| ---------- | ---------------- | ---------------------- |
-| Local / GitHub assess, HTML/JSON reports | Shipped | Consumes Engine |
-| MCP assessment tools | Shipped | Adds RAG + KG tools via entry points |
-| Repository RAG (index/retrieve/answer) | Not included | Implemented under `platform/rag/` |
-| Persistent Knowledge Graph | Not included | Implemented under `platform/knowledge_graph/` |
-| Hosted multi-tenancy / SSO / billing | Not included | Not implemented |
-| Cursor / VS Code extensions | Placeholders | — |
-
-**Dependency rule:** Platform → Engine only. Engine must never import Platform.
-
----
-
-## Generated public repositories
-
-Public GitHub repositories are **generated mirrors**. Develop only in this
-monorepo, then export and publish intentionally.
-
-| Monorepo path | Public repository |
-| ------------- | ----------------- |
-| `engine/` | `codestrata-engine` |
-| `examples/` | `codestrata-examples` |
-| `cursor-plugin/` | `codestrata-cursor` |
-| `vscode-plugin/` | `codestrata-vscode` |
-
-Staging export (no remotes, push, or publish):
-
-```bash
-python scripts/verify_release.py --skip-lint --skip-tests
-# or step-by-step:
-python scripts/export-public-repos.py --dry-run
-python scripts/export-public-repos.py
-python scripts/validate-public-exports.py
-```
-
-Full export, validation, release, and ownership rules:
-**[platform/README.md](platform/README.md)** (maintainer handbook).
-
----
-
-## Maintainer onboarding
-
-1. Read this file for orientation.
-2. Follow [CONTRIBUTING.md](CONTRIBUTING.md) for setup and quality gates.
-3. Use **[platform/README.md](platform/README.md)** for export, release, and
-   documentation ownership (do not duplicate that handbook here).
-4. Check [ROADMAP.md](ROADMAP.md) for current direction and
-   [ARCHITECTURE.md](ARCHITECTURE.md) for ecosystem architecture.
-
-Quick local smoke:
+| Step | Doc |
+| ---- | --- |
+| What is CodeStrata? | [docs/getting-started/](docs/getting-started/) |
+| Install | [docs/getting-started/install.md](docs/getting-started/install.md) |
+| First assessment | [docs/getting-started/first-assessment.md](docs/getting-started/first-assessment.md) |
+| Community vs Platform | [docs/community/vs-platform.md](docs/community/vs-platform.md) |
+| Public docs portal | [docs/README.md](docs/README.md) |
+| Engine maintainer docs | [engine/docs/README.md](engine/docs/README.md) |
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -e "./engine[dev,mcp]"
-pip install -e "./platform[dev,mcp,pgvector]"
+codestrata init
+codestrata doctor
 codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
+# open reports/sample-js-app/<timestamp>/report.html
 ```
 
-Engine docs: [engine/docs/quick-start.md](engine/docs/quick-start.md) ·
-[engine/README.md](engine/README.md)
+---
+
+## Engine vs Platform
+
+| Capability | CodeStrata Engine (Community) | CodeStrata Platform |
+| ---------- | ----------------------------- | ------------------- |
+| Local / GitHub assess, Engineering Assessment reports | Shipped | Consumes Engine |
+| Deterministic Engineering Intelligence | Shipped | Consumes / stores |
+| Optional customer-configured AI | Shipped (`--with-ai`) | Provider utilities |
+| Local MCP / local knowledge | Shipped | Adds Platform MCP surfaces |
+| Engineering Knowledge Graph | Not included | Implemented |
+| Repository Retrieval / Answering | Not included | Implemented |
+| Portfolio Intelligence | Not included | Implemented |
+| Executive Intelligence / Strategic Roadmap | Not included | Implemented |
+| Hosted multi-tenancy / SSO / billing | Not included | Not fully productized |
+| CodeStrata Cursor / VS Code Extension | `cursor-plugin/` · `vscode-plugin/` | — |
+
+**Dependency rule:** Platform → Engine only. Engine must never import Platform.
+
+Details: [docs/community/vs-platform.md](docs/community/vs-platform.md).
+
+---
+
+## Maintainer onboarding
+
+1. Follow the developer journey above for Engine smoke.
+2. [CONTRIBUTING.md](CONTRIBUTING.md) for setup and quality gates.
+3. **[platform/README.md](platform/README.md)** for export, release, and doc ownership.
+4. [ARCHITECTURE.md](ARCHITECTURE.md) · [CHANGELOG.md](CHANGELOG.md) · [ROADMAP.md](ROADMAP.md) (archive candidate).
+
+Platform install (contributors only):
+
+```bash
+pip install -e "./platform[dev,mcp,pgvector]"
+```
 
 Security: [engine/SECURITY.md](engine/SECURITY.md) ·
-[engine/docs/security/threat-model.md](engine/docs/security/threat-model.md)
+[engine/docs/security/threat-model.md](engine/docs/security/threat-model.md).
+
+---
+
+## Generated public repositories
+
+Public GitHub repositories are **generated mirrors**. Develop only here, then
+export intentionally. Handbook: [platform/README.md](platform/README.md).
+
+| Monorepo path | Public repository |
+| ------------- | ----------------- |
+| `engine/` | `codestrata-engine` |
+| `examples/` | `codestrata-examples` |
+| `docs/` | `codestrata-docs` |
+| `cursor-plugin/` | `codestrata-cursor` |
+| `vscode-plugin/` | `codestrata-vscode` |
+
+```bash
+python scripts/verify_release.py --skip-lint --skip-tests
+```
+
+Related products outside this monorepo: `codestrata-ui`, `codestrata-site`.

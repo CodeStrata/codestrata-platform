@@ -1,0 +1,39 @@
+PresentationTrendPointDto:
+  properties:
+    metric_key:
+      type: string
+      title: Metric Key
+    current_value:
+      type: integer
+      title: Current Value
+    snapshot_timestamp:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Snapshot Timestamp
+    portfolio_snapshot_id:
+      type: string
+      title: Portfolio Snapshot Id
+    executive_intelligence_id:
+      type: string
+      title: Executive Intelligence Id
+    comparison_metadata:
+      additionalProperties:
+        type: string
+      type: object
+      title: Comparison Metadata
+    direction:
+      type: string
+      title: Direction
+  additionalProperties: false
+  type: object
+  required:
+  - metric_key
+  - current_value
+  - snapshot_timestamp
+  - portfolio_snapshot_id
+  - executive_intelligence_id
+  - comparison_metadata
+  - direction
+  title: PresentationTrendPointDto

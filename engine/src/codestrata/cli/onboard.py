@@ -21,7 +21,7 @@ from codestrata.logging_config import configure_logging
 def register_onboard_command(app: typer.Typer) -> None:
     """Register ``codestrata onboard`` on the root Typer application."""
 
-    @app.command("onboard")
+    @app.command("onboard", rich_help_panel="Advanced")
     def onboard(
         repository: Annotated[
             str,

@@ -1,0 +1,267 @@
+paths:
+  /api/v1/executive-intelligence/{executive_intelligence_id}/presentation:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Executive Presentation
+      operationId: get_executive_presentation_api_v1_executive_intelligence__executive_intelligence_id__presentation_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutivePresentationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/executive-presentation/latest:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Latest Executive Presentation
+      operationId: get_latest_executive_presentation_api_v1_portfolios__portfolio_id__executive_presentation_latest_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutivePresentationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/executive-presentation:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Executive Presentation By Portfolio Snapshot
+      operationId: get_executive_presentation_by_portfolio_snapshot_api_v1_portfolio_snapshots__portfolio_snapshot_id__executive_presentation_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: portfolio_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Portfolio Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutivePresentationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/presentation/executive-summary:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Executive Presentation Executive Summary
+      operationId: get_executive_presentation_executive_summary_api_v1_executive_intelligence__executive_intelligence_id__presentation_executive_summary_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationExecutiveSummaryDto'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/presentation/cto-summary:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Executive Presentation Cto Summary
+      operationId: get_executive_presentation_cto_summary_api_v1_executive_intelligence__executive_intelligence_id__presentation_cto_summary_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationCtoSummaryDto'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal
+  /api/v1/executive-intelligence/{executive_intelligence_id}/presentation/scorecard:
+    get:
+      tags:
+      - Executive Presentation
+      summary: Get Executive Presentation Scorecard
+      operationId: get_executive_presentation_scorecard_api_v1_executive_intelligence__executive_intelligence_id__presentation_scorecard_get
+      parameters:
+      - name: executive_intelligence_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Executive Intelligence Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationScorecardDto'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-executive
+      x-codestrata-audience: internal

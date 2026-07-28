@@ -20,7 +20,7 @@ def _normalize_postgres_url(url: str) -> str:
     lowered = compact.lower()
     if lowered.startswith("sqlite"):
         raise RuntimeError(
-            "SQLite is not supported for the Commercial Platform. "
+            "SQLite is not supported for CodeStrata Platform. "
             f"Set {CANONICAL_DATABASE_URL_ENV} to a PostgreSQL URL."
         )
     if lowered.startswith("postgres://"):
@@ -29,7 +29,7 @@ def _normalize_postgres_url(url: str) -> str:
         return "postgresql+psycopg://" + compact[len("postgresql://") :]
     if not lowered.startswith("postgresql+psycopg://"):
         raise RuntimeError(
-            "Commercial Platform requires postgresql+psycopg://… "
+            "CodeStrata Platform requires postgresql+psycopg://… "
             f"(got {compact.split('://', 1)[0]!r})."
         )
     return compact
@@ -60,7 +60,7 @@ def resolve_api_database_url(*, override: str | None = None) -> str:
         )
         return _normalize_postgres_url(deprecated_pg)
     raise RuntimeError(
-        "Commercial Platform requires PostgreSQL. Set "
+        "CodeStrata Platform requires PostgreSQL. Set "
         f"{CANONICAL_DATABASE_URL_ENV}=postgresql+psycopg://user:***@host:port/database. "
         f"For local Docker Compose use a local postgresql+psycopg URL "
         f"(default credentials are for local Compose only)."
@@ -75,7 +75,7 @@ class ApiSettings:
     use_memory: bool = False
     artifact_storage_root: Path | None = None
     max_artifact_bytes: int = 10_485_760
-    title: str = "CodeStrata Commercial Platform API"
+    title: str = "CodeStrata Platform API"
     version: str = "v1"
 
     @classmethod
@@ -83,15 +83,14 @@ class ApiSettings:
         root_raw = os.environ.get("CODESTRATA_PLATFORM_ARTIFACT_STORAGE_ROOT", "").strip()
         max_bytes_raw = os.environ.get("CODESTRATA_PLATFORM_MAX_ARTIFACT_BYTES", "").strip()
         if use_memory:
+            # Memory mode still requires a well-formed PostgreSQL URL for settings
+            # shape consistency; it is not used for persistence when use_memory=True.
             resolved = (
                 database_url
                 or os.environ.get(CANONICAL_DATABASE_URL_ENV, "").strip()
                 or _DEFAULT_DOCKER
             )
-            if resolved.lower().startswith("sqlite"):
-                resolved = _DEFAULT_DOCKER
-            else:
-                resolved = _normalize_postgres_url(resolved)
+            resolved = _normalize_postgres_url(resolved)
         else:
             resolved = resolve_api_database_url(override=database_url)
         return cls(

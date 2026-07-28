@@ -26,18 +26,23 @@ report.html (self-contained, branded, HTML report version 3.0)
 | `advisor.json` | Optional Modernization Advisor narrative |
 | `advisor-execution.json` | Internal Advisor provider/model/status/errors |
 
-## Sections (HTML v3)
+## Sections (HTML v3 — Design System aligned)
 
-1. Cover (brand, repository, report/engine/advisor versions, generated time, KPIs)
-2. Contents (TOC with section anchors)
-3. Key Takeaways (3–5 bullets from deterministic evidence + Advisor when present)
-4. Engineering Modernization Assessment (posture summary + technology overview)
-5. Priority Actions (Immediate / Near Term / Future recommendations)
-6. Findings (severity-led overview)
-7. Capability Assessments (optional Analysis Intelligence packs)
-8. Phased Modernization Plan (when roadmap pack present)
-9. Modernization Advisor (only when enrichment is present)
-10. Technical Appendix (repository, evidence, artifacts, metadata)
+Brand and layout follow the CodeStrata Design System (tokens mirrored in the
+public docs portal).
+
+1. Cover (brand, edition, repository, KPIs)
+2. Contents (TOC)
+3. Executive Summary
+4. Repository Overview
+5. Assessment Summary (verdict, takeaways, risks)
+6. Domain Intelligence (optional capability packs)
+7. Findings (cross-domain insights)
+8. Recommendations (Priority Actions + opportunities)
+9. Engineering Assessment Conclusion
+10. Implementation Sequence (Engine assess roadmap section — not Platform Strategic Roadmap)
+11. Optional AI Enhancements (when AI enrichment present)
+12. Technical Appendix (evidence, graphs, artifacts, rule IDs)
 
 ## Executive dashboard cards
 

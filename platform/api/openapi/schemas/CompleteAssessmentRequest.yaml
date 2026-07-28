@@ -1,0 +1,15 @@
+CompleteAssessmentRequest:
+  properties:
+    generated_reports:
+      items:
+        $ref: '#/components/schemas/GeneratedReportRequest'
+      type: array
+      title: Generated Reports
+    references:
+      items:
+        $ref: '#/components/schemas/AssessmentReferenceRequest'
+      type: array
+      title: References
+  additionalProperties: false
+  type: object
+  title: CompleteAssessmentRequest

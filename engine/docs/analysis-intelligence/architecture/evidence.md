@@ -12,7 +12,7 @@
 ## Provenance labels
 
 - `architecture_analysis_view` — observed from repository sources after normalization
-- `enterprise-declared` — from optional Enterprise Knowledge Graph context
+- `enterprise-declared` — from optional Engineering Knowledge Graph context
 
 ## Distinctions
 

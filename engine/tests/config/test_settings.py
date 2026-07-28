@@ -759,3 +759,22 @@ def test_extensions_analyzers_allowlist_loads(tmp_path: Path) -> None:
     )
     settings = load_settings(config_file)
     assert settings.extensions.analyzers.enabled == ["com.example.license_scan"]
+
+
+def test_blank_bedrock_answer_model_is_treated_as_unset(tmp_path: Path) -> None:
+    """Blank ai.bedrock.answer_model must load as empty string (not None)."""
+
+    config_file = tmp_path / "codestrata.toml"
+    config_file.write_text(
+        """
+        [repository]
+        path = "."
+
+        [ai.bedrock]
+        answer_model = ""
+        """,
+        encoding="utf-8",
+    )
+    settings = load_settings(config_file)
+    assert settings.ai.bedrock.answer_model == ""
+    assert isinstance(settings.ai.bedrock.answer_model, str)

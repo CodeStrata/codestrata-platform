@@ -1,0 +1,30 @@
+RetrievalChunkSummaryResponse:
+  properties:
+    chunk_id:
+      type: string
+      title: Chunk Id
+    document_id:
+      type: string
+      title: Document Id
+    ordinal:
+      type: integer
+      title: Ordinal
+    token_estimate:
+      type: integer
+      title: Token Estimate
+    text:
+      type: string
+      title: Text
+    has_embedding:
+      type: boolean
+      title: Has Embedding
+  additionalProperties: false
+  type: object
+  required:
+  - chunk_id
+  - document_id
+  - ordinal
+  - token_estimate
+  - text
+  - has_embedding
+  title: RetrievalChunkSummaryResponse

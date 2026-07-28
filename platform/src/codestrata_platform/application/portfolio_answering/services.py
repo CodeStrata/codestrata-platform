@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 from codestrata_platform.application.portfolio_answering.citations import (
     PortfolioContextSufficiencyPolicy,
@@ -360,12 +361,12 @@ class PortfolioAnswerOrchestrationService:
         except Exception as error:  # noqa: BLE001 - orchestration boundary
             if run.status not in {AnswerStatus.FAILED, AnswerStatus.REJECTED}:
                 try:
-                    run.fail(str(error)[:1000])
+                    run.fail(safe_failure_summary(error, limit=1000))
                     self._answers.save(run)
                 except Exception:  # noqa: BLE001
                     pass
             raise ValidationError(
-                f"Portfolio answering failed: {error}",
+                f"Portfolio answering failed: {safe_failure_summary(error)}",
                 reason_code="portfolio_answering_failed",
             ) from error
 

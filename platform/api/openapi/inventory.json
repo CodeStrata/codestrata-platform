@@ -1,0 +1,30 @@
+{
+  "by_status": {
+    "implemented": 136,
+    "partial": 12
+  },
+  "by_tag": {
+    "Answering": 5,
+    "Assessment Intelligence": 5,
+    "Assessments": 5,
+    "Engineering Intelligence": 7,
+    "Executive Intelligence": 8,
+    "Executive Presentation": 6,
+    "Health": 2,
+    "Ingestion": 6,
+    "Ingestion Artifacts": 6,
+    "Ingestion Intelligence": 3,
+    "Knowledge Graph Intelligence": 14,
+    "Knowledge Graphs": 10,
+    "Organizations": 6,
+    "Portfolio": 20,
+    "Portfolio Answering": 5,
+    "Portfolio Retrieval": 11,
+    "Repositories": 6,
+    "Retrieval": 11,
+    "Strategic Portfolio Roadmap": 6,
+    "Workspaces": 6
+  },
+  "operations": 148,
+  "paths": 130
+}

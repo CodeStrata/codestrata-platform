@@ -1,0 +1,32 @@
+GraphNodeResponse:
+  properties:
+    node_id:
+      type: string
+      title: Node Id
+    node_type:
+      type: string
+      title: Node Type
+    canonical_type:
+      type: string
+      title: Canonical Type
+    canonical_id:
+      type: string
+      title: Canonical Id
+    display_name:
+      type: string
+      title: Display Name
+    properties:
+      anyOf:
+      - additionalProperties: true
+        type: object
+      - type: 'null'
+      title: Properties
+  additionalProperties: false
+  type: object
+  required:
+  - node_id
+  - node_type
+  - canonical_type
+  - canonical_id
+  - display_name
+  title: GraphNodeResponse

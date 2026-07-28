@@ -1,7 +1,8 @@
 """Shared-secret API access gate (not a full identity platform).
 
 Development may run without a key. Production fails closed unless an API key is
-configured. When a key is configured, every non-health request must present it.
+configured. When a key is configured, every non-health/readiness request must
+present it. OpenAPI docs are public only outside production.
 """
 
 from __future__ import annotations
@@ -21,7 +22,24 @@ from codestrata_platform.api.dto.common import ErrorDetailDto, ErrorResponseDto
 PLATFORM_ENV_VAR = "CODESTRATA_PLATFORM_ENV"
 PLATFORM_API_KEY_ENV = "CODESTRATA_PLATFORM_API_KEY"
 _PRODUCTION_ENVS = frozenset({"production", "prod"})
+_PUBLIC_PATHS = frozenset({"/health", "/ready"})
+_DOCS_PATHS = frozenset(
+    {
+        "/docs",
+        "/openapi.json",
+        "/redoc",
+        "/api/docs",
+        "/api/openapi.yaml",
+        "/api/openapi.json",
+    }
+)
 _CallNext = Callable[[Request], Awaitable[Response]]
+
+
+def _is_docs_path(path: str) -> bool:
+    if path in _DOCS_PATHS:
+        return True
+    return path.startswith("/api/docs/")
 
 
 def resolve_platform_env() -> str:
@@ -40,7 +58,7 @@ def assert_production_auth_configuration() -> None:
         return
     if resolve_platform_api_key() is None:
         raise RuntimeError(
-            f"Commercial Platform production requires {PLATFORM_API_KEY_ENV}. "
+            f"CodeStrata Platform production requires {PLATFORM_API_KEY_ENV}. "
             f"Set {PLATFORM_ENV_VAR}=development for local use, or configure a "
             "shared API key before starting the API."
         )
@@ -66,12 +84,23 @@ class PlatformApiKeyMiddleware(BaseHTTPMiddleware):
         if self._api_key is None:
             return await call_next(request)
         path = request.url.path
-        if path in {"/health", "/docs", "/openapi.json", "/redoc"}:
+        if path in _PUBLIC_PATHS:
+            return await call_next(request)
+        # Keep OpenAPI browsable in non-production; require the key in production.
+        if _is_docs_path(path) and resolve_platform_env() not in _PRODUCTION_ENVS:
             return await call_next(request)
         authorization = request.headers.get("authorization", "")
         scheme, _, credential = authorization.partition(" ")
         if scheme.lower() != "bearer" or not credential.strip():
-            return _unauthorized("Missing or invalid Authorization bearer token")
+            return _unauthorized(
+                "Missing or invalid Authorization header. "
+                f"Send Authorization: Bearer <key> using {PLATFORM_API_KEY_ENV}. "
+                "This is the CodeStrata Platform API key, not an AI provider credential."
+            )
         if not hmac.compare_digest(credential.strip(), self._api_key):
-            return _unauthorized("Invalid API credentials")
+            return _unauthorized(
+                "Invalid CodeStrata Platform API key. "
+                f"Verify {PLATFORM_API_KEY_ENV}. "
+                "Do not use AI provider tokens (Bedrock/OpenAI/etc.) here."
+            )
         return await call_next(request)

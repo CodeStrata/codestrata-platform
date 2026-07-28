@@ -1,0 +1,29 @@
+UpdatePortfolioRequest:
+  properties:
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    name:
+      anyOf:
+      - type: string
+        maxLength: 256
+        minLength: 1
+      - type: 'null'
+      title: Name
+    description:
+      anyOf:
+      - type: string
+        maxLength: 4000
+      - type: 'null'
+      title: Description
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  title: UpdatePortfolioRequest

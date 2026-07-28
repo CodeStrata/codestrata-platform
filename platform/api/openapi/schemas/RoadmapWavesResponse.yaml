@@ -1,0 +1,15 @@
+RoadmapWavesResponse:
+  properties:
+    identity:
+      $ref: '#/components/schemas/RoadmapIdentityDto'
+    waves:
+      items:
+        $ref: '#/components/schemas/RoadmapWaveBucketDto'
+      type: array
+      title: Waves
+  additionalProperties: false
+  type: object
+  required:
+  - identity
+  - waves
+  title: RoadmapWavesResponse

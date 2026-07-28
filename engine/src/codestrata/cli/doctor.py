@@ -150,6 +150,37 @@ def run_doctor_checks(
                     f"repository={source})",
                 )
             )
+            checks.append(
+                DoctorCheck(
+                    name="ai_optional",
+                    ok=True,
+                    detail=(
+                        f"AI provider configured as '{settings.ai.provider}' "
+                        "(optional; deterministic assess --no-ai does not require it)"
+                    ),
+                )
+            )
+            mcp_enabled = bool(getattr(settings.mcp, "enabled", False))
+            if mcp_enabled:
+                checks.append(
+                    DoctorCheck(
+                        name="mcp",
+                        ok=True,
+                        detail="MCP enabled in configuration ([mcp].enabled=true)",
+                    )
+                )
+            else:
+                checks.append(
+                    DoctorCheck(
+                        name="mcp",
+                        ok=True,
+                        detail=(
+                            "MCP disabled (default). Not required for assess. "
+                            "To enable later: set [mcp].enabled = true, then "
+                            "codestrata mcp serve"
+                        ),
+                    )
+                )
             if settings.repository.path:
                 repo_path = Path(settings.repository.path)
                 if not repo_path.is_absolute():
@@ -209,7 +240,7 @@ def run_doctor_checks(
 def register_doctor_command(app: typer.Typer) -> None:
     """Register ``codestrata doctor``."""
 
-    @app.command("doctor")
+    @app.command("doctor", rich_help_panel="Primary")
     def doctor_command(
         config: Annotated[
             Path,
@@ -231,9 +262,10 @@ def register_doctor_command(app: typer.Typer) -> None:
             ),
         ] = False,
     ) -> None:
-        """Diagnose environment and configuration for Community assess.
+        """Diagnose environment and configuration for CodeStrata Engine assess.
 
         Exit code 0 when all checks pass; 1 when any check fails.
+        AI provider credentials are optional for deterministic assess (--no-ai).
         """
 
         checks = run_doctor_checks(

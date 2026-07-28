@@ -1,4 +1,4 @@
-# Dependency Assessment Inventory (Phase 4.4.4)
+# Dependency Assessment Inventory
 
 Schema: `assessment.dependency` **1.2.0** (`dependency-assessment.json`).
 

@@ -553,6 +553,7 @@ def test_quiet_suppresses_stages_and_json_summary(
     joined = "\n".join(console.messages)
     assert "Scanning repository" not in joined
     # Quiet + json-summary: machine JSON on stdout only (no human completion dump).
+    assert "Engineering assessment completed" not in joined
     assert "Modernization assessment completed" not in joined
     assert "Deterministic recommendations:" not in joined
     captured = capsys.readouterr()
@@ -575,10 +576,11 @@ def test_quiet_prints_compact_completion_summary(tmp_path: Path) -> None:
     )
     joined = "\n".join(console.messages)
     assert "Scanning repository" not in joined
-    assert "Modernization assessment completed" in joined
+    assert "Engineering assessment completed" in joined
     assert "Repository:" in joined
     assert "AI status:" in joined
-    assert "Report location:" in joined
+    assert "HTML report:" in joined
+    assert "JSON report:" in joined
     assert "Deterministic recommendations:" not in joined
 
 
@@ -757,7 +759,7 @@ def test_concise_success_output_without_raw_response_or_credentials(
     provider = FakeProvider(raw_response_text="SYSTEM PROMPT AKIAIOSFODNN7EXAMPLE")
     _run(tmp_path, provider=provider, console=console)
     joined = "\n".join(console.messages)
-    assert "Modernization assessment completed" in joined
+    assert "Engineering assessment completed" in joined
     assert "Assessment mode: AI Enhanced" in joined
     assert "Repository:" in joined
     assert "Findings:" in joined

@@ -1,10 +1,12 @@
-# CodeStrata MCP Overview (Phase 5.7)
+# CodeStrata MCP Overview
 
-**Status:** Complete — repository-intelligence MCP tools over existing services.
+<!-- documentation-visibility: public-contributor -->
 
-CodeStrata exposes assessment, retrieval, and grounded-answer capabilities through
-a standards-compliant Model Context Protocol server. MCP is an **interface layer
-only**; tools delegate to existing application services.
+**Status:** Community MCP tools for local assessment knowledge are documented here.
+
+CodeStrata Engine exposes assessment knowledge through a standards-compliant
+Model Context Protocol server. MCP is an **interface layer only**; tools
+delegate to existing Engine services.
 
 ```text
 MCP Client
@@ -15,39 +17,27 @@ MCP Tool Registry
    ↓
 MCP Application Adapters
    ↓
-KnowledgeQueryService / RepositoryRetriever / GroundedAnswerEngine
+Local assessment knowledge / assess runtime
 ```
+
+## Community vs Platform
+
+| Edition | What MCP exposes |
+| ------- | ---------------- |
+| **CodeStrata Engine** (Community) | Local assessment knowledge: list/get/explain, `run_assessment`, optional AI artifacts |
+| **CodeStrata Platform** | Additional organizational MCP tools when Platform is installed |
+
+Platform REST and organizational MCP details are Platform documentation.
+Community docs only state that Platform capabilities exist separately.
+
+Platform API keys are not used by Community MCP and are not AI provider credentials.
 
 ## Principles
 
-- Model-independent (no Bedrock/OpenAI/Anthropic/local LLM in this phase)
-- Tenant + repository (+ optional scan) isolation
+- Model-independent defaults for Community Engine tools
 - Structured, bounded, traceable JSON outputs
 - Never expose credentials, database URLs, env values, or embeddings
-- Read-only tools (no repository mutation, shell, or arbitrary filesystem access)
-
-## External tool names
-
-SDK registration uses underscores. Dotted aliases map 1:1:
-
-| External name | Registered tool |
-| ------------- | --------------- |
-| `repository.search` | `repository_search` |
-| `repository.answer` | `repository_answer` |
-| `repository.findings` | `repository_findings` |
-| `repository.recommendations` | `repository_recommendations` |
-| `repository.assessments` | `repository_assessments` |
-| `repository.files` | `repository_files` |
-| `repository.architecture` | `repository_architecture` |
-| `repository.security` | `repository_security` |
-| `repository.dependencies` | `repository_dependencies` |
-| `repository.tests` | `repository_tests` |
-| `repository.cloud` | `repository_cloud` |
-| `repository.ai_readiness` | `repository_ai_readiness` |
-| `repository.performance` | `repository_performance` |
-| `repository.health` | `repository_health` |
-
-Phase 2 knowledge-store tools (`list_findings`, `run_assessment`, …) remain available.
+- Read-only tools except explicit assessment operations
 
 ## Schemas
 
@@ -55,16 +45,9 @@ Phase 2 knowledge-store tools (`list_findings`, `run_assessment`, …) remain av
 - `mcp-health-response` 1.0.0
 - `mcp-server-manifest` 1.0.0
 
-## `repository.answer` labeling
-
-Uses `DeterministicExtractiveAnswerProvider`:
-
-- non-generative
-- non-production
-- deterministic extraction only
-
-Not an LLM-generated answer. Future production providers must keep citation and
-grounding contracts.
+## Related
 
 See [setup.md](setup.md), [tools.md](tools.md), [client-examples.md](client-examples.md),
 [security.md](security.md), and [troubleshooting.md](troubleshooting.md).
+
+Boundary: [https://docs.codestrata.ai/community/vs-platform](https://docs.codestrata.ai/community/vs-platform).

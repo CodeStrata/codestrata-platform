@@ -1,0 +1,63 @@
+PortfolioRetrievalSearchRequest:
+  properties:
+    query_text:
+      type: string
+      maxLength: 4000
+      minLength: 1
+      title: Query Text
+    mode:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Mode
+      default: hybrid
+    top_k:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Top K
+      default: 10
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+    repository_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Repository Ids
+    exclude_repository_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Exclude Repository Ids
+    repository_balance_mode:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Repository Balance Mode
+      default: none
+    include_portfolio_aggregates:
+      type: boolean
+      title: Include Portfolio Aggregates
+      default: true
+    include_repository_context:
+      type: boolean
+      title: Include Repository Context
+      default: true
+    include_score_breakdown:
+      type: boolean
+      title: Include Score Breakdown
+      default: true
+  additionalProperties: false
+  type: object
+  required:
+  - query_text
+  title: PortfolioRetrievalSearchRequest

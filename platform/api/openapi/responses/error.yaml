@@ -1,0 +1,12 @@
+Unauthorized:
+  description: Missing or invalid Platform API key
+  content:
+    application/json:
+      schema:
+        $ref: '#/components/schemas/ErrorResponseDto'
+ProblemDetailsProposed:
+  description: PROPOSED RFC 9457 problem response
+  content:
+    application/problem+json:
+      schema:
+        $ref: '#/components/schemas/ProblemDetails'

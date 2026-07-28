@@ -1,0 +1,46 @@
+PresentationCoverageSummaryDto:
+  properties:
+    assessment_coverage_score:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Assessment Coverage Score
+    repository_coverage_score:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Repository Coverage Score
+    assessment_coverage:
+      anyOf:
+      - type: number
+      - type: 'null'
+      title: Assessment Coverage
+    repository_coverage:
+      anyOf:
+      - type: number
+      - type: 'null'
+      title: Repository Coverage
+    metric_coverage_average:
+      type: number
+      title: Metric Coverage Average
+    incomplete_metric_keys:
+      items:
+        type: string
+      type: array
+      title: Incomplete Metric Keys
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - assessment_coverage_score
+  - repository_coverage_score
+  - assessment_coverage
+  - repository_coverage
+  - metric_coverage_average
+  - incomplete_metric_keys
+  - limitations
+  title: PresentationCoverageSummaryDto

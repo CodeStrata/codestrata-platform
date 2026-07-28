@@ -1,0 +1,22 @@
+codestrata_platform__api__controllers__engineering__BuildSnapshotRequest:
+  properties:
+    assessment_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Assessment Id
+    intelligence_id:
+      anyOf:
+      - type: string
+        maxLength: 160
+      - type: 'null'
+      title: Intelligence Id
+    publish:
+      type: boolean
+      title: Publish
+      default: true
+  additionalProperties: false
+  type: object
+  required:
+  - assessment_id
+  title: BuildSnapshotRequest

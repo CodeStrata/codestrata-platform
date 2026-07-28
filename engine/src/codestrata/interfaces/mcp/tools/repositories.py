@@ -14,7 +14,10 @@ from codestrata.interfaces.mcp.tools._common import require_nonblank, run_bounde
 def register_repository_tools(server: FastMCP, queries: KnowledgeQueryService) -> None:
     @server.tool(name="list_repositories", structured_output=True)
     def list_repositories(limit: int = 50) -> dict[str, Any]:
-        """List registered repositories with latest assessment pointers."""
+        """List registered repositories with latest assessment pointers.
+
+        Scope: Community Engine (local knowledge store).
+        """
 
         def _run() -> dict[str, Any]:
             items = queries.list_repositories(limit=limit)
@@ -26,7 +29,10 @@ def register_repository_tools(server: FastMCP, queries: KnowledgeQueryService) -
 
     @server.tool(name="get_repository", structured_output=True)
     def get_repository(repository_identifier: str) -> dict[str, Any]:
-        """Get a repository by ID, canonical key, or GitHub URL (not local paths)."""
+        """Get a repository by ID, canonical key, or GitHub URL (not local paths).
+
+        Scope: Community Engine (local knowledge store).
+        """
 
         def _run() -> dict[str, Any]:
             identifier = require_nonblank(

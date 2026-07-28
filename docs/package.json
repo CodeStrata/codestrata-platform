@@ -1,0 +1,24 @@
+{
+  "name": "codestrata-docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CodeStrata public documentation portal (docs.codestrata.ai)",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "test": "npm run build && node scripts/validate.mjs",
+    "validate": "node scripts/validate.mjs",
+    "visual:capture": "node scripts/visual-capture.mjs",
+    "theme:validate": "node scripts/theme-validate.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.52.0",
+    "vitepress": "^1.6.3"
+  }
+}

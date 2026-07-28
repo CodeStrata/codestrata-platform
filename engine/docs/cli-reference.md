@@ -1,5 +1,12 @@
 # CLI Reference
 
+> **Canonical public overview:** [CLI](https://docs.codestrata.ai/reference/cli)  
+> Monorepo: `docs/reference/cli.md`
+
+Public journey commands are documented in the docs portal. The remainder of this
+file is the **Engine CLI implementation reference** for maintainers (flags,
+behaviors, contracts).
+
 Primary commands for CodeStrata. Run `codestrata COMMAND --help` for full
 options. Global: `codestrata --help`, `codestrata version`, `codestrata about`.
 

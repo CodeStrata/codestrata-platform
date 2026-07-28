@@ -1,0 +1,62 @@
+PresentationExecutiveSummaryDto:
+  properties:
+    headline:
+      type: string
+      title: Headline
+    overall_engineering_health:
+      type: integer
+      title: Overall Engineering Health
+    overall_health_status:
+      type: string
+      title: Overall Health Status
+    portfolio_risk:
+      type: integer
+      title: Portfolio Risk
+    portfolio_risk_status:
+      type: string
+      title: Portfolio Risk Status
+    modernization_outlook:
+      type: string
+      title: Modernization Outlook
+    major_strengths:
+      items:
+        type: string
+      type: array
+      title: Major Strengths
+    major_weaknesses:
+      items:
+        type: string
+      type: array
+      title: Major Weaknesses
+    highest_priority_recommendations:
+      items:
+        type: string
+      type: array
+      title: Highest Priority Recommendations
+    confidence_statement:
+      type: string
+      title: Confidence Statement
+    coverage_statement:
+      type: string
+      title: Coverage Statement
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - headline
+  - overall_engineering_health
+  - overall_health_status
+  - portfolio_risk
+  - portfolio_risk_status
+  - modernization_outlook
+  - major_strengths
+  - major_weaknesses
+  - highest_priority_recommendations
+  - confidence_statement
+  - coverage_statement
+  - limitations
+  title: PresentationExecutiveSummaryDto

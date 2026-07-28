@@ -75,7 +75,8 @@ def test_cli_help() -> None:
     result = runner.invoke(app, ["--help"])
 
     assert result.exit_code == 0
-    assert "evidence-based modernization" in result.stdout
+    assert "Engineering Assessment" in result.stdout
+    assert "CodeStrata Engine" in result.stdout
     assert "docs/quick-start.md" in result.stdout
     assert "version" in result.stdout
     assert "about" in result.stdout

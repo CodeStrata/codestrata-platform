@@ -1,0 +1,470 @@
+/* Bridge CodeStrata public tokens → VitePress theme variables.
+   Removes stock VitePress blue/indigo palette in BOTH themes. */
+
+@import "../../public/design-tokens/tokens.css";
+
+:root {
+  color-scheme: light dark;
+  --vp-font-family-base: var(--font-body);
+  --vp-font-family-mono: var(--font-mono);
+
+  --vp-c-bg: var(--bg);
+  --vp-c-bg-alt: var(--bg-2);
+  --vp-c-bg-elv: var(--surface);
+  --vp-c-bg-soft: var(--surface);
+
+  --vp-c-border: var(--border);
+  --vp-c-divider: var(--border);
+  --vp-c-gutter: var(--border);
+
+  --vp-c-text-1: var(--fg);
+  --vp-c-text-2: var(--fg-muted);
+  --vp-c-text-3: var(--fg-dim);
+
+  --vp-c-brand-1: var(--accent);
+  --vp-c-brand-2: var(--accent-bright);
+  --vp-c-brand-3: var(--amber-deep);
+  --vp-c-brand-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+
+  --vp-c-default-1: var(--surface-2);
+  --vp-c-default-2: var(--surface);
+  --vp-c-default-3: var(--bg-2);
+  --vp-c-default-soft: var(--surface);
+
+  --vp-c-mute: var(--surface);
+  --vp-c-mute-1: var(--surface);
+  --vp-c-mute-2: var(--surface-2);
+  --vp-c-mute-3: var(--border);
+
+  --vp-c-indigo-1: var(--accent);
+  --vp-c-indigo-2: var(--accent-bright);
+  --vp-c-indigo-3: var(--amber-deep);
+  --vp-c-indigo-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--accent-fg);
+  --vp-button-brand-bg: var(--accent);
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: var(--accent-fg);
+  --vp-button-brand-hover-bg: var(--accent-bright);
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: var(--accent-fg);
+  --vp-button-brand-active-bg: var(--amber-deep);
+
+  --vp-button-alt-border: var(--border-2);
+  --vp-button-alt-text: var(--fg);
+  --vp-button-alt-bg: transparent;
+  --vp-button-alt-hover-border: var(--fg-dim);
+  --vp-button-alt-hover-text: var(--fg);
+  --vp-button-alt-hover-bg: var(--surface);
+
+  --vp-code-bg: var(--code-bg);
+  --vp-code-color: #d7dde5;
+  --vp-code-block-bg: var(--code-bg);
+  --vp-code-copy-code-bg: var(--surface-2);
+  --vp-code-copy-code-border-color: var(--border);
+
+  --vp-nav-height: var(--nav-h);
+  --vp-nav-bg-color: color-mix(in srgb, var(--bg) 80%, transparent);
+  --vp-sidebar-bg-color: var(--bg);
+  --vp-local-nav-bg-color: var(--bg);
+
+  --vp-c-tip-1: var(--accent);
+  --vp-c-tip-2: var(--accent-bright);
+  --vp-c-tip-3: var(--amber-deep);
+  --vp-c-tip-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+
+  --vp-c-warning-1: var(--amber-bright);
+  --vp-c-warning-soft: color-mix(in srgb, var(--amber) 14%, transparent);
+
+  --vp-c-danger-1: var(--risk);
+  --vp-c-danger-soft: color-mix(in srgb, var(--danger) 14%, transparent);
+
+  --vp-shadow-1: var(--shadow);
+  --vp-shadow-2: var(--shadow);
+  --vp-shadow-3: var(--shadow);
+
+  --vp-c-bg-svp: var(--bg);
+  --vp-input-border-color: var(--border-2);
+  --vp-input-switch-bg-color: var(--surface-2);
+}
+
+/* Ensure dark class gets same semantic bridge (values come from design-tokens). */
+.dark {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--fg);
+}
+
+/* Prefer dark-first: match website sticky translucent header */
+.VPNav {
+  background: color-mix(in srgb, var(--bg) 80%, transparent) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.VPNavBar {
+  background: transparent !important;
+  border-bottom: none !important;
+  height: var(--nav-h) !important;
+}
+
+.VPNavBar .divider,
+.VPNavBar.has-sidebar .divider {
+  display: none;
+}
+
+.VPNavBarTitle .title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--fg) !important;
+  border: none !important;
+}
+
+.VPNavBarTitle .logo {
+  height: 28px;
+  margin-right: 0.65rem;
+}
+
+.VPNavBarMenuLink,
+.VPNavBarMenuGroup .button {
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  color: var(--fg-muted) !important;
+}
+
+.VPNavBarMenuLink:hover,
+.VPNavBarMenuGroup:hover .button,
+.VPNavBarMenuLink.active {
+  color: var(--fg) !important;
+}
+
+.VPNavBarMenuLink.active::after {
+  content: "";
+  display: block;
+  height: 1.5px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin-top: 3px;
+}
+
+.VPNavBarExtra .VPSwitch,
+.VPNavBarHamburger,
+.VPSwitchAppearance {
+  border-color: var(--border-2) !important;
+  background: var(--surface) !important;
+}
+
+.VPSwitchAppearance:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.DocSearch-Button {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--fg-muted) !important;
+}
+
+.DocSearch-Button:hover {
+  border-color: var(--border-2) !important;
+  color: var(--fg) !important;
+}
+
+/* Hero / home */
+.VPHero {
+  padding-top: 3.5rem !important;
+}
+
+.VPHero .name {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.04 !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  color: var(--fg) !important;
+  max-width: 18ch;
+}
+
+.VPHero .name .clip,
+.VPHero .clip {
+  background: linear-gradient(120deg, var(--amber-bright), var(--amber-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHero .text {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em !important;
+  color: var(--fg) !important;
+  max-width: 22ch;
+}
+
+.VPHero .tagline {
+  font-family: var(--font-body) !important;
+  font-size: clamp(1.08rem, 1.5vw, 1.24rem) !important;
+  font-weight: 420;
+  color: var(--fg-muted) !important;
+  max-width: 58ch;
+  line-height: 1.55 !important;
+}
+
+.VPButton {
+  border-radius: var(--radius) !important;
+  font-weight: 600 !important;
+  font-size: 0.92rem !important;
+  padding: 0.72rem 1.35rem !important;
+  transition: transform 0.16s ease, background 0.18s ease, border-color 0.18s ease !important;
+}
+
+.VPButton:active {
+  transform: translateY(1px);
+}
+
+.VPButton.brand {
+  background: var(--accent) !important;
+  color: var(--accent-fg) !important;
+  border-color: transparent !important;
+}
+
+.VPButton.brand:hover {
+  background: var(--accent-bright) !important;
+  color: var(--accent-fg) !important;
+}
+
+.VPButton.alt {
+  background: transparent !important;
+  border: 1px solid var(--border-2) !important;
+  color: var(--fg) !important;
+}
+
+.VPButton.alt:hover {
+  border-color: var(--fg-dim) !important;
+  background: var(--surface) !important;
+}
+
+.VPFeatures .box {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: none !important;
+}
+
+.VPFeatures .title {
+  font-family: var(--font-body) !important;
+  font-weight: 640 !important;
+  font-size: 1.08rem !important;
+  color: var(--fg) !important;
+}
+
+.VPFeatures .details {
+  color: var(--fg-muted) !important;
+  font-size: 0.95rem !important;
+}
+
+/* Sidebar */
+.VPSidebar {
+  background: var(--bg) !important;
+  border-right: 1px solid var(--border) !important;
+  padding-top: 1rem !important;
+}
+
+.VPSidebarItem.level-0 > .item .text,
+.VPSidebarItem.level-0 > .item .link > .text {
+  font-family: var(--font-mono) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.13em !important;
+  text-transform: uppercase !important;
+  color: var(--fg-dim) !important;
+  font-weight: 500 !important;
+}
+
+.VPSidebarItem .link {
+  border-radius: 8px;
+  color: var(--fg-muted) !important;
+  font-size: 0.9rem !important;
+}
+
+.VPSidebarItem .link:hover {
+  color: var(--fg) !important;
+  background: var(--surface) !important;
+}
+
+.VPSidebarItem.is-active > .item .link {
+  color: var(--fg) !important;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important;
+}
+
+.VPSidebarItem.is-active > .item .link::before {
+  background: var(--accent) !important;
+}
+
+/* Content typography */
+.vp-doc h1,
+.vp-doc h2 {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: var(--fg);
+}
+
+.vp-doc h1 {
+  font-size: clamp(2rem, 4vw, 2.6rem) !important;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.vp-doc h2 {
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem) !important;
+  border-top-color: var(--border) !important;
+}
+
+.vp-doc h3 {
+  font-family: var(--font-body) !important;
+  font-weight: 640 !important;
+  font-size: 1.08rem !important;
+}
+
+.vp-doc p,
+.vp-doc li {
+  color: var(--fg-muted);
+  text-wrap: pretty;
+  max-width: 68ch;
+}
+
+.vp-doc a {
+  color: var(--accent);
+  font-weight: 540;
+  text-decoration: none;
+}
+
+.vp-doc a:hover {
+  color: var(--accent-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.vp-doc table {
+  border-color: var(--border);
+  font-size: 0.92rem;
+}
+
+.vp-doc tr {
+  border-color: var(--border);
+  background: transparent;
+}
+
+.vp-doc tr:nth-child(2n) {
+  background: var(--surface) !important;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border-color: var(--border);
+}
+
+.vp-doc th {
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.vp-doc div[class*="language-"],
+.vp-doc .vp-code-group {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--code-bg) !important;
+}
+
+.vp-doc div[class*="language-"] code,
+.vp-doc [class*="language-"] code {
+  font-family: var(--font-mono) !important;
+  font-size: 0.84rem !important;
+  line-height: 1.65 !important;
+  color: #d7dde5 !important;
+}
+
+.vp-doc :not(pre) > code {
+  background: var(--surface-2);
+  color: var(--fg);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  padding: 0.15em 0.4em;
+}
+
+.vp-doc .custom-block {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.vp-doc .custom-block.tip {
+  border-left: 3px solid var(--accent);
+}
+
+.vp-doc .custom-block.warning {
+  border-left: 3px solid var(--amber-bright);
+}
+
+.vp-doc .custom-block.danger {
+  border-left: 3px solid var(--risk);
+}
+
+/* Prev / next */
+.VPDocFooter .pager-link {
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--surface) !important;
+}
+
+.VPDocFooter .pager-link:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-2)) !important;
+}
+
+.VPDocFooter .pager-link .title {
+  color: var(--fg) !important;
+}
+
+/* Hide default VitePress footer message; we use CsFooter */
+.VPFooter,
+footer.VPFooter {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

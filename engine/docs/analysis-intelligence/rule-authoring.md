@@ -1,4 +1,4 @@
-# Rule authoring (Phase 4.1+)
+# Rule authoring
 
 Implement `SharedRule`:
 

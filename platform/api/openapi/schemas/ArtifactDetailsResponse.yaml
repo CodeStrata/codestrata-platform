@@ -1,0 +1,93 @@
+ArtifactDetailsResponse:
+  properties:
+    artifact_id:
+      type: string
+      title: Artifact Id
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    repository_id:
+      type: string
+      title: Repository Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    engine_assessment_id:
+      type: string
+      title: Engine Assessment Id
+    artifact_type:
+      type: string
+      title: Artifact Type
+    format:
+      type: string
+      title: Format
+    schema_version:
+      type: string
+      title: Schema Version
+    checksum:
+      type: string
+      title: Checksum
+    size_bytes:
+      type: integer
+      title: Size Bytes
+    status:
+      type: string
+      title: Status
+    version:
+      type: integer
+      title: Version
+    metadata:
+      additionalProperties:
+        type: string
+      type: object
+      title: Metadata
+    storage_key:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Storage Key
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+  additionalProperties: false
+  type: object
+  required:
+  - artifact_id
+  - organization_id
+  - workspace_id
+  - repository_id
+  - assessment_id
+  - engine_assessment_id
+  - artifact_type
+  - format
+  - schema_version
+  - checksum
+  - size_bytes
+  - status
+  - version
+  - metadata
+  - storage_key
+  - created_at
+  - updated_at
+  - completed_at
+  - failure_reason
+  title: ArtifactDetailsResponse

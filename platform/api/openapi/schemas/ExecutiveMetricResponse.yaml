@@ -1,0 +1,50 @@
+ExecutiveMetricResponse:
+  properties:
+    metric_id:
+      type: string
+      title: Metric Id
+    key:
+      type: string
+      title: Key
+    score:
+      type: integer
+      title: Score
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    coverage:
+      type: number
+      title: Coverage
+    inputs:
+      items:
+        type: string
+      type: array
+      title: Inputs
+    calculation_rule:
+      type: string
+      title: Calculation Rule
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+    policy_version:
+      type: string
+      title: Policy Version
+  additionalProperties: false
+  type: object
+  required:
+  - metric_id
+  - key
+  - score
+  - confidence
+  - confidence_band
+  - coverage
+  - inputs
+  - calculation_rule
+  - limitations
+  - policy_version
+  title: ExecutiveMetricResponse

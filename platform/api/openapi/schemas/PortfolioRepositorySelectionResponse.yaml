@@ -1,0 +1,53 @@
+PortfolioRepositorySelectionResponse:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    availability_status:
+      type: string
+      title: Availability Status
+    criticality:
+      type: string
+      title: Criticality
+    assessment_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Assessment Id
+    engineering_snapshot_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Engineering Snapshot Id
+    engineering_snapshot_version:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Engineering Snapshot Version
+    knowledge_graph_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Knowledge Graph Id
+    knowledge_graph_version:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Knowledge Graph Version
+    selected_at:
+      type: string
+      format: date-time
+      title: Selected At
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - availability_status
+  - criticality
+  - assessment_id
+  - engineering_snapshot_id
+  - engineering_snapshot_version
+  - knowledge_graph_id
+  - knowledge_graph_version
+  - selected_at
+  title: PortfolioRepositorySelectionResponse

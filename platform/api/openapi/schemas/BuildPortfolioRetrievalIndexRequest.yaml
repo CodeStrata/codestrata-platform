@@ -1,0 +1,52 @@
+BuildPortfolioRetrievalIndexRequest:
+  properties:
+    organization_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Workspace Id
+    portfolio_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Portfolio Id
+    portfolio_snapshot_id:
+      anyOf:
+      - type: string
+        maxLength: 160
+        minLength: 1
+      - type: 'null'
+      title: Portfolio Snapshot Id
+    embedding_provider:
+      anyOf:
+      - type: string
+        maxLength: 64
+        minLength: 1
+      - type: 'null'
+      title: Embedding Provider
+    embedding_model:
+      anyOf:
+      - type: string
+        maxLength: 128
+        minLength: 1
+      - type: 'null'
+      title: Embedding Model
+    embedding_dimension:
+      anyOf:
+      - type: integer
+        maximum: 8192.0
+        minimum: 1.0
+      - type: 'null'
+      title: Embedding Dimension
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  - portfolio_id
+  title: BuildPortfolioRetrievalIndexRequest

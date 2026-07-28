@@ -1,0 +1,19 @@
+UpdateOrganizationRequest:
+  properties:
+    name:
+      anyOf:
+      - type: string
+        maxLength: 512
+        minLength: 1
+      - type: 'null'
+      title: Name
+      description: New display name when renaming
+    activate:
+      anyOf:
+      - type: boolean
+      - type: 'null'
+      title: Activate
+      description: Set true to reactivate an archived organization
+  additionalProperties: false
+  type: object
+  title: UpdateOrganizationRequest

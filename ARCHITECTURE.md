@@ -1,6 +1,25 @@
 # CodeStrata Architecture
 
+**Audience:** Monorepo maintainers and integrators.  
 **Version:** 0.1.0
+
+This document is the **ecosystem / monorepo architecture map** for
+`codestrata-platform`. It is not the public documentation portal architecture.
+
+| Document | Role |
+| -------- | ---- |
+| **This file** | Monorepo layout, Engine↔Platform boundary, implementation map |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Public docs portal (VitePress) architecture |
+| [`governance/constitution/`](governance/constitution/) | Normative product principles |
+| [`knowledge/`](knowledge/) | Engineering knowledge concepts |
+| [`docs/`](docs/) | Public Community documentation portal |
+
+**Normative principles:** [governance/constitution/](governance/constitution/)  
+**Engineering concepts:** [knowledge/](knowledge/)
+
+> Product direction historically tracked in [ROADMAP.md](ROADMAP.md) is marked as an
+> **archive candidate** — prefer [CHANGELOG.md](CHANGELOG.md) for completed work and
+> governance reports for audits.
 
 ## Monorepo layout
 
@@ -9,8 +28,9 @@ codestrata-platform/          # private source of truth
 ├── engine/                   # Community Engine → public codestrata-engine
 ├── examples/                 # real-world showcases → public codestrata-examples
 ├── test-fixtures/            # internal language samples (not in examples export)
-├── cursor-plugin/            # placeholder → codestrata-cursor
-├── vscode-plugin/            # placeholder → codestrata-vscode
+├── docs/                     # Public documentation portal → codestrata-docs
+├── cursor-plugin/            # Community Cursor extension → codestrata-cursor
+├── vscode-plugin/            # Community VS Code extension → codestrata-vscode
 ├── platform/                 # private Platform (RAG + Knowledge Graph)
 ├── scripts/                  # verify_release, export, security, showcase wrappers
 ├── public-export-manifest.yaml
@@ -35,6 +55,10 @@ inventing facts.
 ## Engineering philosophy
 
 > **Deterministic analysis first. AI reasoning second.**
+
+Normative statement and AI rules:
+[governance/constitution/002_ENGINEERING_CONSTITUTION.md](governance/constitution/002_ENGINEERING_CONSTITUTION.md),
+[governance/constitution/007_AI_PHILOSOPHY.md](governance/constitution/007_AI_PHILOSOPHY.md).
 
 Benefits: repeatable analysis, explainable findings, lower hallucination risk,
 budgeted token use, clear separation between facts and interpretation, and useful
@@ -296,14 +320,15 @@ IncrementalAssessmentPlan
 Details: [docs/incremental-assessment.md](engine/docs/incremental-assessment.md),
 [docs/knowledge-store.md](engine/docs/knowledge-store.md).
 
-### Enterprise Knowledge Graph (Phase 3)
+### Engineering Knowledge Graph (Platform)
 
-YAML-declared enterprise architecture (organizations, applications, ownership,
-standards) linked to CodeStrata repositories and assessments. Optional;
-disabled by default. No graph database.
+YAML-declared organization architecture (organizations, applications, ownership,
+standards) linked to CodeStrata repositories and assessments. Optional
+CodeStrata Platform capability (CLI group `enterprise` retained for
+compatibility); disabled by default. No graph database.
 
 ```text
-Enterprise YAML → validate → EnterpriseKnowledgeGraph → CLI / MCP queries
+Declared YAML → validate → Engineering Knowledge Graph → CLI / MCP queries
 ```
 
 Details: [platform/docs/knowledge_graph/README.md](platform/docs/knowledge_graph/README.md),

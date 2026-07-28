@@ -1,4 +1,4 @@
-# Technical Debt Complexity Rules (Phase 4.3.3)
+# Technical Debt Complexity Rules
 
 SharedRules in pack `technical_debt.core` that evaluate Language Evidence
 complexity facts.

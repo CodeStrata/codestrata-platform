@@ -1,0 +1,17 @@
+PageResponseDto_OrganizationResponse_:
+  properties:
+    items:
+      items:
+        $ref: '#/components/schemas/OrganizationResponse'
+      type: array
+      title: Items
+      description: Page items
+    pagination:
+      $ref: '#/components/schemas/PageMetaDto'
+      description: Pagination metadata
+  additionalProperties: false
+  type: object
+  required:
+  - items
+  - pagination
+  title: PageResponseDto[OrganizationResponse]

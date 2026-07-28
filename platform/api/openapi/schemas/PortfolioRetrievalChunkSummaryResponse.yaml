@@ -1,0 +1,41 @@
+PortfolioRetrievalChunkSummaryResponse:
+  properties:
+    chunk_id:
+      type: string
+      title: Chunk Id
+    document_id:
+      type: string
+      title: Document Id
+    ordinal:
+      type: integer
+      title: Ordinal
+    token_estimate:
+      type: integer
+      title: Token Estimate
+    text:
+      type: string
+      title: Text
+    repository_ids:
+      items:
+        type: string
+      type: array
+      title: Repository Ids
+    primary_repository_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Primary Repository Id
+    has_embedding:
+      type: boolean
+      title: Has Embedding
+  additionalProperties: false
+  type: object
+  required:
+  - chunk_id
+  - document_id
+  - ordinal
+  - token_estimate
+  - text
+  - repository_ids
+  - has_embedding
+  title: PortfolioRetrievalChunkSummaryResponse

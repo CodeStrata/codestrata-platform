@@ -1,4 +1,4 @@
-# Dependency Assessment Synthesis (Phase 4.4.5)
+# Dependency Assessment Synthesis
 
 Deterministic themes, conclusions, and recommendations derived from the
 Dependency assessment inventory (schema `1.2.0`).

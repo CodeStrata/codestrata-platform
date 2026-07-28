@@ -29,8 +29,10 @@ from codestrata_platform.rag.mcp.repository_common import (
 repository_app = typer.Typer(
     name="repository",
     help=(
-        "Repository knowledge commands (grounded search and answering).\n\n"
-        "Uses indexed repository knowledge; requires retrieval and answering gates."
+        "CodeStrata Platform — Repository Retrieval and Answering.\n\n"
+        "Grounded search and answers over indexed repository knowledge. "
+        "Not required for Community Engine assess. AI answering uses your "
+        "configured provider when enabled."
     ),
     no_args_is_help=True,
 )

@@ -63,16 +63,22 @@ _METADATA_SUBCOMMANDS = frozenset({"version", "about", "examples", "extensions"}
 app = typer.Typer(
     name="codestrata",
     help=(
-        "Analyze repositories and produce evidence-based modernization "
-        "assessments.\n\n"
-        "Quick start:\n"
+        "CodeStrata Engine (Community Edition) — scan repositories and generate "
+        "deterministic Engineering Assessment reports.\n\n"
+        "Community golden path (no Platform required):\n"
         "  codestrata init\n"
         "  codestrata doctor\n"
-        "  codestrata assess --repo . --output reports --no-ai\n"
-        "  codestrata assess --config codestrata.toml --output reports --with-ai\n\n"
-        "Primary workflow: assess (HTML + JSON modernization report).\n"
-        "Legacy/advanced: scan (clone+analyze; prefer assess).\n\n"
-        "Docs: docs/quick-start.md · docs/cli-reference.md · "
+        "  codestrata assess --repo . --output reports --no-ai\n\n"
+        "Optional AI advisor (your own supported provider):\n"
+        "  codestrata assess --repo . --output reports --with-ai\n\n"
+        "Exit codes: 0 success · 1 failure · 2 invalid usage.\n"
+        "AI unavailable with --with-ai still exits 0 when reports are written "
+        "(enhancements skipped).\n\n"
+        "Primary workflow: assess (HTML + JSON Engineering Assessment).\n"
+        "Legacy/advanced: scan (clone+analyze; prefer assess).\n"
+        "Platform groups appear only when Platform is installed; Community "
+        "does not require them.\n\n"
+        "Docs: docs/README.md (portal) · docs/quick-start.md · "
         "docs/troubleshooting.md"
     ),
     no_args_is_help=True,
@@ -109,21 +115,21 @@ def _root_callback(
     configure_logging()
 
 
-@app.command("version")
+@app.command("version", rich_help_panel="Primary")
 def version_command() -> None:
     """Display the CodeStrata version and runtime environment."""
 
     typer.echo(format_version_details())
 
 
-@app.command()
+@app.command(rich_help_panel="Primary")
 def about() -> None:
     """Display CodeStrata product and project information."""
 
     typer.echo(format_about())
 
 
-@app.command()
+@app.command(rich_help_panel="Advanced")
 def scan(
     config: Annotated[
         Path,
@@ -285,12 +291,12 @@ def _register_mcp_group(root: typer.Typer) -> None:
             )
             raise typer.Exit(code=1)
 
-        root.add_typer(mcp_stub, name="mcp")
+        root.add_typer(mcp_stub, name="mcp", rich_help_panel="Advanced")
         return
 
     from codestrata.cli.mcp import mcp_app
 
-    root.add_typer(mcp_app, name="mcp")
+    root.add_typer(mcp_app, name="mcp", rich_help_panel="Advanced")
 
 
 def _register_platform_cli_extensions(root: typer.Typer) -> None:
@@ -305,25 +311,25 @@ def _register_platform_cli_extensions(root: typer.Typer) -> None:
     for name, help_text, message in (
         (
             "enterprise",
-            "Enterprise Knowledge Graph (Platform-only; not in Community).",
-            "Enterprise Knowledge Graph is a Platform capability and is not "
-            "included in the Community Engine.\n"
+            "CodeStrata Platform Engineering Knowledge Graph (not in Community Engine).",
+            "Engineering Knowledge Graph is a CodeStrata Platform capability and is "
+            "not included in the Community Engine.\n"
             "Install codestrata-platform in private deployments to enable it.",
         ),
         (
             "repository",
-            "Repository RAG search/answer (Platform-only; not in Community).",
-            "Repository RAG commands are a Platform capability and are not "
-            "included in the Community Engine.\n"
+            "CodeStrata Platform repository RAG (not in Community Engine).",
+            "Repository RAG commands are a CodeStrata Platform capability and "
+            "are not included in the Community Engine.\n"
             "Install codestrata-platform in private deployments to enable them.",
         ),
         (
             "ai",
-            "AI embedding and grounded-answer providers (Platform-only).",
-            "AI embedding/answer provider commands are a Platform capability "
-            "and are not included in the Community Engine.\n"
+            "CodeStrata Platform AI provider commands (not in Community Engine).",
+            "AI embedding/answer provider commands are a CodeStrata Platform "
+            "capability and are not included in the Community Engine.\n"
             "Install codestrata-platform in private deployments to enable them.\n"
-            "Community assess still supports [ai] settings for assessment narrative.",
+            "Community assess still supports optional [ai] settings with --with-ai.",
         ),
     ):
         stub = typer.Typer(name=name, help=help_text, no_args_is_help=False)
@@ -333,7 +339,7 @@ def _register_platform_cli_extensions(root: typer.Typer) -> None:
             raise typer.Exit(code=1)
 
         stub.callback(invoke_without_command=True)(_missing)
-        root.add_typer(stub, name=name)
+        root.add_typer(stub, name=name, rich_help_panel="Platform")
 
 
 register_assess_command(app)
@@ -343,17 +349,17 @@ register_examples_command(app)
 register_extensions_command(app)
 register_onboard_command(app)
 _register_mcp_group(app)
-app.add_typer(config_app, name="config")
-app.add_typer(agent_app, name="agent")
-app.add_typer(incremental_app, name="incremental")
+app.add_typer(config_app, name="config", rich_help_panel="Configuration")
+app.add_typer(agent_app, name="agent", rich_help_panel="Advanced")
+app.add_typer(incremental_app, name="incremental", rich_help_panel="Advanced")
 _register_platform_cli_extensions(app)
-app.add_typer(rules_app, name="rules")
-app.add_typer(evidence_app, name="evidence")
-app.add_typer(architecture_app, name="architecture")
-app.add_typer(roadmap_app, name="roadmap")
-app.add_typer(report_app, name="report")
-app.add_typer(acceptance_app, name="acceptance")
-app.add_typer(release_app, name="release")
+app.add_typer(rules_app, name="rules", rich_help_panel="Advanced")
+app.add_typer(evidence_app, name="evidence", rich_help_panel="Advanced")
+app.add_typer(architecture_app, name="architecture", rich_help_panel="Advanced")
+app.add_typer(roadmap_app, name="roadmap", rich_help_panel="Advanced")
+app.add_typer(report_app, name="report", rich_help_panel="Advanced")
+app.add_typer(acceptance_app, name="acceptance", rich_help_panel="Maintainer")
+app.add_typer(release_app, name="release", rich_help_panel="Maintainer")
 
 __all__ = [
     "DEFAULT_ASSESS_MAX_OUTPUT_TOKENS",

@@ -142,7 +142,7 @@ def _default_limitations(
                 ),
                 category=ArchitectureLimitationCategory.ENTERPRISE_CONTEXT_UNAVAILABLE,
                 summary=(
-                    "Business impact remains unknown because Enterprise Knowledge Graph "
+                    "Business impact remains unknown because Engineering Knowledge Graph "
                     "context was not supplied."
                 ),
                 affected_capability="business_impact",

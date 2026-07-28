@@ -1,95 +1,68 @@
-# Architecture Guide
+# Architecture Overview
 
-How CodeStrata turns a repository into evidence, findings, and reports.
+<!-- documentation-visibility: public-contributor -->
 
-Canonical deep design notes live in [ARCHITECTURE.md](../../ARCHITECTURE.md) and
-[community-edition.md](community-edition.md)
-(optional KG overview; Platform-only docs are not shipped in the public engine mirror).
-This page is the developer-facing map.
+Developer-facing map of how CodeStrata turns a repository into Engineering
+Intelligence and reports. Edition boundary:
+[community-vs-platform.md](community-vs-platform.md).
+
+## Engine pipeline (Community)
+
+```text
+Assessment
+    ↓
+Engineering Intelligence
+  (inventory → evidence → rules → findings → recommendations)
+    ↓
+Engineering Assessment reports (HTML + JSON)
+    ↓
+Optional AI (Modernization Advisor — narrative only)
+```
+
+1. **Assessment** — `codestrata assess` acquires a local path or GitHub clone
+   and runs the analysis pipeline ([runtime.md](runtime.md)).
+2. **Engineering Intelligence** — deterministic detectors, evidence, rule engine,
+   and recommendation engine. Findings are evidence-backed, not LLM-invented
+   ([rule-engine.md](rule-engine.md),
+   [recommendation-engine.md](recommendation-engine.md)).
+3. **Reports** — self-contained HTML Report v2 plus JSON contracts
+   ([report-generation.md](report-generation.md),
+   [report-interpretation.md](report-interpretation.md)).
+4. **Optional AI** — at most one provider call for interpretive narrative; never
+   creates or deletes findings ([ai-enrichment.md](ai-enrichment.md)).
 
 ## Design principles
 
-1. **Deterministic analysis first** — findings and recommendations come from
-   rules and evidence, not from LLM invention.
-2. **AI second** — optional Bedrock enrichment adds narrative only.
-3. **Configuration-driven editions** — Community vs Enterprise is gated by
-   settings (see [configuration-profiles.md](configuration-profiles.md)).
-4. **Artifacts are the contract** — HTML is presentation; JSON is the machine
-   interface ([report-contract.md](report-contract.md)).
+1. Deterministic analysis first.
+2. AI second — enhancement, not replacement.
+3. Artifacts are the contract (JSON) — HTML is presentation.
+4. Community Engine must work without Platform.
 
-## Runtime pipeline
+## What this overview intentionally omits
 
-```text
-CLI / codestrata.toml
-        │
-        ▼
-  Repository scan (local path or GitHub clone)
-        │
-        ▼
-  Phase 1 analysis (detectors + analyzers + optional PMD)
-        │
-        ▼
-  Repository Inventory → Repository Graph
-        │
-        ▼
-  Knowledge Pipeline ← Engineering Knowledge Graph
-        │
-        ▼
-  Assessment Graph → Rule Engine → Recommendation Engine
-        │
-        ├──────────────┐
-        ▼              ▼
-  HTML/JSON reports   optional AI enrichment (one call)
-```
+Package folder layouts, internal class diagrams, and Platform database schemas
+belong in maintainer docs — not the first developer architecture page.
 
-Details: [runtime.md](runtime.md).
+## Platform (separate product)
 
-## Major subsystems
+Advanced portfolio and organizational intelligence capabilities are available in
+**CodeStrata Platform**. Community documentation does not describe Platform
+internal architecture, sequencing, or unpublished contracts.
 
-| Area | Entry | Docs |
-| ---- | ----- | ---- |
-| Assessment orchestration | `codestrata assess` | [runtime.md](runtime.md) |
-| Rules / findings | `codestrata rules` | [rule-engine.md](rule-engine.md) |
-| Recommendations | (assess) | [recommendation-engine.md](recommendation-engine.md) |
-| Knowledge store | `.codestrata/knowledge` | [knowledge-store.md](knowledge-store.md) |
-| Repository knowledge / RAG | Platform CLI extensions | Monorepo `platform/docs/rag/` (not CE docs) |
-| MCP | `codestrata mcp` | [mcp-server.md](mcp-server.md) |
-| Agents | `codestrata agent` | [agent-framework.md](agent-framework.md) |
-| Enterprise KG | Platform CLI extensions | Monorepo `platform/docs/knowledge_graph/` |
-| Execution profiles | `codestrata config` | [configuration-profiles.md](configuration-profiles.md) |
-| Runtime performance | `analysis.runtime` | [runtime-performance.md](runtime-performance.md) |
-
-## Package layout
-
-```text
-src/codestrata/
-  cli/                 # Typer adapters (thin)
-  application/         # Use-cases / orchestration
-  domain/              # Models and contracts
-  services/            # Detectors, analyzers, scanners
-  infrastructure/      # Stores, embeddings, AWS
-  interfaces/mcp/      # FastMCP composition
-  reporting/           # HTML + JSON report builders
-  config/              # Settings + execution profiles
-```
+Learn more: [https://codestrata.ai/platform](https://codestrata.ai/platform) ·
+[https://docs.codestrata.ai/community/vs-platform](https://docs.codestrata.ai/community/vs-platform).
 
 ## Language coverage
 
-Evidence and packs currently emphasize:
-
-* Java (Maven/Gradle, PMD optional)
-* JavaScript / TypeScript (npm)
-* Python (complexity + detectors)
-* PHP (Composer)
-* C# / .NET (NuGet)
-
-Sample apps for each language plus golden HTML/JSON reports:
-
-* Samples: [examples/README.md](../../examples/README.md)
-* Reports: [test-fixtures/sample-reports/README.md](../../test-fixtures/sample-reports/README.md)
+Evidence and packs currently emphasize Java, JavaScript/TypeScript, Python, PHP,
+and C# / .NET. See [getting-started.md](getting-started.md).
 
 ## Related
 
-* [capabilities.md](capabilities.md) — what is shipped vs gated
-* [assessment-framework/methodology.md](assessment-framework/methodology.md)
-* [community-enterprise-boundary.md](assessment-framework/community-enterprise-boundary.md)
+| Topic | Doc |
+| ----- | --- |
+| Runtime detail | [runtime.md](runtime.md) |
+| MCP | [mcp-server.md](mcp-server.md) |
+| Agents | [agent-framework.md](agent-framework.md) |
+| Configuration | [configuration-profiles.md](configuration-profiles.md) |
+| Public contracts | [public-contracts.md](public-contracts.md) |

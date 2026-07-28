@@ -1,4 +1,4 @@
-# Incremental assessment (Phase 2F)
+# Incremental assessment
 
 **Status:** Phase 2F complete (2F.1 planning + 2F.2 execution + 2F.3 operations).
 
@@ -151,8 +151,7 @@ Phase 2 (knowledge + agents + MCP + incremental foundation through 2F.3) is
 complete for controlled opt-in use. Full assessment remains the default product
 path.
 
-## Next phase (deferred)
+## Related products
 
-Phase 3 delivers the Enterprise Knowledge Graph (optional YAML). Analysis
-Intelligence is Phase 4; GitHub PR review is Phase 6.1–6.5 MVP
-(see [ROADMAP.md](../../ROADMAP.md)).
+Advanced organizational knowledge capabilities are available in CodeStrata
+Platform. See [community-vs-platform.md](community-vs-platform.md).

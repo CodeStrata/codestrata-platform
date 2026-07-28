@@ -1,5 +1,8 @@
 # CodeStrata Roadmap
 
+> **ARCHIVE CANDIDATE (Phase 12.2.2)** — Retained for history. Do not treat as current public documentation. Prefer CHANGELOG / governance reports / public `docs/` for current guidance. File was **not deleted**.
+
+
 **Audience:** Maintainers and core contributors.  
 **Scope:** Current product direction only. Completed release history lives in
 [CHANGELOG.md](CHANGELOG.md). Ecosystem architecture lives in

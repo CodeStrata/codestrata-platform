@@ -1,0 +1,24 @@
+ProblemDetails:
+  type: object
+  description: RFC 9457 Problem Details (PROPOSED mapping alongside ErrorResponseDto).
+    Not yet the runtime envelope.
+  properties:
+    type:
+      type: string
+      format: uri
+    title:
+      type: string
+    status:
+      type: integer
+    detail:
+      type: string
+    instance:
+      type: string
+      format: uri
+    code:
+      type: string
+  required:
+  - type
+  - title
+  - status
+  x-codestrata-status: proposed

@@ -1,0 +1,49 @@
+RoadmapSummaryDto:
+  properties:
+    initiative_count:
+      type: integer
+      title: Initiative Count
+    effort_distribution:
+      items:
+        items: {}
+        type: array
+      type: array
+      title: Effort Distribution
+    wave_distribution:
+      items:
+        items: {}
+        type: array
+      type: array
+      title: Wave Distribution
+    category_distribution:
+      items:
+        items: {}
+        type: array
+      type: array
+      title: Category Distribution
+    portfolio_investment_themes:
+      items:
+        type: string
+      type: array
+      title: Portfolio Investment Themes
+    strategic_observations:
+      items:
+        type: string
+      type: array
+      title: Strategic Observations
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - initiative_count
+  - effort_distribution
+  - wave_distribution
+  - category_distribution
+  - portfolio_investment_themes
+  - strategic_observations
+  - limitations
+  title: RoadmapSummaryDto

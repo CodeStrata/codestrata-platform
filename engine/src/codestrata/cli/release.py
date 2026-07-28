@@ -13,7 +13,7 @@ from codestrata.application.release import run_release_check
 release_app = typer.Typer(
     name="release",
     help=(
-        "Release readiness helpers (Phase 5.14).\n\n"
+        "Maintainer release readiness helpers.\n\n"
         "Validate package metadata, resources, CLI registration, schemas, "
         "prompts, defaults, deterministic providers, build artifacts, and "
         "clean-install smoke results."

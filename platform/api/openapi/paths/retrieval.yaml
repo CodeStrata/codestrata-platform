@@ -1,0 +1,386 @@
+paths:
+  /api/v1/retrieval/indexes:
+    post:
+      tags:
+      - Retrieval
+      summary: Build Retrieval Index
+      operationId: build_retrieval_index_api_v1_retrieval_indexes_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildRetrievalIndexRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/rebuild:
+    post:
+      tags:
+      - Retrieval
+      summary: Rebuild Retrieval Index
+      operationId: rebuild_retrieval_index_api_v1_retrieval_indexes__index_id__rebuild_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/RebuildRetrievalIndexRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}:
+    get:
+      tags:
+      - Retrieval
+      summary: Get Retrieval Index
+      operationId: get_retrieval_index_api_v1_retrieval_indexes__index_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/retrieval-indexes:
+    get:
+      tags:
+      - Retrieval
+      summary: List Repository Retrieval Indexes
+      operationId: list_repository_retrieval_indexes_api_v1_repositories__repository_id__retrieval_indexes_get
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrievalIndexSummaryResponse'
+                title: Response List Repository Retrieval Indexes Api V1 Repositories  Repository
+                  Id  Retrieval Indexes Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/retrieval-indexes/latest:
+    get:
+      tags:
+      - Retrieval
+      summary: Get Latest Repository Retrieval Index
+      operationId: get_latest_repository_retrieval_index_api_v1_repositories__repository_id__retrieval_indexes_latest_get
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalIndexDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/documents:
+    get:
+      tags:
+      - Retrieval
+      summary: List Retrieval Documents
+      operationId: list_retrieval_documents_api_v1_retrieval_indexes__index_id__documents_get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: content_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Content Type
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetrievalDocumentSummaryResponse'
+                title: Response List Retrieval Documents Api V1 Retrieval Indexes  Index
+                  Id  Documents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/documents/{document_id}:
+    get:
+      tags:
+      - Retrieval
+      summary: Get Retrieval Document
+      operationId: get_retrieval_document_api_v1_retrieval_indexes__index_id__documents__document_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: document_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Document Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalDocumentSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/chunks/{chunk_id}:
+    get:
+      tags:
+      - Retrieval
+      summary: Get Retrieval Chunk
+      operationId: get_retrieval_chunk_api_v1_retrieval_indexes__index_id__chunks__chunk_id__get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      - name: chunk_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chunk Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalChunkSummaryResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/search:
+    post:
+      tags:
+      - Retrieval
+      summary: Search Retrieval Index
+      operationId: search_retrieval_index_api_v1_retrieval_indexes__index_id__search_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrievalSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalSearchResultResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/context:
+    post:
+      tags:
+      - Retrieval
+      summary: Assemble Retrieval Context
+      operationId: assemble_retrieval_context_api_v1_retrieval_indexes__index_id__context_post
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetrievalContextRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalContextResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal
+  /api/v1/retrieval/indexes/{index_id}/statistics:
+    get:
+      tags:
+      - Retrieval
+      summary: Get Retrieval Index Statistics
+      operationId: get_retrieval_index_statistics_api_v1_retrieval_indexes__index_id__statistics_get
+      parameters:
+      - name: index_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Index Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalIndexStatisticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-retrieval
+      x-codestrata-audience: internal

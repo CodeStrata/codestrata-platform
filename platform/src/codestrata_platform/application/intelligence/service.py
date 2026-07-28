@@ -11,6 +11,7 @@ from codestrata_platform.application.commands.intelligence import (
     ProcessAssessmentIntelligenceCommand,
     RegisterAssessmentIntelligenceCommand,
 )
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import (
     NotFoundError,
     ValidationError,
@@ -326,7 +327,7 @@ class DefaultAssessmentIntelligenceService:
                 )
             record.complete()
         except Exception as error:
-            reason = str(error)
+            reason = safe_failure_summary(error, limit=1000)
             diagnostics = (
                 (error.reason_code,)
                 if hasattr(error, "reason_code") and error.reason_code

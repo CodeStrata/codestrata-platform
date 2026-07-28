@@ -1,0 +1,104 @@
+@import "./tokens.css";
+@import "./components.css";
+
+/* Docs-specific layout helpers on top of website-aligned tokens */
+
+.cs-home-below {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+.cs-home-below h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
+  color: var(--fg);
+  margin: 2.5rem 0 1rem;
+}
+
+.cs-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.cs-journey {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+  padding: 0.8rem 1.1rem;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: #d7dde5;
+  max-width: 42rem;
+}
+
+.cs-cta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.cs-cta-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--fg) !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none !important;
+  transition: border-color 0.18s ease, transform 0.16s ease;
+}
+
+.cs-cta-grid a:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-2));
+  transform: translateY(-2px);
+}
+
+.cs-cta-grid a span {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.VPHome {
+  background:
+    radial-gradient(ellipse 70% 50% at 70% 0%, var(--hero-glow), transparent 65%),
+    var(--bg);
+}
+
+.dark .VPNavBarTitle .logo-light,
+html:not(.dark) .VPNavBarTitle .logo-dark {
+  display: none;
+}
+
+
+.VPNavBarTitle .logo {
+  height: 26px !important;
+  width: auto !important;
+  margin-right: 0 !important;
+}
+
+/* Light theme: keep terminal/code surfaces dark (website rule) */
+html:not(.dark) .cs-terminal,
+html:not(.dark) .cs-journey,
+html:not(.dark) .cs-flow {
+  background: var(--code-bg);
+  color: #d7dde5;
+  border-color: var(--border);
+}

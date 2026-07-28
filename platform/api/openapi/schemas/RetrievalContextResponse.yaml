@@ -1,0 +1,24 @@
+RetrievalContextResponse:
+  properties:
+    items:
+      items:
+        $ref: '#/components/schemas/RetrievalContextItemResponse'
+      type: array
+      title: Items
+    token_estimate:
+      type: integer
+      title: Token Estimate
+    policy_version:
+      type: string
+      title: Policy Version
+    truncated:
+      type: boolean
+      title: Truncated
+  additionalProperties: false
+  type: object
+  required:
+  - items
+  - token_estimate
+  - policy_version
+  - truncated
+  title: RetrievalContextResponse

@@ -1,0 +1,418 @@
+paths:
+  /api/v1/knowledge-graphs:
+    post:
+      tags:
+      - Knowledge Graphs
+      summary: Build Knowledge Graph
+      operationId: build_knowledge_graph_api_v1_knowledge_graphs_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildKnowledgeGraphRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeGraphDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/rebuild:
+    post:
+      tags:
+      - Knowledge Graphs
+      summary: Rebuild Knowledge Graph
+      operationId: rebuild_knowledge_graph_api_v1_knowledge_graphs__graph_id__rebuild_post
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/RebuildKnowledgeGraphRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeGraphDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: Get Knowledge Graph
+      operationId: get_knowledge_graph_api_v1_knowledge_graphs__graph_id__get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeGraphDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/knowledge-graphs:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: List Repository Graphs
+      operationId: list_repository_graphs_api_v1_repositories__repository_id__knowledge_graphs_get
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KnowledgeGraphSummaryResponse'
+                title: Response List Repository Graphs Api V1 Repositories  Repository
+                  Id  Knowledge Graphs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/repositories/{repository_id}/knowledge-graphs/latest:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: Get Latest Repository Graph
+      operationId: get_latest_repository_graph_api_v1_repositories__repository_id__knowledge_graphs_latest_get
+      parameters:
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KnowledgeGraphDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/nodes:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: List Nodes
+      operationId: list_nodes_api_v1_knowledge_graphs__graph_id__nodes_get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      - name: node_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Node Type
+      - name: canonical_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Canonical Type
+      - name: canonical_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Canonical Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GraphNodeResponse'
+                title: Response List Nodes Api V1 Knowledge Graphs  Graph Id  Nodes
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/nodes/{node_id}:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: Get Node
+      operationId: get_node_api_v1_knowledge_graphs__graph_id__nodes__node_id__get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      - name: node_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Node Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphNodeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/nodes/{node_id}/neighbors:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: Get Neighbors
+      operationId: get_neighbors_api_v1_knowledge_graphs__graph_id__nodes__node_id__neighbors_get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      - name: node_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Node Id
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          default: both
+          title: Direction
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GraphNeighborResponse'
+                title: Response Get Neighbors Api V1 Knowledge Graphs  Graph Id  Nodes  Node
+                  Id  Neighbors Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/edges:
+    get:
+      tags:
+      - Knowledge Graphs
+      summary: List Edges
+      operationId: list_edges_api_v1_knowledge_graphs__graph_id__edges_get
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      - name: edge_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edge Type
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Size
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GraphEdgeResponse'
+                title: Response List Edges Api V1 Knowledge Graphs  Graph Id  Edges
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal
+  /api/v1/knowledge-graphs/{graph_id}/paths:
+    post:
+      tags:
+      - Knowledge Graphs
+      summary: Find Paths
+      operationId: find_paths_api_v1_knowledge_graphs__graph_id__paths_post
+      parameters:
+      - name: graph_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Graph Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphPathRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GraphPathResponse'
+                title: Response Find Paths Api V1 Knowledge Graphs  Graph Id  Paths
+                  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-knowledge-graph
+      x-codestrata-audience: internal

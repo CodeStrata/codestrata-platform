@@ -1,0 +1,19 @@
+UpdateRepositoryRequest:
+  properties:
+    display_name:
+      anyOf:
+      - type: string
+        maxLength: 512
+        minLength: 1
+      - type: 'null'
+      title: Display Name
+    metadata:
+      anyOf:
+      - additionalProperties:
+          type: string
+        type: object
+      - type: 'null'
+      title: Metadata
+  additionalProperties: false
+  type: object
+  title: UpdateRepositoryRequest
