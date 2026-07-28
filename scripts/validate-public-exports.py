@@ -48,6 +48,116 @@ def _match_any(rel: str, patterns: list[str]) -> bool:
     return any(fnmatch.fnmatch(rel, pat) for pat in patterns)
 
 
+_MD_LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
+
+
+def _validate_markdown_links(
+    *,
+    name: str,
+    dest: Path,
+    files: list[Path],
+    forbid_link_substrings: list[str],
+) -> list[str]:
+    """Fail when public Markdown links private monorepo paths or missing files."""
+
+    errors: list[str] = []
+    md_files = [path for path in files if path.suffix.lower() == ".md"]
+    for path in md_files:
+        rel = _rel(path, dest)
+        try:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for match in _MD_LINK_RE.finditer(text):
+            target = match.group(2).strip()
+            if not target or target.startswith(("#", "mailto:")):
+                continue
+            if " " in target and not target.startswith(("http://", "https://")):
+                target = target.split(" ", 1)[0]
+            href = target.split("#", 1)[0].split("?", 1)[0]
+            if not href:
+                continue
+            private_hit = False
+            for needle in forbid_link_substrings:
+                if needle in href:
+                    errors.append(
+                        f"{name}: private markdown link in {rel}: {href!r}"
+                    )
+                    private_hit = True
+                    break
+            if private_hit:
+                continue
+            if href.startswith(("http://", "https://")):
+                continue
+            # VitePress / docs portal site-absolute paths (resolved at build time).
+            if name == "codestrata-docs" and href.startswith("/"):
+                continue
+            resolved = (path.parent / href).resolve()
+            try:
+                resolved.relative_to(dest.resolve())
+            except ValueError:
+                errors.append(
+                    f"{name}: markdown link escapes export in {rel}: {href!r}"
+                )
+                continue
+            if resolved.exists():
+                continue
+            # VitePress-style extensionless links: ./install → install.md / index.md
+            candidates = [
+                Path(str(resolved) + ".md"),
+                resolved / "index.md",
+            ]
+            if href.endswith("/"):
+                candidates.append((path.parent / href / "index.md").resolve())
+            if not any(candidate.exists() for candidate in candidates):
+                errors.append(
+                    f"{name}: broken markdown link in {rel}: {href!r}"
+                )
+    return errors
+
+
+def _validate_allowlist(
+    *,
+    name: str,
+    export: dict[str, Any],
+    defaults: dict[str, Any],
+    rels: list[str],
+) -> list[str]:
+    """Ensure every staged file matches the export allowlist (include − exclude)."""
+
+    errors: list[str] = []
+    include = list(export.get("include") or ["**"])
+    exclude = list(export.get("exclude") or [])
+    default_exclude = list(defaults.get("exclude_globs") or [])
+    extra_prefixes = [
+        str(item.get("to", "")).replace("\\", "/").rstrip("/") + "/"
+        for item in (export.get("extra_includes") or [])
+        if item.get("to")
+    ]
+    for rel in rels:
+        if any(
+            rel == p.rstrip("/") or rel.startswith(p)
+            for p in extra_prefixes
+            if p != "/"
+        ):
+            continue
+        if _match_any(rel, exclude) or _match_any(rel, default_exclude):
+            errors.append(f"{name}: excluded path was exported: {rel}")
+            continue
+        if include and not _match_any(rel, include):
+            errors.append(f"{name}: non-allowlisted path exported: {rel}")
+    never = list(
+        (defaults.get("documentation_boundary") or {}).get(
+            "never_export_source_roots"
+        )
+        or []
+    )
+    source_root = str(export.get("source_root") or "")
+    if source_root in never:
+        errors.append(f"{name}: forbidden source_root {source_root!r}")
+    return errors
+
+
 def _run(cmd: list[str], *, cwd: Path, env: dict[str, str] | None = None) -> None:
     print(f"  $ {' '.join(cmd)}")
     subprocess.run(cmd, cwd=cwd, env=env, check=True)
@@ -82,7 +192,21 @@ def validate_export(
 
     for needle in defaults.get("forbid_path_substrings") or []:
         if needle == "platform/":
-            hits = [rel for rel in rels if "platform/" in rel or rel.startswith("platform")]
+            # codestrata-docs may publish a public Platform overview under platform/.
+            if name == "codestrata-docs":
+                hits = [
+                    rel
+                    for rel in rels
+                    if rel.startswith("platform/src")
+                    or "platform/docs/" in rel
+                    or rel.endswith("platform/pyproject.toml")
+                ]
+            else:
+                hits = [
+                    rel
+                    for rel in rels
+                    if "platform/" in rel or rel.startswith("platform")
+                ]
             if hits:
                 errors.append(f"{name}: platform path leaked: {hits[:5]}")
             continue
@@ -100,6 +224,15 @@ def validate_export(
         hits = [rel for rel in rels if needle in rel]
         if hits:
             errors.append(f"{name}: forbidden substring {needle!r}: {hits[:5]}")
+
+    errors.extend(
+        _validate_allowlist(
+            name=name,
+            export=export,
+            defaults=defaults,
+            rels=rels,
+        )
+    )
 
     patterns = [re.compile(p) for p in defaults.get("forbid_content_patterns") or []]
     skip_secret_scan_globs = [
@@ -124,6 +257,17 @@ def validate_export(
                     f"{name}: secret-like content in {rel} ({pattern.pattern})"
                 )
                 break
+
+    errors.extend(
+        _validate_markdown_links(
+            name=name,
+            dest=dest,
+            files=files,
+            forbid_link_substrings=list(
+                defaults.get("forbid_markdown_link_substrings") or []
+            ),
+        )
+    )
 
     allow_only = list(validation.get("allow_only_globs") or [])
     if allow_only:

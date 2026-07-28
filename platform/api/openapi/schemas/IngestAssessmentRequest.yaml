@@ -1,0 +1,55 @@
+IngestAssessmentRequest:
+  properties:
+    repository_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Repository Id
+    workspace_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Workspace Id
+    engine_assessment_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Engine Assessment Id
+    engine_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Engine Version
+    assessment_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Assessment Version
+    started_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Started At
+    technology_summary:
+      anyOf:
+      - type: string
+        maxLength: 4000
+      - type: 'null'
+      title: Technology Summary
+    metadata:
+      anyOf:
+      - additionalProperties:
+          type: string
+        type: object
+      - type: 'null'
+      title: Metadata
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - workspace_id
+  - engine_assessment_id
+  - engine_version
+  - assessment_version
+  title: IngestAssessmentRequest

@@ -251,13 +251,13 @@ class OpenAIEmbeddingProvider:
         except Exception as exc:  # noqa: BLE001
             category = categorize_provider_error(exc)
             if category == "throttling":
-                raise ProviderThrottlingError(str(exc)) from exc
+                raise ProviderThrottlingError(sanitize_exception_message(str(exc))) from exc
             if category == "authentication":
                 raise ProviderAuthenticationError(
                     sanitize_exception_message(str(exc))
                 ) from exc
             if category == "timeout":
-                raise ProviderTimeoutError(str(exc)) from exc
+                raise ProviderTimeoutError(sanitize_exception_message(str(exc))) from exc
             raise
         data = sorted(response.data, key=lambda item: item.index)
         vectors = [list(item.embedding) for item in data]

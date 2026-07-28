@@ -54,7 +54,7 @@ __all__ = [
 def register_assess_command(app: typer.Typer) -> None:
     """Register the assess command on the CodeStrata Typer application."""
 
-    @app.command("assess")
+    @app.command("assess", rich_help_panel="Primary")
     def assess(
         repo: Annotated[
             str | None,
@@ -81,9 +81,9 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--with-ai/--no-ai",
                 help=(
-                    "Enable Modernization Advisor (AI narrative over deterministic "
-                    "assessment). Default is --no-ai (deterministic evidence only; "
-                    "no cloud provider required)."
+                    "Optionally enable the AI advisor (narrative over deterministic "
+                    "assessment). Default is --no-ai: deterministic Engineering "
+                    "Assessment only; no cloud provider required."
                 ),
             ),
         ] = False,
@@ -92,7 +92,7 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--model-id",
                 help=(
-                    "Model ID for Modernization Advisor (--with-ai). Resolution "
+                    "Model ID for the optional AI advisor (--with-ai). Resolution "
                     "order: this flag; then provider-specific env/config "
                     "(CODESTRATA_BEDROCK_MODEL_ID / ai.bedrock.model_id for "
                     "Bedrock, CODESTRATA_OPENAI_MODEL_ID / ai.openai.answer_model "
@@ -223,11 +223,14 @@ def register_assess_command(app: typer.Typer) -> None:
             ),
         ] = False,
     ) -> None:
-        """Assess a repository and write HTML + JSON reports.
+        """Assess a repository and write HTML + JSON Engineering Assessment reports.
 
-        Primary Community workflow:
+        Community golden path (deterministic, no AI required):
 
             codestrata assess --repo . --output reports --no-ai
+
+        AI is optional. When unavailable, assessment still completes and reports
+        are written; AI enhancements are skipped with a clear status message.
         """
 
         configure_logging(level="DEBUG" if verbose else "WARNING")

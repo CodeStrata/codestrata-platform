@@ -1,0 +1,64 @@
+RepositoryResponse:
+  properties:
+    id:
+      type: string
+      title: Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    organization_id:
+      type: string
+      title: Organization Id
+    display_name:
+      type: string
+      title: Display Name
+    provider:
+      type: string
+      title: Provider
+    repository_url:
+      type: string
+      title: Repository Url
+    default_branch:
+      type: string
+      title: Default Branch
+    visibility:
+      type: string
+      title: Visibility
+    description:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Description
+    status:
+      type: string
+      title: Status
+    metadata:
+      additionalProperties:
+        type: string
+      type: object
+      title: Metadata
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+  additionalProperties: false
+  type: object
+  required:
+  - id
+  - workspace_id
+  - organization_id
+  - display_name
+  - provider
+  - repository_url
+  - default_branch
+  - visibility
+  - description
+  - status
+  - metadata
+  - created_at
+  - updated_at
+  title: RepositoryResponse

@@ -20,7 +20,6 @@ class EngineeringExecutiveIntelligenceSnapshotRecord(Base):
             "projection_key",
             unique=True,
             postgresql_where="status = 'completed'",
-            sqlite_where="status = 'completed'",
         ),
         Index(
             "ix_engineering_executive_intelligence_portfolio_id",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 from codestrata_platform.application.knowledge_graph.commands import (
     BuildKnowledgeGraphCommand,
@@ -131,14 +132,14 @@ class EngineeringGraphProjectionService:
             project_snapshot_into_graph(graph, snapshot)
             graph.complete()
         except Exception as error:  # noqa: BLE001 - projection boundary
-            graph.fail(reason=str(error)[:1000])
+            graph.fail(reason=safe_failure_summary(error, limit=1000))
             # Free the unique projection_key so deterministic retries can rebuild.
             graph.projection_key = GraphProjectionKey(
                 f"{projection_key.value}:f{graph.graph_version.value}"[:128]
             )
             self._graphs.save(graph)
             raise ValidationError(
-                f"Knowledge graph projection failed: {error}",
+                f"Knowledge graph projection failed: {safe_failure_summary(error)}",
                 reason_code="graph_projection_failed",
             ) from error
 

@@ -1,0 +1,30 @@
+StrategicRoadmapResponse:
+  properties:
+    identity:
+      $ref: '#/components/schemas/RoadmapIdentityDto'
+    summary:
+      $ref: '#/components/schemas/RoadmapSummaryDto'
+    initiatives:
+      items:
+        $ref: '#/components/schemas/RoadmapInitiativeDto'
+      type: array
+      title: Initiatives
+    waves:
+      items:
+        $ref: '#/components/schemas/RoadmapWaveBucketDto'
+      type: array
+      title: Waves
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - identity
+  - summary
+  - initiatives
+  - waves
+  - limitations
+  title: StrategicRoadmapResponse

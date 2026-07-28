@@ -1,0 +1,45 @@
+IntegrityResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    integrity_version:
+      type: string
+      title: Integrity Version
+    passed:
+      type: boolean
+      title: Passed
+    issue_count:
+      type: integer
+      title: Issue Count
+    critical_issue_count:
+      type: integer
+      title: Critical Issue Count
+    issues:
+      items:
+        $ref: '#/components/schemas/IntegrityIssueResponse'
+      type: array
+      title: Issues
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - integrity_version
+  - passed
+  - issue_count
+  - critical_issue_count
+  - issues
+  title: IntegrityResponse

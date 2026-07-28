@@ -17,7 +17,7 @@ from codestrata.application.acceptance.targets import ACCEPTANCE_TARGETS, ROOT
 acceptance_app = typer.Typer(
     name="acceptance",
     help=(
-        "MVP end-to-end acceptance harness (Phase 5.13).\n\n"
+        "Maintainer acceptance harness.\n\n"
         "Runs live onboard → report validate → grounded questions → MCP health → "
         "determinism for dogfood repositories."
     ),

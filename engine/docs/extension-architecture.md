@@ -1,4 +1,6 @@
-# Extension Architecture (Phase 6.5)
+# Extension Architecture
+
+<!-- documentation-visibility: public-contributor -->
 
 **Audience:** Engine contributors and extension authors.  
 **Scope:** Community Edition extension contracts — not a plugin marketplace.
@@ -17,13 +19,18 @@ Extension API version: defined as `EXTENSION_API_VERSION` in
 
 | Group | Purpose | Default |
 | ----- | ------- | ------- |
-| `codestrata.cli_extensions` | Typer registrar `(app) -> None` | Soft-discover (Platform) |
-| `codestrata.mcp_extensions` | MCP registrar | Soft-discover (Platform) |
-| `codestrata.ai_provider_extensions` | RAG embed/answer factories | Soft-discover (Platform) |
+| `codestrata.cli_extensions` | Typer registrar `(app) -> None` | Soft-discover |
+| `codestrata.mcp_extensions` | MCP registrar | Soft-discover |
+| `codestrata.ai_provider_extensions` | Optional AI embed/answer factories | Soft-discover |
 | `codestrata.assess_ai_provider_extensions` | Extra assess AI providers | Optional |
-| `codestrata.analyzer_extensions` | Phase 1 analyzer contributions | **Opt-in allowlist** |
+| `codestrata.analyzer_extensions` | Analyzer contributions | **Opt-in allowlist** |
 | `codestrata.report_renderer_extensions` | `CustomerReportDocument` renderers | Optional |
 | `codestrata.acceptance_extensions` | Acceptance helpers | Soft-discover |
+
+Soft-discover means entry points load when present on `PYTHONPATH`. Community
+Engine never imports Platform packages; optional integrators may register via
+entry points only. Unpublished commercial capabilities are out of scope for this
+document.
 
 ## Contracts
 
@@ -81,7 +88,7 @@ codestrata version   # includes Extension API
 
 * Additive Protocol changes within a major are preferred.
 * Breaking contract changes bump `EXTENSION_API_VERSION` major.
-* Community Edition never imports Platform packages; Platform registers via entry points only.
+* Community Edition never imports Platform packages.
 
 ## Security
 

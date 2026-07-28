@@ -16,7 +16,12 @@ from codestrata.interfaces.mcp.tools._common import run_bounded
 def register_artifact_tools(server: FastMCP, queries: KnowledgeQueryService) -> None:
     @server.tool(name="get_ai_execution", structured_output=True)
     def get_ai_execution(run_id: str) -> dict[str, Any]:
-        """Return AI execution metadata when present for a run."""
+        """Return AI execution metadata when present for a run.
+
+        Scope: Community Engine. Optional AI dependency — artifact exists only
+        when the assessment ran with AI and persisted execution metadata.
+        Requires Engine AI provider credentials at assess time, not Platform keys.
+        """
 
         def _run() -> dict[str, Any]:
             payload = queries.get_ai_execution(require_nonblank(run_id, label="run_id"))
@@ -38,7 +43,11 @@ def register_artifact_tools(server: FastMCP, queries: KnowledgeQueryService) -> 
 
     @server.tool(name="get_ai_enrichment", structured_output=True)
     def get_ai_enrichment(run_id: str) -> dict[str, Any]:
-        """Return AI enrichment narrative when present for a run."""
+        """Return AI enrichment narrative when present for a run.
+
+        Scope: Community Engine. Optional AI dependency — absent when the run
+        was deterministic-only or AI was skipped.
+        """
 
         def _run() -> dict[str, Any]:
             payload = queries.get_ai_enrichment(require_nonblank(run_id, label="run_id"))

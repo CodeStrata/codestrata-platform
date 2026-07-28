@@ -1,0 +1,83 @@
+AskAnswerRequest:
+  properties:
+    question:
+      type: string
+      maxLength: 2000
+      minLength: 1
+      title: Question
+      description: Natural-language question over repository engineering knowledge
+      examples:
+      - What are the highest severity findings?
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+      description: Organization id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+      description: Workspace id
+    repository_id:
+      anyOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+      title: Repository Id
+      description: Repository id (required for POST /answers)
+    retrieval_index_id:
+      anyOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+      title: Retrieval Index Id
+      description: Optional retrieval index pin; defaults to latest when omitted
+    question_type:
+      anyOf:
+      - type: string
+        maxLength: 64
+        minLength: 1
+      - type: 'null'
+      title: Question Type
+      description: Optional question type hint
+    canonical_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Canonical Ids
+      description: Optional canonical engineering ids to scope retrieval
+    graph_node_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Graph Node Ids
+      description: Optional knowledge-graph node ids to scope retrieval
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+      description: Optional retrieval content-type filters
+    include_diagnostics:
+      type: boolean
+      title: Include Diagnostics
+      description: Include diagnostics in the answer payload when true
+      default: false
+    use_cache:
+      type: boolean
+      title: Use Cache
+      description: Allow cached answer reuse when true
+      default: true
+  additionalProperties: false
+  type: object
+  required:
+  - question
+  - organization_id
+  - workspace_id
+  title: AskAnswerRequest

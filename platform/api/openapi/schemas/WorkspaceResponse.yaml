@@ -1,0 +1,38 @@
+WorkspaceResponse:
+  properties:
+    id:
+      type: string
+      title: Id
+    organization_id:
+      type: string
+      title: Organization Id
+    name:
+      type: string
+      title: Name
+    description:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Description
+    status:
+      type: string
+      title: Status
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+  additionalProperties: false
+  type: object
+  required:
+  - id
+  - organization_id
+  - name
+  - description
+  - status
+  - created_at
+  - updated_at
+  title: WorkspaceResponse

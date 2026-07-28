@@ -2,18 +2,29 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![Edition: Community](https://img.shields.io/badge/edition-Community-brightgreen.svg)](docs/community-edition.md)
+[![Edition: Community](https://img.shields.io/badge/edition-Community-brightgreen.svg)](https://docs.codestrata.ai/community/vs-platform)
 
 > The Engine produces structured engineering intelligence.
 
 Open-source CLI that assesses a software repository and produces deterministic
-findings, recommendations, and a self-contained HTML/JSON modernization report.
+findings, recommendations, and a self-contained HTML/JSON **Engineering
+Assessment** report.
 
 **Audience:** engineers and engineering leaders evaluating a codebase for
 modernization, due diligence, or portfolio discovery.
 
 > **Public mirror.** Prefer changes in the private `codestrata-platform` monorepo;
 > this repository is generated for Community distribution.
+
+## Documentation
+
+| Need | Where |
+| ---- | ----- |
+| **Install, first assessment, reports, extensions** | [Public docs](https://docs.codestrata.ai/getting-started/) (`docs/` in monorepo) |
+| Community vs Platform | [docs.codestrata.ai/community/vs-platform](https://docs.codestrata.ai/community/vs-platform) |
+| Engine contracts / architecture (maintainers) | [docs/README.md](docs/README.md) in this repository |
+
+Do not treat Engine `docs/` journey pointers as a second public portal.
 
 ---
 
@@ -27,8 +38,9 @@ modernization, due diligence, or portfolio discovery.
 | Automation | CLI, optional MCP, optional Agent Framework |
 
 **Not in Community Engine:** hosted SaaS, SSO/billing, multi-tenant control planes,
-or commercial RAG / persistent Knowledge Graph (those live in the private
-Platform package). Details: [docs/community-edition.md](docs/community-edition.md).
+or CodeStrata Platform capabilities (Engineering Knowledge Graph, Repository
+Retrieval / Answering, Portfolio Intelligence, Executive Intelligence, Strategic
+Roadmap). Details: [Community vs Platform](https://docs.codestrata.ai/community/vs-platform).
 
 ---
 
@@ -38,7 +50,8 @@ Platform package). Details: [docs/community-edition.md](docs/community-edition.m
 | ---------- | ---- | ------- |
 | **codestrata-engine** (this repo) | Assessment CLI, reports, Engine docs | Yes |
 | **codestrata-examples** | Pinned real-world showcase manifests + fetch scripts | Yes |
-| **Platform** (`platform/` in the monorepo) | RAG + persistent Knowledge Graph | Private |
+| **CodeStrata Platform** (`platform/` in the monorepo) | Engineering Knowledge Graph, Retrieval, Answering, Portfolio / Executive Intelligence | Private |
+| **CodeStrata VS Code Extension** / **CodeStrata Cursor Extension** | Editor integrations | Community packages (`vscode-plugin/`, `cursor-plugin/`) |
 
 Product statement: *The Engine produces structured engineering intelligence.
 The Platform stores, connects, retrieves, and reasons over that intelligence.*
@@ -47,13 +60,14 @@ The Platform stores, connects, retrieves, and reasons over that intelligence.*
 
 ## Quick start
 
-Requires **Python 3.12+**. Full guide: [docs/quick-start.md](docs/quick-start.md).
+Requires **Python 3.12+**. Portal: [docs/README.md](docs/README.md) ·
+[docs/quick-start.md](docs/quick-start.md).
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -e .   # from this Engine checkout (not monorepo root)
+python -m pip install -e '.[mcp]'   # from this Engine checkout (not monorepo root)
 codestrata version
 codestrata init
 codestrata doctor
@@ -79,9 +93,10 @@ codestrata assess --repo /path/to/your-app --output reports --no-ai
 
 CI sample: [examples/github-actions/codestrata-assess.yml](examples/github-actions/codestrata-assess.yml).
 
-Guides: [docs/quick-start.md](docs/quick-start.md) ·
+Guides: [docs/getting-started.md](docs/getting-started.md) ·
 [docs/installation.md](docs/installation.md) ·
-[docs/tutorial.md](docs/tutorial.md).
+[docs/tutorial.md](docs/tutorial.md) ·
+[docs/community-vs-platform.md](docs/community-vs-platform.md).
 
 ---
 

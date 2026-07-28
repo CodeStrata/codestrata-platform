@@ -1,0 +1,37 @@
+GraphPathRequest:
+  properties:
+    source_node_id:
+      type: string
+      maxLength: 240
+      minLength: 1
+      title: Source Node Id
+    target_node_id:
+      type: string
+      maxLength: 240
+      minLength: 1
+      title: Target Node Id
+    max_depth:
+      type: integer
+      maximum: 10.0
+      minimum: 1.0
+      title: Max Depth
+      default: 5
+    edge_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Edge Types
+    max_paths:
+      type: integer
+      maximum: 50.0
+      minimum: 1.0
+      title: Max Paths
+      default: 20
+  additionalProperties: false
+  type: object
+  required:
+  - source_node_id
+  - target_node_id
+  title: GraphPathRequest

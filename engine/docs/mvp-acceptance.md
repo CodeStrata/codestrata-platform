@@ -1,5 +1,8 @@
 # MVP Acceptance Harness
 
+> **ARCHIVE CANDIDATE (Phase 12.2.2)** — Retained for history. Do not treat as current public documentation. Prefer CHANGELOG / governance reports / public `docs/` for current guidance. File was **not deleted**.
+
+
 Phase 5.13 provides a repeatable live acceptance harness for the CodeStrata MVP
 workflow. It does not add assessment rules or AI capabilities.
 

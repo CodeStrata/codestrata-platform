@@ -1,0 +1,22 @@
+RecommendationStepResponse:
+  properties:
+    node_id:
+      type: string
+      title: Node Id
+    display_name:
+      type: string
+      title: Display Name
+    priority:
+      type: string
+      title: Priority
+    order:
+      type: integer
+      title: Order
+  additionalProperties: false
+  type: object
+  required:
+  - node_id
+  - display_name
+  - priority
+  - order
+  title: RecommendationStepResponse

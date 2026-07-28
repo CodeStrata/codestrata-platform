@@ -31,7 +31,7 @@ from codestrata.config import CodestrataSettings, load_settings
 incremental_app = typer.Typer(
     name="incremental",
     help=(
-        "CodeStrata incremental assessment (explicit opt-in).\n\n"
+        "Incremental assessment (explicit opt-in; advanced).\n\n"
         "Requires [incremental].rollout_mode=plan_only|opt_in. "
         "`codestrata assess` remains a full rebuild regardless of rollout mode."
     ),

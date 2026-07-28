@@ -1,0 +1,28 @@
+RoadmapWaveBucketDto:
+  properties:
+    wave:
+      type: string
+      title: Wave
+    title:
+      type: string
+      title: Title
+    description:
+      type: string
+      title: Description
+    initiative_ids:
+      items:
+        type: string
+      type: array
+      title: Initiative Ids
+    initiative_count:
+      type: integer
+      title: Initiative Count
+  additionalProperties: false
+  type: object
+  required:
+  - wave
+  - title
+  - description
+  - initiative_ids
+  - initiative_count
+  title: RoadmapWaveBucketDto

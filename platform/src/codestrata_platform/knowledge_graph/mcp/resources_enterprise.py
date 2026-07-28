@@ -1,4 +1,4 @@
-"""MCP resources for Enterprise Knowledge Graph (read-only, bounded)."""
+"""MCP resources for Platform Engineering Knowledge Graph (read-only, bounded)."""
 
 from __future__ import annotations
 
@@ -121,7 +121,7 @@ def register_enterprise_resources(
         def _run() -> str:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             entity_id = (

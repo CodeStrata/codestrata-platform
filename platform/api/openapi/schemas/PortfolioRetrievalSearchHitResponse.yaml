@@ -1,0 +1,64 @@
+PortfolioRetrievalSearchHitResponse:
+  properties:
+    result_id:
+      type: string
+      title: Result Id
+    chunk_id:
+      type: string
+      title: Chunk Id
+    document_id:
+      type: string
+      title: Document Id
+    content_type:
+      type: string
+      title: Content Type
+    canonical_type:
+      type: string
+      title: Canonical Type
+    canonical_id:
+      type: string
+      title: Canonical Id
+    title:
+      type: string
+      title: Title
+    text:
+      type: string
+      title: Text
+    score:
+      $ref: '#/components/schemas/PortfolioRetrievalScoreBreakdownResponse'
+    repository_ids:
+      items:
+        type: string
+      type: array
+      title: Repository Ids
+    primary_repository_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Primary Repository Id
+    repository_contributions:
+      items:
+        $ref: '#/components/schemas/RepositoryContributionResponse'
+      type: array
+      title: Repository Contributions
+    citations:
+      items:
+        type: string
+      type: array
+      title: Citations
+  additionalProperties: false
+  type: object
+  required:
+  - result_id
+  - chunk_id
+  - document_id
+  - content_type
+  - canonical_type
+  - canonical_id
+  - title
+  - text
+  - score
+  - repository_ids
+  - repository_contributions
+  - citations
+  title: PortfolioRetrievalSearchHitResponse

@@ -1,0 +1,275 @@
+paths:
+  /api/v1/engineering/snapshots:
+    post:
+      tags:
+      - Engineering Intelligence
+      summary: Build Engineering Snapshot
+      description: Build an Engineering Snapshot from assessment intelligence for
+        Platform consumers (Knowledge Graph, retrieval, portfolio). Not a Community
+        Engine local assessment run.
+      operationId: build_snapshot_api_v1_engineering_snapshots_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/codestrata_platform__api__controllers__engineering__BuildSnapshotRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: List Snapshots
+      operationId: list_snapshots_api_v1_engineering_snapshots_get
+      parameters:
+      - name: assessment_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SnapshotSummaryResponse'
+                title: Response List Snapshots Api V1 Engineering Snapshots Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+  /api/v1/engineering/snapshots/{snapshot_id}:
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: Get Snapshot
+      operationId: get_snapshot_api_v1_engineering_snapshots__snapshot_id__get
+      parameters:
+      - name: snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Snapshot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+  /api/v1/engineering/technologies:
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: List Technologies
+      operationId: list_technologies_api_v1_engineering_technologies_get
+      parameters:
+      - name: assessment_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assessment Id
+      - name: snapshot_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snapshot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response List Technologies Api V1 Engineering Technologies
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+  /api/v1/engineering/findings:
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: List Findings
+      operationId: list_findings_api_v1_engineering_findings_get
+      parameters:
+      - name: assessment_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assessment Id
+      - name: snapshot_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snapshot Id
+      - name: severity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Severity
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response List Findings Api V1 Engineering Findings Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+  /api/v1/engineering/recommendations:
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: List Recommendations
+      operationId: list_recommendations_api_v1_engineering_recommendations_get
+      parameters:
+      - name: assessment_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assessment Id
+      - name: snapshot_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snapshot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response List Recommendations Api V1 Engineering Recommendations
+                  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal
+  /api/v1/engineering/metrics:
+    get:
+      tags:
+      - Engineering Intelligence
+      summary: List Metrics
+      operationId: list_metrics_api_v1_engineering_metrics_get
+      parameters:
+      - name: assessment_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Assessment Id
+      - name: snapshot_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Snapshot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+                title: Response List Metrics Api V1 Engineering Metrics Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-engineering
+      x-codestrata-audience: internal

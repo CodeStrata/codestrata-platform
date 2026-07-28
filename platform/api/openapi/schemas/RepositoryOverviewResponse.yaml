@@ -1,0 +1,83 @@
+RepositoryOverviewResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    repository_id:
+      type: string
+      title: Repository Id
+    technology_count:
+      type: integer
+      title: Technology Count
+    component_count:
+      type: integer
+      title: Component Count
+    finding_distribution:
+      additionalProperties:
+        type: integer
+      type: object
+      title: Finding Distribution
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    evidence_coverage:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    recommendation_coverage:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    dependency_hotspots:
+      items:
+        $ref: '#/components/schemas/DependencyHotspotResponse'
+      type: array
+      title: Dependency Hotspots
+    risk_hotspots:
+      items:
+        $ref: '#/components/schemas/RiskHotspotResponse'
+      type: array
+      title: Risk Hotspots
+    highest_impact_components:
+      items:
+        type: string
+      type: array
+      title: Highest Impact Components
+    highest_impact_technologies:
+      items:
+        type: string
+      type: array
+      title: Highest Impact Technologies
+    integrity_passed:
+      type: boolean
+      title: Integrity Passed
+    policy_version:
+      type: string
+      title: Policy Version
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - repository_id
+  - technology_count
+  - component_count
+  - finding_distribution
+  - recommendation_count
+  - evidence_coverage
+  - recommendation_coverage
+  - dependency_hotspots
+  - risk_hotspots
+  - highest_impact_components
+  - highest_impact_technologies
+  - integrity_passed
+  - policy_version
+  title: RepositoryOverviewResponse

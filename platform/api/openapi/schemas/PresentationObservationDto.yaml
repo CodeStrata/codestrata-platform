@@ -1,0 +1,38 @@
+PresentationObservationDto:
+  properties:
+    observation_key:
+      type: string
+      title: Observation Key
+    title:
+      type: string
+      title: Title
+    summary:
+      type: string
+      title: Summary
+    related_metric_keys:
+      items:
+        type: string
+      type: array
+      title: Related Metric Keys
+    related_finding_ids:
+      items:
+        type: string
+      type: array
+      title: Related Finding Ids
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+  additionalProperties: false
+  type: object
+  required:
+  - observation_key
+  - title
+  - summary
+  - related_metric_keys
+  - related_finding_ids
+  - confidence
+  - confidence_band
+  title: PresentationObservationDto

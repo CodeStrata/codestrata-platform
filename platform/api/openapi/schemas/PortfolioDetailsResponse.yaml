@@ -1,0 +1,15 @@
+PortfolioDetailsResponse:
+  properties:
+    portfolio:
+      $ref: '#/components/schemas/PortfolioSummaryResponse'
+    memberships:
+      items:
+        $ref: '#/components/schemas/PortfolioMembershipResponse'
+      type: array
+      title: Memberships
+  additionalProperties: false
+  type: object
+  required:
+  - portfolio
+  - memberships
+  title: PortfolioDetailsResponse

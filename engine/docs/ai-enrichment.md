@@ -1,4 +1,10 @@
-# Modernization Advisor (AI enrichment)
+# AI Providers / enrichment
+
+> **Canonical public overview:** [AI Providers](https://docs.codestrata.ai/ai-providers/)  
+> Monorepo: `docs/ai-providers/`
+
+Optional AI is a capability of CodeStrata Engine. Public setup overview lives in
+the docs portal. Engine provider wiring and maintainer detail follows.
 
 Optional one-call leadership narrative over deterministic findings and
 recommendations. Customer-facing name: **Modernization Advisor**. Internal

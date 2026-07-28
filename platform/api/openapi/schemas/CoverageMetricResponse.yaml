@@ -1,0 +1,20 @@
+CoverageMetricResponse:
+  properties:
+    numerator:
+      type: integer
+      title: Numerator
+    denominator:
+      type: integer
+      title: Denominator
+    percentage:
+      anyOf:
+      - type: number
+      - type: 'null'
+      title: Percentage
+  additionalProperties: false
+  type: object
+  required:
+  - numerator
+  - denominator
+  - percentage
+  title: CoverageMetricResponse

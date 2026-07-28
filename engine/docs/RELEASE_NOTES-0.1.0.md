@@ -42,20 +42,19 @@ Optional extras: `bedrock`, `openai`, `mcp`, `pgvector`, `dev`.
 Included by default: repository assessment, local graphs, deterministic rules,
 HTML/JSON reports, local MCP/agents when enabled.
 
-Enterprise Knowledge Graph and future Platform services (SSO, billing,
+Engineering Knowledge Graph and future Platform services (SSO, billing,
 multi-tenancy) are **not** Community defaults. See
 [community-edition.md](community-edition.md).
 
 ## Sample reports
 
 Golden HTML/JSON samples for each language live under
-[test-fixtures/sample-reports/](../../test-fixtures/sample-reports/README.md).
+test-fixtures/sample-reports/README.md (when present).
 
 ## Breaking / rename notes
 
 This release uses the **CodeStrata** package and CLI exclusively. Pre-rename
-package and CLI names are not shipped. The product rename was completed in
-Phase 5.16 (see [ROADMAP.md](../../ROADMAP.md)).
+package and CLI names are not shipped.
 
 ## Known limitations
 
@@ -73,5 +72,4 @@ ruff check .
 mypy src
 ```
 
-Full history: [CHANGELOG.md](../../CHANGELOG.md).  
-Checklist: [COMMUNITY_EDITION_CHECKLIST.md](COMMUNITY_EDITION_CHECKLIST.md).
+See also [README.md](README.md) and [https://docs.codestrata.ai](https://docs.codestrata.ai).

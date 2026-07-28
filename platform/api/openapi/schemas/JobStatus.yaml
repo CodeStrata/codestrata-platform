@@ -1,0 +1,10 @@
+JobStatus:
+  type: string
+  enum:
+  - queued
+  - running
+  - succeeded
+  - failed
+  - cancelled
+  description: Async job status vocabulary (shared)
+  x-codestrata-status: implemented

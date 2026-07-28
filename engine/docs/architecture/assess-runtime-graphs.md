@@ -3,4 +3,4 @@
 Canonical documentation:
 
 * [../runtime.md](../runtime.md)
-* [../../ARCHITECTURE.md](../../../ARCHITECTURE.md)
+* [../architecture-guide.md](../architecture-guide.md)

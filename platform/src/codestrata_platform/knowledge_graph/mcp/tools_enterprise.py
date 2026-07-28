@@ -1,4 +1,4 @@
-"""Additive MCP tools for Enterprise Knowledge Graph."""
+"""Additive MCP tools for Platform Engineering Knowledge Graph."""
 
 from __future__ import annotations
 
@@ -33,10 +33,15 @@ def register_enterprise_tools(
 ) -> None:
     @server.tool(name="validate_enterprise_workspace", structured_output=True)
     def validate_enterprise_workspace(workspace: str = "enterprise") -> dict[str, Any]:
+        """Validate an Engineering Knowledge Graph workspace layout.
+
+        Scope: CodeStrata Platform. Input: workspace id. Output: validation summary.
+        """
+
         def _run() -> dict[str, Any]:
             if knowledge_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise knowledge service is not configured",
+                    "Engineering Knowledge Graph service is not configured",
                     reason_code="enterprise_service_missing",
                 )
             result = knowledge_service.validate_workspace(
@@ -51,10 +56,15 @@ def register_enterprise_tools(
         workspace: str = "enterprise",
         link_assessments: bool = False,
     ) -> dict[str, Any]:
+        """Build an Engineering Knowledge Graph for a workspace.
+
+        Scope: CodeStrata Platform. Does not run Community Engine assessments.
+        """
+
         def _run() -> dict[str, Any]:
             if knowledge_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise knowledge service is not configured",
+                    "Engineering Knowledge Graph service is not configured",
                     reason_code="enterprise_service_missing",
                 )
             result = knowledge_service.build_graph(
@@ -70,10 +80,15 @@ def register_enterprise_tools(
         enterprise_id: str = "enterprise:example",
         graph_id: str | None = None,
     ) -> dict[str, Any]:
+        """Get an Engineering Knowledge Graph by id or latest for an enterprise.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             graph = (
@@ -92,10 +107,15 @@ def register_enterprise_tools(
         entity_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Get one Engineering Knowledge Graph entity.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             entity = query_service.get_entity(
@@ -112,10 +132,15 @@ def register_enterprise_tools(
         enterprise_id: str = "enterprise:example",
         limit: int = 100,
     ) -> dict[str, Any]:
+        """List Engineering Knowledge Graph entities by kind.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             items = query_service.list_entities(
@@ -133,10 +158,15 @@ def register_enterprise_tools(
         depth: int = 1,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Return neighbors of an Engineering Knowledge Graph entity.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             return map_neighborhood(
@@ -155,10 +185,15 @@ def register_enterprise_tools(
         target_entity_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Trace dependency paths between two graph entities.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             paths = query_service.trace_dependency_paths(
@@ -175,10 +210,15 @@ def register_enterprise_tools(
         repository_entity_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Get Engineering Knowledge Graph context for a repository entity.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             return map_impact(
@@ -195,10 +235,15 @@ def register_enterprise_tools(
         finding_entity_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Get cross-repository impact for a finding entity.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             return map_impact(
@@ -215,10 +260,15 @@ def register_enterprise_tools(
         recommendation_entity_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Get cross-repository impact for a recommendation entity.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             return map_impact(
@@ -235,10 +285,15 @@ def register_enterprise_tools(
         relationship_id: str,
         enterprise_id: str = "enterprise:example",
     ) -> dict[str, Any]:
+        """Explain one Engineering Knowledge Graph relationship and provenance.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if query_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise query service is not configured",
+                    "Engineering Knowledge Graph query service is not configured",
                     reason_code="enterprise_query_missing",
                 )
             graph = query_service.get_latest_graph(enterprise_id)
@@ -275,10 +330,15 @@ def register_enterprise_tools(
         left_graph_id: str,
         right_graph_id: str,
     ) -> dict[str, Any]:
+        """Compare two Engineering Knowledge Graph versions.
+
+        Scope: CodeStrata Platform.
+        """
+
         def _run() -> dict[str, Any]:
             if knowledge_service is None:
                 raise EnterpriseApplicationError(
-                    "Enterprise knowledge service is not configured",
+                    "Engineering Knowledge Graph service is not configured",
                     reason_code="enterprise_service_missing",
                 )
             return map_diff(

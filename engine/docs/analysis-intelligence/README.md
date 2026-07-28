@@ -1,12 +1,28 @@
 # Analysis Intelligence
 
-Phase 4 of CodeStrata.
+Phase 4 of CodeStrata Engine — **implementation and milestone notes**.
+
+## Canonical authorities
+
+| Concern | Location |
+| ------- | -------- |
+| Engineering concepts (domains) | [`knowledge/`](../../../knowledge/) |
+| Assessment methodology | [`knowledge/ASSESSMENT_CONCEPTS.md`](../../../knowledge/ASSESSMENT_CONCEPTS.md) |
+| How CodeStrata is built | [`governance/`](../../../governance/) |
+
+Docs in this tree describe **how Analysis Intelligence is implemented** in the
+Engine (contracts, configuration, CLI/MCP wiring). Conceptual taxonomies and
+methodology live in Knowledge; do not duplicate them here.
+
+Canonical phase status: [ROADMAP.md](../../../ROADMAP.md).
+
+## Milestone status
 
 | Milestone | Status |
 | --------- | ------ |
 | 4.1 Shared Rule Platform | Implemented (infrastructure) |
 | 4.1.1 Rule Platform Integration Bridge | Complete |
-| 4.1.2 CodeStrata Assessment Framework | Complete (methodology) |
+| 4.1.2 CodeStrata Assessment Framework | Complete (methodology → Knowledge) |
 | 4.2 Architecture Intelligence | Complete (4.2.1–4.2.5) |
 | 4.3 Technical Debt Intelligence | Complete (4.3.1–4.3.6) |
 | 4.4 Dependency Intelligence | Complete through report integration |
@@ -16,8 +32,6 @@ Phase 4 of CodeStrata.
 | 4.8 AI Readiness Intelligence | Complete (4.8.1–4.8.6) |
 | 4.9 Performance Intelligence | Complete through report integration |
 | 4.10 Modernization Intelligence | See Phase 5.10 modernization roadmap |
-
-Canonical phase status: [ROADMAP.md](../../../ROADMAP.md).
 
 ## Phase 4.1
 

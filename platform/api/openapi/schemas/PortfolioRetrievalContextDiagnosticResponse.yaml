@@ -1,0 +1,19 @@
+PortfolioRetrievalContextDiagnosticResponse:
+  properties:
+    kind:
+      type: string
+      title: Kind
+    detail:
+      type: string
+      title: Detail
+    repository_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Repository Id
+  additionalProperties: false
+  type: object
+  required:
+  - kind
+  - detail
+  title: PortfolioRetrievalContextDiagnosticResponse

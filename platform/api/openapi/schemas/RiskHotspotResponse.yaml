@@ -1,0 +1,28 @@
+RiskHotspotResponse:
+  properties:
+    node_id:
+      type: string
+      title: Node Id
+    node_type:
+      type: string
+      title: Node Type
+    display_name:
+      type: string
+      title: Display Name
+    score:
+      type: integer
+      title: Score
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+  additionalProperties: false
+  type: object
+  required:
+  - node_id
+  - node_type
+  - display_name
+  - score
+  - factors
+  title: RiskHotspotResponse

@@ -1,4 +1,4 @@
-# Repository AI-Readiness Evidence (Phase 4.8.2)
+# Repository AI-Readiness Evidence
 
 Platform evidence for repository-observable AI/agent readiness signals.
 **Not** owned by AI Readiness Intelligence assessment.

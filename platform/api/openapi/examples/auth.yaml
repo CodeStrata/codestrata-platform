@@ -1,0 +1,4 @@
+bearerApiKey:
+  summary: Platform API key (not an AI provider token)
+  value:
+    Authorization: Bearer ${CODESTRATA_PLATFORM_API_KEY}

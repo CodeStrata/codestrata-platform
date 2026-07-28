@@ -10,7 +10,7 @@ expose Cypher, SQL, or unrestricted traversal.
 | Repository Graph | Files/modules inside one repo |
 | Engineering Knowledge Graph | Technology concepts from assessment |
 | Assessment Graph | Findings/recommendations for a run |
-| Enterprise Knowledge Graph | Cross-repo enterprise architecture |
+| Engineering Knowledge Graph | Cross-repo organization architecture |
 
 `KnowledgeQueryService` remains the repository knowledge API.
 `EnterpriseKnowledgeQueryService` is enterprise-level.

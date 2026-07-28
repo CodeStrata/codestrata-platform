@@ -1,0 +1,62 @@
+RegisterRepositoryRequest:
+  properties:
+    workspace_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Workspace Id
+    organization_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Organization Id
+    display_name:
+      type: string
+      maxLength: 512
+      minLength: 1
+      title: Display Name
+    provider:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Provider
+    repository_url:
+      type: string
+      maxLength: 2083
+      minLength: 1
+      format: uri
+      title: Repository Url
+    default_branch:
+      type: string
+      maxLength: 256
+      minLength: 1
+      title: Default Branch
+      default: main
+    visibility:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Visibility
+      default: private
+    description:
+      anyOf:
+      - type: string
+        maxLength: 4000
+      - type: 'null'
+      title: Description
+    metadata:
+      anyOf:
+      - additionalProperties:
+          type: string
+        type: object
+      - type: 'null'
+      title: Metadata
+  additionalProperties: false
+  type: object
+  required:
+  - workspace_id
+  - organization_id
+  - display_name
+  - provider
+  - repository_url
+  title: RegisterRepositoryRequest

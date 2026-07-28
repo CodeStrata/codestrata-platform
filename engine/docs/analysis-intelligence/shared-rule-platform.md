@@ -1,4 +1,4 @@
-# Shared Rule Platform (Phase 4.1)
+# Shared Rule Platform
 
 ```text
 Assessment Inputs

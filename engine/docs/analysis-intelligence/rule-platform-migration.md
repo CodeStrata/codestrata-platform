@@ -1,4 +1,4 @@
-# Rule Platform Migration (Phase 4.1.1)
+# Rule Platform Migration
 
 Public product: **CodeStrata**. Internals remain `codestrata`.
 

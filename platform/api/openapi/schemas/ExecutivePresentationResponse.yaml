@@ -1,0 +1,108 @@
+ExecutivePresentationResponse:
+  properties:
+    identity:
+      $ref: '#/components/schemas/PresentationIdentityDto'
+    executive_summary:
+      $ref: '#/components/schemas/PresentationExecutiveSummaryDto'
+    cto_summary:
+      $ref: '#/components/schemas/PresentationCtoSummaryDto'
+    portfolio_scorecard:
+      $ref: '#/components/schemas/PresentationScorecardDto'
+    kpi_cards:
+      items:
+        $ref: '#/components/schemas/PresentationKpiCardDto'
+      type: array
+      title: Kpi Cards
+    portfolio_health:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    portfolio_risk:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    modernization_readiness:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    technology_landscape:
+      $ref: '#/components/schemas/PresentationTechnologyLandscapeDto'
+    architecture_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    technical_debt_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    security_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    dependency_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    cloud_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    ai_readiness:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    engineering_strengths:
+      items:
+        $ref: '#/components/schemas/PresentationStrengthWeaknessItemDto'
+      type: array
+      title: Engineering Strengths
+    engineering_weaknesses:
+      items:
+        $ref: '#/components/schemas/PresentationStrengthWeaknessItemDto'
+      type: array
+      title: Engineering Weaknesses
+    findings:
+      items:
+        $ref: '#/components/schemas/PresentationFindingDto'
+      type: array
+      title: Findings
+    recommendations:
+      items:
+        $ref: '#/components/schemas/PresentationRecommendationDto'
+      type: array
+      title: Recommendations
+    observations:
+      items:
+        $ref: '#/components/schemas/PresentationObservationDto'
+      type: array
+      title: Observations
+    confidence_summary:
+      $ref: '#/components/schemas/PresentationConfidenceSummaryDto'
+    coverage_summary:
+      $ref: '#/components/schemas/PresentationCoverageSummaryDto'
+    limitations_and_assumptions:
+      items:
+        type: string
+      type: array
+      title: Limitations And Assumptions
+    repository_references:
+      items:
+        $ref: '#/components/schemas/PresentationRepositoryReferenceDto'
+      type: array
+      title: Repository References
+    trend_ready_metrics:
+      items:
+        $ref: '#/components/schemas/PresentationTrendPointDto'
+      type: array
+      title: Trend Ready Metrics
+  additionalProperties: false
+  type: object
+  required:
+  - identity
+  - executive_summary
+  - cto_summary
+  - portfolio_scorecard
+  - kpi_cards
+  - portfolio_health
+  - portfolio_risk
+  - modernization_readiness
+  - technology_landscape
+  - architecture_posture
+  - technical_debt_posture
+  - security_posture
+  - dependency_posture
+  - cloud_posture
+  - ai_readiness
+  - engineering_strengths
+  - engineering_weaknesses
+  - findings
+  - recommendations
+  - observations
+  - confidence_summary
+  - coverage_summary
+  - limitations_and_assumptions
+  - repository_references
+  - trend_ready_metrics
+  title: ExecutivePresentationResponse

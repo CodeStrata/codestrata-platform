@@ -1,0 +1,77 @@
+[
+ {
+  "name": "icon.svg",
+  "w": 22,
+  "h": 22
+ },
+ {
+  "name": "icon-mono-white.svg",
+  "w": 22,
+  "h": 22
+ },
+ {
+  "name": "icon-mono-black.svg",
+  "w": 22,
+  "h": 22
+ },
+ {
+  "name": "icon-tile-dark.svg",
+  "w": 32,
+  "h": 32
+ },
+ {
+  "name": "icon-tile-light.svg",
+  "w": 32,
+  "h": 32
+ },
+ {
+  "name": "wordmark-on-dark.svg",
+  "w": 539.162109375,
+  "h": 93.119140625
+ },
+ {
+  "name": "wordmark-on-light.svg",
+  "w": 539.162109375,
+  "h": 93.119140625
+ },
+ {
+  "name": "wordmark-mono-white.svg",
+  "w": 539.162109375,
+  "h": 93.119140625
+ },
+ {
+  "name": "wordmark-mono-black.svg",
+  "w": 539.162109375,
+  "h": 93.119140625
+ },
+ {
+  "name": "lockup-horizontal-on-dark.svg",
+  "w": 731.2573474702381,
+  "h": 150.95238095238096
+ },
+ {
+  "name": "lockup-horizontal-on-light.svg",
+  "w": 731.2573474702381,
+  "h": 150.95238095238096
+ },
+ {
+  "name": "lockup-horizontal-mono-white.svg",
+  "w": 731.2573474702381,
+  "h": 150.95238095238096
+ },
+ {
+  "name": "lockup-horizontal-mono-black.svg",
+  "w": 731.2573474702381,
+  "h": 150.95238095238096
+ },
+ {
+  "name": "lockup-stacked-on-dark.svg",
+  "w": 551.162109375,
+  "h": 313.72223772321433
+ },
+ {
+  "name": "lockup-stacked-on-light.svg",
+  "w": 551.162109375,
+  "h": 313.72223772321433
+ }
+]

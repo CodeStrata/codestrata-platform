@@ -1,0 +1,30 @@
+ImpactFactorResponse:
+  properties:
+    code:
+      type: string
+      title: Code
+    description:
+      type: string
+      title: Description
+    points:
+      type: integer
+      title: Points
+    source_node_ids:
+      items:
+        type: string
+      type: array
+      title: Source Node Ids
+    source_edge_ids:
+      items:
+        type: string
+      type: array
+      title: Source Edge Ids
+  additionalProperties: false
+  type: object
+  required:
+  - code
+  - description
+  - points
+  - source_node_ids
+  - source_edge_ids
+  title: ImpactFactorResponse

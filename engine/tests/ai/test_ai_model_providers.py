@@ -1,4 +1,4 @@
-"""Tests for CodeStrata AI model providers and Bedrock Converse integration."""
+"""Tests for CodeStrata optional AI model providers and Bedrock Converse integration."""
 
 from __future__ import annotations
 

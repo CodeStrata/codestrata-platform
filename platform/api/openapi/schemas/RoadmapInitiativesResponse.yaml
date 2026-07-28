@@ -1,0 +1,19 @@
+RoadmapInitiativesResponse:
+  properties:
+    identity:
+      $ref: '#/components/schemas/RoadmapIdentityDto'
+    initiatives:
+      items:
+        $ref: '#/components/schemas/RoadmapInitiativeDto'
+      type: array
+      title: Initiatives
+    total:
+      type: integer
+      title: Total
+  additionalProperties: false
+  type: object
+  required:
+  - identity
+  - initiatives
+  - total
+  title: RoadmapInitiativesResponse

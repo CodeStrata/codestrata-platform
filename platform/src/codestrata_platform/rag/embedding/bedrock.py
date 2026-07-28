@@ -203,7 +203,7 @@ class BedrockEmbeddingProvider:
                 model_id=self._model,
             )
         except AwsAuthenticationError as exc:
-            raise ProviderAuthenticationError(str(exc)) from exc
+            raise ProviderAuthenticationError(sanitize_exception_message(str(exc))) from exc
         typed = cast(BedrockEmbeddingClient, client)
         self._client = typed
         return typed
@@ -225,13 +225,13 @@ class BedrockEmbeddingProvider:
         except Exception as exc:  # noqa: BLE001
             category = categorize_provider_error(exc)
             if category == "throttling":
-                raise ProviderThrottlingError(str(exc)) from exc
+                raise ProviderThrottlingError(sanitize_exception_message(str(exc))) from exc
             if category == "authentication":
                 raise ProviderAuthenticationError(
                     sanitize_exception_message(str(exc))
                 ) from exc
             if category == "timeout":
-                raise ProviderTimeoutError(str(exc)) from exc
+                raise ProviderTimeoutError(sanitize_exception_message(str(exc))) from exc
             raise
         payload = response.get("body")
         if hasattr(payload, "read"):

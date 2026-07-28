@@ -1,0 +1,22 @@
+AnswerFeedbackResponse:
+  properties:
+    answer_run_id:
+      type: string
+      title: Answer Run Id
+    rating:
+      type: integer
+      title: Rating
+    feedback_category:
+      type: string
+      title: Feedback Category
+    comment:
+      type: string
+      title: Comment
+  additionalProperties: false
+  type: object
+  required:
+  - answer_run_id
+  - rating
+  - feedback_category
+  - comment
+  title: AnswerFeedbackResponse

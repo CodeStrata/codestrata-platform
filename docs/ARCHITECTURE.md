@@ -1,0 +1,143 @@
+# CodeStrata Documentation Portal — Architecture
+
+Public documentation for CodeStrata Community assets. Intended deploy host:
+`https://docs.codestrata.ai`. This repository tree lives at monorepo `docs/` and
+is prepared for extraction as **`codestrata-docs`**.
+
+## Framework decision
+
+**Selected: [VitePress](https://vitepress.dev/)** (Vue-powered static site generator).
+
+| Criterion | VitePress fit |
+| --------- | ------------- |
+| Static SSG | Yes — `vitepress build` → `.vitepress/dist` |
+| Markdown | First-class; MDX not required for this foundation |
+| Navigation | Config-driven nav + sidebar |
+| Local dev / preview | `npm run dev` / `npm run preview` |
+| Search readiness | Built-in local search provider |
+| Syntax highlighting | Shiki (bundled) |
+| Dark / light | Built-in theme toggle |
+| Deployment | Static files only; no backend |
+| Contributor familiarity | Node tooling aligned with VS Code / Cursor extensions |
+| Maintenance | Low; established Vite ecosystem |
+
+### Alternatives considered
+
+| Option | Why not selected for this foundation |
+| ------ | ------------------------------------ |
+| Docusaurus | Heavier React stack; more config for the same static outcome |
+| MkDocs Material | Excellent Python fit for Engine alone; portal spans Node extension docs and benefits from one Node toolchain |
+| Astro Starlight | Strong, but VitePress is lighter for a Markdown-first docs portal with local search out of the box |
+
+**Non-goals:** custom docs framework; runtime dependency on CodeStrata Platform.
+
+## Directory layout
+
+```text
+docs/
+  .vitepress/          # site config + theme
+  public/              # static assets (favicon, robots.txt)
+  getting-started/     # primary developer journey
+  engine/              # Engine public overview
+  assessments/
+  reports/
+  extensions/
+  ai-providers/
+  reference/
+  community/
+  platform/
+  security/
+  troubleshooting/
+  scripts/             # validation
+  ARCHITECTURE.md
+  MIGRATION_PLAN.md
+  DEPLOYMENT.md
+  EXTRACTION.md
+  CI.md
+  README.md
+  CONTRIBUTING.md
+  LICENSE
+  SECURITY.md
+  SUPPORT.md
+  PRIVACY.md
+  package.json
+  package-lock.json
+```
+
+## Ownership boundaries
+
+| Tree | Role |
+| ---- | ---- |
+| `docs/` | Public CodeStrata documentation portal |
+| `engine/docs/` | Engine-specific developer / technical documentation |
+| `vscode-plugin/` | Extension repository documentation |
+| `cursor-plugin/` | Extension repository documentation |
+| `governance/` | Internal architecture, standards, playbooks (not a runtime dependency) |
+
+The public portal may **adapt** or **link** to public GitHub mirrors. It must not
+depend on private Platform implementation details or import from `governance/`
+or `platform/` at build time.
+
+## Design system mapping
+
+Authoritative brand foundation: `governance/assets/DESIGN-SYSTEM.md` (monorepo).  
+Public visual authority: live https://codestrata.ai/ (see `WEBSITE_STYLE_ALIGNMENT.md`).
+
+| Design System / website token | Portal usage |
+| ----------------------------- | ------------ |
+| `--bg` `#0b0d10` | Page / VitePress `--vp-c-bg` |
+| `--amber` `#d98a3d` | Brand accent |
+| `--amber-bright` / `--amber-deep` | Hover / light-theme accent |
+| Space Grotesk / Inter / IBM Plex Mono | Self-hosted in `public/fonts/` |
+| `--radius` 10 / `--radius-lg` 16 | Buttons, cards, code |
+| `--nav-h` 60px | Header height |
+| `--maxw` 1120px | Home / footer container |
+
+Token file: `public/design-tokens/tokens.css` (standalone; no monorepo import).
+VitePress bridge: `.vitepress/theme/tokens.css`.
+
+
+## Search readiness
+
+- Local search via `themeConfig.search.provider: 'local'`
+- Stable clean URLs (`cleanUrls: true`)
+- Page `title` / `description` frontmatter
+- Sitemap hostname documented as `https://docs.codestrata.ai` for production builds
+- Future options (undecided): Algolia DocSearch, Pagefind, or host-native search —
+  any paid provider requires explicit review; not required for this phase
+
+## SEO and metadata
+
+- Site title / description in VitePress config
+- Canonical public URL assumption: `https://docs.codestrata.ai`
+- Open Graph basics in `head`
+- `public/robots.txt` + sitemap generation
+- Favicon: `public/favicon.svg`
+
+Local/preview builds serve `base: '/'`. Production DNS and host headers establish
+the public hostname; do not claim the site is already deployed.
+
+## Accessibility
+
+VitePress default theme provides landmarks, skip-to-content, keyboard nav, and
+theme toggle. Portal additions: visible `:focus-visible`, reduced-motion respect,
+semantic headings, callout borders that are not color-only.
+
+**Limitations:** contrast of third-party content embeds (none by default); full
+axe CI not wired in this phase (documented under CI readiness).
+
+## Link governance
+
+Allowed: `docs.codestrata.ai`, `codestrata.ai`, public CodeStrata GitHub repos,
+official provider docs, stable public standards.
+
+Avoid: private monorepo paths, local filesystem paths, unpublished repos without
+qualification, internal phase docs, temporary dev URLs.
+
+Validation: `scripts/validate.mjs` after build (internal href audit + forbidden
+pattern scan).
+
+## Security and privacy defaults
+
+No auth, no credentials collection, no analytics by default, no unnecessary
+cookies, no Platform secrets in content.

@@ -1,0 +1,103 @@
+paths:
+  /api/v1/ingestion/assessments/{assessment_id}/intelligence:
+    post:
+      tags:
+      - Ingestion Intelligence
+      summary: Register and process assessment intelligence
+      operationId: register_and_process_intelligence_api_v1_ingestion_assessments__assessment_id__intelligence_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/IntelligenceProcessRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceProcessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Ingestion Intelligence
+      summary: Get latest assessment intelligence
+      operationId: get_intelligence_api_v1_ingestion_assessments__assessment_id__intelligence_get
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal
+  /api/v1/ingestion/assessments/{assessment_id}/intelligence/process:
+    post:
+      tags:
+      - Ingestion Intelligence
+      summary: Process completed assessment artifacts into intelligence
+      operationId: process_intelligence_api_v1_ingestion_assessments__assessment_id__intelligence_process_post
+      parameters:
+      - name: assessment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assessment Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/IntelligenceProcessRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceProcessResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-ingestion
+      x-codestrata-audience: internal

@@ -1,4 +1,4 @@
-# Dependency Hygiene Rules (Phase 4.4.3 / 4.4.3A)
+# Dependency Hygiene Rules
 
 Dependency Intelligence hygiene rules consume **Dependency Evidence only**.
 They never reparse manifests, execute build tools, or contact registries.

@@ -1,0 +1,62 @@
+PresentationKpiCardDto:
+  properties:
+    identifier:
+      type: string
+      title: Identifier
+    metric_key:
+      type: string
+      title: Metric Key
+    title:
+      type: string
+      title: Title
+    score:
+      type: integer
+      title: Score
+    status:
+      type: string
+      title: Status
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    coverage:
+      type: number
+      title: Coverage
+    description:
+      type: string
+      title: Description
+    calculation_disclosure:
+      type: string
+      title: Calculation Disclosure
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+    drill_down_reference:
+      type: string
+      title: Drill Down Reference
+    inputs:
+      items:
+        type: string
+      type: array
+      title: Inputs
+  additionalProperties: false
+  type: object
+  required:
+  - identifier
+  - metric_key
+  - title
+  - score
+  - status
+  - confidence
+  - confidence_band
+  - coverage
+  - description
+  - calculation_disclosure
+  - limitations
+  - drill_down_reference
+  - inputs
+  title: PresentationKpiCardDto

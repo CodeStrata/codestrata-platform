@@ -1,0 +1,15 @@
+CreateOrganizationRequest:
+  properties:
+    name:
+      type: string
+      maxLength: 512
+      minLength: 1
+      title: Name
+      description: Organization display name
+      examples:
+      - Acme Engineering
+  additionalProperties: false
+  type: object
+  required:
+  - name
+  title: CreateOrganizationRequest

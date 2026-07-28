@@ -1,0 +1,62 @@
+PresentationRecommendationDto:
+  properties:
+    recommendation_id:
+      type: string
+      title: Recommendation Id
+    title:
+      type: string
+      title: Title
+    theme:
+      type: string
+      title: Theme
+    priority_score:
+      type: integer
+      title: Priority Score
+    rationale:
+      type: string
+      title: Rationale
+    expected_impact:
+      type: string
+      title: Expected Impact
+    affected_repository_ids:
+      items:
+        type: string
+      type: array
+      title: Affected Repository Ids
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    supporting_finding_ids:
+      items:
+        type: string
+      type: array
+      title: Supporting Finding Ids
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - recommendation_id
+  - title
+  - theme
+  - priority_score
+  - rationale
+  - expected_impact
+  - affected_repository_ids
+  - confidence
+  - confidence_band
+  - supporting_finding_ids
+  - source_references
+  - limitations
+  title: PresentationRecommendationDto

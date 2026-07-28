@@ -1,0 +1,75 @@
+PortfolioSnapshotSummaryResponse:
+  properties:
+    portfolio_snapshot_id:
+      type: string
+      title: Portfolio Snapshot Id
+    portfolio_id:
+      type: string
+      title: Portfolio Id
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    snapshot_version:
+      type: integer
+      title: Snapshot Version
+    status:
+      type: string
+      title: Status
+    projection_key:
+      type: string
+      title: Projection Key
+    aggregation_policy_version:
+      type: string
+      title: Aggregation Policy Version
+    repository_count:
+      type: integer
+      title: Repository Count
+    available_repository_count:
+      type: integer
+      title: Available Repository Count
+    unavailable_repository_count:
+      type: integer
+      title: Unavailable Repository Count
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+    superseded_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Superseded At
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+  additionalProperties: false
+  type: object
+  required:
+  - portfolio_snapshot_id
+  - portfolio_id
+  - organization_id
+  - workspace_id
+  - snapshot_version
+  - status
+  - projection_key
+  - aggregation_policy_version
+  - repository_count
+  - available_repository_count
+  - unavailable_repository_count
+  - created_at
+  - completed_at
+  - superseded_at
+  - failure_reason
+  title: PortfolioSnapshotSummaryResponse

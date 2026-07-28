@@ -1,0 +1,5 @@
+IsoTimestamp:
+  type: string
+  format: date-time
+  description: ISO-8601 timestamp
+  x-codestrata-status: implemented

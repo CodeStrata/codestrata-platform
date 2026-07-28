@@ -1,21 +1,22 @@
-# Enterprise Knowledge Graph
+# Engineering Knowledge Graph (Platform)
 
-Public product: **CodeStrata**. Internals remain `codestrata`.
+Public product: **CodeStrata**. Package: CodeStrata Platform.
 
-Phase 3 introduces an **enterprise-level** context above repositories. It is
-distinct from the Engineering Knowledge Graph (technology concepts).
+This surface provides an **organization-level** Engineering Knowledge Graph
+context above repositories. It is a **CodeStrata Platform** capability and is
+not required for Community Engine `codestrata assess`.
 
 ```text
-Enterprise YAML
+Declared YAML
       │
       ▼
 Load + Validate
       │
       ▼
-Enterprise Graph Builder
+Graph Builder
       │
       ▼
-Enterprise Knowledge Graph
+Engineering Knowledge Graph
       │
       ├─ Repository Registry
       ├─ Repository / Engineering / Assessment Graphs
@@ -23,7 +24,7 @@ Enterprise Knowledge Graph
       └─ Recommendations
                        │
                        ▼
-              Enterprise Impact Queries
+              Impact Queries
 ```
 
 ## Principles
@@ -32,7 +33,7 @@ Enterprise Knowledge Graph
 - Safe YAML loading only (no code execution)
 - Typed domain models; no graph database
 - Declared vs derived provenance is explicit
-- Enterprise metadata is **optional**; `codestrata assess` unchanged
+- Graph metadata is **optional**; `codestrata assess` unchanged
 - Full assessment remains the default
 
 ## Quick start

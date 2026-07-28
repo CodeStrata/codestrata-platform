@@ -1,0 +1,79 @@
+ImpactAnalysisResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    subject_node_id:
+      type: string
+      title: Subject Node Id
+    subject_node_type:
+      type: string
+      title: Subject Node Type
+    score:
+      type: integer
+      title: Score
+    severity:
+      type: string
+      title: Severity
+    policy_version:
+      type: string
+      title: Policy Version
+    contributing_factors:
+      items:
+        $ref: '#/components/schemas/ImpactFactorResponse'
+      type: array
+      title: Contributing Factors
+    impacted_node_ids:
+      items:
+        type: string
+      type: array
+      title: Impacted Node Ids
+    source_node_ids:
+      items:
+        type: string
+      type: array
+      title: Source Node Ids
+    source_edge_ids:
+      items:
+        type: string
+      type: array
+      title: Source Edge Ids
+    paths:
+      items:
+        $ref: '#/components/schemas/ImpactPathResponse'
+      type: array
+      title: Paths
+    diagnostics:
+      items:
+        type: string
+      type: array
+      title: Diagnostics
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - subject_node_id
+  - subject_node_type
+  - score
+  - severity
+  - policy_version
+  - contributing_factors
+  - impacted_node_ids
+  - source_node_ids
+  - source_edge_ids
+  - paths
+  - diagnostics
+  title: ImpactAnalysisResponse

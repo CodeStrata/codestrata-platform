@@ -1,4 +1,6 @@
-# Security Domain Foundation (Phase 4.5.1)
+> **Engineering concepts:** see [`knowledge/`](../../../../knowledge/) for the canonical domain Knowledge. This document retains **implementation** contracts (schemas, pack IDs, lifecycle). Do not treat it as the conceptual source of truth.
+
+# Security Domain Foundation
 
 ## Objective
 

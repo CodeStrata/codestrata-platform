@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="description" content="Internal CodeStrata Platform API documentation. Not for public use." />
+    <title>CodeStrata Platform API — Internal</title>
+    <link rel="stylesheet" href="/api/docs/static/fonts.css" />
+    <link rel="stylesheet" href="/api/docs/static/design-tokens/tokens.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css"
+    />
+    <link rel="stylesheet" href="/api/docs/static/css/codestrata-swagger.css" />
+    <link rel="icon" href="/api/docs/static/brand/icon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="cs-skip" href="#swagger-ui">Skip to API</a>
+    <header class="cs-header">
+      <div class="cs-header__inner">
+        <a class="cs-brand" href="/" aria-label="Platform Home">
+          <img
+            class="cs-brand__logo cs-brand__logo--dark"
+            src="/api/docs/static/brand/lockup-horizontal-on-dark.svg"
+            alt="CodeStrata"
+            height="28"
+          />
+          <img
+            class="cs-brand__logo cs-brand__logo--light"
+            src="/api/docs/static/brand/lockup-horizontal-on-light.svg"
+            alt="CodeStrata"
+            height="28"
+          />
+          <span class="cs-brand__badge">Platform API · Internal</span>
+        </a>
+        <nav class="cs-nav" aria-label="Internal API">
+          <a href="/">Platform Home</a>
+          <a href="/api/docs" aria-current="page">API Overview</a>
+          <a href="/api/docs">Swagger</a>
+          <a href="/api/openapi.yaml">OpenAPI</a>
+          <a href="/api/docs#/">Engineering Guide</a>
+        </nav>
+        <div class="cs-theme" role="group" aria-label="Theme">
+          <button type="button" data-theme-set="system" title="System">Auto</button>
+          <button type="button" data-theme-set="light" title="Light">Light</button>
+          <button type="button" data-theme-set="dark" title="Dark">Dark</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="cs-main">
+      <section class="cs-hero">
+        <p class="cs-eyebrow">Internal engineering only</p>
+        <h1>Platform API Contract</h1>
+        <p class="cs-lede">
+          Canonical OpenAPI 3.1 for CodeStrata Platform. Swagger UI is a generated
+          projection — edit controllers/DTOs, regenerate
+          <code>platform/api/openapi/openapi.yaml</code>, then refresh.
+        </p>
+        <p class="cs-note">
+          Not linked from codestrata.ai · Excluded from codestrata-docs ·
+          <code>noindex</code>
+        </p>
+      </section>
+      <div id="swagger-ui"></div>
+    </main>
+
+    <footer class="cs-footer">
+      <div class="cs-footer__inner">
+        <p>CodeStrata Platform — internal API documentation</p>
+        <nav aria-label="Internal footer">
+          <a href="/api/openapi.yaml">openapi.yaml</a>
+          <a href="/api/openapi.json">openapi.json</a>
+          <a href="/health">/health</a>
+          <a href="/ready">/ready</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js" crossorigin></script>
+    <script src="/api/docs/static/js/theme.js"></script>
+    <script src="/api/docs/static/js/swagger-init.js"></script>
+  </body>
+</html>

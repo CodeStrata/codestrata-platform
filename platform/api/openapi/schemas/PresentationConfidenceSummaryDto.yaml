@@ -1,0 +1,48 @@
+PresentationConfidenceSummaryDto:
+  properties:
+    overall_confidence_score:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Overall Confidence Score
+    overall_confidence:
+      anyOf:
+      - type: number
+      - type: 'null'
+      title: Overall Confidence
+    overall_confidence_band:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Overall Confidence Band
+    metric_confidence_average:
+      type: number
+      title: Metric Confidence Average
+    finding_confidence_average:
+      type: number
+      title: Finding Confidence Average
+    recommendation_confidence_average:
+      type: number
+      title: Recommendation Confidence Average
+    low_confidence_metric_keys:
+      items:
+        type: string
+      type: array
+      title: Low Confidence Metric Keys
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - overall_confidence_score
+  - overall_confidence
+  - overall_confidence_band
+  - metric_confidence_average
+  - finding_confidence_average
+  - recommendation_confidence_average
+  - low_confidence_metric_keys
+  - limitations
+  title: PresentationConfidenceSummaryDto

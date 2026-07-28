@@ -1,8 +1,9 @@
 # CodeStrata MCP server
 
-**Status:** Phase 2C knowledge-store tools + Phase 5.7 repository-intelligence tools.
+**Status:** Phase 2C knowledge-store tools + Phase 5.7 repository-intelligence tools
++ Phase 9.5 Community vs Platform discoverability.
 
-See the Phase 5.7 guides:
+See the MCP guides:
 
 - [docs/mcp/overview.md](mcp/overview.md)
 - [docs/mcp/setup.md](mcp/setup.md)
@@ -10,6 +11,10 @@ See the Phase 5.7 guides:
 - [docs/mcp/client-examples.md](mcp/client-examples.md)
 - [docs/mcp/security.md](mcp/security.md)
 - [docs/mcp/troubleshooting.md](mcp/troubleshooting.md)
+
+**CodeStrata Engine (Community)** MCP tools query local assessment knowledge.
+**CodeStrata Platform** extensions add `repository_*` and `enterprise_*` tools when
+installed. Platform API keys are unrelated to MCP and to Engine AI credentials.
 
 ## Architecture
 
@@ -135,20 +140,15 @@ Requires `[incremental].rollout_mode` of `plan_only` or `opt_in`. Default remain
 Phase 2 is complete for controlled opt-in incremental use. Full assessment remains
 the default.
 
-## Enterprise Knowledge Graph (Phase 3)
+## Platform MCP (separate product)
 
-Additive YAML enterprise architecture tools (optional; disabled by default). See
-[community-edition.md](community-edition.md).
+Organizational MCP tools may appear when CodeStrata Platform is installed.
+They are not part of the Community Engine MCP catalog. See
+[mcp/tools.md](mcp/tools.md) and [community-vs-platform.md](community-vs-platform.md).
 
-MCP tools include workspace validate/build, graph/entity query, neighborhood,
-dependency paths, repository context, finding/recommendation impact, explain,
-and graph version compare. Read-only resources under
-`codestrata://enterprise/...` are registered when the enterprise query service
-is configured.
-
-Analysis Intelligence remains Phase 4; GitHub PR review is Phase 6.1–6.5 MVP
-(see [ROADMAP.md](../../ROADMAP.md)).
+Analysis Intelligence packs continue to evolve with Engine releases; see
+[RELEASE_NOTES-0.1.0.md](RELEASE_NOTES-0.1.0.md) and the public docs portal.
 
 ## Next phase
 
-See [../ROADMAP.md](../../ROADMAP.md).
+See [https://docs.codestrata.ai](https://docs.codestrata.ai) and Engine release notes.

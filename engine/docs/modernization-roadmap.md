@@ -17,7 +17,8 @@ include_evidence = true
 ```
 
 When enabled, `codestrata assess` adds `assessment.roadmap` to `report.json` and a
-**Phased Modernization Plan** section to the HTML report (`#modernization-roadmap-assessment`).
+**Implementation Sequence** section to the HTML report (`#phased-modernization-plan`).
+This Engine assess sequencing is not CodeStrata Platform Strategic Roadmap.
 Schema version remains `1.2` (additive key only).
 
 ## Phases

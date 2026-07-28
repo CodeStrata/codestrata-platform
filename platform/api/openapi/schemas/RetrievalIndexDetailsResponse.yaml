@@ -1,0 +1,109 @@
+RetrievalIndexDetailsResponse:
+  properties:
+    index_id:
+      type: string
+      title: Index Id
+    repository_id:
+      type: string
+      title: Repository Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    knowledge_graph_id:
+      type: string
+      title: Knowledge Graph Id
+    index_version:
+      type: integer
+      title: Index Version
+    status:
+      type: string
+      title: Status
+    projection_key:
+      type: string
+      title: Projection Key
+    embedding_provider_id:
+      type: string
+      title: Embedding Provider Id
+    embedding_model_id:
+      type: string
+      title: Embedding Model Id
+    embedding_dimension:
+      type: integer
+      title: Embedding Dimension
+    document_count:
+      type: integer
+      title: Document Count
+    chunk_count:
+      type: integer
+      title: Chunk Count
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    engineering_snapshot_version:
+      type: integer
+      title: Engineering Snapshot Version
+    knowledge_graph_version:
+      type: integer
+      title: Knowledge Graph Version
+    retrieval_schema_version:
+      type: string
+      title: Retrieval Schema Version
+    chunking_policy_version:
+      type: string
+      title: Chunking Policy Version
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+    created:
+      anyOf:
+      - type: boolean
+      - type: 'null'
+      title: Created
+    idempotent:
+      anyOf:
+      - type: boolean
+      - type: 'null'
+      title: Idempotent
+  additionalProperties: false
+  type: object
+  required:
+  - index_id
+  - repository_id
+  - assessment_id
+  - engineering_snapshot_id
+  - knowledge_graph_id
+  - index_version
+  - status
+  - projection_key
+  - embedding_provider_id
+  - embedding_model_id
+  - embedding_dimension
+  - document_count
+  - chunk_count
+  - created_at
+  - completed_at
+  - organization_id
+  - workspace_id
+  - engineering_snapshot_version
+  - knowledge_graph_version
+  - retrieval_schema_version
+  - chunking_policy_version
+  title: RetrievalIndexDetailsResponse

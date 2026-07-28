@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 from codestrata_platform.application.retrieval.chunking import CanonicalRetrievalDocumentBuilder
 from codestrata_platform.application.retrieval.commands import (
@@ -186,10 +187,10 @@ class EngineeringRetrievalIndexingService:
                 index.add_chunk(replace(chunk, embedding=vector))
             index.complete()
         except Exception as error:  # noqa: BLE001 - indexing boundary
-            index.fail(reason=str(error)[:1000])
+            index.fail(reason=safe_failure_summary(error, limit=1000))
             self._indexes.save(index)
             raise ValidationError(
-                f"Retrieval indexing failed: {error}",
+                f"Retrieval indexing failed: {safe_failure_summary(error)}",
                 reason_code="retrieval_indexing_failed",
             ) from error
 

@@ -1,0 +1,983 @@
+paths:
+  /api/v1/portfolios:
+    post:
+      tags:
+      - Portfolio
+      summary: Create Portfolio
+      operationId: create_portfolio_api_v1_portfolios_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePortfolioRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Portfolio
+      summary: List Portfolios
+      operationId: list_portfolios_api_v1_portfolios_get
+      parameters:
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Portfolio
+      operationId: get_portfolio_api_v1_portfolios__portfolio_id__get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+    patch:
+      tags:
+      - Portfolio
+      summary: Update Portfolio
+      operationId: update_portfolio_api_v1_portfolios__portfolio_id__patch
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePortfolioRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/repositories:
+    post:
+      tags:
+      - Portfolio
+      summary: Add Repository
+      operationId: add_repository_api_v1_portfolios__portfolio_id__repositories_post
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddRepositoryRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Portfolio
+      summary: List Repositories
+      operationId: list_repositories_api_v1_portfolios__portfolio_id__repositories_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/repositories/{repository_id}:
+    delete:
+      tags:
+      - Portfolio
+      summary: Remove Repository
+      operationId: remove_repository_api_v1_portfolios__portfolio_id__repositories__repository_id__delete
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: repository_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Repository Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/snapshots:
+    post:
+      tags:
+      - Portfolio
+      summary: Build Snapshot
+      operationId: build_snapshot_api_v1_portfolios__portfolio_id__snapshots_post
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/codestrata_platform__api__portfolio__dto__BuildSnapshotRequest'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioSnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Portfolio
+      summary: List Snapshots
+      operationId: list_snapshots_api_v1_portfolios__portfolio_id__snapshots_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/snapshots/rebuild:
+    post:
+      tags:
+      - Portfolio
+      summary: Rebuild Snapshot
+      operationId: rebuild_snapshot_api_v1_portfolios__portfolio_id__snapshots_rebuild_post
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/codestrata_platform__api__portfolio__dto__BuildSnapshotRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioSnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolios/{portfolio_id}/snapshots/latest:
+    get:
+      tags:
+      - Portfolio
+      summary: Latest Snapshot
+      operationId: latest_snapshot_api_v1_portfolios__portfolio_id__snapshots_latest_get
+      parameters:
+      - name: portfolio_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioSnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Snapshot
+      operationId: get_snapshot_api_v1_portfolio_snapshots__portfolio_snapshot_id__get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioSnapshotDetailsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/technologies:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Technologies
+      operationId: get_technologies_api_v1_portfolio_snapshots__portfolio_snapshot_id__technologies_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: technology
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Technology
+      - name: framework
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Technologies Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Technologies Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/findings:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Findings
+      operationId: get_findings_api_v1_portfolio_snapshots__portfolio_snapshot_id__findings_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Findings Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Findings Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/recommendations:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Recommendations
+      operationId: get_recommendations_api_v1_portfolio_snapshots__portfolio_snapshot_id__recommendations_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Recommendations Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Recommendations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/risks:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Risks
+      operationId: get_risks_api_v1_portfolio_snapshots__portfolio_snapshot_id__risks_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Risks Api V1 Portfolio Snapshots  Portfolio Snapshot
+                  Id  Risks Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/modernization:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Modernization
+      operationId: get_modernization_api_v1_portfolio_snapshots__portfolio_snapshot_id__modernization_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: modernization_theme
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modernization Theme
+      - name: modernization_wave
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Modernization Wave
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Modernization Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Modernization Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/coverage:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Coverage
+      operationId: get_coverage_api_v1_portfolio_snapshots__portfolio_snapshot_id__coverage_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Coverage Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Coverage Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Repository Profiles
+      operationId: get_repository_profiles_api_v1_portfolio_snapshots__portfolio_snapshot_id__repository_profiles_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      - name: criticality
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Criticality
+      - name: availability_status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Availability Status
+      - name: freshness_status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Freshness Status
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Repository Profiles Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Repository Profiles Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal
+  /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/overview:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Overview
+      operationId: get_overview_api_v1_portfolio_snapshots__portfolio_snapshot_id__overview_get
+      parameters:
+      - name: portfolio_snapshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Portfolio Snapshot Id
+      - name: organization_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Organization Id
+      - name: workspace_id
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Workspace Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Overview Api V1 Portfolio Snapshots  Portfolio
+                  Snapshot Id  Overview Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: partial
+      x-codestrata-owner: platform-portfolio
+      x-codestrata-audience: internal

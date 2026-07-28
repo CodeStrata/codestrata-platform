@@ -1,0 +1,35 @@
+CreatePortfolioRequest:
+  properties:
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    name:
+      type: string
+      maxLength: 256
+      minLength: 1
+      title: Name
+    description:
+      anyOf:
+      - type: string
+        maxLength: 4000
+      - type: 'null'
+      title: Description
+    max_repositories:
+      anyOf:
+      - type: integer
+        maximum: 2000.0
+        minimum: 1.0
+      - type: 'null'
+      title: Max Repositories
+  additionalProperties: false
+  type: object
+  required:
+  - organization_id
+  - workspace_id
+  - name
+  title: CreatePortfolioRequest

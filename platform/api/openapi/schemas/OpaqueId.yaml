@@ -1,0 +1,5 @@
+OpaqueId:
+  type: string
+  description: Opaque Platform identifier (organization, workspace, …)
+  minLength: 1
+  x-codestrata-status: implemented

@@ -1,0 +1,34 @@
+IngestAssessmentResponse:
+  properties:
+    assessment_id:
+      type: string
+      title: Assessment Id
+    repository_id:
+      type: string
+      title: Repository Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    engine_assessment_id:
+      type: string
+      title: Engine Assessment Id
+    engine_version:
+      type: string
+      title: Engine Version
+    assessment_version:
+      type: string
+      title: Assessment Version
+    status:
+      type: string
+      title: Status
+  additionalProperties: false
+  type: object
+  required:
+  - assessment_id
+  - repository_id
+  - workspace_id
+  - engine_assessment_id
+  - engine_version
+  - assessment_version
+  - status
+  title: IngestAssessmentResponse

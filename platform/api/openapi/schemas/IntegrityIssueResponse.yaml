@@ -1,0 +1,30 @@
+IntegrityIssueResponse:
+  properties:
+    issue_type:
+      type: string
+      title: Issue Type
+    severity:
+      type: string
+      title: Severity
+    message:
+      type: string
+      title: Message
+    node_ids:
+      items:
+        type: string
+      type: array
+      title: Node Ids
+    edge_ids:
+      items:
+        type: string
+      type: array
+      title: Edge Ids
+  additionalProperties: false
+  type: object
+  required:
+  - issue_type
+  - severity
+  - message
+  - node_ids
+  - edge_ids
+  title: IntegrityIssueResponse

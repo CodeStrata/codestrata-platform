@@ -1,5 +1,7 @@
 # MCP Client Examples
 
+<!-- documentation-visibility: public-contributor -->
+
 Placeholders only — do not embed secrets, usernames, or absolute private paths.
 
 ## Cursor
@@ -15,7 +17,7 @@ Placeholders only — do not embed secrets, usernames, or absolute private paths
 }
 ```
 
-Enable `[mcp].enabled = true` and the knowledge retrieval/answering gates you need.
+Enable `[mcp].enabled = true`. Community assessment tools work with Engine alone.
 
 ## Claude Desktop
 
@@ -39,31 +41,33 @@ codestrata mcp serve --config codestrata.toml --transport http --host 127.0.0.1 
 Point an MCP HTTP client at `http://127.0.0.1:8765/mcp` (SDK default path).
 Do not expose this port publicly.
 
-## Example tool calls
+## Community Engine examples
+
+Run a local assessment (optional AI uses Engine AI provider credentials):
 
 ```json
 {
-  "name": "repository_search",
+  "name": "run_assessment",
   "arguments": {
-    "query": "How is authentication implemented?",
-    "tenant_id": "example-tenant",
-    "repository_id": "example-repo",
-    "top_k": 5
+    "repository": ".",
+    "with_ai": false
   }
 }
 ```
 
 ```json
 {
-  "name": "repository_answer",
+  "name": "list_findings",
   "arguments": {
-    "question": "What are the highest-severity security findings?",
-    "tenant_id": "example-tenant",
-    "repository_id": "example-repo",
-    "answer_style": "findings_summary"
+    "run_id": "assessment-run-id",
+    "severity": "high",
+    "limit": 20
   }
 }
 ```
 
-`repository_answer` returns deterministic extractive statements with `SRC-*`
-citations — not production generative AI.
+## Related
+
+- [tools.md](tools.md)
+- [overview.md](overview.md)
+- [setup.md](setup.md)

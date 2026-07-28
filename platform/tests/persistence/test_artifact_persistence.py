@@ -90,9 +90,7 @@ def test_artifact_persistence_round_trip(
 
 def test_artifact_persistence_survives_engine_restart(
     session_factory,
-    sqlite_engine,
 ) -> None:
-    _ = sqlite_engine
     session = session_factory()
     try:
         org_repo = SqlAlchemyOrganizationRepository(session)

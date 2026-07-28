@@ -1,6 +1,6 @@
 # Incremental enterprise graph rebuild
 
-Phase 3 rebuilds the complete Enterprise Knowledge Graph after workspace
+Rebuilds the complete Engineering Knowledge Graph after workspace
 validation. Interfaces fingerprint manifests and support future selective
 rebuild, but the implementation always falls back to a full rebuild rather than
 claiming partial reuse.

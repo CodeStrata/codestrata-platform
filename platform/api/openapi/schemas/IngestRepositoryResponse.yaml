@@ -1,0 +1,34 @@
+IngestRepositoryResponse:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    organization_id:
+      type: string
+      title: Organization Id
+    display_name:
+      type: string
+      title: Display Name
+    repository_url:
+      type: string
+      title: Repository Url
+    status:
+      type: string
+      title: Status
+    created:
+      type: boolean
+      title: Created
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - workspace_id
+  - organization_id
+  - display_name
+  - repository_url
+  - status
+  - created
+  title: IngestRepositoryResponse

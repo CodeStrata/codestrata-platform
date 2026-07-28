@@ -1,0 +1,24 @@
+BuildKnowledgeGraphRequest:
+  properties:
+    snapshot_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Snapshot Id
+    projector_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Projector Version
+      default: 1.0.0
+    projection_schema_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Projection Schema Version
+      default: '1.0'
+  additionalProperties: false
+  type: object
+  required:
+  - snapshot_id
+  title: BuildKnowledgeGraphRequest

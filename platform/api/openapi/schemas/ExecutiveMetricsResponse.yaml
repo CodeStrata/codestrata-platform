@@ -1,0 +1,15 @@
+ExecutiveMetricsResponse:
+  properties:
+    summary:
+      $ref: '#/components/schemas/ExecutiveIntelligenceSummaryResponse'
+    metrics:
+      items:
+        $ref: '#/components/schemas/ExecutiveMetricResponse'
+      type: array
+      title: Metrics
+  additionalProperties: false
+  type: object
+  required:
+  - summary
+  - metrics
+  title: ExecutiveMetricsResponse

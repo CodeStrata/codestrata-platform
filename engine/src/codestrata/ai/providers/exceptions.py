@@ -1,4 +1,4 @@
-"""Typed exceptions for CodeStrata AI model providers."""
+"""Typed exceptions for CodeStrata optional AI model providers."""
 
 from __future__ import annotations
 

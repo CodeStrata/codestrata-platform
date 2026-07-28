@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "codestrata"
 version = "0.1.0"
-description = "CodeStrata: deterministic assessment, knowledge, and modernization tooling for legacy enterprise applications."
+description = "CodeStrata Engine: deterministic Engineering Assessment and Engineering Intelligence for software repositories."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
@@ -107,6 +107,7 @@ codestrata = [
     "resources/**/*.json",
     "resources/**/*.md",
     "reporting/assets/*.png",
+    "application/rules/data/*.json",
 ]
 
 

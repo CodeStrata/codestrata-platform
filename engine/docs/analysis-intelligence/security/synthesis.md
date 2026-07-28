@@ -1,4 +1,4 @@
-# Security Assessment Synthesis (Phase 4.5.5)
+# Security Assessment Synthesis
 
 Schema: `security-assessment` **1.3.0**. Synthesis version: **1.0.0**.
 

@@ -160,7 +160,7 @@
     ],
     "mode": "deterministic",
     "organization_name": null,
-    "report_title": "Modernization Assessment",
+    "report_title": "Engineering Assessment",
     "repository": {
       "default_branch": "main",
       "file_count": 2,
@@ -232,8 +232,10 @@
     "warnings": []
   },
   "manifest": {
+    "brand_report_name": "Engineering Assessment",
     "codestrata_version": "TEST",
     "contract_version": "1.0.0",
+    "edition": "community",
     "enabled_sections": [
       "executive_summary",
       "technologies",
@@ -242,6 +244,8 @@
     ],
     "generation_mode": "deterministic",
     "html_report_version": "3.0",
+    "product_name": "CodeStrata",
+    "report_type": "engineering_assessment",
     "report_version": "1.2",
     "repository_id": "repo-sample",
     "scan_id": "run-sample",

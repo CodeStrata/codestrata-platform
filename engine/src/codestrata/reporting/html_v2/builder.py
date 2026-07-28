@@ -292,16 +292,12 @@ def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry
     """Stable TOC entries for sections that will appear in the rendered report."""
 
     entries: list[ReportOutlineEntry] = [
+        ReportOutlineEntry(section_id="executive-summary", title="Executive Summary"),
+        ReportOutlineEntry(section_id="repository-overview", title="Repository Overview"),
+        ReportOutlineEntry(section_id="assessment-summary", title="Assessment Summary"),
         ReportOutlineEntry(section_id="leadership-verdict", title="Leadership Verdict"),
         ReportOutlineEntry(section_id="key-takeaways", title="Key Takeaways"),
-        ReportOutlineEntry(section_id="executive-summary", title="Executive Summary"),
         ReportOutlineEntry(section_id="engineering-risks", title="Engineering Risks"),
-        ReportOutlineEntry(
-            section_id="modernization-opportunities",
-            title="Modernization Opportunities",
-        ),
-        ReportOutlineEntry(section_id="priority-actions", title="Priority Actions"),
-        ReportOutlineEntry(section_id="findings", title="Findings"),
     ]
     capability_packs = (
         ("architecture-assessment", "Architecture Assessment", document.architecture_report),
@@ -313,21 +309,44 @@ def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry
         ("ai-readiness-assessment", "AI Readiness Assessment", document.ai_readiness_report),
         ("performance-assessment", "Performance Assessment", document.performance_report),
     )
+    has_capability = any(present is not None for _, _, present in capability_packs)
+    if has_capability:
+        entries.append(
+            ReportOutlineEntry(
+                section_id="capability-assessments",
+                title="Domain Intelligence",
+            )
+        )
     for section_id, title, present in capability_packs:
         if present is not None:
             entries.append(ReportOutlineEntry(section_id=section_id, title=title))
+    entries.append(ReportOutlineEntry(section_id="findings", title="Findings"))
+    entries.append(ReportOutlineEntry(section_id="recommendations", title="Recommendations"))
+    entries.append(ReportOutlineEntry(section_id="priority-actions", title="Priority Actions"))
+    entries.append(
+        ReportOutlineEntry(
+            section_id="modernization-opportunities",
+            title="Modernization Opportunities",
+        )
+    )
+    entries.append(
+        ReportOutlineEntry(
+            section_id="engineering-assessment-conclusion",
+            title="Engineering Assessment Conclusion",
+        )
+    )
     if document.roadmap_report is not None:
         entries.append(
             ReportOutlineEntry(
                 section_id="phased-modernization-plan",
-                title="Phased Modernization Plan",
+                title="Implementation Sequence",
             )
         )
     if document.ai_enrichment is not None:
         entries.append(
             ReportOutlineEntry(
                 section_id="modernization-advisor",
-                title="Modernization Advisor",
+                title="Optional AI Enhancements",
             )
         )
     entries.append(

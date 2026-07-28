@@ -16,7 +16,7 @@ from codestrata.config import load_settings
 architecture_app = typer.Typer(
     name="architecture",
     help=(
-        "Architecture Intelligence helpers (Phase 4.2+).\n\n"
+        "Architecture assessment helpers.\n\n"
         "Conclusions, assessment sections, and report presentation are optional "
         "(`[analysis.architecture_conclusions]` / "
         "`[assessment.sections.architecture]` / "

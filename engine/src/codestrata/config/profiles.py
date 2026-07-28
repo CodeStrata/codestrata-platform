@@ -454,8 +454,9 @@ def validate_profile_settings(
                 code="community_enterprise_enabled",
                 message=(
                     "Community profile with [enterprise].enabled = true. "
-                    "Enterprise Knowledge Graph features are active. "
-                    "Prefer profile = \"enterprise\" for clarity."
+                    "Platform Engineering Knowledge Graph features are active. "
+                    "Prefer profile = \"enterprise\" for clarity "
+                    "(CodeStrata Platform capability)."
                 ),
                 severity="warning",
             )

@@ -1,0 +1,51 @@
+PresentationCtoSummaryDto:
+  properties:
+    engineering_health:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    architecture_maturity:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    technical_debt:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    security_posture:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    dependency_health:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    technology_standardization:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    modernization_readiness:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    cloud_adoption:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    ai_readiness:
+      $ref: '#/components/schemas/PresentationKpiCardDto'
+    critical_findings:
+      items:
+        $ref: '#/components/schemas/PresentationFindingDto'
+      type: array
+      title: Critical Findings
+    strategic_priorities:
+      items:
+        $ref: '#/components/schemas/PresentationRecommendationDto'
+      type: array
+      title: Strategic Priorities
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+  additionalProperties: false
+  type: object
+  required:
+  - engineering_health
+  - architecture_maturity
+  - technical_debt
+  - security_posture
+  - dependency_health
+  - technology_standardization
+  - modernization_readiness
+  - cloud_adoption
+  - ai_readiness
+  - critical_findings
+  - strategic_priorities
+  - limitations
+  title: PresentationCtoSummaryDto

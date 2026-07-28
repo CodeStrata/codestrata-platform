@@ -1,0 +1,49 @@
+RecommendationAnalysisResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    total:
+      type: integer
+      title: Total
+    linked_to_findings:
+      type: integer
+      title: Linked To Findings
+    execution_order:
+      items:
+        $ref: '#/components/schemas/RecommendationStepResponse'
+      type: array
+      title: Execution Order
+    cycles:
+      items:
+        items:
+          type: string
+        type: array
+      type: array
+      title: Cycles
+    conflict_count:
+      type: integer
+      title: Conflict Count
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - total
+  - linked_to_findings
+  - execution_order
+  - cycles
+  - conflict_count
+  title: RecommendationAnalysisResponse

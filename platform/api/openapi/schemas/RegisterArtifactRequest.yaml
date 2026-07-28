@@ -1,0 +1,50 @@
+RegisterArtifactRequest:
+  properties:
+    engine_assessment_id:
+      type: string
+      maxLength: 160
+      minLength: 1
+      title: Engine Assessment Id
+    artifact_type:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Artifact Type
+    format:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Format
+    schema_version:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Schema Version
+    checksum:
+      type: string
+      maxLength: 64
+      minLength: 64
+      pattern: ^[a-fA-F0-9]{64}$
+      title: Checksum
+    size_bytes:
+      type: integer
+      maximum: 104857600.0
+      exclusiveMinimum: 0.0
+      title: Size Bytes
+    metadata:
+      anyOf:
+      - additionalProperties:
+          type: string
+        type: object
+      - type: 'null'
+      title: Metadata
+  additionalProperties: false
+  type: object
+  required:
+  - engine_assessment_id
+  - artifact_type
+  - format
+  - schema_version
+  - checksum
+  - size_bytes
+  title: RegisterArtifactRequest

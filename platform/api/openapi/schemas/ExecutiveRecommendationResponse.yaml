@@ -1,0 +1,54 @@
+ExecutiveRecommendationResponse:
+  properties:
+    recommendation_id:
+      type: string
+      title: Recommendation Id
+    theme:
+      type: string
+      title: Theme
+    title:
+      type: string
+      title: Title
+    rationale:
+      type: string
+      title: Rationale
+    affected_repository_ids:
+      items:
+        type: string
+      type: array
+      title: Affected Repository Ids
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    expected_impact:
+      type: string
+      title: Expected Impact
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+    priority_score:
+      type: integer
+      title: Priority Score
+    policy_version:
+      type: string
+      title: Policy Version
+  additionalProperties: false
+  type: object
+  required:
+  - recommendation_id
+  - theme
+  - title
+  - rationale
+  - affected_repository_ids
+  - confidence
+  - confidence_band
+  - expected_impact
+  - source_references
+  - priority_score
+  - policy_version
+  title: ExecutiveRecommendationResponse

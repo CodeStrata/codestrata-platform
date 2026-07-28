@@ -1,0 +1,254 @@
+/* Website-aligned documentation components (from codestrata.ai patterns) */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.35rem;
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+  font-weight: 560;
+  font-family: inherit;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.16s ease, background 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease;
+  white-space: nowrap;
+  text-decoration: none !important;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-fg) !important;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--primary:hover {
+  background: var(--accent-bright);
+  color: var(--accent-fg) !important;
+}
+
+.btn--ghost {
+  border-color: var(--border-2);
+  color: var(--fg) !important;
+  font-weight: 600;
+}
+
+.btn--ghost:hover {
+  border-color: var(--fg-dim);
+  background: var(--surface);
+}
+
+.btn--sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent) !important;
+  font-size: 0.92rem;
+  font-weight: 540;
+  transition: gap 0.18s ease;
+  text-decoration: none !important;
+}
+
+.arrow-link:hover {
+  gap: 0.7rem;
+}
+
+.cs-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.35rem;
+}
+
+.cs-card h3 {
+  margin: 0 0 0.45rem;
+  font-size: 1.08rem;
+  font-weight: 640;
+  color: var(--fg);
+}
+
+.cs-card p {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+}
+
+.cs-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-2);
+  color: var(--fg-muted);
+  background: var(--surface);
+}
+
+.cs-badge--accent {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  color: var(--accent-bright);
+}
+
+.cs-terminal {
+  background: var(--code-bg);
+  color: #d7dde5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  overflow-x: auto;
+  line-height: 1.65;
+}
+
+.cs-terminal .c {
+  color: #6b7480;
+}
+
+.cs-terminal .cmd {
+  color: var(--amber-bright);
+}
+
+.cs-callout {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 0.9rem 1.1rem;
+  margin: 1.25rem 0;
+  color: var(--fg-muted);
+}
+
+.cs-callout--warn {
+  border-left-color: var(--amber-bright);
+}
+
+.cs-callout--danger {
+  border-left-color: var(--risk);
+}
+
+.cs-flow {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  color: #d7dde5;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem 1.1rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Site footer (aligned with codestrata.ai .footer) */
+.cs-footer {
+  border-top: 1px solid var(--border);
+  padding-block: 3.2rem 2.2rem;
+  background: var(--bg-2);
+  margin-top: 3rem;
+}
+
+.cs-footer__inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.cs-footer__grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  margin-bottom: 2.6rem;
+}
+
+@media (max-width: 780px) {
+  .cs-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.cs-footer h4 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+
+.cs-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.cs-footer a {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.cs-footer a:hover {
+  color: var(--fg);
+}
+
+.cs-footer__brand {
+  color: var(--fg-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: 28ch;
+}
+
+.cs-footer__brand strong {
+  display: block;
+  color: var(--fg);
+  font-size: 1rem;
+  margin-bottom: 0.45rem;
+}
+
+.cs-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.7rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.83rem;
+  color: var(--fg-dim);
+}
+
+.cs-footer__base a {
+  color: var(--fg-dim);
+}
+
+.cs-footer__base a:hover {
+  color: var(--fg);
+}

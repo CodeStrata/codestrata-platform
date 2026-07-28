@@ -1,4 +1,4 @@
-# Security Assessment Inventory (Phase 4.5.4)
+# Security Assessment Inventory
 
 Schema: `security-assessment` **1.3.0** (`security-assessment.json`).
 

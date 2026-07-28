@@ -1,0 +1,18 @@
+PortfolioSnapshotDetailsResponse:
+  properties:
+    snapshot:
+      $ref: '#/components/schemas/PortfolioSnapshotSummaryResponse'
+    repository_selections:
+      items:
+        $ref: '#/components/schemas/PortfolioRepositorySelectionResponse'
+      type: array
+      title: Repository Selections
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeResponse'
+  additionalProperties: false
+  type: object
+  required:
+  - snapshot
+  - repository_selections
+  - envelope
+  title: PortfolioSnapshotDetailsResponse

@@ -1,0 +1,41 @@
+CoverageResponse:
+  properties:
+    graph_id:
+      type: string
+      title: Graph Id
+    graph_version:
+      type: integer
+      title: Graph Version
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    findings_with_evidence:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    high_critical_with_recommendations:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    findings_linked_to_components:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    technologies_linked_to_components:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    recommendations_linked_to_findings:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+    objects_with_source_reference:
+      $ref: '#/components/schemas/CoverageMetricResponse'
+  additionalProperties: false
+  type: object
+  required:
+  - graph_id
+  - graph_version
+  - engineering_snapshot_id
+  - generated_at
+  - findings_with_evidence
+  - high_critical_with_recommendations
+  - findings_linked_to_components
+  - technologies_linked_to_components
+  - recommendations_linked_to_findings
+  - objects_with_source_reference
+  title: CoverageResponse

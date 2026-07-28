@@ -1,0 +1,37 @@
+RetrievalContextRequest:
+  properties:
+    query_text:
+      type: string
+      maxLength: 4000
+      minLength: 1
+      title: Query Text
+    mode:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Mode
+      default: hybrid
+    top_k:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Top K
+      default: 10
+    max_tokens:
+      type: integer
+      maximum: 12000.0
+      minimum: 1.0
+      title: Max Tokens
+      default: 6000
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+  additionalProperties: false
+  type: object
+  required:
+  - query_text
+  title: RetrievalContextRequest

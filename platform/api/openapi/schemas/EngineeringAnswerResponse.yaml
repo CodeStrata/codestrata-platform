@@ -1,0 +1,110 @@
+EngineeringAnswerResponse:
+  properties:
+    answer_run_id:
+      type: string
+      title: Answer Run Id
+    question:
+      type: string
+      title: Question
+    question_type:
+      type: string
+      title: Question Type
+    status:
+      type: string
+      title: Status
+    answer:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Answer
+    citations:
+      items:
+        $ref: '#/components/schemas/AnswerCitationResponse'
+      type: array
+      title: Citations
+    confidence_level:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Confidence Level
+    confidence_score:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Confidence Score
+    grounding_status:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Grounding Status
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+    follow_up_questions:
+      items:
+        type: string
+      type: array
+      title: Follow Up Questions
+    retrieval_index_id:
+      type: string
+      title: Retrieval Index Id
+    graph_id:
+      type: string
+      title: Graph Id
+    snapshot_id:
+      type: string
+      title: Snapshot Id
+    provider_id:
+      type: string
+      title: Provider Id
+    model_id:
+      type: string
+      title: Model Id
+    prompt_template_version:
+      type: string
+      title: Prompt Template Version
+    answer_policy_version:
+      type: string
+      title: Answer Policy Version
+    generated_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Generated At
+    cache_hit:
+      type: boolean
+      title: Cache Hit
+      default: false
+    diagnostics:
+      anyOf:
+      - additionalProperties:
+          type: string
+        type: object
+      - type: 'null'
+      title: Diagnostics
+  additionalProperties: false
+  type: object
+  required:
+  - answer_run_id
+  - question
+  - question_type
+  - status
+  - answer
+  - citations
+  - confidence_level
+  - confidence_score
+  - grounding_status
+  - limitations
+  - follow_up_questions
+  - retrieval_index_id
+  - graph_id
+  - snapshot_id
+  - provider_id
+  - model_id
+  - prompt_template_version
+  - answer_policy_version
+  - generated_at
+  title: EngineeringAnswerResponse

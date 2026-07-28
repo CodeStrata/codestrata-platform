@@ -23,7 +23,10 @@ def register_assessment_tools(server: FastMCP, queries: KnowledgeQueryService) -
         limit: int = 20,
         status: str | None = None,
     ) -> dict[str, Any]:
-        """List assessment runs for a repository, newest first."""
+        """List assessment runs for a repository, newest first.
+
+        Scope: Community Engine (local knowledge store).
+        """
 
         def _run() -> dict[str, Any]:
             repository_id = resolve_repository_id(queries, repository_identifier)
@@ -38,7 +41,10 @@ def register_assessment_tools(server: FastMCP, queries: KnowledgeQueryService) -
 
     @server.tool(name="get_assessment", structured_output=True)
     def get_assessment(run_id: str) -> dict[str, Any]:
-        """Get one assessment run by ID."""
+        """Get one assessment run by ID.
+
+        Scope: Community Engine (local knowledge store).
+        """
 
         def _run() -> dict[str, Any]:
             return to_mcp_dict(
@@ -52,7 +58,10 @@ def register_assessment_tools(server: FastMCP, queries: KnowledgeQueryService) -
         repository_identifier: str,
         branch: str | None = None,
     ) -> dict[str, Any]:
-        """Get the latest completed assessment for a repository."""
+        """Get the latest completed assessment for a repository.
+
+        Scope: Community Engine (local knowledge store).
+        """
 
         def _run() -> dict[str, Any]:
             repository_id = resolve_repository_id(queries, repository_identifier)

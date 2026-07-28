@@ -1,0 +1,60 @@
+RecommendationDetailsResponse:
+  properties:
+    recommendation_id:
+      type: string
+      title: Recommendation Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    category:
+      type: string
+      title: Category
+    title:
+      type: string
+      title: Title
+    rationale:
+      type: string
+      title: Rationale
+    priority:
+      type: string
+      title: Priority
+    effort:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Effort
+    impact:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Impact
+    roadmap_horizon:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Roadmap Horizon
+    dependencies:
+      items:
+        type: string
+      type: array
+      title: Dependencies
+    related_finding_ids:
+      items:
+        type: string
+      type: array
+      title: Related Finding Ids
+    metadata:
+      additionalProperties:
+        type: string
+      type: object
+      title: Metadata
+  additionalProperties: false
+  type: object
+  required:
+  - recommendation_id
+  - assessment_id
+  - category
+  - title
+  - rationale
+  - priority
+  title: RecommendationDetailsResponse

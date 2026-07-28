@@ -7,8 +7,8 @@ This file lives under `platform/` because the Platform package is private and
 never exported. It is the **ecosystem maintainer handbook** for the private
 monorepo `codestrata-platform`.
 
-> The Engine produces structured engineering intelligence.  
-> The Platform stores, connects, retrieves, and reasons over that intelligence.
+> CodeStrata Engine produces structured Engineering Intelligence.  
+> CodeStrata Platform stores, connects, retrieves, and reasons over that intelligence.
 
 ---
 

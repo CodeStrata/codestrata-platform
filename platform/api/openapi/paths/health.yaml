@@ -1,0 +1,40 @@
+paths:
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Liveness probe
+      description: Returns process liveness. No Platform API key required.
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Health Health Get
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-api
+      x-codestrata-audience: internal
+  /ready:
+    get:
+      tags:
+      - Health
+      summary: Readiness probe
+      description: Returns readiness including persistence connectivity. No Platform
+        API key required. HTTP 503 when not ready.
+      operationId: ready_ready_get
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service is not ready
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-api
+      x-codestrata-audience: internal

@@ -237,7 +237,7 @@ def _report_input(
         assessment_mode=AssessmentMode.DETERMINISTIC,
         ai_status=AIExecutionStatus.NOT_REQUESTED,
         generated_at_utc=datetime(2026, 7, 22, 12, 0, tzinfo=UTC),
-        report_title="Modernization Assessment",
+        report_title="Engineering Assessment",
         assessment_rule_evaluation=evaluation,
         assessment_recommendation_result=recommendations,
         ai_enrichment=enrichment,
@@ -284,8 +284,11 @@ def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> No
     assert isinstance(document, CustomerReportDocument)
     assert 3 <= len(document.key_takeaways) <= 5
     assert document.outline
-    assert document.outline[0].section_id == "leadership-verdict"
+    assert document.outline[0].section_id == "executive-summary"
     outline_ids = {entry.section_id for entry in document.outline}
+    assert "repository-overview" in outline_ids
+    assert "assessment-summary" in outline_ids
+    assert "engineering-assessment-conclusion" in outline_ids
     assert "engineering-risks" in outline_ids
     assert "executive-summary" in outline_ids
     assert "modernization-opportunities" in outline_ids
@@ -334,7 +337,7 @@ def test_ai_enrichment_present_and_absent(tmp_path: Path) -> None:
     view = build_html_report_view_model(_report_input(tmp_path, with_ai=True))
     with_ai = HtmlReportRenderer().render(view)
     assert 'id="modernization-advisor"' in with_ai
-    assert "Modernization Advisor" in with_ai
+    assert "Optional AI Enhancements" in with_ai or "Modernization Advisor" in with_ai
     assert "Modernization Advisor interpretation" in with_ai
     assert "Stabilize dependencies" in with_ai
     assert "fake" in with_ai

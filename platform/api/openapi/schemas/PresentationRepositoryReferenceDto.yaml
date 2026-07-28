@@ -1,0 +1,30 @@
+PresentationRepositoryReferenceDto:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    display_name:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Display Name
+    snapshot_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Snapshot Id
+    status:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Status
+    participation_state:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Participation State
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  title: PresentationRepositoryReferenceDto

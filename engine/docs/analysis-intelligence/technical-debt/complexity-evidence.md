@@ -1,4 +1,4 @@
-# Complexity Evidence (Phase 4.3.2)
+# Complexity Evidence
 
 Deterministic structural complexity facts for future Technical Debt rules.
 

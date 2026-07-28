@@ -1,0 +1,44 @@
+PageMetaDto:
+  properties:
+    page:
+      type: integer
+      minimum: 1.0
+      title: Page
+      description: 1-based page number
+    size:
+      type: integer
+      maximum: 500.0
+      minimum: 1.0
+      title: Size
+      description: Page size
+    total:
+      type: integer
+      minimum: 0.0
+      title: Total
+      description: Total matching items
+    sort:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Sort
+      description: Applied sort key, if any
+    next:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Next
+      description: Next page number, if any
+    previous:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Previous
+      description: Previous page number, if any
+  additionalProperties: false
+  type: object
+  required:
+  - page
+  - size
+  - total
+  title: PageMetaDto
+  description: Pagination metadata for list endpoints.

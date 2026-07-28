@@ -1,0 +1,49 @@
+PortfolioRetrievalContextRequest:
+  properties:
+    query_text:
+      type: string
+      maxLength: 4000
+      minLength: 1
+      title: Query Text
+    mode:
+      type: string
+      maxLength: 32
+      minLength: 1
+      title: Mode
+      default: hybrid
+    top_k:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Top K
+      default: 10
+    max_tokens:
+      type: integer
+      maximum: 20000.0
+      minimum: 1.0
+      title: Max Tokens
+      default: 10000
+    max_repositories:
+      type: integer
+      maximum: 100.0
+      minimum: 1.0
+      title: Max Repositories
+      default: 20
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+    repository_balance_mode:
+      type: string
+      maxLength: 64
+      minLength: 1
+      title: Repository Balance Mode
+      default: none
+  additionalProperties: false
+  type: object
+  required:
+  - query_text
+  title: PortfolioRetrievalContextRequest

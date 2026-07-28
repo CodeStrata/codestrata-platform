@@ -1,0 +1,50 @@
+SnapshotSummaryResponse:
+  properties:
+    snapshot_id:
+      type: string
+      title: Snapshot Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    assessment_intelligence_id:
+      type: string
+      title: Assessment Intelligence Id
+    assessment_revision:
+      type: integer
+      title: Assessment Revision
+    version:
+      type: integer
+      title: Version
+    status:
+      type: string
+      title: Status
+    technology_count:
+      type: integer
+      title: Technology Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    metric_count:
+      type: integer
+      title: Metric Count
+    relationship_count:
+      type: integer
+      title: Relationship Count
+  additionalProperties: false
+  type: object
+  required:
+  - snapshot_id
+  - assessment_id
+  - assessment_intelligence_id
+  - assessment_revision
+  - version
+  - status
+  - technology_count
+  - finding_count
+  - recommendation_count
+  - metric_count
+  - relationship_count
+  title: SnapshotSummaryResponse

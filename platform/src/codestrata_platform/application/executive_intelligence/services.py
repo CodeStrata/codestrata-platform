@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata_platform.application.common.diagnostics import safe_failure_summary
 from codestrata_platform.application.common.errors import NotFoundError
 from codestrata_platform.application.common.pagination import PageResult
 from codestrata_platform.application.executive_intelligence.aggregation import (
@@ -136,7 +137,7 @@ class ExecutiveIntelligenceAggregationService:
                 limitations=result.limitations,
             )
         except Exception as exc:
-            snapshot.fail(str(exc)[:1000])
+            snapshot.fail(safe_failure_summary(exc, limit=1000))
             self._executive_intelligence.save(snapshot)
             raise
 

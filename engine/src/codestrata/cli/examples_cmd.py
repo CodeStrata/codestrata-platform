@@ -56,12 +56,16 @@ OFFICIAL_EXAMPLES: tuple[ExampleEntry, ...] = (
 )
 
 DOC_LINKS: tuple[tuple[str, str], ...] = (
+    ("Documentation portal", "docs/README.md"),
+    ("Getting started", "docs/getting-started.md"),
     ("Quick start", "docs/quick-start.md"),
-    ("CLI reference", "docs/cli-reference.md"),
     ("Installation", "docs/installation.md"),
-    ("CI sample workflow", "examples/github-actions/codestrata-assess.yml"),
+    ("Tutorial", "docs/tutorial.md"),
+    ("Examples index", "docs/examples.md"),
+    ("CLI reference", "docs/cli-reference.md"),
+    ("Community vs Platform", "docs/community-vs-platform.md"),
     ("Troubleshooting", "docs/troubleshooting.md"),
-    ("Community edition", "docs/community-edition.md"),
+    ("CI sample workflow", "examples/github-actions/codestrata-assess.yml"),
 )
 
 
@@ -109,7 +113,7 @@ def format_examples(*, json_output: bool = False) -> str:
 def register_examples_command(app: typer.Typer) -> None:
     """Register ``codestrata examples``."""
 
-    @app.command("examples")
+    @app.command("examples", rich_help_panel="Primary")
     def examples_command(
         json_output: Annotated[
             bool,

@@ -1,0 +1,28 @@
+UploadArtifactResponse:
+  properties:
+    artifact_id:
+      type: string
+      title: Artifact Id
+    status:
+      type: string
+      title: Status
+    checksum:
+      type: string
+      title: Checksum
+    size_bytes:
+      type: integer
+      title: Size Bytes
+    storage_key:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Storage Key
+  additionalProperties: false
+  type: object
+  required:
+  - artifact_id
+  - status
+  - checksum
+  - size_bytes
+  - storage_key
+  title: UploadArtifactResponse

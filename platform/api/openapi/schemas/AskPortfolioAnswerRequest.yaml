@@ -1,0 +1,63 @@
+AskPortfolioAnswerRequest:
+  properties:
+    question:
+      type: string
+      maxLength: 2000
+      minLength: 1
+      title: Question
+    organization_id:
+      type: string
+      minLength: 1
+      title: Organization Id
+    workspace_id:
+      type: string
+      minLength: 1
+      title: Workspace Id
+    portfolio_id:
+      anyOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+      title: Portfolio Id
+    portfolio_retrieval_index_id:
+      anyOf:
+      - type: string
+        minLength: 1
+      - type: 'null'
+      title: Portfolio Retrieval Index Id
+    question_type:
+      anyOf:
+      - type: string
+        maxLength: 64
+        minLength: 1
+      - type: 'null'
+      title: Question Type
+    repository_ids:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Repository Ids
+    content_types:
+      anyOf:
+      - items:
+          type: string
+        type: array
+      - type: 'null'
+      title: Content Types
+    include_diagnostics:
+      type: boolean
+      title: Include Diagnostics
+      default: false
+    use_cache:
+      type: boolean
+      title: Use Cache
+      default: true
+  additionalProperties: false
+  type: object
+  required:
+  - question
+  - organization_id
+  - workspace_id
+  title: AskPortfolioAnswerRequest

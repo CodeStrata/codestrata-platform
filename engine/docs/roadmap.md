@@ -1,5 +1,8 @@
 # CodeStrata Roadmap
 
+> **ARCHIVE CANDIDATE (Phase 12.2.2)** — Retained for history. Do not treat as current public documentation. Prefer CHANGELOG / governance reports / public `docs/` for current guidance. File was **not deleted**.
+
+
 Canonical product direction lives in the monorepo root:
 [ROADMAP.md](../../ROADMAP.md).
 

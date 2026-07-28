@@ -1,0 +1,22 @@
+GraphEdgeResponse:
+  properties:
+    edge_id:
+      type: string
+      title: Edge Id
+    source_node_id:
+      type: string
+      title: Source Node Id
+    target_node_id:
+      type: string
+      title: Target Node Id
+    edge_type:
+      type: string
+      title: Edge Type
+  additionalProperties: false
+  type: object
+  required:
+  - edge_id
+  - source_node_id
+  - target_node_id
+  - edge_type
+  title: GraphEdgeResponse

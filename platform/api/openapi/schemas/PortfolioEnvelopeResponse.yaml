@@ -1,0 +1,41 @@
+PortfolioEnvelopeResponse:
+  properties:
+    portfolio_id:
+      type: string
+      title: Portfolio Id
+    portfolio_snapshot_id:
+      type: string
+      title: Portfolio Snapshot Id
+    portfolio_snapshot_version:
+      type: integer
+      title: Portfolio Snapshot Version
+    generated_at:
+      type: string
+      format: date-time
+      title: Generated At
+    aggregation_policy_version:
+      type: string
+      title: Aggregation Policy Version
+    selected_repository_count:
+      type: integer
+      title: Selected Repository Count
+    unavailable_repository_count:
+      type: integer
+      title: Unavailable Repository Count
+    source_snapshot_references:
+      items:
+        type: string
+      type: array
+      title: Source Snapshot References
+  additionalProperties: false
+  type: object
+  required:
+  - portfolio_id
+  - portfolio_snapshot_id
+  - portfolio_snapshot_version
+  - generated_at
+  - aggregation_policy_version
+  - selected_repository_count
+  - unavailable_repository_count
+  - source_snapshot_references
+  title: PortfolioEnvelopeResponse

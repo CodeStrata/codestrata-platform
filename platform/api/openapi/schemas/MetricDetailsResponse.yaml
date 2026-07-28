@@ -1,0 +1,28 @@
+MetricDetailsResponse:
+  properties:
+    name:
+      type: string
+      title: Name
+    kind:
+      type: string
+      title: Kind
+    value:
+      type: string
+      title: Value
+    unit:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Unit
+    metadata:
+      additionalProperties:
+        type: string
+      type: object
+      title: Metadata
+  additionalProperties: false
+  type: object
+  required:
+  - name
+  - kind
+  - value
+  title: MetricDetailsResponse

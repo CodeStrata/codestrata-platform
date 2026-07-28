@@ -16,9 +16,13 @@ _GITHUB_TOKEN_PATTERN = re.compile(
 _BEARER_PATTERN = re.compile(
     r"(?i)(Authorization:\s*Bearer\s+)\S+",
 )
+_BEARER_ASSIGN_PATTERN = re.compile(
+    r"(?i)(bearer\s*[=:]\s*)\S+",
+)
 _BASIC_PATTERN = re.compile(
     r"(?i)(Authorization:\s*Basic\s+)\S+",
 )
+_OPENAI_KEY_PATTERN = re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")
 _URL_USERINFO_PATTERN = re.compile(
     r"(https?://)([^/\s:@]+):([^/\s@]+)@",
 )
@@ -128,7 +132,9 @@ class Redactor:
             sanitized,
         )
         sanitized = _BEARER_PATTERN.sub(rf"\1{REDACTED}", sanitized)
+        sanitized = _BEARER_ASSIGN_PATTERN.sub(rf"\1{REDACTED}", sanitized)
         sanitized = _BASIC_PATTERN.sub(rf"\1{REDACTED}", sanitized)
+        sanitized = _OPENAI_KEY_PATTERN.sub(REDACTED, sanitized)
         sanitized = _GITHUB_TOKEN_PATTERN.sub(REDACTED, sanitized)
         sanitized = _AWS_ACCESS_KEY_PATTERN.sub(REDACTED, sanitized)
         sanitized = _AWS_SECRET_ASSIGN_PATTERN.sub(rf"\1{REDACTED}", sanitized)

@@ -69,7 +69,12 @@ def register_repository_search(
         include_metadata: bool = True,
         include_traceability: bool = True,
     ) -> dict[str, Any]:
-        """Search indexed repository knowledge (delegates to RepositoryRetriever)."""
+        """Search indexed repository knowledge (Repository Retrieval).
+
+        Scope: CodeStrata Platform. Not available on Community Engine alone.
+        Inputs: query, tenant_id, repository_id (required). Output: bounded
+        retrieval hits with coverage/diagnostics envelope.
+        """
 
         def _run() -> dict[str, Any]:
             request_payload = {
@@ -174,7 +179,9 @@ def register_repository_answer(
     ) -> dict[str, Any]:
         """Answer a repository question with citation-bound grounded evidence.
 
-        Uses DeterministicExtractiveAnswerProvider (non-generative, non-production).
+        Scope: CodeStrata Platform (Repository Answering). Deterministic
+        extractive answering — not generative AI / not production LLM.
+        AI provider credentials are not required for this tool.
         """
 
         def _run() -> dict[str, Any]:

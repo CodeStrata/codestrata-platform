@@ -1,24 +1,35 @@
-# Configuration and execution profiles (Phase 5.20)
+# Configuration and execution profiles
+
+<!-- documentation-visibility: public-contract -->
 
 CodeStrata uses named **execution profiles** to apply secure defaults without
 duplicating the rest of the configuration model. Profiles only supply defaults;
 they do not replace `codestrata.toml`.
 
+**Public contract:** `codestrata.toml` keys, profile names, and documented env
+overlays are compatibility-sensitive. Prefer additive changes; deprecate before
+remove.
+
+## Compatibility notes
+
+1. Precedence is stable: CLI (`--profile`) > environment > TOML > profile defaults.
+2. Prefer additive settings. Deprecate with release notes before removal.
+3. Secrets never belong in TOML — store environment variable *names* only.
+4. `codestrata config validate` / `effective` are the supported diagnostics.
+5. Platform API keys (`CODESTRATA_PLATFORM_API_KEY`) are **not** Engine config.
+
 ## Profiles
 
 | Profile | Intent | Secure defaults |
 | ------- | ------ | --------------- |
-| `community` | Community edition (default) | Enterprise KG off; deterministic knowledge AI |
-| `local` | No external LLM | Deterministic embedding/answer providers |
-| `enterprise` | Enterprise Knowledge Graph | `[enterprise].enabled = true`; deterministic AI |
+| `community` | Community edition (default) | Local Community defaults |
+| `local` | No external LLM | Deterministic providers |
 | `bedrock` | AWS Bedrock providers | Assessment + knowledge via Bedrock; region required |
-| `openai` | OpenAI knowledge providers | `embedding_provider` / `answer_provider` = `openai`; API key via env name |
+| `openai` | OpenAI providers | `embedding_provider` / `answer_provider` = `openai`; API key via env name |
 
-Community vs Enterprise remains **configuration-driven** via
-`[enterprise].enabled` (see
-[community-enterprise-boundary.md](assessment-framework/community-enterprise-boundary.md)).
-The `enterprise` profile turns that gate on by default; `community` / `local` /
-`bedrock` / `openai` leave it off unless the TOML explicitly enables it.
+Additional profile names may exist for Platform-oriented deployments. Advanced
+portfolio capabilities are available in CodeStrata Platform; Community assess
+does not require them.
 
 ## Precedence
 
@@ -73,12 +84,6 @@ embedding_model = "text-embedding-3-small"
 answer_model = "gpt-4o-mini"
 ```
 
-```toml
-profile = "enterprise"
-
-# enterprise.enabled defaults to true under this profile
-```
-
 Alias form (equivalent):
 
 ```toml
@@ -110,14 +115,12 @@ Hard errors (fail load / `config validate`):
 
 * Unknown profile name
 * `local` with non-deterministic knowledge providers
-* `enterprise` profile with `[enterprise].enabled = false`
 * `bedrock` profile without a resolvable AWS region
 * `openai` profile without OpenAI embedding/answer providers or `api_key_env`
 
 Warnings (reported, non-fatal):
 
 * `community` with external AI providers (prefer `bedrock` / `openai` profiles)
-* `community` with `[enterprise].enabled = true` (prefer `profile = "enterprise"`)
 * `--strict` Bedrock credential hints when no profile/access key is visible
 
 `local` + `assess --with-ai` is rejected at assessment time.
@@ -133,9 +136,8 @@ Effective dumps and MCP health:
 ## Backward compatibility
 
 Existing `codestrata.toml` files without `profile` load as **`community`**,
-matching prior secure defaults (`enterprise.enabled = false`, deterministic
-knowledge providers, Bedrock-named assessment provider). Explicit TOML keys
-continue to override profile defaults.
+matching prior secure defaults. Explicit TOML keys continue to override profile
+defaults.
 
 ## Related
 
@@ -144,4 +146,4 @@ continue to override profile defaults.
 * [ai-enrichment.md](ai-enrichment.md)
 * [cli-reference.md](cli-reference.md)
 * [troubleshooting.md](troubleshooting.md)
-* [assessment-framework/community-enterprise-boundary.md](assessment-framework/community-enterprise-boundary.md)
+* [public-contracts.md](public-contracts.md)

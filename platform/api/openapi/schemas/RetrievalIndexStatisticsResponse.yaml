@@ -1,0 +1,28 @@
+RetrievalIndexStatisticsResponse:
+  properties:
+    index_id:
+      type: string
+      title: Index Id
+    document_count:
+      type: integer
+      title: Document Count
+    chunk_count:
+      type: integer
+      title: Chunk Count
+    embedded_chunk_count:
+      type: integer
+      title: Embedded Chunk Count
+    content_type_counts:
+      additionalProperties:
+        type: integer
+      type: object
+      title: Content Type Counts
+  additionalProperties: false
+  type: object
+  required:
+  - index_id
+  - document_count
+  - chunk_count
+  - embedded_chunk_count
+  - content_type_counts
+  title: RetrievalIndexStatisticsResponse

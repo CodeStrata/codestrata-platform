@@ -40,6 +40,12 @@ def test_authorization_bearer_and_basic() -> None:
     assert "dXNlcjpwYXNz" not in redact_secrets(basic)
 
 
+def test_openai_style_and_bearer_assignment_redaction() -> None:
+    key = "sk-" + ("x" * 20)
+    assert key not in redact_secrets(f"provider failed key={key}")
+    assert "tokensecret" not in redact_secrets("boom bearer=tokensecret")
+
+
 def test_github_style_token_patterns() -> None:
     classic = "ghp_" + ("a" * 36)
     fine = "github_pat_" + ("b" * 40)

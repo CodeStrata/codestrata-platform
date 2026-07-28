@@ -76,6 +76,11 @@ def _build_ask_command(
     "/portfolio-answers",
     response_model=PortfolioAnswerResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="Ask a portfolio question",
+    description=(
+        "Grounded Portfolio Answering across repositories in a portfolio. "
+        "Platform capability — requires portfolio answering to be enabled."
+    ),
 )
 def ask_portfolio_answer(
     body: AskPortfolioAnswerRequest,
@@ -96,6 +101,11 @@ def ask_portfolio_answer(
     "/portfolios/{portfolio_id}/ask",
     response_model=PortfolioAnswerResponse,
     status_code=status.HTTP_201_CREATED,
+    summary="Ask a question for a portfolio",
+    description=(
+        "Portfolio-scoped grounded answering. Same capability as POST /portfolio-answers "
+        "with portfolio_id taken from the path."
+    ),
 )
 def ask_portfolio(
     portfolio_id: str,

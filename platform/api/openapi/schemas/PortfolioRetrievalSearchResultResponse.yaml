@@ -1,0 +1,20 @@
+PortfolioRetrievalSearchResultResponse:
+  properties:
+    hits:
+      items:
+        $ref: '#/components/schemas/PortfolioRetrievalSearchHitResponse'
+      type: array
+      title: Hits
+    mode:
+      type: string
+      title: Mode
+    top_k:
+      type: integer
+      title: Top K
+  additionalProperties: false
+  type: object
+  required:
+  - hits
+  - mode
+  - top_k
+  title: PortfolioRetrievalSearchResultResponse

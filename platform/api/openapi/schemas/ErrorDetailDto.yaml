@@ -1,0 +1,22 @@
+ErrorDetailDto:
+  type: object
+  description: Stable Platform API error detail
+  properties:
+    code:
+      type: string
+      description: Machine-readable error code
+      examples:
+      - unauthorized
+      - not_found
+      - validation_error
+    message:
+      type: string
+      description: Human-readable, sanitized guidance
+    details:
+      type: object
+      additionalProperties: true
+      nullable: true
+      description: Optional structured detail
+  required:
+  - code
+  - message

@@ -6,11 +6,18 @@ This monorepo (`codestrata-platform`) is the private source of truth.
 
 | Audience | Guide |
 | -------- | ----- |
+| New developers (Engine) | [engine/docs/README.md](engine/docs/README.md) portal · [quick-start.md](engine/docs/quick-start.md) |
 | New maintainers | [README.md](README.md) then [platform/README.md](platform/README.md) |
 | Community Engine contributors | [engine/CONTRIBUTING.md](engine/CONTRIBUTING.md) · [engine/docs/contributor-guide.md](engine/docs/contributor-guide.md) |
 | Platform package developers | [platform/docs/getting-started.md](platform/docs/getting-started.md) |
+| Governance (how we build) | [governance/README.md](governance/README.md) |
+| Engineering Knowledge (what we know) | [knowledge/README.md](knowledge/README.md) |
+| Coding standards | [governance/standards/CODING_STANDARDS.md](governance/standards/CODING_STANDARDS.md) |
+| Design System | [governance/assets/DESIGN-SYSTEM.md](governance/assets/DESIGN-SYSTEM.md) |
 | Current direction | [ROADMAP.md](ROADMAP.md) |
-| Ecosystem architecture | [ARCHITECTURE.md](ARCHITECTURE.md) |
+| Ecosystem architecture | [ARCHITECTURE.md](ARCHITECTURE.md) · [engine/docs/architecture-guide.md](engine/docs/architecture-guide.md) |
+| Documentation inventory | [governance/DOCUMENTATION_INVENTORY.md](governance/DOCUMENTATION_INVENTORY.md) |
+| Public API / SDK contracts | [governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md](governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md) |
 
 ## Setup
 
@@ -53,3 +60,6 @@ Showcases (network): `python scripts/fetch_example.py` / `python scripts/run_sho
 * Do not commit secrets or large `reports/` trees.
 * Preserve Platform → Engine dependency direction.
 * Prefer linking to canonical docs over copying content.
+* Every new document must declare or clearly imply visibility: public Community,
+  public contributor, or private Platform/internal (see `docs/CONTRIBUTING.md`
+  and `engine/CONTRIBUTING.md`). Do not publish private classification inventories.

@@ -1,0 +1,104 @@
+RoadmapInitiativeDto:
+  properties:
+    initiative_id:
+      type: string
+      title: Initiative Id
+    title:
+      type: string
+      title: Title
+    category:
+      type: string
+      title: Category
+    description:
+      type: string
+      title: Description
+    rationale:
+      type: string
+      title: Rationale
+    affected_repository_ids:
+      items:
+        type: string
+      type: array
+      title: Affected Repository Ids
+    supporting_finding_ids:
+      items:
+        type: string
+      type: array
+      title: Supporting Finding Ids
+    supporting_recommendation_ids:
+      items:
+        type: string
+      type: array
+      title: Supporting Recommendation Ids
+    expected_impact:
+      type: string
+      title: Expected Impact
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    coverage:
+      type: number
+      title: Coverage
+    limitations:
+      items:
+        type: string
+      type: array
+      title: Limitations
+    priority:
+      type: integer
+      title: Priority
+    effort_band:
+      type: string
+      title: Effort Band
+    sequencing_wave:
+      type: string
+      title: Sequencing Wave
+    related_initiative_ids:
+      items:
+        type: string
+      type: array
+      title: Related Initiative Ids
+    depends_on_initiative_ids:
+      items:
+        type: string
+      type: array
+      title: Depends On Initiative Ids
+    priority_inputs:
+      items:
+        type: string
+      type: array
+      title: Priority Inputs
+    effort_rule:
+      type: string
+      title: Effort Rule
+    wave_rule:
+      type: string
+      title: Wave Rule
+  additionalProperties: false
+  type: object
+  required:
+  - initiative_id
+  - title
+  - category
+  - description
+  - rationale
+  - affected_repository_ids
+  - supporting_finding_ids
+  - supporting_recommendation_ids
+  - expected_impact
+  - confidence
+  - confidence_band
+  - coverage
+  - limitations
+  - priority
+  - effort_band
+  - sequencing_wave
+  - related_initiative_ids
+  - depends_on_initiative_ids
+  - priority_inputs
+  - effort_rule
+  - wave_rule
+  title: RoadmapInitiativeDto

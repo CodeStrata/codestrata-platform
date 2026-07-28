@@ -5,6 +5,7 @@ Presentation only — no analysis or enrichment business logic.
 
 from __future__ import annotations
 
+from codestrata.design_system.tokens import DESIGN_SYSTEM_REF, DESIGN_TOKENS_CSS
 from codestrata.reporters.html_rendering import escape_and_wrap, escape_html
 from codestrata.reporting.ai_readiness.models import AiReadinessReportSection
 from codestrata.reporting.architecture.models import ArchitectureReportSection
@@ -59,61 +60,55 @@ class HtmlReportRenderer:
             '<meta charset="utf-8">',
             f'<meta http-equiv="Content-Security-Policy" content="{CONTENT_SECURITY_POLICY}">',
             '<meta name="viewport" content="width=device-width, initial-scale=1">',
+            '<meta name="color-scheme" content="light">',
+            (
+                f'<meta name="generator" content="{escape_html(BRAND_NAME)} '
+                f'{escape_html(BRAND_REPORT_NAME)}">'
+            ),
             f"<title>{escape_html(BRAND_NAME)} {escape_html(BRAND_REPORT_NAME)} — "
             f"{escape_html(view.summary.repository_name)}</title>",
             f"<style>{_CSS}</style>",
             "</head>",
             "<body>",
+            '<a class="skip-link" href="#contents">Skip to contents</a>',
             '<div class="page">',
             _render_hero(view),
-            _render_leadership_verdict(view),
             _render_toc(view),
+            _section(
+                "Executive Summary",
+                _render_executive_summary(view),
+                section_id="executive-summary",
+                eyebrow="01",
+                note="Should I care, why now, and what the team should do next.",
+            ),
+            _section(
+                "Repository Overview",
+                _render_repository_overview(view),
+                section_id="repository-overview",
+                eyebrow="02",
+                note="What was assessed and the technology posture observed.",
+            ),
+            _section(
+                "Assessment Summary",
+                _render_assessment_summary_bundle(view),
+                section_id="assessment-summary",
+                eyebrow="03",
+                note="Leadership verdict, key takeaways, and engineering risks.",
+            ),
+            _render_leadership_verdict(view),
             _section(
                 "Key Takeaways",
                 _render_key_takeaways(view),
                 section_id="key-takeaways",
                 note="Concise leadership bullets for scanning and handoff.",
-            ),
-            _section(
-                "Executive Summary",
-                _render_executive_summary(view),
-                section_id="executive-summary",
-                note="Should I care, why now, and what the team should do next.",
+                css_class="section section-anchor-only",
             ),
             _section(
                 "Engineering Risks",
                 _render_engineering_risks(view),
                 section_id="engineering-risks",
                 note="Meaningful risks grouped by theme.",
-            ),
-            _section(
-                "Modernization Opportunities",
-                _render_modernization_opportunities(view),
-                section_id="modernization-opportunities",
-                note=(
-                    "Improvement opportunities distinct from Priority Actions. "
-                    "Priority Actions remain the authoritative action list."
-                ),
-            ),
-            _section(
-                "Priority Actions",
-                _render_roadmap(
-                    view.priority_actions if view.priority_actions else view.recommendations
-                ),
-                section_id="priority-actions",
-                note=(
-                    "Priority-ordered actions linked to findings. "
-                    "Order matches the Phased Modernization Plan below."
-                ),
-            ),
-            _section(
-                "Findings",
-                _render_findings_overview(view),
-                section_id="findings",
-                note=(
-                    "Highest-severity findings first. "
-                    "Full evidence is in the Technical Appendix."
-                ),
+                css_class="section section-anchor-only",
             ),
         ]
         capability_parts: list[str] = []
@@ -195,31 +190,101 @@ class HtmlReportRenderer:
         if capability_parts:
             parts.append(
                 '<section class="section section-capability" id="capability-assessments">\n'
-                '<div class="section-head"><h2>Capability Assessments</h2></div>\n'
-                '<p class="section-note">Detailed assessment packs for engineering follow-up.</p>\n'
+                '<p class="section-eyebrow" aria-hidden="true">'
+                "<span>04</span> // DOMAIN INTELLIGENCE</p>\n"
+                '<div class="section-head"><h2>Domain Intelligence</h2></div>\n'
+                '<p class="section-note">Engineering domain packs for technical follow-up. '
+                "These are part of the Engineering Assessment, not a Strategic Roadmap.</p>\n"
                 f"{''.join(capability_parts)}\n"
                 "</section>"
             )
+        parts.append(
+            _section(
+                "Findings",
+                _render_findings_overview(view),
+                section_id="findings",
+                eyebrow="05",
+                note=(
+                    "Cross-domain insights from deterministic rules. "
+                    "Highest-severity findings first; full evidence is in the Technical Appendix."
+                ),
+            )
+        )
+        parts.append(
+            _section(
+                "Recommendations",
+                _render_recommendations_bundle(view),
+                section_id="recommendations",
+                eyebrow="06",
+                note=(
+                    "Priority-ordered actions linked to findings. "
+                    "Opportunities are distinct from the authoritative Priority Actions list."
+                ),
+            )
+        )
+        parts.extend(
+            [
+                _section(
+                    "Priority Actions",
+                    _render_roadmap(
+                        view.priority_actions if view.priority_actions else view.recommendations
+                    ),
+                    section_id="priority-actions",
+                    note=(
+                        "Priority-ordered actions linked to findings. "
+                        "Order matches the Implementation Sequence below."
+                    ),
+                    css_class="section section-anchor-only",
+                ),
+                _section(
+                    "Modernization Opportunities",
+                    _render_modernization_opportunities(view),
+                    section_id="modernization-opportunities",
+                    note=(
+                        "Improvement opportunities distinct from Priority Actions. "
+                        "Priority Actions remain the authoritative action list."
+                    ),
+                    css_class="section section-anchor-only",
+                ),
+            ]
+        )
+        parts.append(
+            _section(
+                "Engineering Assessment Conclusion",
+                _render_engineering_conclusion(view),
+                section_id="engineering-assessment-conclusion",
+                eyebrow="07",
+                note=(
+                    "Current-state Engineering Assessment wrap-up. "
+                    "Not a CodeStrata Platform Strategic Roadmap."
+                ),
+            )
+        )
         if view.roadmap_report is not None:
             parts.append(
                 _section(
-                    "Phased Modernization Plan",
+                    "Implementation Sequence",
                     _render_phased_roadmap(view),
                     section_id="phased-modernization-plan",
+                    eyebrow="08",
                     note=(
-                        "Same Priority Actions, sequenced Stabilize → Secure → "
-                        "Modernize → Optimize."
+                        "Engine assess sequencing of Priority Actions "
+                        "(Stabilize → Secure → Modernize → Optimize). "
+                        "This is not CodeStrata Platform Strategic Roadmap."
                     ),
                 )
             )
         if view.ai_enrichment is not None:
             parts.append(
                 _section(
-                    "Modernization Advisor",
+                    "Optional AI Enhancements",
                     _render_ai(view.ai_enrichment),
                     section_id="modernization-advisor",
+                    eyebrow="09",
                     note=(
-                        "AI-generated interpretation. Not merged into findings or recommendations."
+                        "Optional AI interpretation when enabled. "
+                        "AI enhances—does not replace—deterministic Engineering Intelligence. "
+                        "Not merged into findings or recommendations."
                     ),
                     css_class="section section-ai",
                 )
@@ -229,7 +294,8 @@ class HtmlReportRenderer:
                 "Technical Appendix",
                 _render_technical_details(view),
                 section_id="technical-appendix",
-                note="Engineering reference: evidence, graphs, artifacts, and metadata.",
+                eyebrow="10",
+                note="Engineering reference: evidence, graphs, artifacts, metadata, and rule IDs.",
             )
         )
         parts.extend(
@@ -252,10 +318,19 @@ def _section(
     section_id: str,
     note: str | None = None,
     css_class: str = "section",
+    eyebrow: str | None = None,
 ) -> str:
     note_html = f'<p class="section-note">{escape_html(note)}</p>' if note else ""
+    eyebrow_html = ""
+    if eyebrow:
+        eyebrow_html = (
+            f'<p class="section-eyebrow" aria-hidden="true">'
+            f"<span>{escape_html(eyebrow)}</span> // "
+            f"{escape_html(title.upper())}</p>\n"
+        )
     return (
         f'<section class="{css_class}" id="{escape_html(section_id)}">\n'
+        f"{eyebrow_html}"
         f'<div class="section-head"><h2>{escape_html(title)}</h2></div>\n'
         f"{note_html}"
         f"{body}\n"
@@ -289,6 +364,7 @@ def _render_toc(view: HtmlReportViewModel) -> str:
     )
     return (
         '<nav class="toc" id="contents" aria-label="Table of contents">\n'
+        '<p class="section-eyebrow" aria-hidden="true"><span>00</span> // CONTENTS</p>\n'
         '<div class="section-head"><h2>Contents</h2></div>\n'
         f"<ol>\n{items}</ol>\n"
         "</nav>"
@@ -300,7 +376,8 @@ def _render_leadership_verdict(view: HtmlReportViewModel) -> str:
     if not text:
         return ""
     return (
-        '<section class="section section-verdict" id="leadership-verdict">\n'
+        '<section class="section section-verdict section-anchor-only" '
+        'id="leadership-verdict">\n'
         '<div class="section-head"><h2>Leadership Verdict</h2></div>\n'
         f'<p class="verdict-body">{escape_html(text)}</p>\n'
         "</section>"
@@ -361,6 +438,66 @@ def _render_modernization_opportunities(view: HtmlReportViewModel) -> str:
         f"<li>{escape_html(item)}</li>" for item in view.modernization_opportunities
     )
     return f'<ul class="plain">{items}</ul>'
+
+
+def _render_repository_overview(view: HtmlReportViewModel) -> str:
+    return (
+        f"{_render_assessment_scope(view)}\n"
+        "<h3>Technology Overview</h3>\n"
+        f"{_render_technology(view)}"
+    )
+
+
+def _render_assessment_summary_bundle(view: HtmlReportViewModel) -> str:
+    verdict = (view.leadership_verdict or "").strip()
+    verdict_html = (
+        f'<p class="verdict-body">{escape_html(verdict)}</p>'
+        if verdict
+        else '<p class="muted">No leadership verdict was recorded for this run.</p>'
+    )
+    return (
+        "<h3>Leadership Verdict</h3>\n"
+        f"{verdict_html}\n"
+        "<h3>Key Takeaways</h3>\n"
+        f"{_render_key_takeaways(view)}\n"
+        "<h3>Engineering Risks</h3>\n"
+        f"{_render_engineering_risks(view)}"
+    )
+
+
+def _render_recommendations_bundle(view: HtmlReportViewModel) -> str:
+    actions = view.priority_actions if view.priority_actions else view.recommendations
+    return (
+        "<h3>Priority Actions</h3>\n"
+        f"{_render_roadmap(actions)}\n"
+        "<h3>Modernization Opportunities</h3>\n"
+        f"{_render_modernization_opportunities(view)}"
+    )
+
+
+def _render_engineering_conclusion(view: HtmlReportViewModel) -> str:
+    verdict = (view.leadership_verdict or "").strip()
+    mode = escape_html(view.summary.assessment_mode_label)
+    ai_status = escape_html(view.metadata.ai_status)
+    findings = view.summary.total_findings
+    recommendations = view.summary.total_recommendations
+    body = (
+        f"<p>This <strong>Engineering Assessment</strong> summarizes the current state "
+        f"of <strong>{escape_html(view.summary.repository_name)}</strong> "
+        f"({findings} findings, {recommendations} recommendations).</p>\n"
+        f"<p>Assessment mode: <strong>{mode}</strong>. AI status: "
+        f'<code class="trace-id">{ai_status}</code>. AI is optional and does not '
+        "replace Engineering Intelligence results.</p>\n"
+    )
+    if verdict:
+        body += f'<p class="verdict-body">{escape_html(verdict)}</p>\n'
+    body += (
+        '<p class="muted">Next steps are in Recommendations / Priority Actions. '
+        "Engine Implementation Sequence (when present) sequences those actions. "
+        "CodeStrata Platform Strategic Roadmap is a separate Platform capability "
+        "and is not part of this Community Engineering Assessment report.</p>"
+    )
+    return body
 
 
 def _render_assessment_scope(view: HtmlReportViewModel) -> str:
@@ -426,7 +563,13 @@ def _render_hero(view: HtmlReportViewModel) -> str:
         f'<img class="brand-logo" src="{logo_data_uri()}" '
         f'alt="{escape_html(BRAND_NAME)}" width="140" height="40">\n'
         f'<p class="brand-name">{escape_html(BRAND_NAME)}</p>\n'
+        '<p class="hero-eyebrow" aria-label="Report edition">'
+        f"Community Edition · {escape_html(BRAND_REPORT_NAME)} · "
+        f"{escape_html(summary.assessment_mode_label)}</p>\n"
         f'<h1 class="report-title">{escape_html(BRAND_REPORT_NAME)}</h1>\n'
+        '<p class="hero-lede">Engineering Intelligence for the current '
+        "repository state. Optional AI enhancements do not replace findings or "
+        "recommendations.</p>\n"
         "</div>\n"
         f'<div class="hero-meta report-identity">\n{meta_html}</div>\n'
         '<div class="hero-kpis">\n'
@@ -637,8 +780,10 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
         meta = (
             '<dl class="meta">\n'
             f"<div><dt>Finding ID</dt>"
-            f"<dd><code>{escape_and_wrap(item.finding_id)}</code></dd></div>\n"
-            f"<div><dt>Rule ID</dt><dd><code>{escape_and_wrap(item.rule_id)}</code></dd></div>\n"
+            f"<dd><code class=\"trace-id\">{escape_and_wrap(item.finding_id)}</code></dd></div>\n"
+            f"<div><dt>Rule ID</dt>"
+            f"<dd><code class=\"trace-id\" title=\"Rule ID\">{escape_and_wrap(item.rule_id)}"
+            "</code></dd></div>\n"
             f"<div><dt>Category</dt><dd>{escape_html(item.category)}</dd></div>\n"
             f"<div><dt>Affected nodes</dt><dd>{nodes}</dd></div>\n"
             "</dl>\n"
@@ -646,6 +791,13 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
     description = ""
     if not compact:
         description = f'<p class="card-desc">{escape_html(item.description)}</p>\n'
+    # Compact cards keep a subtle rule-id trail for engineers without cluttering executives.
+    trace = (
+        f'<p class="trace-line"><span class="meta-label">Rule</span> '
+        f'<code class="trace-id" title="Rule ID">{escape_and_wrap(item.rule_id)}</code></p>\n'
+        if compact
+        else ""
+    )
     return (
         f'<article class="item-card finding" id="finding-{escape_html(item.finding_id)}">\n'
         f'<header class="item-header">'
@@ -654,6 +806,7 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
         f"<strong>{escape_html(item.title)}</strong>"
         f"</header>\n"
         f"{description}"
+        f"{trace}"
         f"{meta}"
         f"{evidence}\n"
         "</article>"
@@ -2724,10 +2877,21 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
 def _render_footer(view: HtmlReportViewModel | None = None) -> str:
     engine = view.metadata.engine_version if view is not None else BRAND_VERSION
     report_version = view.metadata.report_version if view is not None else "3.0"
+    mode = (
+        view.summary.assessment_mode_label if view is not None else "Deterministic"
+    )
+    ai_status = view.metadata.ai_status if view is not None else "not_requested"
     return (
         '<footer class="site-footer">\n'
         f"<p>{escape_html(BRAND_FOOTER_LINE)}</p>\n"
-        f"<p>Report {escape_html(report_version)} · Engine {escape_html(engine)}</p>\n"
+        f"<p>{escape_html(BRAND_REPORT_NAME)} — current-state Engineering Intelligence. "
+        f"Mode: {escape_html(mode)}. AI status: "
+        f'<code class="trace-id">{escape_html(ai_status)}</code> '
+        "(optional; does not replace deterministic results).</p>\n"
+        "<p>This Community report does not include CodeStrata Platform portfolio, "
+        "executive, or Strategic Roadmap outputs.</p>\n"
+        f"<p>Report {escape_html(report_version)} · Engine {escape_html(engine)} · "
+        f"Design System: <span class=\"trace-id\">{escape_html(DESIGN_SYSTEM_REF)}</span></p>\n"
         f'<p class="copyright">© {escape_html(BRAND_NAME)}</p>\n'
         "</footer>"
     )
@@ -2791,135 +2955,187 @@ def _fmt_ms(value: float | None) -> str:
     return str(value)
 
 
-_CSS = """
-:root {
-  --bg: #f4f6f8;
-  --surface: #ffffff;
-  --ink: #1a1f24;
-  --muted: #5b6773;
-  --border: #e2e8ee;
-  --accent: #b57b48;
-  --accent-soft: #f6efe8;
-  --teal: #68a691;
-  --shadow: 0 10px 30px rgba(26, 31, 36, 0.06);
-  --radius: 14px;
-  --critical: #b42318;
-  --high: #c4320a;
-  --medium: #a15c07;
-  --low: #0f7b6c;
-  --info: #3e4c59;
-  --ai: #0b6e99;
-}
-* { box-sizing: border-box; }
-body {
+_CSS = f"""
+{DESIGN_TOKENS_CSS}
+* {{ box-sizing: border-box; }}
+body {{
   margin: 0;
   background:
     radial-gradient(1200px 500px at 10% -10%, #efe6dc 0%, transparent 55%),
     radial-gradient(900px 400px at 100% 0%, #e7eef2 0%, transparent 50%),
     var(--bg);
   color: var(--ink);
-  font: 15px/1.55 "Source Sans 3", "IBM Plex Sans", "Segoe UI", sans-serif;
-}
-.page { max-width: 1120px; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
-.toc {
+  font: 17px/1.6 var(--cs-font-sans);
+}}
+.skip-link {{
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  z-index: 100;
+  border: 1px solid var(--border);
+}}
+.skip-link:focus {{
+  left: 1rem;
+  top: 1rem;
+}}
+.page {{ max-width: var(--cs-max-content); margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }}
+.toc {{
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.1rem 1.35rem 1.2rem;
   margin-bottom: 1.25rem;
-}
-.toc ol {
+}}
+.toc ol {{
   margin: 0.35rem 0 0;
   padding-left: 1.25rem;
   columns: 2;
   column-gap: 2rem;
-}
-.toc li { break-inside: avoid; margin: 0.25rem 0; }
-.toc a {
+}}
+.toc li {{ break-inside: avoid; margin: 0.25rem 0; }}
+.toc a {{
   color: var(--ink);
   text-decoration: none;
   border-bottom: 1px solid transparent;
-}
-.toc a:hover { border-bottom-color: var(--accent); color: var(--accent); }
-.takeaways {
+}}
+.toc a:hover, .toc a:focus {{
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}}
+.section-eyebrow {{
+  margin: 0 0 0.35rem;
+  font-family: var(--cs-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}}
+.section-eyebrow span {{ color: var(--accent); }}
+.section-note {{
+  margin: 0 0 1rem;
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}}
+.section-head h2 {{
+  margin: 0 0 0.5rem;
+  font-family: var(--cs-font-display);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  text-wrap: balance;
+  max-width: 680px;
+}}
+.section {{
+  margin: 1.75rem 0 0;
+  padding: 1.35rem 0 0;
+  border-top: 1px solid var(--border);
+}}
+.section:first-of-type {{ border-top: 0; }}
+.section-anchor-only {{
+  /* Keep deep-link anchors without adding executive visual noise. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}}
+.takeaways {{
   margin: 0.35rem 0 0;
   padding-left: 1.2rem;
-}
-.takeaways li {
+}}
+.takeaways li {{
   margin: 0.45rem 0;
   line-height: 1.5;
   max-width: 62rem;
-}
-.section-verdict {
+  text-wrap: pretty;
+}}
+.section-verdict {{
   margin: 1.25rem 0 0;
-}
-.verdict-body {
+}}
+.verdict-body {{
   margin: 0.35rem 0 0;
   font-size: 1.12rem;
   line-height: 1.6;
   max-width: 46rem;
   color: var(--ink);
-}
-.exec-narrative h3 {
+  text-wrap: pretty;
+}}
+.exec-narrative h3 {{
   margin: 1rem 0 0.35rem;
-  font-size: 1rem;
-}
-.exec-narrative p {
+  font-size: 1.08rem;
+  font-weight: 640;
+  font-family: var(--cs-font-sans);
+}}
+.exec-narrative p {{
   margin: 0;
-  max-width: 46rem;
-  line-height: 1.55;
-}
-.ema-lede {
-  margin: 0 0 1rem;
-  font-size: 1.05rem;
-  line-height: 1.55;
-  max-width: 46rem;
-  color: var(--ink);
-}
-.subsection {
-  margin: 1.1rem 0 0;
-  padding: 1rem 0 0;
-  border-top: 1px solid var(--border);
-}
-.subsection:first-of-type { border-top: 0; padding-top: 0; }
-.section-capability > .section-head h2 { margin-bottom: 0.25rem; }
-.report-identity { margin-bottom: 1rem; }
-.hero {
-  background: linear-gradient(180deg, #fff 0%, #fbfcfd 100%);
+  max-width: 60ch;
+  text-wrap: pretty;
+}}
+.hero {{
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) + 4px);
   box-shadow: var(--shadow);
   padding: 1.5rem 1.6rem 1.35rem;
   margin-bottom: 1.25rem;
-}
-.hero-brand { margin-bottom: 1.1rem; }
-.brand-logo {
+}}
+.hero-brand {{ margin-bottom: 1.1rem; }}
+.brand-logo {{
   display: block;
   width: 140px;
   height: 40px;
   max-width: 140px;
   object-fit: contain;
   margin-bottom: 0.85rem;
-}
-.brand-name {
+}}
+.brand-name {{
   margin: 0;
   font-size: 0.95rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
   font-weight: 650;
-}
-.report-title {
-  margin: 0.2rem 0 0;
-  font-size: clamp(1.55rem, 2.4vw, 2.05rem);
-  line-height: 1.15;
+  font-family: var(--cs-font-sans);
+}}
+.hero-eyebrow {{
+  margin: 0.55rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}}
+.report-title {{
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+  line-height: 1.08;
   letter-spacing: -0.02em;
   color: var(--ink);
-  font-family: "Fraunces", "Iowan Old Style", Georgia, serif;
-  font-weight: 650;
-}
-.hero-meta {
+  font-family: var(--cs-font-display);
+  font-weight: 600;
+  text-wrap: balance;
+}}
+.hero-lede {{
+  margin: 0.65rem 0 0;
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.4vw, 1.14rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}}
+.hero-meta {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.75rem;
@@ -2927,97 +3143,211 @@ body {
   padding: 0.85rem 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-}
-.meta-item { display: flex; flex-direction: column; gap: 0.15rem; }
-.meta-label {
-  font-size: 0.72rem;
+}}
+.meta-item {{ display: flex; flex-direction: column; gap: 0.15rem; }}
+.meta-label {{
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  font-weight: 650;
-}
-.meta-value { font-weight: 650; word-break: break-word; }
-.hero-kpis {
+  font-weight: 550;
+  font-family: var(--cs-font-sans);
+}}
+.meta-value {{ font-weight: 650; word-break: break-word; }}
+.hero-kpis {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 0.75rem;
-}
-.kpi {
+}}
+.kpi {{
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--cs-radius-control);
   padding: 0.9rem 1rem;
-}
-.kpi-label {
+}}
+.kpi-label {{
   margin: 0;
   color: var(--muted);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 650;
-}
-.kpi-value {
+}}
+.kpi-value {{
+  margin: 0.25rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 500;
+}}
+.trace-id {{
+  font-family: var(--cs-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}}
+.trace-line {{
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}}
+.site-footer {{
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}}
+.site-footer p {{ margin: 0.35rem 0; max-width: 70ch; }}
+.copyright {{ font-weight: 600; color: var(--ink); }}
+.ema-lede {{
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 46rem;
+  color: var(--ink);
+}}
+.subsection {{
+  margin: 1.1rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--border);
+}}
+.subsection:first-of-type {{ border-top: 0; padding-top: 0; }}
+.section-capability > .section-head h2 {{ margin-bottom: 0.25rem; }}
+.report-identity {{ margin-bottom: 1rem; }}
+.hero {{
+  background: linear-gradient(180deg, #fff 0%, #fbfcfd 100%);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.6rem 1.35rem;
+  margin-bottom: 1.25rem;
+}}
+.hero-brand {{ margin-bottom: 1.1rem; }}
+.brand-logo {{
+  display: block;
+  width: 140px;
+  height: 40px;
+  max-width: 140px;
+  object-fit: contain;
+  margin-bottom: 0.85rem;
+}}
+.brand-name {{
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 650;
+}}
+.report-title {{
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.55rem, 2.4vw, 2.05rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-family: "Fraunces", "Iowan Old Style", Georgia, serif;
+  font-weight: 650;
+}}
+.hero-meta {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}}
+.meta-item {{ display: flex; flex-direction: column; gap: 0.15rem; }}
+.meta-label {{
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 650;
+}}
+.meta-value {{ font-weight: 650; word-break: break-word; }}
+.hero-kpis {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}}
+.kpi {{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+}}
+.kpi-label {{
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 650;
+}}
+.kpi-value {{
   margin: 0.35rem 0 0;
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-}
-.kpi-hint { color: var(--muted); font-size: 0.85rem; }
-.kpi-score .kpi-value { color: var(--teal); }
-.kpi-severity-critical .kpi-value { color: var(--critical); }
-.kpi-severity-high .kpi-value { color: var(--high); }
-.kpi-severity-medium .kpi-value { color: var(--medium); }
-.kpi-severity-low .kpi-value { color: var(--low); }
+}}
+.kpi-hint {{ color: var(--muted); font-size: 0.85rem; }}
+.kpi-score .kpi-value {{ color: var(--teal); }}
+.kpi-severity-critical .kpi-value {{ color: var(--critical); }}
+.kpi-severity-high .kpi-value {{ color: var(--high); }}
+.kpi-severity-medium .kpi-value {{ color: var(--medium); }}
+.kpi-severity-low .kpi-value {{ color: var(--low); }}
 .kpi-severity-informational .kpi-value,
 .kpi-severity-none-detected .kpi-value,
-.kpi-severity-unknown .kpi-value { color: var(--info); }
-.stat-hint {
+.kpi-severity-unknown .kpi-value {{ color: var(--info); }}
+.stat-hint {{
   margin: 0.2rem 0 0;
   color: var(--muted);
   font-size: 0.82rem;
-}
-.section {
+}}
+.section {{
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 1.2rem 1.3rem 1.35rem;
   margin: 0 0 1rem;
-}
-.section-head h2 {
+}}
+.section-head h2 {{
   margin: 0;
   font-size: 1.15rem;
   letter-spacing: -0.01em;
-}
-.section-note, .muted, .provenance { color: var(--muted); }
-.section-note { margin: 0.35rem 0 0.9rem; font-size: 0.9rem; }
-.stat-grid {
+}}
+.section-note, .muted, .provenance {{ color: var(--muted); }}
+.section-note {{ margin: 0.35rem 0 0.9rem; font-size: 0.9rem; }}
+.stat-grid {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 0.75rem;
-}
-.stat-card {
+}}
+.stat-card {{
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.9rem 0.95rem;
   background: linear-gradient(180deg, #fff, #fafbfc);
-}
-.stat-label {
+}}
+.stat-label {{
   margin: 0;
   color: var(--muted);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 650;
-}
-.stat-value {
+}}
+.stat-value {{
   margin: 0.35rem 0 0;
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-}
-.tech-badges { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1rem; }
-.tech-badge {
+}}
+.tech-badges {{ display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1rem; }}
+.tech-badge {{
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -3026,60 +3356,60 @@ body {
   border: 1px solid var(--border);
   background: #f8fafb;
   font-weight: 650;
-}
-.tech-badge em {
+}}
+.tech-badge em {{
   font-style: normal;
   color: var(--muted);
   font-weight: 550;
   font-size: 0.85em;
-}
-.table-card { margin-top: 0.5rem; }
-.severity-grid {
+}}
+.table-card {{ margin-top: 0.5rem; }}
+.severity-grid {{
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.65rem;
   margin-bottom: 1rem;
-}
-.severity-card {
+}}
+.severity-card {{
   border-radius: 12px;
   border: 1px solid var(--border);
   padding: 0.85rem 0.7rem;
   text-align: center;
   background: #fafbfc;
-}
-.severity-label {
+}}
+.severity-label {{
   margin: 0;
   text-transform: uppercase;
   font-size: 0.7rem;
   letter-spacing: 0.06em;
   color: var(--muted);
   font-weight: 700;
-}
-.severity-count {
+}}
+.severity-count {{
   margin: 0.35rem 0 0;
   font-size: 1.6rem;
   font-weight: 750;
-}
-.severity-critical { background: #fef3f2; }
-.severity-critical .severity-count { color: var(--critical); }
-.severity-high { background: #fff4ed; }
-.severity-high .severity-count { color: var(--high); }
-.severity-medium { background: #fffaeb; }
-.severity-medium .severity-count { color: var(--medium); }
-.severity-low { background: #edfcf7; }
-.severity-low .severity-count { color: var(--low); }
-.severity-informational { background: #f4f6f8; }
-.card-stack { display: grid; gap: 0.7rem; }
-.item-card {
+}}
+.severity-critical {{ background: #fef3f2; }}
+.severity-critical .severity-count {{ color: var(--critical); }}
+.severity-high {{ background: #fff4ed; }}
+.severity-high .severity-count {{ color: var(--high); }}
+.severity-medium {{ background: #fffaeb; }}
+.severity-medium .severity-count {{ color: var(--medium); }}
+.severity-low {{ background: #edfcf7; }}
+.severity-low .severity-count {{ color: var(--low); }}
+.severity-informational {{ background: #f4f6f8; }}
+.card-stack {{ display: grid; gap: 0.7rem; }}
+.item-card {{
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.9rem 1rem;
   background: #fff;
-}
-.item-header { margin-bottom: 0.45rem; }
-.card-desc { margin: 0.35rem 0 0.55rem; }
-.chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.35rem 0 0.55rem; }
-.chip {
+}}
+.item-header {{ margin-bottom: 0.45rem; }}
+.card-desc {{ margin: 0.35rem 0 0.55rem; }}
+.chip-row {{ display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.35rem 0 0.55rem; }}
+.chip {{
   display: inline-flex;
   gap: 0.35rem;
   align-items: baseline;
@@ -3088,25 +3418,25 @@ body {
   background: var(--accent-soft);
   border: 1px solid #ead9c8;
   font-size: 0.82rem;
-}
-.chip em {
+}}
+.chip em {{
   font-style: normal;
   color: var(--muted);
   font-size: 0.72rem;
   text-transform: uppercase;
-}
-.outcome { margin: 0; color: var(--ink); }
-.outcome em {
+}}
+.outcome {{ margin: 0; color: var(--ink); }}
+.outcome em {{
   font-style: normal;
   color: var(--muted);
   margin-right: 0.35rem;
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
-}
-.roadmap { display: grid; gap: 1rem; }
-.roadmap-lane h3 { margin: 0 0 0.55rem; font-size: 1rem; }
-.count-pill {
+}}
+.roadmap {{ display: grid; gap: 1rem; }}
+.roadmap-lane h3 {{ margin: 0 0 0.55rem; font-size: 1rem; }}
+.count-pill {{
   display: inline-block;
   margin-left: 0.35rem;
   padding: 0.05rem 0.45rem;
@@ -3114,17 +3444,17 @@ body {
   background: #eef2f6;
   color: var(--muted);
   font-size: 0.78rem;
-}
-.section-ai {
+}}
+.section-ai {{
   border-color: #9cc5d9;
   background: linear-gradient(180deg, #f4fafc, #fff);
-}
-.td-test-observation {
+}}
+.td-test-observation {{
   border-left: 3px solid #9aa7b5;
   background: #f7f8fa;
-}
-.ai-panel { padding: 0.15rem; }
-.ai-banner {
+}}
+.ai-panel {{ padding: 0.15rem; }}
+.ai-banner {{
   background: #e6f4f8;
   color: var(--ai);
   border: 1px solid #9cc5d9;
@@ -3132,9 +3462,9 @@ body {
   padding: 0.7rem 0.85rem;
   margin: 0 0 0.9rem;
   font-weight: 600;
-}
-.ai-headline { margin: 0 0 0.45rem; font-size: 1.2rem; }
-.badge {
+}}
+.ai-headline {{ margin: 0 0 0.45rem; font-size: 1.2rem; }}
+.badge {{
   display: inline-block;
   padding: 0.12rem 0.5rem;
   border-radius: 999px;
@@ -3142,93 +3472,96 @@ body {
   font-weight: 750;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-}
+}}
 .severity-critical,
 .priority-immediate,
-.priority-critical { background: #fde8e8; color: var(--critical); }
-.severity-high, .priority-high { background: #feecdc; color: var(--high); }
-.severity-medium, .priority-medium { background: #fbf1de; color: var(--medium); }
+.priority-critical {{ background: #fde8e8; color: var(--critical); }}
+.severity-high, .priority-high {{ background: #feecdc; color: var(--high); }}
+.severity-medium, .priority-medium {{ background: #fbf1de; color: var(--medium); }}
 .severity-low,
 .priority-low,
 .severity-informational,
-.severity-info { background: #e1f5f0; color: var(--low); }
-.meta {
+.severity-info {{ background: #e1f5f0; color: var(--low); }}
+.meta {{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.35rem 1rem;
   margin: 0.5rem 0;
-}
-.meta dt {
+}}
+.meta dt {{
   font-size: 0.72rem;
   color: var(--muted);
   text-transform: uppercase;
   margin: 0;
   letter-spacing: 0.04em;
-}
-.meta dd { margin: 0.1rem 0 0; }
-code, .cmd {
+}}
+.meta dd {{ margin: 0.1rem 0 0; }}
+code, .cmd {{
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-size: 0.85em;
   word-break: break-word;
-}
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
-th, td {
+}}
+.table-wrap {{ overflow-x: auto; }}
+table {{ width: 100%; border-collapse: collapse; font-size: 0.92rem; }}
+th, td {{
   border-bottom: 1px solid var(--border);
   text-align: left;
   padding: 0.5rem 0.35rem;
   vertical-align: top;
-}
-th { color: var(--muted); font-weight: 650; }
-.evidence { margin-top: 0.45rem; }
-.evidence summary, .tech-block summary {
+}}
+th {{ color: var(--muted); font-weight: 650; }}
+.evidence {{ margin-top: 0.45rem; }}
+.evidence summary, .tech-block summary {{
   cursor: pointer;
   color: var(--ink);
   font-weight: 650;
-}
-.tech-block {
+}}
+.tech-block {{
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.75rem 0.9rem;
   margin: 0 0 0.7rem;
   background: #fbfcfd;
-}
-.tech-block summary { list-style: none; }
-.tech-block summary::-webkit-details-marker { display: none; }
-.ids { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
-.actions { padding-left: 1.2rem; }
-.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.plain { margin: 0; padding-left: 1.1rem; }
-.more-note { margin-top: 0.75rem; }
-.site-footer {
+}}
+.tech-block summary {{ list-style: none; }}
+.tech-block summary::-webkit-details-marker {{ display: none; }}
+.ids {{ color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }}
+.actions {{ padding-left: 1.2rem; }}
+.split {{ display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }}
+.plain {{ margin: 0; padding-left: 1.1rem; }}
+.more-note {{ margin-top: 0.75rem; }}
+.site-footer {{
   margin-top: 1.5rem;
   padding: 1.25rem 0.25rem 0.5rem;
   text-align: center;
   color: var(--muted);
   border-top: 1px solid var(--border);
-}
-.site-footer p { margin: 0.15rem 0; font-size: 0.9rem; }
-.site-footer strong { color: var(--ink); }
-.copyright { margin-top: 0.45rem !important; opacity: 0.85; }
-@media (max-width: 820px) {
-  .severity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .split { grid-template-columns: 1fr; }
-}
-@media (max-width: 560px) {
-  .page { padding: 1rem 0.85rem 2rem; }
-}
-@media print {
-  @page { margin: 1.4cm; }
-  body { background: #fff; color: #000; }
-  .page { max-width: none; padding: 0; }
-  .toc { box-shadow: none; columns: 1; break-after: page; }
-  .toc a { text-decoration: none; color: #000; }
-  .hero { box-shadow: none; break-after: page; }
-  .section, .subsection, .item-card, .stat-card, .kpi {
+}}
+.site-footer p {{ margin: 0.15rem 0; font-size: 0.9rem; }}
+.site-footer strong {{ color: var(--ink); }}
+.copyright {{ margin-top: 0.45rem !important; opacity: 0.85; }}
+@media (max-width: 820px) {{
+  .severity-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+  .split {{ grid-template-columns: 1fr; }}
+}}
+@media (max-width: 560px) {{
+  .page {{ padding: 1rem 0.85rem 2rem; }}
+}}
+@media print {{
+  @page {{ margin: 1.4cm; }}
+  body {{ background: #fff; color: #000; }}
+  .skip-link {{ display: none !important; }}
+  .section-anchor-only {{ display: none !important; }}
+  .page {{ max-width: none; padding: 0; }}
+  .toc {{ box-shadow: none; columns: 1; break-after: page; }}
+  .toc a {{ text-decoration: none; color: #000; }}
+  .hero {{ box-shadow: none; break-after: page; }}
+  .section, .subsection, .item-card, .stat-card, .kpi {{
     break-inside: avoid;
     box-shadow: none;
-  }
-  .hero-kpis { break-inside: avoid; }
-  .site-footer { border-top: 1px solid #ccc; }
-}
-"""
+  }}
+  .hero-kpis {{ break-inside: avoid; }}
+  .site-footer {{ border-top: 1px solid #ccc; }}
+  a {{ color: inherit; text-decoration: none; }}
+}}
+""".rstrip()

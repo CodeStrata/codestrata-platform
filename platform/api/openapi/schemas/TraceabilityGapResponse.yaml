@@ -1,0 +1,18 @@
+TraceabilityGapResponse:
+  properties:
+    gap_type:
+      type: string
+      title: Gap Type
+    node_id:
+      type: string
+      title: Node Id
+    message:
+      type: string
+      title: Message
+  additionalProperties: false
+  type: object
+  required:
+  - gap_type
+  - node_id
+  - message
+  title: TraceabilityGapResponse

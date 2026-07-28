@@ -1,56 +1,37 @@
 # MCP Tools
 
-All repository-intelligence tools return a common envelope
-(`mcp-tool-response` 1.0.0):
+<!-- documentation-visibility: public-contract -->
 
-- `schema_name` / `schema_version`
-- `request_id` (deterministic fingerprint)
-- `tool_name`
-- `status` — `success` | `partial` | `empty` | `insufficient_evidence` | `disabled` | `failed`
-- `data`
-- `coverage`
-- `diagnostics`
-- `limitations`
-- `generated_at` — `"deterministic"` in this phase
-- `fingerprint`
+Community Engine tools register with the local MCP server when
+`[mcp].enabled=true`. Discover the live catalog with `codestrata mcp tools`.
 
-## repository_search
+**CodeStrata Platform** may register additional organizational tools when the
+Platform package is installed. Those tools and wire contracts are Platform
+documentation — they are not part of the Community catalog below.
 
-Delegates to `RepositoryRetriever`. Required: `query`, `tenant_id`, `repository_id`.
-Omits embeddings and database information.
+## Community Engine tools (local)
 
-## repository_answer
+| Tool (examples) | Inputs | Outputs | AI |
+| --------------- | ------ | ------- | -- |
+| `list_repositories` / `get_repository` | id / limit | repository summaries | No |
+| `list_assessments` / `get_assessment` / `get_latest_assessment` | repository / run_id | assessment metadata | No |
+| `list_findings` / `get_finding` / `explain_finding` | run_id / filters | findings | No |
+| `list_recommendations` / … | run_id / filters | recommendations | No |
+| `run_assessment` | repository, `with_ai` | run ids + counts | Optional (`with_ai`) |
+| `get_ai_execution` / `get_ai_enrichment` | run_id | optional AI artifacts | Artifact may be absent |
+| rules / evidence / architecture / incremental / agents | vary | bounded JSON | Agents may use client model |
 
-Delegates to `GroundedAnswerEngine`. Label: **deterministic extractive** —
-not generative AI / not production. Provider identity is included in `data.provider`
-and `data.provider_notes`.
-
-## repository_findings / repository_recommendations
-
-Read Phase 3 findings/recommendations for the latest completed assessment of
-`repository_id` via `KnowledgeQueryService`. No arbitrary report-file reads.
-
-## repository_assessments
-
-Assessment summaries and counts for a repository scope.
-
-## repository_files
-
-Indexed file knowledge only (vector/retrieval scope). No arbitrary filesystem access.
-
-## Pack tools
-
-`repository_architecture`, `repository_security`, `repository_dependencies`,
-`repository_tests`, `repository_cloud`, `repository_ai_readiness`,
-`repository_performance` — filter findings/recommendations by intelligence pack.
-
-## repository_health
-
-Sanitized dependency health: transport, retrieval/answer availability, vector-store
-provider type, embedding/answer provider identity. Never credentials or URLs.
+Optional AI uses **Engine AI provider credentials** in `codestrata.toml` /
+environment — never `CODESTRATA_PLATFORM_API_KEY`.
 
 ## Result bounding
 
 When `max_result_characters` is exceeded, complete lower-priority collections are
 omitted (never mid-JSON truncation), status becomes `partial`, and diagnostics
 record exclusions.
+
+## Related
+
+- [overview.md](overview.md) — principles and boundary
+- [setup.md](setup.md) — enable and serve
+- [client-examples.md](client-examples.md)

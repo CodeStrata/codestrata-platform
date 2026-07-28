@@ -10,18 +10,50 @@ from pydantic import BaseModel, ConfigDict, Field
 class AskAnswerRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    question: str = Field(min_length=1, max_length=2000)
-    organization_id: str = Field(min_length=1)
-    workspace_id: str = Field(min_length=1)
-    repository_id: str | None = Field(default=None, min_length=1)
-    retrieval_index_id: str | None = Field(default=None, min_length=1)
-    question_type: str | None = Field(default=None, min_length=1, max_length=64)
-    canonical_ids: list[str] | None = None
-    graph_node_ids: list[str] | None = None
-    content_types: list[str] | None = None
-    include_diagnostics: bool = False
-    use_cache: bool = True
-
+    question: str = Field(
+        min_length=1,
+        max_length=2000,
+        description="Natural-language question over repository engineering knowledge",
+        examples=["What are the highest severity findings?"],
+    )
+    organization_id: str = Field(min_length=1, description="Organization id")
+    workspace_id: str = Field(min_length=1, description="Workspace id")
+    repository_id: str | None = Field(
+        default=None,
+        min_length=1,
+        description="Repository id (required for POST /answers)",
+    )
+    retrieval_index_id: str | None = Field(
+        default=None,
+        min_length=1,
+        description="Optional retrieval index pin; defaults to latest when omitted",
+    )
+    question_type: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=64,
+        description="Optional question type hint",
+    )
+    canonical_ids: list[str] | None = Field(
+        default=None,
+        description="Optional canonical engineering ids to scope retrieval",
+    )
+    graph_node_ids: list[str] | None = Field(
+        default=None,
+        description="Optional knowledge-graph node ids to scope retrieval",
+    )
+    content_types: list[str] | None = Field(
+        default=None,
+        description="Optional retrieval content-type filters",
+    )
+    include_diagnostics: bool = Field(
+        default=False,
+        description="Include diagnostics in the answer payload when true",
+    )
+    use_cache: bool = Field(
+        default=True,
+        description="Allow cached answer reuse when true",
+    )
 
 class AnswerCitationResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")

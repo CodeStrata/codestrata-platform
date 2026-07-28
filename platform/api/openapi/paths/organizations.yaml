@@ -1,0 +1,240 @@
+paths:
+  /api/v1/organizations:
+    post:
+      tags:
+      - Organizations
+      summary: Create organization
+      operationId: create_organization_api_v1_organizations_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+            examples:
+              createOrganization:
+                summary: Create an organization
+                value:
+                  name: Acme Engineering
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '401':
+          description: Missing or invalid Platform API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseDto'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal
+    get:
+      tags:
+      - Organizations
+      summary: List organizations
+      operationId: list_organizations_api_v1_organizations_get
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Size
+      - name: sort
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sort
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDto_OrganizationResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal
+  /api/v1/organizations/{organization_id}:
+    get:
+      tags:
+      - Organizations
+      summary: Get organization
+      operationId: get_organization_api_v1_organizations__organization_id__get
+      parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal
+    patch:
+      tags:
+      - Organizations
+      summary: Update organization
+      operationId: update_organization_api_v1_organizations__organization_id__patch
+      parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal
+    delete:
+      tags:
+      - Organizations
+      summary: Archive organization (deactivate)
+      operationId: archive_organization_api_v1_organizations__organization_id__delete
+      parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal
+  /api/v1/organizations/{organization_id}/workspaces:
+    get:
+      tags:
+      - Organizations
+      summary: List workspaces for an organization
+      operationId: list_organization_workspaces_api_v1_organizations__organization_id__workspaces_get
+      parameters:
+      - name: organization_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Organization Id
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Size
+      - name: sort
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sort
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageResponseDto_WorkspaceResponse_'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      x-codestrata-status: implemented
+      x-codestrata-owner: platform-tenancy
+      x-codestrata-audience: internal

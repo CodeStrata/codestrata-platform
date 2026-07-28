@@ -1,0 +1,38 @@
+RepositorySummaryResponse:
+  properties:
+    id:
+      type: string
+      title: Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    organization_id:
+      type: string
+      title: Organization Id
+    display_name:
+      type: string
+      title: Display Name
+    provider:
+      type: string
+      title: Provider
+    repository_url:
+      type: string
+      title: Repository Url
+    status:
+      type: string
+      title: Status
+    visibility:
+      type: string
+      title: Visibility
+  additionalProperties: false
+  type: object
+  required:
+  - id
+  - workspace_id
+  - organization_id
+  - display_name
+  - provider
+  - repository_url
+  - status
+  - visibility
+  title: RepositorySummaryResponse

@@ -18,8 +18,8 @@ PRODUCT_NAME = "CodeStrata"
 
 # Fallbacks must stay aligned with pyproject.toml / codestrata.__version__.
 _FALLBACK_SUMMARY = (
-    "CodeStrata: deterministic assessment, knowledge, and modernization "
-    "tooling for legacy enterprise applications."
+    "CodeStrata Engine: deterministic Engineering Assessment and "
+    "Engineering Intelligence for software repositories."
 )
 _FALLBACK_HOMEPAGE = "https://github.com/sknampally/codestrata"
 _FALLBACK_REPOSITORY = "https://github.com/sknampally/codestrata"
@@ -131,8 +131,8 @@ def format_version_details() -> str:
             f"Engine: {get_package_version()}",
             f"Extension API: {EXTENSION_API_VERSION}",
             f"Report HTML: {REPORT_HTML_VERSION}",
-            f"AI provider (default): {ai_provider}",
-            f"AI model (default): {ai_model}",
+            f"AI provider (optional default): {ai_provider}",
+            f"AI model (optional default): {ai_model}",
             f"Python: {platform.python_version()}",
             f"Platform: {platform.system()}",
         )
@@ -148,6 +148,13 @@ def format_about() -> str:
             f"{PRODUCT_NAME} {info.version}",
             "",
             info.summary,
+            "",
+            "Products: CodeStrata Engine (Community Edition) · CodeStrata Platform",
+            "AI is optional: connect your own supported provider; deterministic "
+            "Engineering Assessment works without AI.",
+            "Source code is not retained by CodeStrata unless you explicitly "
+            "configure retention.",
+            "Branding: governance/assets/DESIGN-SYSTEM.md",
             "",
             f"Website: {info.website}",
             f"GitHub: {info.github}",

@@ -1,0 +1,56 @@
+ExecutiveFindingResponse:
+  properties:
+    finding_id:
+      type: string
+      title: Finding Id
+    category:
+      type: string
+      title: Category
+    title:
+      type: string
+      title: Title
+    summary:
+      type: string
+      title: Summary
+    severity_band:
+      type: string
+      title: Severity Band
+    confidence:
+      type: number
+      title: Confidence
+    confidence_band:
+      type: string
+      title: Confidence Band
+    affected_repository_ids:
+      items:
+        type: string
+      type: array
+      title: Affected Repository Ids
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+    evidence:
+      items:
+        type: string
+      type: array
+      title: Evidence
+    policy_version:
+      type: string
+      title: Policy Version
+  additionalProperties: false
+  type: object
+  required:
+  - finding_id
+  - category
+  - title
+  - summary
+  - severity_band
+  - confidence
+  - confidence_band
+  - affected_repository_ids
+  - source_references
+  - evidence
+  - policy_version
+  title: ExecutiveFindingResponse

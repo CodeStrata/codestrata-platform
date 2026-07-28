@@ -1,67 +1,61 @@
-# Community Engine documentation
+# CodeStrata Engine documentation
 
-Audience: Community Edition users and Engine contributors.
-Owner: `engine/` (exported as `codestrata-engine`).
+<!-- documentation-visibility: public-contributor -->
 
-## Start here
+**Audience:** Engine maintainers and Community contributors working on the Engine.
+
+**Public product documentation** (install, first assessment, reports, extensions,
+Community vs Platform) lives in the documentation portal:
+
+- Canonical public URL: [https://docs.codestrata.ai](https://docs.codestrata.ai)
+
+```text
+Public journeys  →  docs.codestrata.ai (codestrata-docs)
+Engine contracts →  docs/ in this repository (codestrata-engine)
+```
+
+Do **not** duplicate end-user tutorials here. Journey pages below are pointers
+to the public portal.
+
+## Public journey pointers
+
+| Topic | Pointer |
+| ----- | ------- |
+| Getting Started | [getting-started.md](getting-started.md) |
+| Installation | [installation.md](installation.md) |
+| Quick Start | [quick-start.md](quick-start.md) |
+| First assessment | [tutorial.md](tutorial.md) |
+| Reports | [report-interpretation.md](report-interpretation.md) |
+| AI Providers | [ai-enrichment.md](ai-enrichment.md) |
+| CLI (overview) | [cli-reference.md](cli-reference.md) |
+| Examples | [examples.md](examples.md) |
+| Community vs Platform | [community-vs-platform.md](community-vs-platform.md) |
+| Troubleshooting | [troubleshooting.md](troubleshooting.md) |
+
+## Engine technical documentation (canonical here)
 
 | Document | Description |
 | -------- | ----------- |
-| [community-edition.md](community-edition.md) | Community Edition scope |
-| [extension-architecture.md](extension-architecture.md) | Extension API, entry points, namespaces |
-| [quick-start.md](quick-start.md) | Fast path to a report |
-| [installation.md](installation.md) | Install and extras |
-| [tutorial.md](tutorial.md) | Install → assess → findings → MCP |
-| [cli-reference.md](cli-reference.md) | Command reference and exit codes |
-| [configuration-profiles.md](configuration-profiles.md) | Execution profiles |
-| [report-interpretation.md](report-interpretation.md) | How to read HTML/JSON reports |
-| [troubleshooting.md](troubleshooting.md) | Common failures |
-| [contributor-guide.md](contributor-guide.md) | Contributing workflow |
-| [mcp/README.md](mcp/README.md) | MCP documentation index |
-| [COMMUNITY_EDITION_CHECKLIST.md](COMMUNITY_EDITION_CHECKLIST.md) | Public release checklist |
-| [RELEASE_NOTES-0.1.0.md](RELEASE_NOTES-0.1.0.md) | 0.1.0 release notes draft |
-
-## Product guides
-
-| Document | Description |
-| -------- | ----------- |
-| [architecture-guide.md](architecture-guide.md) | Developer architecture map |
-| [runtime.md](runtime.md) | End-to-end `codestrata assess` runtime |
-| [runtime-performance.md](runtime-performance.md) | Runtime performance controls |
-| [knowledge-store.md](knowledge-store.md) | Local engineering knowledge store |
-| [agent-framework.md](agent-framework.md) | Agent Framework + CLI/MCP adapters |
-| [analysis-intelligence/README.md](analysis-intelligence/README.md) | Analysis Intelligence verticals |
-| [assessment-framework/README.md](assessment-framework/README.md) | Assessment methodology contracts |
-| [capabilities.md](capabilities.md) | Capability status matrix |
-| [roadmap.md](roadmap.md) | Pointer to monorepo roadmap |
-| [mcp-server.md](mcp-server.md) | FastMCP server hub |
-| [repository-graph.md](repository-graph.md) | Inventory and repository graph |
-| [assessment-graph.md](assessment-graph.md) | Assessment graph projection |
-| [rule-engine.md](rule-engine.md) | Deterministic findings |
-| [recommendation-engine.md](recommendation-engine.md) | Deterministic recommendations |
-| [ai-enrichment.md](ai-enrichment.md) | Optional AI narrative enrichment |
-| [report-generation.md](report-generation.md) | HTML Report v2 and JSON artifacts |
+| [configuration-profiles.md](configuration-profiles.md) | Profiles and Engine configuration depth |
+| [public-contracts.md](public-contracts.md) | Community SDK/CLI contracts |
 | [report-contract.md](report-contract.md) | Report schema contract |
-| [repository-onboarding.md](repository-onboarding.md) | Onboarding |
-| [incremental-assessment.md](incremental-assessment.md) | Incremental assessment |
-| [modernization-roadmap.md](modernization-roadmap.md) | Deterministic modernization roadmap |
-| [coding-standards.md](coding-standards.md) | Coding standards |
-| [security/](security/) | Threat model and hardening notes |
+| [report-generation.md](report-generation.md) | HTML/JSON generation |
+| [capabilities.md](capabilities.md) | Capability matrix |
+| [runtime.md](runtime.md) | Assess runtime |
+| [architecture-guide.md](architecture-guide.md) | Architecture overview |
+| [architecture/](architecture/) | Architecture deep dives |
+| [mcp/README.md](mcp/README.md) | MCP technical reference |
+| [apis.md](apis.md) | Integration surfaces |
+| [security/](security/) | Threat model / hardening |
+| [extension-architecture.md](extension-architecture.md) | Extension API |
+| [contributor-guide.md](contributor-guide.md) | Engine contributor guide |
+| [RELEASE_NOTES-0.1.0.md](RELEASE_NOTES-0.1.0.md) | Engine release notes |
 
-## Platform topics (not Community Engine docs)
+Deep analysis-intelligence and assessment-framework methodology docs remain in
+the private monorepo until public contributor editions are published.
 
-RAG, persistent Knowledge Graph, and commercial Platform capabilities are
-documented under the private monorepo tree:
+## Related entry points
 
-* [platform/docs/](../../platform/docs/README.md)
-* [platform/docs/rag/](../../platform/docs/rag/README.md) (Repository Knowledge Layer)
-
-Stub: [repository-knowledge/README.md](repository-knowledge/README.md).
-
-## Related root entry points
-
-* [README.md](../../README.md) (monorepo) · [engine/README.md](../README.md)
-* [ARCHITECTURE.md](../../ARCHITECTURE.md)
-* [platform/README.md](../../platform/README.md) (maintainer handbook)
-* [examples/README.md](../../examples/README.md) (real-world showcases)
-* [test-fixtures/README.md](../../test-fixtures/README.md) (internal samples)
+- [engine README](../README.md)
+- [CONTRIBUTING.md](../CONTRIBUTING.md)
+- [https://docs.codestrata.ai](https://docs.codestrata.ai)

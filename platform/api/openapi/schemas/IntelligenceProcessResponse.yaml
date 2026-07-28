@@ -1,0 +1,47 @@
+IntelligenceProcessResponse:
+  properties:
+    intelligence_id:
+      type: string
+      title: Intelligence Id
+    assessment_id:
+      type: string
+      title: Assessment Id
+    revision:
+      type: integer
+      title: Revision
+    status:
+      type: string
+      title: Status
+    created:
+      type: boolean
+      title: Created
+    idempotent:
+      type: boolean
+      title: Idempotent
+    finding_count:
+      type: integer
+      title: Finding Count
+    metric_count:
+      type: integer
+      title: Metric Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+  additionalProperties: false
+  type: object
+  required:
+  - intelligence_id
+  - assessment_id
+  - revision
+  - status
+  - created
+  - idempotent
+  - finding_count
+  - metric_count
+  - recommendation_count
+  title: IntelligenceProcessResponse

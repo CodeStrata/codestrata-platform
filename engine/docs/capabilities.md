@@ -6,7 +6,7 @@
 | Engineering knowledge store | Available |
 | MCP + agents | Available |
 | Incremental assessment (opt-in) | Available |
-| Enterprise Knowledge Graph (YAML) | Available (optional) |
+| Engineering Knowledge Graph (YAML; Platform) | Available (optional) |
 | Shared Rule Platform (4.1) | Available (disabled by default) |
 | Rule Platform Integration Bridge (4.1.1) | Available (compatibility layer) |
 | Assessment Framework methodology (4.1.2) | Documented |

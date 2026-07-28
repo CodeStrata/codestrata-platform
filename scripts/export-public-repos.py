@@ -44,7 +44,9 @@ _PRUNE_DIR_NAMES = frozenset(
         ".eggs",
         "pgdata",
         "pgdata17",
-        "reports",
+        # Do not prune every directory named "reports" — docs/reports is public portal content.
+        ".vscode-test",
+        "visual-baselines",
     }
 )
 

@@ -106,13 +106,38 @@ REQUIRED_PATHS = {
     "/api/v1/executive-intelligence/{executive_intelligence_id}/overview",
 }
 
+REQUIRED_TAGS = {
+    "Organizations",
+    "Workspaces",
+    "Repositories",
+    "Assessments",
+    "Assessment Intelligence",
+    "Ingestion",
+    "Ingestion Artifacts",
+    "Ingestion Intelligence",
+    "Engineering Intelligence",
+    "Knowledge Graphs",
+    "Knowledge Graph Intelligence",
+    "Retrieval",
+    "Answering",
+    "Portfolio",
+    "Portfolio Retrieval",
+    "Portfolio Answering",
+    "Executive Intelligence",
+    "Executive Presentation",
+    "Strategic Portfolio Roadmap",
+    "Health",
+}
+
 
 def test_openapi_documents_all_endpoints(client: TestClient) -> None:
     response = client.get("/openapi.json")
     assert response.status_code == 200
     spec = response.json()
-    assert spec["info"]["title"]
+    assert spec["info"]["title"] == "CodeStrata Platform API"
     assert spec["info"]["version"] == "v1"
+    assert "CodeStrata Engine" in spec["info"]["description"]
+    assert "CODESTRATA_PLATFORM_API_KEY" in spec["info"]["description"]
     paths = set(spec["paths"])
     missing = REQUIRED_PATHS - paths
     assert missing == set()
@@ -120,3 +145,58 @@ def test_openapi_documents_all_endpoints(client: TestClient) -> None:
     org_post = spec["paths"]["/api/v1/organizations"]["post"]
     assert "responses" in org_post
     assert "201" in org_post["responses"] or "200" in org_post["responses"]
+
+
+def test_openapi_tags_cover_all_operations(client: TestClient) -> None:
+    spec = client.get("/openapi.json").json()
+    declared = {tag["name"] for tag in spec.get("tags", [])}
+    assert REQUIRED_TAGS <= declared
+
+    used: set[str] = set()
+    for methods in spec["paths"].values():
+        for method, operation in methods.items():
+            if method not in {"get", "post", "put", "patch", "delete"}:
+                continue
+            if not isinstance(operation, dict):
+                continue
+            used.update(operation.get("tags") or [])
+            assert operation.get("summary"), f"missing summary on {method}"
+    assert used <= declared
+    assert "Assessment Intelligence" in used
+    assert "Strategic Portfolio Roadmap" in used
+
+
+def test_openapi_documents_platform_api_key(client: TestClient) -> None:
+    spec = client.get("/openapi.json").json()
+    schemes = spec["components"]["securitySchemes"]
+    assert "PlatformApiKey" in schemes
+    assert schemes["PlatformApiKey"]["scheme"] == "bearer"
+    assert "AI provider" in schemes["PlatformApiKey"]["description"]
+    assert {"PlatformApiKey": []} in spec.get("security", [])
+
+    schemas = spec["components"]["schemas"]
+    assert "ErrorResponseDto" in schemas
+    assert "ErrorDetailDto" in schemas
+    assert spec.get("x-codestrata-public-contract", {}).get("api_major") == "v1"
+
+    ask = spec["paths"]["/api/v1/answers"]["post"]
+    assert ask["summary"] == "Ask a repository question"
+    ask_examples = (
+        ask.get("requestBody", {})
+        .get("content", {})
+        .get("application/json", {})
+        .get("examples", {})
+    )
+    assert "askRepositoryQuestion" in ask_examples
+
+    org = spec["paths"]["/api/v1/organizations"]["post"]
+    org_examples = (
+        org.get("requestBody", {})
+        .get("content", {})
+        .get("application/json", {})
+        .get("examples", {})
+    )
+    assert "createOrganization" in org_examples
+
+    snapshot = spec["paths"]["/api/v1/engineering/snapshots"]["post"]
+    assert snapshot["summary"] == "Build Engineering Snapshot"

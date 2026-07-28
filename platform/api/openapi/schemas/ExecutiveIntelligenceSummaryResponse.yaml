@@ -1,0 +1,96 @@
+ExecutiveIntelligenceSummaryResponse:
+  properties:
+    executive_intelligence_id:
+      type: string
+      title: Executive Intelligence Id
+    organization_id:
+      type: string
+      title: Organization Id
+    workspace_id:
+      type: string
+      title: Workspace Id
+    portfolio_id:
+      type: string
+      title: Portfolio Id
+    portfolio_snapshot_id:
+      type: string
+      title: Portfolio Snapshot Id
+    portfolio_snapshot_version:
+      type: integer
+      title: Portfolio Snapshot Version
+    version:
+      type: integer
+      title: Version
+    status:
+      type: string
+      title: Status
+    projection_key:
+      type: string
+      title: Projection Key
+    schema_version:
+      type: string
+      title: Schema Version
+    policy_version:
+      type: string
+      title: Policy Version
+    created_at:
+      type: string
+      format: date-time
+      title: Created At
+    updated_at:
+      type: string
+      format: date-time
+      title: Updated At
+    completed_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Completed At
+    superseded_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Superseded At
+    failure_reason:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Failure Reason
+    metric_count:
+      type: integer
+      title: Metric Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    observation_count:
+      type: integer
+      title: Observation Count
+  additionalProperties: false
+  type: object
+  required:
+  - executive_intelligence_id
+  - organization_id
+  - workspace_id
+  - portfolio_id
+  - portfolio_snapshot_id
+  - portfolio_snapshot_version
+  - version
+  - status
+  - projection_key
+  - schema_version
+  - policy_version
+  - created_at
+  - updated_at
+  - completed_at
+  - superseded_at
+  - failure_reason
+  - metric_count
+  - finding_count
+  - recommendation_count
+  - observation_count
+  title: ExecutiveIntelligenceSummaryResponse

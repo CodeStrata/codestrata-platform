@@ -1,6 +1,13 @@
 """Infrastructure-only database configuration and engine/session factories.
 
-Commercial Platform runtime uses PostgreSQL only (SQLAlchemy 2.x + psycopg 3).
+CodeStrata Platform runtime uses PostgreSQL only (SQLAlchemy 2.x + psycopg 3).
+
+SQLite status
+-------------
+- CodeStrata Platform persistence: **not supported**. SQLite URLs are rejected.
+- Engine knowledge store (``engine/.../knowledge_store``, ``knowledge.sqlite``):
+  **intentional** Community Engine local durable store — unrelated to Platform DB.
+- In-memory Platform tests use process memory repositories, not SQLite.
 """
 
 from __future__ import annotations
@@ -19,7 +26,10 @@ CANONICAL_DATABASE_URL_ENV = "CODESTRATA_DATABASE_URL"
 DEPRECATED_PLATFORM_DATABASE_URL_ENV = "CODESTRATA_PLATFORM_DATABASE_URL"
 DEPRECATED_PGVECTOR_URL_ENV = "CODESTRATA_PGVECTOR_URL"
 
-# Deterministic local Docker Compose credentials (docker-compose.yml).
+# Local Docker Compose defaults (credentials live in docker-compose.yml only).
+_LOCAL_DOCKER_POSTGRES_HINT = (
+    "postgresql+psycopg://codestrata:***@127.0.0.1:5432/codestrata"
+)
 DEFAULT_DOCKER_POSTGRES_URL = (
     "postgresql+psycopg://codestrata:codestrata@127.0.0.1:5432/codestrata"
 )
@@ -36,9 +46,9 @@ def _normalize_postgres_url(url: str) -> str:
     lowered = compact.lower()
     if lowered.startswith("sqlite"):
         raise DatabaseConfigurationError(
-            "SQLite is not supported for the Commercial Platform. "
+            "SQLite is not supported for CodeStrata Platform. "
             f"Set {CANONICAL_DATABASE_URL_ENV} to a PostgreSQL URL "
-            f"(e.g. {DEFAULT_DOCKER_POSTGRES_URL})."
+            f"(e.g. {_LOCAL_DOCKER_POSTGRES_HINT})."
         )
     if lowered.startswith("postgres://"):
         compact = "postgresql+psycopg://" + compact[len("postgres://") :]
@@ -46,7 +56,7 @@ def _normalize_postgres_url(url: str) -> str:
         compact = "postgresql+psycopg://" + compact[len("postgresql://") :]
     elif not lowered.startswith("postgresql+psycopg://"):
         raise DatabaseConfigurationError(
-            "Commercial Platform requires postgresql+psycopg://… "
+            "CodeStrata Platform requires postgresql+psycopg://… "
             f"(got scheme from {compact.split('://', 1)[0]!r})."
         )
     return compact
@@ -90,9 +100,9 @@ def get_database_url(*, override: str | None = None) -> str:
         return _normalize_postgres_url(deprecated_pgvector)
 
     raise DatabaseConfigurationError(
-        "Commercial Platform requires PostgreSQL. Set "
-        f"{CANONICAL_DATABASE_URL_ENV}=postgresql+psycopg://user:password@host:port/database. "
-        f"For local Docker Compose use {DEFAULT_DOCKER_POSTGRES_URL}."
+        "CodeStrata Platform requires PostgreSQL. Set "
+        f"{CANONICAL_DATABASE_URL_ENV}=postgresql+psycopg://user:***@host:port/database. "
+        f"For local Docker Compose use {_LOCAL_DOCKER_POSTGRES_HINT}."
     )
 
 
@@ -132,7 +142,12 @@ def ensure_pgvector_extension(engine: Engine) -> None:
             with engine.begin() as connection:
                 connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         except Exception:  # noqa: BLE001
-            logger.warning("pgvector extension not available: %s", error)
+            from codestrata.security.database_url import sanitize_exception_message
+
+            logger.warning(
+                "pgvector extension not available: %s",
+                sanitize_exception_message(str(error)),
+            )
 
 
 def create_platform_schema(engine: Engine) -> None:

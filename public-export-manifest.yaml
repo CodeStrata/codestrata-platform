@@ -23,18 +23,21 @@ defaults:
     - "**/venv/**"
     - "**/.env"
     - "**/.env.*"
-    - "**/reports/**"
+    # Do not globally exclude "reports/**" — codestrata-docs ships docs/reports/.
+    - "**/reports/showcases/**"
     - "**/dist/**"
     - "**/build/**"
     - "**/.git/**"
     - "**/node_modules/**"
     - "**/*.sqlite"
     - "**/*.db"
-    - "**/*.lock"
+    - "**/poetry.lock"
+    - "**/Pipfile.lock"
     - "**/pgdata/**"
     - "**/pgdata*/**"
   forbid_path_substrings:
     - "platform/"
+    - "governance/reports"
     - ".codestrata/"
     - ".codestrata-examples/"
     - ".codestrata-test-knowledge/"
@@ -46,10 +49,47 @@ defaults:
     - ".mypy_cache"
     - ".ruff_cache"
     - "knowledge.sqlite"
+    - "mvp-acceptance"
+    - "mvp-regression"
+    - "MARKDOWN_AUDIT"
   forbid_content_patterns:
     - "(?i)BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY"
     - "(?i)aws_secret_access_key\\s*="
     - "(?i)api[_-]?key\\s*=\\s*['\"]?[A-Za-z0-9/+=]{20,}"
+  # Markdown relative targets that must not appear in exported Community docs.
+  forbid_markdown_link_substrings:
+    - "platform/docs"
+    - "../../platform/"
+    - "../../../platform/"
+    - "governance/"
+    - "../../governance/"
+    - "../../../governance/"
+    - "../../knowledge/"
+    - "../../../knowledge/"
+    - "../../../../knowledge/"
+    - "../../docs/"
+    - "../../../docs/"
+    - "platform.codestrata.ai"
+    - "/api/openapi"
+    - "platform/api/openapi"
+  documentation_boundary:
+    # knowledge/ and governance/ are never public Community source roots.
+    # platform/ (including platform/api/openapi internal Swagger) is never exported.
+    never_export_source_roots:
+      - platform
+      - governance
+      - knowledge
+    never_export_path_globs:
+      - "platform/**"
+      - "platform/api/openapi/**"
+      - "governance/adr/**"
+      - "governance/reports/**"
+    notes: >
+      Public export is allowlist-based via each export's include patterns.
+      Directory absence from a denylist is never sufficient for publication.
+      Platform OpenAPI / Swagger (platform.codestrata.ai/api/docs) is internal-only
+      and must never appear in codestrata-docs, Community repos, public sitemaps,
+      or codestrata.ai navigation.
 
 exports:
   - name: codestrata-engine
@@ -80,12 +120,25 @@ exports:
         to: test-fixtures/sample-js-app
     exclude:
       - "**/complexity/fixtures/**"
+      - ".DS_Store"
       - "**/.DS_Store"
       # Stale docs/tests that referenced pre-move Enterprise paths (if any remain).
       - "tests/interfaces/mcp/test_mcp_enterprise_tools.py"
+      - "reports/**"
+      # Private / historical / Platform-adjacent Engine documentation.
       - "docs/enterprise-knowledge-graph/**"
       - "docs/reviews/**"
       - "docs/design/**"
+      - "docs/mvp-acceptance.md"
+      - "docs/mvp-regression.md"
+      - "docs/release-readiness.md"
+      - "docs/roadmap.md"
+      - "docs/COMMUNITY_EDITION_CHECKLIST.md"
+      - "docs/modernization-roadmap.md"
+      - "docs/assessment-framework/**"
+      - "docs/analysis-intelligence/**"
+      - "docs/mcp/repository-knowledge/**"
+      - "docs/repository-knowledge/**"
     validation:
       require_files:
         - LICENSE
@@ -97,8 +150,21 @@ exports:
         - codestrata.toml
         - SECURITY.md
         - test-fixtures/sample-js-app/package.json
+        - docs/public-contracts.md
+        - docs/report-contract.md
+        - docs/extension-architecture.md
       forbid_globs:
         - "platform/**"
+        - "governance/**"
+        - "docs/mvp-acceptance.md"
+        - "docs/mvp-regression.md"
+        - "docs/release-readiness.md"
+        - "docs/roadmap.md"
+        - "docs/assessment-framework/**"
+        - "docs/analysis-intelligence/**"
+        - "docs/mcp/repository-knowledge/**"
+        - "docs/repository-knowledge/**"
+        - "**/reports/**"
       commands:
         - "python -m pip install -e '.[dev]'"
         - "codestrata version"
@@ -147,37 +213,148 @@ exports:
         - "**/sample-reports/**"
         - "fixtures/**"
   - name: codestrata-cursor
-    description: Cursor plugin placeholder (not implemented in Phase 5.23)
+    description: CodeStrata Cursor Extension (Community Engine client)
     source_root: cursor-plugin
     public_repository: codestrata-cursor
     destination_layout: flat
     include:
       - "**"
     exclude:
+      - ".DS_Store"
       - "**/.DS_Store"
+      - "node_modules/**"
+      - "**/node_modules/**"
+      - "out/**"
+      - "*.vsix"
+      - ".vscode-test/**"
+      - "**/.vscode-test/**"
+      - ".tmp-test-*/**"
+      - "PLACEHOLDER.md"
     validation:
       require_files:
         - README.md
-        - PLACEHOLDER.md
-      allow_only_globs:
-        - "README.md"
+        - CHANGELOG.md
+        - LICENSE
+        - SECURITY.md
+        - SUPPORT.md
+        - PRIVACY.md
+        - CONTRIBUTING.md
+        - CODE_OF_CONDUCT.md
+        - EXTRACTION.md
+        - RELEASE_CHECKLIST.md
+        - package.json
+        - package-lock.json
+        - src/extension.ts
+        - tsconfig.json
+        - media/codestrata-icon.png
+      forbid_globs:
+        - "platform/**"
+        - "governance/**"
+        - "**/*.py"
         - "PLACEHOLDER.md"
-        - ".gitkeep"
+        - "*.vsix"
+        - "out/**"
+        - ".vscode-test/**"
+      commands:
+        - "npm install"
+        - "npm test"
+        - "npm run package:dry"
 
   - name: codestrata-vscode
-    description: VS Code plugin placeholder (not implemented in Phase 5.23)
+    description: CodeStrata VS Code Extension (Community Engine client)
     source_root: vscode-plugin
     public_repository: codestrata-vscode
     destination_layout: flat
     include:
       - "**"
     exclude:
+      - ".DS_Store"
       - "**/.DS_Store"
+      - "node_modules/**"
+      - "**/node_modules/**"
+      - "out/**"
+      - "*.vsix"
+      - ".vscode-test/**"
+      - "**/.vscode-test/**"
+      - "PLACEHOLDER.md"
     validation:
       require_files:
         - README.md
-        - PLACEHOLDER.md
-      allow_only_globs:
-        - "README.md"
+        - CHANGELOG.md
+        - LICENSE
+        - package.json
+        - src/extension.ts
+        - tsconfig.json
+        - media/codestrata-icon.png
+      forbid_globs:
+        - "platform/**"
+        - "governance/**"
+        - "**/*.py"
         - "PLACEHOLDER.md"
-        - ".gitkeep"
+        - "*.vsix"
+        - "out/**"
+        - ".vscode-test/**"
+      commands:
+        - "npm install"
+        - "npm test"
+        - "npm run package:dry"
+
+  - name: codestrata-docs
+    description: CodeStrata public documentation portal (docs.codestrata.ai)
+    source_root: docs
+    public_repository: codestrata-docs
+    destination_layout: flat
+    include:
+      - "**"
+    exclude:
+      - ".DS_Store"
+      - "**/.DS_Store"
+      - "node_modules/**"
+      - "**/node_modules/**"
+      - ".vitepress/dist/**"
+      - ".vitepress/cache/**"
+      - "visual-baselines/**"
+      - ".tmp*"
+    validation:
+      require_files:
+        - README.md
+        - ARCHITECTURE.md
+        - CONTRIBUTING.md
+        - LICENSE
+        - SECURITY.md
+        - SUPPORT.md
+        - PRIVACY.md
+        - MIGRATION_PLAN.md
+        - DEPLOYMENT.md
+        - EXTRACTION.md
+        - CI.md
+        - package.json
+        - package-lock.json
+        - index.md
+        - .vitepress/config.ts
+        - .vitepress/theme/index.ts
+        - .vitepress/theme/tokens.css
+        - public/favicon.svg
+        - public/robots.txt
+        - WEBSITE_STYLE_ALIGNMENT.md
+        - VISUAL_REGRESSION.md
+        - public/design-tokens/tokens.css
+        - public/fonts.css
+        - public/brand/lockup-horizontal-on-dark.svg
+        - scripts/visual-capture.mjs
+        - scripts/validate.mjs
+        - getting-started/index.md
+        - extensions/vscode.md
+        - extensions/cursor.md
+        - community/vs-platform.md
+        - reports/index.md
+      forbid_globs:
+        - "governance/**"
+        - "visual-baselines/**"
+        - "**/*.py"
+        - "node_modules/**"
+        - "platform/src/**"
+        - "platform/docs/**"
+      commands:
+        - "npm ci"
+        - "npm test"
