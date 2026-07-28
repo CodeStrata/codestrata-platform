@@ -17,6 +17,9 @@ from codestrata_platform.application.engineering import EngineeringNormalization
 from codestrata_platform.application.executive_intelligence import (
     ExecutiveIntelligenceAggregationService,
 )
+from codestrata_platform.application.executive_presentation import (
+    ExecutivePresentationService,
+)
 from codestrata_platform.application.intelligence import DefaultAssessmentIntelligenceService
 from codestrata_platform.application.intelligence.service import DefaultAssessmentArtifactReader
 from codestrata_platform.application.knowledge_graph import EngineeringGraphProjectionService
@@ -32,6 +35,7 @@ from codestrata_platform.application.portfolio_answering import PortfolioAnswerO
 from codestrata_platform.application.portfolio_retrieval import PortfolioRetrievalIndexingService
 from codestrata_platform.application.repository import DefaultRepositoryService
 from codestrata_platform.application.retrieval import EngineeringRetrievalIndexingService
+from codestrata_platform.application.strategic_roadmap import StrategicRoadmapService
 from codestrata_platform.application.workspace import DefaultWorkspaceService
 from codestrata_platform.domain.artifact import ArtifactStorage
 from codestrata_platform.infrastructure.answering import create_llm_provider
@@ -112,6 +116,8 @@ class ApiServices:
     portfolio_retrieval: PortfolioRetrievalIndexingService
     portfolio_answering: PortfolioAnswerOrchestrationService
     executive_intelligence: ExecutiveIntelligenceAggregationService
+    executive_presentation: ExecutivePresentationService
+    strategic_roadmap: StrategicRoadmapService
     _session: Session | None = None
     _committed: bool = False
 
@@ -292,6 +298,14 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
             organizations=org_store,
             workspaces=workspace_store,
         )
+        executive_presentation = ExecutivePresentationService(
+            executive_intelligence=executive_intelligence,
+            executive_intelligence_repository=executive_intelligence_store,
+        )
+        strategic_roadmap = StrategicRoadmapService(
+            executive_intelligence=executive_intelligence,
+            executive_intelligence_repository=executive_intelligence_store,
+        )
         services = ApiServices(
             organizations=DefaultOrganizationService(organizations=org_store),
             workspaces=DefaultWorkspaceService(
@@ -350,6 +364,8 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
             portfolio_retrieval=portfolio_retrieval,
             portfolio_answering=portfolio_answering,
             executive_intelligence=executive_intelligence,
+            executive_presentation=executive_presentation,
+            strategic_roadmap=strategic_roadmap,
             _session=None,
         )
         try:
@@ -430,6 +446,14 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
         organizations=org_repo,
         workspaces=workspace_repo,
     )
+    executive_presentation = ExecutivePresentationService(
+        executive_intelligence=executive_intelligence,
+        executive_intelligence_repository=executive_intelligence_repo,
+    )
+    strategic_roadmap = StrategicRoadmapService(
+        executive_intelligence=executive_intelligence,
+        executive_intelligence_repository=executive_intelligence_repo,
+    )
     services = ApiServices(
         organizations=DefaultOrganizationService(organizations=org_repo),
         workspaces=DefaultWorkspaceService(
@@ -488,6 +512,8 @@ def get_api_services(request: Request) -> Iterator[ApiServices]:
         portfolio_retrieval=portfolio_retrieval,
         portfolio_answering=portfolio_answering,
         executive_intelligence=executive_intelligence,
+        executive_presentation=executive_presentation,
+        strategic_roadmap=strategic_roadmap,
         _session=session,
     )
     try:

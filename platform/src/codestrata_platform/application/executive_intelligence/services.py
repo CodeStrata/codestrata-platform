@@ -183,9 +183,10 @@ class ExecutiveIntelligenceAggregationService:
             query.organization_id,
             query.workspace_id,
         )
+        # Fetch the full portfolio history so pagination total/has_more are accurate.
         items = self._executive_intelligence.list_by_portfolio(
             query.portfolio_id,
-            limit=max(query.limit, 1) + query.offset,
+            limit=10_000,
         )
         summaries = tuple(self._summary(item) for item in items)
         return _page(summaries, offset=query.offset, limit=query.limit)

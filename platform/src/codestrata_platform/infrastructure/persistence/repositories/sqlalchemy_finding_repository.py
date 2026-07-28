@@ -15,7 +15,8 @@ from codestrata_platform.infrastructure.persistence.models.evidence_reference_re
     EvidenceReferenceRecord,
 )
 from codestrata_platform.infrastructure.persistence.models.finding_record import FindingRecord
-from codestrata_platform.infrastructure.persistence.repositories.sqlalchemy_assessment_intelligence_repository import (
+
+from .sqlalchemy_assessment_intelligence_repository import (
     SqlAlchemyAssessmentIntelligenceRepository,
 )
 

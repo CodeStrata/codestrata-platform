@@ -14,9 +14,13 @@ from codestrata_platform.infrastructure.persistence.models.base import Base
 class EngineeringExecutiveIntelligenceSnapshotRecord(Base):
     __tablename__ = "engineering_executive_intelligence_snapshots"
     __table_args__ = (
-        UniqueConstraint(
+        # Only completed projections are unique so FAILED retries can rebuild.
+        Index(
+            "uq_engineering_executive_intelligence_projection_key_completed",
             "projection_key",
-            name="uq_engineering_executive_intelligence_projection_key",
+            unique=True,
+            postgresql_where="status = 'completed'",
+            sqlite_where="status = 'completed'",
         ),
         Index(
             "ix_engineering_executive_intelligence_portfolio_id",

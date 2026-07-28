@@ -60,10 +60,15 @@ def upgrade() -> None:
         sa.Column("superseded_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column("failure_reason", sa.Text(), nullable=True),
         sa.Column("optimistic_version", sa.Integer(), nullable=False, server_default="0"),
-        sa.UniqueConstraint(
-            "projection_key",
-            name="uq_engineering_executive_intelligence_projection_key",
-        ),
+    )
+    # Completed projection keys are unique; FAILED rows may share a key so retries work.
+    op.create_index(
+        "uq_engineering_executive_intelligence_projection_key_completed",
+        "engineering_executive_intelligence_snapshots",
+        ["projection_key"],
+        unique=True,
+        postgresql_where=sa.text("status = 'completed'"),
+        sqlite_where=sa.text("status = 'completed'"),
     )
     op.create_index(
         "ix_engineering_executive_intelligence_portfolio_id",

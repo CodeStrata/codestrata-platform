@@ -14,7 +14,7 @@ from codestrata_platform.infrastructure.persistence.mappers.assessment_intellige
 from codestrata_platform.infrastructure.persistence.models.assessment_intelligence_record import (
     AssessmentIntelligenceRecord,
 )
-from codestrata_platform.infrastructure.persistence.models.intelligence_source_artifact_record import (
+from codestrata_platform.infrastructure.persistence.models.intelligence_source_artifact_record import (  # noqa: E501
     IntelligenceSourceArtifactRecord,
 )
 

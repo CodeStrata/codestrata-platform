@@ -2,18 +2,14 @@
 
 from __future__ import annotations
 
-from codestrata_platform.application.common.errors import ApplicationError, ValidationError
-
-
-class ExecutiveIntelligenceApplicationError(ApplicationError):
-    """Base application error for Executive Intelligence operations."""
+from codestrata_platform.application.common.errors import NotFoundError, ValidationError
 
 
 class ExecutiveIntelligenceDisabledError(ValidationError):
     """Raised when Executive Intelligence is disabled by configuration."""
 
 
-class ExecutiveIntelligenceNotFoundError(ExecutiveIntelligenceApplicationError):
+class ExecutiveIntelligenceNotFoundError(NotFoundError):
     def __init__(self, executive_intelligence_id: str) -> None:
         super().__init__(
             f"Executive intelligence '{executive_intelligence_id}' was not found",
