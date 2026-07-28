@@ -1,7 +1,8 @@
 """CodeStrata branded CLI landing page (presentation only).
 
 Shown for bare ``codestrata`` and ``codestrata welcome`` in interactive
-terminals. Never changes assessment behavior, schemas, or AI. No telemetry.
+terminals. Never changes assessment behavior, schemas, or AI. May prompt once
+for optional anonymous telemetry (default No).
 """
 
 from __future__ import annotations
@@ -49,29 +50,30 @@ class WordmarkSize(str, Enum):
     COMPACT = "compact"
 
 
-# Original CodeStrata wordmarks — layered "strata block" letterforms (not a
-# third-party FIGlet font). Widths validated in tests for 40/60/80/100/120 cols.
+# Clean CodeStrata wordmarks — original strata letterforms with consistent gaps.
+# Width strategy (validated in tests):
+#   LARGE  (≥120 cols): full 6-row banner, ~92 cols (≤ ~75% of 120)
+#   MEDIUM (80–119):    compact 2-row banner with clear letter separation
+#   COMPACT (<80):      plain "CODESTRATA" (no large ASCII art)
 
 
-# Large (~109 cols): premium double-line strata glyphs with letter spacing.
+# Large: premium double-line glyphs with consistent one-column letter spacing.
+# Width 90 → ≤75% of a 120-column terminal.
 _WORDMARK_LARGE = """\
- ██████╗  ██████╗  ██████╗  ███████╗ ███████╗ ████████╗ ██████╗   █████╗  ████████╗  █████╗
-██╔════╝ ██╔═══██╗ ██╔══██╗ ██╔════╝ ██╔════╝ ╚══██╔══╝ ██╔══██╗ ██╔══██╗ ╚══██╔══╝ ██╔══██╗
-██║      ██║   ██║ ██║  ██║ █████╗   ███████╗    ██║    ██████╔╝ ███████║    ██║    ███████║
-██║      ██║   ██║ ██║  ██║ ██╔══╝   ╚════██║    ██║    ██╔══██╗ ██╔══██║    ██║    ██╔══██║
-╚██████╗ ╚██████╔╝ ██████╔╝ ███████╗ ███████║    ██║    ██║  ██║ ██║  ██║    ██║    ██║  ██║
- ╚═════╝  ╚═════╝  ╚═════╝  ╚══════╝ ╚══════╝    ╚═╝    ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝    ╚═╝  ╚═╝"""
+ ██████╗  ██████╗  ██████╗  ███████╗ ███████╗ ███████╗ ██████╗   █████╗  ███████╗  █████╗
+██╔════╝ ██╔═══██╗ ██╔══██╗ ██╔════╝ ██╔════╝ ╚══██╔═╝ ██╔══██╗ ██╔══██╗ ╚══██╔═╝ ██╔══██╗
+██║      ██║   ██║ ██║  ██║ █████╗   ███████╗    ██║   ██████╔╝ ███████║    ██║   ███████║
+██║      ██║   ██║ ██║  ██║ ██╔══╝   ╚════██║    ██║   ██╔══██╗ ██╔══██║    ██║   ██╔══██║
+╚██████╗ ╚██████╔╝ ██████╔╝ ███████╗ ███████║    ██║   ██║  ██║ ██║  ██║    ██║   ██║  ██║
+ ╚═════╝  ╚═════╝  ╚═════╝  ╚══════╝ ╚══════╝    ╚═╝   ╚═╝  ╚═╝ ╚═╝  ╚═╝    ╚═╝   ╚═╝  ╚═╝"""
 
-# Medium (~71 cols): readable block form for standard terminals.
+# Medium: compact half-block glyphs; double spaces keep letters distinct at 80 cols.
 _WORDMARK_MEDIUM = """\
-█▀▀ █▀█ █▀▄ █▀▀ █▀▀ ▀█▀ █▀█ ▄▀█ ▀█▀ ▄▀█
-█▄▄ █▄█ █▄▀ ██▄ ▄▄█  █  █▀▄ █▀█  █  █▀█"""
+█▀▀  █▀█  █▀▄  █▀▀  █▀▀  ▀█▀  █▀█  ▄▀█  ▀█▀  ▄▀█
+█▄▄  █▄█  █▄▀  ██▄  ▄▄█   █   █▀▄  █▀█   █   █▀█"""
 
-# Compact (~30 cols): dense box-drawing for narrow panes and 40-col terminals.
-_WORDMARK_COMPACT = """\
-╔═╗╔═╗╔╦╗╔═╗╔═╗╔╦╗╦═╗╔═╗╔╦╗╔═╗
-║  ║ ║ ║║║╣ ╚═╗ ║ ╠╦╝╠═╣ ║ ╠═╣
-╚═╝╚═╝═╩╝╚═╝╚═╝ ╩ ╩╚═╩ ╩ ╩ ╩ ╩"""
+# Narrow: plain heading — never large ASCII art below 80 columns.
+_WORDMARK_COMPACT = "CODESTRATA"
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,6 +105,13 @@ def terminal_columns(console: Console | None = None) -> int:
 
 
 def select_wordmark_size(columns: int) -> WordmarkSize:
+    """Choose banner layout from terminal width.
+
+    - ≥120: full branded ASCII (large)
+    - 80–119: compact ASCII (medium)
+    - <80: plain ``CODESTRATA`` heading (compact)
+    """
+
     if columns >= 120:
         return WordmarkSize.LARGE
     if columns >= 80:
@@ -111,21 +120,37 @@ def select_wordmark_size(columns: int) -> WordmarkSize:
 
 
 def wordmark_art(size: WordmarkSize | None = None, *, columns: int | None = None) -> str:
-    """Return the ASCII CodeStrata wordmark for the given layout size."""
+    """Return the CodeStrata wordmark for the given layout size."""
 
     resolved = size
     if resolved is None:
         resolved = select_wordmark_size(columns if columns is not None else terminal_columns())
     if resolved is WordmarkSize.LARGE:
-        return _WORDMARK_LARGE
-    if resolved is WordmarkSize.MEDIUM:
-        return _WORDMARK_MEDIUM
-    return _WORDMARK_COMPACT
+        art = _WORDMARK_LARGE
+    elif resolved is WordmarkSize.MEDIUM:
+        art = _WORDMARK_MEDIUM
+    else:
+        art = _WORDMARK_COMPACT
+    return _equalize_wordmark_width(art)
+
+
+def _equalize_wordmark_width(art: str) -> str:
+    """Pad wordmark rows to a common width so centering stays visually aligned."""
+
+    lines = art.splitlines()
+    width = max((len(line) for line in lines), default=0)
+    return "\n".join(line.ljust(width) for line in lines)
 
 
 def wordmark_width(art: str) -> int:
     lines = [line.rstrip("\n") for line in art.splitlines() if line.strip()]
     return max((len(line) for line in lines), default=0)
+
+
+def max_banner_width_for_terminal(columns: int) -> int:
+    """Approximate max banner width (~75% of terminal, with a small margin)."""
+
+    return max(10, int(columns * 0.75))
 
 
 def is_shell_completion_context() -> bool:
@@ -292,9 +317,16 @@ def render_landing(
     active.size = (width, height)
     size = select_wordmark_size(width)
     art = wordmark_art(size)
+    banner_budget = max_banner_width_for_terminal(width)
 
-    # If the selected art is still wider than the terminal, step down.
-    while wordmark_width(art) > width - 2 and size is not WordmarkSize.COMPACT:
+    # Step down when art exceeds the terminal or the ~75% banner budget.
+    while (
+        size is not WordmarkSize.COMPACT
+        and (
+            wordmark_width(art) > width - 2
+            or wordmark_width(art) > banner_budget
+        )
+    ):
         size = (
             WordmarkSize.MEDIUM
             if size is WordmarkSize.LARGE
@@ -302,7 +334,7 @@ def render_landing(
         )
         art = wordmark_art(size)
     if wordmark_width(art) > width - 2:
-        art = "C O D E S T R A T A"
+        art = _WORDMARK_COMPACT
 
     use_color = not active.no_color and _color_allowed() and not force_mono
 
@@ -341,7 +373,8 @@ def render_landing(
     )
 
     # Next Steps: fixed-width right-aligned labels for a flush command column.
-    label_width = 4 if width < 50 else 11  # "Open Report"
+    # Longest labels: "Initialize", "Assess + AI", "Open Report" (11).
+    label_width = 5 if width < 50 else 11
     steps = Table.grid(padding=(0, 2 if width >= 60 else 1), expand=False)
     steps.add_column(
         justify="right",
@@ -351,13 +384,18 @@ def render_landing(
     )
     steps.add_column(style=CYAN if use_color else "bold", no_wrap=True)
     if width < 50:
+        # Abbreviated labels/commands so 40-col terminals do not overflow.
         steps.add_row("Init", "codestrata init")
-        steps.add_row("Assess", "codestrata assess --repo .")
+        steps.add_row("Assess", "assess --repo .")
+        steps.add_row("AI", "assess --repo . --with-ai")
         steps.add_row("Open", "codestrata open")
+        steps.add_row("Setup", "codestrata ai")
     else:
         steps.add_row("Initialize", "codestrata init")
         steps.add_row("Assess", "codestrata assess --repo .")
+        steps.add_row("Assess + AI", "codestrata assess --repo . --with-ai")
         steps.add_row("Open Report", "codestrata open")
+        steps.add_row("AI Setup", "codestrata ai")
 
     version = get_package_version()
     meta = f"Engine {version} • {EDITION} • Schema {ASSESSMENT_JSON_SCHEMA_VERSION}"
@@ -428,6 +466,12 @@ def show_bare_invocation(*, cwd: Path | None = None) -> None:
         render_automation_fallback()
         return
     render_landing(cwd=cwd)
+    try:
+        from codestrata.telemetry.prompt import maybe_prompt_telemetry_opt_in
+
+        maybe_prompt_telemetry_opt_in()
+    except Exception:  # noqa: BLE001 - never break landing
+        return
 
 
 # Back-compat alias used by older call sites / tests.
@@ -459,6 +503,7 @@ __all__ = [
     "detect_start_here_context",
     "is_shell_completion_context",
     "landing_suppressed",
+    "max_banner_width_for_terminal",
     "render_automation_fallback",
     "render_landing",
     "select_wordmark_size",

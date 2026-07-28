@@ -1,0 +1,18 @@
+EvidenceCoverageSummaryDto:
+  properties:
+    findings_total:
+      type: integer
+      title: Findings Total
+    findings_with_evidence:
+      type: integer
+      title: Findings With Evidence
+    coverage_ratio:
+      type: number
+      title: Coverage Ratio
+  additionalProperties: false
+  type: object
+  required:
+  - findings_total
+  - findings_with_evidence
+  - coverage_ratio
+  title: EvidenceCoverageSummaryDto

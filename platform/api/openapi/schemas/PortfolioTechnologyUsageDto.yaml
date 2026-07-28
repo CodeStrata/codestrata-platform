@@ -1,0 +1,34 @@
+PortfolioTechnologyUsageDto:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    engineering_snapshot_id:
+      type: string
+      title: Engineering Snapshot Id
+    component_count:
+      type: integer
+      title: Component Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    high_critical_finding_count:
+      type: integer
+      title: High Critical Finding Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    production_scope:
+      type: boolean
+      title: Production Scope
+      default: false
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - engineering_snapshot_id
+  - component_count
+  - finding_count
+  - high_critical_finding_count
+  - recommendation_count
+  title: PortfolioTechnologyUsageDto

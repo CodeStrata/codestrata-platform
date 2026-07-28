@@ -41,6 +41,11 @@
   --vp-c-indigo-3: var(--amber-deep);
   --vp-c-indigo-soft: color-mix(in srgb, var(--accent) 16%, transparent);
 
+  /* Kill residual VitePress stock blues in chrome / code accents */
+  --vp-c-brand: var(--accent);
+  --vp-code-link-color: var(--amber-bright);
+  --vp-code-line-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
+
   --vp-button-brand-border: transparent;
   --vp-button-brand-text: var(--accent-fg);
   --vp-button-brand-bg: var(--accent);
@@ -283,7 +288,34 @@ body {
 .VPSidebar {
   background: var(--bg) !important;
   border-right: 1px solid var(--border) !important;
-  padding-top: 1rem !important;
+  padding: 1rem 0.85rem 2.5rem !important;
+  box-sizing: border-box !important;
+}
+
+.VPSidebar .nav {
+  margin-top: 0.25rem;
+}
+
+.VPSidebarItem {
+  margin: 0 !important;
+}
+
+.VPSidebarItem.level-0 {
+  padding-top: 0.35rem;
+  padding-bottom: 0.85rem;
+}
+
+.VPSidebarItem.level-0 + .VPSidebarItem.level-0 {
+  margin-top: 0.35rem !important;
+  border-top: 1px solid var(--border);
+  padding-top: 0.85rem;
+}
+
+.VPSidebarItem.level-0 > .item {
+  display: flex;
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.35rem 0.65rem 0.55rem !important;
 }
 
 .VPSidebarItem.level-0 > .item .text,
@@ -294,12 +326,33 @@ body {
   text-transform: uppercase !important;
   color: var(--fg-dim) !important;
   font-weight: 500 !important;
+  line-height: 1.35 !important;
+}
+
+.VPSidebarItem.level-1 {
+  padding-left: 0.15rem;
+}
+
+.VPSidebarItem.level-1 > .item {
+  padding: 0.1rem 0 !important;
 }
 
 .VPSidebarItem .link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem;
   border-radius: 8px;
   color: var(--fg-muted) !important;
   font-size: 0.9rem !important;
+  line-height: 1.35 !important;
+  padding: 0.42rem 0.7rem 0.42rem 0.75rem !important;
+  min-height: 2rem;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.VPSidebarItem .link .text {
+  line-height: 1.35 !important;
 }
 
 .VPSidebarItem .link:hover {
@@ -310,10 +363,32 @@ body {
 .VPSidebarItem.is-active > .item .link {
   color: var(--fg) !important;
   background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important;
+  font-weight: 560;
 }
 
 .VPSidebarItem.is-active > .item .link::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0.4rem !important;
+  bottom: 0.4rem !important;
+  width: 2px !important;
+  border-radius: 1px !important;
   background: var(--accent) !important;
+  transform: none !important;
+}
+
+/* Avoid sidebar / content collision on narrow desktop widths */
+@media (min-width: 960px) and (max-width: 1280px) {
+  .VPSidebar {
+    width: var(--vp-sidebar-width) !important;
+  }
+}
+
+@media (max-width: 959px) {
+  .VPSidebar {
+    padding-top: 0.75rem !important;
+  }
 }
 
 /* Content typography */
@@ -394,12 +469,56 @@ body {
   background: var(--code-bg) !important;
 }
 
+/* Readable terminal/code text — avoid low-contrast blue on black (light + dark). */
 .vp-doc div[class*="language-"] code,
-.vp-doc [class*="language-"] code {
+.vp-doc [class*="language-"] code,
+.vp-doc .shiki,
+.vp-doc .shiki span {
   font-family: var(--font-mono) !important;
   font-size: 0.84rem !important;
   line-height: 1.65 !important;
-  color: #d7dde5 !important;
+}
+
+.vp-doc div[class*="language-"] code,
+.vp-doc [class*="language-"] code {
+  color: #e8edf4 !important;
+}
+
+/* Raise contrast for common Shiki token hues used for commands/strings */
+.vp-doc .shiki span[style*="#6A9955"],
+.vp-doc .shiki span[style*="#6a9955"] {
+  color: #8fb573 !important; /* comments */
+}
+
+.vp-doc .shiki span[style*="#569CD6"],
+.vp-doc .shiki span[style*="#569cd6"],
+.vp-doc .shiki span[style*="#4FC1FF"],
+.vp-doc .shiki span[style*="#4fc1ff"],
+.vp-doc .shiki span[style*="#9CDCFE"],
+.vp-doc .shiki span[style*="#9cdcfe"],
+.vp-doc .shiki span[style*="#5468ff"],
+.vp-doc .shiki span[style*="#79b8ff"],
+.vp-doc .shiki span[style*="#79B8FF"] {
+  color: #f0c090 !important; /* keywords / commands → amber-tint, high contrast */
+}
+
+.vp-doc .shiki span[style*="#CE9178"],
+.vp-doc .shiki span[style*="#ce9178"],
+.vp-doc .shiki span[style*="#D7BA7D"],
+.vp-doc .shiki span[style*="#d7ba7d"] {
+  color: #f0d0a8 !important; /* strings */
+}
+
+.vp-doc .shiki span[style*="#D4D4D4"],
+.vp-doc .shiki span[style*="#d4d4d4"] {
+  color: #e8edf4 !important;
+}
+
+html:not(.dark) .vp-doc div[class*="language-"],
+html:not(.dark) .vp-doc .vp-code-group,
+.dark .vp-doc div[class*="language-"],
+.dark .vp-doc .vp-code-group {
+  background: var(--code-bg) !important;
 }
 
 .vp-doc :not(pre) > code {

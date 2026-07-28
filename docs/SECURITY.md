@@ -11,7 +11,8 @@ Related Community projects (Engine, VS Code, Cursor) publish their own
 ## Reporting a vulnerability
 
 Please report security issues **privately**. Do not open a public GitHub issue
-with exploit details, credentials, or private repository contents.
+with exploit details, credentials, or private repository contents, and **do not
+disclose publicly** before coordinated release of a fix or advisory.
 
 Include:
 
@@ -19,10 +20,13 @@ Include:
 - Steps to reproduce
 - Affected component (docs site, CI, dependency)
 - Your contact for follow-up
+- Any coordinated disclosure timing preferences
 
 Use the security contact channel published for CodeStrata Community repositories
 (GitHub Security Advisories when enabled, or the maintainer contact listed on the
-public organization profile).
+public organization profile — no personal emails are published in this file).
+
+You should receive an acknowledgment within **7 days**.
 
 ## Documentation portal baseline
 

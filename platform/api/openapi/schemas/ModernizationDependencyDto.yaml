@@ -1,0 +1,18 @@
+ModernizationDependencyDto:
+  properties:
+    dependency_key:
+      type: string
+      title: Dependency Key
+    description:
+      type: string
+      title: Description
+    blocking:
+      type: boolean
+      title: Blocking
+  additionalProperties: false
+  type: object
+  required:
+  - dependency_key
+  - description
+  - blocking
+  title: ModernizationDependencyDto

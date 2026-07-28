@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -147,10 +146,10 @@ class PortfolioSnapshotDetailsResponse(BaseModel):
     envelope: PortfolioEnvelopeResponse
 
 
-class PageResponse(BaseModel):
+class PageResponse[T](BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    items: list[Any]
-    total: int
-    offset: int
-    limit: int
+    items: list[T]
+    total: int = Field(ge=0)
+    offset: int = Field(ge=0)
+    limit: int = Field(ge=1)

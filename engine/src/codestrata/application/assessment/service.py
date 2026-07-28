@@ -75,6 +75,7 @@ from codestrata.services.scanners.github_repository_scanner import (
     GitHubRepositoryScanner,
     dispose_ephemeral_repository,
 )
+from codestrata.scan_boundary import BoundaryPolicy
 from codestrata.services.scanners.local_repository_scanner import LocalRepositoryScanner
 from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 from codestrata.static_analysis.models import StaticAnalysisStatus
@@ -404,11 +405,19 @@ class AssessmentApplicationService:
         except (FileNotFoundError, ValueError, OSError) as error:
             raise AssessmentCommandError(sanitize_provider_text(str(error))) from error
 
+        from codestrata.benchmark.recorder import BenchmarkRecorder
+
+        benchmark_recorder = BenchmarkRecorder.create(
+            enabled=bool(loaded_settings.analysis.runtime.benchmark_collection)
+        )
+        benchmark_recorder.activate()
+
         from codestrata.security.filesystem import safe_output_directory
 
         try:
             output_directory = safe_output_directory(output_directory)
         except (OSError, NotADirectoryError, ValueError) as error:
+            benchmark_recorder.deactivate()
             raise AssessmentCommandError(
                 f"Invalid --output directory: {sanitize_provider_text(str(error))}"
             ) from error
@@ -442,12 +451,17 @@ class AssessmentApplicationService:
                 if scanned_repository is not None:
                     repository = scanned_repository
                 else:
-                    repository = _scan_repository(
-                        resolved_repo,
-                        settings=loaded_settings,
-                        branch=resolved_branch,
-                        scanner=scanner,
-                    )
+                    with benchmark_recorder.stage("repository_discovery"):
+                        repository = _scan_repository(
+                            resolved_repo,
+                            settings=loaded_settings,
+                            branch=resolved_branch,
+                            scanner=scanner,
+                        )
+                    if repository is not None:
+                        boundary = (repository.metadata or {}).get("scan_boundary")
+                        if isinstance(boundary, dict):
+                            benchmark_recorder.set_meta("scan_boundary", boundary)
             except AssessmentCommandError:
                 raise
             except (
@@ -547,6 +561,7 @@ class AssessmentApplicationService:
             # Phase 6.2: always dispose ephemeral GitHub clones; never touch local repos.
             if repository is not None:
                 _cleanup_ephemeral_github_clone(repository, warn=warn)
+            benchmark_recorder.deactivate()
 
     def assess_incrementally_if_safe(
         self,
@@ -677,6 +692,9 @@ class AssessmentApplicationService:
     ) -> AssessmentCommandResult:
         stage("Analyzing technologies...")
         stage("Running Engineering Intelligence...")
+        from codestrata.benchmark.recorder import get_active_recorder
+
+        benchmark_recorder = get_active_recorder()
         analysis_started = perf_counter()
         resolved_pmd = _resolve_pmd_for_assessment(
             cli_path=pmd_path,
@@ -691,7 +709,8 @@ class AssessmentApplicationService:
             pmd_profile=pmd_profile,
         )
         try:
-            analysis_result = service.analyze(repository)
+            with benchmark_recorder.stage("repository_inventory"):
+                analysis_result = service.analyze(repository)
         except StaticAnalysisProviderError as error:
             raise AssessmentCommandError(sanitize_provider_text(str(error))) from error
         except Exception as error:  # noqa: BLE001 - application boundary
@@ -749,7 +768,8 @@ class AssessmentApplicationService:
         graph_started = perf_counter()
         active_graph_pipeline = graph_pipeline or GraphAssessmentPipeline()
         try:
-            graph_pipeline_result = active_graph_pipeline.run(repository)
+            with benchmark_recorder.stage("graph_generation"):
+                graph_pipeline_result = active_graph_pipeline.run(repository)
         except GraphAssessmentPipelineError as error:
             raise AssessmentCommandError(sanitize_provider_text(str(error))) from error
         except Exception as error:  # noqa: BLE001 - application boundary
@@ -768,12 +788,14 @@ class AssessmentApplicationService:
             create_directory=True,
         )
         try:
-            graph_artifacts = write_graph_artifacts(
-                graph_pipeline_result,
-                report_paths.run_directory,
-            )
+            with benchmark_recorder.stage("graph_serialization"):
+                graph_artifacts = write_graph_artifacts(
+                    graph_pipeline_result,
+                    report_paths.run_directory,
+                )
         except GraphAssessmentPipelineError as error:
             raise AssessmentCommandError(sanitize_provider_text(str(error))) from error
+        _write_scan_boundary_diagnostics(repository, report_paths.run_directory)
         graph_elapsed_ms = round((perf_counter() - graph_started) * 1000, 2)
         for line in format_graph_console_summary(graph_artifacts.summary):
             active_console.print(line)
@@ -2606,14 +2628,15 @@ class AssessmentApplicationService:
             )
 
         try:
-            recommendation_result = active_recommendation_engine.evaluate_pipeline_result(
-                pipeline_result=graph_pipeline_result,
-                evaluation=rule_evaluation,
-            )
-            recommendations_artifact = write_recommendations_artifact(
-                recommendation_result,
-                report_paths.run_directory,
-            )
+            with benchmark_recorder.stage("recommendation_generation"):
+                recommendation_result = active_recommendation_engine.evaluate_pipeline_result(
+                    pipeline_result=graph_pipeline_result,
+                    evaluation=rule_evaluation,
+                )
+                recommendations_artifact = write_recommendations_artifact(
+                    recommendation_result,
+                    report_paths.run_directory,
+                )
         except Exception as error:  # noqa: BLE001 - application boundary
             raise AssessmentCommandError(
                 f"[recommendation_engine] Recommendation evaluation failed: "
@@ -2625,6 +2648,7 @@ class AssessmentApplicationService:
         ):
             active_console.print(line)
         rules_elapsed_ms = round((perf_counter() - rules_started) * 1000, 2)
+        benchmark_recorder.record("finding_synthesis", rules_elapsed_ms)
 
         analysis_context: LLMAnalysisContext | None = None
         assessment_result: ModernizationAssessmentResult | None = None
@@ -2653,27 +2677,28 @@ class AssessmentApplicationService:
             )
             ai_started = perf_counter()
             try:
-                (
-                    analysis_context,
-                    assessment_result,
-                    ai_attempt,
-                    enrichment_result,
-                ) = _run_ai_assessment(
-                    analysis_result=analysis_result,
-                    settings=loaded_settings,
-                    resolved_model_id=resolved_model_id,
-                    temperature=temperature,
-                    max_output_tokens=max_output_tokens,
-                    context_limit=context_limit,
-                    provider=provider,
-                    prompt_builder=prompt_builder,
-                    agent=agent,
-                    context_builder=context_builder,
-                    rule_evaluation=rule_evaluation,
-                    recommendation_result=recommendation_result,
-                    repository_graph=graph_pipeline_result.repository_graph,
-                    stage=stage,
-                )
+                with benchmark_recorder.stage("ai_enrichment"):
+                    (
+                        analysis_context,
+                        assessment_result,
+                        ai_attempt,
+                        enrichment_result,
+                    ) = _run_ai_assessment(
+                        analysis_result=analysis_result,
+                        settings=loaded_settings,
+                        resolved_model_id=resolved_model_id,
+                        temperature=temperature,
+                        max_output_tokens=max_output_tokens,
+                        context_limit=context_limit,
+                        provider=provider,
+                        prompt_builder=prompt_builder,
+                        agent=agent,
+                        context_builder=context_builder,
+                        rule_evaluation=rule_evaluation,
+                        recommendation_result=recommendation_result,
+                        repository_graph=graph_pipeline_result.repository_graph,
+                        stage=stage,
+                    )
                 ai_status = AIExecutionStatus.SUCCEEDED
                 ai_execution_document = build_ai_execution_document(
                     status=AIExecutionStatus.SUCCEEDED,
@@ -3404,10 +3429,11 @@ class AssessmentApplicationService:
         )
         try:
             if write_reports:
-                written_paths = write_modernization_assessment_reports(
-                    report_input,
-                    report_paths,
-                )
+                with benchmark_recorder.stage("report_generation"):
+                    written_paths = write_modernization_assessment_reports(
+                        report_input,
+                        report_paths,
+                    )
                 if ai_execution_document is not None:
                     written = try_write_ai_execution_artifact(
                         written_paths.run_directory,
@@ -3743,7 +3769,7 @@ class AssessmentApplicationService:
                 f"Details: {sanitize_provider_text(str(error))}"
             )
 
-        return result.model_copy(
+        final_result = result.model_copy(
             update={
                 "knowledge_repository_id": knowledge_session.repository_id,
                 "knowledge_run_id": knowledge_session.run_id,
@@ -3764,6 +3790,19 @@ class AssessmentApplicationService:
                 "engine_assessment_id": engine_assessment_id,
             }
         )
+        from codestrata.benchmark.finalize import maybe_write_run_benchmark
+
+        maybe_write_run_benchmark(
+            enabled=bool(loaded_settings.analysis.runtime.benchmark_collection),
+            recorder=benchmark_recorder,
+            label=repository.name,
+            repository_path=Path(repository.path),
+            run_directory=final_result.run_directory,
+            report_json_path=final_result.json_report_path,
+            command_result=final_result,
+            ai_requested=mode == AssessmentMode.AI_ENHANCED,
+        )
+        return final_result
 
 
 def run_assessment(
@@ -4850,6 +4889,27 @@ def _build_command_result(
     )
 
 
+def _write_scan_boundary_diagnostics(
+    repository: Repository,
+    run_directory: Path,
+) -> None:
+    """Persist bounded scan-boundary diagnostics for Technical Appendix consumers."""
+
+    import json
+
+    payload = repository.metadata.get("scan_boundary")
+    if not isinstance(payload, dict):
+        return
+    target = run_directory / "scan-boundary-diagnostics.json"
+    try:
+        target.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    except OSError:
+        logger.debug("Unable to write scan-boundary diagnostics", exc_info=True)
+
+
 def _scan_repository(
     repo: str,
     *,
@@ -4889,9 +4949,13 @@ def _scan_repository(
             f"Repository path is not a directory: {path}\n\n"
             "Fix: point --repo or [repository].path at the repository root."
         )
-    return LocalRepositoryScanner(
+    scanner_impl = LocalRepositoryScanner(
         max_files=settings.analysis.runtime.max_source_files,
-    ).scan(path)
+        boundary_policy=BoundaryPolicy.from_settings(settings),
+    )
+    repository = scanner_impl.scan(path)
+    repository.metadata["scan_boundary"] = scanner_impl.last_diagnostics.to_dict()
+    return repository
 
 
 def _create_assess_ai_provider(settings: CodestrataSettings) -> AIModelProvider:

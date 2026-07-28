@@ -28,6 +28,8 @@ to the public portal.
 | Reports | [report-interpretation.md](report-interpretation.md) |
 | AI Providers | [ai-enrichment.md](ai-enrichment.md) |
 | CLI (overview) | [cli-reference.md](cli-reference.md) |
+| Anonymous telemetry (opt-in) | [telemetry.md](telemetry.md) |
+| Privacy policy | [../PRIVACY.md](../PRIVACY.md) |
 | Examples | [examples.md](examples.md) |
 | Community vs Platform | [community-vs-platform.md](community-vs-platform.md) |
 | Troubleshooting | [troubleshooting.md](troubleshooting.md) |

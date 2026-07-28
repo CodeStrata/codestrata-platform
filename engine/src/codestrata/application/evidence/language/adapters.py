@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import PurePosixPath
-
 from codestrata.application.rules.architecture.view_builder import RawPackageFacts
 from codestrata.domain.evidence.language.capabilities import (
     DependencySemantics,
@@ -41,13 +39,23 @@ _KIND_TO_SEMANTICS = {
 
 
 def classify_source_path(path: str) -> SourceClassification:
-    lower = path.replace("\\", "/").lower()
-    if any(marker in lower for marker in ("/generated/", "/.generated/", "/target/generated")):
-        return SourceClassification.GENERATED
-    parts = {part.lower() for part in PurePosixPath(lower).parts}
-    if parts.intersection({"test", "tests", "__tests__", "spec", "specs"}):
-        return SourceClassification.TEST
-    return SourceClassification.SOURCE
+    """Classify a path for language/evidence layers using shared boundary heuristics."""
+
+    from codestrata.scan_boundary import ScanSourceRole, classify_path_role
+
+    role = classify_path_role(path)
+    mapping = {
+        ScanSourceRole.PRODUCTION: SourceClassification.SOURCE,
+        ScanSourceRole.TEST: SourceClassification.TEST,
+        ScanSourceRole.FIXTURE: SourceClassification.FIXTURE,
+        ScanSourceRole.EXAMPLE: SourceClassification.EXAMPLE,
+        ScanSourceRole.GENERATED: SourceClassification.GENERATED,
+        ScanSourceRole.VENDOR: SourceClassification.VENDOR,
+        ScanSourceRole.DOCUMENTATION: SourceClassification.DOCUMENTATION,
+        ScanSourceRole.UNKNOWN: SourceClassification.UNKNOWN,
+        ScanSourceRole.EXCLUDED: SourceClassification.UNKNOWN,
+    }
+    return mapping.get(role, SourceClassification.UNKNOWN)
 
 
 def bundle_from_raw_facts(
@@ -71,10 +79,18 @@ def bundle_from_raw_facts(
     for unit_id in sorted(facts.package_files):
         paths = tuple(sorted(set(facts.package_files[unit_id])))
         classifications = {classify_source_path(path) for path in paths}
-        if classifications == {SourceClassification.TEST}:
+        if classifications == {SourceClassification.TEST} or classifications == {
+            SourceClassification.FIXTURE
+        }:
             classification = SourceClassification.TEST
         elif SourceClassification.GENERATED in classifications:
             classification = SourceClassification.GENERATED
+        elif SourceClassification.EXAMPLE in classifications:
+            classification = SourceClassification.EXAMPLE
+        elif SourceClassification.VENDOR in classifications:
+            classification = SourceClassification.VENDOR
+        elif SourceClassification.DOCUMENTATION in classifications:
+            classification = SourceClassification.DOCUMENTATION
         else:
             classification = SourceClassification.SOURCE
         source_units.append(

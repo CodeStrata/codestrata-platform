@@ -16,6 +16,10 @@ class ErrorDetailDto(BaseModel):
         default=None,
         description="Optional structured detail (for example bounded validation errors)",
     )
+    correlation_id: str | None = Field(
+        default=None,
+        description="Optional correlation id for operator diagnostics (also echoed in headers)",
+    )
 
 
 class ErrorResponseDto(BaseModel):
@@ -46,3 +50,31 @@ class PageResponseDto[T](BaseModel):
 
     items: list[T] = Field(description="Page items")
     pagination: PageMetaDto = Field(description="Pagination metadata")
+
+
+class HealthResponseDto(BaseModel):
+    """Liveness probe response."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: str = Field(description="Process liveness status")
+    version: str = Field(description="Platform service version")
+
+
+class ReadyResponseDto(BaseModel):
+    """Readiness probe response."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+    version: str
+    checks: dict[str, str] = Field(default_factory=dict)
+
+
+class ApiVersionInfoDto(BaseModel):
+    """Explicit API version metadata for clients."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    api_major: str = Field(description="URL major version, e.g. v1")
+    version_header: str = Field(description="Response header carrying the major version")

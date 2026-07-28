@@ -1,0 +1,64 @@
+PortfolioRepositoryProfileDto:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    criticality:
+      type: string
+      title: Criticality
+    availability_status:
+      type: string
+      title: Availability Status
+    engineering_snapshot_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Engineering Snapshot Id
+    engineering_snapshot_version:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Engineering Snapshot Version
+    knowledge_graph_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Knowledge Graph Id
+    risk_score:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Risk Score
+    risk_band:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Risk Band
+    finding_count:
+      type: integer
+      title: Finding Count
+    high_critical_count:
+      type: integer
+      title: High Critical Count
+    technology_count:
+      type: integer
+      title: Technology Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    freshness_status:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Freshness Status
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - criticality
+  - availability_status
+  - finding_count
+  - high_critical_count
+  - technology_count
+  - recommendation_count
+  title: PortfolioRepositoryProfileDto

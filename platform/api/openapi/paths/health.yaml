@@ -12,10 +12,7 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties:
-                  type: string
-                type: object
-                title: Response Health Health Get
+                $ref: '#/components/schemas/HealthResponseDto'
       x-codestrata-status: implemented
       x-codestrata-owner: platform-api
       x-codestrata-audience: internal
@@ -32,7 +29,8 @@ paths:
           description: Service is ready
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/ReadyResponseDto'
         '503':
           description: Service is not ready
       x-codestrata-status: implemented

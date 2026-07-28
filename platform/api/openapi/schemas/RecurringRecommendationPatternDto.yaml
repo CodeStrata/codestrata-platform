@@ -1,0 +1,67 @@
+RecurringRecommendationPatternDto:
+  properties:
+    recurrence_key:
+      type: string
+      title: Recurrence Key
+    canonical_recommendation_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Canonical Recommendation Id
+    category:
+      type: string
+      title: Category
+    priority:
+      type: string
+      title: Priority
+    linked_finding_rule:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Linked Finding Rule
+    target_technology:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Target Technology
+    target_component:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Target Component
+    roadmap_horizon:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Roadmap Horizon
+    repository_count:
+      type: integer
+      title: Repository Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    affected_repositories:
+      items:
+        type: string
+      type: array
+      title: Affected Repositories
+    priority_score:
+      $ref: '#/components/schemas/PortfolioRecommendationPriorityDto'
+    concentration:
+      $ref: '#/components/schemas/RecommendationConcentrationDto'
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+  additionalProperties: false
+  type: object
+  required:
+  - recurrence_key
+  - category
+  - priority
+  - repository_count
+  - recommendation_count
+  - priority_score
+  - concentration
+  title: RecurringRecommendationPatternDto

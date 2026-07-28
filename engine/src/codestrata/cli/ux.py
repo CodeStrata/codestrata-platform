@@ -326,6 +326,12 @@ def maybe_notify_update(*, quiet: bool = False, json_output: bool = False) -> No
     if is_machine_mode(quiet=quiet, json_output=json_output):
         return
     try:
+        from codestrata.telemetry.service import get_telemetry_service
+
+        get_telemetry_service().record_version_check()
+    except Exception:  # noqa: BLE001
+        pass
+    try:
         import json
         import urllib.request
 

@@ -1,0 +1,69 @@
+ModernizationCandidateDto:
+  properties:
+    candidate_id:
+      type: string
+      title: Candidate Id
+    repository_id:
+      type: string
+      title: Repository Id
+    theme:
+      type: string
+      title: Theme
+    priority:
+      $ref: '#/components/schemas/ModernizationPriorityScoreDto'
+    wave:
+      type: string
+      title: Wave
+    affected_technologies:
+      items:
+        type: string
+      type: array
+      title: Affected Technologies
+    affected_components:
+      items:
+        type: string
+      type: array
+      title: Affected Components
+    related_findings:
+      items:
+        type: string
+      type: array
+      title: Related Findings
+    related_recommendations:
+      items:
+        type: string
+      type: array
+      title: Related Recommendations
+    dependency_constraints:
+      items:
+        $ref: '#/components/schemas/ModernizationDependencyDto'
+      type: array
+      title: Dependency Constraints
+    constraints:
+      items:
+        $ref: '#/components/schemas/ModernizationConstraintDto'
+      type: array
+      title: Constraints
+    evidence_coverage:
+      type: number
+      title: Evidence Coverage
+    source_snapshot_references:
+      items:
+        type: string
+      type: array
+      title: Source Snapshot References
+    wave_factors:
+      items:
+        type: string
+      type: array
+      title: Wave Factors
+  additionalProperties: false
+  type: object
+  required:
+  - candidate_id
+  - repository_id
+  - theme
+  - priority
+  - wave
+  - evidence_coverage
+  title: ModernizationCandidateDto

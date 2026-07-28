@@ -231,6 +231,11 @@
   color: var(--fg);
   font-size: 1rem;
   margin-bottom: 0.45rem;
+  transition: color 0.18s ease;
+}
+
+.cs-footer a[target="_blank"]::after {
+  content: none;
 }
 
 .cs-footer__base {

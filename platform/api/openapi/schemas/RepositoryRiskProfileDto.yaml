@@ -1,0 +1,39 @@
+RepositoryRiskProfileDto:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    score:
+      type: integer
+      title: Score
+    band:
+      type: string
+      title: Band
+    finding_count:
+      type: integer
+      title: Finding Count
+    high_critical_count:
+      type: integer
+      title: High Critical Count
+    evidence_gap_count:
+      type: integer
+      title: Evidence Gap Count
+    recommendation_gap_count:
+      type: integer
+      title: Recommendation Gap Count
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - score
+  - band
+  - finding_count
+  - high_critical_count
+  - evidence_gap_count
+  - recommendation_gap_count
+  title: RepositoryRiskProfileDto

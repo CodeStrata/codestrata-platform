@@ -1,0 +1,15 @@
+PortfolioFindingClusterDto:
+  properties:
+    cluster_key:
+      type: string
+      title: Cluster Key
+    patterns:
+      items:
+        $ref: '#/components/schemas/RecurringFindingPatternDto'
+      type: array
+      title: Patterns
+  additionalProperties: false
+  type: object
+  required:
+  - cluster_key
+  title: PortfolioFindingClusterDto

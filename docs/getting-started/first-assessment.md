@@ -63,10 +63,12 @@ AI is optional. It uses **your** Engine provider credentials (for example Bedroc
 or OpenAI) — not Platform API keys.
 
 ```bash
+codestrata ai
+codestrata ai doctor
 codestrata assess --repo . --output reports --with-ai
 ```
 
-Details: [AI Providers](/ai-providers/).
+Details: [AI Providers](/ai-providers/) (Bedrock and OpenAI setup, troubleshooting).
 
 ## IDE extensions
 

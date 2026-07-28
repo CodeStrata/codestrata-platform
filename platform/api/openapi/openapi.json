@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "CodeStrata Platform API",
-    "description": "CodeStrata Platform REST API (`/api/v1`).\n\n## Product boundary\n\n**CodeStrata Platform** is the multi-user product surface: organizations, workspaces,\nrepository registry, Engineering Assessment records, Engineering Snapshot,\nEngineering Knowledge Graph, Repository Retrieval and Answering, Portfolio\nIntelligence, Executive Intelligence, and Strategic Roadmap.\n\n**CodeStrata Engine** (Community) runs local assessments and optional AI enrichment\nwithout this API. Local MCP tools expose Engine knowledge; Platform MCP extensions\nare separate. Do not confuse Platform API credentials with optional AI provider\ncredentials used by the Engine.\n\n## Authentication\n\nWhen `CODESTRATA_PLATFORM_API_KEY` is set, send `Authorization: Bearer <api-key>` on every\nrequest except `/health` and `/ready`. Development may omit the key; production\nrequires it. This shared secret is **not** an AI provider token.\n\n## Errors\n\nFailures use a stable envelope: `{\"error\": {\"code\", \"message\", \"details?\"}}`.\nValidation failures return HTTP 422 with bounded field errors. Missing or invalid\nAPI credentials return HTTP 401.\n\n## Feature flags\n\nSome capabilities are gated by environment flags (default off), including\nanswering, portfolio retrieval/answering, executive intelligence/presentation,\nstrategic roadmap, and retrieval indexing. Disabled features return clear\napplication errors rather than silent empty success.\n\n## Versioning\n\nAPI version is carried in the URL prefix (`/api/v1`) and in OpenAPI `info.version`.\nBreaking changes require a new major path version.\n\nVisual branding follows `governance/assets/DESIGN-SYSTEM.md`.\n\n\n## Internal contract foundation\n\nThis specification is the **canonical** Platform API contract (OpenAPI 3.1). Swagger UI at `/api/docs` is a generated projection.\n\nAudience: internal engineers only. Not for public docs, Community export, sitemap, or search indexing.\n\nHostname (internal): `https://platform.codestrata.ai` — API base `https://platform.codestrata.ai/api`.\n",
+    "description": "CodeStrata Platform REST API (`/api/v1`).\n\n## Product boundary\n\n**CodeStrata Platform** is the multi-user product surface: organizations, workspaces,\nrepository registry, Engineering Assessment records, Engineering Snapshot,\nEngineering Knowledge Graph, Repository Retrieval and Answering, Portfolio\nIntelligence, Executive Intelligence, and Strategic Roadmap.\n\n**CodeStrata Engine** (Community) runs local assessments and optional AI enrichment\nwithout this API. Local MCP tools expose Engine knowledge; Platform MCP extensions\nare separate. Do not confuse Platform API credentials with optional AI provider\ncredentials used by the Engine.\n\n## Authentication\n\nWhen `CODESTRATA_PLATFORM_API_KEY` is set, send `Authorization: Bearer <api-key>` on every\nrequest except `/health` and `/ready`. Development may omit the key; production\nrequires it. This shared secret is **not** an AI provider token.\n\n## Errors\n\nFailures use a stable envelope:\n`{\"error\": {\"code\", \"message\", \"details?\", \"correlation_id?\"}}`.\nValidation failures return HTTP 422 with bounded field errors. Missing or invalid\nAPI credentials return HTTP 401. Correlation ids are also echoed in\n`X-Correlation-Id` / `X-Request-Id` headers.\n\n## Feature flags\n\nSome capabilities are gated by environment flags (default off), including\nanswering, portfolio retrieval/answering, executive intelligence/presentation,\nstrategic roadmap, and retrieval indexing. Disabled features return clear\napplication errors rather than silent empty success.\n\n## Versioning\n\nPlatform REST contracts are versioned by URL major (`/api/v1`). Additive, backward-compatible fields may appear within a major. Breaking changes require a new major path and updated clients.\n\nResponses include header `X-CodeStrata-API-Version: v1`.\nOpenAPI `info.version` is `v1`.\n\nVisual branding follows `governance/assets/DESIGN-SYSTEM.md`.\n\n\n## Internal contract foundation\n\nThis specification is the **canonical** Platform API contract (OpenAPI 3.1). Swagger UI at `/api/docs` is a generated projection.\n\nAudience: internal engineers only. Not for public docs, Community export, sitemap, or search indexing.\n\nHostname (internal): `https://platform.codestrata.ai` — API base `https://platform.codestrata.ai/api`.\n",
     "version": "v1",
     "x-codestrata-audience": "internal",
     "x-codestrata-hostname": "https://platform.codestrata.ai"
@@ -1809,8 +1809,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/EngineeringTechnologyItemDto"
                   },
                   "title": "Response List Technologies Api V1 Engineering Technologies Get"
                 }
@@ -1828,7 +1827,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-engineering",
         "x-codestrata-audience": "internal"
       }
@@ -1898,8 +1897,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/EngineeringFindingItemDto"
                   },
                   "title": "Response List Findings Api V1 Engineering Findings Get"
                 }
@@ -1917,7 +1915,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-engineering",
         "x-codestrata-audience": "internal"
       }
@@ -1971,8 +1969,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/EngineeringRecommendationItemDto"
                   },
                   "title": "Response List Recommendations Api V1 Engineering Recommendations Get"
                 }
@@ -1990,7 +1987,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-engineering",
         "x-codestrata-audience": "internal"
       }
@@ -2044,8 +2041,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "$ref": "#/components/schemas/EngineeringMetricItemDto"
                   },
                   "title": "Response List Metrics Api V1 Engineering Metrics Get"
                 }
@@ -2063,7 +2059,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-engineering",
         "x-codestrata-audience": "internal"
       }
@@ -4553,7 +4549,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponse"
+                  "$ref": "#/components/schemas/PageResponse_PortfolioSummaryResponse_"
                 }
               }
             }
@@ -4812,7 +4808,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponse"
+                  "$ref": "#/components/schemas/PageResponse_PortfolioMembershipResponse_"
                 }
               }
             }
@@ -5027,7 +5023,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResponse"
+                  "$ref": "#/components/schemas/PageResponse_PortfolioSnapshotSummaryResponse_"
                 }
               }
             }
@@ -5332,9 +5328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Technologies Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Technologies Get"
+                  "$ref": "#/components/schemas/PortfolioTechnologiesResponse"
                 }
               }
             }
@@ -5350,7 +5344,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5399,9 +5393,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Findings Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Findings Get"
+                  "$ref": "#/components/schemas/PortfolioFindingsResponse"
                 }
               }
             }
@@ -5417,7 +5409,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5466,9 +5458,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Recommendations Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Recommendations Get"
+                  "$ref": "#/components/schemas/PortfolioRecommendationsResponse"
                 }
               }
             }
@@ -5484,7 +5474,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5533,9 +5523,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Risks Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Risks Get"
+                  "$ref": "#/components/schemas/PortfolioRisksResponse"
                 }
               }
             }
@@ -5551,7 +5539,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5632,9 +5620,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Modernization Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Modernization Get"
+                  "$ref": "#/components/schemas/PortfolioModernizationResponse"
                 }
               }
             }
@@ -5650,7 +5636,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5699,9 +5685,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Coverage Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Coverage Get"
+                  "$ref": "#/components/schemas/PortfolioCoverageResponse"
                 }
               }
             }
@@ -5717,7 +5701,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5837,9 +5821,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Repository Profiles Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Repository Profiles Get"
+                  "$ref": "#/components/schemas/PortfolioRepositoryProfilesResponse"
                 }
               }
             }
@@ -5855,7 +5837,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -5904,9 +5886,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": true,
-                  "title": "Response Get Overview Api V1 Portfolio Snapshots  Portfolio Snapshot Id  Overview Get"
+                  "$ref": "#/components/schemas/PortfolioEngineeringOverviewResponse"
                 }
               }
             }
@@ -5922,7 +5902,7 @@
             }
           }
         },
-        "x-codestrata-status": "partial",
+        "x-codestrata-status": "implemented",
         "x-codestrata-owner": "platform-portfolio",
         "x-codestrata-audience": "internal"
       }
@@ -9158,11 +9138,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "type": "object",
-                  "title": "Response Health Health Get"
+                  "$ref": "#/components/schemas/HealthResponseDto"
                 }
               }
             }
@@ -9186,7 +9162,9 @@
             "description": "Service is ready",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyResponseDto"
+                }
               }
             }
           },
@@ -9839,6 +9817,56 @@
         ],
         "title": "AskPortfolioAnswerRequest"
       },
+      "AssessmentFreshnessSummaryDto": {
+        "properties": {
+          "current_count": {
+            "type": "integer",
+            "title": "Current Count"
+          },
+          "aging_count": {
+            "type": "integer",
+            "title": "Aging Count"
+          },
+          "stale_count": {
+            "type": "integer",
+            "title": "Stale Count"
+          },
+          "unknown_count": {
+            "type": "integer",
+            "title": "Unknown Count"
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Evaluated At"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          },
+          "current_threshold_days": {
+            "type": "integer",
+            "title": "Current Threshold Days"
+          },
+          "aging_threshold_days": {
+            "type": "integer",
+            "title": "Aging Threshold Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "current_count",
+          "aging_count",
+          "stale_count",
+          "unknown_count",
+          "evaluated_at",
+          "policy_version",
+          "current_threshold_days",
+          "aging_threshold_days"
+        ],
+        "title": "AssessmentFreshnessSummaryDto"
+      },
       "AssessmentReferenceRequest": {
         "properties": {
           "artifact_uri": {
@@ -10388,6 +10416,59 @@
         ],
         "title": "CreateWorkspaceRequest"
       },
+      "CrossRepositoryDependencySignalDto": {
+        "properties": {
+          "signal_key": {
+            "type": "string",
+            "title": "Signal Key"
+          },
+          "signal_type": {
+            "type": "string",
+            "title": "Signal Type"
+          },
+          "is_explicit_dependency": {
+            "type": "boolean",
+            "title": "Is Explicit Dependency"
+          },
+          "is_shared_exposure": {
+            "type": "boolean",
+            "title": "Is Shared Exposure"
+          },
+          "repository_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Repository Ids"
+          },
+          "shared_key": {
+            "type": "string",
+            "title": "Shared Key"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "source_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "signal_key",
+          "signal_type",
+          "is_explicit_dependency",
+          "is_shared_exposure",
+          "shared_key",
+          "description"
+        ],
+        "title": "CrossRepositoryDependencySignalDto"
+      },
       "DependencyAnalysisResponse": {
         "properties": {
           "graph_id": {
@@ -10705,6 +10786,208 @@
           "generated_at"
         ],
         "title": "EngineeringAnswerResponse"
+      },
+      "EngineeringFindingItemDto": {
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Finding Id"
+          },
+          "source_finding_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source Finding Id"
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Category"
+          },
+          "severity": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Severity"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Title"
+          },
+          "rule_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Rule Id"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "finding_id",
+          "source_finding_id",
+          "category",
+          "severity",
+          "title",
+          "rule_id",
+          "confidence"
+        ],
+        "title": "EngineeringFindingItemDto"
+      },
+      "EngineeringMetricItemDto": {
+        "properties": {
+          "metric_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Metric Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Kind"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric_id",
+          "name",
+          "kind",
+          "value"
+        ],
+        "title": "EngineeringMetricItemDto"
+      },
+      "EngineeringRecommendationItemDto": {
+        "properties": {
+          "recommendation_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Recommendation Id"
+          },
+          "source_recommendation_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source Recommendation Id"
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Category"
+          },
+          "severity": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Severity"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Title"
+          },
+          "priority": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Priority"
+          },
+          "related_finding_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Related Finding Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "recommendation_id",
+          "source_recommendation_id",
+          "category",
+          "severity",
+          "title",
+          "priority"
+        ],
+        "title": "EngineeringRecommendationItemDto"
+      },
+      "EngineeringTechnologyItemDto": {
+        "properties": {
+          "technology_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Technology Id"
+          },
+          "canonical_key": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Canonical Key"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Display Name"
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Category"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "technology_id",
+          "canonical_key",
+          "display_name",
+          "category"
+        ],
+        "title": "EngineeringTechnologyItemDto"
+      },
+      "EvidenceCoverageSummaryDto": {
+        "properties": {
+          "findings_total": {
+            "type": "integer",
+            "title": "Findings Total"
+          },
+          "findings_with_evidence": {
+            "type": "integer",
+            "title": "Findings With Evidence"
+          },
+          "coverage_ratio": {
+            "type": "number",
+            "title": "Coverage Ratio"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "findings_total",
+          "findings_with_evidence",
+          "coverage_ratio"
+        ],
+        "title": "EvidenceCoverageSummaryDto"
       },
       "ExecutiveFindingResponse": {
         "properties": {
@@ -11373,6 +11656,30 @@
         ],
         "title": "FailAssessmentRequest"
       },
+      "FindingConcentrationDto": {
+        "properties": {
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "production_count": {
+            "type": "integer",
+            "title": "Production Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_count",
+          "finding_count",
+          "production_count"
+        ],
+        "title": "FindingConcentrationDto"
+      },
       "FindingDetailsResponse": {
         "properties": {
           "finding_id": {
@@ -11548,6 +11855,30 @@
         ],
         "title": "GeneratedReportRequest"
       },
+      "GraphCoverageSummaryDto": {
+        "properties": {
+          "repositories_with_graphs": {
+            "type": "integer",
+            "title": "Repositories With Graphs"
+          },
+          "repositories_total": {
+            "type": "integer",
+            "title": "Repositories Total"
+          },
+          "coverage_ratio": {
+            "type": "number",
+            "title": "Coverage Ratio"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repositories_with_graphs",
+          "repositories_total",
+          "coverage_ratio"
+        ],
+        "title": "GraphCoverageSummaryDto"
+      },
       "GraphEdgeResponse": {
         "properties": {
           "edge_id": {
@@ -11720,6 +12051,28 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HealthResponseDto": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Process liveness status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "Platform service version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "HealthResponseDto",
+        "description": "Liveness probe response."
       },
       "ImpactAnalysisResponse": {
         "properties": {
@@ -12891,6 +13244,184 @@
         ],
         "title": "MetricDetailsResponse"
       },
+      "ModernizationCandidateDto": {
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "title": "Candidate Id"
+          },
+          "repository_id": {
+            "type": "string",
+            "title": "Repository Id"
+          },
+          "theme": {
+            "type": "string",
+            "title": "Theme"
+          },
+          "priority": {
+            "$ref": "#/components/schemas/ModernizationPriorityScoreDto"
+          },
+          "wave": {
+            "type": "string",
+            "title": "Wave"
+          },
+          "affected_technologies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Technologies"
+          },
+          "affected_components": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Components"
+          },
+          "related_findings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Related Findings"
+          },
+          "related_recommendations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Related Recommendations"
+          },
+          "dependency_constraints": {
+            "items": {
+              "$ref": "#/components/schemas/ModernizationDependencyDto"
+            },
+            "type": "array",
+            "title": "Dependency Constraints"
+          },
+          "constraints": {
+            "items": {
+              "$ref": "#/components/schemas/ModernizationConstraintDto"
+            },
+            "type": "array",
+            "title": "Constraints"
+          },
+          "evidence_coverage": {
+            "type": "number",
+            "title": "Evidence Coverage"
+          },
+          "source_snapshot_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Snapshot References"
+          },
+          "wave_factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Wave Factors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "repository_id",
+          "theme",
+          "priority",
+          "wave",
+          "evidence_coverage"
+        ],
+        "title": "ModernizationCandidateDto"
+      },
+      "ModernizationConstraintDto": {
+        "properties": {
+          "constraint_key": {
+            "type": "string",
+            "title": "Constraint Key"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "unresolved": {
+            "type": "boolean",
+            "title": "Unresolved"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "constraint_key",
+          "description",
+          "unresolved"
+        ],
+        "title": "ModernizationConstraintDto"
+      },
+      "ModernizationDependencyDto": {
+        "properties": {
+          "dependency_key": {
+            "type": "string",
+            "title": "Dependency Key"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "blocking": {
+            "type": "boolean",
+            "title": "Blocking"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dependency_key",
+          "description",
+          "blocking"
+        ],
+        "title": "ModernizationDependencyDto"
+      },
+      "ModernizationPriorityScoreDto": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "contributing_factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Contributing Factors"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "score",
+          "band",
+          "confidence",
+          "policy_version"
+        ],
+        "title": "ModernizationPriorityScoreDto"
+      },
       "OrganizationResponse": {
         "properties": {
           "id": {
@@ -12995,36 +13526,6 @@
         "title": "PageMetaDto",
         "description": "Pagination metadata for list endpoints."
       },
-      "PageResponse": {
-        "properties": {
-          "items": {
-            "items": {},
-            "type": "array",
-            "title": "Items"
-          },
-          "total": {
-            "type": "integer",
-            "title": "Total"
-          },
-          "offset": {
-            "type": "integer",
-            "title": "Offset"
-          },
-          "limit": {
-            "type": "integer",
-            "title": "Limit"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "items",
-          "total",
-          "offset",
-          "limit"
-        ],
-        "title": "PageResponse"
-      },
       "PageResponseDto_OrganizationResponse_": {
         "properties": {
           "items": {
@@ -13093,6 +13594,111 @@
           "pagination"
         ],
         "title": "PageResponseDto[WorkspaceResponse]"
+      },
+      "PageResponse_PortfolioMembershipResponse_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioMembershipResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "PageResponse[PortfolioMembershipResponse]"
+      },
+      "PageResponse_PortfolioSnapshotSummaryResponse_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioSnapshotSummaryResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "PageResponse[PortfolioSnapshotSummaryResponse]"
+      },
+      "PageResponse_PortfolioSummaryResponse_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioSummaryResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "PageResponse[PortfolioSummaryResponse]"
       },
       "PortfolioAnswerCitationResponse": {
         "properties": {
@@ -13406,6 +14012,85 @@
         ],
         "title": "PortfolioAnswerResponse"
       },
+      "PortfolioCoverageResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioCoverageSummaryDto"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "summary"
+        ],
+        "title": "PortfolioCoverageResponse"
+      },
+      "PortfolioCoverageSummaryDto": {
+        "properties": {
+          "repositories_total": {
+            "type": "integer",
+            "title": "Repositories Total"
+          },
+          "repositories_with_published_snapshots": {
+            "type": "integer",
+            "title": "Repositories With Published Snapshots"
+          },
+          "repositories_without_assessments": {
+            "type": "integer",
+            "title": "Repositories Without Assessments"
+          },
+          "repositories_unavailable": {
+            "type": "integer",
+            "title": "Repositories Unavailable"
+          },
+          "repository_participation_percentage": {
+            "type": "number",
+            "title": "Repository Participation Percentage"
+          },
+          "repository_statuses": {
+            "items": {
+              "$ref": "#/components/schemas/RepositoryCoverageStatusDto"
+            },
+            "type": "array",
+            "title": "Repository Statuses"
+          },
+          "freshness": {
+            "$ref": "#/components/schemas/AssessmentFreshnessSummaryDto"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/EvidenceCoverageSummaryDto"
+          },
+          "recommendations": {
+            "$ref": "#/components/schemas/RecommendationCoverageSummaryDto"
+          },
+          "graphs": {
+            "$ref": "#/components/schemas/GraphCoverageSummaryDto"
+          },
+          "technology_coverage_count": {
+            "type": "integer",
+            "title": "Technology Coverage Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repositories_total",
+          "repositories_with_published_snapshots",
+          "repositories_without_assessments",
+          "repositories_unavailable",
+          "repository_participation_percentage",
+          "freshness",
+          "evidence",
+          "recommendations",
+          "graphs",
+          "technology_coverage_count"
+        ],
+        "title": "PortfolioCoverageSummaryDto"
+      },
       "PortfolioDetailsResponse": {
         "properties": {
           "portfolio": {
@@ -13426,6 +14111,109 @@
           "memberships"
         ],
         "title": "PortfolioDetailsResponse"
+      },
+      "PortfolioEngineeringOverviewResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "technologies": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioTechnologyItemDto"
+            },
+            "type": "array",
+            "title": "Technologies"
+          },
+          "findings": {
+            "$ref": "#/components/schemas/PortfolioFindingSummaryDto"
+          },
+          "recommendations": {
+            "$ref": "#/components/schemas/PortfolioRecommendationSummaryDto"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/PortfolioRiskSummaryDto"
+          },
+          "modernization": {
+            "$ref": "#/components/schemas/PortfolioModernizationSummaryDto"
+          },
+          "coverage": {
+            "$ref": "#/components/schemas/PortfolioCoverageSummaryDto"
+          },
+          "dependencies": {
+            "$ref": "#/components/schemas/SharedDependencySummaryDto"
+          },
+          "repository_profiles": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioRepositoryProfileDto"
+            },
+            "type": "array",
+            "title": "Repository Profiles"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "findings",
+          "recommendations",
+          "risk",
+          "modernization",
+          "coverage",
+          "dependencies"
+        ],
+        "title": "PortfolioEngineeringOverviewResponse"
+      },
+      "PortfolioEnvelopeDto": {
+        "properties": {
+          "portfolio_id": {
+            "type": "string",
+            "title": "Portfolio Id"
+          },
+          "portfolio_snapshot_id": {
+            "type": "string",
+            "title": "Portfolio Snapshot Id"
+          },
+          "portfolio_snapshot_version": {
+            "type": "integer",
+            "title": "Portfolio Snapshot Version"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          },
+          "aggregation_policy_version": {
+            "type": "string",
+            "title": "Aggregation Policy Version"
+          },
+          "selected_repository_count": {
+            "type": "integer",
+            "title": "Selected Repository Count"
+          },
+          "unavailable_repository_count": {
+            "type": "integer",
+            "title": "Unavailable Repository Count"
+          },
+          "source_snapshot_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Snapshot References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "portfolio_id",
+          "portfolio_snapshot_id",
+          "portfolio_snapshot_version",
+          "generated_at",
+          "aggregation_policy_version",
+          "selected_repository_count",
+          "unavailable_repository_count"
+        ],
+        "title": "PortfolioEnvelopeDto"
       },
       "PortfolioEnvelopeResponse": {
         "properties": {
@@ -13479,6 +14267,108 @@
           "source_snapshot_references"
         ],
         "title": "PortfolioEnvelopeResponse"
+      },
+      "PortfolioFindingClusterDto": {
+        "properties": {
+          "cluster_key": {
+            "type": "string",
+            "title": "Cluster Key"
+          },
+          "patterns": {
+            "items": {
+              "$ref": "#/components/schemas/RecurringFindingPatternDto"
+            },
+            "type": "array",
+            "title": "Patterns"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "cluster_key"
+        ],
+        "title": "PortfolioFindingClusterDto"
+      },
+      "PortfolioFindingDistributionDto": {
+        "properties": {
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "severity",
+          "count"
+        ],
+        "title": "PortfolioFindingDistributionDto"
+      },
+      "PortfolioFindingSummaryDto": {
+        "properties": {
+          "total_findings": {
+            "type": "integer",
+            "title": "Total Findings"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "high_critical_count": {
+            "type": "integer",
+            "title": "High Critical Count"
+          },
+          "recurring_patterns": {
+            "items": {
+              "$ref": "#/components/schemas/RecurringFindingPatternDto"
+            },
+            "type": "array",
+            "title": "Recurring Patterns"
+          },
+          "clusters": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioFindingClusterDto"
+            },
+            "type": "array",
+            "title": "Clusters"
+          },
+          "severity_distribution": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioFindingDistributionDto"
+            },
+            "type": "array",
+            "title": "Severity Distribution"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_findings",
+          "repository_count",
+          "high_critical_count"
+        ],
+        "title": "PortfolioFindingSummaryDto"
+      },
+      "PortfolioFindingsResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioFindingSummaryDto"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "summary"
+        ],
+        "title": "PortfolioFindingsResponse"
       },
       "PortfolioMembershipResponse": {
         "properties": {
@@ -13571,6 +14461,304 @@
           "active"
         ],
         "title": "PortfolioMembershipResponse"
+      },
+      "PortfolioModernizationResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioModernizationSummaryDto"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "summary"
+        ],
+        "title": "PortfolioModernizationResponse"
+      },
+      "PortfolioModernizationSummaryDto": {
+        "properties": {
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/ModernizationCandidateDto"
+            },
+            "type": "array",
+            "title": "Candidates"
+          },
+          "theme_counts": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Theme Counts"
+          },
+          "wave_counts": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Wave Counts"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "policy_version"
+        ],
+        "title": "PortfolioModernizationSummaryDto"
+      },
+      "PortfolioRecommendationPriorityDto": {
+        "properties": {
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "contributing_factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Contributing Factors"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "score",
+          "band",
+          "policy_version"
+        ],
+        "title": "PortfolioRecommendationPriorityDto"
+      },
+      "PortfolioRecommendationSummaryDto": {
+        "properties": {
+          "total_recommendations": {
+            "type": "integer",
+            "title": "Total Recommendations"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "recurring_patterns": {
+            "items": {
+              "$ref": "#/components/schemas/RecurringRecommendationPatternDto"
+            },
+            "type": "array",
+            "title": "Recurring Patterns"
+          },
+          "coverage_gaps": {
+            "items": {
+              "$ref": "#/components/schemas/RecommendationCoverageGapDto"
+            },
+            "type": "array",
+            "title": "Coverage Gaps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total_recommendations",
+          "repository_count"
+        ],
+        "title": "PortfolioRecommendationSummaryDto"
+      },
+      "PortfolioRecommendationsResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioRecommendationSummaryDto"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "summary"
+        ],
+        "title": "PortfolioRecommendationsResponse"
+      },
+      "PortfolioRepositoryProfileDto": {
+        "properties": {
+          "repository_id": {
+            "type": "string",
+            "title": "Repository Id"
+          },
+          "criticality": {
+            "type": "string",
+            "title": "Criticality"
+          },
+          "availability_status": {
+            "type": "string",
+            "title": "Availability Status"
+          },
+          "engineering_snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engineering Snapshot Id"
+          },
+          "engineering_snapshot_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engineering Snapshot Version"
+          },
+          "knowledge_graph_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Knowledge Graph Id"
+          },
+          "risk_score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Score"
+          },
+          "risk_band": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Band"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "high_critical_count": {
+            "type": "integer",
+            "title": "High Critical Count"
+          },
+          "technology_count": {
+            "type": "integer",
+            "title": "Technology Count"
+          },
+          "recommendation_count": {
+            "type": "integer",
+            "title": "Recommendation Count"
+          },
+          "freshness_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Freshness Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_id",
+          "criticality",
+          "availability_status",
+          "finding_count",
+          "high_critical_count",
+          "technology_count",
+          "recommendation_count"
+        ],
+        "title": "PortfolioRepositoryProfileDto"
+      },
+      "PortfolioRepositoryProfilesResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioRepositoryProfileDto"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Limit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
+        ],
+        "title": "PortfolioRepositoryProfilesResponse"
       },
       "PortfolioRepositorySelectionResponse": {
         "properties": {
@@ -14611,6 +15799,230 @@
         ],
         "title": "PortfolioRetrievalSearchResultResponse"
       },
+      "PortfolioRiskConcentrationDto": {
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "title": "Dimension"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "high_critical_count": {
+            "type": "integer",
+            "title": "High Critical Count"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Factors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "dimension",
+          "key",
+          "repository_count",
+          "finding_count",
+          "high_critical_count",
+          "score",
+          "band"
+        ],
+        "title": "PortfolioRiskConcentrationDto"
+      },
+      "PortfolioRiskDistributionDto": {
+        "properties": {
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "severity",
+          "count"
+        ],
+        "title": "PortfolioRiskDistributionDto"
+      },
+      "PortfolioRiskHotspotDto": {
+        "properties": {
+          "hotspot_key": {
+            "type": "string",
+            "title": "Hotspot Key"
+          },
+          "repository_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Repository Id"
+          },
+          "technology_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Technology Key"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Factors"
+          },
+          "source_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "hotspot_key",
+          "score",
+          "band"
+        ],
+        "title": "PortfolioRiskHotspotDto"
+      },
+      "PortfolioRiskSummaryDto": {
+        "properties": {
+          "overall_score": {
+            "type": "integer",
+            "title": "Overall Score"
+          },
+          "overall_band": {
+            "type": "string",
+            "title": "Overall Band"
+          },
+          "severity_distribution": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioRiskDistributionDto"
+            },
+            "type": "array",
+            "title": "Severity Distribution"
+          },
+          "concentrations": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioRiskConcentrationDto"
+            },
+            "type": "array",
+            "title": "Concentrations"
+          },
+          "hotspots": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioRiskHotspotDto"
+            },
+            "type": "array",
+            "title": "Hotspots"
+          },
+          "repository_profiles": {
+            "items": {
+              "$ref": "#/components/schemas/RepositoryRiskProfileDto"
+            },
+            "type": "array",
+            "title": "Repository Profiles"
+          },
+          "technology_profiles": {
+            "items": {
+              "$ref": "#/components/schemas/TechnologyRiskProfileDto"
+            },
+            "type": "array",
+            "title": "Technology Profiles"
+          },
+          "systemic_risks": {
+            "items": {
+              "$ref": "#/components/schemas/SystemicRiskDto"
+            },
+            "type": "array",
+            "title": "Systemic Risks"
+          },
+          "policy_version": {
+            "type": "string",
+            "title": "Policy Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "overall_score",
+          "overall_band",
+          "policy_version"
+        ],
+        "title": "PortfolioRiskSummaryDto"
+      },
+      "PortfolioRisksResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/PortfolioRiskSummaryDto"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "summary"
+        ],
+        "title": "PortfolioRisksResponse"
+      },
       "PortfolioSnapshotDetailsResponse": {
         "properties": {
           "snapshot": {
@@ -14819,6 +16231,189 @@
           "archived_at"
         ],
         "title": "PortfolioSummaryResponse"
+      },
+      "PortfolioTechnologiesResponse": {
+        "properties": {
+          "envelope": {
+            "$ref": "#/components/schemas/PortfolioEnvelopeDto"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioTechnologyItemDto"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "envelope",
+          "items",
+          "total"
+        ],
+        "title": "PortfolioTechnologiesResponse"
+      },
+      "PortfolioTechnologyItemDto": {
+        "properties": {
+          "technology_id": {
+            "type": "string",
+            "title": "Technology Id"
+          },
+          "canonical_key": {
+            "type": "string",
+            "title": "Canonical Key"
+          },
+          "normalized_name": {
+            "type": "string",
+            "title": "Normalized Name"
+          },
+          "framework": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Framework"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "repository_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Repository References"
+          },
+          "component_count": {
+            "type": "integer",
+            "title": "Component Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "high_critical_finding_count": {
+            "type": "integer",
+            "title": "High Critical Finding Count"
+          },
+          "recommendation_count": {
+            "type": "integer",
+            "title": "Recommendation Count"
+          },
+          "usage_percentage": {
+            "type": "number",
+            "title": "Usage Percentage"
+          },
+          "production_usage_count": {
+            "type": "integer",
+            "title": "Production Usage Count"
+          },
+          "lifecycle_signal": {
+            "type": "string",
+            "title": "Lifecycle Signal"
+          },
+          "standardization_status": {
+            "type": "string",
+            "title": "Standardization Status"
+          },
+          "concentration": {
+            "$ref": "#/components/schemas/TechnologyConcentrationDto"
+          },
+          "source_snapshot_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Snapshot References"
+          },
+          "usages": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioTechnologyUsageDto"
+            },
+            "type": "array",
+            "title": "Usages"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "technology_id",
+          "canonical_key",
+          "normalized_name",
+          "repository_count",
+          "component_count",
+          "finding_count",
+          "high_critical_finding_count",
+          "recommendation_count",
+          "usage_percentage",
+          "production_usage_count",
+          "lifecycle_signal",
+          "standardization_status",
+          "concentration"
+        ],
+        "title": "PortfolioTechnologyItemDto"
+      },
+      "PortfolioTechnologyUsageDto": {
+        "properties": {
+          "repository_id": {
+            "type": "string",
+            "title": "Repository Id"
+          },
+          "engineering_snapshot_id": {
+            "type": "string",
+            "title": "Engineering Snapshot Id"
+          },
+          "component_count": {
+            "type": "integer",
+            "title": "Component Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "high_critical_finding_count": {
+            "type": "integer",
+            "title": "High Critical Finding Count"
+          },
+          "recommendation_count": {
+            "type": "integer",
+            "title": "Recommendation Count"
+          },
+          "production_scope": {
+            "type": "boolean",
+            "title": "Production Scope",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_id",
+          "engineering_snapshot_id",
+          "component_count",
+          "finding_count",
+          "high_critical_finding_count",
+          "recommendation_count"
+        ],
+        "title": "PortfolioTechnologyUsageDto"
       },
       "PresentationConfidenceSummaryDto": {
         "properties": {
@@ -15785,6 +17380,33 @@
         ],
         "title": "PresentationTrendPointDto"
       },
+      "ReadyResponseDto": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "checks": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Checks"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "ReadyResponseDto",
+        "description": "Readiness probe response."
+      },
       "RebuildKnowledgeGraphRequest": {
         "properties": {
           "projector_version": {
@@ -15967,6 +17589,100 @@
         ],
         "title": "RecommendationAnalysisResponse"
       },
+      "RecommendationConcentrationDto": {
+        "properties": {
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "recommendation_count": {
+            "type": "integer",
+            "title": "Recommendation Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_count",
+          "recommendation_count"
+        ],
+        "title": "RecommendationConcentrationDto"
+      },
+      "RecommendationCoverageGapDto": {
+        "properties": {
+          "gap_key": {
+            "type": "string",
+            "title": "Gap Key"
+          },
+          "finding_rule_id": {
+            "type": "string",
+            "title": "Finding Rule Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "affected_repositories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Repositories"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "gap_key",
+          "finding_rule_id",
+          "category",
+          "severity",
+          "repository_count",
+          "finding_count",
+          "reason"
+        ],
+        "title": "RecommendationCoverageGapDto"
+      },
+      "RecommendationCoverageSummaryDto": {
+        "properties": {
+          "high_critical_findings": {
+            "type": "integer",
+            "title": "High Critical Findings"
+          },
+          "high_critical_with_recommendations": {
+            "type": "integer",
+            "title": "High Critical With Recommendations"
+          },
+          "coverage_ratio": {
+            "type": "number",
+            "title": "Coverage Ratio"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "high_critical_findings",
+          "high_critical_with_recommendations",
+          "coverage_ratio"
+        ],
+        "title": "RecommendationCoverageSummaryDto"
+      },
       "RecommendationDetailsResponse": {
         "properties": {
           "recommendation_id": {
@@ -16088,6 +17804,207 @@
           "order"
         ],
         "title": "RecommendationStepResponse"
+      },
+      "RecurringFindingPatternDto": {
+        "properties": {
+          "recurrence_key": {
+            "type": "string",
+            "title": "Recurrence Key"
+          },
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "normalized_title_id": {
+            "type": "string",
+            "title": "Normalized Title Id"
+          },
+          "technology_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Technology Key"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "affected_repositories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Repositories"
+          },
+          "severity_distribution": {
+            "items": {
+              "$ref": "#/components/schemas/PortfolioFindingDistributionDto"
+            },
+            "type": "array",
+            "title": "Severity Distribution"
+          },
+          "production_count": {
+            "type": "integer",
+            "title": "Production Count"
+          },
+          "evidence_coverage": {
+            "type": "number",
+            "title": "Evidence Coverage"
+          },
+          "recommendation_coverage": {
+            "type": "number",
+            "title": "Recommendation Coverage"
+          },
+          "concentration": {
+            "$ref": "#/components/schemas/FindingConcentrationDto"
+          },
+          "source_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "recurrence_key",
+          "rule_id",
+          "category",
+          "normalized_title_id",
+          "repository_count",
+          "finding_count",
+          "production_count",
+          "evidence_coverage",
+          "recommendation_coverage",
+          "concentration"
+        ],
+        "title": "RecurringFindingPatternDto"
+      },
+      "RecurringRecommendationPatternDto": {
+        "properties": {
+          "recurrence_key": {
+            "type": "string",
+            "title": "Recurrence Key"
+          },
+          "canonical_recommendation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canonical Recommendation Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "linked_finding_rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linked Finding Rule"
+          },
+          "target_technology": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Technology"
+          },
+          "target_component": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Component"
+          },
+          "roadmap_horizon": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Roadmap Horizon"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "recommendation_count": {
+            "type": "integer",
+            "title": "Recommendation Count"
+          },
+          "affected_repositories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Affected Repositories"
+          },
+          "priority_score": {
+            "$ref": "#/components/schemas/PortfolioRecommendationPriorityDto"
+          },
+          "concentration": {
+            "$ref": "#/components/schemas/RecommendationConcentrationDto"
+          },
+          "source_references": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source References"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "recurrence_key",
+          "category",
+          "priority",
+          "repository_count",
+          "recommendation_count",
+          "priority_score",
+          "concentration"
+        ],
+        "title": "RecurringRecommendationPatternDto"
       },
       "RegisterArtifactRequest": {
         "properties": {
@@ -16350,6 +18267,79 @@
         ],
         "title": "RepositoryContributionResponse"
       },
+      "RepositoryCoverageStatusDto": {
+        "properties": {
+          "repository_id": {
+            "type": "string",
+            "title": "Repository Id"
+          },
+          "availability_status": {
+            "type": "string",
+            "title": "Availability Status"
+          },
+          "has_published_snapshot": {
+            "type": "boolean",
+            "title": "Has Published Snapshot"
+          },
+          "has_completed_graph": {
+            "type": "boolean",
+            "title": "Has Completed Graph"
+          },
+          "has_retrieval_index": {
+            "type": "boolean",
+            "title": "Has Retrieval Index"
+          },
+          "freshness_status": {
+            "type": "string",
+            "title": "Freshness Status"
+          },
+          "assessment_age_days": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment Age Days"
+          },
+          "engineering_snapshot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engineering Snapshot Id"
+          },
+          "selected_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_id",
+          "availability_status",
+          "has_published_snapshot",
+          "has_completed_graph",
+          "has_retrieval_index",
+          "freshness_status"
+        ],
+        "title": "RepositoryCoverageStatusDto"
+      },
       "RepositoryOverviewResponse": {
         "properties": {
           "graph_id": {
@@ -16543,6 +18533,57 @@
           "updated_at"
         ],
         "title": "RepositoryResponse"
+      },
+      "RepositoryRiskProfileDto": {
+        "properties": {
+          "repository_id": {
+            "type": "string",
+            "title": "Repository Id"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "finding_count": {
+            "type": "integer",
+            "title": "Finding Count"
+          },
+          "high_critical_count": {
+            "type": "integer",
+            "title": "High Critical Count"
+          },
+          "evidence_gap_count": {
+            "type": "integer",
+            "title": "Evidence Gap Count"
+          },
+          "recommendation_gap_count": {
+            "type": "integer",
+            "title": "Recommendation Gap Count"
+          },
+          "factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Factors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_id",
+          "score",
+          "band",
+          "finding_count",
+          "high_critical_count",
+          "evidence_gap_count",
+          "recommendation_gap_count"
+        ],
+        "title": "RepositoryRiskProfileDto"
       },
       "RepositorySummaryResponse": {
         "properties": {
@@ -17854,6 +19895,32 @@
         ],
         "title": "RoadmapWavesResponse"
       },
+      "SharedDependencySummaryDto": {
+        "properties": {
+          "signals": {
+            "items": {
+              "$ref": "#/components/schemas/CrossRepositoryDependencySignalDto"
+            },
+            "type": "array",
+            "title": "Signals"
+          },
+          "explicit_dependency_count": {
+            "type": "integer",
+            "title": "Explicit Dependency Count"
+          },
+          "shared_exposure_count": {
+            "type": "integer",
+            "title": "Shared Exposure Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "explicit_dependency_count",
+          "shared_exposure_count"
+        ],
+        "title": "SharedDependencySummaryDto"
+      },
       "SnapshotDetailsResponse": {
         "properties": {
           "snapshot_id": {
@@ -18117,6 +20184,119 @@
           "limitations"
         ],
         "title": "StrategicRoadmapResponse"
+      },
+      "SystemicRiskDto": {
+        "properties": {
+          "systemic_key": {
+            "type": "string",
+            "title": "Systemic Key"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Factors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "systemic_key",
+          "title",
+          "score",
+          "band",
+          "repository_count"
+        ],
+        "title": "SystemicRiskDto"
+      },
+      "TechnologyConcentrationDto": {
+        "properties": {
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "usage_percentage": {
+            "type": "number",
+            "title": "Usage Percentage"
+          },
+          "production_usage_count": {
+            "type": "integer",
+            "title": "Production Usage Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "repository_count",
+          "usage_percentage",
+          "production_usage_count"
+        ],
+        "title": "TechnologyConcentrationDto"
+      },
+      "TechnologyRiskProfileDto": {
+        "properties": {
+          "technology_key": {
+            "type": "string",
+            "title": "Technology Key"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "repository_count": {
+            "type": "integer",
+            "title": "Repository Count"
+          },
+          "high_critical_count": {
+            "type": "integer",
+            "title": "High Critical Count"
+          },
+          "factors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Factors"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "technology_key",
+          "score",
+          "band",
+          "repository_count",
+          "high_critical_count"
+        ],
+        "title": "TechnologyRiskProfileDto"
       },
       "TraceabilityGapResponse": {
         "properties": {

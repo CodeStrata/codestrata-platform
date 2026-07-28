@@ -78,7 +78,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PageResponse'
+                $ref: '#/components/schemas/PageResponse_PortfolioSummaryResponse_'
         '422':
           description: Validation Error
           content:
@@ -249,7 +249,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PageResponse'
+                $ref: '#/components/schemas/PageResponse_PortfolioMembershipResponse_'
         '422':
           description: Validation Error
           content:
@@ -392,7 +392,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PageResponse'
+                $ref: '#/components/schemas/PageResponse_PortfolioSnapshotSummaryResponse_'
         '422':
           description: Validation Error
           content:
@@ -589,17 +589,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Technologies Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Technologies Get
+                $ref: '#/components/schemas/PortfolioTechnologiesResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/findings:
@@ -635,17 +632,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Findings Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Findings Get
+                $ref: '#/components/schemas/PortfolioFindingsResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/recommendations:
@@ -681,17 +675,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Recommendations Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Recommendations Get
+                $ref: '#/components/schemas/PortfolioRecommendationsResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/risks:
@@ -727,17 +718,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Risks Api V1 Portfolio Snapshots  Portfolio Snapshot
-                  Id  Risks Get
+                $ref: '#/components/schemas/PortfolioRisksResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/modernization:
@@ -789,17 +777,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Modernization Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Modernization Get
+                $ref: '#/components/schemas/PortfolioModernizationResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/coverage:
@@ -835,17 +820,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Coverage Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Coverage Get
+                $ref: '#/components/schemas/PortfolioCoverageResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles:
@@ -922,17 +904,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Repository Profiles Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Repository Profiles Get
+                $ref: '#/components/schemas/PortfolioRepositoryProfilesResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal
   /api/v1/portfolio-snapshots/{portfolio_snapshot_id}/overview:
@@ -968,16 +947,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
-                title: Response Get Overview Api V1 Portfolio Snapshots  Portfolio
-                  Snapshot Id  Overview Get
+                $ref: '#/components/schemas/PortfolioEngineeringOverviewResponse'
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-codestrata-status: partial
+      x-codestrata-status: implemented
       x-codestrata-owner: platform-portfolio
       x-codestrata-audience: internal

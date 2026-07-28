@@ -11,16 +11,22 @@ Advisory.
 
 ## Reporting a vulnerability
 
-Please **do not** open a public GitHub issue for security vulnerabilities.
+Please **do not** open a public GitHub issue for security vulnerabilities, and
+**do not disclose publicly** before coordinated release of a fix or advisory.
 
-Report privately by emailing the maintainer listed in the repository profile, or
-by opening a private GitHub Security Advisory if enabled on the repository.
+Report privately via:
+
+* A private **GitHub Security Advisory** on the affected public repository
+  (preferred when enabled), or
+* The security contact listed on the repository’s GitHub profile / security
+  policy page (no personal emails are published in this file)
 
 Include:
 
 * A description of the issue and its impact
 * Steps to reproduce (proof of concept if available)
 * Affected versions or commit SHAs if known
+* Whether you plan coordinated disclosure timing preferences
 
 You should receive an acknowledgment within **7 days**. We aim to provide a fix
 or mitigation timeline within **30 days** for confirmed issues in supported

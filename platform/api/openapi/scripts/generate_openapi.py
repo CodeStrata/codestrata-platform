@@ -24,20 +24,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[4]
 OPENAPI_ROOT = Path(__file__).resolve().parents[1]
-PARTIAL_OPS = {
-    ("get", "/api/v1/engineering/technologies"),
-    ("get", "/api/v1/engineering/findings"),
-    ("get", "/api/v1/engineering/recommendations"),
-    ("get", "/api/v1/engineering/metrics"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/technologies"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/findings"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/recommendations"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/risks"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/modernization"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/coverage"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles"),
-    ("get", "/api/v1/portfolio-snapshots/{portfolio_snapshot_id}/overview"),
-}
+PARTIAL_OPS: set[tuple[str, str]] = set()
 INTERNAL_OPS = {
     ("post", "/api/v1/portfolios/{portfolio_id}/archive"),
 }

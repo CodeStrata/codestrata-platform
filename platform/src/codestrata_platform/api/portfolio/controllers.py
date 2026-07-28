@@ -2,22 +2,38 @@
 
 from __future__ import annotations
 
-from typing import Annotated, Any
+from typing import Annotated, TypeVar
 
 from fastapi import APIRouter, Query, status
+from pydantic import BaseModel
 
 from codestrata_platform.api.configuration.dependencies import ServicesDep
+from codestrata_platform.api.contracts.serialization import to_jsonable
+from codestrata_platform.api.contracts.validation import validate_response
+from codestrata_platform.api.portfolio.aggregation_dto import (
+    PortfolioCoverageResponse,
+    PortfolioEngineeringOverviewResponse,
+    PortfolioFindingsResponse,
+    PortfolioModernizationResponse,
+    PortfolioRecommendationsResponse,
+    PortfolioRepositoryProfilesResponse,
+    PortfolioRisksResponse,
+    PortfolioTechnologiesResponse,
+)
 from codestrata_platform.api.portfolio.dto import (
     AddRepositoryRequest,
     BuildSnapshotRequest,
     CreatePortfolioRequest,
     PageResponse,
     PortfolioDetailsResponse,
+    PortfolioMembershipResponse,
     PortfolioSnapshotDetailsResponse,
+    PortfolioSnapshotSummaryResponse,
+    PortfolioSummaryResponse,
     UpdatePortfolioRequest,
 )
 from codestrata_platform.api.portfolio.mappers import (
-    page_response,
+    membership_response,
     portfolio_details,
     portfolio_summary,
     snapshot_details,
@@ -49,24 +65,11 @@ from codestrata_platform.domain.workspace.ids import WorkspaceId
 
 router = APIRouter(tags=["Portfolio"])
 
+TModel = TypeVar("TModel", bound=BaseModel)
 
-def _serialize(obj: Any) -> Any:
-    if obj is None or isinstance(obj, (str, int, float, bool)):
-        return obj
-    if isinstance(obj, dict):
-        return {str(key): _serialize(value) for key, value in obj.items()}
-    if isinstance(obj, (list, tuple)):
-        return [_serialize(item) for item in obj]
-    if hasattr(obj, "value") and not hasattr(obj, "__dataclass_fields__"):
-        return obj.value
-    if hasattr(obj, "__dataclass_fields__"):
-        return {
-            field: _serialize(getattr(obj, field))
-            for field in obj.__dataclass_fields__
-        }
-    if hasattr(obj, "value"):
-        return obj.value
-    return str(obj)
+
+def _dto(model_type: type[TModel], payload: object) -> TModel:
+    return validate_response(model_type, to_jsonable(payload))
 
 
 @router.post(
@@ -90,7 +93,7 @@ def create_portfolio(
     return portfolio_details(details)
 
 
-@router.get("/portfolios", response_model=PageResponse)
+@router.get("/portfolios", response_model=PageResponse[PortfolioSummaryResponse])
 def list_portfolios(
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
@@ -98,7 +101,7 @@ def list_portfolios(
     status_filter: Annotated[str | None, Query(alias="status")] = None,
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=500)] = 50,
-) -> PageResponse:
+) -> PageResponse[PortfolioSummaryResponse]:
     page = services.portfolio.management.list_portfolios(
         ListPortfoliosQuery(
             organization_id=OrganizationId(organization_id),
@@ -108,8 +111,8 @@ def list_portfolios(
             limit=limit,
         )
     )
-    return PageResponse(
-        items=[portfolio_summary(item).model_dump() for item in page.items],
+    return PageResponse[PortfolioSummaryResponse](
+        items=[portfolio_summary(item) for item in page.items],
         total=page.total,
         offset=page.offset,
         limit=page.limit,
@@ -198,7 +201,10 @@ def remove_repository(
     return portfolio_details(details)
 
 
-@router.get("/portfolios/{portfolio_id}/repositories", response_model=PageResponse)
+@router.get(
+    "/portfolios/{portfolio_id}/repositories",
+    response_model=PageResponse[PortfolioMembershipResponse],
+)
 def list_repositories(
     portfolio_id: str,
     services: ServicesDep,
@@ -206,7 +212,7 @@ def list_repositories(
     workspace_id: Annotated[str, Query(min_length=1)],
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=500)] = 50,
-) -> PageResponse:
+) -> PageResponse[PortfolioMembershipResponse]:
     page = services.portfolio.management.list_repositories(
         ListPortfolioRepositoriesQuery(
             portfolio_id=PortfolioId(portfolio_id),
@@ -216,7 +222,12 @@ def list_repositories(
             limit=limit,
         )
     )
-    return page_response(page)
+    return PageResponse[PortfolioMembershipResponse](
+        items=[membership_response(item) for item in page.items],
+        total=page.total,
+        offset=page.offset,
+        limit=page.limit,
+    )
 
 
 @router.post(
@@ -260,7 +271,10 @@ def rebuild_snapshot(
     return snapshot_details(details)
 
 
-@router.get("/portfolios/{portfolio_id}/snapshots", response_model=PageResponse)
+@router.get(
+    "/portfolios/{portfolio_id}/snapshots",
+    response_model=PageResponse[PortfolioSnapshotSummaryResponse],
+)
 def list_snapshots(
     portfolio_id: str,
     services: ServicesDep,
@@ -268,7 +282,7 @@ def list_snapshots(
     workspace_id: Annotated[str, Query(min_length=1)],
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=500)] = 50,
-) -> PageResponse:
+) -> PageResponse[PortfolioSnapshotSummaryResponse]:
     page = services.portfolio.aggregation.list_snapshots(
         ListPortfolioSnapshotsQuery(
             portfolio_id=PortfolioId(portfolio_id),
@@ -278,8 +292,8 @@ def list_snapshots(
             limit=limit,
         )
     )
-    return PageResponse(
-        items=[snapshot_summary(item).model_dump() for item in page.items],
+    return PageResponse[PortfolioSnapshotSummaryResponse](
+        items=[snapshot_summary(item) for item in page.items],
         total=page.total,
         offset=page.offset,
         limit=page.limit,
@@ -333,7 +347,7 @@ def _inventory_query(
     workspace_id: str,
     offset: int,
     limit: int,
-    **filters: Any,
+    **filters: object,
 ) -> PortfolioInventoryQuery:
     return PortfolioInventoryQuery(
         portfolio_snapshot_id=PortfolioSnapshotId(portfolio_snapshot_id),
@@ -341,11 +355,14 @@ def _inventory_query(
         workspace_id=WorkspaceId(workspace_id),
         offset=offset,
         limit=limit,
-        **filters,
+        **filters,  # type: ignore[arg-type]
     )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/technologies")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/technologies",
+    response_model=PortfolioTechnologiesResponse,
+)
 def get_technologies(
     portfolio_snapshot_id: str,
     services: ServicesDep,
@@ -355,7 +372,7 @@ def get_technologies(
     framework: Annotated[str | None, Query()] = None,
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=500)] = 50,
-) -> dict[str, Any]:
+) -> PortfolioTechnologiesResponse:
     result = services.portfolio.aggregation.get_technologies(
         _inventory_query(
             portfolio_snapshot_id,
@@ -367,20 +384,26 @@ def get_technologies(
             framework=framework,
         )
     )
-    return {
-        "envelope": _serialize(result.envelope),
-        "items": _serialize(result.items),
-        "total": result.total,
-    }
+    return _dto(
+        PortfolioTechnologiesResponse,
+        {
+            "envelope": result.envelope,
+            "items": result.items,
+            "total": result.total,
+        },
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/findings")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/findings",
+    response_model=PortfolioFindingsResponse,
+)
 def get_findings(
     portfolio_snapshot_id: str,
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
     workspace_id: Annotated[str, Query(min_length=1)],
-) -> dict[str, Any]:
+) -> PortfolioFindingsResponse:
     result = services.portfolio.aggregation.get_findings(
         _inventory_query(
             portfolio_snapshot_id,
@@ -390,16 +413,22 @@ def get_findings(
             limit=50,
         )
     )
-    return {"envelope": _serialize(result.envelope), "summary": _serialize(result.summary)}
+    return _dto(
+        PortfolioFindingsResponse,
+        {"envelope": result.envelope, "summary": result.summary},
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/recommendations")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/recommendations",
+    response_model=PortfolioRecommendationsResponse,
+)
 def get_recommendations(
     portfolio_snapshot_id: str,
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
     workspace_id: Annotated[str, Query(min_length=1)],
-) -> dict[str, Any]:
+) -> PortfolioRecommendationsResponse:
     result = services.portfolio.aggregation.get_recommendations(
         _inventory_query(
             portfolio_snapshot_id,
@@ -409,16 +438,22 @@ def get_recommendations(
             limit=50,
         )
     )
-    return {"envelope": _serialize(result.envelope), "summary": _serialize(result.summary)}
+    return _dto(
+        PortfolioRecommendationsResponse,
+        {"envelope": result.envelope, "summary": result.summary},
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/risks")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/risks",
+    response_model=PortfolioRisksResponse,
+)
 def get_risks(
     portfolio_snapshot_id: str,
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
     workspace_id: Annotated[str, Query(min_length=1)],
-) -> dict[str, Any]:
+) -> PortfolioRisksResponse:
     result = services.portfolio.aggregation.get_risk(
         _inventory_query(
             portfolio_snapshot_id,
@@ -428,10 +463,16 @@ def get_risks(
             limit=50,
         )
     )
-    return {"envelope": _serialize(result.envelope), "summary": _serialize(result.summary)}
+    return _dto(
+        PortfolioRisksResponse,
+        {"envelope": result.envelope, "summary": result.summary},
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/modernization")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/modernization",
+    response_model=PortfolioModernizationResponse,
+)
 def get_modernization(
     portfolio_snapshot_id: str,
     services: ServicesDep,
@@ -439,7 +480,7 @@ def get_modernization(
     workspace_id: Annotated[str, Query(min_length=1)],
     modernization_theme: Annotated[str | None, Query()] = None,
     modernization_wave: Annotated[str | None, Query()] = None,
-) -> dict[str, Any]:
+) -> PortfolioModernizationResponse:
     result = services.portfolio.aggregation.get_modernization(
         _inventory_query(
             portfolio_snapshot_id,
@@ -459,22 +500,28 @@ def get_modernization(
     if modernization_wave:
         needle = modernization_wave.strip().lower()
         candidates = [item for item in candidates if item.wave.value == needle]
-    return {
-        "envelope": _serialize(result.envelope),
-        "summary": {
-            **_serialize(summary),
-            "candidates": _serialize(candidates),
+    summary_payload = to_jsonable(summary)
+    assert isinstance(summary_payload, dict)
+    summary_payload["candidates"] = to_jsonable(candidates)
+    return _dto(
+        PortfolioModernizationResponse,
+        {
+            "envelope": result.envelope,
+            "summary": summary_payload,
         },
-    }
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/coverage")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/coverage",
+    response_model=PortfolioCoverageResponse,
+)
 def get_coverage(
     portfolio_snapshot_id: str,
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
     workspace_id: Annotated[str, Query(min_length=1)],
-) -> dict[str, Any]:
+) -> PortfolioCoverageResponse:
     result = services.portfolio.aggregation.get_coverage(
         _inventory_query(
             portfolio_snapshot_id,
@@ -484,10 +531,16 @@ def get_coverage(
             limit=50,
         )
     )
-    return {"envelope": _serialize(result.envelope), "summary": _serialize(result.summary)}
+    return _dto(
+        PortfolioCoverageResponse,
+        {"envelope": result.envelope, "summary": result.summary},
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/repository-profiles",
+    response_model=PortfolioRepositoryProfilesResponse,
+)
 def get_repository_profiles(
     portfolio_snapshot_id: str,
     services: ServicesDep,
@@ -498,7 +551,7 @@ def get_repository_profiles(
     freshness_status: Annotated[str | None, Query()] = None,
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=500)] = 50,
-) -> dict[str, Any]:
+) -> PortfolioRepositoryProfilesResponse:
     profiles = services.portfolio.aggregation.get_repository_profiles(
         _inventory_query(
             portfolio_snapshot_id,
@@ -511,16 +564,27 @@ def get_repository_profiles(
             freshness_status=freshness_status,
         )
     )
-    return {"items": _serialize(profiles), "total": len(profiles), "offset": offset, "limit": limit}
+    return _dto(
+        PortfolioRepositoryProfilesResponse,
+        {
+            "items": profiles,
+            "total": len(profiles),
+            "offset": offset,
+            "limit": limit,
+        },
+    )
 
 
-@router.get("/portfolio-snapshots/{portfolio_snapshot_id}/overview")
+@router.get(
+    "/portfolio-snapshots/{portfolio_snapshot_id}/overview",
+    response_model=PortfolioEngineeringOverviewResponse,
+)
 def get_overview(
     portfolio_snapshot_id: str,
     services: ServicesDep,
     organization_id: Annotated[str, Query(min_length=1)],
     workspace_id: Annotated[str, Query(min_length=1)],
-) -> dict[str, Any]:
+) -> PortfolioEngineeringOverviewResponse:
     result = services.portfolio.aggregation.get_overview(
         _inventory_query(
             portfolio_snapshot_id,
@@ -530,7 +594,7 @@ def get_overview(
             limit=50,
         )
     )
-    return _serialize(result)
+    return _dto(PortfolioEngineeringOverviewResponse, result)
 
 
 @router.post(

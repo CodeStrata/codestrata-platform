@@ -1,0 +1,12 @@
+PortfolioCoverageResponse:
+  properties:
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeDto'
+    summary:
+      $ref: '#/components/schemas/PortfolioCoverageSummaryDto'
+  additionalProperties: false
+  type: object
+  required:
+  - envelope
+  - summary
+  title: PortfolioCoverageResponse

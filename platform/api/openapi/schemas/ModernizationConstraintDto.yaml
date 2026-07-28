@@ -1,0 +1,18 @@
+ModernizationConstraintDto:
+  properties:
+    constraint_key:
+      type: string
+      title: Constraint Key
+    description:
+      type: string
+      title: Description
+    unresolved:
+      type: boolean
+      title: Unresolved
+  additionalProperties: false
+  type: object
+  required:
+  - constraint_key
+  - description
+  - unresolved
+  title: ModernizationConstraintDto

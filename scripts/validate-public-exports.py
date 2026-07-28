@@ -116,6 +116,13 @@ def _validate_markdown_links(
     return errors
 
 
+GENERATED_EXPORT_MARKERS = frozenset(
+    {
+        ".codestrata-export-snapshot.json",
+    }
+)
+
+
 def _validate_allowlist(
     *,
     name: str,
@@ -135,6 +142,8 @@ def _validate_allowlist(
         if item.get("to")
     ]
     for rel in rels:
+        if Path(rel).name in GENERATED_EXPORT_MARKERS:
+            continue
         if any(
             rel == p.rstrip("/") or rel.startswith(p)
             for p in extra_prefixes

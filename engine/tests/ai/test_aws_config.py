@@ -228,11 +228,115 @@ def test_invalid_profile_raises_friendly_error() -> None:
 
 
 def test_authentication_error_message_includes_guidance() -> None:
-    message = format_aws_authentication_error(profile="codestrata")
+    message = format_aws_authentication_error(profile="my-profile")
     assert "Unable to authenticate with AWS." in message
-    assert "aws sso login --profile codestrata" in message
-    assert "aws configure sso" in message
-    assert "configure AWS credentials" in message
+    assert "aws sso login --profile my-profile" in message
+    assert "standard AWS credential provider chain" in message
+    assert "AWS_PROFILE" in message
+    assert "aws configure" in message
+    assert "developer-specific" in message
+
+
+def test_probe_aws_session_reports_env_profile_source(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(AWS_PROFILE_ENV, "env-profile")
+    monkeypatch.setenv(AWS_REGION_ENV, "us-west-2")
+    monkeypatch.delenv("AWS_ACCESS_KEY_ID", raising=False)
+
+    class _Creds:
+        pass
+
+    class _Sts:
+        def get_caller_identity(self) -> dict[str, str]:
+            return {"Account": "123", "Arn": "arn:aws:iam::123:user/test", "UserId": "AIDATEST"}
+
+    class _Session:
+        region_name = "us-west-2"
+
+        def get_credentials(self) -> _Creds:
+            return _Creds()
+
+        def client(self, service_name: str, region_name: str | None = None) -> _Sts:
+            assert service_name == "sts"
+            return _Sts()
+
+    with patch("boto3.Session", return_value=_Session()):
+        from codestrata.ai.aws_config import probe_aws_session_for_bedrock
+
+        probe = probe_aws_session_for_bedrock()
+    assert probe.ok is True
+    assert probe.resolved.profile == "env-profile"
+    assert AWS_PROFILE_ENV in probe.resolved.source_profile
+    assert "env-profile" in probe.credential_source
+    assert probe.effective_region == "us-west-2"
+
+
+def test_probe_aws_session_default_chain_without_toml_profile(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv(AWS_PROFILE_ENV, raising=False)
+    monkeypatch.setenv(AWS_REGION_ENV, "eu-west-1")
+    monkeypatch.delenv("AWS_ACCESS_KEY_ID", raising=False)
+
+    class _Creds:
+        pass
+
+    class _Sts:
+        def get_caller_identity(self) -> dict[str, str]:
+            return {"Account": "123", "Arn": "arn:aws:iam::123:user/test", "UserId": "AIDATEST"}
+
+    class _Session:
+        region_name = "eu-west-1"
+
+        def get_credentials(self) -> _Creds:
+            return _Creds()
+
+        def client(self, service_name: str, region_name: str | None = None) -> _Sts:
+            assert service_name == "sts"
+            return _Sts()
+
+    with patch("boto3.Session", return_value=_Session()) as session_ctor:
+        from codestrata.ai.aws_config import probe_aws_session_for_bedrock
+
+        probe = probe_aws_session_for_bedrock()
+    assert probe.ok is True
+    assert probe.resolved.profile is None
+    assert "default credential chain" in probe.credential_source
+    # Session built without profile_name (default chain)
+    kwargs = session_ctor.call_args.kwargs
+    assert "profile_name" not in kwargs
+    assert kwargs.get("region_name") == "eu-west-1"
+
+
+def test_probe_aws_session_rejects_expired_credentials(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(AWS_PROFILE_ENV, "expired-profile")
+    monkeypatch.setenv(AWS_REGION_ENV, "us-east-1")
+
+    class _Creds:
+        pass
+
+    class _Sts:
+        def get_caller_identity(self) -> dict[str, str]:
+            raise RuntimeError("Token has expired and refresh failed")
+
+    class _Session:
+        region_name = "us-east-1"
+
+        def get_credentials(self) -> _Creds:
+            return _Creds()
+
+        def client(self, service_name: str, region_name: str | None = None) -> _Sts:
+            return _Sts()
+
+    with patch("boto3.Session", return_value=_Session()):
+        from codestrata.ai.aws_config import probe_aws_session_for_bedrock
+
+        probe = probe_aws_session_for_bedrock()
+    assert probe.ok is False
+    assert "Unable to authenticate" in probe.detail
+    assert probe.guidance is not None
+    assert "aws sso login" in probe.guidance
 
 
 def test_load_settings_reads_aws_section(tmp_path: Path) -> None:

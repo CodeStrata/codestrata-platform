@@ -98,8 +98,20 @@ def test_suppressed_non_tty_bare_fallback(monkeypatch) -> None:
 def test_community_command_registry_excludes_platform_and_maintainer() -> None:
     click_cmd = typer.main.get_command(app)
     names = set(click_cmd.list_commands(None))  # type: ignore[arg-type]
-    for forbidden in ("ai", "enterprise", "repository", "acceptance", "release"):
+    # Community owns ``ai`` (assess provider discovery). Platform/maintainer only.
+    for forbidden in ("enterprise", "repository", "acceptance", "release"):
         assert forbidden not in names, f"{forbidden} must not be on Community CLI"
+    assert "ai" in names
+    assert "assess" in names
+    assert "doctor" in names
+
+
+def test_help_lists_community_ai_command() -> None:
+    result = runner.invoke(app, ["--help"])
+    out = _strip_ansi(result.stdout)
+    assert result.exit_code == 0
+    assert "ai" in out
+    assert "╭─ Platform" not in out
 
 
 def test_version_consistency_across_surfaces(monkeypatch, tmp_path: Path) -> None:

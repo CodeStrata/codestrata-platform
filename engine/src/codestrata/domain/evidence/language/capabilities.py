@@ -37,7 +37,11 @@ class DependencySemantics(StrEnum):
 class SourceClassification(StrEnum):
     SOURCE = "source"
     TEST = "test"
+    FIXTURE = "fixture"
+    EXAMPLE = "example"
     GENERATED = "generated"
+    VENDOR = "vendor"
+    DOCUMENTATION = "documentation"
     UNKNOWN = "unknown"
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 from collections.abc import Mapping, Sequence
 from pathlib import PurePosixPath
 
@@ -9,20 +10,7 @@ from codestrata.application.evidence.language.adapters import classify_source_pa
 from codestrata.domain.evidence.language.capabilities import SourceClassification
 
 # Default exclusions for complexity measurement (includes .codestrata workspace clones).
-DEFAULT_COMPLEXITY_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/bin/",
-    "/obj/",
-    "/packages/",
-)
+DEFAULT_COMPLEXITY_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _SUPPORTED_SUFFIXES: dict[str, frozenset[str]] = {
     "python": frozenset({".py"}),

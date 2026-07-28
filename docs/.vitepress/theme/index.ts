@@ -3,6 +3,7 @@ import { h, watch, onMounted } from "vue";
 import type { Theme } from "vitepress";
 import { useData } from "vitepress";
 import CsFooter from "./CsFooter.vue";
+import CsDocsHomeLink from "./CsDocsHomeLink.vue";
 import "./custom.css";
 
 function syncDataTheme(isDark: boolean) {
@@ -11,7 +12,6 @@ function syncDataTheme(isDark: boolean) {
     "data-theme",
     isDark ? "dark" : "light",
   );
-  // Match website theme-color for browser chrome
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     meta.setAttribute("content", isDark ? "#0b0d10" : "#ffffff");
@@ -28,6 +28,8 @@ const Layout = {
     });
     return () =>
       h(DefaultTheme.Layout, null, {
+        // Outside the logo <a> so Docs home stays distinct from website logo.
+        "nav-bar-content-before": () => h(CsDocsHomeLink),
         "layout-bottom": () => h(CsFooter),
       });
   },

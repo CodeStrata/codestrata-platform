@@ -56,6 +56,6 @@ Do not duplicate Design System rules in this file or elsewhere under
 ## 5. References
 
 - [001_PRODUCT_VISION.md](../constitution/001_PRODUCT_VISION.md)
-- [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) (pointer only)
+- [DESIGN-SYSTEM.md](../assets/DESIGN-SYSTEM.md)
 - [`../assets/DESIGN-SYSTEM.md`](../assets/DESIGN-SYSTEM.md) (authority)
 - [engine/src/codestrata/reporting/branding.py](../../engine/src/codestrata/reporting/branding.py)

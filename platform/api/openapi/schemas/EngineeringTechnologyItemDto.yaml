@@ -1,0 +1,26 @@
+EngineeringTechnologyItemDto:
+  properties:
+    technology_id:
+      type: string
+      minLength: 1
+      title: Technology Id
+    canonical_key:
+      type: string
+      minLength: 1
+      title: Canonical Key
+    display_name:
+      type: string
+      minLength: 1
+      title: Display Name
+    category:
+      type: string
+      minLength: 1
+      title: Category
+  additionalProperties: false
+  type: object
+  required:
+  - technology_id
+  - canonical_key
+  - display_name
+  - category
+  title: EngineeringTechnologyItemDto

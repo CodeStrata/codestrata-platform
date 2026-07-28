@@ -1,4 +1,4 @@
-# Release Checklist
+# Internal Release Checklist
 
 **Status:** Foundation  
 **Authority:** Playbook
@@ -37,7 +37,10 @@ handbook).
 - [ ] Public contract changes reviewed against
   [PUBLIC_CONTRACT_COMPATIBILITY.md](PUBLIC_CONTRACT_COMPATIBILITY.md)
 
-<!-- TODO: Split Community Engine export publish steps into a dedicated playbook. -->
+Community public distribution gate:
+
+- [`../release/COMMUNITY_RELEASE_CHECKLIST.md`](../release/COMMUNITY_RELEASE_CHECKLIST.md)
+- Orchestrator: `python scripts/validate_release.py`
 
 ## References
 

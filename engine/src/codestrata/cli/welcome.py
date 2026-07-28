@@ -56,6 +56,12 @@ def register_welcome_command(app: typer.Typer) -> None:
             return
 
         render_landing(include_first_run=True)
+        try:
+            from codestrata.telemetry.prompt import maybe_prompt_telemetry_opt_in
+
+            maybe_prompt_telemetry_opt_in()
+        except Exception:  # noqa: BLE001
+            return
 
 
 __all__ = ["register_welcome_command"]

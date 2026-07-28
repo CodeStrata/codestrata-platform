@@ -128,4 +128,4 @@ required for broad open-editor reach.
 
 - `vscode-plugin/RELEASE_CHECKLIST.md`
 - `cursor-plugin/RELEASE_CHECKLIST.md`
-- `governance/reports/EXTENSION_MARKETPLACE_PUBLICATION.md`
+- `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`

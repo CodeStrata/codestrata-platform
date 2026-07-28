@@ -155,6 +155,13 @@ def report_open_command(
         error(str(exc))
         raise typer.Exit(code=1) from exc
 
+    try:
+        from codestrata.telemetry.service import get_telemetry_service
+
+        get_telemetry_service().record_report_opened()
+    except Exception:  # noqa: BLE001 - never break open
+        pass
+
     if is_machine_mode() or no_browser or os.environ.get("CI"):
         typer.echo(str(target))
         return

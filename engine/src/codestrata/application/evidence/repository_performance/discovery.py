@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -20,21 +21,7 @@ from codestrata.domain.evidence.repository_performance.enums import (
     PerformanceResourceKind,
 )
 
-DEFAULT_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/.venv/",
-    "/venv/",
-    "/__pycache__/",
-    "/reports/",
-)
+DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _DEPENDENCY_MANIFEST_NAMES = frozenset(
     {

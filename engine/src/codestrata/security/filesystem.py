@@ -2,58 +2,59 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
+
+from codestrata.scan_boundary import BoundaryPolicy, BoundaryService
 
 
 def iter_repository_files(
     repository_root: Path,
     *,
-    excluded_directories: set[str],
+    excluded_directories: set[str] | None = None,
     max_files: int | None = None,
+    boundary_policy: BoundaryPolicy | None = None,
 ) -> list[str]:
     """Return sorted repo-relative file paths without following symlinks.
 
-    Directory symlinks are not descended into. File symlinks are included only
-    when their resolved target remains inside ``repository_root``.
+    Uses the shared :class:`BoundaryService`. When ``excluded_directories`` is
+    provided (including an empty set), it becomes the complete directory-name
+    exclusion set and ignore-path markers are cleared so callers can exercise
+    traversal independently of default policy. Prefer ``boundary_policy`` for
+    assessment paths.
     """
 
-    root = repository_root.expanduser().resolve()
-    collected: list[str] = []
-
-    for dirpath, dirnames, filenames in os.walk(root, topdown=True, followlinks=False):
-        current = Path(dirpath)
-        # Prune excluded directories in-place (os.walk contract).
-        dirnames[:] = sorted(
-            name
-            for name in dirnames
-            if name not in excluded_directories and not (current / name).is_symlink()
+    if boundary_policy is not None:
+        policy = boundary_policy
+        if excluded_directories:
+            policy = BoundaryPolicy(
+                excluded_directory_names=frozenset(
+                    policy.excluded_directory_names | set(excluded_directories)
+                ),
+                include_paths=policy.include_paths,
+                exclude_paths=policy.exclude_paths,
+                production_roots=policy.production_roots,
+                test_roots=policy.test_roots,
+                example_roots=policy.example_roots,
+                generated_roots=policy.generated_roots,
+                vendor_roots=policy.vendor_roots,
+                fixture_roots=policy.fixture_roots,
+                documentation_roots=policy.documentation_roots,
+                source_role_overrides=policy.source_role_overrides,
+                ignore_path_markers=policy.ignore_path_markers,
+                policy_version=policy.policy_version,
+            )
+    elif excluded_directories is not None:
+        policy = BoundaryPolicy(
+            excluded_directory_names=frozenset(excluded_directories),
+            ignore_path_markers=(),
         )
+    else:
+        policy = BoundaryPolicy()
 
-        for name in filenames:
-            path = current / name
-            if path.is_symlink():
-                try:
-                    target = path.resolve(strict=False)
-                    target.relative_to(root)
-                except (ValueError, OSError, RuntimeError):
-                    continue
-            elif not path.is_file():
-                continue
-
-            try:
-                relative = path.relative_to(root).as_posix()
-            except ValueError:
-                continue
-
-            if any(part in excluded_directories for part in relative.split("/")):
-                continue
-
-            collected.append(relative)
-            if max_files is not None and len(collected) >= max_files:
-                return sorted(collected)
-
-    return sorted(collected)
+    return BoundaryService(policy).collect_files(
+        repository_root,
+        max_files=max_files,
+    )
 
 
 def assert_path_within_root(candidate: Path, root: Path) -> Path:

@@ -9,7 +9,7 @@ Checklist for reviewing AI-produced (or human) diffs before merge.
 
 ## Scope
 
-PR / local review. Complements [RELEASE_CHECKLIST.md](../playbooks/RELEASE_CHECKLIST.md).
+PR / local review. Complements [INTERNAL_RELEASE_CHECKLIST.md](../playbooks/INTERNAL_RELEASE_CHECKLIST.md).
 
 ## Architecture
 

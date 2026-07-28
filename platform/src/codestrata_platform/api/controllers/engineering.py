@@ -6,6 +6,13 @@ from fastapi import APIRouter, Query, status
 from pydantic import BaseModel, ConfigDict, Field
 
 from codestrata_platform.api.configuration.dependencies import ServicesDep
+from codestrata_platform.api.contracts.validation import validate_response
+from codestrata_platform.api.dto.response.engineering import (
+    EngineeringFindingItemDto,
+    EngineeringMetricItemDto,
+    EngineeringRecommendationItemDto,
+    EngineeringTechnologyItemDto,
+)
 from codestrata_platform.application.commands.engineering import BuildEngineeringSnapshotCommand
 from codestrata_platform.application.queries.engineering import (
     GetEngineeringSnapshotQuery,
@@ -154,36 +161,37 @@ def get_snapshot(snapshot_id: str, services: ServicesDep) -> SnapshotDetailsResp
     )
 
 
-@router.get("/technologies")
+@router.get("/technologies", response_model=list[EngineeringTechnologyItemDto])
 def list_technologies(
     services: ServicesDep,
     assessment_id: str | None = Query(default=None),
     snapshot_id: str | None = Query(default=None),
-) -> list[dict[str, object]]:
+) -> list[EngineeringTechnologyItemDto]:
     items = services.engineering.get_technology_inventory(
         GetTechnologyInventoryQuery(
             snapshot_id=EngineeringSnapshotId(snapshot_id.strip()) if snapshot_id else None,
             assessment_id=AssessmentId(assessment_id.strip()) if assessment_id else None,
         )
     )
-    return [
-        {
-            "technology_id": item.technology_id,
-            "canonical_key": item.canonical_key,
-            "display_name": item.display_name,
-            "category": item.category.value,
-        }
+    payload = [
+        EngineeringTechnologyItemDto(
+            technology_id=item.technology_id,
+            canonical_key=item.canonical_key,
+            display_name=item.display_name,
+            category=item.category.value,
+        )
         for item in items
     ]
+    return [validate_response(EngineeringTechnologyItemDto, item) for item in payload]
 
 
-@router.get("/findings")
+@router.get("/findings", response_model=list[EngineeringFindingItemDto])
 def list_findings(
     services: ServicesDep,
     assessment_id: str | None = Query(default=None),
     snapshot_id: str | None = Query(default=None),
     severity: str | None = Query(default=None),
-) -> list[dict[str, object]]:
+) -> list[EngineeringFindingItemDto]:
     severity_filter = (
         EngineeringSeverity(severity.strip().lower()) if severity else None
     )
@@ -195,25 +203,28 @@ def list_findings(
         )
     )
     return [
-        {
-            "finding_id": item.finding_id,
-            "source_finding_id": item.source_finding_id,
-            "category": item.category.value,
-            "severity": item.severity.value,
-            "title": item.title,
-            "rule_id": item.rule_id,
-            "confidence": item.confidence,
-        }
+        validate_response(
+            EngineeringFindingItemDto,
+            EngineeringFindingItemDto(
+                finding_id=item.finding_id,
+                source_finding_id=item.source_finding_id,
+                category=item.category.value,
+                severity=item.severity.value,
+                title=item.title,
+                rule_id=item.rule_id,
+                confidence=item.confidence,
+            ),
+        )
         for item in items
     ]
 
 
-@router.get("/recommendations")
+@router.get("/recommendations", response_model=list[EngineeringRecommendationItemDto])
 def list_recommendations(
     services: ServicesDep,
     assessment_id: str | None = Query(default=None),
     snapshot_id: str | None = Query(default=None),
-) -> list[dict[str, object]]:
+) -> list[EngineeringRecommendationItemDto]:
     items = services.engineering.get_recommendation_inventory(
         GetRecommendationInventoryQuery(
             snapshot_id=EngineeringSnapshotId(snapshot_id.strip()) if snapshot_id else None,
@@ -221,25 +232,28 @@ def list_recommendations(
         )
     )
     return [
-        {
-            "recommendation_id": item.recommendation_id,
-            "source_recommendation_id": item.source_recommendation_id,
-            "category": item.category.value,
-            "severity": item.severity.value,
-            "title": item.title,
-            "priority": item.priority,
-            "related_finding_ids": list(item.related_finding_ids),
-        }
+        validate_response(
+            EngineeringRecommendationItemDto,
+            EngineeringRecommendationItemDto(
+                recommendation_id=item.recommendation_id,
+                source_recommendation_id=item.source_recommendation_id,
+                category=item.category.value,
+                severity=item.severity.value,
+                title=item.title,
+                priority=item.priority,
+                related_finding_ids=list(item.related_finding_ids),
+            ),
+        )
         for item in items
     ]
 
 
-@router.get("/metrics")
+@router.get("/metrics", response_model=list[EngineeringMetricItemDto])
 def list_metrics(
     services: ServicesDep,
     assessment_id: str | None = Query(default=None),
     snapshot_id: str | None = Query(default=None),
-) -> list[dict[str, object]]:
+) -> list[EngineeringMetricItemDto]:
     items = services.engineering.get_metric_inventory(
         GetMetricInventoryQuery(
             snapshot_id=EngineeringSnapshotId(snapshot_id.strip()) if snapshot_id else None,
@@ -247,12 +261,15 @@ def list_metrics(
         )
     )
     return [
-        {
-            "metric_id": item.metric_id,
-            "name": item.name,
-            "kind": item.kind.value,
-            "value": item.value,
-            "unit": item.unit,
-        }
+        validate_response(
+            EngineeringMetricItemDto,
+            EngineeringMetricItemDto(
+                metric_id=item.metric_id,
+                name=item.name,
+                kind=item.kind.value,
+                value=item.value,
+                unit=item.unit,
+            ),
+        )
         for item in items
     ]

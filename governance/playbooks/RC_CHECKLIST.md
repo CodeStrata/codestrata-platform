@@ -32,6 +32,6 @@ When all items pass, declare the engineering RC name (example:
 
 ## References
 
-- [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)
+- [INTERNAL_RELEASE_CHECKLIST.md](INTERNAL_RELEASE_CHECKLIST.md)
 - [DOGFOOD_CHECKLIST.md](DOGFOOD_CHECKLIST.md)
 - [002_ENGINEERING_CONSTITUTION.md](../constitution/002_ENGINEERING_CONSTITUTION.md)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from pathlib import PurePosixPath
@@ -15,21 +16,7 @@ from codestrata.domain.evidence.repository_testing.enums import (
     TestFileRole,
 )
 
-DEFAULT_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/.venv/",
-    "/venv/",
-    "/__pycache__/",
-    "/reports/",
-)
+DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _DIR_MARKERS: tuple[str, ...] = (
     "test",

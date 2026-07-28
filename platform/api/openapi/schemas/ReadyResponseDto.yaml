@@ -1,0 +1,20 @@
+ReadyResponseDto:
+  properties:
+    status:
+      type: string
+      title: Status
+    version:
+      type: string
+      title: Version
+    checks:
+      additionalProperties:
+        type: string
+      type: object
+      title: Checks
+  additionalProperties: false
+  type: object
+  required:
+  - status
+  - version
+  title: ReadyResponseDto
+  description: Readiness probe response.

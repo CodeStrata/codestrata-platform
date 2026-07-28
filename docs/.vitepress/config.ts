@@ -8,7 +8,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "CodeStrata Docs",
   description:
-    "Engineering Intelligence for Modern Software Organizations — CodeStrata Engine, assessments, reports, and IDE extensions.",
+    "Engineering Intelligence for Modern Software — CodeStrata Engine, assessments, reports, and IDE extensions.",
   lang: "en-US",
   cleanUrls: true,
   lastUpdated: true,
@@ -52,18 +52,28 @@ export default defineConfig({
       {
         property: "og:description",
         content:
-          "Engineering Intelligence for Modern Software Organizations. Assess repositories with CodeStrata Engine.",
+          "Engineering Intelligence for Modern Software. Assess repositories with CodeStrata Engine.",
       },
     ],
     ["meta", { property: "og:url", content: "https://docs.codestrata.ai/" }],
     ["meta", { name: "twitter:card", content: "summary" }],
   ],
+  markdown: {
+    // High-contrast dark blocks in both appearance modes (website code surfaces stay dark).
+    theme: {
+      light: "github-dark",
+      dark: "github-dark",
+    },
+  },
   themeConfig: {
     logo: {
       light: "/brand/lockup-horizontal-on-light.svg",
       dark: "/brand/lockup-horizontal-on-dark.svg",
       alt: "CodeStrata",
     },
+    // Logo click is wired to https://codestrata.ai/ (new tab) in CsDocsHomeLink.
+    // Keep a sensible fallback for no-JS crawlers.
+    logoLink: "https://codestrata.ai/",
     siteTitle: false,
     nav: [
       { text: "Get Started", link: "/getting-started/" },

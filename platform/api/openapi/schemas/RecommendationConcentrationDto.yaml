@@ -1,0 +1,14 @@
+RecommendationConcentrationDto:
+  properties:
+    repository_count:
+      type: integer
+      title: Repository Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+  additionalProperties: false
+  type: object
+  required:
+  - repository_count
+  - recommendation_count
+  title: RecommendationConcentrationDto

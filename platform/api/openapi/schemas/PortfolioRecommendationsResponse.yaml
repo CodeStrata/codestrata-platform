@@ -1,0 +1,12 @@
+PortfolioRecommendationsResponse:
+  properties:
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeDto'
+    summary:
+      $ref: '#/components/schemas/PortfolioRecommendationSummaryDto'
+  additionalProperties: false
+  type: object
+  required:
+  - envelope
+  - summary
+  title: PortfolioRecommendationsResponse

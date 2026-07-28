@@ -1,0 +1,12 @@
+PortfolioModernizationResponse:
+  properties:
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeDto'
+    summary:
+      $ref: '#/components/schemas/PortfolioModernizationSummaryDto'
+  additionalProperties: false
+  type: object
+  required:
+  - envelope
+  - summary
+  title: PortfolioModernizationResponse

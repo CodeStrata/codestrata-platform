@@ -18,4 +18,12 @@ You do **not** need:
 - Cloud database access
 - AI provider keys (unless you later enable `--with-ai`)
 
+When you do enable AI, validate first:
+
+```bash
+codestrata ai doctor
+```
+
+See [AI Providers](/ai-providers/) for Bedrock and OpenAI setup.
+
 Next: [Install Engine](./install).

@@ -16,6 +16,8 @@ MINIMAL_CODESTRATA_TOML = """\
 #   codestrata assess --repo . --output reports --no-ai
 #
 # Optional AI advisor (your own supported provider):
+#   codestrata ai
+#   codestrata ai doctor
 #   codestrata assess --repo . --output reports --with-ai
 #
 # [ai] / [ai.bedrock] / [ai.openai] settings are optional and only used with --with-ai.

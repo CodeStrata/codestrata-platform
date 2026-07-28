@@ -1,0 +1,39 @@
+AssessmentFreshnessSummaryDto:
+  properties:
+    current_count:
+      type: integer
+      title: Current Count
+    aging_count:
+      type: integer
+      title: Aging Count
+    stale_count:
+      type: integer
+      title: Stale Count
+    unknown_count:
+      type: integer
+      title: Unknown Count
+    evaluated_at:
+      type: string
+      format: date-time
+      title: Evaluated At
+    policy_version:
+      type: string
+      title: Policy Version
+    current_threshold_days:
+      type: integer
+      title: Current Threshold Days
+    aging_threshold_days:
+      type: integer
+      title: Aging Threshold Days
+  additionalProperties: false
+  type: object
+  required:
+  - current_count
+  - aging_count
+  - stale_count
+  - unknown_count
+  - evaluated_at
+  - policy_version
+  - current_threshold_days
+  - aging_threshold_days
+  title: AssessmentFreshnessSummaryDto

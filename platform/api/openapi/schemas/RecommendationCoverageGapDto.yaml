@@ -1,0 +1,39 @@
+RecommendationCoverageGapDto:
+  properties:
+    gap_key:
+      type: string
+      title: Gap Key
+    finding_rule_id:
+      type: string
+      title: Finding Rule Id
+    category:
+      type: string
+      title: Category
+    severity:
+      type: string
+      title: Severity
+    repository_count:
+      type: integer
+      title: Repository Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    affected_repositories:
+      items:
+        type: string
+      type: array
+      title: Affected Repositories
+    reason:
+      type: string
+      title: Reason
+  additionalProperties: false
+  type: object
+  required:
+  - gap_key
+  - finding_rule_id
+  - category
+  - severity
+  - repository_count
+  - finding_count
+  - reason
+  title: RecommendationCoverageGapDto

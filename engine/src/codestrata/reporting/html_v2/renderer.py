@@ -5,8 +5,9 @@ Presentation only — no analysis or enrichment business logic.
 
 from __future__ import annotations
 
-from codestrata.design_system.tokens import DESIGN_SYSTEM_REF, DESIGN_TOKENS_CSS
-from codestrata.reporters.html_rendering import escape_and_wrap, escape_html
+from codestrata.reporters.html_rendering import escape_and_wrap, escape_html, wrap_table
+from codestrata.design_system.tokens import DESIGN_SYSTEM_REF
+from codestrata.reporting.html_v2.styles import REPORT_CSS
 from codestrata.reporting.ai_readiness.models import AiReadinessReportSection
 from codestrata.reporting.architecture.models import ArchitectureReportSection
 from codestrata.reporting.branding import (
@@ -307,7 +308,38 @@ class HtmlReportRenderer:
                 "",
             ]
         )
-        return "\n".join(parts)
+        return _ensure_responsive_tables("\n".join(parts))
+
+
+def _ensure_responsive_tables(html: str) -> str:
+    """Wrap bare tables in scroll containers without double-wrapping."""
+
+    pieces: list[str] = []
+    index = 0
+    lower = html.lower()
+    while True:
+        start = lower.find("<table", index)
+        if start < 0:
+            pieces.append(html[index:])
+            break
+        lookbehind = lower[max(0, start - 96) : start]
+        end = lower.find("</table>", start)
+        if end < 0:
+            pieces.append(html[index:])
+            break
+        end += len("</table>")
+        pieces.append(html[index:start])
+        if any(
+            marker in lookbehind
+            for marker in ("table-wrap", "responsive-table", "table-wrapper")
+        ):
+            pieces.append(html[start:end])
+        else:
+            pieces.append('<div class="table-wrap responsive-table">')
+            pieces.append(html[start:end])
+            pieces.append("</div>")
+        index = end
+    return "".join(pieces)
 
 
 
@@ -549,23 +581,23 @@ def _render_hero(view: HtmlReportViewModel) -> str:
         ("Repository", meta.repository_name or summary.repository_name),
         ("Generated", generated),
         ("Report version", meta.report_version),
+        ("Assessment mode", summary.assessment_mode_label),
+        ("AI status", meta.ai_status),
     ]
     meta_html = "".join(
         '<div class="meta-item"><span class="meta-label">'
         f"{escape_html(label)}</span>"
-        f'<span class="meta-value">{escape_and_wrap(value)}</span></div>\n'
+        f'<span class="meta-value">{escape_and_wrap(str(value))}</span></div>\n'
         for label, value in meta_items
-        if value and str(value).strip() not in {"—", "-", "Unknown"}
+        if value and str(value).strip() not in {"—", "-", "Unknown", ""}
     )
     return (
         '<header class="hero" id="cover">\n'
         '<div class="hero-brand">\n'
         f'<img class="brand-logo" src="{logo_data_uri()}" '
         f'alt="{escape_html(BRAND_NAME)}" width="140" height="40">\n'
-        f'<p class="brand-name">{escape_html(BRAND_NAME)}</p>\n'
         '<p class="hero-eyebrow" aria-label="Report edition">'
-        f"Community Edition · {escape_html(BRAND_REPORT_NAME)} · "
-        f"{escape_html(summary.assessment_mode_label)}</p>\n"
+        f"Community Edition · {escape_html(summary.assessment_mode_label)}</p>\n"
         f'<h1 class="report-title">{escape_html(BRAND_REPORT_NAME)}</h1>\n'
         '<p class="hero-lede">Engineering Intelligence for the current '
         "repository state. Optional AI enhancements do not replace findings or "
@@ -999,6 +1031,48 @@ def _limitation_items(limitations: object) -> str:
     return "".join(items)
 
 
+def _status_badge_class(status_label: str) -> str:
+    key = (status_label or "").strip().lower().replace(" ", "-").replace("_", "-")
+    if any(token in key for token in ("fail", "error")):
+        return "status-badge status-badge-failed"
+    if any(token in key for token in ("partial", "limited", "degraded")):
+        return "status-badge status-badge-partial"
+    if any(token in key for token in ("success", "complete", "ok", "ready", "assessed")):
+        return "status-badge status-badge-succeeded"
+    return "status-badge"
+
+
+def _domain_status_header(section: object) -> str:
+    label = str(getattr(section, "status_label", "") or "")
+    summary = str(getattr(section, "status_summary", "") or "")
+    if not label and not summary:
+        return ""
+    badge = (
+        f"<span class='{_status_badge_class(label)}'>{escape_html(label)}</span>"
+        if label
+        else ""
+    )
+    summary_html = (
+        f"<span class='muted'>{escape_html(summary)}</span>" if summary else ""
+    )
+    return f"<div class='domain-header'>{badge}{summary_html}</div>"
+
+
+def _metric_tile(label: str, value: str, note: str | None = None) -> str:
+    note_html = f'<p class="muted">{escape_html(note)}</p>' if note else ""
+    return (
+        "<div class='metric-card card'>"
+        f"<div class='label'>{escape_html(label)}</div>"
+        f"<div class='value'>{escape_html(value)}</div>"
+        f"{note_html}"
+        "</div>"
+    )
+
+
+def _responsive_table(table_html: str) -> str:
+    return wrap_table(table_html, css_class="table-wrap responsive-table")
+
+
 def _architecture_conclusion_meta(item: object) -> str:
     bits: list[str] = []
     confidence = getattr(item, "confidence", None)
@@ -1016,14 +1090,14 @@ def _architecture_conclusion_meta(item: object) -> str:
 
 def _architecture_conclusion_card(item: object) -> str:
     meta = _architecture_conclusion_meta(item)
-    meta_html = f"<p class='muted'>{meta}</p>" if meta else ""
+    meta_html = f"<p class='muted technical-metadata'>{meta}</p>" if meta else ""
     scope_values = tuple(getattr(item, "affected_scope", ()) or ())
     # Prefer package/module roots over exhaustive file lists for leadership readability.
     scope = ", ".join(scope_values[:4]) or "—"
     if len(scope_values) > 4:
         scope = f"{scope} (+{len(scope_values) - 4} more)"
     return (
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(getattr(item, 'title', ''))}</h4>"
         f"<p>{escape_html(getattr(item, 'summary', ''))}</p>"
         f"{meta_html}"
@@ -1047,11 +1121,7 @@ def _dedupe_architecture_conclusions(items: tuple[object, ...]) -> tuple[object,
 
 def _render_architecture(section: ArchitectureReportSection) -> str:
     metrics = "".join(
-        "<div class='card'>"
-        f"<div class='label'>{escape_html(item.label)}</div>"
-        f"<div class='value'>{escape_html(item.value)}</div>"
-        f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
-        "</div>"
+        _metric_tile(item.label, item.value, item.note)
         for item in section.key_metrics
         if str(item.value).strip().lower() not in {"unavailable", "unknown", "—", "-"}
         and "coverage" not in item.label.lower()
@@ -1059,7 +1129,7 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
     conclusions = _dedupe_architecture_conclusions(tuple(section.conclusions))
     conclusions_body = "".join(_architecture_conclusion_card(item) for item in conclusions)
     recommendations_body = "".join(
-        "<article class='card'>"
+        "<article class='content-card recommendation-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p><strong>Objective:</strong> {escape_html(item.objective)}</p>"
         f"<p>{escape_html(item.rationale)}</p>"
@@ -1093,26 +1163,24 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
     has_substance = bool(conclusions_body or recommendations_body or findings or limitations)
     if not has_substance and not metrics:
         return (
-            f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-            f"{escape_html(section.status_summary)}</p>"
+            _domain_status_header(section) +
             "<p class='muted'>Architecture was assessed; no significant architecture "
             "risks were identified for this repository.</p>"
         )
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         f"<p>{escape_html(section.executive_summary)}</p>",
     ]
     if metrics:
-        parts.append(f"<div class='grid'>{metrics}</div>")
+        parts.append(f"<div class='metric-grid grid'>{metrics}</div>")
     if conclusions_body:
-        parts.extend(["<h3>Architecture conclusions</h3>", conclusions_body])
+        parts.extend(["<h4>Architecture conclusions</h4>", conclusions_body])
     if recommendations_body:
-        parts.extend(["<h3>Recommended actions</h3>", recommendations_body])
+        parts.extend(["<h4>Recommended actions</h4>", recommendations_body])
     if findings:
         parts.extend(
             [
-                "<h3>Supporting findings</h3>",
+                "<h4>Supporting findings</h4>",
                 "<table><thead><tr>"
                 "<th>Finding</th><th>Severity</th>"
                 "<th>Scope</th>"
@@ -1121,17 +1189,13 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
             ]
         )
     if limitations:
-        parts.extend(["<h3>Limitations</h3>", f"<ul>{limitations}</ul>"])
+        parts.extend(["<h4>Limitations</h4>", f"<ul>{limitations}</ul>"])
     return "\n".join(parts)
 
 
 def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
     metrics = "".join(
-        "<div class='card'>"
-        f"<div class='label'>{escape_html(item.label)}</div>"
-        f"<div class='value'>{escape_html(item.value)}</div>"
-        f"{f'<p class="muted">{escape_html(item.note)}</p>' if item.note else ''}"
-        "</div>"
+        _metric_tile(item.label, item.value, item.note)
         for item in section.key_metrics
         if str(item.value).strip().lower() not in {"unavailable", "unknown", "—", "-"}
     )
@@ -1158,7 +1222,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         for item in section.top_production_hotspots
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1171,7 +1235,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         for item in section.conclusions
     )
     recommendations = "".join(
-        "<article class='card'>"
+        "<article class='content-card recommendation-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
         f"<p>{escape_html(item.rationale)}</p>"
@@ -1214,18 +1278,16 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
     )
     if not has_substance and not metrics:
         return (
-            f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-            f"{escape_html(section.status_summary)}</p>"
+            _domain_status_header(section) +
             "<p class='muted'>Technical debt was assessed; no significant "
             "production-facing debt signals were identified.</p>"
         )
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         f"<p>{escape_html(section.executive_summary)}</p>",
     ]
     if metrics:
-        parts.append(f"<div class='grid'>{metrics}</div>")
+        parts.append(f"<div class='metric-grid grid'>{metrics}</div>")
     if themes:
         parts.extend(
             [
@@ -1240,7 +1302,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
     if hotspots:
         parts.extend(
             [
-                "<h3>Top production hotspots</h3>",
+                "<h4>Top production hotspots</h4>",
                 "<table><thead><tr>"
                 "<th>#</th><th>Path</th><th>Unit</th><th>Highest severity</th>"
                 "<th>Findings</th><th>Rules</th><th>Metrics</th>"
@@ -1249,9 +1311,9 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
             ]
         )
     if conclusions:
-        parts.extend(["<h3>Conclusions</h3>", conclusions])
+        parts.extend(["<h4>Conclusions</h4>", conclusions])
     if recommendations:
-        parts.extend(["<h3>Recommendations</h3>", recommendations])
+        parts.extend(["<h4>Recommendations</h4>", recommendations])
     if test_block:
         parts.extend(["<h3>Test-maintainability observation</h3>", test_block])
         parts.append(
@@ -1260,13 +1322,13 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
     if coverage:
         parts.extend(
             [
-                "<h3>Coverage</h3>",
+                "<h4>Coverage</h4>",
                 "<table><thead><tr><th>Area</th><th>Status</th><th>Detail</th></tr></thead>"
                 f"<tbody>{coverage}</tbody></table>",
             ]
         )
     if limitations:
-        parts.extend(["<h3>Limitations</h3>", f"<ul>{limitations}</ul>"])
+        parts.extend(["<h4>Limitations</h4>", f"<ul>{limitations}</ul>"])
     return "\n".join(parts)
 
 
@@ -1370,7 +1432,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
         else ""
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1384,7 +1446,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
         for item in section.conclusions
     )
     recommendations = "".join(
-        "<article class='card'>"
+        "<article class='content-card recommendation-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p><strong>Action:</strong> {escape_html(item.action)}</p>"
         f"<p>{escape_html(item.rationale)}</p>"
@@ -1441,8 +1503,7 @@ def _render_dependency(section: DependencyReportSection) -> str:
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
     ]
@@ -1466,9 +1527,9 @@ def _render_dependency(section: DependencyReportSection) -> str:
             ]
         )
     if conclusions:
-        parts.extend(["<h3>Conclusions</h3>", conclusions])
+        parts.extend(["<h4>Conclusions</h4>", conclusions])
     if recommendations:
-        parts.extend(["<h3>Recommendations</h3>", recommendations])
+        parts.extend(["<h4>Recommendations</h4>", recommendations])
     parts.extend(["<h3>Coverage and Limitations</h3>", coverage_table])
     if diagnostics_block:
         parts.append(diagnostics_block)
@@ -1564,7 +1625,7 @@ f"{coverage_table}"
     else:
         additional_block = ""
     themes = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1601,7 +1662,7 @@ f"{coverage_table}"
         else ""
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1648,8 +1709,7 @@ f"{coverage_table}"
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Executive Summary</h3>",
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
@@ -1684,7 +1744,7 @@ f"{coverage_table}"
     if conclusions:
         parts.extend(
             [
-                "<h3>Conclusions</h3>",
+                "<h4>Conclusions</h4>",
                 f"<p class='muted'>Showing {section.conclusions_displayed} of "
                 f"{section.conclusions_total}</p>",
                 conclusions,
@@ -1693,7 +1753,7 @@ f"{coverage_table}"
     if recommendations:
         parts.extend(
             [
-                "<h3>Recommendations</h3>",
+                "<h4>Recommendations</h4>",
                 f"<p class='muted'>Showing {section.recommendations_displayed} of "
                 f"{section.recommendations_total}</p>",
                 recommendations,
@@ -1702,7 +1762,7 @@ f"{coverage_table}"
     if diagnostics_block:
         parts.extend(["<h3>Coverage Diagnostics</h3>", diagnostics_block])
     if limitations_block:
-        parts.extend(["<h3>Limitations</h3>", limitations_block])
+        parts.extend(["<h4>Limitations</h4>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)
@@ -1787,7 +1847,7 @@ def _render_testing(section: TestingReportSection) -> str:
             + "</ul>"
         )
     themes = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1799,7 +1859,7 @@ def _render_testing(section: TestingReportSection) -> str:
         for item in section.themes
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -1850,8 +1910,7 @@ def _render_testing(section: TestingReportSection) -> str:
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Overall Test Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
@@ -1868,7 +1927,7 @@ coverage_table,
     if themes:
         parts.extend(
             [
-                "<h3>Themes</h3>",
+                "<h4>Themes</h4>",
                 f"<p class='muted'>Showing {section.themes_displayed} of "
                 f"{section.themes_total}</p>",
                 themes,
@@ -1877,7 +1936,7 @@ coverage_table,
     if conclusions:
         parts.extend(
             [
-                "<h3>Conclusions</h3>",
+                "<h4>Conclusions</h4>",
                 f"<p class='muted'>Showing {section.conclusions_displayed} of "
                 f"{section.conclusions_total}</p>",
                 conclusions,
@@ -1886,7 +1945,7 @@ coverage_table,
     if recommendations:
         parts.extend(
             [
-                "<h3>Recommendations</h3>",
+                "<h4>Recommendations</h4>",
                 f"<p class='muted'>Showing {section.recommendations_displayed} of "
                 f"{section.recommendations_total}</p>",
                 recommendations,
@@ -1895,7 +1954,7 @@ coverage_table,
     if diagnostics_block:
         parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
     if limitations_block:
-        parts.extend(["<h3>Limitations</h3>", limitations_block])
+        parts.extend(["<h4>Limitations</h4>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)
@@ -1999,7 +2058,7 @@ def _render_cloud(section: CloudReportSection) -> str:
             + "</ul>"
         )
     themes = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2011,7 +2070,7 @@ def _render_cloud(section: CloudReportSection) -> str:
         for item in section.themes
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2062,8 +2121,7 @@ def _render_cloud(section: CloudReportSection) -> str:
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Overall Cloud Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
@@ -2082,7 +2140,7 @@ coverage_table,
     if themes:
         parts.extend(
             [
-                "<h3>Themes</h3>",
+                "<h4>Themes</h4>",
                 f"<p class='muted'>Showing {section.themes_displayed} of "
                 f"{section.themes_total}</p>",
                 themes,
@@ -2091,7 +2149,7 @@ coverage_table,
     if conclusions:
         parts.extend(
             [
-                "<h3>Conclusions</h3>",
+                "<h4>Conclusions</h4>",
                 f"<p class='muted'>Showing {section.conclusions_displayed} of "
                 f"{section.conclusions_total}</p>",
                 conclusions,
@@ -2100,7 +2158,7 @@ coverage_table,
     if recommendations:
         parts.extend(
             [
-                "<h3>Recommendations</h3>",
+                "<h4>Recommendations</h4>",
                 f"<p class='muted'>Showing {section.recommendations_displayed} of "
                 f"{section.recommendations_total}</p>",
                 recommendations,
@@ -2109,7 +2167,7 @@ coverage_table,
     if diagnostics_block:
         parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
     if limitations_block:
-        parts.extend(["<h3>Limitations</h3>", limitations_block])
+        parts.extend(["<h4>Limitations</h4>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)
@@ -2213,7 +2271,7 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
             + "</ul>"
         )
     themes = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2225,7 +2283,7 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
         for item in section.themes
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2276,8 +2334,7 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Overall AI Readiness Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
@@ -2296,7 +2353,7 @@ coverage_table,
     if themes:
         parts.extend(
             [
-                "<h3>Themes</h3>",
+                "<h4>Themes</h4>",
                 f"<p class='muted'>Showing {section.themes_displayed} of "
                 f"{section.themes_total}</p>",
                 themes,
@@ -2305,7 +2362,7 @@ coverage_table,
     if conclusions:
         parts.extend(
             [
-                "<h3>Conclusions</h3>",
+                "<h4>Conclusions</h4>",
                 f"<p class='muted'>Showing {section.conclusions_displayed} of "
                 f"{section.conclusions_total}</p>",
                 conclusions,
@@ -2314,7 +2371,7 @@ coverage_table,
     if recommendations:
         parts.extend(
             [
-                "<h3>Recommendations</h3>",
+                "<h4>Recommendations</h4>",
                 f"<p class='muted'>Showing {section.recommendations_displayed} of "
                 f"{section.recommendations_total}</p>",
                 recommendations,
@@ -2323,7 +2380,7 @@ coverage_table,
     if diagnostics_block:
         parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
     if limitations_block:
-        parts.extend(["<h3>Limitations</h3>", limitations_block])
+        parts.extend(["<h4>Limitations</h4>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)
@@ -2532,7 +2589,7 @@ def _render_performance(section: PerformanceReportSection) -> str:
             + "</ul>"
         )
     themes = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2544,7 +2601,7 @@ def _render_performance(section: PerformanceReportSection) -> str:
         for item in section.themes
     )
     conclusions = "".join(
-        "<article class='card'>"
+        "<article class='content-card conclusion-card card'>"
         f"<h4>{escape_html(item.title)}</h4>"
         f"<p>{escape_html(item.summary)}</p>"
         "<p class='muted'>"
@@ -2595,8 +2652,7 @@ def _render_performance(section: PerformanceReportSection) -> str:
     limitations_block = f"<ul>{limitations}</ul>" if limitations else ""
     trace = ""
     parts = [
-        f"<p><strong>Status:</strong> {escape_html(section.status_label)} — "
-        f"{escape_html(section.status_summary)}</p>",
+        _domain_status_header(section),
         "<h3>Overall Performance Posture</h3>",
         f"<p>{escape_html(section.overall_posture_summary or section.executive_summary)}</p>",
         "<h3>Executive Summary</h3>",
@@ -2615,7 +2671,7 @@ coverage_table,
     if themes:
         parts.extend(
             [
-                "<h3>Themes</h3>",
+                "<h4>Themes</h4>",
                 f"<p class='muted'>Showing {section.themes_displayed} of "
                 f"{section.themes_total}</p>",
                 themes,
@@ -2624,7 +2680,7 @@ coverage_table,
     if conclusions:
         parts.extend(
             [
-                "<h3>Conclusions</h3>",
+                "<h4>Conclusions</h4>",
                 f"<p class='muted'>Showing {section.conclusions_displayed} of "
                 f"{section.conclusions_total}</p>",
                 conclusions,
@@ -2633,7 +2689,7 @@ coverage_table,
     if recommendations:
         parts.extend(
             [
-                "<h3>Recommendations</h3>",
+                "<h4>Recommendations</h4>",
                 f"<p class='muted'>Showing {section.recommendations_displayed} of "
                 f"{section.recommendations_total}</p>",
                 recommendations,
@@ -2642,7 +2698,7 @@ coverage_table,
     if diagnostics_block:
         parts.extend(["<h3>Diagnostics</h3>", diagnostics_block])
     if limitations_block:
-        parts.extend(["<h3>Limitations</h3>", limitations_block])
+        parts.extend(["<h4>Limitations</h4>", limitations_block])
     if trace:
         parts.extend(["<h3>Traceability</h3>", trace])
     return "\n".join(parts)
@@ -2756,7 +2812,7 @@ def _render_technical_details(view: HtmlReportViewModel) -> str:
         "<summary>Repository Profile</summary>\n"
         f"{_render_repository(view)}\n"
         "</details>\n"
-        '<details class="tech-block" id="assessment-summary">\n'
+        '<details class="tech-block" id="appendix-assessment-summary">\n'
         "<summary>Assessment Summary</summary>\n"
         f"{_render_assessment_summary(view)}\n"
         "</details>\n"
@@ -2955,613 +3011,4 @@ def _fmt_ms(value: float | None) -> str:
     return str(value)
 
 
-_CSS = f"""
-{DESIGN_TOKENS_CSS}
-* {{ box-sizing: border-box; }}
-body {{
-  margin: 0;
-  background:
-    radial-gradient(1200px 500px at 10% -10%, #efe6dc 0%, transparent 55%),
-    radial-gradient(900px 400px at 100% 0%, #e7eef2 0%, transparent 50%),
-    var(--bg);
-  color: var(--ink);
-  font: 17px/1.6 var(--cs-font-sans);
-}}
-.skip-link {{
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  background: var(--surface);
-  color: var(--ink);
-  padding: 0.5rem 0.75rem;
-  z-index: 100;
-  border: 1px solid var(--border);
-}}
-.skip-link:focus {{
-  left: 1rem;
-  top: 1rem;
-}}
-.page {{ max-width: var(--cs-max-content); margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }}
-.toc {{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.1rem 1.35rem 1.2rem;
-  margin-bottom: 1.25rem;
-}}
-.toc ol {{
-  margin: 0.35rem 0 0;
-  padding-left: 1.25rem;
-  columns: 2;
-  column-gap: 2rem;
-}}
-.toc li {{ break-inside: avoid; margin: 0.25rem 0; }}
-.toc a {{
-  color: var(--ink);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}}
-.toc a:hover, .toc a:focus {{
-  border-bottom-color: var(--accent);
-  color: var(--accent);
-  outline: none;
-}}
-.section-eyebrow {{
-  margin: 0 0 0.35rem;
-  font-family: var(--cs-font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}}
-.section-eyebrow span {{ color: var(--accent); }}
-.section-note {{
-  margin: 0 0 1rem;
-  max-width: 58ch;
-  color: var(--muted);
-  font-size: 1.05rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}}
-.section-head h2 {{
-  margin: 0 0 0.5rem;
-  font-family: var(--cs-font-display);
-  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  text-wrap: balance;
-  max-width: 680px;
-}}
-.section {{
-  margin: 1.75rem 0 0;
-  padding: 1.35rem 0 0;
-  border-top: 1px solid var(--border);
-}}
-.section:first-of-type {{ border-top: 0; }}
-.section-anchor-only {{
-  /* Keep deep-link anchors without adding executive visual noise. */
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}}
-.takeaways {{
-  margin: 0.35rem 0 0;
-  padding-left: 1.2rem;
-}}
-.takeaways li {{
-  margin: 0.45rem 0;
-  line-height: 1.5;
-  max-width: 62rem;
-  text-wrap: pretty;
-}}
-.section-verdict {{
-  margin: 1.25rem 0 0;
-}}
-.verdict-body {{
-  margin: 0.35rem 0 0;
-  font-size: 1.12rem;
-  line-height: 1.6;
-  max-width: 46rem;
-  color: var(--ink);
-  text-wrap: pretty;
-}}
-.exec-narrative h3 {{
-  margin: 1rem 0 0.35rem;
-  font-size: 1.08rem;
-  font-weight: 640;
-  font-family: var(--cs-font-sans);
-}}
-.exec-narrative p {{
-  margin: 0;
-  max-width: 60ch;
-  text-wrap: pretty;
-}}
-.hero {{
-  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
-  border: 1px solid var(--border);
-  border-radius: calc(var(--radius) + 4px);
-  box-shadow: var(--shadow);
-  padding: 1.5rem 1.6rem 1.35rem;
-  margin-bottom: 1.25rem;
-}}
-.hero-brand {{ margin-bottom: 1.1rem; }}
-.brand-logo {{
-  display: block;
-  width: 140px;
-  height: 40px;
-  max-width: 140px;
-  object-fit: contain;
-  margin-bottom: 0.85rem;
-}}
-.brand-name {{
-  margin: 0;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 650;
-  font-family: var(--cs-font-sans);
-}}
-.hero-eyebrow {{
-  margin: 0.55rem 0 0;
-  font-family: var(--cs-font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-}}
-.report-title {{
-  margin: 0.35rem 0 0;
-  font-size: clamp(1.75rem, 3.2vw, 2.4rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  font-family: var(--cs-font-display);
-  font-weight: 600;
-  text-wrap: balance;
-}}
-.hero-lede {{
-  margin: 0.65rem 0 0;
-  max-width: 58ch;
-  color: var(--muted);
-  font-size: clamp(1.02rem, 1.4vw, 1.14rem);
-  line-height: 1.5;
-  text-wrap: pretty;
-}}
-.hero-meta {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.1rem;
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}}
-.meta-item {{ display: flex; flex-direction: column; gap: 0.15rem; }}
-.meta-label {{
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  font-weight: 550;
-  font-family: var(--cs-font-sans);
-}}
-.meta-value {{ font-weight: 650; word-break: break-word; }}
-.hero-kpis {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.75rem;
-}}
-.kpi {{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--cs-radius-control);
-  padding: 0.9rem 1rem;
-}}
-.kpi-label {{
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 650;
-}}
-.kpi-value {{
-  margin: 0.25rem 0 0;
-  font-family: var(--cs-font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 1.15rem;
-  font-weight: 500;
-}}
-.trace-id {{
-  font-family: var(--cs-font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-}}
-.trace-line {{
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  font-size: 0.85rem;
-}}
-.site-footer {{
-  margin-top: 2.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
-}}
-.site-footer p {{ margin: 0.35rem 0; max-width: 70ch; }}
-.copyright {{ font-weight: 600; color: var(--ink); }}
-.ema-lede {{
-  margin: 0 0 1rem;
-  font-size: 1.05rem;
-  line-height: 1.55;
-  max-width: 46rem;
-  color: var(--ink);
-}}
-.subsection {{
-  margin: 1.1rem 0 0;
-  padding: 1rem 0 0;
-  border-top: 1px solid var(--border);
-}}
-.subsection:first-of-type {{ border-top: 0; padding-top: 0; }}
-.section-capability > .section-head h2 {{ margin-bottom: 0.25rem; }}
-.report-identity {{ margin-bottom: 1rem; }}
-.hero {{
-  background: linear-gradient(180deg, #fff 0%, #fbfcfd 100%);
-  border: 1px solid var(--border);
-  border-radius: calc(var(--radius) + 4px);
-  box-shadow: var(--shadow);
-  padding: 1.5rem 1.6rem 1.35rem;
-  margin-bottom: 1.25rem;
-}}
-.hero-brand {{ margin-bottom: 1.1rem; }}
-.brand-logo {{
-  display: block;
-  width: 140px;
-  height: 40px;
-  max-width: 140px;
-  object-fit: contain;
-  margin-bottom: 0.85rem;
-}}
-.brand-name {{
-  margin: 0;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 650;
-}}
-.report-title {{
-  margin: 0.2rem 0 0;
-  font-size: clamp(1.55rem, 2.4vw, 2.05rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  font-family: "Fraunces", "Iowan Old Style", Georgia, serif;
-  font-weight: 650;
-}}
-.hero-meta {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.1rem;
-  padding: 0.85rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}}
-.meta-item {{ display: flex; flex-direction: column; gap: 0.15rem; }}
-.meta-label {{
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  font-weight: 650;
-}}
-.meta-value {{ font-weight: 650; word-break: break-word; }}
-.hero-kpis {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.75rem;
-}}
-.kpi {{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.9rem 1rem;
-}}
-.kpi-label {{
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 650;
-}}
-.kpi-value {{
-  margin: 0.35rem 0 0;
-  font-size: 1.55rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}}
-.kpi-hint {{ color: var(--muted); font-size: 0.85rem; }}
-.kpi-score .kpi-value {{ color: var(--teal); }}
-.kpi-severity-critical .kpi-value {{ color: var(--critical); }}
-.kpi-severity-high .kpi-value {{ color: var(--high); }}
-.kpi-severity-medium .kpi-value {{ color: var(--medium); }}
-.kpi-severity-low .kpi-value {{ color: var(--low); }}
-.kpi-severity-informational .kpi-value,
-.kpi-severity-none-detected .kpi-value,
-.kpi-severity-unknown .kpi-value {{ color: var(--info); }}
-.stat-hint {{
-  margin: 0.2rem 0 0;
-  color: var(--muted);
-  font-size: 0.82rem;
-}}
-.section {{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.2rem 1.3rem 1.35rem;
-  margin: 0 0 1rem;
-}}
-.section-head h2 {{
-  margin: 0;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
-}}
-.section-note, .muted, .provenance {{ color: var(--muted); }}
-.section-note {{ margin: 0.35rem 0 0.9rem; font-size: 0.9rem; }}
-.stat-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 0.75rem;
-}}
-.stat-card {{
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.9rem 0.95rem;
-  background: linear-gradient(180deg, #fff, #fafbfc);
-}}
-.stat-label {{
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 650;
-}}
-.stat-value {{
-  margin: 0.35rem 0 0;
-  font-size: 1.45rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}}
-.tech-badges {{ display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1rem; }}
-.tech-badge {{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: #f8fafb;
-  font-weight: 650;
-}}
-.tech-badge em {{
-  font-style: normal;
-  color: var(--muted);
-  font-weight: 550;
-  font-size: 0.85em;
-}}
-.table-card {{ margin-top: 0.5rem; }}
-.severity-grid {{
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.65rem;
-  margin-bottom: 1rem;
-}}
-.severity-card {{
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  padding: 0.85rem 0.7rem;
-  text-align: center;
-  background: #fafbfc;
-}}
-.severity-label {{
-  margin: 0;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  font-weight: 700;
-}}
-.severity-count {{
-  margin: 0.35rem 0 0;
-  font-size: 1.6rem;
-  font-weight: 750;
-}}
-.severity-critical {{ background: #fef3f2; }}
-.severity-critical .severity-count {{ color: var(--critical); }}
-.severity-high {{ background: #fff4ed; }}
-.severity-high .severity-count {{ color: var(--high); }}
-.severity-medium {{ background: #fffaeb; }}
-.severity-medium .severity-count {{ color: var(--medium); }}
-.severity-low {{ background: #edfcf7; }}
-.severity-low .severity-count {{ color: var(--low); }}
-.severity-informational {{ background: #f4f6f8; }}
-.card-stack {{ display: grid; gap: 0.7rem; }}
-.item-card {{
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.9rem 1rem;
-  background: #fff;
-}}
-.item-header {{ margin-bottom: 0.45rem; }}
-.card-desc {{ margin: 0.35rem 0 0.55rem; }}
-.chip-row {{ display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.35rem 0 0.55rem; }}
-.chip {{
-  display: inline-flex;
-  gap: 0.35rem;
-  align-items: baseline;
-  padding: 0.28rem 0.55rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  border: 1px solid #ead9c8;
-  font-size: 0.82rem;
-}}
-.chip em {{
-  font-style: normal;
-  color: var(--muted);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-}}
-.outcome {{ margin: 0; color: var(--ink); }}
-.outcome em {{
-  font-style: normal;
-  color: var(--muted);
-  margin-right: 0.35rem;
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-}}
-.roadmap {{ display: grid; gap: 1rem; }}
-.roadmap-lane h3 {{ margin: 0 0 0.55rem; font-size: 1rem; }}
-.count-pill {{
-  display: inline-block;
-  margin-left: 0.35rem;
-  padding: 0.05rem 0.45rem;
-  border-radius: 999px;
-  background: #eef2f6;
-  color: var(--muted);
-  font-size: 0.78rem;
-}}
-.section-ai {{
-  border-color: #9cc5d9;
-  background: linear-gradient(180deg, #f4fafc, #fff);
-}}
-.td-test-observation {{
-  border-left: 3px solid #9aa7b5;
-  background: #f7f8fa;
-}}
-.ai-panel {{ padding: 0.15rem; }}
-.ai-banner {{
-  background: #e6f4f8;
-  color: var(--ai);
-  border: 1px solid #9cc5d9;
-  border-radius: 10px;
-  padding: 0.7rem 0.85rem;
-  margin: 0 0 0.9rem;
-  font-weight: 600;
-}}
-.ai-headline {{ margin: 0 0 0.45rem; font-size: 1.2rem; }}
-.badge {{
-  display: inline-block;
-  padding: 0.12rem 0.5rem;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 750;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}}
-.severity-critical,
-.priority-immediate,
-.priority-critical {{ background: #fde8e8; color: var(--critical); }}
-.severity-high, .priority-high {{ background: #feecdc; color: var(--high); }}
-.severity-medium, .priority-medium {{ background: #fbf1de; color: var(--medium); }}
-.severity-low,
-.priority-low,
-.severity-informational,
-.severity-info {{ background: #e1f5f0; color: var(--low); }}
-.meta {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.35rem 1rem;
-  margin: 0.5rem 0;
-}}
-.meta dt {{
-  font-size: 0.72rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin: 0;
-  letter-spacing: 0.04em;
-}}
-.meta dd {{ margin: 0.1rem 0 0; }}
-code, .cmd {{
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 0.85em;
-  word-break: break-word;
-}}
-.table-wrap {{ overflow-x: auto; }}
-table {{ width: 100%; border-collapse: collapse; font-size: 0.92rem; }}
-th, td {{
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-  padding: 0.5rem 0.35rem;
-  vertical-align: top;
-}}
-th {{ color: var(--muted); font-weight: 650; }}
-.evidence {{ margin-top: 0.45rem; }}
-.evidence summary, .tech-block summary {{
-  cursor: pointer;
-  color: var(--ink);
-  font-weight: 650;
-}}
-.tech-block {{
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.75rem 0.9rem;
-  margin: 0 0 0.7rem;
-  background: #fbfcfd;
-}}
-.tech-block summary {{ list-style: none; }}
-.tech-block summary::-webkit-details-marker {{ display: none; }}
-.ids {{ color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }}
-.actions {{ padding-left: 1.2rem; }}
-.split {{ display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }}
-.plain {{ margin: 0; padding-left: 1.1rem; }}
-.more-note {{ margin-top: 0.75rem; }}
-.site-footer {{
-  margin-top: 1.5rem;
-  padding: 1.25rem 0.25rem 0.5rem;
-  text-align: center;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-}}
-.site-footer p {{ margin: 0.15rem 0; font-size: 0.9rem; }}
-.site-footer strong {{ color: var(--ink); }}
-.copyright {{ margin-top: 0.45rem !important; opacity: 0.85; }}
-@media (max-width: 820px) {{
-  .severity-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
-  .split {{ grid-template-columns: 1fr; }}
-}}
-@media (max-width: 560px) {{
-  .page {{ padding: 1rem 0.85rem 2rem; }}
-}}
-@media print {{
-  @page {{ margin: 1.4cm; }}
-  body {{ background: #fff; color: #000; }}
-  .skip-link {{ display: none !important; }}
-  .section-anchor-only {{ display: none !important; }}
-  .page {{ max-width: none; padding: 0; }}
-  .toc {{ box-shadow: none; columns: 1; break-after: page; }}
-  .toc a {{ text-decoration: none; color: #000; }}
-  .hero {{ box-shadow: none; break-after: page; }}
-  .section, .subsection, .item-card, .stat-card, .kpi {{
-    break-inside: avoid;
-    box-shadow: none;
-  }}
-  .hero-kpis {{ break-inside: avoid; }}
-  .site-footer {{ border-top: 1px solid #ccc; }}
-  a {{ color: inherit; text-decoration: none; }}
-}}
-""".rstrip()
+_CSS = REPORT_CSS

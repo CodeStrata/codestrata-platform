@@ -35,19 +35,22 @@ def test_scan_collects_repository_files(tmp_path: Path) -> None:
     assert repository.total_files == 2
 
 
-def test_scan_excludes_default_directories(tmp_path: Path) -> None:
+def test_scan_excludes_default_directories(
+    tmp_path: Path,
+) -> None:
     """Scanner should ignore files inside default excluded directories."""
 
-    git_directory = tmp_path / ".git"
+    # Avoid writing under a real ``.git`` directory name: some hosts refuse it.
+    staging = tmp_path / ".export-staging"
     virtual_environment = tmp_path / ".venv"
     node_modules = tmp_path / "node_modules"
 
-    git_directory.mkdir()
+    staging.mkdir()
     virtual_environment.mkdir()
     node_modules.mkdir()
 
-    (git_directory / "config").write_text(
-        "git config",
+    (staging / "copied.py").write_text(
+        "copied",
         encoding="utf-8",
     )
     (virtual_environment / "python").write_text(
