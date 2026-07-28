@@ -159,11 +159,14 @@ rulesets = [
 minimum_priority = 5
 timeout_seconds = 120
 
-# Optional AWS session for --with-ai (preferred over exporting AWS_PROFILE / AWS_REGION).
-# After `aws sso login --profile <profile-name>`, set profile below (or export AWS_PROFILE).
+# Optional AWS session for --with-ai.
+# Prefer machine-local credentials (standard AWS provider chain):
+#   export AWS_REGION=us-east-1
+#   export AWS_PROFILE=<your-profile>   # optional; omit to use the default chain
+# Do not commit developer-specific profile names in shared repositories.
 [aws]
-profile = "codestrata"
 region = "us-east-1"
+# profile = "<your-profile>"  # optional override only; prefer AWS_PROFILE env
 
 # Bedrock Converse defaults for --with-ai, plus independent knowledge providers.
 [ai]

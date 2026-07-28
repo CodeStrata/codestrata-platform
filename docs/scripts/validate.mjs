@@ -149,8 +149,61 @@ for (const file of htmlFiles) {
 // Metadata smoke: home title
 const home = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 if (!/CodeStrata/i.test(home)) errors.push("home HTML missing CodeStrata brand");
-if (!/Engineering Intelligence/i.test(home)) {
-  warnings.push("home HTML may be missing Engineering Intelligence headline");
+if (!/Engineering Intelligence for Modern Software/i.test(home)) {
+  errors.push("home HTML missing Engineering Intelligence for Modern Software title");
+}
+// Hero name must not restate brand or "Organizations"
+if (/class="name"[^>]*>[\s\S]*?Organizations/i.test(home)) {
+  errors.push("home hero title still includes Organizations");
+}
+
+// Footer / logo UX checks (Phase 13.5)
+const footerMust = [
+  "https://codestrata.ai/#how",
+  "https://codestrata.ai/sample-report",
+  "https://codestrata.ai/approach",
+  "https://codestrata.ai/for-private-equity",
+  "https://codestrata.ai/ecommerce-eol",
+  "https://codestrata.ai/#engage",
+  "https://codestrata.ai/#partner",
+  "https://codestrata.ai/#faq",
+  "https://codestrata.ai/privacy",
+  "https://github.com/sknampally/ai-modernization-factory",
+];
+for (const href of footerMust) {
+  if (!home.includes(href)) {
+    errors.push(`home footer missing website link: ${href}`);
+  }
+}
+if (home.includes("https://codestrata.ai/platform")) {
+  errors.push("footer still links to broken codestrata.ai/platform (404)");
+}
+if (!home.includes('class="cs-docs-home"') && !home.includes("cs-docs-home")) {
+  // Component may be hydrated client-side; check theme source instead.
+  const themeIndex = fs.readFileSync(
+    path.join(root, ".vitepress/theme/index.ts"),
+    "utf8",
+  );
+  if (!themeIndex.includes("CsDocsHomeLink")) {
+    errors.push("docs home nav link component not registered");
+  }
+}
+if (!fs.existsSync(path.join(root, ".vitepress/theme/CsDocsHomeLink.vue"))) {
+  errors.push("missing CsDocsHomeLink.vue");
+}
+const footerSrc = fs.readFileSync(
+  path.join(root, ".vitepress/theme/CsFooter.vue"),
+  "utf8",
+);
+if (!/rel="noopener noreferrer"/.test(footerSrc) && !/noopener noreferrer/.test(footerSrc)) {
+  errors.push("CsFooter missing noopener noreferrer on external links");
+}
+const configSrc = fs.readFileSync(path.join(root, ".vitepress/config.ts"), "utf8");
+if (!configSrc.includes('logoLink: "https://codestrata.ai/"')) {
+  errors.push('config logoLink must be https://codestrata.ai/');
+}
+if (/codestrata ai --provider platform/.test(home)) {
+  errors.push("published home must not advertise codestrata ai --provider platform");
 }
 
 console.log(`Scanned ${htmlFiles.length} HTML files in dist`);

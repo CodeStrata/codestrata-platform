@@ -1,6 +1,6 @@
 # CodeStrata Engineering Governance
 
-**Status:** Foundation (Phase 8.9.1; cleanup 8.9.1A)  
+**Status:** Active  
 **Audience:** Maintainers, contributors, AI assistants, design partners
 
 ## Purpose
@@ -15,8 +15,9 @@ It separates:
 | Source code | `engine/`, `platform/`, plugins, scripts |
 | Governance (this tree) | `governance/` |
 | Engineering knowledge | [`knowledge/`](../knowledge/) — concepts; existing `engine/docs/` remain until migration |
-| User documentation | Future public docs portal (Phase 12+) — must reference Governance, not duplicate it |
+| User documentation | Public docs portal — must reference Governance, not duplicate it |
 | Operational playbooks | `governance/playbooks/` |
+| Generated validation output | `.generated/` (gitignored; never under `governance/`) |
 
 ## Product naming
 
@@ -25,8 +26,8 @@ It separates:
 | **CodeStrata** | Product |
 | **CodeStrata Engine** | Community Engine (`engine/`) |
 | **CodeStrata Platform** | Commercial Platform (`platform/`) — use product name **CodeStrata Platform** in customer copy |
-| **CodeStrata VS Code Extension** | Placeholder / future |
-| **CodeStrata Cursor Extension** | Placeholder / future |
+| **CodeStrata VS Code Extension** | Editor extension (`vscode-plugin/`) |
+| **CodeStrata Cursor Extension** | Editor extension (`cursor-plugin/`) |
 
 AI is a **capability**, not part of the product name.
 
@@ -35,27 +36,31 @@ AI is a **capability**, not part of the product name.
 ```text
 governance/
 ├── README.md                 # This file
+├── DOCUMENTATION_INVENTORY.md
+├── adr/                      # Architecture Decision Records
 ├── constitution/             # Normative product & engineering principles
 ├── standards/                # Day-to-day engineering & product standards
-├── playbooks/                # Operational checklists (release, dogfood, public contracts)
+├── playbooks/                # Operational checklists (release, dogfood, contracts)
+├── release/                  # Community release / extraction guidance
+├── metrics/                  # Long-term Community/GitHub metric definitions
 ├── ai/                       # Instructions for AI-assisted development
-└── assets/                   # Uploaded brand package + DESIGN-SYSTEM.md (single design authority)
+└── assets/                   # Brand package + DESIGN-SYSTEM.md (design authority)
 ```
 
 Public API / SDK / CLI / report compatibility:
 [`playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`](playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md).
 
-**Design System authority:** [`assets/DESIGN-SYSTEM.md`](assets/DESIGN-SYSTEM.md)  
-(`standards/DESIGN_SYSTEM.md` is a pointer only.)
+**Design System authority:** [`assets/DESIGN-SYSTEM.md`](assets/DESIGN-SYSTEM.md)
 
 ## How to use
 
-1. **Normative decisions** → start in `constitution/`.
+1. **Normative decisions** → start in `constitution/` (and `adr/` for accepted ADRs).
 2. **Implementation standards** → `standards/`.
 3. **Visual branding / Design System** → `assets/DESIGN-SYSTEM.md`.
 4. **AI-assisted work** → `ai/` (especially `CURSOR_INSTRUCTIONS.md`).
-5. **Release / RC / dogfood / demos** → `playbooks/`.
-6. **Implementation detail** → keep in existing engineering docs; link here rather than copy.
+5. **Internal RC / dogfood / demos** → `playbooks/`.
+6. **Community public distribution** → `release/COMMUNITY_RELEASE_CHECKLIST.md`.
+7. **Implementation detail** → keep in engineering docs; link here rather than copy.
 
 ## Authority & conflict resolution
 
@@ -77,8 +82,9 @@ governance references without an explicit decision.
 
 | Marker | Meaning |
 | ------ | ------- |
+| **Active** | Current living governance |
 | **Foundation** | Structure established; content outlined |
-| **TODO** | Content to be authored in a later phase |
+| **TODO** | Content to be authored later |
 | **Reference** | Points at existing authoritative docs |
 
 ## Related existing docs (not replaced)
@@ -91,3 +97,4 @@ governance references without an explicit decision.
 - [engine/docs/security/](../engine/docs/security/)
 - [platform/docs/architecture/](../platform/docs/architecture/)
 - [scripts/verify_release.py](../scripts/verify_release.py)
+- [scripts/validate_release.py](../scripts/validate_release.py)

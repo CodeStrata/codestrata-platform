@@ -1,6 +1,6 @@
 # API Standards
 
-**Status:** Normative (updated Phase 9.7)  
+**Status:** Normative  
 **Authority:** Standards
 
 ## Objective
@@ -13,14 +13,19 @@ Standardize REST/OpenAPI and related transport contracts for CodeStrata Platform
 Platform REST API under `platform/src/codestrata_platform/api/`.  
 Out of scope: inventing new endpoints in Governance phases.
 
-Compatibility and deprecation:
-[`../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`](../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md).
+**Compatibility, versioning, deprecation, and the frozen error envelope** are
+defined by the public-contract authority:
+
+[`../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`](../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md)
+
+Do not duplicate those rules here. This document covers Platform API engineering
+standards that complement the compatibility playbook.
 
 ## 1. Transport principles
 
 1. Controllers are thin adapters over Application Services.
 2. No Domain or persistence types in request/response DTOs.
-3. Stable `/api/v1` versioning until a deliberate v2.
+3. Stable `/api/v1` versioning until a deliberate v2 (see compatibility playbook).
 4. Additive evolution within a major version; clients must ignore unknown fields.
 
 ## 2. OpenAPI expectations
@@ -31,17 +36,16 @@ Compatibility and deprecation:
 | `info.version` | Major API version (`v1`) |
 | Tags | Complete set matching routers |
 | Summaries | Verb + resource; product terminology |
-| Errors | `ErrorResponseDto` envelope; sanitized messages |
+| Errors | `ErrorResponseDto` envelope; sanitized messages (see compatibility playbook) |
 | Security | `PlatformApiKey` Bearer scheme documented |
 | Examples | Golden-path request examples for SDK generation |
 
-## 3. Error envelope (frozen)
+## 3. Error envelope
 
-```json
-{"error":{"code":"string","message":"string","details":{}}}
-```
-
-See the compatibility playbook for status-code mapping and client rules.
+Use the frozen `ErrorResponseDto` shape and status-code / client rules in
+[`PUBLIC_CONTRACT_COMPATIBILITY.md`](../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md)
+§1 (API versioning — Error envelope). Controllers and exception handlers must not
+invent alternate envelopes.
 
 ## 4. Naming
 
@@ -57,6 +61,7 @@ See the compatibility playbook for status-code mapping and client rules.
 
 ## 6. References
 
+- [PUBLIC_CONTRACT_COMPATIBILITY.md](../playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md)
 - [platform/src/codestrata_platform/api/app.py](../../platform/src/codestrata_platform/api/app.py)
 - [003_ARCHITECTURE_PRINCIPLES.md](../constitution/003_ARCHITECTURE_PRINCIPLES.md)
 - [NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)

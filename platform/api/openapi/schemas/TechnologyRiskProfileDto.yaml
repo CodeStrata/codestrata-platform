@@ -1,0 +1,31 @@
+TechnologyRiskProfileDto:
+  properties:
+    technology_key:
+      type: string
+      title: Technology Key
+    score:
+      type: integer
+      title: Score
+    band:
+      type: string
+      title: Band
+    repository_count:
+      type: integer
+      title: Repository Count
+    high_critical_count:
+      type: integer
+      title: High Critical Count
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+  additionalProperties: false
+  type: object
+  required:
+  - technology_key
+  - score
+  - band
+  - repository_count
+  - high_critical_count
+  title: TechnologyRiskProfileDto

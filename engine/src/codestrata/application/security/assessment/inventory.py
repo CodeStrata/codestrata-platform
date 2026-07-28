@@ -111,13 +111,13 @@ def map_source_role(
         return SecuritySourceRole.PRODUCTION
     if raw in {"test", "fixture"}:
         return SecuritySourceRole.TEST
-    if raw in {"generated", "unknown"}:
+    if raw in {"generated", "unknown", "example", "vendor", "documentation", "docs"}:
         return SecuritySourceRole.UNKNOWN
     if path:
         classified = classify_source_path(path)
         if classified is SourceClassification.SOURCE:
             return SecuritySourceRole.PRODUCTION
-        if classified is SourceClassification.TEST:
+        if classified in {SourceClassification.TEST, SourceClassification.FIXTURE}:
             return SecuritySourceRole.TEST
         return SecuritySourceRole.UNKNOWN
     return SecuritySourceRole.UNKNOWN

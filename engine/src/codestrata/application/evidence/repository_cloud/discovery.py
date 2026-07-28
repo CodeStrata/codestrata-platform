@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -17,21 +18,7 @@ from codestrata.domain.evidence.repository_cloud.enums import (
     CloudServerlessKind,
 )
 
-DEFAULT_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/.venv/",
-    "/venv/",
-    "/__pycache__/",
-    "/reports/",
-)
+DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _K8S_DIR_MARKERS = frozenset({"k8s", "kubernetes", "manifests", "kube", "deployments"})
 _HELM_DIR_MARKERS = frozenset({"charts", "helm", "chart"})

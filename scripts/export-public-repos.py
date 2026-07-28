@@ -50,6 +50,9 @@ _PRUNE_DIR_NAMES = frozenset(
     }
 )
 
+# Written after copy; not part of the source allowlist.
+_GENERATED_STAGING_MARKERS = frozenset({".codestrata-export-snapshot.json"})
+
 
 @dataclass
 class FileDelta:
@@ -181,12 +184,21 @@ def export_one(
     planned_set = set(planned)
     prev_set = set(previous)
 
-    delta.added = sorted(planned_set - prev_set)
-    delta.deleted = sorted(prev_set - planned_set)
+    delta.added = sorted(
+        rel
+        for rel in (planned_set - prev_set)
+        if Path(rel).name not in _GENERATED_STAGING_MARKERS
+    )
+    delta.deleted = sorted(
+        rel
+        for rel in (prev_set - planned_set)
+        if Path(rel).name not in _GENERATED_STAGING_MARKERS
+    )
     delta.changed = sorted(
         rel
         for rel in (planned_set & prev_set)
-        if _sha256(selected[rel]) != previous[rel]
+        if Path(rel).name not in _GENERATED_STAGING_MARKERS
+        and _sha256(selected[rel]) != previous[rel]
     )
     delta.copied = planned
 
@@ -290,8 +302,15 @@ def main(argv: list[str] | None = None) -> int:
         shutil.rmtree(staging)
 
     staging.mkdir(parents=True, exist_ok=True)
+    # Ensure scripts/ is importable for extraction snapshot helpers.
+    scripts_dir = str(ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+
     failures = 0
     for export in exports:
+        dest_preview = staging / str(export["name"])
+        previous_exists = dest_preview.is_dir() and any(dest_preview.iterdir())
         try:
             delta = export_one(
                 root=ROOT,
@@ -306,7 +325,20 @@ def main(argv: list[str] | None = None) -> int:
             continue
         _print_delta(str(export["name"]), delta, dry_run=args.dry_run)
         if not args.dry_run:
-            print(f"  staging: {staging / export['name']}")
+            dest = staging / export["name"]
+            print(f"  staging: {dest}")
+            try:
+                from release.extraction import write_export_snapshot
+
+                mode = "update" if previous_exists else "first_time"
+                write_export_snapshot(
+                    staging_repo=dest,
+                    export_name=str(export["name"]),
+                    manifest_version=manifest.get("version"),
+                    mode=mode,
+                )
+            except Exception as snapshot_error:  # noqa: BLE001
+                print(f"  warning: export snapshot not written: {snapshot_error}")
 
     return 1 if failures else 0
 

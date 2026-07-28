@@ -1,0 +1,20 @@
+PortfolioTechnologiesResponse:
+  properties:
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeDto'
+    items:
+      items:
+        $ref: '#/components/schemas/PortfolioTechnologyItemDto'
+      type: array
+      title: Items
+    total:
+      type: integer
+      minimum: 0.0
+      title: Total
+  additionalProperties: false
+  type: object
+  required:
+  - envelope
+  - items
+  - total
+  title: PortfolioTechnologiesResponse

@@ -1,0 +1,14 @@
+PortfolioFindingDistributionDto:
+  properties:
+    severity:
+      type: string
+      title: Severity
+    count:
+      type: integer
+      title: Count
+  additionalProperties: false
+  type: object
+  required:
+  - severity
+  - count
+  title: PortfolioFindingDistributionDto

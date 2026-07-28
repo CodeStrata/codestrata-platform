@@ -81,9 +81,12 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--with-ai/--no-ai",
                 help=(
-                    "Optionally enable the AI advisor (narrative over deterministic "
-                    "assessment). Default is --no-ai: deterministic Engineering "
-                    "Assessment only; no cloud provider required."
+                    "Enable optional AI enrichment (Modernization Advisor) using your "
+                    "configured provider (Bedrock or OpenAI). Default is --no-ai "
+                    "(deterministic only; no cloud credentials required). "
+                    "Example: codestrata assess --repo . --output reports --with-ai. "
+                    "Check setup with: codestrata ai / codestrata ai doctor. "
+                    "Docs: https://docs.codestrata.ai/ai-providers/"
                 ),
             ),
         ] = False,
@@ -239,6 +242,11 @@ def register_assess_command(app: typer.Typer) -> None:
             format_actionable_error,
             maybe_notify_update,
         )
+        from codestrata.telemetry.prompt import maybe_prompt_telemetry_opt_in
+        from codestrata.telemetry.service import get_telemetry_service
+
+        maybe_prompt_telemetry_opt_in(quiet=quiet, json_output=json_summary)
+        telemetry = get_telemetry_service()
 
         if model_id and model_id.strip() and not with_ai:
             typer.secho(
@@ -257,8 +265,28 @@ def register_assess_command(app: typer.Typer) -> None:
         # the user explicitly disabled with --no-static-analysis.
         static_override: bool | None = False if not static_analysis else None
 
+        repo_root = None
+        if repo and not is_github_repository_source(repo):
+            from pathlib import Path as _Path
+
+            candidate = _Path(repo).expanduser()
+            if candidate.is_dir():
+                repo_root = candidate
+        elif not repo:
+            from pathlib import Path as _Path
+
+            # Best-effort local cwd when --repo omitted; never send the path.
+            cwd = _Path.cwd()
+            if (cwd / "codestrata.toml").is_file() or (cwd / ".git").exists():
+                repo_root = cwd
+
+        telemetry.record_assessment_started(
+            ai_enabled=with_ai,
+            repo_root=repo_root,
+        )
+
         try:
-            run_assessment(
+            result = run_assessment(
                 repo=repo,
                 output_directory=output,
                 mode=mode,
@@ -280,6 +308,13 @@ def register_assess_command(app: typer.Typer) -> None:
                 json_summary=json_summary,
             )
         except AssessmentCommandError as error:
+            telemetry.record_assessment_completed(
+                ai_enabled=with_ai,
+                ai_executed=False,
+                success=False,
+                duration_ms=None,
+                repo_root=repo_root,
+            )
             message = str(error)
             if "Fix:" not in message and "Learn more:" not in message:
                 message = format_actionable_error(
@@ -291,6 +326,13 @@ def register_assess_command(app: typer.Typer) -> None:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=error.exit_code) from error
         except Exception as error:  # noqa: BLE001 - CLI boundary
+            telemetry.record_assessment_completed(
+                ai_enabled=with_ai,
+                ai_executed=False,
+                success=False,
+                duration_ms=None,
+                repo_root=repo_root,
+            )
             typer.secho(
                 format_actionable_error(
                     what=sanitize_provider_text(str(error)),
@@ -304,4 +346,11 @@ def register_assess_command(app: typer.Typer) -> None:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=1) from error
 
+        telemetry.record_assessment_completed(
+            ai_enabled=with_ai,
+            ai_executed=bool(result.ai_executed),
+            success=True,
+            duration_ms=result.duration_ms,
+            repo_root=repo_root,
+        )
         maybe_notify_update(quiet=quiet, json_output=json_summary)

@@ -1,10 +1,15 @@
 # Public Contract Compatibility Policy
 
-**Status:** Normative (Phase 9.7)  
-**Authority:** Playbook (signed for public SDK / API readiness)  
+**Status:** Normative  
+**Authority:** Playbook (public SDK / API / CLI / MCP / report compatibility)  
 **Audience:** Maintainers, SDK authors, extension authors, integrators
 
-This playbook freezes how CodeStrata evolves **externally consumable** contracts.
+This playbook is the **detailed compatibility authority** for how CodeStrata
+evolves **externally consumable** contracts. Related standards (for example
+[`API_STANDARDS.md`](../standards/API_STANDARDS.md)) must defer to this document
+for versioning, deprecation, and the frozen error envelope rather than
+duplicating those rules.
+
 It does not publish language SDKs to registries; it defines the rules those SDKs
 must follow.
 
@@ -46,19 +51,24 @@ unexported private helpers, placeholder extension repos until implemented.
   "error": {
     "code": "string",
     "message": "string",
-    "details": {}
+    "details": {},
+    "correlation_id": "string"
   }
 }
 ```
 
 - HTTP status conveys class (401 auth, 404 missing, 409 conflict, 422 validation, …).
 - `code` is stable for programmatic handling; `message` is human-oriented and sanitized.
+- `details` is optional structured data (for example bounded validation errors).
+- `correlation_id` is optional for clients but populated by current servers; also
+  echoed in `X-Correlation-Id` / `X-Request-Id` response headers.
 - Do not parse free-text `message` for control flow.
+- Do not invent alternate envelopes outside `ErrorResponseDto`.
 
 ### Authentication
 
 - Production: `Authorization: Bearer <CODESTRATA_PLATFORM_API_KEY>`.
-- Shared secret is intentional for this phase — not OAuth/OIDC.
+- Shared secret is intentional for current Platform API auth — not OAuth/OIDC.
 - Not interchangeable with Engine AI provider credentials.
 
 ## 2. JSON report versioning (Engine)
@@ -121,7 +131,7 @@ Support window for a deprecated Community Engine CLI flag or config key:
 **minimum one minor release** after announcement unless a security issue requires
 immediate removal.
 
-## 8. Ready-for-public-SDK checklist (Phase 9.7)
+## 8. Ready-for-public-SDK checklist
 
 - [x] Versioning + deprecation policy published (this playbook)
 - [x] Error envelope documented and exposed in OpenAPI components
@@ -130,9 +140,9 @@ immediate removal.
 - [x] Extension readiness gaps documented (placeholders; APIs identified)
 - [x] Remaining non-blocking recommendations recorded in SDK readiness
 
-**Sign-off:** Phase 9.7 accepts these contracts as the public baseline for
-extension and customer integrations. Publishing language SDKs to package
-registries remains a later release decision.
+**Sign-off:** These contracts are the public baseline for extension and customer
+integrations. Publishing language SDKs to package registries remains a later
+release decision.
 
 ## References
 

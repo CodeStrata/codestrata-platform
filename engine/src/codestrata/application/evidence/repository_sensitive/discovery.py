@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from pathlib import PurePosixPath
@@ -13,21 +14,7 @@ from codestrata.domain.evidence.repository_sensitive.enums import (
     SensitiveArtifactKind,
 )
 
-DEFAULT_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/.venv/",
-    "/venv/",
-    "/__pycache__/",
-    "/reports/",
-)
+DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _EXACT_FILENAMES: dict[str, SensitiveArtifactKind] = {
     ".env": SensitiveArtifactKind.ENVIRONMENT_FILE,

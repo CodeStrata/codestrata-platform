@@ -1,0 +1,17 @@
+HealthResponseDto:
+  properties:
+    status:
+      type: string
+      title: Status
+      description: Process liveness status
+    version:
+      type: string
+      title: Version
+      description: Platform service version
+  additionalProperties: false
+  type: object
+  required:
+  - status
+  - version
+  title: HealthResponseDto
+  description: Liveness probe response.

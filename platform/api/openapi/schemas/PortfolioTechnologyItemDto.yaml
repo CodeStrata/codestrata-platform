@@ -1,0 +1,82 @@
+PortfolioTechnologyItemDto:
+  properties:
+    technology_id:
+      type: string
+      title: Technology Id
+    canonical_key:
+      type: string
+      title: Canonical Key
+    normalized_name:
+      type: string
+      title: Normalized Name
+    framework:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Framework
+    categories:
+      items:
+        type: string
+      type: array
+      title: Categories
+    repository_count:
+      type: integer
+      title: Repository Count
+    repository_references:
+      items:
+        type: string
+      type: array
+      title: Repository References
+    component_count:
+      type: integer
+      title: Component Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    high_critical_finding_count:
+      type: integer
+      title: High Critical Finding Count
+    recommendation_count:
+      type: integer
+      title: Recommendation Count
+    usage_percentage:
+      type: number
+      title: Usage Percentage
+    production_usage_count:
+      type: integer
+      title: Production Usage Count
+    lifecycle_signal:
+      type: string
+      title: Lifecycle Signal
+    standardization_status:
+      type: string
+      title: Standardization Status
+    concentration:
+      $ref: '#/components/schemas/TechnologyConcentrationDto'
+    source_snapshot_references:
+      items:
+        type: string
+      type: array
+      title: Source Snapshot References
+    usages:
+      items:
+        $ref: '#/components/schemas/PortfolioTechnologyUsageDto'
+      type: array
+      title: Usages
+  additionalProperties: false
+  type: object
+  required:
+  - technology_id
+  - canonical_key
+  - normalized_name
+  - repository_count
+  - component_count
+  - finding_count
+  - high_critical_finding_count
+  - recommendation_count
+  - usage_percentage
+  - production_usage_count
+  - lifecycle_signal
+  - standardization_status
+  - concentration
+  title: PortfolioTechnologyItemDto

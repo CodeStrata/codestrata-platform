@@ -29,10 +29,30 @@ Inspect the Output channel (IDE) or CLI stderr.
 
 ## AI failures
 
+```bash
+codestrata ai
+codestrata ai doctor
+```
+
 - Confirm you intended `--with-ai`
-- Verify provider extras and credentials in **Engine** config
+- Verify provider extras (`codestrata[bedrock]` / `codestrata[openai]`) and credentials in **Engine** config
+- Typical doctor messages: AWS credentials missing, `OPENAI_API_KEY` missing, unsupported provider
 - Fall back to `--no-ai` for deterministic results
+- Full guide: [AI Providers](/ai-providers/)
 
 ## Report missing
 
 Confirm the output directory and timestamp folder under `reports/`.
+
+## Telemetry / privacy FAQ
+
+| Question | Answer |
+| --- | --- |
+| Is telemetry on by default? | No |
+| How do I enable it? | Answer **y** at the first-run prompt, or `codestrata telemetry enable` |
+| How do I disable it? | `codestrata telemetry disable` or `CODESTRATA_TELEMETRY=0` |
+| How do I inspect payloads? | `codestrata telemetry show` |
+| How do I reset the anonymous id? | `codestrata telemetry reset` |
+| Does offline telemetry block assess? | No — events queue locally |
+
+Details: [Privacy](/security/privacy).

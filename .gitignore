@@ -81,6 +81,9 @@ logs/
 output/*
 !output/.gitkeep
 
+# Validation / release / inventory artifacts (never under governance/)
+.generated/
+
 # ==========================================
 # Temporary Files
 # ==========================================
@@ -148,6 +151,10 @@ artifacts/models/
 
 # Generated analysis reports
 reports/
+
+# Never commit generated governance dumps (scripts write to .generated/)
+governance/reports/
+governance/archive/
 
 # Fetched real-world showcase checkouts (never vendor upstream)
 .codestrata-examples/

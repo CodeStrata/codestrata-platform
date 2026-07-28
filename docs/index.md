@@ -1,12 +1,12 @@
 ---
 layout: home
-title: CodeStrata Docs
-description: Engineering Intelligence for Modern Software Organizations — CodeStrata Engine, assessments, reports, and IDE extensions.
+title: Engineering Intelligence for Modern Software
+description: Engineering Intelligence for Modern Software — CodeStrata Engine, assessments, reports, and IDE extensions.
 
 hero:
-  name: CodeStrata
-  text: Engineering Intelligence for Modern Software Organizations
-  tagline: CodeStrata helps engineering teams understand, assess, modernize, and transform software systems with confidence.
+  name: Engineering Intelligence for Modern Software
+  text: ""
+  tagline: Understand, assess, modernize, and transform software systems with confidence — starting with deterministic Engineering Assessments.
   actions:
     - theme: brand
       text: Get Started

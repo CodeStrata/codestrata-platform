@@ -62,8 +62,9 @@ Every operation MUST declare:
 python platform/api/openapi/scripts/generate_openapi.py
 ```
 
-4. Mark `partial` ops in `PARTIAL_OPS` inside `generate_openapi.py` when responses
-   are still untyped.
+4. Do **not** add new `partial` ops — Phase 14.4 requires explicit DTOs for all
+   public Platform routes (`PARTIAL_OPS` must stay empty). Archive-only routes
+   may remain marked `internal`.
 5. Run contract tests:
 
 ```bash
@@ -138,7 +139,10 @@ This OpenAPI tree must stay out of `docs/` and `codestrata-docs`.
 
 ## Related
 
+- Contract guide: [`../../docs/api/CONTRACT.md`](../../docs/api/CONTRACT.md)
+- Version policy: [`../../docs/api/VERSION_POLICY.md`](../../docs/api/VERSION_POLICY.md)
+- DTO reference: [`../../docs/api/DTO_REFERENCE.md`](../../docs/api/DTO_REFERENCE.md)
 - ADR: [`../../../governance/adr/ADR-001-platform-openapi-source-of-truth.md`](../../../governance/adr/ADR-001-platform-openapi-source-of-truth.md)
 - Visual: [`VISUAL_ALIGNMENT.md`](VISUAL_ALIGNMENT.md)
-- Audit report: `governance/reports/PLATFORM_API_CONTRACT_FOUNDATION.md`
+- Compatibility: `governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`
 - API standards: `governance/standards/API_STANDARDS.md`

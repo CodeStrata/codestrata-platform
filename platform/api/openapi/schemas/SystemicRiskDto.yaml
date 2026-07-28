@@ -1,0 +1,36 @@
+SystemicRiskDto:
+  properties:
+    systemic_key:
+      type: string
+      title: Systemic Key
+    title:
+      type: string
+      title: Title
+    score:
+      type: integer
+      title: Score
+    band:
+      type: string
+      title: Band
+    repository_count:
+      type: integer
+      title: Repository Count
+    evidence:
+      items:
+        type: string
+      type: array
+      title: Evidence
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+  additionalProperties: false
+  type: object
+  required:
+  - systemic_key
+  - title
+  - score
+  - band
+  - repository_count
+  title: SystemicRiskDto

@@ -1,0 +1,43 @@
+PortfolioRiskHotspotDto:
+  properties:
+    hotspot_key:
+      type: string
+      title: Hotspot Key
+    repository_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Repository Id
+    technology_key:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Technology Key
+    category:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Category
+    score:
+      type: integer
+      title: Score
+    band:
+      type: string
+      title: Band
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+  additionalProperties: false
+  type: object
+  required:
+  - hotspot_key
+  - score
+  - band
+  title: PortfolioRiskHotspotDto

@@ -9,7 +9,7 @@ description: After your first assessment — reports, AI, and IDE extensions.
 | ---- | ----------- |
 | Interpret reports | [Understanding Reports](/reports/) |
 | Learn assessment model | [Engineering Assessments](/assessments/) |
-| Optional AI | [AI Providers](/ai-providers/) |
+| Optional AI | `codestrata ai` → [AI Providers](/ai-providers/) |
 | VS Code workflow | [VS Code Extension](/extensions/vscode) |
 | Cursor Chat / Agent | [Cursor Extension](/extensions/cursor) |
 | CLI reference | [CLI](/reference/cli) |

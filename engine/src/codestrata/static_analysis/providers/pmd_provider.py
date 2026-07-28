@@ -10,6 +10,7 @@ from time import perf_counter
 
 from codestrata.models.repository import Repository
 from codestrata.models.technology import Technology
+from codestrata.scan_boundary import DEFAULT_EXCLUDED_DIRECTORY_NAMES
 from codestrata.static_analysis.grouping import (
     group_observations,
     observations_from_pmd_findings,
@@ -39,23 +40,7 @@ _JAVA_SOURCE_ROOTS = (
     "src/test/java",
 )
 
-_EXCLUDED_DIRECTORY_NAMES = frozenset(
-    {
-        ".git",
-        ".codestrata",
-        ".idea",
-        ".venv",
-        "venv",
-        "build",
-        "target",
-        "generated",
-        "node_modules",
-        "vendor",
-        "reports",
-        "dist",
-        "__pycache__",
-    }
-)
+_EXCLUDED_DIRECTORY_NAMES = DEFAULT_EXCLUDED_DIRECTORY_NAMES
 
 
 class PmdProvider:

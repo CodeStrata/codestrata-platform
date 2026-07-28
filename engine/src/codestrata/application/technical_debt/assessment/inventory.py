@@ -40,16 +40,16 @@ def map_source_role(
     raw = (classification or "").strip().lower()
     if raw in {"source", "production"}:
         return TechnicalDebtSourceRole.PRODUCTION
-    if raw == "test":
+    if raw in {"test", "fixture"}:
         return TechnicalDebtSourceRole.TEST
-    if raw in {"generated", "unknown"}:
-        # Generated content must not drive the primary production inventory.
+    if raw in {"generated", "unknown", "example", "vendor", "documentation", "docs"}:
+        # Non-production content must not drive the primary production inventory.
         return TechnicalDebtSourceRole.UNKNOWN
     if path:
         classified = classify_source_path(path)
         if classified is SourceClassification.SOURCE:
             return TechnicalDebtSourceRole.PRODUCTION
-        if classified is SourceClassification.TEST:
+        if classified in {SourceClassification.TEST, SourceClassification.FIXTURE}:
             return TechnicalDebtSourceRole.TEST
         return TechnicalDebtSourceRole.UNKNOWN
     return TechnicalDebtSourceRole.UNKNOWN

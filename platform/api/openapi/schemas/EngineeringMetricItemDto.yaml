@@ -1,0 +1,30 @@
+EngineeringMetricItemDto:
+  properties:
+    metric_id:
+      type: string
+      minLength: 1
+      title: Metric Id
+    name:
+      type: string
+      minLength: 1
+      title: Name
+    kind:
+      type: string
+      minLength: 1
+      title: Kind
+    value:
+      type: string
+      title: Value
+    unit:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Unit
+  additionalProperties: false
+  type: object
+  required:
+  - metric_id
+  - name
+  - kind
+  - value
+  title: EngineeringMetricItemDto

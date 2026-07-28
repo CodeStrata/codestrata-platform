@@ -1,0 +1,18 @@
+RecommendationCoverageSummaryDto:
+  properties:
+    high_critical_findings:
+      type: integer
+      title: High Critical Findings
+    high_critical_with_recommendations:
+      type: integer
+      title: High Critical With Recommendations
+    coverage_ratio:
+      type: number
+      title: Coverage Ratio
+  additionalProperties: false
+  type: object
+  required:
+  - high_critical_findings
+  - high_critical_with_recommendations
+  - coverage_ratio
+  title: RecommendationCoverageSummaryDto

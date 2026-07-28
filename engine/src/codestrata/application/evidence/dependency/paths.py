@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.scan_boundary import default_ignore_path_markers
 from collections.abc import Mapping, Sequence
 from pathlib import PurePosixPath
 
@@ -12,23 +13,7 @@ from codestrata.domain.evidence.dependency.enums import (
 )
 from codestrata.domain.evidence.language.capabilities import SourceClassification
 
-DEFAULT_DEPENDENCY_IGNORE_MARKERS: tuple[str, ...] = (
-    "/generated/",
-    "/.generated/",
-    "/vendor/",
-    "/.codestrata/",
-    "/node_modules/",
-    "/.git/",
-    "/target/",
-    "/dist/",
-    "/build/",
-    "/.venv/",
-    "/venv/",
-    "/__pycache__/",
-    "/bin/",
-    "/obj/",
-    "/packages/",
-)
+DEFAULT_DEPENDENCY_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
 _MANIFEST_BASENAMES: dict[str, tuple[DependencyEcosystem, DependencyManifestType]] = {
     "pom.xml": (DependencyEcosystem.MAVEN, DependencyManifestType.POM_XML),

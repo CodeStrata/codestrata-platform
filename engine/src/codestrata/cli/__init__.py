@@ -9,6 +9,7 @@ from typing import Annotated
 import typer
 
 from codestrata.cli.agent import agent_app
+from codestrata.cli.ai_cmd import register_ai_command
 from codestrata.cli.architecture import architecture_app
 from codestrata.cli.assess import (
     DEFAULT_ASSESS_MAX_OUTPUT_TOKENS,
@@ -32,6 +33,7 @@ from codestrata.cli.onboard import register_onboard_command
 from codestrata.cli.report import register_open_command, report_app
 from codestrata.cli.roadmap import roadmap_app
 from codestrata.cli.rules import rules_app
+from codestrata.cli.telemetry_cmd import register_telemetry_command
 from codestrata.cli.welcome import register_welcome_command
 from codestrata.cli.ux import (
     DOCS_GETTING_STARTED,
@@ -88,6 +90,8 @@ app = typer.Typer(
         "  codestrata assess --repo . --output reports --no-ai\n"
         "  codestrata open\n\n"
         "Optional AI advisor (your own supported provider):\n"
+        "  codestrata ai\n"
+        "  codestrata ai doctor\n"
         "  codestrata assess --repo . --output reports --with-ai\n\n"
         "Primary workflow: assess (HTML + JSON Engineering Assessment).\n"
         "Legacy/advanced: scan (clone+analyze; prefer assess).\n"
@@ -362,9 +366,10 @@ def _platform_cli_enabled() -> bool:
 def _register_platform_cli_extensions(root: typer.Typer) -> None:
     """Attach Platform CLI groups only when explicitly enabled and installed.
 
-    Community default does not register ``ai`` / ``enterprise`` / ``repository``,
-    even if Platform packages are present on PYTHONPATH (e.g. monorepo venv).
-    Enable with ``CODESTRATA_PLATFORM_CLI=1``.
+    Community default does not register Platform ``enterprise`` / ``repository``
+    groups, even if Platform packages are present on PYTHONPATH (e.g. monorepo
+    venv). Community ``codestrata ai`` is always registered for assess provider
+    discovery. Enable Platform groups with ``CODESTRATA_PLATFORM_CLI=1``.
     """
 
     if not _platform_cli_enabled():
@@ -399,6 +404,7 @@ register_init_command(app)
 register_doctor_command(app)
 register_open_command(app)
 register_welcome_command(app)
+register_telemetry_command(app)
 register_examples_command(app)
 register_extensions_command(app)
 register_onboard_command(app)
@@ -407,6 +413,9 @@ app.add_typer(config_app, name="config", rich_help_panel="Configuration")
 app.add_typer(agent_app, name="agent", rich_help_panel="Advanced")
 app.add_typer(incremental_app, name="incremental", rich_help_panel="Advanced")
 _register_platform_cli_extensions(app)
+# Community assess AI discovery owns ``ai`` (Platform RAG helpers stay opt-in
+# packages; invoke their Typer apps directly in Platform tests).
+register_ai_command(app)
 app.add_typer(rules_app, name="rules", rich_help_panel="Advanced")
 app.add_typer(evidence_app, name="evidence", rich_help_panel="Advanced")
 app.add_typer(architecture_app, name="architecture", rich_help_panel="Advanced")

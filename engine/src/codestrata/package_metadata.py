@@ -180,8 +180,9 @@ def format_about() -> str:
             "Engineering Assessment works without AI.",
             "Source code is not retained by CodeStrata unless you explicitly "
             "configure retention.",
-            "Privacy: no automatic telemetry, update checks, or analytics "
-            "(optional update notices require CODESTRATA_CLI_UPDATE_CHECK=1).",
+            "Privacy: anonymous telemetry is disabled by default and requires "
+            "explicit opt-in (codestrata telemetry). Optional update notices "
+            "require CODESTRATA_CLI_UPDATE_CHECK=1.",
             "Branding: governance/assets/DESIGN-SYSTEM.md",
             "",
             f"Website: {info.website}",

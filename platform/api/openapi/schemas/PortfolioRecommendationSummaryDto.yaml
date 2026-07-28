@@ -1,0 +1,24 @@
+PortfolioRecommendationSummaryDto:
+  properties:
+    total_recommendations:
+      type: integer
+      title: Total Recommendations
+    repository_count:
+      type: integer
+      title: Repository Count
+    recurring_patterns:
+      items:
+        $ref: '#/components/schemas/RecurringRecommendationPatternDto'
+      type: array
+      title: Recurring Patterns
+    coverage_gaps:
+      items:
+        $ref: '#/components/schemas/RecommendationCoverageGapDto'
+      type: array
+      title: Coverage Gaps
+  additionalProperties: false
+  type: object
+  required:
+  - total_recommendations
+  - repository_count
+  title: PortfolioRecommendationSummaryDto

@@ -1,0 +1,40 @@
+EngineeringFindingItemDto:
+  properties:
+    finding_id:
+      type: string
+      minLength: 1
+      title: Finding Id
+    source_finding_id:
+      type: string
+      minLength: 1
+      title: Source Finding Id
+    category:
+      type: string
+      minLength: 1
+      title: Category
+    severity:
+      type: string
+      minLength: 1
+      title: Severity
+    title:
+      type: string
+      minLength: 1
+      title: Title
+    rule_id:
+      type: string
+      minLength: 1
+      title: Rule Id
+    confidence:
+      type: number
+      title: Confidence
+  additionalProperties: false
+  type: object
+  required:
+  - finding_id
+  - source_finding_id
+  - category
+  - severity
+  - title
+  - rule_id
+  - confidence
+  title: EngineeringFindingItemDto

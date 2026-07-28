@@ -12,6 +12,11 @@ from codestrata.config.dotenv import load_dotenv
 from codestrata.repository_auth.exceptions import UnsupportedRepositoryUrlError
 from codestrata.repository_auth.github_urls import parse_github_repository_url
 from codestrata.repository_auth.models import RepositoryAuthenticationConfig
+from codestrata.scan_boundary import default_ignore_path_markers
+
+
+def _default_ignore_path_markers_list() -> list[str]:
+    return list(default_ignore_path_markers())
 
 if TYPE_CHECKING:
     from codestrata.config.profiles import ConfigurationIssue
@@ -74,6 +79,39 @@ class WorkspaceSettings(BaseModel):
 
     directory: Path = Path(".codestrata-workspace")
     clean_before_clone: bool = True
+
+
+class ScanBoundarySettings(BaseModel):
+    """Shared repository scan-boundary overrides (Phase 13.6.3).
+
+    Precedence when deciding path inclusion:
+
+    1. ``include_paths``
+    2. ``exclude_paths``
+    3. ``source_role_overrides`` / role roots (classification only for retained paths)
+    4. default excluded directory names
+    5. heuristic source-role classification
+    """
+
+    excluded_directories: list[str] = Field(default_factory=list)
+    include_default_directories: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Directory names to keep despite defaults (e.g. vendor when it is "
+            "first-party source)."
+        ),
+    )
+    include_paths: list[str] = Field(default_factory=list)
+    exclude_paths: list[str] = Field(default_factory=list)
+    production_roots: list[str] = Field(default_factory=list)
+    test_roots: list[str] = Field(default_factory=list)
+    fixture_roots: list[str] = Field(default_factory=list)
+    example_roots: list[str] = Field(default_factory=list)
+    generated_roots: list[str] = Field(default_factory=list)
+    vendor_roots: list[str] = Field(default_factory=list)
+    documentation_roots: list[str] = Field(default_factory=list)
+    source_role_overrides: dict[str, str] = Field(default_factory=dict)
+    ignore_path_markers: list[str] = Field(default_factory=list)
 
 
 class PmdSettings(BaseModel):
@@ -163,8 +201,10 @@ class StaticAnalysisSettings(BaseModel):
 class AwsSettings(BaseModel):
     """Optional AWS session settings for Bedrock and related services.
 
-    Prefer configuring profile/region here so users do not need to export
-    ``AWS_PROFILE`` or ``AWS_REGION`` before running ``codestrata assess --with-ai``.
+    Community Edition uses the standard AWS credential provider chain.
+    Prefer ``AWS_PROFILE`` / ``AWS_REGION`` (or default credentials) on each
+    machine. ``[aws].profile`` is an optional override only — do not commit
+    developer-specific profile names in shared repositories.
     """
 
     profile: str | None = None
@@ -1162,7 +1202,7 @@ class ArchitectureUnitSelectionSettings(BaseModel):
         default_factory=lambda: sorted(_DEFAULT_REGISTRATION_MARKERS)
     )
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: ["/generated/", "/.generated/", "/vendor/"]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("module_depth")
@@ -1590,17 +1630,7 @@ class ComplexityEvidenceSettings(BaseModel):
     max_files: int = 2000
     max_file_chars: int = 100_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars")
@@ -1626,20 +1656,7 @@ class DependencyEvidenceSettings(BaseModel):
     max_files: int = 500
     max_file_chars: int = 500_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars")
@@ -1662,21 +1679,7 @@ class RepositorySensitiveEvidenceSettings(BaseModel):
     max_file_chars: int = 500_000
     max_file_bytes: int = 2_000_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-            "/reports/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars", "max_file_bytes")
@@ -1699,21 +1702,7 @@ class RepositoryTestingEvidenceSettings(BaseModel):
     max_file_chars: int = 500_000
     max_file_bytes: int = 2_000_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-            "/reports/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars", "max_file_bytes")
@@ -1736,21 +1725,7 @@ class RepositoryCloudEvidenceSettings(BaseModel):
     max_file_chars: int = 500_000
     max_file_bytes: int = 2_000_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-            "/reports/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars", "max_file_bytes")
@@ -1773,21 +1748,7 @@ class RepositoryAiReadinessEvidenceSettings(BaseModel):
     max_file_chars: int = 500_000
     max_file_bytes: int = 2_000_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-            "/reports/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars", "max_file_bytes")
@@ -1810,21 +1771,7 @@ class RepositoryPerformanceEvidenceSettings(BaseModel):
     max_file_chars: int = 500_000
     max_file_bytes: int = 2_000_000
     ignore_path_markers: list[str] = Field(
-        default_factory=lambda: [
-            "/generated/",
-            "/.generated/",
-            "/vendor/",
-            "/.codestrata/",
-            "/node_modules/",
-            "/.git/",
-            "/target/",
-            "/dist/",
-            "/build/",
-            "/.venv/",
-            "/venv/",
-            "/__pycache__/",
-            "/reports/",
-        ]
+        default_factory=_default_ignore_path_markers_list
     )
 
     @field_validator("max_files", "max_file_chars", "max_file_bytes")
@@ -1936,6 +1883,13 @@ class AnalysisRuntimeSettings(BaseModel):
     max_source_files: int = Field(default=2000, ge=1, le=100_000)
     max_source_chars: int = Field(default=100_000, ge=1_024, le=5_000_000)
     capture_peak_rss: bool = True
+    benchmark_collection: bool = Field(
+        default=False,
+        description=(
+            "When true, write performance-benchmark.json for the run. "
+            "Observational only — does not change assessment outputs."
+        ),
+    )
 
 
 class AnalysisSettings(BaseModel):
@@ -2272,6 +2226,7 @@ class CodestrataSettings(BaseModel):
     workspace: WorkspaceSettings = Field(
         default_factory=WorkspaceSettings,
     )
+    scan: ScanBoundarySettings = Field(default_factory=ScanBoundarySettings)
     knowledge: KnowledgeSettings = Field(
         default_factory=KnowledgeSettings,
     )

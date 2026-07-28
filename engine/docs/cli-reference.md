@@ -33,6 +33,11 @@ hint.
 | `codestrata config validate` | Validate configuration / profile compatibility |
 | `codestrata config effective` | Show effective non-secret settings |
 | `codestrata config show` | Alias for `effective` |
+| `codestrata telemetry status` | Anonymous telemetry status (disabled by default) |
+| `codestrata telemetry enable` | Explicit opt-in for anonymous telemetry |
+| `codestrata telemetry disable` | Disable anonymous telemetry |
+| `codestrata telemetry reset` | Reset installation id + preferences |
+| `codestrata telemetry show` | Print sample telemetry payload (no transmit) |
 
 ### Assess (canonical)
 
@@ -79,9 +84,13 @@ Guide: [mcp/setup.md](mcp/setup.md).
 
 | Command | Purpose |
 | ------- | ------- |
-| `codestrata ai providers` | List embedding/answer providers |
-| `codestrata ai config` | Show AI settings (no secrets) |
-| `codestrata ai health` | Config / optional live health |
+| `codestrata ai` | Community: supported assess providers, Configured / Not Configured, required env vars |
+| `codestrata ai doctor` | Community: validate Bedrock / OpenAI setup without assessing (no secrets) |
+
+Portal guide: [AI Providers](https://docs.codestrata.ai/ai-providers/).
+
+When Platform CLI is explicitly enabled, Platform packages may also expose RAG
+provider helpers; Community ``codestrata ai`` remains the assess discovery surface.
 
 ## Analysis intelligence helpers
 

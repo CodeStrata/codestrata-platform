@@ -1,0 +1,65 @@
+RecurringFindingPatternDto:
+  properties:
+    recurrence_key:
+      type: string
+      title: Recurrence Key
+    rule_id:
+      type: string
+      title: Rule Id
+    category:
+      type: string
+      title: Category
+    normalized_title_id:
+      type: string
+      title: Normalized Title Id
+    technology_key:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Technology Key
+    repository_count:
+      type: integer
+      title: Repository Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    affected_repositories:
+      items:
+        type: string
+      type: array
+      title: Affected Repositories
+    severity_distribution:
+      items:
+        $ref: '#/components/schemas/PortfolioFindingDistributionDto'
+      type: array
+      title: Severity Distribution
+    production_count:
+      type: integer
+      title: Production Count
+    evidence_coverage:
+      type: number
+      title: Evidence Coverage
+    recommendation_coverage:
+      type: number
+      title: Recommendation Coverage
+    concentration:
+      $ref: '#/components/schemas/FindingConcentrationDto'
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+  additionalProperties: false
+  type: object
+  required:
+  - recurrence_key
+  - rule_id
+  - category
+  - normalized_title_id
+  - repository_count
+  - finding_count
+  - production_count
+  - evidence_coverage
+  - recommendation_coverage
+  - concentration
+  title: RecurringFindingPatternDto

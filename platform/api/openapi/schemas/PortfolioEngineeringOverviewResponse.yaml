@@ -1,0 +1,37 @@
+PortfolioEngineeringOverviewResponse:
+  properties:
+    envelope:
+      $ref: '#/components/schemas/PortfolioEnvelopeDto'
+    technologies:
+      items:
+        $ref: '#/components/schemas/PortfolioTechnologyItemDto'
+      type: array
+      title: Technologies
+    findings:
+      $ref: '#/components/schemas/PortfolioFindingSummaryDto'
+    recommendations:
+      $ref: '#/components/schemas/PortfolioRecommendationSummaryDto'
+    risk:
+      $ref: '#/components/schemas/PortfolioRiskSummaryDto'
+    modernization:
+      $ref: '#/components/schemas/PortfolioModernizationSummaryDto'
+    coverage:
+      $ref: '#/components/schemas/PortfolioCoverageSummaryDto'
+    dependencies:
+      $ref: '#/components/schemas/SharedDependencySummaryDto'
+    repository_profiles:
+      items:
+        $ref: '#/components/schemas/PortfolioRepositoryProfileDto'
+      type: array
+      title: Repository Profiles
+  additionalProperties: false
+  type: object
+  required:
+  - envelope
+  - findings
+  - recommendations
+  - risk
+  - modernization
+  - coverage
+  - dependencies
+  title: PortfolioEngineeringOverviewResponse

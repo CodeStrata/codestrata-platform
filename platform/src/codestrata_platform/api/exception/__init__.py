@@ -34,9 +34,25 @@ def _safe_message(exc: BaseException | str) -> str:
     return sanitize_exception_message(str(exc))
 
 
-def _error_body(*, code: str, message: str, details: dict[str, object] | None = None) -> dict:
+def _correlation_id(request: Request) -> str:
+    request_id = resolve_request_id(request)
+    return str(getattr(request.state, "correlation_id", request_id) or request_id)
+
+
+def _error_body(
+    *,
+    code: str,
+    message: str,
+    details: dict[str, object] | None = None,
+    correlation_id: str | None = None,
+) -> dict:
     return ErrorResponseDto(
-        error=ErrorDetailDto(code=code, message=_safe_message(message), details=details)
+        error=ErrorDetailDto(
+            code=code,
+            message=_safe_message(message),
+            details=details,
+            correlation_id=correlation_id,
+        )
     ).model_dump(mode="json")
 
 
@@ -61,115 +77,132 @@ def _bounded_validation_details(errors: list[dict]) -> dict[str, object]:
     return payload
 
 
+def _json_error(
+    request: Request,
+    *,
+    status_code: int,
+    code: str,
+    message: str,
+    details: dict[str, object] | None = None,
+) -> JSONResponse:
+    correlation_id = _correlation_id(request)
+    return JSONResponse(
+        status_code=status_code,
+        content=_error_body(
+            code=code,
+            message=message,
+            details=details,
+            correlation_id=correlation_id,
+        ),
+        headers={
+            "X-Request-Id": resolve_request_id(request),
+            "X-Correlation-Id": correlation_id,
+        },
+    )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(NotFoundError)
-    async def not_found_handler(_request: Request, exc: NotFoundError) -> JSONResponse:
-        return JSONResponse(
+    async def not_found_handler(request: Request, exc: NotFoundError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=404,
-            content=_error_body(
-                code=exc.reason_code or "not_found",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "not_found",
+            message=str(exc),
         )
 
     @app.exception_handler(ConflictError)
-    async def conflict_handler(_request: Request, exc: ConflictError) -> JSONResponse:
-        return JSONResponse(
+    async def conflict_handler(request: Request, exc: ConflictError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=409,
-            content=_error_body(
-                code=exc.reason_code or "conflict",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "conflict",
+            message=str(exc),
         )
 
     @app.exception_handler(ValidationError)
-    async def validation_handler(_request: Request, exc: ValidationError) -> JSONResponse:
-        return JSONResponse(
+    async def validation_handler(request: Request, exc: ValidationError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=422,
-            content=_error_body(
-                code=exc.reason_code or "validation_error",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "validation_error",
+            message=str(exc),
         )
 
     @app.exception_handler(PayloadTooLargeError)
     async def payload_too_large_handler(
-        _request: Request,
+        request: Request,
         exc: PayloadTooLargeError,
     ) -> JSONResponse:
-        return JSONResponse(
+        return _json_error(
+            request,
             status_code=413,
-            content=_error_body(
-                code=exc.reason_code or "payload_too_large",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "payload_too_large",
+            message=str(exc),
         )
 
     @app.exception_handler(InvalidValueError)
-    async def invalid_value_handler(_request: Request, exc: InvalidValueError) -> JSONResponse:
-        return JSONResponse(
+    async def invalid_value_handler(request: Request, exc: InvalidValueError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=400,
-            content=_error_body(
-                code=exc.reason_code or "invalid_value",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "invalid_value",
+            message=str(exc),
         )
 
     @app.exception_handler(InvalidStateTransitionError)
     async def invalid_state_handler(
-        _request: Request,
+        request: Request,
         exc: InvalidStateTransitionError,
     ) -> JSONResponse:
-        return JSONResponse(
+        return _json_error(
+            request,
             status_code=409,
-            content=_error_body(
-                code=exc.reason_code or "invalid_state_transition",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "invalid_state_transition",
+            message=str(exc),
         )
 
     @app.exception_handler(DomainError)
-    async def domain_error_handler(_request: Request, exc: DomainError) -> JSONResponse:
-        return JSONResponse(
+    async def domain_error_handler(request: Request, exc: DomainError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=400,
-            content=_error_body(
-                code=exc.reason_code or "domain_error",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "domain_error",
+            message=str(exc),
         )
 
     @app.exception_handler(ApplicationError)
     async def application_error_handler(
-        _request: Request,
+        request: Request,
         exc: ApplicationError,
     ) -> JSONResponse:
-        return JSONResponse(
+        return _json_error(
+            request,
             status_code=400,
-            content=_error_body(
-                code=exc.reason_code or "application_error",
-                message=str(exc),
-            ),
+            code=exc.reason_code or "application_error",
+            message=str(exc),
         )
 
     @app.exception_handler(RequestValidationError)
     async def request_validation_handler(
-        _request: Request,
+        request: Request,
         exc: RequestValidationError,
     ) -> JSONResponse:
-        return JSONResponse(
+        return _json_error(
+            request,
             status_code=422,
-            content=_error_body(
-                code="request_validation_error",
-                message="Request validation failed",
-                details=_bounded_validation_details(list(exc.errors())),
-            ),
+            code="request_validation_error",
+            message="Request validation failed",
+            details=_bounded_validation_details(list(exc.errors())),
         )
 
     @app.exception_handler(ValueError)
-    async def value_error_handler(_request: Request, exc: ValueError) -> JSONResponse:
-        return JSONResponse(
+    async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
+        return _json_error(
+            request,
             status_code=400,
-            content=_error_body(code="value_error", message=str(exc)),
+            code="value_error",
+            message=str(exc),
         )
 
     @app.exception_handler(Exception)
@@ -177,7 +210,7 @@ def register_exception_handlers(app: FastAPI) -> None:
         import traceback
 
         request_id = resolve_request_id(request)
-        correlation_id = getattr(request.state, "correlation_id", request_id)
+        correlation_id = _correlation_id(request)
         safe_trace = sanitize_exception_message(
             "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
         )
@@ -195,9 +228,10 @@ def register_exception_handlers(app: FastAPI) -> None:
             content=_error_body(
                 code="internal_server_error",
                 message="An unexpected error occurred",
+                correlation_id=correlation_id,
             ),
             headers={
                 "X-Request-Id": request_id,
-                "X-Correlation-Id": str(correlation_id),
+                "X-Correlation-Id": correlation_id,
             },
         )

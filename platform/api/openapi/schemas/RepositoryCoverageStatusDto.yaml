@@ -1,0 +1,46 @@
+RepositoryCoverageStatusDto:
+  properties:
+    repository_id:
+      type: string
+      title: Repository Id
+    availability_status:
+      type: string
+      title: Availability Status
+    has_published_snapshot:
+      type: boolean
+      title: Has Published Snapshot
+    has_completed_graph:
+      type: boolean
+      title: Has Completed Graph
+    has_retrieval_index:
+      type: boolean
+      title: Has Retrieval Index
+    freshness_status:
+      type: string
+      title: Freshness Status
+    assessment_age_days:
+      anyOf:
+      - type: integer
+      - type: 'null'
+      title: Assessment Age Days
+    engineering_snapshot_id:
+      anyOf:
+      - type: string
+      - type: 'null'
+      title: Engineering Snapshot Id
+    selected_at:
+      anyOf:
+      - type: string
+        format: date-time
+      - type: 'null'
+      title: Selected At
+  additionalProperties: false
+  type: object
+  required:
+  - repository_id
+  - availability_status
+  - has_published_snapshot
+  - has_completed_graph
+  - has_retrieval_index
+  - freshness_status
+  title: RepositoryCoverageStatusDto

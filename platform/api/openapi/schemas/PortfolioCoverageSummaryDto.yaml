@@ -1,0 +1,47 @@
+PortfolioCoverageSummaryDto:
+  properties:
+    repositories_total:
+      type: integer
+      title: Repositories Total
+    repositories_with_published_snapshots:
+      type: integer
+      title: Repositories With Published Snapshots
+    repositories_without_assessments:
+      type: integer
+      title: Repositories Without Assessments
+    repositories_unavailable:
+      type: integer
+      title: Repositories Unavailable
+    repository_participation_percentage:
+      type: number
+      title: Repository Participation Percentage
+    repository_statuses:
+      items:
+        $ref: '#/components/schemas/RepositoryCoverageStatusDto'
+      type: array
+      title: Repository Statuses
+    freshness:
+      $ref: '#/components/schemas/AssessmentFreshnessSummaryDto'
+    evidence:
+      $ref: '#/components/schemas/EvidenceCoverageSummaryDto'
+    recommendations:
+      $ref: '#/components/schemas/RecommendationCoverageSummaryDto'
+    graphs:
+      $ref: '#/components/schemas/GraphCoverageSummaryDto'
+    technology_coverage_count:
+      type: integer
+      title: Technology Coverage Count
+  additionalProperties: false
+  type: object
+  required:
+  - repositories_total
+  - repositories_with_published_snapshots
+  - repositories_without_assessments
+  - repositories_unavailable
+  - repository_participation_percentage
+  - freshness
+  - evidence
+  - recommendations
+  - graphs
+  - technology_coverage_count
+  title: PortfolioCoverageSummaryDto

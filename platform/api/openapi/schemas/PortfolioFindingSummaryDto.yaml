@@ -1,0 +1,33 @@
+PortfolioFindingSummaryDto:
+  properties:
+    total_findings:
+      type: integer
+      title: Total Findings
+    repository_count:
+      type: integer
+      title: Repository Count
+    high_critical_count:
+      type: integer
+      title: High Critical Count
+    recurring_patterns:
+      items:
+        $ref: '#/components/schemas/RecurringFindingPatternDto'
+      type: array
+      title: Recurring Patterns
+    clusters:
+      items:
+        $ref: '#/components/schemas/PortfolioFindingClusterDto'
+      type: array
+      title: Clusters
+    severity_distribution:
+      items:
+        $ref: '#/components/schemas/PortfolioFindingDistributionDto'
+      type: array
+      title: Severity Distribution
+  additionalProperties: false
+  type: object
+  required:
+  - total_findings
+  - repository_count
+  - high_critical_count
+  title: PortfolioFindingSummaryDto

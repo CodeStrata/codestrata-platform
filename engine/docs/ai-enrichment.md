@@ -30,10 +30,19 @@ advisor.json  (+ report HTML/JSON from AiEnrichmentResult)
 
 Configure `[ai].provider` as `bedrock` (default) or `openai`.
 
+Discover and validate without assessing:
+
+```bash
+codestrata ai
+codestrata ai doctor
+```
+
 * Bedrock: Converse API; model via `--model-id`, `CODESTRATA_BEDROCK_MODEL_ID`,
   or `ai.bedrock.model_id`
 * OpenAI: Chat Completions with `response_format=json_object`; model via
   `--model-id`, `CODESTRATA_OPENAI_MODEL_ID`, or `ai.openai.answer_model`
+
+Portal setup: [AI Providers](https://docs.codestrata.ai/ai-providers/).
 
 ## Advisor metadata
 

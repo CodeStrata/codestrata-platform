@@ -36,24 +36,29 @@ def portfolio_summary(item: PortfolioSummary) -> PortfolioSummaryResponse:
     )
 
 
+def membership_response(membership) -> PortfolioMembershipResponse:
+    return PortfolioMembershipResponse(
+        membership_id=membership.membership_id,
+        repository_id=membership.repository_id,
+        criticality=(
+            membership.criticality.value
+            if hasattr(membership.criticality, "value")
+            else membership.criticality
+        ),
+        business_capability=membership.business_capability,
+        owner_reference=membership.owner_reference,
+        lifecycle_status=membership.lifecycle_status,
+        tags=list(membership.tags),
+        added_at=membership.added_at,
+        removed_at=membership.removed_at,
+        active=membership.active,
+    )
+
+
 def portfolio_details(item: PortfolioDetails) -> PortfolioDetailsResponse:
     return PortfolioDetailsResponse(
         portfolio=portfolio_summary(item.summary),
-        memberships=[
-            PortfolioMembershipResponse(
-                membership_id=membership.membership_id,
-                repository_id=membership.repository_id,
-                criticality=membership.criticality.value,
-                business_capability=membership.business_capability,
-                owner_reference=membership.owner_reference,
-                lifecycle_status=membership.lifecycle_status,
-                tags=list(membership.tags),
-                added_at=membership.added_at,
-                removed_at=membership.removed_at,
-                active=membership.active,
-            )
-            for membership in item.memberships
-        ],
+        memberships=[membership_response(membership) for membership in item.memberships],
     )
 
 
@@ -109,8 +114,8 @@ def snapshot_details(item: PortfolioSnapshotDetails) -> PortfolioSnapshotDetails
     )
 
 
-def page_response(page: PageResult) -> PageResponse:
-    return PageResponse(
+def page_response[T](page: PageResult[T]) -> PageResponse[T]:
+    return PageResponse[T](
         items=list(page.items),
         total=page.total,
         offset=page.offset,

@@ -1,0 +1,40 @@
+CrossRepositoryDependencySignalDto:
+  properties:
+    signal_key:
+      type: string
+      title: Signal Key
+    signal_type:
+      type: string
+      title: Signal Type
+    is_explicit_dependency:
+      type: boolean
+      title: Is Explicit Dependency
+    is_shared_exposure:
+      type: boolean
+      title: Is Shared Exposure
+    repository_ids:
+      items:
+        type: string
+      type: array
+      title: Repository Ids
+    shared_key:
+      type: string
+      title: Shared Key
+    description:
+      type: string
+      title: Description
+    source_references:
+      items:
+        type: string
+      type: array
+      title: Source References
+  additionalProperties: false
+  type: object
+  required:
+  - signal_key
+  - signal_type
+  - is_explicit_dependency
+  - is_shared_exposure
+  - shared_key
+  - description
+  title: CrossRepositoryDependencySignalDto

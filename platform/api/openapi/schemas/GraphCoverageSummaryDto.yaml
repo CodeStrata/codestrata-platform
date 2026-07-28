@@ -1,0 +1,18 @@
+GraphCoverageSummaryDto:
+  properties:
+    repositories_with_graphs:
+      type: integer
+      title: Repositories With Graphs
+    repositories_total:
+      type: integer
+      title: Repositories Total
+    coverage_ratio:
+      type: number
+      title: Coverage Ratio
+  additionalProperties: false
+  type: object
+  required:
+  - repositories_with_graphs
+  - repositories_total
+  - coverage_ratio
+  title: GraphCoverageSummaryDto

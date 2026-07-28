@@ -18,8 +18,10 @@ from codestrata_platform.api.configuration.dependencies import (
     install_memory_stores,
 )
 from codestrata_platform.api.configuration.settings import ApiSettings
+from codestrata_platform.api.contracts import API_MAJOR_VERSION, API_VERSION_HEADER, VERSION_POLICY
 from codestrata_platform.api.controllers import build_api_router
 from codestrata_platform.api.correlation import RequestCorrelationMiddleware
+from codestrata_platform.api.dto.common import HealthResponseDto, ReadyResponseDto
 from codestrata_platform.api.exception import register_exception_handlers
 from codestrata_platform.api.security import (
     PLATFORM_API_KEY_ENV,
@@ -56,9 +58,11 @@ requires it. This shared secret is **not** an AI provider token.
 
 ## Errors
 
-Failures use a stable envelope: `{{"error": {{"code", "message", "details?"}}}}`.
+Failures use a stable envelope:
+`{{"error": {{"code", "message", "details?", "correlation_id?"}}}}`.
 Validation failures return HTTP 422 with bounded field errors. Missing or invalid
-API credentials return HTTP 401.
+API credentials return HTTP 401. Correlation ids are also echoed in
+`X-Correlation-Id` / `X-Request-Id` headers.
 
 ## Feature flags
 
@@ -69,11 +73,18 @@ application errors rather than silent empty success.
 
 ## Versioning
 
-API version is carried in the URL prefix (`/api/v1`) and in OpenAPI `info.version`.
-Breaking changes require a new major path version.
+{version_policy}
+
+Responses include header `{version_header}: {api_major}`.
+OpenAPI `info.version` is `{api_major}`.
 
 Visual branding follows `governance/assets/DESIGN-SYSTEM.md`.
-""".format(api_key_env=PLATFORM_API_KEY_ENV)
+""".format(
+    api_key_env=PLATFORM_API_KEY_ENV,
+    version_policy=VERSION_POLICY,
+    version_header=API_VERSION_HEADER,
+    api_major=API_MAJOR_VERSION,
+)
 
 _OPENAPI_TAGS: list[dict[str, str]] = [
     {
@@ -428,10 +439,11 @@ def create_app(
         tags=["Health"],
         summary="Liveness probe",
         description="Returns process liveness. No Platform API key required.",
+        response_model=HealthResponseDto,
         responses={200: {"description": "Service is alive"}},
     )
-    def health() -> dict[str, str]:
-        return {"status": "ok", "version": resolved.version}
+    def health() -> HealthResponseDto:
+        return HealthResponseDto(status="ok", version=resolved.version)
 
     @app.get(
         "/ready",
@@ -441,6 +453,7 @@ def create_app(
             "Returns readiness including persistence connectivity. "
             "No Platform API key required. HTTP 503 when not ready."
         ),
+        response_model=ReadyResponseDto,
         responses={
             200: {"description": "Service is ready"},
             503: {"description": "Service is not ready"},
@@ -451,20 +464,22 @@ def create_app(
 
         from codestrata.security.database_url import sanitize_exception_message
 
-        checks: dict[str, object] = {"application": "ok"}
+        checks: dict[str, str] = {"application": "ok"}
         if resolved.use_memory:
             checks["persistence"] = "memory"
-            return {"status": "ready", "version": resolved.version, "checks": checks}
+            return ReadyResponseDto(
+                status="ready", version=resolved.version, checks=checks
+            )
 
         engine = getattr(app.state, "engine", None)
         if engine is None:
             return JSONResponse(
                 status_code=503,
-                content={
-                    "status": "not_ready",
-                    "version": resolved.version,
-                    "checks": {"application": "ok", "persistence": "unavailable"},
-                },
+                content=ReadyResponseDto(
+                    status="not_ready",
+                    version=resolved.version,
+                    checks={"application": "ok", "persistence": "unavailable"},
+                ).model_dump(mode="json"),
             )
         try:
             from sqlalchemy import text
@@ -475,17 +490,17 @@ def create_app(
         except Exception as exc:  # noqa: BLE001 - readiness must never leak DSN details
             return JSONResponse(
                 status_code=503,
-                content={
-                    "status": "not_ready",
-                    "version": resolved.version,
-                    "checks": {
+                content=ReadyResponseDto(
+                    status="not_ready",
+                    version=resolved.version,
+                    checks={
                         "application": "ok",
                         "persistence": "error",
-                        "detail": sanitize_exception_message(str(exc)),
+                        "detail": sanitize_exception_message(str(exc))[:200],
                     },
-                },
+                ).model_dump(mode="json"),
             )
-        return {"status": "ready", "version": resolved.version, "checks": checks}
+        return ReadyResponseDto(status="ready", version=resolved.version, checks=checks)
 
     _mount_internal_api_docs(app)
     return app

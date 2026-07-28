@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from io import StringIO
 from pathlib import Path
 
@@ -16,23 +17,33 @@ from codestrata.cli.landing import (
     WordmarkSize,
     detect_start_here_context,
     landing_suppressed,
+    max_banner_width_for_terminal,
     render_landing,
     select_wordmark_size,
     show_landing_or_help,
     start_here_content,
+    terminal_columns,
     wordmark_art,
     wordmark_width,
 )
 
 runner = CliRunner()
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
-def _render(columns: int, *, cwd: Path | None = None, first_run: bool = False) -> str:
+def _render(
+    columns: int,
+    *,
+    cwd: Path | None = None,
+    first_run: bool = False,
+    force_mono: bool = True,
+    no_color: bool = True,
+) -> str:
     buf = StringIO()
     console = Console(
         file=buf,
         force_terminal=True,
-        no_color=True,
+        no_color=no_color,
         emoji=False,
         soft_wrap=False,
         legacy_windows=False,
@@ -43,33 +54,46 @@ def _render(columns: int, *, cwd: Path | None = None, first_run: bool = False) -
         columns=columns,
         cwd=cwd,
         include_first_run=first_run,
-        force_mono=True,
+        force_mono=force_mono,
     )
     return buf.getvalue()
 
 
+def _visible_len(line: str) -> int:
+    return len(_ANSI_RE.sub("", line).rstrip("\n"))
+
+
 def test_wordmark_sizes_and_widths() -> None:
+    assert select_wordmark_size(160) is WordmarkSize.LARGE
     assert select_wordmark_size(120) is WordmarkSize.LARGE
+    assert select_wordmark_size(119) is WordmarkSize.MEDIUM
     assert select_wordmark_size(100) is WordmarkSize.MEDIUM
     assert select_wordmark_size(80) is WordmarkSize.MEDIUM
     assert select_wordmark_size(79) is WordmarkSize.COMPACT
+    assert select_wordmark_size(60) is WordmarkSize.COMPACT
     assert select_wordmark_size(40) is WordmarkSize.COMPACT
 
     large = wordmark_art(WordmarkSize.LARGE)
     medium = wordmark_art(WordmarkSize.MEDIUM)
     compact = wordmark_art(WordmarkSize.COMPACT)
-    assert wordmark_width(large) <= 118
+
+    assert wordmark_width(large) <= max_banner_width_for_terminal(120)
     assert wordmark_width(medium) <= 78
-    assert wordmark_width(compact) <= 38
+    assert wordmark_width(compact) <= 20
     assert large != medium != compact
-    assert len(large.splitlines()) >= 4
-    assert len(compact.splitlines()) >= 2
+
+    # Wide: full multi-line ASCII. Standard: compact 2-line. Narrow: plain text.
+    assert len(large.splitlines()) >= 5
+    assert len(medium.splitlines()) == 2
+    assert compact.strip() == "CODESTRATA"
+    assert "╔" not in compact
+    assert "█" not in compact
 
 
 def test_responsive_layouts_no_overflow(tmp_path: Path) -> None:
-    for cols in (40, 60, 80, 100, 120):
+    for cols in (40, 60, 79, 80, 100, 119, 120, 160):
         out = _render(cols, cwd=tmp_path)
-        overs = [line for line in out.splitlines() if len(line) > cols]
+        overs = [line for line in out.splitlines() if _visible_len(line) > cols]
         assert not overs, f"overflow at {cols}: {overs[:1]!r}"
         assert BRAND_STATEMENT in out
         assert PRODUCT_CATEGORY in out
@@ -79,14 +103,72 @@ def test_responsive_layouts_no_overflow(tmp_path: Path) -> None:
         assert "codestrata --help" in out
         assert "docs.codestrata.ai" in out
         assert "codestrata.ai" in out
-        assert "Platform" not in out
-        # Do not repeat the product name as a plain subtitle under the wordmark.
-        lines = [line.strip() for line in out.splitlines() if line.strip()]
-        # Hierarchy order
+        assert "╭─ Platform" not in out
+        if cols < 80:
+            # Narrow plain heading appears once; no second subtitle.
+            assert out.count("CODESTRATA") == 1
+            assert "█" not in out
+            assert "╔" not in out
+        else:
+            # ASCII banners spell the brand; do not also print plain CODESTRATA.
+            assert out.count("CODESTRATA") == 0
+        if cols >= 50:
+            assert "Assess + AI" in out
+            assert "codestrata assess --repo . --with-ai" in out
+            assert "AI Setup" in out
+            assert "codestrata ai" in out
+        else:
+            assert "assess --repo . --with-ai" in out
+            assert "codestrata ai" in out
         i_brand = out.index(BRAND_STATEMENT)
         i_cat = out.index(PRODUCT_CATEGORY)
         i_ed = out.index(EDITION)
         assert i_brand < i_cat < i_ed
+
+
+def test_banner_tier_selection_in_render(tmp_path: Path) -> None:
+    narrow = _render(60, cwd=tmp_path)
+    assert "CODESTRATA" in narrow
+    assert "█▀▀" not in narrow
+    assert "██████" not in narrow
+
+    standard = _render(80, cwd=tmp_path)
+    assert "█▀▀" in standard
+    assert "██████╗" not in standard
+
+    wide = _render(120, cwd=tmp_path)
+    assert "██████╗" in wide
+    assert wide.count("CODESTRATA") == 0
+
+
+def test_ansi_does_not_inflate_width(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("CODESTRATA_FORCE_COLOR", "1")
+    monkeypatch.delenv("NO_COLOR", raising=False)
+    monkeypatch.setattr("codestrata.cli.landing._color_allowed", lambda: True)
+    for cols in (80, 120):
+        out = _render(cols, cwd=tmp_path, force_mono=False, no_color=False)
+        # Rich may emit ANSI; width checks must ignore escapes either way.
+        overs = [line for line in out.splitlines() if _visible_len(line) > cols]
+        assert not overs, f"ANSI overflow at {cols}: {overs[:1]!r}"
+        assert BRAND_STATEMENT in _ANSI_RE.sub("", out)
+
+
+def test_terminal_columns_fallback_when_size_unavailable(monkeypatch) -> None:
+    def _boom(*_args, **_kwargs) -> tuple[int, int]:
+        raise OSError("no tty")
+
+    monkeypatch.setattr("codestrata.cli.landing.shutil.get_terminal_size", _boom)
+    assert terminal_columns() == 80
+
+
+def test_landing_survives_unknown_terminal_size(tmp_path: Path, monkeypatch) -> None:
+    def _boom(*_args, **_kwargs) -> tuple[int, int]:
+        raise OSError("no tty")
+
+    monkeypatch.setattr("codestrata.cli.landing.shutil.get_terminal_size", _boom)
+    out = _render(80, cwd=tmp_path)
+    assert BRAND_STATEMENT in out
+    assert "Start Here" in out
 
 
 def test_start_here_context_aware(tmp_path: Path) -> None:
@@ -201,5 +283,4 @@ def test_no_color_monochrome_readable(tmp_path: Path, monkeypatch) -> None:
     out = _render(100, cwd=tmp_path)
     assert BRAND_STATEMENT in out
     assert "Start Here" in out
-    # No ANSI escape sequences expected with force_mono render helper.
     assert "\x1b[" not in out

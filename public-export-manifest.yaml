@@ -2,10 +2,35 @@
 #
 # Public GitHub repositories are generated mirrors. Do not edit them directly.
 # Export staging only; this file never pushes or creates remote repositories.
+#
+# Phase 14.2: this file is the authoritative Community release boundary.
+# Do not rely only on .gitignore for release inclusion.
 
-version: 1
+version: 2
+manifest_id: codestrata.community_release
 staging_directory: .export-staging
 source_of_truth: codestrata-platform
+
+release:
+  required_legal_files:
+    - LICENSE
+    - SECURITY.md
+  permitted_config_examples:
+    - .env.example
+    - codestrata.toml
+  forbidden_internal_paths:
+    - platform/
+    - governance/
+    - knowledge/
+    - .codestrata-test-knowledge/
+    - .codestrata-examples/
+    - reports/
+    - .env
+  generated_during_export:
+    - .codestrata-export-snapshot.json
+  notes: >
+    Allowlist-based export via each export's include patterns.
+    Directory absence from a denylist is never sufficient for publication.
 
 defaults:
   exclude_globs:
@@ -54,8 +79,8 @@ defaults:
     - "MARKDOWN_AUDIT"
   forbid_content_patterns:
     - "(?i)BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY"
-    - "(?i)aws_secret_access_key\\s*="
-    - "(?i)api[_-]?key\\s*=\\s*['\"]?[A-Za-z0-9/+=]{20,}"
+    - "(?i)aws_secret_access_key\\s*[=:]\\s*['\\\"]?[A-Za-z0-9/+=]{20,}"
+    - "(?i)api[_-]?key\\s*=\\s*['\\\"]?[A-Za-z0-9/+=]{20,}"
   # Markdown relative targets that must not appear in exported Community docs.
   forbid_markdown_link_substrings:
     - "platform/docs"
@@ -107,6 +132,7 @@ exports:
       - "MANIFEST.in"
       - "LICENSE"
       - "NOTICE"
+      - "PRIVACY.md"
       - "README.md"
       - "CODE_OF_CONDUCT.md"
       - "CONTRIBUTING.md"
@@ -114,6 +140,7 @@ exports:
       - "SUPPORT.md"
       - "codestrata.toml"
       - ".env.example"
+      - ".github/**"
     # Pull a minimal smoke fixture into the engine mirror for offline quick-start.
     extra_includes:
       - from: test-fixtures/sample-js-app
@@ -143,6 +170,7 @@ exports:
       require_files:
         - LICENSE
         - NOTICE
+        - PRIVACY.md
         - README.md
         - pyproject.toml
         - src/codestrata/__init__.py
@@ -153,6 +181,9 @@ exports:
         - docs/public-contracts.md
         - docs/report-contract.md
         - docs/extension-architecture.md
+        - docs/telemetry.md
+        - schemas/telemetry/codestrata.io/v1.0/TelemetryEvent.json
+        - .github/PULL_REQUEST_TEMPLATE.md
       forbid_globs:
         - "platform/**"
         - "governance/**"
@@ -190,6 +221,8 @@ exports:
       - "**/fixtures/**"
     validation:
       require_files:
+        - LICENSE
+        - SECURITY.md
         - README.md
         - real-world/README.md
         - real-world/THIRD_PARTY.md
@@ -230,6 +263,7 @@ exports:
       - "**/.vscode-test/**"
       - ".tmp-test-*/**"
       - "PLACEHOLDER.md"
+      - ".vscode/**"
     validation:
       require_files:
         - README.md
@@ -255,6 +289,7 @@ exports:
         - "*.vsix"
         - "out/**"
         - ".vscode-test/**"
+        - ".vscode/**"
       commands:
         - "npm install"
         - "npm test"
@@ -277,11 +312,13 @@ exports:
       - ".vscode-test/**"
       - "**/.vscode-test/**"
       - "PLACEHOLDER.md"
+      - ".vscode/**"
     validation:
       require_files:
         - README.md
         - CHANGELOG.md
         - LICENSE
+        - SECURITY.md
         - package.json
         - src/extension.ts
         - tsconfig.json
@@ -294,6 +331,7 @@ exports:
         - "*.vsix"
         - "out/**"
         - ".vscode-test/**"
+        - ".vscode/**"
       commands:
         - "npm install"
         - "npm test"

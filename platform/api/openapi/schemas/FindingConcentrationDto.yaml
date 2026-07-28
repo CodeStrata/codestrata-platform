@@ -1,0 +1,18 @@
+FindingConcentrationDto:
+  properties:
+    repository_count:
+      type: integer
+      title: Repository Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    production_count:
+      type: integer
+      title: Production Count
+  additionalProperties: false
+  type: object
+  required:
+  - repository_count
+  - finding_count
+  - production_count
+  title: FindingConcentrationDto

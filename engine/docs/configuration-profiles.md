@@ -68,8 +68,9 @@ path = "test-fixtures/sample-js-app"
 profile = "bedrock"
 
 [aws]
-profile = "codestrata"
 region = "us-east-1"
+# Optional: prefer export AWS_PROFILE=<your-profile> on each machine
+# instead of committing a developer-specific profile name.
 
 [ai.bedrock]
 model_id = "amazon.nova-lite-v1:0"

@@ -1,0 +1,41 @@
+EngineeringRecommendationItemDto:
+  properties:
+    recommendation_id:
+      type: string
+      minLength: 1
+      title: Recommendation Id
+    source_recommendation_id:
+      type: string
+      minLength: 1
+      title: Source Recommendation Id
+    category:
+      type: string
+      minLength: 1
+      title: Category
+    severity:
+      type: string
+      minLength: 1
+      title: Severity
+    title:
+      type: string
+      minLength: 1
+      title: Title
+    priority:
+      type: string
+      minLength: 1
+      title: Priority
+    related_finding_ids:
+      items:
+        type: string
+      type: array
+      title: Related Finding Ids
+  additionalProperties: false
+  type: object
+  required:
+  - recommendation_id
+  - source_recommendation_id
+  - category
+  - severity
+  - title
+  - priority
+  title: EngineeringRecommendationItemDto

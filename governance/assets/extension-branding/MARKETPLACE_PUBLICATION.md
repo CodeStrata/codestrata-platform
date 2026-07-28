@@ -17,7 +17,7 @@ As of 2026-07-28, no published `codestrata.*` CodeStrata extensions were found o
 the Visual Studio Marketplace (name collisions with unrelated “Codex*” products
 are different publishers).
 
-## Classification (this phase)
+## Classification
 
 | Extension | Status |
 | --------- | ------ |
@@ -26,6 +26,13 @@ are different publishers).
 
 Neither extension is **PUBLISHED** or **VERIFIED_INSTALLABLE** from a marketplace
 until live install is confirmed after publish.
+
+Do **not** treat local VSIX presence as Marketplace publication.
+
+Publisher namespace `codestrata` must be created/claimed on Visual Studio
+Marketplace and Open VSX before first upload. Prefer public repository URLs under
+`github.com/codestrata/*` when org repos exist — do not rename extension IDs after
+publish.
 
 ## Branding assets
 
@@ -108,13 +115,22 @@ required for broad open-editor reach.
 ## Release gates (must all pass)
 
 - [ ] `npm test` (both plugins)
-- [ ] `npm run package` produces VSIX containing icon
+- [ ] `npm run package` produces VSIX containing icon **and** screenshots (for README rendering)
 - [ ] Icon 128 PNG present; screenshots synthetic / no secrets
 - [ ] README / CHANGELOG / SECURITY / PRIVACY / SUPPORT / LICENSE present
-- [ ] displayName + description accurate; no Platform-only claims
+- [ ] README covers purpose, audience, Engine dependency, first command, supported
+      Engine/schema versions, privacy/security, troubleshooting, support, docs link,
+      and Community vs Platform boundary (no Platform-only feature claims)
+- [ ] displayName + description accurate
 - [ ] Publisher `codestrata` created and owned
-- [ ] Credentials only in approved secret storage
+- [ ] Credentials only in approved secret storage (`VSCE_PAT` / `OVSX_TOKEN`)
 - [ ] Human approval to publish
+
+## Why publish may remain deferred
+
+1. Do not publish until all release gates pass.
+2. Publisher ownership / PATs must be configured in approved secret storage.
+3. Human approval is required for the first public listing.
 
 ## Post-publish verification
 
@@ -128,4 +144,5 @@ required for broad open-editor reach.
 
 - `vscode-plugin/RELEASE_CHECKLIST.md`
 - `cursor-plugin/RELEASE_CHECKLIST.md`
-- `governance/reports/EXTENSION_MARKETPLACE_PUBLICATION.md`
+- `vscode-plugin/MARKETPLACE.md`
+- `cursor-plugin/MARKETPLACE.md`

@@ -1,0 +1,39 @@
+PortfolioRiskConcentrationDto:
+  properties:
+    dimension:
+      type: string
+      title: Dimension
+    key:
+      type: string
+      title: Key
+    repository_count:
+      type: integer
+      title: Repository Count
+    finding_count:
+      type: integer
+      title: Finding Count
+    high_critical_count:
+      type: integer
+      title: High Critical Count
+    score:
+      type: integer
+      title: Score
+    band:
+      type: string
+      title: Band
+    factors:
+      items:
+        type: string
+      type: array
+      title: Factors
+  additionalProperties: false
+  type: object
+  required:
+  - dimension
+  - key
+  - repository_count
+  - finding_count
+  - high_critical_count
+  - score
+  - band
+  title: PortfolioRiskConcentrationDto

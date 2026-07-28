@@ -1,0 +1,27 @@
+PageResponse_PortfolioMembershipResponse_:
+  properties:
+    items:
+      items:
+        $ref: '#/components/schemas/PortfolioMembershipResponse'
+      type: array
+      title: Items
+    total:
+      type: integer
+      minimum: 0.0
+      title: Total
+    offset:
+      type: integer
+      minimum: 0.0
+      title: Offset
+    limit:
+      type: integer
+      minimum: 1.0
+      title: Limit
+  additionalProperties: false
+  type: object
+  required:
+  - items
+  - total
+  - offset
+  - limit
+  title: PageResponse[PortfolioMembershipResponse]

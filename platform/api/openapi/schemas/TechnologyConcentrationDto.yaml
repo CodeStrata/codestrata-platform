@@ -1,0 +1,18 @@
+TechnologyConcentrationDto:
+  properties:
+    repository_count:
+      type: integer
+      title: Repository Count
+    usage_percentage:
+      type: number
+      title: Usage Percentage
+    production_usage_count:
+      type: integer
+      title: Production Usage Count
+  additionalProperties: false
+  type: object
+  required:
+  - repository_count
+  - usage_percentage
+  - production_usage_count
+  title: TechnologyConcentrationDto

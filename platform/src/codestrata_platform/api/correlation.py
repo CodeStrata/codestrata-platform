@@ -7,6 +7,7 @@ import uuid
 from collections.abc import Awaitable, Callable
 
 from fastapi import Request
+from codestrata_platform.api.contracts import API_MAJOR_VERSION, API_VERSION_HEADER
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from starlette.types import ASGIApp
@@ -34,7 +35,7 @@ def resolve_request_id(request: Request) -> str:
 
 
 class RequestCorrelationMiddleware(BaseHTTPMiddleware):
-    """Accept or mint request/correlation IDs and echo them on the response."""
+    """Accept or mint request/correlation IDs and echo API version on the response."""
 
     def __init__(self, app: ASGIApp) -> None:
         super().__init__(app)
@@ -49,4 +50,5 @@ class RequestCorrelationMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         response.headers[REQUEST_ID_HEADER] = request_id
         response.headers[CORRELATION_ID_HEADER] = correlation_id
+        response.headers[API_VERSION_HEADER] = API_MAJOR_VERSION
         return response

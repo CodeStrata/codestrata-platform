@@ -12,12 +12,8 @@ OPENAPI_ROOT = Path(__file__).resolve().parents[2] / "api" / "openapi"
 CANONICAL_JSON = OPENAPI_ROOT / "openapi.json"
 CANONICAL_YAML = OPENAPI_ROOT / "openapi.yaml"
 
-PARTIAL_MARKERS = {
-    ("get", "/api/v1/engineering/technologies"),
-    ("get", "/api/v1/engineering/findings"),
-    ("get", "/api/v1/engineering/recommendations"),
-    ("get", "/api/v1/engineering/metrics"),
-}
+PARTIAL_MARKERS: set[tuple[str, str]] = set()
+
 
 
 def _live_operations(client: TestClient) -> set[tuple[str, str]]:

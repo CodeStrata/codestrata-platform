@@ -49,4 +49,4 @@ Platform authentication, SSO, and/or VPN — not obscurity alone.
 
 - `platform/api/openapi/README.md`
 - `governance/standards/API_STANDARDS.md`
-- `governance/reports/PLATFORM_API_CONTRACT_FOUNDATION.md`
+- `governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`

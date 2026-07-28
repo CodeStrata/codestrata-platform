@@ -1,0 +1,19 @@
+SharedDependencySummaryDto:
+  properties:
+    signals:
+      items:
+        $ref: '#/components/schemas/CrossRepositoryDependencySignalDto'
+      type: array
+      title: Signals
+    explicit_dependency_count:
+      type: integer
+      title: Explicit Dependency Count
+    shared_exposure_count:
+      type: integer
+      title: Shared Exposure Count
+  additionalProperties: false
+  type: object
+  required:
+  - explicit_dependency_count
+  - shared_exposure_count
+  title: SharedDependencySummaryDto
