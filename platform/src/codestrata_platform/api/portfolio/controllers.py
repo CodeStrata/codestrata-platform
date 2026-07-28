@@ -313,14 +313,14 @@ def latest_snapshot(
 def get_snapshot(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioSnapshotDetailsResponse:
     details = services.portfolio.aggregation.get_snapshot(
         GetPortfolioSnapshotQuery(
             portfolio_snapshot_id=PortfolioSnapshotId(portfolio_snapshot_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return snapshot_details(details)
@@ -329,16 +329,16 @@ def get_snapshot(
 def _inventory_query(
     portfolio_snapshot_id: str,
     *,
-    organization_id: str | None,
-    workspace_id: str | None,
+    organization_id: str,
+    workspace_id: str,
     offset: int,
     limit: int,
     **filters: Any,
 ) -> PortfolioInventoryQuery:
     return PortfolioInventoryQuery(
         portfolio_snapshot_id=PortfolioSnapshotId(portfolio_snapshot_id),
-        organization_id=OrganizationId(organization_id) if organization_id else None,
-        workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+        organization_id=OrganizationId(organization_id),
+        workspace_id=WorkspaceId(workspace_id),
         offset=offset,
         limit=limit,
         **filters,
@@ -349,8 +349,8 @@ def _inventory_query(
 def get_technologies(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     technology: Annotated[str | None, Query()] = None,
     framework: Annotated[str | None, Query()] = None,
     offset: Annotated[int, Query(ge=0)] = 0,
@@ -378,8 +378,8 @@ def get_technologies(
 def get_findings(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> dict[str, Any]:
     result = services.portfolio.aggregation.get_findings(
         _inventory_query(
@@ -397,8 +397,8 @@ def get_findings(
 def get_recommendations(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> dict[str, Any]:
     result = services.portfolio.aggregation.get_recommendations(
         _inventory_query(
@@ -416,8 +416,8 @@ def get_recommendations(
 def get_risks(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> dict[str, Any]:
     result = services.portfolio.aggregation.get_risk(
         _inventory_query(
@@ -435,8 +435,8 @@ def get_risks(
 def get_modernization(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     modernization_theme: Annotated[str | None, Query()] = None,
     modernization_wave: Annotated[str | None, Query()] = None,
 ) -> dict[str, Any]:
@@ -472,8 +472,8 @@ def get_modernization(
 def get_coverage(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> dict[str, Any]:
     result = services.portfolio.aggregation.get_coverage(
         _inventory_query(
@@ -491,8 +491,8 @@ def get_coverage(
 def get_repository_profiles(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     criticality: Annotated[str | None, Query()] = None,
     availability_status: Annotated[str | None, Query()] = None,
     freshness_status: Annotated[str | None, Query()] = None,
@@ -518,8 +518,8 @@ def get_repository_profiles(
 def get_overview(
     portfolio_snapshot_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> dict[str, Any]:
     result = services.portfolio.aggregation.get_overview(
         _inventory_query(

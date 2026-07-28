@@ -61,8 +61,9 @@ def resolve_api_database_url(*, override: str | None = None) -> str:
         return _normalize_postgres_url(deprecated_pg)
     raise RuntimeError(
         "Commercial Platform requires PostgreSQL. Set "
-        f"{CANONICAL_DATABASE_URL_ENV}=postgresql+psycopg://user:password@host:port/database. "
-        f"For local Docker Compose use {_DEFAULT_DOCKER}."
+        f"{CANONICAL_DATABASE_URL_ENV}=postgresql+psycopg://user:***@host:port/database. "
+        f"For local Docker Compose use a local postgresql+psycopg URL "
+        f"(default credentials are for local Compose only)."
     )
 
 

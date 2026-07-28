@@ -117,13 +117,20 @@ def test_answering_api_flow(client: TestClient, monkeypatch: pytest.MonkeyPatch)
     assert body["status"] == "completed"
     answer_run_id = body["answer_run_id"]
 
-    got = client.get(f"/api/v1/answers/{answer_run_id}")
+    got = client.get(
+        f"/api/v1/answers/{answer_run_id}",
+        params={"organization_id": org_id, "workspace_id": workspace_id},
+    )
     assert got.status_code == 200
-    listed = client.get(f"/api/v1/repositories/{repository_id}/answers")
+    listed = client.get(
+        f"/api/v1/repositories/{repository_id}/answers",
+        params={"organization_id": org_id, "workspace_id": workspace_id},
+    )
     assert listed.status_code == 200
     assert listed.json()
     feedback = client.post(
         f"/api/v1/answers/{answer_run_id}/feedback",
+        params={"organization_id": org_id, "workspace_id": workspace_id},
         json={"rating": 5, "feedback_category": "helpful", "comment": "useful"},
     )
     assert feedback.status_code in {200, 201}
@@ -145,3 +152,12 @@ def test_answering_disabled_returns_error(
         },
     )
     assert response.status_code in {400, 422}
+
+
+def test_get_answer_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CODESTRATA_ANSWERING_ENABLED", "true")
+    response = client.get("/api/v1/answers/answer-run:missing")
+    assert response.status_code == 422, response.text

@@ -131,7 +131,7 @@ class DefaultArtifactService:
         )
 
     def upload_artifact(self, command: UploadArtifactCommand) -> ArtifactIngestionResult:
-        artifact = self._require(command.artifact_id)
+        artifact = self._require_owned(command.artifact_id, command.assessment_id)
         if len(command.content) > self._max_artifact_bytes:
             raise PayloadTooLargeError(
                 f"Artifact exceeds maximum size of {self._max_artifact_bytes} bytes",
@@ -178,7 +178,7 @@ class DefaultArtifactService:
         )
 
     def complete_artifact(self, command: CompleteArtifactCommand) -> ArtifactDetails:
-        artifact = self._require(command.artifact_id)
+        artifact = self._require_owned(command.artifact_id, command.assessment_id)
         if artifact.status is ArtifactStatus.COMPLETED:
             return ArtifactDetails.from_aggregate(artifact)
         if artifact.storage_reference is None:
@@ -197,13 +197,15 @@ class DefaultArtifactService:
 
 
     def fail_artifact(self, command: FailArtifactCommand) -> ArtifactDetails:
-        artifact = self._require(command.artifact_id)
+        artifact = self._require_owned(command.artifact_id, command.assessment_id)
         artifact.fail(reason=command.reason)
         self._artifacts.save(artifact)
         return ArtifactDetails.from_aggregate(artifact)
 
     def get_artifact(self, query: GetArtifactQuery) -> ArtifactDetails:
-        return ArtifactDetails.from_aggregate(self._require(query.artifact_id))
+        return ArtifactDetails.from_aggregate(
+            self._require_owned(query.artifact_id, query.assessment_id)
+        )
 
     def list_assessment_artifacts(
         self,
@@ -221,6 +223,19 @@ class DefaultArtifactService:
     def _require(self, artifact_id: AssessmentArtifactId) -> AssessmentArtifact:
         artifact = self._artifacts.get(artifact_id)
         if artifact is None:
+            raise NotFoundError(
+                f"Artifact not found: {artifact_id.value}",
+                reason_code="artifact_not_found",
+            )
+        return artifact
+
+    def _require_owned(
+        self,
+        artifact_id: AssessmentArtifactId,
+        assessment_id,
+    ) -> AssessmentArtifact:
+        artifact = self._require(artifact_id)
+        if artifact.assessment_id != assessment_id:
             raise NotFoundError(
                 f"Artifact not found: {artifact_id.value}",
                 reason_code="artifact_not_found",

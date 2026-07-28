@@ -99,12 +99,16 @@ def build_portfolio_retrieval_index(
 def rebuild_portfolio_retrieval_index(
     index_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     body: RebuildPortfolioRetrievalIndexRequest | None = None,
 ) -> PortfolioRetrievalIndexDetailsResponse:
     request = body or RebuildPortfolioRetrievalIndexRequest()
     result = services.portfolio_retrieval.rebuild_index(
         RebuildPortfolioRetrievalIndexCommand(
             index_id=PortfolioRetrievalIndexId(index_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             embedding_provider=request.embedding_provider,
             embedding_model=request.embedding_model,
             embedding_dimension=request.embedding_dimension,
@@ -121,9 +125,15 @@ def rebuild_portfolio_retrieval_index(
 def get_portfolio_retrieval_index(
     index_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioRetrievalIndexDetailsResponse:
     details = services.portfolio_retrieval.get(
-        GetPortfolioRetrievalIndexQuery(index_id=PortfolioRetrievalIndexId(index_id.strip()))
+        GetPortfolioRetrievalIndexQuery(
+            index_id=PortfolioRetrievalIndexId(index_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
+        )
     )
     return details_response(details)
 
@@ -135,9 +145,15 @@ def get_portfolio_retrieval_index(
 def list_portfolio_retrieval_indexes(
     portfolio_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> list[PortfolioRetrievalIndexSummaryResponse]:
     items = services.portfolio_retrieval.list(
-        ListPortfolioRetrievalIndexesQuery(portfolio_id=PortfolioId(portfolio_id.strip()))
+        ListPortfolioRetrievalIndexesQuery(
+            portfolio_id=PortfolioId(portfolio_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
+        )
     )
     return [summary_response(item) for item in items]
 
@@ -149,9 +165,15 @@ def list_portfolio_retrieval_indexes(
 def get_latest_portfolio_retrieval_index(
     portfolio_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioRetrievalIndexDetailsResponse:
     details = services.portfolio_retrieval.get_latest(
-        GetLatestPortfolioRetrievalIndexQuery(portfolio_id=PortfolioId(portfolio_id.strip()))
+        GetLatestPortfolioRetrievalIndexQuery(
+            portfolio_id=PortfolioId(portfolio_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
+        )
     )
     return details_response(details)
 
@@ -225,6 +247,8 @@ def search_portfolio_retrieval_index(
     index_id: str,
     body: PortfolioRetrievalSearchRequest,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioRetrievalSearchResultResponse:
     content_types = (
         tuple(PortfolioRetrievalContentType(item) for item in body.content_types)
@@ -242,6 +266,8 @@ def search_portfolio_retrieval_index(
     result = services.portfolio_retrieval.search(
         SearchPortfolioRetrievalIndexQuery(
             index_id=PortfolioRetrievalIndexId(index_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             query=PortfolioRetrievalQuery(
                 query_text=body.query_text,
                 mode=RetrievalMode(body.mode),
@@ -267,6 +293,8 @@ def assemble_portfolio_retrieval_context(
     index_id: str,
     body: PortfolioRetrievalContextRequest,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioRetrievalContextResponse:
     content_types = (
         tuple(PortfolioRetrievalContentType(item) for item in body.content_types)
@@ -276,6 +304,8 @@ def assemble_portfolio_retrieval_context(
     result = services.portfolio_retrieval.assemble_context(
         BuildPortfolioRetrievalContextQuery(
             index_id=PortfolioRetrievalIndexId(index_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             query_text=body.query_text,
             mode=RetrievalMode(body.mode),
             top_k=body.top_k,

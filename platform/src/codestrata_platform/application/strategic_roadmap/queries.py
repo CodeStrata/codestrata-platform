@@ -15,8 +15,8 @@ from codestrata_platform.domain.workspace.ids import WorkspaceId
 @dataclass(frozen=True, slots=True)
 class GetStrategicRoadmapQuery:
     executive_intelligence_id: ExecutiveIntelligenceId
-    organization_id: OrganizationId | None = None
-    workspace_id: WorkspaceId | None = None
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
 
 
 @dataclass(frozen=True, slots=True)

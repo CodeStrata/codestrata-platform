@@ -18,10 +18,18 @@ def test_url_encoded_token_redaction() -> None:
     assert REDACTED in sanitized
 
 
-def test_url_userinfo_pattern_redaction() -> None:
-    text = "https://user:super-secret@github.com/org/repo.git"
+def test_sqlalchemy_dialect_connection_string_redaction() -> None:
+    text = "failed: postgresql+psycopg://codestrata:SuperSecretPass@127.0.0.1:5432/codestrata"
     sanitized = redact_secrets(text)
-    assert "super-secret" not in sanitized
+    assert "SuperSecretPass" not in sanitized
+    assert REDACTED in sanitized
+    assert "postgresql+psycopg://" in sanitized
+
+
+def test_mysql_dialect_connection_string_redaction() -> None:
+    text = "mysql+pymysql://root:hunter2@db.internal/app"
+    sanitized = redact_secrets(text)
+    assert "hunter2" not in sanitized
     assert REDACTED in sanitized
 
 

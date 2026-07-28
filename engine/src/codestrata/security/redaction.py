@@ -33,9 +33,10 @@ _PRIVATE_KEY_PATTERN = re.compile(
     r"-----BEGIN (?:RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----[\s\S]*?"
     r"-----END (?:RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----",
 )
+# Include SQLAlchemy dialect URLs (e.g. postgresql+psycopg://user:pass@host/db).
 _CONNECTION_STRING_PATTERN = re.compile(
-    r"(?i)\b((?:postgres(?:ql)?|mysql|mongodb(?:\+srv)?|redis|amqp|mssql|"
-    r"sqlserver)://)([^/\s:@]+):([^/\s@]+)@",
+    r"(?i)\b((?:postgres(?:ql)?(?:\+[A-Za-z0-9_]+)?|mysql(?:\+[A-Za-z0-9_]+)?|"
+    r"mongodb(?:\+srv)?|redis|amqp|mssql|sqlserver)://)([^/\s:@]+):([^/\s@]+)@",
 )
 _ASSIGNMENT_SECRET_PATTERN = re.compile(
     r"(?i)\b("

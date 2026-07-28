@@ -48,8 +48,19 @@ class LatestPublishedRepositorySnapshotPolicy:
         self,
         memberships: tuple[PortfolioMembership, ...],
     ) -> tuple[PortfolioRepositorySnapshotSelection, ...]:
+        selections, _intelligence = self.select_with_sources(memberships)
+        return selections
+
+    def select_with_sources(
+        self,
+        memberships: tuple[PortfolioMembership, ...],
+    ) -> tuple[
+        tuple[PortfolioRepositorySnapshotSelection, ...],
+        dict[str, PublishedRepositoryIntelligence],
+    ]:
         selected_at = datetime.now(UTC)
         results: list[PortfolioRepositorySnapshotSelection] = []
+        intelligence: dict[str, PublishedRepositoryIntelligence] = {}
         for membership in memberships:
             if not membership.is_active:
                 continue
@@ -58,9 +69,11 @@ class LatestPublishedRepositorySnapshotPolicy:
                 workspace_id=membership.workspace_id,
                 repository_id=membership.repository_id,
             )
+            if intel is not None:
+                intelligence[membership.repository_id.value] = intel
             results.append(self._to_selection(membership, intel, selected_at))
         results.sort(key=lambda item: item.repository_id.value)
-        return tuple(results)
+        return tuple(results), intelligence
 
     def _to_selection(
         self,

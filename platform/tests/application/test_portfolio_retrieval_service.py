@@ -288,6 +288,8 @@ def test_build_search_and_context(monkeypatch: pytest.MonkeyPatch) -> None:
                 top_k=5,
                 repository_balance_mode=RepositoryBalanceMode.DIVERSIFIED,
             ),
+            organization_id=org_id,
+            workspace_id=workspace_id,
         )
     )
     assert search.hits
@@ -297,6 +299,8 @@ def test_build_search_and_context(monkeypatch: pytest.MonkeyPatch) -> None:
         BuildPortfolioRetrievalContextQuery(
             index_id=PortfolioRetrievalIndexId(index_id),
             query_text="debt hotspot modernization",
+            organization_id=org_id,
+            workspace_id=workspace_id,
             mode=RetrievalMode.HYBRID,
             top_k=5,
             repository_balance_mode=RepositoryBalanceMode.DIVERSIFIED,

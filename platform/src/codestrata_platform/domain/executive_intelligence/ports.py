@@ -40,7 +40,10 @@ class ExecutiveIntelligenceRepository(Protocol):
         self,
         portfolio_id: PortfolioId,
         *,
+        offset: int = 0,
         limit: int = 50,
     ) -> tuple[ExecutiveIntelligenceSnapshot, ...]: ...
+
+    def count_by_portfolio(self, portfolio_id: PortfolioId) -> int: ...
 
     def latest_version_for_portfolio(self, portfolio_id: PortfolioId) -> int: ...

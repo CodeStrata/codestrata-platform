@@ -21,12 +21,14 @@ from codestrata_platform.application.portfolio_answering.commands import (
     ListPortfolioAnswersQuery,
     SubmitPortfolioAnswerFeedbackCommand,
 )
+from codestrata_platform.domain.organization.ids import OrganizationId
 from codestrata_platform.domain.portfolio.identifiers import PortfolioId
 from codestrata_platform.domain.portfolio_answering.identifiers import PortfolioAnswerRunId
 from codestrata_platform.domain.portfolio_answering.lifecycle import PortfolioQuestionType
 from codestrata_platform.domain.portfolio_answering.question import PortfolioQuestionScope
 from codestrata_platform.domain.portfolio_retrieval.identifiers import PortfolioRetrievalIndexId
 from codestrata_platform.domain.portfolio_retrieval.taxonomy import PortfolioRetrievalContentType
+from codestrata_platform.domain.workspace.ids import WorkspaceId
 
 router = APIRouter(tags=["Portfolio Answering"])
 
@@ -110,9 +112,18 @@ def ask_portfolio(
     "/portfolio-answers/{answer_id}",
     response_model=PortfolioAnswerResponse,
 )
-def get_portfolio_answer(answer_id: str, services: ServicesDep) -> PortfolioAnswerResponse:
+def get_portfolio_answer(
+    answer_id: str,
+    services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
+) -> PortfolioAnswerResponse:
     result = services.portfolio_answering.get_answer(
-        GetPortfolioAnswerRunQuery(answer_run_id=PortfolioAnswerRunId(answer_id.strip()))
+        GetPortfolioAnswerRunQuery(
+            answer_run_id=PortfolioAnswerRunId(answer_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
+        )
     )
     return answer_response(result)
 
@@ -124,11 +135,15 @@ def get_portfolio_answer(answer_id: str, services: ServicesDep) -> PortfolioAnsw
 def list_portfolio_answers(
     portfolio_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
 ) -> list[PortfolioAnswerResponse]:
     items = services.portfolio_answering.list_portfolio_answers(
         ListPortfolioAnswersQuery(
             portfolio_id=PortfolioId(portfolio_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             limit=limit,
         )
     )
@@ -143,10 +158,14 @@ def submit_portfolio_answer_feedback(
     answer_id: str,
     body: PortfolioAnswerFeedbackRequest,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PortfolioAnswerFeedbackResponse:
     payload = services.portfolio_answering.submit_feedback(
         SubmitPortfolioAnswerFeedbackCommand(
             answer_run_id=PortfolioAnswerRunId(answer_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             rating=body.rating,
             feedback_category=body.feedback_category,
             comment=body.comment or "",

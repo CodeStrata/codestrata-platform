@@ -86,11 +86,11 @@ async def upload_artifact(
     services: ServicesDep,
     x_codestrata_checksum: str = Header(..., alias="X-CodeStrata-Checksum"),
 ) -> UploadArtifactResponse:
-    _ = assessment_id
     content = await request.body()
     result = services.artifacts.upload_artifact(
         UploadArtifactCommand(
             artifact_id=AssessmentArtifactId(artifact_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
             content=content,
             declared_checksum=x_codestrata_checksum.strip().lower(),
         )
@@ -114,9 +114,11 @@ def complete_artifact(
     artifact_id: str,
     services: ServicesDep,
 ) -> ArtifactDetailsResponse:
-    _ = assessment_id
     details = services.artifacts.complete_artifact(
-        CompleteArtifactCommand(artifact_id=AssessmentArtifactId(artifact_id.strip()))
+        CompleteArtifactCommand(
+            artifact_id=AssessmentArtifactId(artifact_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
+        )
     )
     return _details_response(details)
 
@@ -132,10 +134,10 @@ def fail_artifact(
     body: FailArtifactRequest,
     services: ServicesDep,
 ) -> ArtifactDetailsResponse:
-    _ = assessment_id
     details = services.artifacts.fail_artifact(
         FailArtifactCommand(
             artifact_id=AssessmentArtifactId(artifact_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
             reason=body.reason,
         )
     )
@@ -177,9 +179,11 @@ def get_artifact(
     artifact_id: str,
     services: ServicesDep,
 ) -> ArtifactDetailsResponse:
-    _ = assessment_id
     details = services.artifacts.get_artifact(
-        GetArtifactQuery(artifact_id=AssessmentArtifactId(artifact_id.strip()))
+        GetArtifactQuery(
+            artifact_id=AssessmentArtifactId(artifact_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
+        )
     )
     return _details_response(details)
 

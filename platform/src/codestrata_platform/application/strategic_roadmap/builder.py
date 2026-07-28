@@ -341,14 +341,24 @@ def _related_by_shared_repositories(
 ) -> tuple[RoadmapInitiative, ...]:
     """Attach evidence-backed related IDs from shared affected repositories only."""
 
+    repo_to_initiatives: dict[str, list[str]] = {}
+    order = {item.initiative_id: index for index, item in enumerate(initiatives)}
+    for item in initiatives:
+        for repo_id in item.affected_repository_ids:
+            repo_to_initiatives.setdefault(repo_id, []).append(item.initiative_id)
+
+    related_by_id: dict[str, tuple[str, ...]] = {}
+    for item in initiatives:
+        related: set[str] = set()
+        for repo_id in item.affected_repository_ids:
+            related.update(repo_to_initiatives.get(repo_id, ()))
+        related.discard(item.initiative_id)
+        related_by_id[item.initiative_id] = tuple(
+            sorted(related, key=lambda initiative_id: order[initiative_id])
+        )
+
     updated: list[RoadmapInitiative] = []
     for item in initiatives:
-        related = [
-            other.initiative_id
-            for other in initiatives
-            if other.initiative_id != item.initiative_id
-            and set(item.affected_repository_ids).intersection(other.affected_repository_ids)
-        ]
         updated.append(
             RoadmapInitiative(
                 initiative_id=item.initiative_id,
@@ -367,7 +377,7 @@ def _related_by_shared_repositories(
                 priority=item.priority,
                 effort_band=item.effort_band,
                 sequencing_wave=item.sequencing_wave,
-                related_initiative_ids=tuple(related),
+                related_initiative_ids=related_by_id[item.initiative_id],
                 depends_on_initiative_ids=(),
                 priority_inputs=item.priority_inputs,
                 effort_rule=item.effort_rule,

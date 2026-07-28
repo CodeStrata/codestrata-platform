@@ -156,12 +156,16 @@ def _register_complete_artifact(
     artifact_service.upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
     artifact_service.complete_artifact(
-        CompleteArtifactCommand(artifact_id=registered.artifact_id)
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
     )
     return registered.artifact_id.value
 
@@ -250,11 +254,17 @@ def test_process_intelligence_idempotent_and_revision_on_change() -> None:
     artifact_s.upload_artifact(
         UploadArtifactCommand(
             artifact_id=changed.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=changed_content,
             declared_checksum=_checksum(changed_content),
         )
     )
-    artifact_s.complete_artifact(CompleteArtifactCommand(artifact_id=changed.artifact_id))
+    artifact_s.complete_artifact(
+        CompleteArtifactCommand(
+            artifact_id=changed.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
+    )
 
     third = intelligence_s.process_assessment_intelligence(
         ProcessAssessmentIntelligenceCommand(
@@ -282,7 +292,9 @@ def test_process_intelligence_idempotent_and_revision_on_change() -> None:
     )
     assert len(listed_metrics) == 1
 
-    finding = intelligence_s.get_finding(GetFindingQuery(finding_id=FindingId("finding:2")))
+    finding = intelligence_s.get_finding(
+        GetFindingQuery(finding_id=FindingId("finding:2"), assessment_id=assessment.assessment_id)
+    )
     assert finding.title == "Updated finding"
 
     del findings_id

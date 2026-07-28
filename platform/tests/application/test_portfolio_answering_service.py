@@ -333,12 +333,18 @@ def test_ask_grounded_answer_flow(monkeypatch: pytest.MonkeyPatch) -> None:
             answer_run_id=__import__(
                 "codestrata_platform.domain.portfolio_answering.identifiers",
                 fromlist=["PortfolioAnswerRunId"],
-            ).PortfolioAnswerRunId(result.answer_run_id)
+            ).PortfolioAnswerRunId(result.answer_run_id),
+            organization_id=org_id,
+            workspace_id=workspace_id,
         )
     )
     assert got.answer_run_id == result.answer_run_id
     listed = answering.list_portfolio_answers(
-        ListPortfolioAnswersQuery(portfolio_id=portfolio_id)
+        ListPortfolioAnswersQuery(
+            portfolio_id=portfolio_id,
+            organization_id=org_id,
+            workspace_id=workspace_id,
+        )
     )
     assert any(item.answer_run_id == result.answer_run_id for item in listed)
     feedback = answering.submit_feedback(
@@ -347,6 +353,8 @@ def test_ask_grounded_answer_flow(monkeypatch: pytest.MonkeyPatch) -> None:
                 "codestrata_platform.domain.portfolio_answering.identifiers",
                 fromlist=["PortfolioAnswerRunId"],
             ).PortfolioAnswerRunId(result.answer_run_id),
+            organization_id=org_id,
+            workspace_id=workspace_id,
             rating=5,
             feedback_category="useful",
             comment="grounded",

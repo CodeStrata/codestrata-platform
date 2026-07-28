@@ -6,7 +6,10 @@ from collections import defaultdict
 from datetime import UTC, datetime
 
 from codestrata_platform.application.common.errors import NotFoundError
-from codestrata_platform.application.knowledge_graph.intelligence.errors import GraphNotReadyError
+from codestrata_platform.application.knowledge_graph.intelligence.errors import (
+    GraphNotFoundError,
+    GraphNotReadyError,
+)
 from codestrata_platform.application.knowledge_graph.intelligence.models import (
     CoverageMetricModel,
     CoverageSummary,
@@ -111,30 +114,18 @@ class _GraphAccess:
     ) -> tuple[EngineeringKnowledgeGraph, GraphQueryContext]:
         graph = self._graphs.get(graph_id)
         if graph is None:
-            raise NotFoundError(
-                f"Knowledge graph not found: {graph_id.value}",
-                reason_code="knowledge_graph_not_found",
-            )
+            raise GraphNotFoundError(graph_id.value)
         if graph.status is not GraphStatus.COMPLETED:
             raise GraphNotReadyError(
                 f"Knowledge graph {graph_id.value} is not completed",
                 reason_code="graph_not_completed",
             )
         if scope.organization_id is not None and graph.organization_id != scope.organization_id:
-            raise GraphNotReadyError(
-                "Graph organization ownership mismatch",
-                reason_code="graph_tenant_mismatch",
-            )
+            raise GraphNotFoundError(graph_id.value)
         if scope.workspace_id is not None and graph.workspace_id != scope.workspace_id:
-            raise GraphNotReadyError(
-                "Graph workspace ownership mismatch",
-                reason_code="graph_tenant_mismatch",
-            )
+            raise GraphNotFoundError(graph_id.value)
         if scope.repository_id is not None and graph.repository_id != scope.repository_id:
-            raise GraphNotReadyError(
-                "Graph repository ownership mismatch",
-                reason_code="graph_tenant_mismatch",
-            )
+            raise GraphNotFoundError(graph_id.value)
         query_scope = GraphQueryScope(
             organization_id=graph.organization_id,
             workspace_id=graph.workspace_id,

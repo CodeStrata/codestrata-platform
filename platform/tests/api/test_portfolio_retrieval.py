@@ -194,14 +194,22 @@ def test_portfolio_retrieval_api_flow(
     assert again.json()["index_id"] == index_id
     assert again.json()["idempotent"] is True
 
-    details = client.get(f"/api/v1/portfolio-retrieval/indexes/{index_id}")
+    scope_params = {"organization_id": org_id, "workspace_id": workspace_id}
+
+    details = client.get(
+        f"/api/v1/portfolio-retrieval/indexes/{index_id}", params=scope_params
+    )
     assert details.status_code == 200
 
-    latest = client.get(f"/api/v1/portfolios/{portfolio_id}/retrieval-indexes/latest")
+    latest = client.get(
+        f"/api/v1/portfolios/{portfolio_id}/retrieval-indexes/latest", params=scope_params
+    )
     assert latest.status_code == 200
     assert latest.json()["index_id"] == index_id
 
-    listed = client.get(f"/api/v1/portfolios/{portfolio_id}/retrieval-indexes")
+    listed = client.get(
+        f"/api/v1/portfolios/{portfolio_id}/retrieval-indexes", params=scope_params
+    )
     assert listed.status_code == 200
     assert len(listed.json()) >= 1
 
@@ -219,6 +227,7 @@ def test_portfolio_retrieval_api_flow(
 
     search = client.post(
         f"/api/v1/portfolio-retrieval/indexes/{index_id}/search",
+        params=scope_params,
         json={
             "query_text": "debt hotspot modernization",
             "mode": "hybrid",
@@ -240,6 +249,7 @@ def test_portfolio_retrieval_api_flow(
 
     context = client.post(
         f"/api/v1/portfolio-retrieval/indexes/{index_id}/context",
+        params=scope_params,
         json={
             "query_text": "debt hotspot modernization",
             "top_k": 5,
@@ -273,6 +283,15 @@ def test_portfolio_retrieval_disabled_by_default(
         },
     )
     assert created.status_code == 422
+
+
+def test_get_portfolio_retrieval_index_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("CODESTRATA_PORTFOLIO_RETRIEVAL_ENABLED", "true")
+    response = client.get("/api/v1/portfolio-retrieval/indexes/portfolio-retrieval:missing")
+    assert response.status_code == 422, response.text
 
 
 def test_portfolio_retrieval_rejects_blank_query_and_excessive_top_k(

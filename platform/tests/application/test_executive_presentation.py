@@ -117,12 +117,14 @@ def test_score_status_bands_are_deterministic() -> None:
 def test_presentation_preserves_source_metric_values(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _, _, details, service = _build_presentation_stack(monkeypatch)
+    stack, _, details, service = _build_presentation_stack(monkeypatch)
     model = service.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     source_by_key = {item.key: item for item in details.metrics}
@@ -168,12 +170,14 @@ def test_presentation_does_not_recalculate_metrics(
 
 
 def test_executive_and_cto_views(monkeypatch: pytest.MonkeyPatch) -> None:
-    _, _, details, service = _build_presentation_stack(monkeypatch)
+    stack, _, details, service = _build_presentation_stack(monkeypatch)
     model = service.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     assert model.executive_summary.headline
@@ -222,6 +226,8 @@ def test_zero_scores_and_limitations_are_visible(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     assert any(card.score == 0 for card in model.kpi_cards)
@@ -267,6 +273,8 @@ def test_repository_references_preserve_ids_without_enrichment(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     for ref in model.repository_references:
@@ -310,10 +318,12 @@ def test_tenant_mismatch_and_missing_presentation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     stack, _, details, service = _build_presentation_stack(monkeypatch)
-    from codestrata_platform.application.common.errors import ValidationError
+    from codestrata_platform.application.executive_intelligence.errors import (
+        ExecutiveIntelligenceNotFoundError,
+    )
     from codestrata_platform.domain.workspace.ids import WorkspaceId
 
-    with pytest.raises(ValidationError):
+    with pytest.raises(ExecutiveIntelligenceNotFoundError):
         service.get(
             GetExecutivePresentationQuery(
                 executive_intelligence_id=ExecutiveIntelligenceId(

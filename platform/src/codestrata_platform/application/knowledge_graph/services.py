@@ -51,6 +51,7 @@ from codestrata_platform.domain.engineering import (
 )
 from codestrata_platform.domain.knowledge_graph import (
     GraphNodeType,
+    GraphProjectionKey,
     GraphQueryRepository,
     GraphStatus,
     KnowledgeGraphId,
@@ -106,6 +107,12 @@ class EngineeringGraphProjectionService:
                 created=False,
                 idempotent=True,
             )
+        if existing is not None and existing.status is GraphStatus.FAILED:
+            # Legacy/in-flight FAILED rows may still occupy the unique key.
+            existing.projection_key = GraphProjectionKey(
+                f"{projection_key.value}:f{existing.graph_version.value}"[:128]
+            )
+            self._graphs.save(existing)
 
         graph_version = (
             self._graphs.latest_graph_version_for_repository(snapshot.repository_id) + 1
@@ -125,6 +132,10 @@ class EngineeringGraphProjectionService:
             graph.complete()
         except Exception as error:  # noqa: BLE001 - projection boundary
             graph.fail(reason=str(error)[:1000])
+            # Free the unique projection_key so deterministic retries can rebuild.
+            graph.projection_key = GraphProjectionKey(
+                f"{projection_key.value}:f{graph.graph_version.value}"[:128]
+            )
             self._graphs.save(graph)
             raise ValidationError(
                 f"Knowledge graph projection failed: {error}",

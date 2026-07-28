@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from codestrata_platform.application.common.errors import NotFoundError, ValidationError
+from codestrata_platform.application.common.errors import NotFoundError
 from codestrata_platform.application.common.pagination import PageResult
 from codestrata_platform.application.executive_intelligence.aggregation import (
     EXECUTIVE_AGGREGATION_POLICY_VERSION,
@@ -183,13 +183,24 @@ class ExecutiveIntelligenceAggregationService:
             query.organization_id,
             query.workspace_id,
         )
-        # Fetch the full portfolio history so pagination total/has_more are accurate.
+        bounded = max(1, min(int(query.limit), 500))
+        start = max(0, query.offset)
+        total = self._executive_intelligence.count_by_portfolio(query.portfolio_id)
         items = self._executive_intelligence.list_by_portfolio(
             query.portfolio_id,
-            limit=10_000,
+            offset=start,
+            limit=bounded,
         )
         summaries = tuple(self._summary(item) for item in items)
-        return _page(summaries, offset=query.offset, limit=query.limit)
+        return PageResult(items=summaries, offset=start, limit=bounded, total=total)
+
+    def details_from_snapshot(
+        self,
+        snapshot: ExecutiveIntelligenceSnapshot,
+    ) -> ExecutiveIntelligenceDetails:
+        """Project an already-loaded snapshot without an extra repository round-trip."""
+
+        return self._details(snapshot)
 
     def get_metrics(self, query: GetExecutiveIntelligenceQuery) -> ExecutiveMetricsModel:
         snapshot = self._load_owned(
@@ -247,9 +258,9 @@ class ExecutiveIntelligenceAggregationService:
             or snapshot.organization_id != command.organization_id
             or snapshot.workspace_id != command.workspace_id
         ):
-            raise ValidationError(
-                "Portfolio snapshot does not belong to the requested portfolio/tenant",
-                reason_code="portfolio_snapshot_tenant_mismatch",
+            raise NotFoundError(
+                f"Portfolio snapshot '{snapshot.portfolio_snapshot_id.value}' was not found",
+                reason_code="portfolio_snapshot_not_found",
             )
         if snapshot.status is not PortfolioSnapshotStatus.COMPLETED:
             raise ExecutiveIntelligenceNotReadyError(
@@ -274,31 +285,26 @@ class ExecutiveIntelligenceAggregationService:
             portfolio.organization_id != organization_id
             or portfolio.workspace_id != workspace_id
         ):
-            raise ValidationError(
-                "Portfolio does not belong to the requested organization/workspace",
-                reason_code="portfolio_tenant_mismatch",
+            raise NotFoundError(
+                f"Portfolio '{portfolio_id.value}' was not found",
+                reason_code="portfolio_not_found",
             )
         return portfolio
 
     def _load_owned(
         self,
         executive_intelligence_id: ExecutiveIntelligenceId,
-        organization_id: OrganizationId | None,
-        workspace_id: WorkspaceId | None,
+        organization_id: OrganizationId,
+        workspace_id: WorkspaceId,
     ) -> ExecutiveIntelligenceSnapshot:
         snapshot = self._executive_intelligence.get(executive_intelligence_id)
         if snapshot is None:
             raise ExecutiveIntelligenceNotFoundError(executive_intelligence_id.value)
-        if organization_id is not None and snapshot.organization_id != organization_id:
-            raise ValidationError(
-                "Executive intelligence tenant mismatch",
-                reason_code="executive_intelligence_tenant_mismatch",
-            )
-        if workspace_id is not None and snapshot.workspace_id != workspace_id:
-            raise ValidationError(
-                "Executive intelligence tenant mismatch",
-                reason_code="executive_intelligence_tenant_mismatch",
-            )
+        if (
+            snapshot.organization_id != organization_id
+            or snapshot.workspace_id != workspace_id
+        ):
+            raise ExecutiveIntelligenceNotFoundError(executive_intelligence_id.value)
         return snapshot
 
     def _summary(

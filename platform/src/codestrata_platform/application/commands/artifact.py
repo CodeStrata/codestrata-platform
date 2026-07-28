@@ -28,6 +28,7 @@ class RegisterArtifactCommand:
 @dataclass(frozen=True, slots=True)
 class UploadArtifactCommand:
     artifact_id: AssessmentArtifactId
+    assessment_id: AssessmentId
     content: bytes
     declared_checksum: str
 
@@ -35,9 +36,11 @@ class UploadArtifactCommand:
 @dataclass(frozen=True, slots=True)
 class CompleteArtifactCommand:
     artifact_id: AssessmentArtifactId
+    assessment_id: AssessmentId
 
 
 @dataclass(frozen=True, slots=True)
 class FailArtifactCommand:
     artifact_id: AssessmentArtifactId
+    assessment_id: AssessmentId
     reason: str

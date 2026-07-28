@@ -24,9 +24,11 @@ from codestrata_platform.application.common.errors import ValidationError
 from codestrata_platform.domain.answering.identifiers import AnswerRunId
 from codestrata_platform.domain.answering.lifecycle import QuestionType
 from codestrata_platform.domain.answering.question import QuestionScope
+from codestrata_platform.domain.organization.ids import OrganizationId
 from codestrata_platform.domain.repository.ids import RepositoryId
 from codestrata_platform.domain.retrieval.identifiers import RetrievalIndexId
 from codestrata_platform.domain.retrieval.taxonomy import RetrievalContentType
+from codestrata_platform.domain.workspace.ids import WorkspaceId
 
 router = APIRouter(tags=["Answering"])
 
@@ -107,9 +109,18 @@ def ask_repository_answer(
     "/answers/{answer_run_id}",
     response_model=EngineeringAnswerResponse,
 )
-def get_answer(answer_run_id: str, services: ServicesDep) -> EngineeringAnswerResponse:
+def get_answer(
+    answer_run_id: str,
+    services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
+) -> EngineeringAnswerResponse:
     result = services.answering.get_answer(
-        GetAnswerRunQuery(answer_run_id=AnswerRunId(answer_run_id.strip()))
+        GetAnswerRunQuery(
+            answer_run_id=AnswerRunId(answer_run_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
+        )
     )
     return answer_response(result)
 
@@ -121,11 +132,15 @@ def get_answer(answer_run_id: str, services: ServicesDep) -> EngineeringAnswerRe
 def list_repository_answers(
     repository_id: str,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
 ) -> list[EngineeringAnswerResponse]:
     items = services.answering.list_repository_answers(
         ListRepositoryAnswersQuery(
             repository_id=RepositoryId(repository_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             limit=limit,
         )
     )
@@ -140,10 +155,14 @@ def submit_answer_feedback(
     answer_run_id: str,
     body: AnswerFeedbackRequest,
     services: ServicesDep,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> AnswerFeedbackResponse:
     payload = services.answering.submit_feedback(
         SubmitAnswerFeedbackCommand(
             answer_run_id=AnswerRunId(answer_run_id.strip()),
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
             rating=body.rating,
             feedback_category=body.feedback_category,
             comment=body.comment or "",

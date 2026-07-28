@@ -11,6 +11,7 @@ from codestrata_platform.domain.assessment.ids import AssessmentId
 @dataclass(frozen=True, slots=True)
 class GetArtifactQuery:
     artifact_id: AssessmentArtifactId
+    assessment_id: AssessmentId
 
 
 @dataclass(frozen=True, slots=True)

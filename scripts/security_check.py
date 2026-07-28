@@ -152,7 +152,14 @@ def main(argv: list[str] | None = None) -> int:
     roots = (
         [ROOT / "engine" / "src", ROOT / "engine" / "tests"]
         if args.engine_only
-        else [ROOT / "engine", ROOT / "scripts", ROOT / "examples", ROOT / "tests"]
+        else [
+            ROOT / "engine",
+            ROOT / "platform" / "src",
+            ROOT / "platform" / "tests",
+            ROOT / "scripts",
+            ROOT / "examples",
+            ROOT / "tests",
+        ]
     )
     findings = scan(roots)
     if not findings:

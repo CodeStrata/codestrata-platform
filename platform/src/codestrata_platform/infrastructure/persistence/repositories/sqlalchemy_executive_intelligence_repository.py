@@ -134,18 +134,33 @@ class SqlAlchemyExecutiveIntelligenceRepository:
         self,
         portfolio_id: PortfolioId,
         *,
+        offset: int = 0,
         limit: int = 50,
     ) -> tuple[ExecutiveIntelligenceSnapshot, ...]:
-        records = self._session.scalars(
-            select(EngineeringExecutiveIntelligenceSnapshotRecord)
+        records = list(
+            self._session.scalars(
+                select(EngineeringExecutiveIntelligenceSnapshotRecord)
+                .where(
+                    EngineeringExecutiveIntelligenceSnapshotRecord.portfolio_id
+                    == portfolio_id.value
+                )
+                .order_by(EngineeringExecutiveIntelligenceSnapshotRecord.version.desc())
+                .offset(max(0, offset))
+                .limit(max(1, limit))
+            ).all()
+        )
+        return self._to_domain_many(records)
+
+    def count_by_portfolio(self, portfolio_id: PortfolioId) -> int:
+        value = self._session.scalar(
+            select(func.count())
+            .select_from(EngineeringExecutiveIntelligenceSnapshotRecord)
             .where(
                 EngineeringExecutiveIntelligenceSnapshotRecord.portfolio_id
                 == portfolio_id.value
             )
-            .order_by(EngineeringExecutiveIntelligenceSnapshotRecord.version.desc())
-            .limit(max(1, limit))
-        ).all()
-        return tuple(self._to_domain(record) for record in records)
+        )
+        return int(value or 0)
 
     def latest_version_for_portfolio(self, portfolio_id: PortfolioId) -> int:
         value = self._session.scalar(
@@ -159,39 +174,58 @@ class SqlAlchemyExecutiveIntelligenceRepository:
         self,
         record: EngineeringExecutiveIntelligenceSnapshotRecord,
     ) -> ExecutiveIntelligenceSnapshot:
-        exec_id = record.executive_intelligence_id
-        metric_records = list(
-            self._session.scalars(
-                select(EngineeringExecutiveMetricRecord).where(
-                    EngineeringExecutiveMetricRecord.executive_intelligence_id == exec_id
-                )
-            ).all()
-        )
-        finding_records = list(
-            self._session.scalars(
-                select(EngineeringExecutiveFindingRecord).where(
-                    EngineeringExecutiveFindingRecord.executive_intelligence_id == exec_id
-                )
-            ).all()
-        )
-        recommendation_records = list(
-            self._session.scalars(
-                select(EngineeringExecutiveRecommendationRecord).where(
-                    EngineeringExecutiveRecommendationRecord.executive_intelligence_id == exec_id
-                )
-            ).all()
-        )
-        observation_records = list(
-            self._session.scalars(
-                select(EngineeringExecutiveObservationRecord).where(
-                    EngineeringExecutiveObservationRecord.executive_intelligence_id == exec_id
-                )
-            ).all()
-        )
-        return ExecutiveIntelligenceMapper.from_records(
-            record,
-            metric_records=metric_records,
-            finding_records=finding_records,
-            recommendation_records=recommendation_records,
-            observation_records=observation_records,
+        return self._to_domain_many([record])[0]
+
+    def _to_domain_many(
+        self,
+        records: list[EngineeringExecutiveIntelligenceSnapshotRecord],
+    ) -> tuple[ExecutiveIntelligenceSnapshot, ...]:
+        if not records:
+            return ()
+        ids = [record.executive_intelligence_id for record in records]
+        metrics_by_id: dict[str, list[EngineeringExecutiveMetricRecord]] = {
+            item: [] for item in ids
+        }
+        findings_by_id: dict[str, list[EngineeringExecutiveFindingRecord]] = {
+            item: [] for item in ids
+        }
+        recommendations_by_id: dict[str, list[EngineeringExecutiveRecommendationRecord]] = {
+            item: [] for item in ids
+        }
+        observations_by_id: dict[str, list[EngineeringExecutiveObservationRecord]] = {
+            item: [] for item in ids
+        }
+        for row in self._session.scalars(
+            select(EngineeringExecutiveMetricRecord).where(
+                EngineeringExecutiveMetricRecord.executive_intelligence_id.in_(ids)
+            )
+        ).all():
+            metrics_by_id[row.executive_intelligence_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringExecutiveFindingRecord).where(
+                EngineeringExecutiveFindingRecord.executive_intelligence_id.in_(ids)
+            )
+        ).all():
+            findings_by_id[row.executive_intelligence_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringExecutiveRecommendationRecord).where(
+                EngineeringExecutiveRecommendationRecord.executive_intelligence_id.in_(ids)
+            )
+        ).all():
+            recommendations_by_id[row.executive_intelligence_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringExecutiveObservationRecord).where(
+                EngineeringExecutiveObservationRecord.executive_intelligence_id.in_(ids)
+            )
+        ).all():
+            observations_by_id[row.executive_intelligence_id].append(row)
+        return tuple(
+            ExecutiveIntelligenceMapper.from_records(
+                record,
+                metric_records=metrics_by_id[record.executive_intelligence_id],
+                finding_records=findings_by_id[record.executive_intelligence_id],
+                recommendation_records=recommendations_by_id[record.executive_intelligence_id],
+                observation_records=observations_by_id[record.executive_intelligence_id],
+            )
+            for record in records
         )

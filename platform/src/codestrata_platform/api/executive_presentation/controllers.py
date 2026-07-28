@@ -41,14 +41,14 @@ router = APIRouter(tags=["Executive Presentation"])
 def get_executive_presentation(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutivePresentationResponse:
     model = services.executive_presentation.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return presentation_response(model)
@@ -103,14 +103,14 @@ def get_executive_presentation_by_portfolio_snapshot(
 def get_executive_presentation_executive_summary(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PresentationExecutiveSummaryDto:
     model = services.executive_presentation.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return presentation_executive_summary_response(model)
@@ -123,14 +123,14 @@ def get_executive_presentation_executive_summary(
 def get_executive_presentation_cto_summary(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PresentationCtoSummaryDto:
     model = services.executive_presentation.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return presentation_cto_summary_response(model)
@@ -143,14 +143,14 @@ def get_executive_presentation_cto_summary(
 def get_executive_presentation_scorecard(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> PresentationScorecardDto:
     model = services.executive_presentation.get(
         GetExecutivePresentationQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return presentation_scorecard_response(model)

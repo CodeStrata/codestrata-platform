@@ -15,6 +15,11 @@ from codestrata_platform.api.configuration.dependencies import (
 from codestrata_platform.api.configuration.settings import ApiSettings
 from codestrata_platform.api.controllers import build_api_router
 from codestrata_platform.api.exception import register_exception_handlers
+from codestrata_platform.api.security import (
+    PlatformApiKeyMiddleware,
+    assert_production_auth_configuration,
+    resolve_platform_api_key,
+)
 
 
 def create_app(
@@ -29,6 +34,7 @@ def create_app(
     Controllers are thin adapters over Application Services.
     """
 
+    assert_production_auth_configuration()
     resolved = settings or ApiSettings.from_env(use_memory=use_memory, database_url=database_url)
     if use_memory:
         resolved = ApiSettings(
@@ -101,6 +107,10 @@ def create_app(
         ],
     )
     register_exception_handlers(app)
+    app.add_middleware(
+        PlatformApiKeyMiddleware,
+        api_key=resolve_platform_api_key(),
+    )
     app.include_router(build_api_router())
 
     @app.get("/health", tags=["Health"], summary="Health check")

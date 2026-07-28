@@ -238,6 +238,8 @@ def test_portfolio_retrieval_round_trip(session, monkeypatch: pytest.MonkeyPatch
                 mode=RetrievalMode.HYBRID,
                 top_k=5,
             ),
+            organization_id=org.organization_id,
+            workspace_id=workspace.workspace_id,
         )
     )
     assert search.hits

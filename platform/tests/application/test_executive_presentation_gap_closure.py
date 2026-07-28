@@ -56,6 +56,8 @@ def _presentation_for_repos(monkeypatch: pytest.MonkeyPatch, *, count: int = 4):
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     return stack, details, model

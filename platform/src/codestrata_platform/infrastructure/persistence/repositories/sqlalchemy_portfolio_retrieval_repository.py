@@ -176,12 +176,14 @@ class SqlAlchemyPortfolioRetrievalRepository:
         self,
         portfolio_id: PortfolioId,
     ) -> tuple[PortfolioRetrievalIndex, ...]:
-        records = self._session.scalars(
-            select(EngineeringPortfolioRetrievalIndexRecord)
-            .where(EngineeringPortfolioRetrievalIndexRecord.portfolio_id == portfolio_id.value)
-            .order_by(EngineeringPortfolioRetrievalIndexRecord.index_version.asc())
-        ).all()
-        return tuple(self._to_domain(item) for item in records)
+        records = list(
+            self._session.scalars(
+                select(EngineeringPortfolioRetrievalIndexRecord)
+                .where(EngineeringPortfolioRetrievalIndexRecord.portfolio_id == portfolio_id.value)
+                .order_by(EngineeringPortfolioRetrievalIndexRecord.index_version.asc())
+            ).all()
+        )
+        return self._to_domain_many(records)
 
     def get_latest_completed(
         self,
@@ -286,18 +288,38 @@ class SqlAlchemyPortfolioRetrievalRepository:
         self,
         record: EngineeringPortfolioRetrievalIndexRecord,
     ) -> PortfolioRetrievalIndex:
-        documents = list(
-            self._session.scalars(
-                select(EngineeringPortfolioRetrievalDocumentRecord).where(
-                    EngineeringPortfolioRetrievalDocumentRecord.index_id == record.id
-                )
-            ).all()
+        return self._to_domain_many([record])[0]
+
+    def _to_domain_many(
+        self,
+        records: list[EngineeringPortfolioRetrievalIndexRecord],
+    ) -> tuple[PortfolioRetrievalIndex, ...]:
+        if not records:
+            return ()
+        ids = [record.id for record in records]
+        documents_by_id: dict[str, list[EngineeringPortfolioRetrievalDocumentRecord]] = {
+            item: [] for item in ids
+        }
+        chunks_by_id: dict[str, list[EngineeringPortfolioRetrievalChunkRecord]] = {
+            item: [] for item in ids
+        }
+        for row in self._session.scalars(
+            select(EngineeringPortfolioRetrievalDocumentRecord).where(
+                EngineeringPortfolioRetrievalDocumentRecord.index_id.in_(ids)
+            )
+        ).all():
+            documents_by_id[row.index_id].append(row)
+        for row in self._session.scalars(
+            select(EngineeringPortfolioRetrievalChunkRecord).where(
+                EngineeringPortfolioRetrievalChunkRecord.index_id.in_(ids)
+            )
+        ).all():
+            chunks_by_id[row.index_id].append(row)
+        return tuple(
+            PortfolioRetrievalIndexMapper.to_domain(
+                record,
+                documents_by_id[record.id],
+                chunks_by_id[record.id],
+            )
+            for record in records
         )
-        chunks = list(
-            self._session.scalars(
-                select(EngineeringPortfolioRetrievalChunkRecord).where(
-                    EngineeringPortfolioRetrievalChunkRecord.index_id == record.id
-                )
-            ).all()
-        )
-        return PortfolioRetrievalIndexMapper.to_domain(record, documents, chunks)

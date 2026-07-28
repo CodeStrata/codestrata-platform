@@ -65,9 +65,11 @@ def get_finding(
     finding_id: str,
     services: ServicesDep,
 ) -> FindingDetailsResponse:
-    _ = assessment_id
     details = services.intelligence.get_finding(
-        GetFindingQuery(finding_id=FindingId(finding_id.strip()))
+        GetFindingQuery(
+            finding_id=FindingId(finding_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
+        )
     )
     return FindingDetailsResponse(
         finding_id=details.finding_id.value,
@@ -147,9 +149,11 @@ def get_recommendation(
     recommendation_id: str,
     services: ServicesDep,
 ) -> RecommendationDetailsResponse:
-    _ = assessment_id
     item = services.intelligence.get_recommendation(
-        GetRecommendationQuery(recommendation_id=RecommendationId(recommendation_id.strip()))
+        GetRecommendationQuery(
+            recommendation_id=RecommendationId(recommendation_id.strip()),
+            assessment_id=AssessmentId(assessment_id.strip()),
+        )
     )
     return _recommendation_response(item)
 

@@ -172,7 +172,10 @@ def test_portfolio_api_flow(client: TestClient) -> None:
         "repository-profiles",
         "overview",
     ):
-        response = client.get(f"/api/v1/portfolio-snapshots/{snapshot_id}/{path}")
+        response = client.get(
+            f"/api/v1/portfolio-snapshots/{snapshot_id}/{path}",
+            params={"organization_id": org_id, "workspace_id": workspace_id},
+        )
         assert response.status_code == 200, path
 
     listed = client.get(
@@ -181,3 +184,8 @@ def test_portfolio_api_flow(client: TestClient) -> None:
     )
     assert listed.status_code == 200
     assert listed.json()["total"] >= 1
+
+
+def test_get_portfolio_technologies_requires_scope_params(client: TestClient) -> None:
+    response = client.get("/api/v1/portfolio-snapshots/portfolio-snapshot:missing/technologies")
+    assert response.status_code == 422, response.text

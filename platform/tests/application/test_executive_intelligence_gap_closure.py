@@ -50,6 +50,8 @@ def test_missing_executive_intelligence_raises_not_found(
         stack["exec_service"].get(
             GetExecutiveIntelligenceQuery(
                 executive_intelligence_id=ExecutiveIntelligenceId("exec:missing"),
+                organization_id=stack["org"].organization_id,
+                workspace_id=stack["workspace"].workspace_id,
             )
         )
     assert exc.value.reason_code == "executive_intelligence_not_found"

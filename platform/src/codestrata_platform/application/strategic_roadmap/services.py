@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from codestrata_platform.application.common.errors import ValidationError
 from codestrata_platform.application.executive_intelligence.models import (
     ExecutiveIntelligenceDetails,
 )
@@ -84,32 +83,19 @@ class StrategicRoadmapService:
         )
         if snapshot is None:
             raise StrategicRoadmapNotFoundError(query.portfolio_snapshot_id.value)
-        if snapshot.organization_id != query.organization_id:
-            raise ValidationError(
-                "Strategic roadmap tenant mismatch",
-                reason_code="strategic_roadmap_tenant_mismatch",
-            )
-        if snapshot.workspace_id != query.workspace_id:
-            raise ValidationError(
-                "Strategic roadmap tenant mismatch",
-                reason_code="strategic_roadmap_tenant_mismatch",
-            )
+        if (
+            snapshot.organization_id != query.organization_id
+            or snapshot.workspace_id != query.workspace_id
+        ):
+            raise StrategicRoadmapNotFoundError(query.portfolio_snapshot_id.value)
         if (
             query.portfolio_id is not None
             and snapshot.portfolio_id != query.portfolio_id
         ):
-            raise ValidationError(
-                "Strategic roadmap portfolio mismatch",
-                reason_code="strategic_roadmap_portfolio_mismatch",
-            )
-        details = self._executive_intelligence.get(
-            GetExecutiveIntelligenceQuery(
-                executive_intelligence_id=snapshot.executive_intelligence_id,
-                organization_id=query.organization_id,
-                workspace_id=query.workspace_id,
-            )
+            raise StrategicRoadmapNotFoundError(query.portfolio_snapshot_id.value)
+        return self._project(
+            self._executive_intelligence.details_from_snapshot(snapshot)
         )
-        return self._project(details)
 
     def _project(self, details: ExecutiveIntelligenceDetails) -> StrategicRoadmapModel:
         if details.summary.status is not ExecutiveIntelligenceStatus.COMPLETED:

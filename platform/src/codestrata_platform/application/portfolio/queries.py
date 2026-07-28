@@ -38,8 +38,8 @@ class ListPortfolioRepositoriesQuery:
 @dataclass(frozen=True, slots=True)
 class GetPortfolioSnapshotQuery:
     portfolio_snapshot_id: PortfolioSnapshotId
-    organization_id: OrganizationId | None = None
-    workspace_id: WorkspaceId | None = None
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
 
 
 @dataclass(frozen=True, slots=True)
@@ -61,8 +61,8 @@ class ListPortfolioSnapshotsQuery:
 @dataclass(frozen=True, slots=True)
 class PortfolioInventoryQuery:
     portfolio_snapshot_id: PortfolioSnapshotId
-    organization_id: OrganizationId | None = None
-    workspace_id: WorkspaceId | None = None
+    organization_id: OrganizationId
+    workspace_id: WorkspaceId
     repository_id: str | None = None
     technology: str | None = None
     framework: str | None = None

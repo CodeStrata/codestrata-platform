@@ -140,9 +140,9 @@ class EngineeringAnswerOrchestrationService:
             or command.scope.workspace_id != resolved.workspace_id.value
             or command.scope.repository_id != resolved.repository_id.value
         ):
-            raise ValidationError(
-                "Question scope does not match retrieval index ownership",
-                reason_code="answer_scope_mismatch",
+            raise NotFoundError(
+                f"Repository '{command.scope.repository_id}' was not found",
+                reason_code="repository_not_found",
             )
         question = EngineeringQuestion(
             text=command.question,
@@ -338,7 +338,10 @@ class EngineeringAnswerOrchestrationService:
 
     def get_answer(self, query: GetAnswerRunQuery) -> EngineeringAnswerModel:
         run = self._answers.get(query.answer_run_id)
-        if run is None:
+        if run is None or (
+            run.organization_id != query.organization_id
+            or run.workspace_id != query.workspace_id
+        ):
             raise NotFoundError(
                 f"Answer run not found: {query.answer_run_id.value}",
                 reason_code="answer_run_not_found",
@@ -350,11 +353,20 @@ class EngineeringAnswerOrchestrationService:
         query: ListRepositoryAnswersQuery,
     ) -> tuple[EngineeringAnswerModel, ...]:
         items = self._answers.list_by_repository(query.repository_id, limit=query.limit)
-        return tuple(EngineeringAnswerModel.from_aggregate(item) for item in items)
+        owned = tuple(
+            item
+            for item in items
+            if item.organization_id == query.organization_id
+            and item.workspace_id == query.workspace_id
+        )
+        return tuple(EngineeringAnswerModel.from_aggregate(item) for item in owned)
 
     def submit_feedback(self, command: SubmitAnswerFeedbackCommand) -> dict[str, object]:
         run = self._answers.get(command.answer_run_id)
-        if run is None:
+        if run is None or (
+            run.organization_id != command.organization_id
+            or run.workspace_id != command.workspace_id
+        ):
             raise NotFoundError(
                 f"Answer run not found: {command.answer_run_id.value}",
                 reason_code="answer_run_not_found",

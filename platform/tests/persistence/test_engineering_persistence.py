@@ -152,11 +152,17 @@ def test_engineering_snapshot_persistence_round_trip(session) -> None:
     artifact_s.upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
-    artifact_s.complete_artifact(CompleteArtifactCommand(artifact_id=registered.artifact_id))
+    artifact_s.complete_artifact(
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
+    )
     intelligence_s.process_assessment_intelligence(
         ProcessAssessmentIntelligenceCommand(assessment_id=assessment.assessment_id)
     )

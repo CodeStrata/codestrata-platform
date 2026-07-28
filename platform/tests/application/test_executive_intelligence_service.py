@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from codestrata_platform.application.common.errors import ValidationError
+from codestrata_platform.application.common.errors import NotFoundError
 from codestrata_platform.application.executive_intelligence.commands import (
     BuildExecutiveIntelligenceCommand,
 )
@@ -370,13 +370,13 @@ def test_mixed_portfolio_findings_and_recommendations_are_grounded(
         assert 0 <= recommendation.priority_score <= 100
 
 
-def test_tenant_mismatch_raises_validation_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_tenant_mismatch_raises_not_found_error(monkeypatch: pytest.MonkeyPatch) -> None:
     _enable_executive_intelligence(monkeypatch)
     stack = _stack()
     portfolio_id = _build_portfolio(stack, repo_ids=[])
 
     other_workspace = WorkspaceId("workspace:other")
-    with pytest.raises(ValidationError):
+    with pytest.raises(NotFoundError):
         stack["exec_service"].build_intelligence(
             BuildExecutiveIntelligenceCommand(
                 portfolio_id=portfolio_id,
@@ -482,6 +482,8 @@ def test_rebuild_supersedes_prior_completed_when_snapshot_changes(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 first.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     assert prior.summary.status.value == "superseded"

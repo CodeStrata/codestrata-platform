@@ -167,12 +167,16 @@ def _publish_snapshot(stack, *, name: str = "App"):
     stack["artifact"].upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
     stack["artifact"].complete_artifact(
-        CompleteArtifactCommand(artifact_id=registered.artifact_id)
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
     )
     stack["intelligence"].process_assessment_intelligence(
         ProcessAssessmentIntelligenceCommand(assessment_id=assessment.assessment_id)
@@ -259,12 +263,16 @@ def test_new_snapshot_supersedes_prior_graph(session) -> None:
     stack["artifact"].upload_artifact(
         UploadArtifactCommand(
             artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
             content=content,
             declared_checksum=_checksum(content),
         )
     )
     stack["artifact"].complete_artifact(
-        CompleteArtifactCommand(artifact_id=registered.artifact_id)
+        CompleteArtifactCommand(
+            artifact_id=registered.artifact_id,
+            assessment_id=assessment.assessment_id,
+        )
     )
     stack["intelligence"].process_assessment_intelligence(
         ProcessAssessmentIntelligenceCommand(assessment_id=assessment.assessment_id)

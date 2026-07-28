@@ -116,14 +116,14 @@ def latest_executive_intelligence(
 def get_executive_intelligence(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutiveIntelligenceDetailsResponse:
     details = services.executive_intelligence.get(
         GetExecutiveIntelligenceQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return details_response(details)
@@ -136,14 +136,14 @@ def get_executive_intelligence(
 def get_executive_intelligence_metrics(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutiveMetricsResponse:
     model = services.executive_intelligence.get_metrics(
         GetExecutiveIntelligenceQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return metrics_response(model)
@@ -156,14 +156,14 @@ def get_executive_intelligence_metrics(
 def get_executive_intelligence_findings(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutiveFindingsResponse:
     model = services.executive_intelligence.get_findings(
         GetExecutiveIntelligenceQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return findings_response(model)
@@ -176,14 +176,14 @@ def get_executive_intelligence_findings(
 def get_executive_intelligence_recommendations(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutiveRecommendationsResponse:
     model = services.executive_intelligence.get_recommendations(
         GetExecutiveIntelligenceQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return recommendations_response(model)
@@ -196,14 +196,14 @@ def get_executive_intelligence_recommendations(
 def get_executive_intelligence_overview(
     executive_intelligence_id: str,
     services: ServicesDep,
-    organization_id: Annotated[str | None, Query()] = None,
-    workspace_id: Annotated[str | None, Query()] = None,
+    organization_id: Annotated[str, Query(min_length=1)],
+    workspace_id: Annotated[str, Query(min_length=1)],
 ) -> ExecutiveIntelligenceDetailsResponse:
     details = services.executive_intelligence.get_overview(
         GetExecutiveIntelligenceQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(executive_intelligence_id),
-            organization_id=OrganizationId(organization_id) if organization_id else None,
-            workspace_id=WorkspaceId(workspace_id) if workspace_id else None,
+            organization_id=OrganizationId(organization_id),
+            workspace_id=WorkspaceId(workspace_id),
         )
     )
     return details_response(details)

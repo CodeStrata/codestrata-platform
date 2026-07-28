@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from codestrata_platform.application.common.errors import ValidationError
 from codestrata_platform.application.executive_intelligence.commands import (
     BuildExecutiveIntelligenceCommand,
+)
+from codestrata_platform.application.executive_intelligence.errors import (
+    ExecutiveIntelligenceNotFoundError,
 )
 from codestrata_platform.application.strategic_roadmap.builder import (
     StrategicRoadmapBuilder,
@@ -119,12 +121,14 @@ def test_empty_portfolio_roadmap_has_no_invented_initiatives(
 def test_single_and_mixed_portfolio_initiatives_are_evidence_backed(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _, _, details, service = _build_roadmap_stack(monkeypatch, repo_count=1)
+    stack, _, details, service = _build_roadmap_stack(monkeypatch, repo_count=1)
     single = service.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 details.summary.executive_intelligence_id
             ),
+            organization_id=stack["org"].organization_id,
+            workspace_id=stack["workspace"].workspace_id,
         )
     )
     assert single.summary.initiative_count == len(single.initiatives)
@@ -145,12 +149,16 @@ def test_single_and_mixed_portfolio_initiatives_are_evidence_backed(
         for recommendation_id in initiative.supporting_recommendation_ids:
             assert recommendation_id in rec_ids
 
-    _, _, mixed_details, mixed_service = _build_roadmap_stack(monkeypatch, repo_count=3)
+    mixed_stack, _, mixed_details, mixed_service = _build_roadmap_stack(
+        monkeypatch, repo_count=3
+    )
     mixed = mixed_service.get(
         GetStrategicRoadmapQuery(
             executive_intelligence_id=ExecutiveIntelligenceId(
                 mixed_details.summary.executive_intelligence_id
             ),
+            organization_id=mixed_stack["org"].organization_id,
+            workspace_id=mixed_stack["workspace"].workspace_id,
         )
     )
     assert mixed.initiatives
@@ -201,7 +209,7 @@ def test_tenant_isolation_and_lookups(monkeypatch: pytest.MonkeyPatch) -> None:
         by_snapshot.identity.executive_intelligence_id
         == details.summary.executive_intelligence_id
     )
-    with pytest.raises(ValidationError):
+    with pytest.raises(ExecutiveIntelligenceNotFoundError):
         service.get(
             GetStrategicRoadmapQuery(
                 executive_intelligence_id=ExecutiveIntelligenceId(

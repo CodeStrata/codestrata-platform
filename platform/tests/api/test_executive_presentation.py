@@ -42,7 +42,10 @@ def test_presentation_requires_feature_flag(
     )
     assert built.status_code == 201, built.text
     executive_id = built.json()["summary"]["executive_intelligence_id"]
-    response = client.get(f"/api/v1/executive-intelligence/{executive_id}/presentation")
+    response = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/presentation",
+        params={"organization_id": org_id, "workspace_id": workspace_id},
+    )
     assert response.status_code == 422, response.text
 
 
@@ -54,7 +57,12 @@ def test_presentation_full_route_flow(
         client, monkeypatch
     )
 
-    full = client.get(f"/api/v1/executive-intelligence/{executive_id}/presentation")
+    scope_params = {"organization_id": org_id, "workspace_id": workspace_id}
+
+    full = client.get(
+        f"/api/v1/executive-intelligence/{executive_id}/presentation",
+        params=scope_params,
+    )
     assert full.status_code == 200, full.text
     payload = full.json()
     assert payload["identity"]["executive_intelligence_id"] == executive_id
@@ -78,19 +86,22 @@ def test_presentation_full_route_flow(
     assert by_snapshot.status_code == 200, by_snapshot.text
 
     executive_summary = client.get(
-        f"/api/v1/executive-intelligence/{executive_id}/presentation/executive-summary"
+        f"/api/v1/executive-intelligence/{executive_id}/presentation/executive-summary",
+        params=scope_params,
     )
     assert executive_summary.status_code == 200, executive_summary.text
     assert "headline" in executive_summary.json()
 
     cto = client.get(
-        f"/api/v1/executive-intelligence/{executive_id}/presentation/cto-summary"
+        f"/api/v1/executive-intelligence/{executive_id}/presentation/cto-summary",
+        params=scope_params,
     )
     assert cto.status_code == 200, cto.text
     assert "engineering_health" in cto.json()
 
     scorecard = client.get(
-        f"/api/v1/executive-intelligence/{executive_id}/presentation/scorecard"
+        f"/api/v1/executive-intelligence/{executive_id}/presentation/scorecard",
+        params=scope_params,
     )
     assert scorecard.status_code == 200, scorecard.text
     assert scorecard.json()["cards"]
@@ -101,5 +112,17 @@ def test_missing_presentation_source_returns_404(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     _enable_flags(monkeypatch)
-    response = client.get("/api/v1/executive-intelligence/exec:missing/presentation")
+    response = client.get(
+        "/api/v1/executive-intelligence/exec:missing/presentation",
+        params={"organization_id": "org:missing", "workspace_id": "workspace:missing"},
+    )
     assert response.status_code == 404, response.text
+
+
+def test_get_executive_presentation_requires_scope_params(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _enable_flags(monkeypatch)
+    response = client.get("/api/v1/executive-intelligence/exec:missing/presentation")
+    assert response.status_code == 422, response.text
