@@ -13,6 +13,7 @@ from codestrata.application.acceptance.service import MvpAcceptanceService, _rep
 from codestrata.application.acceptance.summary import load_acceptance_summary
 from codestrata.application.onboarding import OnboardingApplicationService
 from codestrata.cli import app
+from codestrata.cli.acceptance import acceptance_app
 from codestrata.domain.onboarding.enums import OnboardingStatus
 from codestrata.domain.onboarding.models import (
     OnboardingResult,
@@ -169,7 +170,10 @@ def test_reports_live_equal_ignores_scan_id(tmp_path: Path) -> None:
 
 
 def test_acceptance_status_cli_missing(tmp_path: Path) -> None:
-    result = runner.invoke(app, ["acceptance", "status", "--output", str(tmp_path / "missing")])
+    result = runner.invoke(
+        acceptance_app,
+        ["status", "--output", str(tmp_path / "missing")],
+    )
     assert result.exit_code == 1
 
 
@@ -227,7 +231,7 @@ def test_acceptance_run_with_mocked_onboard(tmp_path: Path, monkeypatch) -> None
     assert loaded is not None
     assert loaded["ok"] is True
 
-    cli = runner.invoke(app, ["acceptance", "status", "--output", str(out)])
+    cli = runner.invoke(acceptance_app, ["status", "--output", str(out)])
     assert cli.exit_code == 0
     assert "PASS" in cli.stdout
 

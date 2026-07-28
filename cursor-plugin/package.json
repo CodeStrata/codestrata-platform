@@ -1,7 +1,7 @@
 {
   "name": "codestrata-cursor",
   "displayName": "CodeStrata Cursor Extension",
-  "description": "Bring CodeStrata Engine Engineering Assessments into Cursor. Generates grounded .cursor/rules context from public findings. Requires CodeStrata Engine (Community). Thin client — not Platform.",
+  "description": "Bring CodeStrata Engine Engineering Assessments into Cursor (Community Edition). Generates grounded .cursor/rules context from public findings. Requires CodeStrata Engine. Thin client — not Platform.",
   "version": "0.2.0",
   "publisher": "codestrata",
   "license": "MIT",

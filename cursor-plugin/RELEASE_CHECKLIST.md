@@ -99,3 +99,16 @@ add it to `.gitignore` if teams do not want assessment snapshots in git.
 Option B: commit intentionally for shared team context.
 
 The extension does **not** silently modify `.gitignore`.
+
+
+## Marketplace publication gates
+
+- [ ] Publisher `codestrata` created/owned (VS Marketplace + Open VSX namespace)
+- [ ] `VSCE_PAT` / `OVSX_TOKEN` in approved secrets storage only
+- [ ] `npm run package` VSIX contains `media/codestrata-icon.png`
+- [ ] Screenshots reviewed (synthetic, no secrets)
+- [ ] README marketplace rendering checked
+- [ ] Human approval recorded before `vsce publish` / `ovsx publish`
+- [ ] Post-publish install verified → VERIFIED_INSTALLABLE
+
+See [MARKETPLACE.md](MARKETPLACE.md) and `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`.

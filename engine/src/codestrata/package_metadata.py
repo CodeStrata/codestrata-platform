@@ -102,12 +102,31 @@ def format_version_line() -> str:
     return f"{PRODUCT_NAME} {get_package_version()}"
 
 
+def _build_date() -> str | None:
+    """Return an optional build/install date when package metadata provides it."""
+
+    try:
+        meta = package_metadata(PACKAGE_NAME)
+    except PackageNotFoundError:
+        return None
+    for key in ("Build-Date", "Date", "Metadata-Version"):
+        value = (meta.get(key) or "").strip()
+        if key == "Metadata-Version":
+            continue
+        if value and value.upper() != "UNKNOWN":
+            return value
+    return None
+
+
 def format_version_details() -> str:
     """Return version details for ``codestrata version`` (CLI / Engine / Report / AI)."""
 
     from codestrata.config.settings import DEFAULT_BEDROCK_MODEL_ID
     from codestrata.extensions.version import EXTENSION_API_VERSION
-    from codestrata.reporting.contract.constants import REPORT_HTML_VERSION
+    from codestrata.reporting.contract.constants import (
+        ASSESSMENT_JSON_SCHEMA_VERSION,
+        REPORT_HTML_VERSION,
+    )
 
     try:
         from codestrata.config.settings import CodestrataSettings
@@ -124,19 +143,25 @@ def format_version_details() -> str:
         ai_provider = "bedrock"
         ai_model = DEFAULT_BEDROCK_MODEL_ID
 
-    return "\n".join(
-        (
-            format_version_line(),
-            f"CLI: {get_package_version()}",
-            f"Engine: {get_package_version()}",
-            f"Extension API: {EXTENSION_API_VERSION}",
-            f"Report HTML: {REPORT_HTML_VERSION}",
-            f"AI provider (optional default): {ai_provider}",
-            f"AI model (optional default): {ai_model}",
-            f"Python: {platform.python_version()}",
-            f"Platform: {platform.system()}",
-        )
-    )
+    version = get_package_version()
+    lines = [
+        format_version_line(),
+        f"CLI: {version}",
+        f"Engine: {version}",
+        "Edition: Community Edition",
+        f"Schema version: {ASSESSMENT_JSON_SCHEMA_VERSION}",
+        f"Extension API: {EXTENSION_API_VERSION}",
+        f"Report HTML: {REPORT_HTML_VERSION}",
+        f"AI provider (optional default): {ai_provider}",
+        f"AI model (optional default): {ai_model}",
+        f"Python: {platform.python_version()}",
+        f"Operating System: {platform.system()} {platform.release()}".rstrip(),
+        f"Platform: {platform.platform()}",
+    ]
+    build_date = _build_date()
+    if build_date:
+        lines.append(f"Build date: {build_date}")
+    return "\n".join(lines)
 
 
 def format_about() -> str:
@@ -150,14 +175,18 @@ def format_about() -> str:
             info.summary,
             "",
             "Products: CodeStrata Engine (Community Edition) · CodeStrata Platform",
+            "Edition: Community Edition",
             "AI is optional: connect your own supported provider; deterministic "
             "Engineering Assessment works without AI.",
             "Source code is not retained by CodeStrata unless you explicitly "
             "configure retention.",
+            "Privacy: no automatic telemetry, update checks, or analytics "
+            "(optional update notices require CODESTRATA_CLI_UPDATE_CHECK=1).",
             "Branding: governance/assets/DESIGN-SYSTEM.md",
             "",
             f"Website: {info.website}",
             f"GitHub: {info.github}",
+            "Documentation: https://docs.codestrata.ai",
         )
     )
 

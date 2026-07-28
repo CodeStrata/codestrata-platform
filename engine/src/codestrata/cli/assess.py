@@ -235,10 +235,18 @@ def register_assess_command(app: typer.Typer) -> None:
 
         configure_logging(level="DEBUG" if verbose else "WARNING")
 
+        from codestrata.cli.ux import (
+            format_actionable_error,
+            maybe_notify_update,
+        )
+
         if model_id and model_id.strip() and not with_ai:
             typer.secho(
-                "--model-id requires --with-ai.\n\n"
-                "Fix: add --with-ai, or omit --model-id for deterministic assessment.",
+                format_actionable_error(
+                    what="--model-id requires --with-ai.",
+                    why="Model selection only applies when the optional AI advisor is enabled.",
+                    fix="Add --with-ai, or omit --model-id for deterministic assessment.",
+                ),
                 fg=typer.colors.RED,
                 err=True,
             )
@@ -272,16 +280,28 @@ def register_assess_command(app: typer.Typer) -> None:
                 json_summary=json_summary,
             )
         except AssessmentCommandError as error:
-            typer.secho(str(error), fg=typer.colors.RED, err=True)
+            message = str(error)
+            if "Fix:" not in message and "Learn more:" not in message:
+                message = format_actionable_error(
+                    what=message,
+                    fix="Re-run with --verbose for diagnostics, or see troubleshooting docs.",
+                )
+            typer.secho(message, fg=typer.colors.RED, err=True)
             if verbose:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=error.exit_code) from error
         except Exception as error:  # noqa: BLE001 - CLI boundary
             typer.secho(
-                sanitize_provider_text(str(error)),
+                format_actionable_error(
+                    what=sanitize_provider_text(str(error)),
+                    why="An unexpected failure occurred during assessment.",
+                    fix="Re-run with --verbose and open a GitHub issue if it persists.",
+                ),
                 fg=typer.colors.RED,
                 err=True,
             )
             if verbose:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=1) from error
+
+        maybe_notify_update(quiet=quiet, json_output=json_summary)

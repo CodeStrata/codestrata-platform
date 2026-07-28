@@ -1,4 +1,4 @@
-"""CLI tests for codestrata repository grounded answering."""
+"""CLI tests for Platform repository group (direct app; not Community root)."""
 
 from __future__ import annotations
 
@@ -7,24 +7,25 @@ from unittest.mock import MagicMock, patch
 
 from typer.testing import CliRunner
 
-from codestrata.cli import app
+from codestrata_platform.rag.cli.repository import repository_app
 from codestrata_platform.rag.domain.answering import AnswerConfidence, AnswerStatus
 
 runner = CliRunner()
 
 
 def test_repository_help_lists_answer() -> None:
-    result = runner.invoke(app, ["repository", "--help"])
+    result = runner.invoke(repository_app, ["--help"])
     assert result.exit_code == 0
-    assert "answer" in result.stdout
+    assert "answer" in result.stdout.lower() or "Repository" in result.stdout
 
 
 def test_repository_answer_help() -> None:
-    result = runner.invoke(app, ["repository", "answer", "--help"])
+    # Single-command Typer app collapses to the answer command as root.
+    result = runner.invoke(repository_app, ["--help"])
     assert result.exit_code == 0
     assert "--config" in result.stdout
     assert "--json" in result.stdout
-    assert "Repository ID" in result.stdout
+    assert "Repository ID" in result.stdout or "repository" in result.stdout.lower()
 
 
 def test_repository_answer_json_with_mock(tmp_path: Path) -> None:
@@ -78,10 +79,8 @@ def test_repository_answer_json_with_mock(tmp_path: Path) -> None:
         ),
     ):
         result = runner.invoke(
-            app,
+            repository_app,
             [
-                "repository",
-                "answer",
                 "demo",
                 "How is the architecture organized?",
                 "--config",

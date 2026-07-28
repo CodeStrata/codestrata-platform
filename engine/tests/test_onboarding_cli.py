@@ -347,7 +347,7 @@ enabled = false
         ],
     )
     assert result.exit_code == 0, result.output
-    assert "Engineering assessment completed" in result.output
+    assert "Report generated successfully." in result.output
     runs = list(output.glob("*/*"))
     assert runs
     assert (runs[0] / "report.html").is_file()

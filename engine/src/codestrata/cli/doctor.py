@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import importlib.metadata
+import os
 import shutil
 import sys
 from dataclasses import dataclass
@@ -10,9 +12,22 @@ from typing import Annotated
 
 import typer
 
+from codestrata.cli.ux import (
+    DOCS_TROUBLESHOOTING,
+    MessageKind,
+    emit,
+    is_machine_mode,
+    success,
+    tip,
+)
 from codestrata.config.settings import CodestrataSettings, load_settings
 from codestrata.extensions.inventory import build_extension_inventory
 from codestrata.extensions.version import EXTENSION_API_VERSION
+from codestrata.package_metadata import get_package_version
+from codestrata.static_analysis.providers.pmd_discovery import (
+    CODESTRATA_PMD_PATH_ENV,
+    resolve_pmd_executable,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,6 +105,20 @@ def _extension_doctor_checks(settings: CodestrataSettings | None) -> list[Doctor
     return checks
 
 
+def _optional_tool_check(name: str, executable: str, *, fix_hint: str) -> DoctorCheck:
+    """Informational tool presence check that never fails the doctor run."""
+
+    path = shutil.which(executable)
+    if path:
+        return DoctorCheck(name=name, ok=True, detail=f"{executable}: {path}")
+    return DoctorCheck(
+        name=name,
+        ok=True,
+        detail=f"{executable} not found on PATH (optional)",
+        fix=fix_hint,
+    )
+
+
 def run_doctor_checks(
     *,
     config_path: Path = Path("codestrata.toml"),
@@ -114,6 +143,53 @@ def run_doctor_checks(
         )
     )
 
+    try:
+        version = get_package_version()
+        checks.append(
+            DoctorCheck(
+                name="engine",
+                ok=True,
+                detail=f"codestrata package {version}",
+            )
+        )
+    except Exception as error:  # noqa: BLE001
+        checks.append(
+            DoctorCheck(
+                name="engine",
+                ok=False,
+                detail=f"Unable to resolve Engine package: {error}",
+                fix="Install the Engine package: pip install -e './engine[dev]'",
+            )
+        )
+
+    dependency_names = ("typer", "rich", "pydantic", "tomli")
+    missing_deps: list[str] = []
+    for dep in dependency_names:
+        try:
+            importlib.metadata.version(dep if dep != "tomli" else "tomli")
+        except importlib.metadata.PackageNotFoundError:
+            # tomllib is stdlib on 3.11+; tomli may be absent.
+            if dep == "tomli":
+                continue
+            missing_deps.append(dep)
+    if missing_deps:
+        checks.append(
+            DoctorCheck(
+                name="dependencies",
+                ok=False,
+                detail=f"Missing packages: {', '.join(missing_deps)}",
+                fix="Reinstall: pip install -e './engine[dev]'",
+            )
+        )
+    else:
+        checks.append(
+            DoctorCheck(
+                name="dependencies",
+                ok=True,
+                detail="Core CLI dependencies available (typer, rich, pydantic)",
+            )
+        )
+
     git_path = shutil.which("git")
     checks.append(
         DoctorCheck(
@@ -126,6 +202,52 @@ def run_doctor_checks(
             "(required for GitHub URL acquisition).",
         )
     )
+
+    checks.append(
+        _optional_tool_check(
+            "java",
+            "java",
+            fix_hint=(
+                "Install a JDK if you analyze Java repositories with PMD "
+                "(optional for non-Java repos)."
+            ),
+        )
+    )
+
+    pmd_path_env = os.environ.get(CODESTRATA_PMD_PATH_ENV, "").strip()
+    try:
+        discovery = resolve_pmd_executable(
+            configured=pmd_path_env or None,
+        )
+        if discovery.executable:
+            checks.append(
+                DoctorCheck(
+                    name="pmd",
+                    ok=True,
+                    detail=f"PMD executable: {discovery.executable}",
+                )
+            )
+        else:
+            checks.append(
+                DoctorCheck(
+                    name="pmd",
+                    ok=True,
+                    detail="PMD not found (optional; used for Java static analysis)",
+                    fix=(
+                        f"Install PMD and set {CODESTRATA_PMD_PATH_ENV}, "
+                        "or pass --pmd-path to assess."
+                    ),
+                )
+            )
+    except Exception:  # noqa: BLE001 - doctor must stay resilient
+        checks.append(
+            DoctorCheck(
+                name="pmd",
+                ok=True,
+                detail="PMD discovery skipped (optional)",
+                fix=f"Install PMD and set {CODESTRATA_PMD_PATH_ENV} when needed.",
+            )
+        )
 
     config = config_path.expanduser()
     if not config.is_file():
@@ -216,7 +338,7 @@ def run_doctor_checks(
         probe.unlink(missing_ok=True)
         checks.append(
             DoctorCheck(
-                name="output",
+                name="permissions",
                 ok=True,
                 detail=f"Writable output directory: {out.resolve()}",
             )
@@ -224,12 +346,39 @@ def run_doctor_checks(
     except OSError as error:
         checks.append(
             DoctorCheck(
-                name="output",
+                name="permissions",
                 ok=False,
                 detail=f"Cannot write to {out}: {error}",
                 fix="Choose a writable --output directory or fix permissions.",
             )
         )
+
+    env_notes: list[str] = []
+    for key in (
+        "CODESTRATA_PROFILE",
+        "CODESTRATA_GITHUB_TOKEN",
+        CODESTRATA_PMD_PATH_ENV,
+        "CODESTRATA_SKIP_ONBOARDING",
+        "CODESTRATA_CLI_UPDATE_CHECK",
+        "NO_COLOR",
+    ):
+        if os.environ.get(key, "").strip():
+            # Never print secret values — presence only.
+            if "TOKEN" in key or "SECRET" in key or "KEY" in key:
+                env_notes.append(f"{key}=<set>")
+            else:
+                env_notes.append(f"{key}={os.environ.get(key, '')}")
+    checks.append(
+        DoctorCheck(
+            name="environment",
+            ok=True,
+            detail=(
+                "Relevant variables: " + ", ".join(env_notes)
+                if env_notes
+                else "No CodeStrata-related environment overrides detected"
+            ),
+        )
+    )
 
     if include_extensions:
         checks.extend(_extension_doctor_checks(loaded_settings))
@@ -261,11 +410,25 @@ def register_doctor_command(app: typer.Typer) -> None:
                 help="Include extension load / version / duplicate diagnostics.",
             ),
         ] = False,
+        quiet: Annotated[
+            bool,
+            typer.Option(
+                "--quiet",
+                "-q",
+                help="Suppress banner/onboarding; keep check lines.",
+            ),
+        ] = False,
     ) -> None:
         """Diagnose environment and configuration for CodeStrata Engine assess.
 
-        Exit code 0 when all checks pass; 1 when any check fails.
+        Checks Python, Engine package, dependencies, Git, optional Java/PMD,
+        configuration, permissions, environment variables, and optionally
+        extensions.
+
+        Exit code 0 when all required checks pass; 1 when any check fails.
         AI provider credentials are optional for deterministic assess (--no-ai).
+
+        Docs: https://docs.codestrata.ai/troubleshooting/
         """
 
         checks = run_doctor_checks(
@@ -276,23 +439,29 @@ def register_doctor_command(app: typer.Typer) -> None:
         failed = 0
         for check in checks:
             status = "OK" if check.ok else "FAIL"
-            color = typer.colors.GREEN if check.ok else typer.colors.RED
-            typer.secho(f"[{status}] {check.name}: {check.detail}", fg=color)
+            # Keep stable [OK]/[FAIL] markers for scripts and existing tests.
+            line = f"[{status}] {check.name}: {check.detail}"
+            if is_machine_mode(quiet=quiet) or not sys.stdout.isatty():
+                typer.echo(line)
+            else:
+                color = typer.colors.GREEN if check.ok else typer.colors.RED
+                typer.secho(line, fg=color)
             if not check.ok:
                 failed += 1
                 if check.fix:
                     typer.echo(f"       Fix: {check.fix}")
 
         if failed:
-            typer.secho(
-                f"\n{failed} check(s) failed. See Fix lines above.",
-                fg=typer.colors.RED,
+            emit(
+                MessageKind.ERROR,
+                f"{failed} check(s) failed. See Fix lines above. "
+                f"Learn more: {DOCS_TROUBLESHOOTING}",
                 err=True,
             )
             raise typer.Exit(code=1)
 
-        typer.secho("\nAll doctor checks passed.", fg=typer.colors.GREEN)
-        typer.echo("Next: codestrata assess --repo . --output reports --no-ai")
+        success("All doctor checks passed.")
+        tip("Next: codestrata assess --repo . --output reports --no-ai")
 
 
 __all__ = [

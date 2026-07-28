@@ -17,6 +17,7 @@ from codestrata.application.release.checks import (
     check_schema_availability,
 )
 from codestrata.cli import app
+from codestrata.cli.release import release_app
 from codestrata.resources import read_default_config_text
 
 runner = CliRunner()
@@ -37,7 +38,9 @@ def test_cli_version_and_release_help() -> None:
     version = runner.invoke(app, ["version"])
     assert version.exit_code == 0
     assert "CodeStrata" in version.stdout
-    help_result = runner.invoke(app, ["release", "check", "--help"])
+    from codestrata.cli.release import release_app
+
+    help_result = runner.invoke(release_app, ["--help"])
     assert help_result.exit_code == 0
     assert check_cli_registration().ok
 
@@ -55,10 +58,8 @@ def test_release_check_skip_build_and_smoke(tmp_path: Path) -> None:
     assert payload["ok"] is True
 
     cli = runner.invoke(
-        app,
+        release_app,
         [
-            "release",
-            "check",
             "--output",
             str(tmp_path / "cli"),
             "--skip-smoke",

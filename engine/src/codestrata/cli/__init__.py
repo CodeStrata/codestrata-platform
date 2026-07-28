@@ -1,11 +1,13 @@
 """Command-line interface for CodeStrata."""
 
+from __future__ import annotations
+
+import os
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
-from codestrata.cli.acceptance import acceptance_app
 from codestrata.cli.agent import agent_app
 from codestrata.cli.architecture import architecture_app
 from codestrata.cli.assess import (
@@ -25,11 +27,21 @@ from codestrata.cli.evidence import evidence_app
 from codestrata.cli.examples_cmd import register_examples_command
 from codestrata.cli.incremental import incremental_app
 from codestrata.cli.init_cmd import register_init_command
+from codestrata.cli.landing import show_bare_invocation
 from codestrata.cli.onboard import register_onboard_command
-from codestrata.cli.release import release_app
-from codestrata.cli.report import report_app
+from codestrata.cli.report import register_open_command, report_app
 from codestrata.cli.roadmap import roadmap_app
 from codestrata.cli.rules import rules_app
+from codestrata.cli.welcome import register_welcome_command
+from codestrata.cli.ux import (
+    DOCS_GETTING_STARTED,
+    DOCS_HOME,
+    DOCS_TROUBLESHOOTING,
+    docs_footer,
+    format_actionable_error,
+    maybe_notify_update,
+    maybe_print_banner,
+)
 from codestrata.config import load_settings
 from codestrata.extensions import load_cli_extensions
 from codestrata.extensions.cli_cmd import register_extensions_command
@@ -58,30 +70,38 @@ from codestrata.services.scanners.github_repository_scanner import (
 )
 from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 
-_METADATA_SUBCOMMANDS = frozenset({"version", "about", "examples", "extensions"})
+# Explicit opt-in for internal maintainer tooling (not public Community CLI).
+_MAINTAINER_CLI_ENV = "CODESTRATA_MAINTAINER_CLI"
+
+_METADATA_SUBCOMMANDS = frozenset(
+    {"version", "about", "examples", "extensions", "welcome"}
+)
 
 app = typer.Typer(
     name="codestrata",
     help=(
-        "CodeStrata Engine (Community Edition) — scan repositories and generate "
-        "deterministic Engineering Assessment reports.\n\n"
-        "Community golden path (no Platform required):\n"
+        "CodeStrata Engine (Community Edition) — deterministic Engineering "
+        "Assessment and Engineering Intelligence for software repositories.\n\n"
+        "Common workflows:\n"
         "  codestrata init\n"
         "  codestrata doctor\n"
-        "  codestrata assess --repo . --output reports --no-ai\n\n"
+        "  codestrata assess --repo . --output reports --no-ai\n"
+        "  codestrata open\n\n"
         "Optional AI advisor (your own supported provider):\n"
         "  codestrata assess --repo . --output reports --with-ai\n\n"
-        "Exit codes: 0 success · 1 failure · 2 invalid usage.\n"
-        "AI unavailable with --with-ai still exits 0 when reports are written "
-        "(enhancements skipped).\n\n"
         "Primary workflow: assess (HTML + JSON Engineering Assessment).\n"
         "Legacy/advanced: scan (clone+analyze; prefer assess).\n"
-        "Platform groups appear only when Platform is installed; Community "
-        "does not require them.\n\n"
-        "Docs: docs/README.md (portal) · docs/quick-start.md · "
-        "docs/troubleshooting.md"
+        "Automation: --quiet / --json-summary · exit 0 success · 1 failure · "
+        "2 invalid usage.\n"
+        "AI unavailable with --with-ai still exits 0 when reports are written "
+        "(enhancements skipped).\n\n"
+        f"Documentation: {DOCS_HOME}\n"
+        f"Getting started: {DOCS_GETTING_STARTED}\n"
+        f"Troubleshooting: {DOCS_TROUBLESHOOTING}"
     ),
-    no_args_is_help=True,
+    rich_markup_mode="rich",
+    invoke_without_command=True,
+    no_args_is_help=False,
 )
 
 
@@ -94,7 +114,7 @@ def _eager_version_option(value: bool) -> None:
     raise typer.Exit(0)
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def _root_callback(
     ctx: typer.Context,
     show_version: Annotated[
@@ -107,26 +127,42 @@ def _root_callback(
         ),
     ] = None,
 ) -> None:
-    """Configure logging for runtime commands; skip for metadata commands."""
+    """Own bare-invocation rendering; configure logging for runtime commands.
+
+    Do not call ``ctx.get_help()`` here. With ``rich_markup_mode="rich"``,
+    Click's ``get_help()`` prints the full command inventory to stdout as a
+    side effect (Phase 12.8.2 defect: help leaked before the landing page).
+    """
 
     del show_version
-    if ctx.invoked_subcommand in _METADATA_SUBCOMMANDS:
+    if ctx.invoked_subcommand is not None:
+        if ctx.invoked_subcommand in _METADATA_SUBCOMMANDS:
+            return
+        configure_logging()
         return
-    configure_logging()
+
+    # Sole owner of bare ``codestrata`` output.
+    show_bare_invocation()
+    raise typer.Exit(0)
 
 
 @app.command("version", rich_help_panel="Primary")
 def version_command() -> None:
-    """Display the CodeStrata version and runtime environment."""
+    """Display CLI, Engine, schema, Python, OS, and edition details."""
 
     typer.echo(format_version_details())
+    maybe_notify_update()
 
 
 @app.command(rich_help_panel="Primary")
 def about() -> None:
     """Display CodeStrata product and project information."""
 
+    maybe_print_banner()
     typer.echo(format_about())
+    typer.echo("")
+    typer.echo(docs_footer())
+    maybe_notify_update()
 
 
 @app.command(rich_help_panel="Advanced")
@@ -177,18 +213,31 @@ def scan(
     try:
         settings = load_settings(config)
     except (FileNotFoundError, ValueError, OSError) as error:
-        typer.secho(str(error), fg=typer.colors.RED, err=True)
+        typer.secho(
+            format_actionable_error(
+                what=str(error),
+                why="Configuration could not be loaded for scan.",
+                fix="Run codestrata init, or fix codestrata.toml.",
+            ),
+            fg=typer.colors.RED,
+            err=True,
+        )
         raise typer.Exit(code=1) from error
 
     if not settings.repository.url:
         typer.secho(
-            "codestrata scan requires [repository].url in the configuration file.\n\n"
-            "Fix: set a GitHub URL in codestrata.toml, for example:\n"
-            "  [repository]\n"
-            '  url = "https://github.com/YOUR_ORG/YOUR_REPO"\n'
-            '  branch = "main"\n\n'
-            "For a local checkout, use:\n"
-            "  codestrata assess --repo /path/to/repo --output reports",
+            format_actionable_error(
+                what="codestrata scan requires [repository].url in the configuration file.",
+                why="scan clones a GitHub URL; a local path alone is not enough.",
+                fix=(
+                    "Set a GitHub URL in codestrata.toml, for example:\n"
+                    "  [repository]\n"
+                    '  url = "https://github.com/YOUR_ORG/YOUR_REPO"\n'
+                    '  branch = "main"\n'
+                    "For a local checkout, prefer:\n"
+                    "  codestrata assess --repo /path/to/repo --output reports"
+                ),
+            ),
             fg=typer.colors.RED,
             err=True,
         )
@@ -299,52 +348,57 @@ def _register_mcp_group(root: typer.Typer) -> None:
     root.add_typer(mcp_app, name="mcp", rich_help_panel="Advanced")
 
 
+def _platform_cli_enabled() -> bool:
+    """Platform CLI groups require explicit opt-in (Community default: off)."""
+
+    return os.environ.get("CODESTRATA_PLATFORM_CLI", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 def _register_platform_cli_extensions(root: typer.Typer) -> None:
-    """Attach Platform CLI groups via entry points; stub when absent."""
+    """Attach Platform CLI groups only when explicitly enabled and installed.
 
-    loaded = load_cli_extensions()
-    if loaded:
-        for register in loaded:
-            register(root)
+    Community default does not register ``ai`` / ``enterprise`` / ``repository``,
+    even if Platform packages are present on PYTHONPATH (e.g. monorepo venv).
+    Enable with ``CODESTRATA_PLATFORM_CLI=1``.
+    """
+
+    if not _platform_cli_enabled():
         return
+    for register in load_cli_extensions():
+        register(root)
 
-    for name, help_text, message in (
-        (
-            "enterprise",
-            "CodeStrata Platform Engineering Knowledge Graph (not in Community Engine).",
-            "Engineering Knowledge Graph is a CodeStrata Platform capability and is "
-            "not included in the Community Engine.\n"
-            "Install codestrata-platform in private deployments to enable it.",
-        ),
-        (
-            "repository",
-            "CodeStrata Platform repository RAG (not in Community Engine).",
-            "Repository RAG commands are a CodeStrata Platform capability and "
-            "are not included in the Community Engine.\n"
-            "Install codestrata-platform in private deployments to enable them.",
-        ),
-        (
-            "ai",
-            "CodeStrata Platform AI provider commands (not in Community Engine).",
-            "AI embedding/answer provider commands are a CodeStrata Platform "
-            "capability and are not included in the Community Engine.\n"
-            "Install codestrata-platform in private deployments to enable them.\n"
-            "Community assess still supports optional [ai] settings with --with-ai.",
-        ),
-    ):
-        stub = typer.Typer(name=name, help=help_text, no_args_is_help=False)
 
-        def _missing(msg: str = message) -> None:
-            typer.echo(msg, err=True)
-            raise typer.Exit(code=1)
+def _maintainer_cli_enabled() -> bool:
+    return os.environ.get(_MAINTAINER_CLI_ENV, "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
-        stub.callback(invoke_without_command=True)(_missing)
-        root.add_typer(stub, name=name, rich_help_panel="Platform")
+
+def _register_maintainer_commands(root: typer.Typer) -> None:
+    """Register acceptance/release only under explicit maintainer mode."""
+
+    if not _maintainer_cli_enabled():
+        return
+    from codestrata.cli.acceptance import acceptance_app
+    from codestrata.cli.release import release_app
+
+    root.add_typer(acceptance_app, name="acceptance", rich_help_panel="Maintainer")
+    root.add_typer(release_app, name="release", rich_help_panel="Maintainer")
 
 
 register_assess_command(app)
 register_init_command(app)
 register_doctor_command(app)
+register_open_command(app)
+register_welcome_command(app)
 register_examples_command(app)
 register_extensions_command(app)
 register_onboard_command(app)
@@ -358,8 +412,7 @@ app.add_typer(evidence_app, name="evidence", rich_help_panel="Advanced")
 app.add_typer(architecture_app, name="architecture", rich_help_panel="Advanced")
 app.add_typer(roadmap_app, name="roadmap", rich_help_panel="Advanced")
 app.add_typer(report_app, name="report", rich_help_panel="Advanced")
-app.add_typer(acceptance_app, name="acceptance", rich_help_panel="Maintainer")
-app.add_typer(release_app, name="release", rich_help_panel="Maintainer")
+_register_maintainer_commands(app)
 
 __all__ = [
     "DEFAULT_ASSESS_MAX_OUTPUT_TOKENS",

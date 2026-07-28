@@ -86,7 +86,7 @@ def check_cli_registration() -> ReleaseCheckItem:
             detail=f"failed to inspect CLI: {error}",
         )
 
-    required = {"version", "scan", "onboard", "report", "acceptance", "release"}
+    required = {"version", "assess", "init", "doctor", "open", "scan", "onboard", "report"}
     missing = sorted(required - cli_names)
     return ReleaseCheckItem(
         name="cli_registration",

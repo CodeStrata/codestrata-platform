@@ -3,6 +3,9 @@
 **Engineering Intelligence for Modern Software Organizations** — run local
 **Engineering Assessments** with **CodeStrata Engine** without leaving VS Code.
 
+**Identifier:** `codestrata.codestrata-vscode` · **Version:** 0.2.0  
+**Requires:** CodeStrata Engine `>=0.1.0 <2.0.0` · Report schema **1.2**
+
 ```text
 VS Code Extension
         ↓
@@ -16,9 +19,8 @@ Findings · Recommendations · Diagnostics · HTML report
 This extension is a **thin client**. It does not duplicate Engineering Intelligence,
 import Engine Python modules, or use CodeStrata Platform APIs.
 
-**Canonical documentation:** [https://docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode)  
-(Monorepo docs portal path: `docs/extensions/vscode.md` →
-[https://docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode))
+**Docs:** [https://docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode)  
+**Support:** [SUPPORT.md](SUPPORT.md) · **Privacy:** [PRIVACY.md](PRIVACY.md) · **Security:** [SECURITY.md](SECURITY.md)
 
 ![Findings explorer](media/screenshot-findings.png)
 
@@ -28,31 +30,36 @@ import Engine Python modules, or use CodeStrata Platform APIs.
 | --- | --- |
 | Activity | ![Activity](media/screenshot-activity.png) |
 | Findings | ![Findings](media/screenshot-findings.png) |
+| Findings (light) | ![Findings light](media/screenshot-findings-light.png) |
 | Recommendations | ![Recommendations](media/screenshot-recommendations.png) |
 | HTML report | ![Report](media/screenshot-report.png) |
 | Progress | ![Progress](media/screenshot-progress.png) |
 
-## Install (Marketplace / VSIX)
+## Who it is for
 
-1. Install **CodeStrata** from the VS Code Marketplace (or `Install from VSIX…`).
-2. Open a repository folder.
+Developers and teams assessing **one repository at a time** locally with
+**Community Edition** Engine. Not a replacement for CodeStrata Platform
+organizational intelligence.
+
+## Install
+
+1. Install **CodeStrata VS Code Extension** from the Visual Studio Marketplace
+   (or Open VSX / `Install from VSIX…`).
+2. Open a repository folder (Workspace Trust respected).
 3. On first run, the extension detects **CodeStrata Engine** or offers **Install Engine**.
-4. Choose **Run First Engineering Assessment**.
+4. Run **CodeStrata: Run Engineering Assessment** (first command).
 
-You should not need to read docs first — guided install uses `uv tool`, `pipx`, or
-`python -m pip install --user 'codestrata[mcp]'` (official Quick Start family).
+Guided install uses `uv tool`, `pipx`, or
+`python -m pip install --user 'codestrata[mcp]'`.
 
-## First run
+## First command
 
-| Engine state | What happens |
-| ------------ | ------------ |
-| Found & compatible | Offer **Run First Engineering Assessment** |
-| Missing | Welcome → **Install Engine** / **Learn More** |
-| After install | `codestrata version` + `codestrata doctor`, then assess or optional AI setup |
+```text
+CodeStrata: Run Engineering Assessment
+```
 
-Optional AI (Bedrock / OpenAI / Azure OpenAI / Anthropic) opens **Engine**
-configuration guidance only — **credentials are never stored in the extension**.
-Deterministic assessment (`--no-ai`) remains the default.
+Deterministic mode (`--no-ai`) is the default. Optional AI uses **Engine** provider
+configuration only — never extension settings, never Platform API keys.
 
 ## Manual Engine install
 
@@ -61,8 +68,7 @@ python3.12 -m pip install --user 'codestrata[mcp]'
 codestrata version
 ```
 
-Or set `codestrata.engine.executable` to an absolute path.  
-Engine docs: [Quick Start](https://docs.codestrata.ai/getting-started/) · [VS Code extension guide](https://docs.codestrata.ai/extensions/vscode).
+Or set `codestrata.engine.executable` to an absolute path.
 
 ## Commands
 
@@ -78,7 +84,7 @@ Engine docs: [Quick Start](https://docs.codestrata.ai/getting-started/) · [VS C
 | Refresh Findings / Recommendations | Reload artifacts |
 | Clear CodeStrata Results | Clear trees + diagnostics |
 | Open CodeStrata Output | Output channel |
-| Open Documentation | Engine Quick Start |
+| Open Documentation | docs.codestrata.ai |
 
 ## Settings
 
@@ -103,40 +109,39 @@ Engine docs: [Quick Start](https://docs.codestrata.ai/getting-started/) · [VS C
 | Report schema | `1.2` (major `1.x`) |
 | Edition | Community Edition |
 
-See also [CONTRIBUTING.md](CONTRIBUTING.md), [EXTRACTION.md](EXTRACTION.md), and [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
-
-## Local development
-
-```bash
-npm install
-npm test
-npm run test:host   # Extension Host
-npm run package     # Build .vsix (do not publish from this phase)
-```
-
-F5: open this folder → **Run CodeStrata Extension**.
-
 ## Privacy & security
 
 See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). No Platform connection;
-no default telemetry; Workspace Trust respected.
+no default telemetry; Workspace Trust respected. Assessment artifacts stay local
+unless you publish them yourself.
 
-## Community scope
+## Community vs Platform
 
-Local Engine · local reports · optional AI via Engine providers.  
-**Not included:** Platform APIs, Enterprise Edition.
+| Community (this extension) | Platform (separate product) |
+| -------------------------- | --------------------------- |
+| Local Engine assess + reports | Org multi-repo intelligence |
+| Optional Engine AI providers | Platform APIs / portfolio / RAG |
+| Works offline with Engine | Requires Platform deployment |
+
+## Troubleshooting
+
+| Symptom | Action |
+| ------- | ------ |
+| Engine missing | **Install CodeStrata Engine** or **Check Environment** |
+| Assessment fails | Open **CodeStrata Output**; run `codestrata doctor` |
+| Stale findings | **Refresh Findings** after a new assess |
+| AI errors | Configure providers in Engine `codestrata.toml` / env — not here |
+
+More: [https://docs.codestrata.ai/troubleshooting/](https://docs.codestrata.ai/troubleshooting/)
 
 ## FAQ
-
-**Q: Assessment failed with a raw process error?**  
-Use **Install Engine** or **Check Environment**. The extension surfaces install guidance instead of bare spawn errors when Engine is missing.
 
 **Q: Where do AI keys go?**  
 Only in Engine configuration — never extension settings, never Platform keys.
 
-**Q: Can I extract this repo?**  
-Yes — see [EXTRACTION.md](EXTRACTION.md) for `codestrata-vscode` standalone readiness.
+**Q: Does this need CodeStrata Platform?**  
+No. Platform is optional and separate.
 
-## Support
+## License
 
-[SUPPORT.md](SUPPORT.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · Canonical docs: [docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode)
+MIT — see [LICENSE](LICENSE).
