@@ -41,3 +41,16 @@
 
 - [ ] EXTRACTION.md reviewed
 - [ ] Public export manifest entry validated
+
+
+## Marketplace publication gates
+
+- [ ] Publisher `codestrata` created/owned (VS Marketplace + Open VSX namespace)
+- [ ] `VSCE_PAT` / `OVSX_TOKEN` in approved secrets storage only
+- [ ] `npm run package` VSIX contains `media/codestrata-icon.png`
+- [ ] Screenshots reviewed (synthetic, no secrets)
+- [ ] README marketplace rendering checked
+- [ ] Human approval recorded before `vsce publish` / `ovsx publish`
+- [ ] Post-publish install verified → VERIFIED_INSTALLABLE
+
+See [MARKETPLACE.md](MARKETPLACE.md) and `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`.

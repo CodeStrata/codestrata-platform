@@ -1,7 +1,7 @@
 {
   "name": "codestrata-vscode",
   "displayName": "CodeStrata VS Code Extension",
-  "description": "Run local Engineering Assessments with CodeStrata Engine from VS Code. Deterministic findings, recommendations, diagnostics, and HTML reports. Requires CodeStrata Engine (Community).",
+  "description": "Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, diagnostics, and HTML reports. Requires CodeStrata Engine.",
   "version": "0.2.0",
   "publisher": "codestrata",
   "license": "MIT",

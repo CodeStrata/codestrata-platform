@@ -102,9 +102,12 @@ def register_init_command(app: typer.Typer) -> None:
             raise typer.Exit(code=1) from error
 
         typer.echo(f"Wrote {written}")
+        typer.echo("Success: Configuration ready.")
         typer.echo("Next:")
         typer.echo("  codestrata doctor")
         typer.echo("  codestrata assess --repo . --output reports --no-ai")
+        typer.echo("  codestrata open")
+        typer.echo("Docs: https://docs.codestrata.ai/getting-started/")
 
 
 __all__ = [

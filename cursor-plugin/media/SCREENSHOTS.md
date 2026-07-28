@@ -1,23 +1,21 @@
-# Marketplace screenshots
+# Marketplace screenshots — Cursor
 
-**Status:** Placeholders only — not captured from a live Cursor session in packaging.
+Synthetic / fixture assets for Open VSX / Marketplace listing. No customer source,
+credentials, usernames, or private repository URLs.
 
-| Intended asset | Description | Status |
-| -------------- | ----------- | ------ |
-| `screenshot-welcome.png` | Welcome / Engine missing | Placeholder — capture during manual Cursor gate |
-| `screenshot-running.png` | Assessment running | Placeholder — capture during manual Cursor gate |
-| `screenshot-complete.png` | Assessment completed + context confirmation | Placeholder |
-| `screenshot-activity.png` | Activity view (Assessment + Suggested Questions) | Placeholder |
-| `screenshot-suggested.png` | Suggested questions categories | Placeholder |
-| `screenshot-findings.png` | Findings output / status | Placeholder |
-| `screenshot-recommendations.png` | Recommendations | Placeholder |
-| `screenshot-report.png` | HTML Engineering Assessment report | Placeholder |
-| `screenshot-chat-guidance.png` | Cursor Chat usage (copy/paste grounded prompt) | Placeholder |
+| File | Description |
+| ---- | ----------- |
+| `codestrata-icon.png` | Extension icon 128×128 (shared CodeStrata identity) |
+| `marketplace-banner.png` | Banner art |
+| `screenshot-welcome.png` | First-run / Engine discovery |
+| `screenshot-running.png` | Assessment in progress |
+| `screenshot-complete.png` | Assessment complete + `.cursor/rules` projection |
+| `screenshot-activity.png` | Assessment + Suggested Questions |
+| `screenshot-findings.png` | Findings (synthetic fixture UI) |
+| `screenshot-recommendations.png` | Recommendations |
+| `screenshot-report.png` | HTML Engineering Assessment report |
 
-Do **not** upload fabricated captures to the Marketplace. Capture real screenshots
-during the [manual Cursor release gate](../RELEASE_CHECKLIST.md).
+Before publish, prefer replacing panel mocks with live Cursor captures from the
+manual release gate when available — still using **synthetic** repositories only.
 
-Icon and activity assets that ship in the VSIX:
-
-- `codestrata-icon.png`
-- `codestrata-activity.svg`
+Shipped in VSIX (for README rendering): all `screenshot-*.png` + icon + banner.

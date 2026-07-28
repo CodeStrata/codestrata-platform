@@ -21,10 +21,15 @@ config_app = typer.Typer(
     name="config",
     help=(
         "Validate and inspect CodeStrata Engine configuration.\n\n"
+        "Examples:\n"
+        "  codestrata config show\n"
+        "  codestrata config validate\n"
+        "  codestrata config profile\n\n"
         "Precedence: --profile > CODESTRATA_PROFILE > codestrata.toml > "
         "profile defaults.\n"
         "AI settings are optional for deterministic assess (--no-ai).\n"
-        "See docs/configuration-profiles.md."
+        "Docs: https://docs.codestrata.ai/ · "
+        "see docs/configuration-profiles.md in the repository."
     ),
     no_args_is_help=True,
 )
@@ -180,9 +185,42 @@ def show_cmd(
             help="Override execution profile (CLI > env > file > defaults).",
         ),
     ] = None,
+    human: Annotated[
+        bool,
+        typer.Option(
+            "--human",
+            help="Print a short human summary before the JSON payload.",
+        ),
+    ] = False,
 ) -> None:
-    """Alias for ``config effective`` (non-secret effective settings)."""
+    """Show current effective settings (non-secret) and config path.
 
+    Alias for ``config effective`` with an optional human preamble.
+    """
+
+    if human:
+        try:
+            settings, active, source, issues = load_settings_resolution(
+                config,
+                profile=profile,
+                validate_profile=False,
+            )
+        except (FileNotFoundError, ValueError, OSError, ConfigurationProfileError) as error:
+            typer.echo(f"Error: Failed to load configuration: {error}", err=True)
+            raise typer.Exit(code=1) from error
+        warnings = [item.format() for item in issues if item.severity == "warning"]
+        typer.echo(f"Config file: {config.expanduser().resolve()}")
+        typer.echo(f"Active profile: {active} (source={source})")
+        typer.echo(f"Defaults applied via profile: {active}")
+        if warnings:
+            typer.echo("Validation warnings:")
+            for warning in warnings:
+                typer.echo(f"  - {warning}")
+        else:
+            typer.echo("Validation issues: none")
+        typer.echo(f"Repository path: {settings.repository.path or '(unset)'}")
+        typer.echo(f"Repository URL: {settings.repository.url or '(unset)'}")
+        typer.echo("---")
     effective_cmd(config=config, profile=profile)
 
 

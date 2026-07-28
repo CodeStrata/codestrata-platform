@@ -393,6 +393,7 @@ class AssessmentApplicationService:
 
         def stage(message: str) -> None:
             if not quiet:
+                # Progress stages: bold label only — no spinners/noise for CI logs.
                 active_console.print(f"[bold]{message}[/bold]")
 
         def warn(message: str) -> None:
@@ -432,7 +433,8 @@ class AssessmentApplicationService:
         resolved_branch = branch if branch is not None else loaded_settings.repository.branch
         repository_reference = _safe_repository_reference(resolved_repo)
 
-        stage("Scanning repository")
+        stage("Initializing...")
+        stage("Discovering repository...")
         scan_started = perf_counter()
         repository: Repository | None = None
         try:
@@ -673,8 +675,8 @@ class AssessmentApplicationService:
         config_path: Path | None = None,
         assessment_activation: str | None = None,
     ) -> AssessmentCommandResult:
-        stage("Detecting technologies")
-        stage("Running deterministic analysis")
+        stage("Analyzing technologies...")
+        stage("Running Engineering Intelligence...")
         analysis_started = perf_counter()
         resolved_pmd = _resolve_pmd_for_assessment(
             cli_path=pmd_path,
@@ -712,7 +714,7 @@ class AssessmentApplicationService:
             resolve_activation_mode,
         )
 
-        stage("Resolving assessment activation")
+        stage("Resolving assessment activation...")
         raw_config = load_raw_toml_dict(config_path)
         activation_overrides = collect_explicit_activation_overrides(
             raw_config,
@@ -743,7 +745,7 @@ class AssessmentApplicationService:
                 f"enabled packs: {enabled_ids}[/dim]"
             )
 
-        stage("Building knowledge graphs")
+        stage("Building knowledge graphs...")
         graph_started = perf_counter()
         active_graph_pipeline = graph_pipeline or GraphAssessmentPipeline()
         try:
@@ -776,7 +778,7 @@ class AssessmentApplicationService:
         for line in format_graph_console_summary(graph_artifacts.summary):
             active_console.print(line)
 
-        stage("Evaluating assessment rules")
+        stage("Evaluating assessment rules...")
         rules_started = perf_counter()
         rules_elapsed_ms: float | None = None
         shared_source_texts: dict[str, str] = {}
@@ -2738,7 +2740,7 @@ class AssessmentApplicationService:
             if ai_attempt is not None and ai_attempt.latency_ms is None and ai_ms is not None:
                 ai_attempt = ai_attempt.model_copy(update={"latency_ms": ai_ms})
 
-        stage("Generating HTML and JSON reports")
+        stage("Generating report...")
         # Reuse the run directory created before optional AI so graph artifacts remain
         # alongside HTML/JSON for the same assessment run.
         from codestrata.reporting.html_v2 import (
@@ -3996,7 +3998,7 @@ def _run_ai_assessment(
     _ = prompt_builder  # Phase 1 prompt builder unused; enrichment has its own prompt.
     _ = agent  # Legacy agent path replaced by single-call enrichment service.
 
-    stage("Building Modernization Advisor context")
+    stage("Building Modernization Advisor context...")
     try:
         active_provider = provider or _create_assess_ai_provider(settings)
     except AIProviderError as error:
@@ -4016,7 +4018,7 @@ def _run_ai_assessment(
         )
     graph = repository_graph if isinstance(repository_graph, RepositoryGraph) else None
 
-    stage("Running Modernization Advisor")
+    stage("Running Modernization Advisor...")
     service = AiEnrichmentService(
         active_provider,
         prompt_builder=AiEnrichmentPromptBuilder(),
@@ -4998,14 +5000,15 @@ def _print_success_summary(
         mode_label = "Deterministic"
 
     console.print()
-    console.print("[green]Engineering assessment completed[/green]")
+    console.print("[green]Report generated successfully.[/green]")
     console.print(f"Repository: {result.repository_name}")
+    console.print(f"Languages: {result.technologies_count}")
+    console.print(f"Findings: {result.findings_count}")
     if result.duration_ms is not None:
         console.print(f"Duration: {result.duration_ms / 1000:.1f}s")
-    console.print(f"Findings: {result.findings_count}")
     if result.mode == AssessmentMode.AI_ENHANCED and not result.ai_executed:
         console.print(
-            "[yellow]AI enhancements skipped[/yellow] "
+            "[yellow]Warning:[/yellow] AI enhancements skipped "
             "(deterministic Engineering Assessment report was still generated)."
         )
         console.print(f"AI status: {ai_status}")
@@ -5015,15 +5018,18 @@ def _print_success_summary(
         console.print("AI status: not requested (deterministic mode)")
     else:
         console.print(f"AI status: {ai_status}")
-    console.print(f"Run directory: {_display_path(result.run_directory)}")
-    console.print(f"HTML report: {_display_path(result.html_report_path)}")
-    console.print(f"JSON report: {_display_path(result.json_report_path)}")
+    console.print()
+    console.print("HTML Report:")
+    console.print(f"  {_display_path(result.html_report_path)}")
+    console.print("JSON Report:")
+    console.print(f"  {_display_path(result.json_report_path)}")
+    console.print(f"Report location: {_display_path(result.run_directory)}")
     if quiet:
+        console.print("Open report: codestrata open")
         return
 
     console.print(f"Assessment mode: {mode_label}")
-    console.print(f"Technologies: {result.technologies_count}")
-    console.print(f"Deterministic recommendations: {result.recommendations_count}")
+    console.print(f"Engineering Intelligence: {result.recommendations_count} recommendations")
     if result.graphs_directory is not None:
         console.print(f"Graph artifacts: {_display_path(result.graphs_directory)}")
         if result.knowledge_binding_count is not None:
@@ -5307,11 +5313,9 @@ def _print_success_summary(
         console.print(f"Model ID: {result.model_id or '—'}")
         latency = f"{result.latency_ms:.2f}" if result.latency_ms is not None else "—"
         console.print(f"Assessment latency (ms): {latency}")
-    console.print(f"Run directory: {_display_path(result.run_directory)}")
-    console.print(f"HTML report: {_display_path(result.html_report_path)}")
-    console.print(f"JSON report: {_display_path(result.json_report_path)}")
-    if result.duration_ms is not None:
-        console.print(f"Duration: {result.duration_ms / 1000:.1f}s")
+    console.print()
+    console.print("Open report:")
+    console.print("  codestrata open")
 
 
 def _slugify(value: str) -> str:

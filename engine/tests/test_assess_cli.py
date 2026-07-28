@@ -499,10 +499,11 @@ def test_deterministic_orchestration_order(tmp_path: Path) -> None:
     _run(tmp_path, mode=AssessmentMode.DETERMINISTIC, model_id=None, console=console)
     joined = "\n".join(console.messages)
     stages = [
-        "Scanning repository",
-        "Detecting technologies",
-        "Running deterministic analysis",
-        "Generating HTML and JSON reports",
+        "Initializing...",
+        "Discovering repository...",
+        "Analyzing technologies...",
+        "Running Engineering Intelligence...",
+        "Generating report...",
     ]
     positions = [joined.index(stage) for stage in stages]
     assert positions == sorted(positions)
@@ -513,7 +514,7 @@ def test_deterministic_orchestration_order(tmp_path: Path) -> None:
     assert "Building Modernization Advisor context" not in joined
     assert "Running Modernization Advisor" not in joined
     assert "Assessment mode: Deterministic" in joined
-    assert "Deterministic recommendations:" in joined
+    assert "Engineering Intelligence:" in joined
     assert "Model ID:" not in joined
 
 
@@ -522,19 +523,20 @@ def test_ai_enhanced_orchestration_order(tmp_path: Path) -> None:
     _run(tmp_path, mode=AssessmentMode.AI_ENHANCED, console=console)
     joined = "\n".join(console.messages)
     stages = [
-        "Scanning repository",
-        "Detecting technologies",
-        "Running deterministic analysis",
-        "Building Modernization Advisor context",
-        "Running Modernization Advisor",
-        "Generating HTML and JSON reports",
+        "Initializing...",
+        "Discovering repository...",
+        "Analyzing technologies...",
+        "Running Engineering Intelligence...",
+        "Building Modernization Advisor context...",
+        "Running Modernization Advisor...",
+        "Generating report...",
     ]
     positions = [joined.index(stage) for stage in stages]
     assert positions == sorted(positions)
     assert "Building AI context" not in joined
     assert "Running modernization assessment" not in joined
     assert "Assessment mode: AI Enhanced" in joined
-    assert "Deterministic recommendations:" in joined
+    assert "Engineering Intelligence:" in joined
     assert "Model ID:" in joined
 
 
@@ -551,11 +553,11 @@ def test_quiet_suppresses_stages_and_json_summary(
         json_summary=True,
     )
     joined = "\n".join(console.messages)
-    assert "Scanning repository" not in joined
+    assert "Initializing..." not in joined
     # Quiet + json-summary: machine JSON on stdout only (no human completion dump).
-    assert "Engineering assessment completed" not in joined
+    assert "Report generated successfully." not in joined
     assert "Modernization assessment completed" not in joined
-    assert "Deterministic recommendations:" not in joined
+    assert "Engineering Intelligence:" not in joined
     captured = capsys.readouterr()
     payload = json.loads(captured.out.strip().splitlines()[-1])
     assert payload["repository"] == result.repository_name
@@ -575,13 +577,13 @@ def test_quiet_prints_compact_completion_summary(tmp_path: Path) -> None:
         quiet=True,
     )
     joined = "\n".join(console.messages)
-    assert "Scanning repository" not in joined
-    assert "Engineering assessment completed" in joined
+    assert "Initializing..." not in joined
+    assert "Report generated successfully." in joined
     assert "Repository:" in joined
     assert "AI status:" in joined
-    assert "HTML report:" in joined
-    assert "JSON report:" in joined
-    assert "Deterministic recommendations:" not in joined
+    assert "HTML Report:" in joined
+    assert "JSON Report:" in joined
+    assert "Engineering Intelligence:" not in joined
 
 
 def test_output_directory_creation_and_sanitized_filename(tmp_path: Path) -> None:
@@ -759,16 +761,23 @@ def test_concise_success_output_without_raw_response_or_credentials(
     provider = FakeProvider(raw_response_text="SYSTEM PROMPT AKIAIOSFODNN7EXAMPLE")
     _run(tmp_path, provider=provider, console=console)
     joined = "\n".join(console.messages)
-    assert "Engineering assessment completed" in joined
+    assert "Report generated successfully." in joined
     assert "Assessment mode: AI Enhanced" in joined
     assert "Repository:" in joined
     assert "Findings:" in joined
-    assert "Deterministic recommendations:" in joined
-    assert "Run directory:" in joined
-    assert "HTML report:" in joined
-    assert "JSON report:" in joined
+    assert "Engineering Intelligence:" in joined
+    assert "Report location:" in joined
+    assert "HTML Report:" in joined
+    assert "JSON Report:" in joined
     assert "Text report:" not in joined
-    assert "Report:" not in joined.replace("HTML report:", "").replace("JSON report:", "")
+    sanitized = (
+        joined.replace("HTML Report:", "")
+        .replace("JSON Report:", "")
+        .replace("Report location:", "")
+        .replace("Report generated successfully.", "")
+        .replace("Open report:", "")
+    )
+    assert "Report:" not in sanitized
     assert "AKIAIOSFODNN7EXAMPLE" not in joined
     assert "SYSTEM PROMPT" not in joined
     assert provider.raw_response_text not in joined

@@ -201,9 +201,7 @@ describe("conversation context quality", () => {
 
 describe("cursor rule lifecycle", () => {
   it("writes atomically with marker, skips unchanged, preserves user rules", () => {
-    const workspace = fs.mkdtempSync(
-      path.join(__dirname, "..", "..", ".tmp-test-")
-    );
+    const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "codestrata-cursor-"));
     try {
       const rulesDir = path.join(workspace, ".cursor", "rules");
       fs.mkdirSync(rulesDir, { recursive: true });
@@ -235,9 +233,7 @@ describe("cursor rule lifecycle", () => {
   });
 
   it("refuses to overwrite a foreign rule file", () => {
-    const workspace = fs.mkdtempSync(
-      path.join(__dirname, "..", "..", ".tmp-test-")
-    );
+    const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "codestrata-cursor-"));
     try {
       const target = path.join(workspace, ".cursor", "rules", "codestrata-engineering.mdc");
       fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -288,7 +284,7 @@ describe("onboarding and package metadata", () => {
       description: string;
     };
     assert.equal(pkg.name, "codestrata-cursor");
-    assert.equal(pkg.displayName, "CodeStrata");
+    assert.equal(pkg.displayName, "CodeStrata Cursor Extension");
     assert.match(pkg.version, /^0\.2\./);
     assert.equal(pkg.publisher, "codestrata");
     assert.equal(pkg.engines.vscode, "^1.85.0");
