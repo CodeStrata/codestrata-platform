@@ -83,6 +83,10 @@ output/*
 
 # Validation / release / inventory artifacts (never under governance/)
 .generated/
+.generated/validation/
+
+# Local-only validation workspace (configs, clones, reports — never commit)
+validation/
 
 # ==========================================
 # Temporary Files
