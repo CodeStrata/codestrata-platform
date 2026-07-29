@@ -21,20 +21,20 @@ SURFACE_CLASSIFICATIONS: dict[str, dict[str, str]] = {
         "notes": "Community Engine package and CLI source",
     },
     "docs/": {
-        "classification": "public_release",
-        "notes": "Public documentation site (codestrata-docs)",
+        "classification": "private_release",
+        "notes": "Private docs portal mirror (codestrata-docs)",
     },
     "examples/": {
         "classification": "public_release",
         "notes": "Public showcase manifests and expected results",
     },
     "cursor-plugin/": {
-        "classification": "public_release",
-        "notes": "Cursor extension Community client",
+        "classification": "private_release",
+        "notes": "Private Cursor extension mirror (codestrata-cursor)",
     },
     "vscode-plugin/": {
-        "classification": "public_release",
-        "notes": "VS Code extension Community client",
+        "classification": "private_release",
+        "notes": "Private VS Code extension mirror (codestrata-vscode)",
     },
     "platform/": {
         "classification": "commercial_platform_only",
@@ -87,6 +87,29 @@ SURFACE_CLASSIFICATIONS: dict[str, dict[str, str]] = {
 }
 
 
+def destination_repository(item: dict[str, Any]) -> str:
+    """Resolve destination GitHub repository name (legacy key supported)."""
+
+    return str(item.get("destination_repository") or item.get("public_repository") or item["name"])
+
+
+def export_visibility(item: dict[str, Any]) -> str:
+    """Return ``public`` or ``private`` for an export entry."""
+
+    raw = str(item.get("visibility") or "public").strip().lower()
+    if raw not in {"public", "private"}:
+        raise ValueError(
+            f"export {item.get('name')!r}: visibility must be public|private, got {raw!r}"
+        )
+    return raw
+
+
+def export_classification(item: dict[str, Any]) -> str:
+    """Map visibility to inventory classification."""
+
+    return "private_release" if export_visibility(item) == "private" else "public_release"
+
+
 def load_export_manifest(root: Path = ROOT) -> dict[str, Any]:
     if yaml is None:
         raise RuntimeError("PyYAML is required")
@@ -105,23 +128,18 @@ def build_surface_inventory(root: Path = ROOT) -> dict[str, Any]:
             {
                 "name": item.get("name"),
                 "source_root": item.get("source_root"),
-                "public_repository": item.get("public_repository"),
-                "classification": "public_release",
+                "destination_repository": destination_repository(item),
+                "visibility": export_visibility(item),
+                "classification": export_classification(item),
                 "include": list(item.get("include") or []),
                 "exclude": list(item.get("exclude") or []),
-                "required_files": list(
-                    (item.get("validation") or {}).get("require_files") or []
-                ),
-                "forbid_globs": list(
-                    (item.get("validation") or {}).get("forbid_globs") or []
-                ),
+                "required_files": list((item.get("validation") or {}).get("require_files") or []),
+                "forbid_globs": list((item.get("validation") or {}).get("forbid_globs") or []),
             }
         )
     defaults = manifest.get("defaults") or {}
     return {
-        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace(
-            "+00:00", "Z"
-        ),
+        "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "manifest_version": manifest.get("version"),
         "staging_directory": manifest.get("staging_directory"),
         "source_of_truth": manifest.get("source_of_truth"),
@@ -132,6 +150,7 @@ def build_surface_inventory(root: Path = ROOT) -> dict[str, Any]:
         "documentation_boundary": defaults.get("documentation_boundary") or {},
         "classifications_legend": [
             "public_release",
+            "private_release",
             "internal_only",
             "generated",
             "test_only",

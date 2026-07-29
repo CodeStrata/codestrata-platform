@@ -4,9 +4,12 @@
 **Authority:** Release engineering  
 **Manifest:** [`public-export-manifest.yaml`](../../public-export-manifest.yaml)
 
-Community GitHub repositories are **generated mirrors**. The monorepo
-(`codestrata-platform`) is the single source of truth. Extraction must be safe
-for both **first-time repository creation** and **repeatable updates**.
+Community and private destination repositories are **generated mirrors**. The
+monorepo (`codestrata-platform`) is the single source of truth. Extraction must
+be safe for both **first-time repository creation** and **repeatable updates**.
+
+Public destinations: `codestrata-engine`, `codestrata-examples`.
+Private destinations: `codestrata-cursor`, `codestrata-vscode`, `codestrata-docs`.
 
 ## Modes
 

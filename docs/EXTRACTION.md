@@ -1,7 +1,9 @@
 # Extraction Readiness — codestrata-docs
 
-This `docs/` tree is designed to extract into a standalone public repository
-named **`codestrata-docs`**.
+This `docs/` tree is designed to extract into a **private** standalone
+repository named **`codestrata-docs`**.
+
+Visibility: **private** (not a public Community GitHub mirror).
 
 ## Standalone capabilities
 
@@ -61,5 +63,7 @@ brand masters). Do not link governance paths from the built site.
 - Does not run multi-repo publish CLI end-to-end
 - Does not delete `engine/docs`
 - Does not deploy docs.codestrata.ai
+- Does not publish this mirror as a public repository
 
-See monorepo `public-export-manifest.yaml` entry `codestrata-docs`.
+See monorepo `public-export-manifest.yaml` entry `codestrata-docs`
+(`visibility: private`).

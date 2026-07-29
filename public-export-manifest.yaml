@@ -1,9 +1,16 @@
 # Public export manifest — codestrata-platform is the single source of truth.
 #
-# Public GitHub repositories are generated mirrors. Do not edit them directly.
+# Destination repositories are generated mirrors. Do not edit them directly.
 # Export staging only; this file never pushes or creates remote repositories.
 #
-# Phase 14.2: this file is the authoritative Community release boundary.
+# Each export declares:
+#   visibility: public | private
+#   destination_repository: GitHub repository name
+#
+# Public (Community): codestrata-engine, codestrata-examples
+# Private mirrors: codestrata-cursor, codestrata-vscode, codestrata-docs
+#
+# Phase 14.2+: this file is the authoritative Community release boundary.
 # Do not rely only on .gitignore for release inclusion.
 
 version: 2
@@ -120,7 +127,8 @@ exports:
   - name: codestrata-engine
     description: Community Edition assessment engine (CLI, MCP, packaging)
     source_root: engine
-    public_repository: codestrata-engine
+    destination_repository: codestrata-engine
+    visibility: public
     destination_layout: flat
     include:
       - "src/**"
@@ -211,7 +219,8 @@ exports:
   - name: codestrata-examples
     description: Real-world showcase manifests, fetch scripts, attribution, curated expected results
     source_root: examples
-    public_repository: codestrata-examples
+    destination_repository: codestrata-examples
+    visibility: public
     destination_layout: flat
     include:
       - "**"
@@ -252,9 +261,10 @@ exports:
         - "**/sample-reports/**"
         - "fixtures/**"
   - name: codestrata-cursor
-    description: CodeStrata Cursor Extension (Community Engine client)
+    description: CodeStrata Cursor Extension (Community Engine client; private mirror)
     source_root: cursor-plugin
-    public_repository: codestrata-cursor
+    destination_repository: codestrata-cursor
+    visibility: private
     destination_layout: flat
     include:
       - "**"
@@ -302,9 +312,10 @@ exports:
         - "npm run package:dry"
 
   - name: codestrata-vscode
-    description: CodeStrata VS Code Extension (Community Engine client)
+    description: CodeStrata VS Code Extension (Community Engine client; private mirror)
     source_root: vscode-plugin
-    public_repository: codestrata-vscode
+    destination_repository: codestrata-vscode
+    visibility: private
     destination_layout: flat
     include:
       - "**"
@@ -344,9 +355,10 @@ exports:
         - "npm run package:dry"
 
   - name: codestrata-docs
-    description: CodeStrata public documentation portal (docs.codestrata.ai)
+    description: CodeStrata documentation portal source (private mirror; docs.codestrata.ai)
     source_root: docs
-    public_repository: codestrata-docs
+    destination_repository: codestrata-docs
+    visibility: private
     destination_layout: flat
     include:
       - "**"

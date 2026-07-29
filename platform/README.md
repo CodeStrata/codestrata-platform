@@ -125,12 +125,13 @@ python scripts/export-public-repos.py --repo codestrata-cursor
 python scripts/export-public-repos.py --repo codestrata-vscode
 ```
 
-| Mirror | Source | Must include | Must exclude |
-| ------ | ------ | ------------ | ------------ |
-| `codestrata-engine` | `engine/` (+ smoke fixture) | CE package, docs, `test-fixtures/sample-js-app` | `platform/`, secrets, reports |
-| `codestrata-examples` | `examples/` | real-world manifests/scripts, attribution, curated expected-results | `sample-*-app`, sample-reports, fetched trees |
-| `codestrata-cursor` | `cursor-plugin/` | README + PLACEHOLDER only | everything else |
-| `codestrata-vscode` | `vscode-plugin/` | README + PLACEHOLDER only | everything else |
+| Mirror | Source | Visibility | Must include | Must exclude |
+| ------ | ------ | ---------- | ------------ | ------------ |
+| `codestrata-engine` | `engine/` (+ smoke fixture) | public | CE package, docs, `test-fixtures/sample-js-app` | `platform/`, secrets, reports |
+| `codestrata-examples` | `examples/` | public | real-world manifests/scripts, attribution, curated expected-results | `sample-*-app`, sample-reports, fetched trees |
+| `codestrata-cursor` | `cursor-plugin/` | private | Extension package + docs | `node_modules`, `*.vsix`, `out/` |
+| `codestrata-vscode` | `vscode-plugin/` | private | Extension package + docs | `node_modules`, `*.vsix`, `out/` |
+| `codestrata-docs` | `docs/` | private | VitePress site source | `node_modules`, `.vitepress/dist` |
 
 Export scripts **do not** create remotes, push, or publish.
 

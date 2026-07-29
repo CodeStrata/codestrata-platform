@@ -72,8 +72,7 @@ def _load_manifest(path: Path) -> dict[str, Any]:
 
 def _match_any(rel: str, patterns: list[str]) -> bool:
     return any(
-        fnmatch.fnmatch(rel, pat) or fnmatch.fnmatch(Path(rel).name, pat)
-        for pat in patterns
+        fnmatch.fnmatch(rel, pat) or fnmatch.fnmatch(Path(rel).name, pat) for pat in patterns
     )
 
 
@@ -136,6 +135,31 @@ def _collect_included(
     return selected, sorted(set(excluded))
 
 
+def _safe_destination(dest_root: Path, rel: str) -> Path:
+    """Resolve ``dest_root / rel`` and reject path traversal outside ``dest_root``."""
+
+    normalized = rel.replace("\\", "/").lstrip("/")
+    if not normalized or normalized in {".", ".."} or ".." in Path(normalized).parts:
+        raise ValueError(f"destination path escapes staging root: {rel!r}")
+    dest = (dest_root / normalized).resolve()
+    root = dest_root.resolve()
+    try:
+        dest.relative_to(root)
+    except ValueError as error:
+        raise ValueError(f"destination path escapes staging root: {rel!r}") from error
+    return dest
+
+
+def _destination_names(export: dict[str, Any]) -> set[str]:
+    """Names that select this export (``name`` and destination repository aliases)."""
+
+    names = {str(export["name"])}
+    dest = export.get("destination_repository") or export.get("public_repository")
+    if dest:
+        names.add(str(dest))
+    return names
+
+
 def export_one(
     *,
     root: Path,
@@ -159,12 +183,14 @@ def export_one(
 
     for extra in export.get("extra_includes") or []:
         src = root / str(extra["from"])
-        dest_rel = str(extra["to"]).replace("\\", "/")
+        dest_rel = str(extra["to"]).replace("\\", "/").strip("/")
+        _safe_destination(dest_root, dest_rel)
         if not src.exists():
             raise FileNotFoundError(f"extra_includes missing: {src}")
         if src.is_dir():
             for path in _iter_files(src):
                 rel = f"{dest_rel}/{_rel(path, src)}"
+                _safe_destination(dest_root, rel)
                 if _should_exclude(
                     rel, export_exclude=export_exclude, default_exclude=default_exclude
                 ):
@@ -185,14 +211,10 @@ def export_one(
     prev_set = set(previous)
 
     delta.added = sorted(
-        rel
-        for rel in (planned_set - prev_set)
-        if Path(rel).name not in _GENERATED_STAGING_MARKERS
+        rel for rel in (planned_set - prev_set) if Path(rel).name not in _GENERATED_STAGING_MARKERS
     )
     delta.deleted = sorted(
-        rel
-        for rel in (prev_set - planned_set)
-        if Path(rel).name not in _GENERATED_STAGING_MARKERS
+        rel for rel in (prev_set - planned_set) if Path(rel).name not in _GENERATED_STAGING_MARKERS
     )
     delta.changed = sorted(
         rel
@@ -211,13 +233,9 @@ def export_one(
 
     for rel in planned:
         src = selected[rel]
-        dest = dest_root / rel
+        dest = _safe_destination(dest_root, rel)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
-
-    # Deterministic empty marker for placeholder-only trees
-    if not planned and export.get("source_root") in {"cursor-plugin", "vscode-plugin"}:
-        (dest_root / ".gitkeep").write_text("", encoding="utf-8")
 
     return delta
 
@@ -225,9 +243,11 @@ def export_one(
 def _print_delta(name: str, delta: FileDelta, *, dry_run: bool) -> None:
     mode = "DRY-RUN" if dry_run else "EXPORT"
     print(f"[{mode}] {name}")
-    print(f"  copied={len(delta.copied)} added={len(delta.added)} "
-          f"changed={len(delta.changed)} deleted={len(delta.deleted)} "
-          f"excluded={len(delta.excluded)}")
+    print(
+        f"  copied={len(delta.copied)} added={len(delta.added)} "
+        f"changed={len(delta.changed)} deleted={len(delta.deleted)} "
+        f"excluded={len(delta.excluded)}"
+    )
     for label, rows in (
         ("added", delta.added[:20]),
         ("changed", delta.changed[:20]),
@@ -259,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
         "--repo",
         action="append",
         dest="repos",
-        help="Export only this public repo name (repeatable). Default: all.",
+        help="Export only this destination/export name (repeatable). Default: all.",
     )
     parser.add_argument(
         "--staging",
@@ -286,14 +306,11 @@ def main(argv: list[str] | None = None) -> int:
     exports = list(manifest["exports"])
     if args.repos:
         wanted = set(args.repos)
-        exports = [
-            item
-            for item in exports
-            if item["name"] in wanted or item.get("public_repository") in wanted
-        ]
-        missing = wanted - {item["name"] for item in exports} - {
-            item.get("public_repository") for item in exports
-        }
+        exports = [item for item in exports if wanted & _destination_names(item)]
+        matched = set()
+        for item in exports:
+            matched |= _destination_names(item)
+        missing = wanted - matched
         if missing:
             print(f"Unknown export(s): {sorted(missing)}", file=sys.stderr)
             return 2

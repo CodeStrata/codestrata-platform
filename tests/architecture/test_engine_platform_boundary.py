@@ -167,6 +167,15 @@ def test_public_export_manifest_lists_community_mirrors() -> None:
         "codestrata-vscode",
         "codestrata-docs",
     }
+    by_name = {item["name"]: item for item in manifest["exports"]}
+    assert by_name["codestrata-engine"]["visibility"] == "public"
+    assert by_name["codestrata-examples"]["visibility"] == "public"
+    assert by_name["codestrata-cursor"]["visibility"] == "private"
+    assert by_name["codestrata-vscode"]["visibility"] == "private"
+    assert by_name["codestrata-docs"]["visibility"] == "private"
+    for item in manifest["exports"]:
+        assert "destination_repository" in item
+        assert "public_repository" not in item
     blob = (REPO_ROOT / "public-export-manifest.yaml").read_text(encoding="utf-8")
     assert "university" not in blob.lower() or "forbid" in blob.lower()
 

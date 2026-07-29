@@ -80,9 +80,7 @@ def _validate_markdown_links(
             private_hit = False
             for needle in forbid_link_substrings:
                 if needle in href:
-                    errors.append(
-                        f"{name}: private markdown link in {rel}: {href!r}"
-                    )
+                    errors.append(f"{name}: private markdown link in {rel}: {href!r}")
                     private_hit = True
                     break
             if private_hit:
@@ -96,9 +94,7 @@ def _validate_markdown_links(
             try:
                 resolved.relative_to(dest.resolve())
             except ValueError:
-                errors.append(
-                    f"{name}: markdown link escapes export in {rel}: {href!r}"
-                )
+                errors.append(f"{name}: markdown link escapes export in {rel}: {href!r}")
                 continue
             if resolved.exists():
                 continue
@@ -110,9 +106,7 @@ def _validate_markdown_links(
             if href.endswith("/"):
                 candidates.append((path.parent / href / "index.md").resolve())
             if not any(candidate.exists() for candidate in candidates):
-                errors.append(
-                    f"{name}: broken markdown link in {rel}: {href!r}"
-                )
+                errors.append(f"{name}: broken markdown link in {rel}: {href!r}")
     return errors
 
 
@@ -144,11 +138,7 @@ def _validate_allowlist(
     for rel in rels:
         if Path(rel).name in GENERATED_EXPORT_MARKERS:
             continue
-        if any(
-            rel == p.rstrip("/") or rel.startswith(p)
-            for p in extra_prefixes
-            if p != "/"
-        ):
+        if any(rel == p.rstrip("/") or rel.startswith(p) for p in extra_prefixes if p != "/"):
             continue
         if _match_any(rel, exclude) or _match_any(rel, default_exclude):
             errors.append(f"{name}: excluded path was exported: {rel}")
@@ -156,10 +146,7 @@ def _validate_allowlist(
         if include and not _match_any(rel, include):
             errors.append(f"{name}: non-allowlisted path exported: {rel}")
     never = list(
-        (defaults.get("documentation_boundary") or {}).get(
-            "never_export_source_roots"
-        )
-        or []
+        (defaults.get("documentation_boundary") or {}).get("never_export_source_roots") or []
     )
     source_root = str(export.get("source_root") or "")
     if source_root in never:
@@ -211,11 +198,7 @@ def validate_export(
                     or rel.endswith("platform/pyproject.toml")
                 ]
             else:
-                hits = [
-                    rel
-                    for rel in rels
-                    if "platform/" in rel or rel.startswith("platform")
-                ]
+                hits = [rel for rel in rels if "platform/" in rel or rel.startswith("platform")]
             if hits:
                 errors.append(f"{name}: platform path leaked: {hits[:5]}")
             continue
@@ -262,9 +245,7 @@ def validate_export(
             continue
         for pattern in patterns:
             if pattern.search(text):
-                errors.append(
-                    f"{name}: secret-like content in {rel} ({pattern.pattern})"
-                )
+                errors.append(f"{name}: secret-like content in {rel} ({pattern.pattern})")
                 break
 
     errors.extend(
@@ -272,9 +253,7 @@ def validate_export(
             name=name,
             dest=dest,
             files=files,
-            forbid_link_substrings=list(
-                defaults.get("forbid_markdown_link_substrings") or []
-            ),
+            forbid_link_substrings=list(defaults.get("forbid_markdown_link_substrings") or []),
         )
     )
 
@@ -297,9 +276,12 @@ def validate_export(
             folder = mapping.get(lang)
             if not folder or not (dest / folder).is_dir():
                 errors.append(f"{name}: missing language sample for {lang}")
-            report = dest / "sample-reports" / (
-                "javascript" if lang == "javascript" else lang
-            ) / "report.html"
+            report = (
+                dest
+                / "sample-reports"
+                / ("javascript" if lang == "javascript" else lang)
+                / "report.html"
+            )
             if lang == "csharp":
                 report = dest / "sample-reports" / "csharp" / "report.html"
             if not report.is_file():
@@ -401,11 +383,17 @@ def main(argv: list[str] | None = None) -> int:
         exports = [
             item
             for item in exports
-            if item["name"] in wanted or item.get("public_repository") in wanted
+            if item["name"] in wanted
+            or item.get("destination_repository") in wanted
+            or item.get("public_repository") in wanted
         ]
 
     if not args.skip_export:
-        cmd = [sys.executable, str(EXPORT_SCRIPT), "--manifest", str(args.manifest), "--clean"]
+        cmd = [sys.executable, str(EXPORT_SCRIPT), "--manifest", str(args.manifest)]
+        # Full staging wipe only when validating the complete export set.
+        # Selective --repo must preserve sibling staged repositories.
+        if not args.repos:
+            cmd.append("--clean")
         if args.dry_run_export:
             cmd.append("--dry-run")
         for repo in args.repos or []:

@@ -8,7 +8,8 @@
 
 | Class | Meaning |
 | --- | --- |
-| `public_release` | May be distributed in Community mirrors / packages |
+| `public_release` | May be distributed in public Community mirrors / packages |
+| `private_release` | Staged destination mirrors that remain private GitHub repositories |
 | `internal_only` | Monorepo engineering only |
 | `generated` | Build/assessment outputs; never ship as product source |
 | `test_only` | Tests / synthetic fixtures |
@@ -22,10 +23,10 @@
 | Path | Classification | Notes |
 | --- | --- | --- |
 | `engine/` | public_release | Community Engine CLI/package |
-| `docs/` | public_release | codestrata-docs site |
+| `docs/` | private_release | Private codestrata-docs mirror |
 | `examples/` | public_release | Showcase manifests / expected results |
-| `cursor-plugin/` | public_release | Cursor extension |
-| `vscode-plugin/` | public_release | VS Code extension |
+| `cursor-plugin/` | private_release | Private codestrata-cursor mirror |
+| `vscode-plugin/` | private_release | Private codestrata-vscode mirror |
 | `platform/` | commercial_platform_only | Never export |
 | `governance/` | internal_only | Never export as product tree |
 | `knowledge/` | internal_only | Never export |
@@ -41,13 +42,13 @@
 
 ## Distributed components
 
-| Component | Source | Public repo | Package form |
-| --- | --- | --- | --- |
-| codestrata-engine | `engine/` | codestrata-engine | PyPI sdist/wheel |
-| codestrata-docs | `docs/` | codestrata-docs | Docs site / archive |
-| codestrata-examples | `examples/` | codestrata-examples | Source archive |
-| codestrata-cursor | `cursor-plugin/` | codestrata-cursor | VSIX / Marketplace |
-| codestrata-vscode | `vscode-plugin/` | codestrata-vscode | VSIX / Marketplace |
+| Component | Source | Destination repo | Visibility | Package form |
+| --- | --- | --- | --- | --- |
+| codestrata-engine | `engine/` | codestrata-engine | public | PyPI sdist/wheel |
+| codestrata-examples | `examples/` | codestrata-examples | public | Source archive |
+| codestrata-docs | `docs/` | codestrata-docs | private | Docs site / archive |
+| codestrata-cursor | `cursor-plugin/` | codestrata-cursor | private | VSIX / Marketplace |
+| codestrata-vscode | `vscode-plugin/` | codestrata-vscode | private | VSIX / Marketplace |
 
 ## Explicit exclusions (non-exhaustive)
 
