@@ -239,14 +239,19 @@ describe("report parsing and schema", () => {
     assert.equal(checkReportSchemaVersion("2.0").ok, false);
   });
 
-  it("loads sample-reports and tolerates missing optional files", () => {
-    const runDir = path.resolve(
-      __dirname,
-      "../../../test-fixtures/sample-reports/javascript"
-    );
+  it("loads in-repo sample assessment run and tolerates missing optional files", () => {
+    // Fixture lives inside this repository so standalone exports never depend on
+    // monorepo-only test-fixtures/. Optional recommendations.json / report.html
+    // are intentionally omitted.
+    const runDir = path.resolve(__dirname, "../../testdata/sample-assessment-run");
+    assert.ok(fs.existsSync(runDir), `missing in-repo fixture: ${runDir}`);
     const artifacts = loadArtifactsFromRunDirectory(runDir);
     assert.ok(artifacts.findings.length > 0);
+    assert.equal(artifacts.findings[0].title, "Missing CI workflow");
     assert.ok(Array.isArray(artifacts.parseWarnings));
+    assert.equal(artifacts.htmlReportPath, undefined);
+    assert.ok(artifacts.jsonReportPath);
+    assert.ok(artifacts.findingsPath);
   });
 
   it("reports malformed JSON without throwing", () => {

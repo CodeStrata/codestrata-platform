@@ -1,0 +1,14 @@
+{
+  "manifest": {
+    "schema_version": "1.2",
+    "product_name": "CodeStrata",
+    "edition": "Community Edition",
+    "report_type": "engineering_assessment",
+    "brand_report_name": "Engineering Assessment",
+    "generation_mode": "deterministic"
+  },
+  "assessment": {
+    "findings": [],
+    "deterministic_recommendations": []
+  }
+}

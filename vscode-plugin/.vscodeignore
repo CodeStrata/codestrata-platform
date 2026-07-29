@@ -12,6 +12,7 @@ tsconfig.json
 **/eslint.config.*
 out/test/**
 sample-reports/**
+testdata/**
 PLACEHOLDER.md
 EXTRACTION.md
 RELEASE_CHECKLIST.md
@@ -19,4 +20,5 @@ media/SCREENSHOTS.md
 **/*.test.js
 **/*.test.js.map
 runHostTests.js
+.codestrata-export-snapshot.json
 

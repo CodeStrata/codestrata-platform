@@ -1,0 +1,19 @@
+{
+  "finding_count": 1,
+  "findings": [
+    {
+      "id": "finding:fixture-missing-ci:1",
+      "title": "Missing CI workflow",
+      "severity": "low",
+      "category": "build",
+      "rule_id": "codestrata-rule-missing-ci-workflow",
+      "description": "Minimal in-repo fixture for standalone extension tests.",
+      "evidence": [
+        {
+          "path": ".github/workflows",
+          "excerpt": "no workflow files present"
+        }
+      ]
+    }
+  ]
+}

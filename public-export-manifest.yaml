@@ -340,6 +340,8 @@ exports:
         - src/extension.ts
         - tsconfig.json
         - media/codestrata-icon.png
+        - testdata/sample-assessment-run/findings.json
+        - testdata/sample-assessment-run/report.json
       forbid_globs:
         - "platform/**"
         - "governance/**"
