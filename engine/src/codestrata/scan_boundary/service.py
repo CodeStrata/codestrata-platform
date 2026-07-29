@@ -8,15 +8,15 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
 from codestrata.scan_boundary.policy import (
-    BOUNDARY_POLICY_VERSION,
-    DEFAULT_EXCLUDED_DIRECTORY_NAMES,
-    ScanSourceRole,
     _DOC_PARTS,
     _EXAMPLE_PARTS,
     _FIXTURE_PARTS,
     _GENERATED_MARKERS,
     _TEST_PARTS,
     _VENDOR_PARTS,
+    BOUNDARY_POLICY_VERSION,
+    DEFAULT_EXCLUDED_DIRECTORY_NAMES,
+    ScanSourceRole,
     default_ignore_path_markers,
 )
 
@@ -45,9 +45,7 @@ class BoundaryPolicy:
     fixture_roots: tuple[str, ...] = ()
     documentation_roots: tuple[str, ...] = ()
     source_role_overrides: tuple[tuple[str, ScanSourceRole], ...] = ()
-    ignore_path_markers: tuple[str, ...] = field(
-        default_factory=default_ignore_path_markers
-    )
+    ignore_path_markers: tuple[str, ...] = field(default_factory=default_ignore_path_markers)
     policy_version: str = BOUNDARY_POLICY_VERSION
 
     @classmethod
@@ -65,8 +63,7 @@ class BoundaryPolicy:
         # Allow removing defaults via include of directory names listed in
         # ``include_default_directories`` (rare); primarily use include_paths.
         restore = {
-            _clean_token(item)
-            for item in getattr(scan, "include_default_directories", ()) or ()
+            _clean_token(item) for item in getattr(scan, "include_default_directories", ()) or ()
         }
         if restore:
             excluded = frozenset(name for name in excluded if name not in restore)
@@ -91,9 +88,7 @@ class BoundaryPolicy:
             production_roots=tuple(
                 _clean_prefix(item) for item in getattr(scan, "production_roots", ()) or ()
             ),
-            test_roots=tuple(
-                _clean_prefix(item) for item in getattr(scan, "test_roots", ()) or ()
-            ),
+            test_roots=tuple(_clean_prefix(item) for item in getattr(scan, "test_roots", ()) or ()),
             example_roots=tuple(
                 _clean_prefix(item) for item in getattr(scan, "example_roots", ()) or ()
             ),
@@ -107,8 +102,7 @@ class BoundaryPolicy:
                 _clean_prefix(item) for item in getattr(scan, "fixture_roots", ()) or ()
             ),
             documentation_roots=tuple(
-                _clean_prefix(item)
-                for item in getattr(scan, "documentation_roots", ()) or ()
+                _clean_prefix(item) for item in getattr(scan, "documentation_roots", ()) or ()
             ),
             source_role_overrides=tuple(overrides),
             ignore_path_markers=default_ignore_path_markers(
@@ -218,9 +212,7 @@ class BoundaryService:
         if name not in self.policy.excluded_directory_names:
             return False
         candidate = (
-            f"{normalize_repo_relative(relative_dir)}/{name}".strip("/")
-            if relative_dir
-            else name
+            f"{normalize_repo_relative(relative_dir)}/{name}".strip("/") if relative_dir else name
         )
         # Explicit includes under an otherwise-excluded directory keep it walkable.
         if self._matches_any_prefix(candidate, self.policy.include_paths):
@@ -328,7 +320,11 @@ def classify_path_role(path: str) -> ScanSourceRole:
     if any(marker in lowered_path for marker in _GENERATED_MARKERS):
         return ScanSourceRole.GENERATED
     parts = {part.lower() for part in PurePosixPath(lower).parts}
-    if parts.intersection(_FIXTURE_PARTS) or "test-fixtures" in lower or "/fixtures/" in lowered_path:
+    if (
+        parts.intersection(_FIXTURE_PARTS)
+        or "test-fixtures" in lower
+        or "/fixtures/" in lowered_path
+    ):
         return ScanSourceRole.FIXTURE
     # Prefer conventional test/source trees over example-token false positives
     # (e.g. org.springframework.samples.petclinic package paths).

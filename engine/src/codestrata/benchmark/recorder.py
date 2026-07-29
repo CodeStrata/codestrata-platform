@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import contextvars
 import resource
+from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from time import perf_counter
-from typing import Iterator
 
 from codestrata.application.runtime_performance.metrics import peak_rss_mb
 
@@ -36,9 +36,7 @@ class BenchmarkRecorder:
     memory_samples_mb: list[float] = field(default_factory=list)
     meta: dict[str, object] = field(default_factory=dict)
     _starts: dict[str, float] = field(default_factory=dict)
-    _token: contextvars.Token[BenchmarkRecorder | None] | None = field(
-        default=None, repr=False
-    )
+    _token: contextvars.Token[BenchmarkRecorder | None] | None = field(default=None, repr=False)
 
     @classmethod
     def create(cls, *, enabled: bool) -> BenchmarkRecorder:

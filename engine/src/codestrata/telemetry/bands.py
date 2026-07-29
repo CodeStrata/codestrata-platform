@@ -43,7 +43,7 @@ def scan_anonymous_repo_stats(root: Path, *, max_files: int = 50_000) -> tuple[i
         return 0, []
     count = 0
     categories: set[str] = set()
-    for dirpath, dirnames, filenames in os.walk(root, topdown=True, followlinks=False):
+    for _dirpath, dirnames, filenames in os.walk(root, topdown=True, followlinks=False):
         dirnames[:] = sorted(name for name in dirnames if name not in SKIP_DIR_NAMES)
         for name in filenames:
             count += 1

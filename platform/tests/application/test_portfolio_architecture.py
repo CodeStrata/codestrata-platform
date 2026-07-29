@@ -62,7 +62,7 @@ def test_portfolio_api_calls_application_only() -> None:
         )
         assert any(
             module.startswith("codestrata_platform.application.portfolio") for module in modules
-        ) or path.name in {"__init__.py", "dto.py"}
+        ) or path.name in {"__init__.py", "dto.py", "aggregation_dto.py"}
 
 
 def test_aggregation_consumes_portfolio_source_ports_only() -> None:

@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from codestrata.scan_boundary import default_ignore_path_markers
 from collections.abc import Mapping, Sequence
 from pathlib import PurePosixPath
 
 from codestrata.application.evidence.language.adapters import classify_source_path
 from codestrata.domain.evidence.language.capabilities import SourceClassification
+from codestrata.scan_boundary import default_ignore_path_markers
 
 # Default exclusions for complexity measurement (includes .codestrata workspace clones).
 DEFAULT_COMPLEXITY_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
@@ -75,9 +75,7 @@ def select_complexity_paths(
         path = normalize_relative_path(raw)
         if not path:
             continue
-        if is_complexity_source_path(
-            path, ignore_markers=ignore_markers, language=language
-        ):
+        if is_complexity_source_path(path, ignore_markers=ignore_markers, language=language):
             eligible.append(path)
         elif PurePosixPath(path).suffix.lower() in _SUPPORTED_SUFFIXES.get(
             language.strip().lower(), frozenset()

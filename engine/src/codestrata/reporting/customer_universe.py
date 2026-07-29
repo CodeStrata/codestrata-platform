@@ -228,22 +228,22 @@ def _related_finding_aliases(
     by_key = {_finding_dedupe_key(item): item.id for item in customer_findings}
     aliases: dict[str, str] = {}
 
-    for finding in report_input.analysis_result.findings:
-        customer = _from_phase1_finding(finding)
+    for phase1_finding in report_input.analysis_result.findings:
+        customer = _from_phase1_finding(phase1_finding)
         survivor = by_key.get(_finding_dedupe_key(customer))
         if survivor is None:
             continue
-        aliases[str(finding.id)] = survivor
+        aliases[str(phase1_finding.id)] = survivor
         aliases[customer.id] = survivor
 
     evaluation = report_input.assessment_rule_evaluation
     if evaluation is not None:
-        for finding in evaluation.findings:
-            customer = _from_phase3_finding(finding)
+        for phase3_finding in evaluation.findings:
+            customer = _from_phase3_finding(phase3_finding)
             survivor = by_key.get(_finding_dedupe_key(customer))
             if survivor is None:
                 continue
-            aliases[str(finding.id)] = survivor
+            aliases[str(phase3_finding.id)] = survivor
             aliases[customer.id] = survivor
 
     return aliases

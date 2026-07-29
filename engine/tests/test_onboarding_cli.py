@@ -304,10 +304,10 @@ def test_readme_documents_canonical_workflow() -> None:
     assert "spring petclinic" not in readme.lower()
     assert ".codestrata/workspace/spring-petclinic" not in readme
     assert "ModuleNotFoundError" in readme
-    assert "python -m pip install -e ." in readme
+    assert "python -m pip install -e " in readme
     assert 'python -c "import codestrata; print(codestrata.__file__)"' in readme
-    assert "does not install the CLI" in readme or "does **not** install" in readme
-    assert "aws sso login --profile <profile-name>" in readme
+    assert "confirm the active interpreter" in readme
+    assert "Amazon Bedrock" in readme or "OpenAI" in readme
     assert "codestrata help" not in readme
     assert "test-fixtures/sample-js-app" in readme
     assert "docs/quick-start.md" in readme

@@ -94,9 +94,7 @@ def test_no_university_references_in_source_tests_docs_manifest() -> None:
             continue
         if UNIVERSITY_RE.search(text):
             offenders.append(str(rel))
-    assert not offenders, "Stale university workspace references:\n" + "\n".join(
-        offenders
-    )
+    assert not offenders, "Stale university workspace references:\n" + "\n".join(offenders)
 
 
 def test_engine_has_no_platform_imports() -> None:
@@ -131,17 +129,11 @@ def test_engine_has_no_platform_path_literals() -> None:
     for root in runtime_roots:
         for path in _python_files(root):
             text = path.read_text(encoding="utf-8")
-            code_lines = [
-                line
-                for line in text.splitlines()
-                if not line.strip().startswith("#")
-            ]
+            code_lines = [line for line in text.splitlines() if not line.strip().startswith("#")]
             joined = "\n".join(code_lines)
             if FORBIDDEN_PATH_RE.search(joined):
                 offenders.append(str(path.relative_to(REPO_ROOT)))
-    assert not offenders, "Engine runtime references platform/ paths:\n" + "\n".join(
-        offenders
-    )
+    assert not offenders, "Engine runtime references platform/ paths:\n" + "\n".join(offenders)
 
 
 def test_engine_package_metadata_is_self_contained() -> None:
@@ -161,7 +153,7 @@ def test_platform_package_depends_on_engine() -> None:
     assert (PLATFORM / "src" / "codestrata_platform" / "knowledge_graph").is_dir()
 
 
-def test_public_export_manifest_lists_four_mirrors() -> None:
+def test_public_export_manifest_lists_community_mirrors() -> None:
     import yaml
 
     manifest = yaml.safe_load(
@@ -173,22 +165,30 @@ def test_public_export_manifest_lists_four_mirrors() -> None:
         "codestrata-examples",
         "codestrata-cursor",
         "codestrata-vscode",
+        "codestrata-docs",
     }
     blob = (REPO_ROOT / "public-export-manifest.yaml").read_text(encoding="utf-8")
     assert "university" not in blob.lower() or "forbid" in blob.lower()
 
 
 @pytest.mark.parametrize(
-    "plugin",
-    ["cursor-plugin", "vscode-plugin"],
+    ("plugin", "package_name"),
+    [
+        ("cursor-plugin", "codestrata-cursor"),
+        ("vscode-plugin", "codestrata-vscode"),
+    ],
 )
-def test_plugin_placeholders_only(plugin: str) -> None:
+def test_community_plugins_are_thin_engine_clients(plugin: str, package_name: str) -> None:
+    """Plugins are real Community clients (not empty placeholders)."""
+
     root = REPO_ROOT / plugin
     assert (root / "README.md").is_file()
-    assert (root / "PLACEHOLDER.md").is_file()
-    files = sorted(
-        path.name
-        for path in root.iterdir()
-        if path.is_file() and path.name != ".DS_Store"
-    )
-    assert set(files) <= {"README.md", "PLACEHOLDER.md", ".gitkeep"}
+    assert (root / "package.json").is_file()
+    assert (root / "src").is_dir()
+    package = (root / "package.json").read_text(encoding="utf-8")
+    assert f'"name": "{package_name}"' in package
+    assert "codestrata" in package.lower()
+    # Historical note file may remain; must not be the only product surface.
+    assert not {
+        path.name for path in root.iterdir() if path.is_file() and path.name != ".DS_Store"
+    } <= {"README.md", "PLACEHOLDER.md", ".gitkeep"}

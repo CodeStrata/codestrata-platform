@@ -10,7 +10,7 @@ from typer.testing import CliRunner
 
 from codestrata.cli import app
 from codestrata.cli.landing import BRAND_STATEMENT, EDITION, PRODUCT_CATEGORY
-from codestrata.package_metadata import get_package_version, format_version_line
+from codestrata.package_metadata import format_version_line, get_package_version
 
 runner = CliRunner()
 

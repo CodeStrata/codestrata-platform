@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from codestrata.scan_boundary import default_ignore_path_markers
 from collections.abc import Mapping, Sequence
 from pathlib import PurePosixPath
 
@@ -12,6 +11,7 @@ from codestrata.domain.evidence.dependency.enums import (
     DependencyManifestType,
 )
 from codestrata.domain.evidence.language.capabilities import SourceClassification
+from codestrata.scan_boundary import default_ignore_path_markers
 
 DEFAULT_DEPENDENCY_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
@@ -76,9 +76,7 @@ def classify_manifest_basename(
     if name in _MANIFEST_BASENAMES:
         return _MANIFEST_BASENAMES[name]
     # requirements*.txt family
-    if name == "requirements.txt" or (
-        name.startswith("requirements") and name.endswith(".txt")
-    ):
+    if name == "requirements.txt" or (name.startswith("requirements") and name.endswith(".txt")):
         return DependencyEcosystem.PYTHON, DependencyManifestType.REQUIREMENTS_TXT
     if name.endswith(".csproj") or name.endswith(".fsproj") or name.endswith(".vbproj"):
         return DependencyEcosystem.NUGET, DependencyManifestType.CSPROJ

@@ -251,25 +251,23 @@ def main() -> int:
 
             command_steps: list[tuple[list[str], str]] = [
                 ([str(codestrata_bin), "--help"], "codestrata_help"),
+                ([str(codestrata_bin), "--version"], "codestrata_version_flag"),
                 ([str(codestrata_bin), "version"], "codestrata_version"),
-                ([str(codestrata_bin), "onboard", "--help"], "onboard_help"),
+                ([str(codestrata_bin), "doctor"], "codestrata_doctor"),
                 ([str(codestrata_bin), "report", "validate", "--help"], "report_validate_help"),
-                ([str(codestrata_bin), "acceptance", "run", "--help"], "acceptance_run_help"),
                 # Engine-only wheel: list tools (do not call Platform-only repository_health).
                 ([str(codestrata_bin), "mcp", "tools", "--config", str(config)], "mcp_tools"),
                 (
                     [
                         str(codestrata_bin),
-                        "onboard",
+                        "assess",
+                        "--repo",
                         str(sample),
-                        "--config",
-                        str(config),
                         "--output",
                         str(reports),
-                        "--provider",
-                        "deterministic",
+                        "--no-ai",
                     ],
-                    "onboard_sample",
+                    "assess_sample",
                 ),
             ]
             report_json: Path | None = None
@@ -294,12 +292,12 @@ def main() -> int:
                         encoding="utf-8",
                     )
                     return 1
-                if name == "onboard_sample":
+                if name == "assess_sample":
                     candidates = sorted(reports.rglob("report.json"))
                     report_json = candidates[-1] if candidates else None
 
             if report_json is None:
-                result["detail"] = "onboard did not produce report.json"
+                result["detail"] = "assess did not produce report.json"
                 summary_path.write_text(
                     json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
                 )

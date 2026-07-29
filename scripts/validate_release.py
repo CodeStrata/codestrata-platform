@@ -154,9 +154,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 5. Secret scan on staging
     secret_payload = scan_export_staging(staging)
-    secret_path = write_secret_scan_report(
-        secret_payload, artifact_dir / "export-secret-scan.json"
-    )
+    secret_path = write_secret_scan_report(secret_payload, artifact_dir / "export-secret-scan.json")
     if secret_payload.get("passed"):
         print(
             f"OK: export secret scan ({secret_payload.get('finding_count', 0)} findings, "
@@ -164,9 +162,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         test_results["steps"]["export_secret_scan"] = "passed"
     else:
-        print(
-            f"FAIL: export secret scan blocking={secret_payload.get('blocking_count')}"
-        )
+        print(f"FAIL: export secret scan blocking={secret_payload.get('blocking_count')}")
         failures += 1
         test_results["steps"]["export_secret_scan"] = "failed"
 
@@ -179,9 +175,7 @@ def main(argv: list[str] | None = None) -> int:
             "--skip-export",
         ]
     )
-    test_results["steps"]["validate_public_exports"] = (
-        "passed" if code == 0 else "failed"
-    )
+    test_results["steps"]["validate_public_exports"] = "passed" if code == 0 else "failed"
     if code != 0:
         failures += 1
 
@@ -248,9 +242,7 @@ def main(argv: list[str] | None = None) -> int:
         "recommendations": dep_payload.get("upgrade_recommendations") or [],
     }
     upgrade_path = artifact_dir / "dependency-upgrade-recommendations.json"
-    upgrade_path.write_text(
-        json.dumps(upgrades, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    upgrade_path.write_text(json.dumps(upgrades, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     artifact_files: list[Path] = [
         inventory_path,
@@ -292,8 +284,12 @@ def main(argv: list[str] | None = None) -> int:
     shutil.copy2(ROOT / "public-export-manifest.yaml", manifest_copy)
     artifact_files.append(manifest_copy)
 
-    # 9. Checksums
-    sums_path = write_sha256sums(artifact_files, artifact_dir / "SHA256SUMS")
+    # 9. Checksums (paths relative to artifact_dir, including dist/*)
+    sums_path = write_sha256sums(
+        artifact_files,
+        artifact_dir / "SHA256SUMS",
+        root=artifact_dir,
+    )
     verify_errors = verify_sha256sums(sums_path, artifact_dir)
     if verify_errors:
         print("FAIL: checksum verification")
@@ -315,12 +311,10 @@ def main(argv: list[str] | None = None) -> int:
         test_results=test_results,
         versions=versions,
     )
-    provenance_path = write_provenance(
-        provenance, artifact_dir / "release-provenance.json"
-    )
+    provenance_path = write_provenance(provenance, artifact_dir / "release-provenance.json")
     # Refresh checksums to include provenance
     artifact_files.append(provenance_path)
-    write_sha256sums(artifact_files, sums_path)
+    write_sha256sums(artifact_files, sums_path, root=artifact_dir)
     print(f"OK: provenance -> {provenance_path.name}")
     test_results["steps"]["provenance"] = "passed"
 

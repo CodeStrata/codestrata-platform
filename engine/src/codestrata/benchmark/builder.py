@@ -40,26 +40,20 @@ def build_suite_document(
 
     completed = [run for run in runs if run.status == "completed"]
     failed = [run for run in runs if run.status == "failed"]
-    expected_failures = [
-        run for run in runs if run.status in {"failed_expected", "skipped"}
-    ]
+    expected_failures = [run for run in runs if run.status in {"failed_expected", "skipped"}]
     summary = {
         "run_count": len(runs),
         "completed_count": len(completed),
         "failed_count": len(failed),
         "expected_failure_or_skip_count": len(expected_failures),
-        "total_ms_by_label": {
-            run.label: (run.timings or {}).get("total_ms") for run in completed
-        },
+        "total_ms_by_label": {run.label: (run.timings or {}).get("total_ms") for run in completed},
         "peak_rss_mb_by_label": {
             run.label: (run.memory or {}).get("peak_rss_mb") for run in completed
         },
     }
     return PerformanceBenchmarkDocument(
         schema_version=BENCHMARK_SCHEMA_VERSION,
-        generated_at=datetime.now(UTC).replace(microsecond=0).isoformat().replace(
-            "+00:00", "Z"
-        ),
+        generated_at=datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         environment=environment or capture_environment(),
         comparison_keys=list(COMPARISON_KEYS),
         measurement_limitations=limitations or list(DEFAULT_MEASUREMENT_LIMITATIONS),
@@ -254,9 +248,7 @@ def _timings_block(
                 "testing_report_adapter": getattr(
                     command_result, "testing_report_adapter_ms", None
                 ),
-                "cloud_report_adapter": getattr(
-                    command_result, "cloud_report_adapter_ms", None
-                ),
+                "cloud_report_adapter": getattr(command_result, "cloud_report_adapter_ms", None),
             }
         )
     for name, value in mapping.items():
@@ -270,7 +262,7 @@ def _timings_block(
     total_ms = float(total) if total is not None else sum(stages.values())
     total_ms = max(0.0, total_ms)
 
-    stage_rows = []
+    stage_rows: list[dict[str, float | str]] = []
     for name, duration in stages.items():
         duration = max(0.0, float(duration))
         pct = round((duration / total_ms) * 100.0, 2) if total_ms > 0 else 0.0
@@ -304,12 +296,8 @@ def _memory_block(
         "average_rss_mb": recorder.average_rss(),
         "sample_count": len(recorder.memory_samples_mb),
         "graph_memory_estimate_bytes": recorder.meta.get("graph_memory_estimate_bytes"),
-        "largest_assessment_object_bytes": recorder.meta.get(
-            "largest_assessment_object_bytes"
-        ),
-        "largest_evidence_collection_bytes": recorder.meta.get(
-            "largest_evidence_collection_bytes"
-        ),
+        "largest_assessment_object_bytes": recorder.meta.get("largest_assessment_object_bytes"),
+        "largest_evidence_collection_bytes": recorder.meta.get("largest_evidence_collection_bytes"),
         "availability": "available" if peak is not None else "unavailable",
     }
 
@@ -331,15 +319,11 @@ def _graphs_block(
     assess_nodes = summary.get("assessment_node_count")
     assess_edges = summary.get("assessment_relationship_count")
     if command_result is not None:
-        repo_nodes = repo_nodes or getattr(
-            command_result, "repository_graph_node_count", None
-        )
+        repo_nodes = repo_nodes or getattr(command_result, "repository_graph_node_count", None)
         repo_edges = repo_edges or getattr(
             command_result, "repository_graph_relationship_count", None
         )
-        assess_nodes = assess_nodes or getattr(
-            command_result, "assessment_graph_node_count", None
-        )
+        assess_nodes = assess_nodes or getattr(command_result, "assessment_graph_node_count", None)
         assess_edges = assess_edges or getattr(
             command_result, "assessment_graph_relationship_count", None
         )
@@ -448,9 +432,7 @@ def _ai_block(
         raw["overall_enrichment_ms"] = raw["overall_enrichment_ms"] or getattr(
             command_result, "latency_ms", None
         )
-        raw["section_generation_success"] = bool(
-            getattr(command_result, "ai_executed", False)
-        )
+        raw["section_generation_success"] = bool(getattr(command_result, "ai_executed", False))
     if not ai_requested:
         raw["unavailable"] = True
         raw["reason"] = "not_requested"
@@ -492,9 +474,7 @@ def _artifacts_block(run_directory: Path | None) -> dict[str, Any]:
         )
         if key in files
     }
-    graphs = {
-        key: value for key, value in files.items() if key.startswith("graphs/")
-    }
+    graphs = {key: value for key, value in files.items() if key.startswith("graphs/")}
     assessments = {
         key: value
         for key, value in files.items()
@@ -557,4 +537,3 @@ def estimate_artifact_object_sizes(run_directory: Path) -> dict[str, int]:
         "largest_evidence_collection_bytes": largest_evidence,
         "graph_memory_estimate_bytes": graphs_total,
     }
-

@@ -21,9 +21,7 @@ _PYTHON_MANIFEST_NAMES = frozenset(
 )
 
 _REQUIREMENTS_NAME = re.compile(r"^requirements(?:[-.].+)?\.txt$", re.IGNORECASE)
-_REQUIREMENT_LINE = re.compile(
-    r"^([A-Za-z0-9][A-Za-z0-9._-]*)(?:\[[^\]]*\])?\s*(.*)$"
-)
+_REQUIREMENT_LINE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)(?:\[[^\]]*\])?\s*(.*)$")
 
 _FRAMEWORK_PACKAGES: dict[str, str] = {
     "fastapi": "FastAPI",
@@ -219,9 +217,7 @@ class PythonTechnologyDetector:
                 if isinstance(group, dict):
                     for section in group.values():
                         if isinstance(section, dict):
-                            packages.update(
-                                self._parse_mapping_deps(section.get("dependencies"))
-                            )
+                            packages.update(self._parse_mapping_deps(section.get("dependencies")))
         return packages
 
     def _parse_pep621_deps(self, value: object) -> dict[str, str | None]:

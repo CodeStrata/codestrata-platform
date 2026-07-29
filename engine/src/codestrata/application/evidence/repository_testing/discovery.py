@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from pathlib import PurePosixPath
@@ -15,6 +14,7 @@ from codestrata.domain.evidence.repository_testing.enums import (
     TestDiscoveryBasis,
     TestFileRole,
 )
+from codestrata.scan_boundary import default_ignore_path_markers
 
 DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 
@@ -78,9 +78,7 @@ def language_hint_for_path(path: str) -> str | None:
 
 
 def _path_parts(path: str) -> tuple[str, ...]:
-    return tuple(
-        part.lower() for part in PurePosixPath(normalize_relative_path(path)).parts
-    )
+    return tuple(part.lower() for part in PurePosixPath(normalize_relative_path(path)).parts)
 
 
 def _has_dir_marker(parts: Sequence[str], *names: str) -> bool:
@@ -174,9 +172,7 @@ def classify_test_candidate(
 
     # Directory markers apply only when the path segment is an exact conventional
     # directory name (already lowercased in parts).
-    dir_hit = any(part in _DIR_MARKERS for part in parts) or (
-        "src" in parts and "test" in parts
-    )
+    dir_hit = any(part in _DIR_MARKERS for part in parts) or ("src" in parts and "test" in parts)
     if dir_hit:
         bases.append(TestDiscoveryBasis.DIRECTORY_CONVENTION)
 
@@ -251,9 +247,7 @@ def classify_ci_path(path: str) -> bool:
     lower = normalized.lower()
     name = PurePosixPath(lower).name
 
-    if lower.startswith(".github/workflows/") and (
-        name.endswith(".yml") or name.endswith(".yaml")
-    ):
+    if lower.startswith(".github/workflows/") and (name.endswith(".yml") or name.endswith(".yaml")):
         return True
     if name == ".gitlab-ci.yml":
         return True
@@ -298,9 +292,7 @@ def discover_candidates(
     ignore_markers: Sequence[str] = DEFAULT_IGNORE_MARKERS,
     max_files: int = 500,
 ) -> tuple[tuple[str, TestFileRole, tuple[TestDiscoveryBasis, ...], str | None], ...]:
-    found: list[
-        tuple[str, TestFileRole, tuple[TestDiscoveryBasis, ...], str | None]
-    ] = []
+    found: list[tuple[str, TestFileRole, tuple[TestDiscoveryBasis, ...], str | None]] = []
     for raw in relative_paths:
         path = normalize_relative_path(raw)
         if not path or is_ignored_path(path, ignore_markers=ignore_markers):

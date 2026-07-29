@@ -20,9 +20,9 @@ from codestrata.reporting.contract.enums import (
     normalize_status,
 )
 from codestrata.reporting.contract.identifiers import (
+    align_related_finding_ids,
     build_finding_id_map,
     remap_related_finding_ids,
-    align_related_finding_ids,
     stable_finding_id,
     stable_recommendation_id,
 )

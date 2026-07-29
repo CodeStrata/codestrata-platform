@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from codestrata.scan_boundary import default_ignore_path_markers
 import fnmatch
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -20,6 +19,7 @@ from codestrata.domain.evidence.repository_performance.enums import (
     PerformanceObservabilityKind,
     PerformanceResourceKind,
 )
+from codestrata.scan_boundary import default_ignore_path_markers
 
 DEFAULT_IGNORE_MARKERS: tuple[str, ...] = default_ignore_path_markers()
 

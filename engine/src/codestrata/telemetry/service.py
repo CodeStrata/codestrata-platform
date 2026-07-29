@@ -18,7 +18,6 @@ from codestrata.telemetry.constants import (
 )
 from codestrata.telemetry.identity import (
     ensure_installation_id,
-    read_installation_id,
     reset_installation_id,
 )
 from codestrata.telemetry.preferences import (
@@ -256,9 +255,7 @@ class TelemetryService:
         if repo_root is not None and self.is_enabled():
             count, languages = scan_anonymous_repo_stats(repo_root)
             size_band = repository_size_band(count)
-        event = (
-            EventName.ASSESSMENT_COMPLETED if success else EventName.ASSESSMENT_FAILED
-        )
+        event = EventName.ASSESSMENT_COMPLETED if success else EventName.ASSESSMENT_FAILED
         self.emit(
             event,
             command="assess",

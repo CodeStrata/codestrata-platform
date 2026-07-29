@@ -34,7 +34,6 @@ from codestrata.cli.report import register_open_command, report_app
 from codestrata.cli.roadmap import roadmap_app
 from codestrata.cli.rules import rules_app
 from codestrata.cli.telemetry_cmd import register_telemetry_command
-from codestrata.cli.welcome import register_welcome_command
 from codestrata.cli.ux import (
     DOCS_GETTING_STARTED,
     DOCS_HOME,
@@ -44,6 +43,7 @@ from codestrata.cli.ux import (
     maybe_notify_update,
     maybe_print_banner,
 )
+from codestrata.cli.welcome import register_welcome_command
 from codestrata.config import load_settings
 from codestrata.extensions import load_cli_extensions
 from codestrata.extensions.cli_cmd import register_extensions_command
@@ -75,9 +75,7 @@ from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 # Explicit opt-in for internal maintainer tooling (not public Community CLI).
 _MAINTAINER_CLI_ENV = "CODESTRATA_MAINTAINER_CLI"
 
-_METADATA_SUBCOMMANDS = frozenset(
-    {"version", "about", "examples", "extensions", "welcome"}
-)
+_METADATA_SUBCOMMANDS = frozenset({"version", "about", "examples", "extensions", "welcome"})
 
 app = typer.Typer(
     name="codestrata",

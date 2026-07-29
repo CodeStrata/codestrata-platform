@@ -5,9 +5,8 @@ Presentation only — no analysis or enrichment business logic.
 
 from __future__ import annotations
 
-from codestrata.reporters.html_rendering import escape_and_wrap, escape_html, wrap_table
 from codestrata.design_system.tokens import DESIGN_SYSTEM_REF
-from codestrata.reporting.html_v2.styles import REPORT_CSS
+from codestrata.reporters.html_rendering import escape_and_wrap, escape_html, wrap_table
 from codestrata.reporting.ai_readiness.models import AiReadinessReportSection
 from codestrata.reporting.architecture.models import ArchitectureReportSection
 from codestrata.reporting.branding import (
@@ -25,6 +24,7 @@ from codestrata.reporting.html_v2.models import (
     HtmlReportViewModel,
     RecommendationView,
 )
+from codestrata.reporting.html_v2.styles import REPORT_CSS
 from codestrata.reporting.performance.models import PerformanceReportSection
 from codestrata.reporting.security.models import SecurityReportSection
 from codestrata.reporting.technical_debt.models import TechnicalDebtReportSection
@@ -330,8 +330,7 @@ def _ensure_responsive_tables(html: str) -> str:
         end += len("</table>")
         pieces.append(html[index:start])
         if any(
-            marker in lookbehind
-            for marker in ("table-wrap", "responsive-table", "table-wrapper")
+            marker in lookbehind for marker in ("table-wrap", "responsive-table", "table-wrapper")
         ):
             pieces.append(html[start:end])
         else:
@@ -340,7 +339,6 @@ def _ensure_responsive_tables(html: str) -> str:
             pieces.append("</div>")
         index = end
     return "".join(pieces)
-
 
 
 def _section(
@@ -466,9 +464,7 @@ def _render_modernization_opportunities(view: HtmlReportViewModel) -> str:
             '<p class="muted">No additional modernization opportunities were '
             "identified beyond Priority Actions and capability assessments.</p>"
         )
-    items = "".join(
-        f"<li>{escape_html(item)}</li>" for item in view.modernization_opportunities
-    )
+    items = "".join(f"<li>{escape_html(item)}</li>" for item in view.modernization_opportunities)
     return f'<ul class="plain">{items}</ul>'
 
 
@@ -540,13 +536,13 @@ def _render_assessment_scope(view: HtmlReportViewModel) -> str:
         "".join(f"<li>{escape_html(label)}</li>" for label in scope.assessed_packs)
         or "<li>None</li>"
     )
-    skipped_rows = "".join(
-        "<tr>"
-        f"<td>{escape_html(label)}</td>"
-        f"<td>{escape_html(reason)}</td>"
-        "</tr>"
-        for label, reason in scope.not_assessed_packs
-    ) or '<tr><td colspan="2">None</td></tr>'
+    skipped_rows = (
+        "".join(
+            f"<tr><td>{escape_html(label)}</td><td>{escape_html(reason)}</td></tr>"
+            for label, reason in scope.not_assessed_packs
+        )
+        or '<tr><td colspan="2">None</td></tr>'
+    )
     return (
         "<p>Packs included in this assessment and packs intentionally not assessed.</p>\n"
         '<div class="split">\n'
@@ -812,9 +808,9 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
         meta = (
             '<dl class="meta">\n'
             f"<div><dt>Finding ID</dt>"
-            f"<dd><code class=\"trace-id\">{escape_and_wrap(item.finding_id)}</code></dd></div>\n"
+            f'<dd><code class="trace-id">{escape_and_wrap(item.finding_id)}</code></dd></div>\n'
             f"<div><dt>Rule ID</dt>"
-            f"<dd><code class=\"trace-id\" title=\"Rule ID\">{escape_and_wrap(item.rule_id)}"
+            f'<dd><code class="trace-id" title="Rule ID">{escape_and_wrap(item.rule_id)}'
             "</code></dd></div>\n"
             f"<div><dt>Category</dt><dd>{escape_html(item.category)}</dd></div>\n"
             f"<div><dt>Affected nodes</dt><dd>{nodes}</dd></div>\n"
@@ -1025,9 +1021,7 @@ def _limitation_items(limitations: object) -> str:
         if "inventory does not re-run rules" in summary_l:
             continue
         label = category.replace("-", " ").replace("_", " ").strip().title() or "Note"
-        items.append(
-            f"<li><strong>{escape_html(label)}</strong> — {escape_html(summary)}</li>"
-        )
+        items.append(f"<li><strong>{escape_html(label)}</strong> — {escape_html(summary)}</li>")
     return "".join(items)
 
 
@@ -1048,13 +1042,9 @@ def _domain_status_header(section: object) -> str:
     if not label and not summary:
         return ""
     badge = (
-        f"<span class='{_status_badge_class(label)}'>{escape_html(label)}</span>"
-        if label
-        else ""
+        f"<span class='{_status_badge_class(label)}'>{escape_html(label)}</span>" if label else ""
     )
-    summary_html = (
-        f"<span class='muted'>{escape_html(summary)}</span>" if summary else ""
-    )
+    summary_html = f"<span class='muted'>{escape_html(summary)}</span>" if summary else ""
     return f"<div class='domain-header'>{badge}{summary_html}</div>"
 
 
@@ -1163,8 +1153,8 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
     has_substance = bool(conclusions_body or recommendations_body or findings or limitations)
     if not has_substance and not metrics:
         return (
-            _domain_status_header(section) +
-            "<p class='muted'>Architecture was assessed; no significant architecture "
+            _domain_status_header(section)
+            + "<p class='muted'>Architecture was assessed; no significant architecture "
             "risks were identified for this repository.</p>"
         )
     parts = [
@@ -1278,8 +1268,8 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
     )
     if not has_substance and not metrics:
         return (
-            _domain_status_header(section) +
-            "<p class='muted'>Technical debt was assessed; no significant "
+            _domain_status_header(section)
+            + "<p class='muted'>Technical debt was assessed; no significant "
             "production-facing debt signals were identified.</p>"
         )
     parts = [
@@ -1316,9 +1306,7 @@ def _render_technical_debt(section: TechnicalDebtReportSection) -> str:
         parts.extend(["<h4>Recommendations</h4>", recommendations])
     if test_block:
         parts.extend(["<h3>Test-maintainability observation</h3>", test_block])
-        parts.append(
-            "<p class='muted'>Test findings are not production health signals.</p>"
-        )
+        parts.append("<p class='muted'>Test findings are not production health signals.</p>")
     if coverage:
         parts.extend(
             [
@@ -1546,7 +1534,7 @@ def _render_security(section: SecurityReportSection) -> str:
     coverage_rows = (
         "<tr><td>Evidence status</td>"
         f"<td>{escape_html(coverage.evidence_status or '—')}</td></tr>"
-                "<tr><td>Candidate artifacts discovered / inspected</td>"
+        "<tr><td>Candidate artifacts discovered / inspected</td>"
         f"<td>{coverage.candidate_artifacts_discovered} / "
         f"{coverage.artifacts_inspected}</td></tr>"
         "<tr><td>Structured files parsed / configuration facts</td>"
@@ -1570,7 +1558,7 @@ def _render_security(section: SecurityReportSection) -> str:
     status_block = (
         f"<p><strong>Assessment status:</strong> "
         f"{escape_html(section.assessment_status)}</p>"
-f"{coverage_table}"
+        f"{coverage_table}"
     )
     if finding.production_finding_count == 0 and finding.none_detected_statement:
         production_findings = f"<p>{escape_html(finding.none_detected_statement)}</p>"
@@ -1917,7 +1905,7 @@ def _render_testing(section: TestingReportSection) -> str:
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-coverage_table,
+        coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Inventory Summary</h3>",
@@ -2128,7 +2116,7 @@ def _render_cloud(section: CloudReportSection) -> str:
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-coverage_table,
+        coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Technology Family Inventory</h3>",
@@ -2341,7 +2329,7 @@ def _render_ai_readiness(section: AiReadinessReportSection) -> str:
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-coverage_table,
+        coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Capability Family Inventory</h3>",
@@ -2393,9 +2381,7 @@ def _render_phased_roadmap(view: HtmlReportViewModel) -> str:
 
     finding_titles = {item.finding_id: item.title for item in view.findings}
     action_pool = view.priority_actions or view.recommendations
-    recommendation_titles = {
-        item.recommendation_id: item.title for item in action_pool
-    }
+    recommendation_titles = {item.recommendation_id: item.title for item in action_pool}
 
     phase_blocks: list[str] = []
     for phase in section.phases:
@@ -2452,9 +2438,7 @@ def _roadmap_initiative_card(
         title = "Modernization initiative"
 
     outcome = str(getattr(item, "expected_outcome", "") or "").strip()
-    related_recs = [
-        recommendation_titles[rid] for rid in rec_ids if rid in recommendation_titles
-    ]
+    related_recs = [recommendation_titles[rid] for rid in rec_ids if rid in recommendation_titles]
     related_findings = [
         finding_titles[fid]
         for fid in tuple(getattr(item, "supporting_finding_ids", ()) or ())
@@ -2471,16 +2455,10 @@ def _roadmap_initiative_card(
         related_bits.append(
             "Findings: "
             + "; ".join(related_findings[:3])
-            + (
-                f" (+{len(related_findings) - 3} more)"
-                if len(related_findings) > 3
-                else ""
-            )
+            + (f" (+{len(related_findings) - 3} more)" if len(related_findings) > 3 else "")
         )
     related_html = (
-        f"<p class='muted'>{escape_html(' · '.join(related_bits))}</p>"
-        if related_bits
-        else ""
+        f"<p class='muted'>{escape_html(' · '.join(related_bits))}</p>" if related_bits else ""
     )
     return (
         "<article class='card'>"
@@ -2659,7 +2637,7 @@ def _render_performance(section: PerformanceReportSection) -> str:
         f"<p>{escape_html(section.executive_summary)}</p>",
         "<h3>Assessment and Coverage Status</h3>",
         f"<p><strong>Assessment status:</strong> {escape_html(section.assessment_status)}</p>",
-coverage_table,
+        coverage_table,
         "<h3>Rule Execution Summary</h3>",
         execution_table,
         "<h3>Performance Family Inventory</h3>",
@@ -2933,9 +2911,7 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
 def _render_footer(view: HtmlReportViewModel | None = None) -> str:
     engine = view.metadata.engine_version if view is not None else BRAND_VERSION
     report_version = view.metadata.report_version if view is not None else "3.0"
-    mode = (
-        view.summary.assessment_mode_label if view is not None else "Deterministic"
-    )
+    mode = view.summary.assessment_mode_label if view is not None else "Deterministic"
     ai_status = view.metadata.ai_status if view is not None else "not_requested"
     return (
         '<footer class="site-footer">\n'
@@ -2947,7 +2923,7 @@ def _render_footer(view: HtmlReportViewModel | None = None) -> str:
         "<p>This Community report does not include CodeStrata Platform portfolio, "
         "executive, or Strategic Roadmap outputs.</p>\n"
         f"<p>Report {escape_html(report_version)} · Engine {escape_html(engine)} · "
-        f"Design System: <span class=\"trace-id\">{escape_html(DESIGN_SYSTEM_REF)}</span></p>\n"
+        f'Design System: <span class="trace-id">{escape_html(DESIGN_SYSTEM_REF)}</span></p>\n'
         f'<p class="copyright">© {escape_html(BRAND_NAME)}</p>\n'
         "</footer>"
     )

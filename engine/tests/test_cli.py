@@ -33,7 +33,8 @@ def test_version_command() -> None:
     assert "Report HTML:" in result.stdout
     assert "AI provider" in result.stdout
     assert f"Python: {platform.python_version()}" in result.stdout
-    assert f"Platform: {platform.system()}" in result.stdout
+    assert f"Operating System: {platform.system()}" in result.stdout
+    assert f"Platform: {platform.platform()}" in result.stdout
     assert "aimf" not in result.stdout.lower()
 
 
@@ -77,7 +78,8 @@ def test_cli_help() -> None:
     assert result.exit_code == 0
     assert "Engineering Assessment" in result.stdout
     assert "CodeStrata Engine" in result.stdout
-    assert "docs/quick-start.md" in result.stdout
+    assert "https://docs.codestrata.ai" in result.stdout
+    assert "getting-started" in result.stdout
     assert "version" in result.stdout
     assert "about" in result.stdout
     assert "--version" in result.stdout

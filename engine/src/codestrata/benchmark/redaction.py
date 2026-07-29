@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-
 _SECRET_KEYS = frozenset(
     {
         "api_key",

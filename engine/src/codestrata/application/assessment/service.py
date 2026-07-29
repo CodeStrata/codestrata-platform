@@ -51,6 +51,7 @@ from codestrata.repository_auth.exceptions import (
     RepositoryAccessError,
     UnsupportedRepositoryUrlError,
 )
+from codestrata.scan_boundary import BoundaryPolicy
 from codestrata.services.analysis_service import AnalysisService
 from codestrata.services.default_pipeline import create_default_analysis_service
 from codestrata.services.graph_assessment import (
@@ -75,7 +76,6 @@ from codestrata.services.scanners.github_repository_scanner import (
     GitHubRepositoryScanner,
     dispose_ephemeral_repository,
 )
-from codestrata.scan_boundary import BoundaryPolicy
 from codestrata.services.scanners.local_repository_scanner import LocalRepositoryScanner
 from codestrata.static_analysis.exceptions import StaticAnalysisProviderError
 from codestrata.static_analysis.models import StaticAnalysisStatus
@@ -171,44 +171,24 @@ class AssessmentCommandResult(BaseModel):
     dependency_evidence_declaration_count: int | None = Field(default=None, ge=0)
     dependency_evidence_artifact_path: Path | None = None
     repository_sensitive_evidence_status: str | None = None
-    repository_sensitive_evidence_artifact_count: int | None = Field(
-        default=None, ge=0
-    )
-    repository_sensitive_evidence_configuration_fact_count: int | None = Field(
-        default=None, ge=0
-    )
+    repository_sensitive_evidence_artifact_count: int | None = Field(default=None, ge=0)
+    repository_sensitive_evidence_configuration_fact_count: int | None = Field(default=None, ge=0)
     repository_sensitive_evidence_artifact_path: Path | None = None
     repository_testing_evidence_status: str | None = None
-    repository_testing_evidence_candidate_count: int | None = Field(
-        default=None, ge=0
-    )
-    repository_testing_evidence_framework_count: int | None = Field(
-        default=None, ge=0
-    )
+    repository_testing_evidence_candidate_count: int | None = Field(default=None, ge=0)
+    repository_testing_evidence_framework_count: int | None = Field(default=None, ge=0)
     repository_testing_evidence_artifact_path: Path | None = None
     repository_cloud_evidence_status: str | None = None
-    repository_cloud_evidence_candidate_count: int | None = Field(
-        default=None, ge=0
-    )
-    repository_cloud_evidence_technology_count: int | None = Field(
-        default=None, ge=0
-    )
+    repository_cloud_evidence_candidate_count: int | None = Field(default=None, ge=0)
+    repository_cloud_evidence_technology_count: int | None = Field(default=None, ge=0)
     repository_cloud_evidence_artifact_path: Path | None = None
     repository_ai_readiness_evidence_status: str | None = None
-    repository_ai_readiness_evidence_candidate_count: int | None = Field(
-        default=None, ge=0
-    )
-    repository_ai_readiness_evidence_technology_count: int | None = Field(
-        default=None, ge=0
-    )
+    repository_ai_readiness_evidence_candidate_count: int | None = Field(default=None, ge=0)
+    repository_ai_readiness_evidence_technology_count: int | None = Field(default=None, ge=0)
     repository_ai_readiness_evidence_artifact_path: Path | None = None
     repository_performance_evidence_status: str | None = None
-    repository_performance_evidence_candidate_count: int | None = Field(
-        default=None, ge=0
-    )
-    repository_performance_evidence_technology_count: int | None = Field(
-        default=None, ge=0
-    )
+    repository_performance_evidence_candidate_count: int | None = Field(default=None, ge=0)
+    repository_performance_evidence_technology_count: int | None = Field(default=None, ge=0)
     repository_performance_evidence_artifact_path: Path | None = None
     security_assessment_status: str | None = None
     security_assessment_finding_count: int | None = Field(default=None, ge=0)
@@ -230,9 +210,7 @@ class AssessmentCommandResult(BaseModel):
     architecture_report_section_version: str | None = None
     architecture_report_finding_count: int | None = Field(default=None, ge=0)
     architecture_report_conclusion_count: int | None = Field(default=None, ge=0)
-    architecture_report_recommendation_group_count: int | None = Field(
-        default=None, ge=0
-    )
+    architecture_report_recommendation_group_count: int | None = Field(default=None, ge=0)
     architecture_report_adapter_ms: float | None = Field(default=None, ge=0.0)
     technical_debt_report_enabled: bool | None = None
     technical_debt_report_status: str | None = None
@@ -605,9 +583,7 @@ class AssessmentApplicationService:
             return self.run(
                 repo,
                 output_directory,
-                mode=(
-                    AssessmentMode.AI_ENHANCED if with_ai else AssessmentMode.DETERMINISTIC
-                ),
+                mode=(AssessmentMode.AI_ENHANCED if with_ai else AssessmentMode.DETERMINISTIC),
                 branch=branch,
                 config_path=config_path,
                 settings=loaded_settings,
@@ -616,11 +592,7 @@ class AssessmentApplicationService:
             )
 
         resolved = resolve_assessment_repository(repo, loaded_settings)
-        typed_candidate = (
-            candidate
-            if isinstance(candidate, CandidateRepositoryState)
-            else None
-        )
+        typed_candidate = candidate if isinstance(candidate, CandidateRepositoryState) else None
         typed_plan = plan if isinstance(plan, IncrementalAssessmentPlan) else None
         executor = create_incremental_assessment_executor(
             assessment_runner=AssessmentApplicationServiceRunner(
@@ -756,9 +728,10 @@ class AssessmentApplicationService:
         )
         activation_coverage = activation_plan.to_coverage_payload()
         if verbose:
-            enabled_ids = ", ".join(
-                item.pack_id.value for item in activation_plan.packs if item.enabled
-            ) or "(none)"
+            enabled_ids = (
+                ", ".join(item.pack_id.value for item in activation_plan.packs if item.enabled)
+                or "(none)"
+            )
             active_console.print(
                 f"[dim]Assessment activation mode={activation_mode.value}; "
                 f"enabled packs: {enabled_ids}[/dim]"
@@ -811,9 +784,7 @@ class AssessmentApplicationService:
                 load_shared_source_texts,
             )
 
-            inventory_paths = tuple(
-                str(path) for path in getattr(repository, "files", ()) or ()
-            )
+            inventory_paths = tuple(str(path) for path in getattr(repository, "files", ()) or ())
             shared_source_texts, shared_source_stats = load_shared_source_texts(
                 relative_paths=inventory_paths,
                 repository_root=Path(repository.path),
@@ -944,34 +915,26 @@ class AssessmentApplicationService:
 
             if repository_sensitive_evidence_collection_enabled(loaded_settings):
                 rs_settings = loaded_settings.evidence.repository_sensitive
-                rs_service = create_repository_sensitive_evidence_service(
-                    loaded_settings
-                )
+                rs_service = create_repository_sensitive_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
-                _candidates, texts, binaries, load_errors = (
-                    load_repository_sensitive_inputs(
-                        relative_paths=inventory_paths,
-                        repository_root=Path(repository.path),
-                        ignore_path_markers=rs_settings.ignore_path_markers,
-                        max_files=rs_settings.max_files,
-                        max_file_chars=rs_settings.max_file_chars,
-                        max_file_bytes=rs_settings.max_file_bytes,
-                    )
+                _candidates, texts, binaries, load_errors = load_repository_sensitive_inputs(
+                    relative_paths=inventory_paths,
+                    repository_root=Path(repository.path),
+                    ignore_path_markers=rs_settings.ignore_path_markers,
+                    max_files=rs_settings.max_files,
+                    max_file_chars=rs_settings.max_file_chars,
+                    max_file_bytes=rs_settings.max_file_bytes,
                 )
                 repository_sensitive_evidence = rs_service.collect(
-                    repository_id=str(
-                        getattr(repository, "name", None) or repository.path
-                    ),
+                    repository_id=str(getattr(repository, "name", None) or repository.path),
                     relative_paths=inventory_paths,
                     file_texts=texts,
                     file_binaries=binaries,
                     load_errors=load_errors,
                     configuration_fingerprint=(
-                        f"evidence.repository_sensitive.enabled="
-                        f"{rs_settings.enabled}"
+                        f"evidence.repository_sensitive.enabled={rs_settings.enabled}"
                     ),
                 )
                 rs_write = write_repository_sensitive_evidence_artifact(
@@ -979,9 +942,7 @@ class AssessmentApplicationService:
                     report_paths.run_directory,
                 )
                 repository_sensitive_evidence_artifact = rs_write.path
-                repository_sensitive_evidence_status = (
-                    repository_sensitive_evidence.status.value
-                )
+                repository_sensitive_evidence_status = repository_sensitive_evidence.status.value
                 repository_sensitive_evidence_artifact_count = rs_write.artifact_count
                 repository_sensitive_evidence_configuration_fact_count = (
                     rs_write.configuration_fact_count
@@ -1024,13 +985,9 @@ class AssessmentApplicationService:
 
             conclusion_result = None
             if architecture_conclusions_enabled(loaded_settings):
-                conclusion_service = create_architecture_conclusion_service(
-                    loaded_settings
-                )
+                conclusion_service = create_architecture_conclusion_service(loaded_settings)
                 conclusion_result = conclusion_service.build(
-                    repository_id=str(
-                        getattr(repository, "name", None) or repository.path
-                    ),
+                    repository_id=str(getattr(repository, "name", None) or repository.path),
                     findings=rule_evaluation.findings,
                     enabled_policy_ids=enabled_policy_ids(loaded_settings),
                     extraction_coverage=(
@@ -1050,9 +1007,7 @@ class AssessmentApplicationService:
                     ),
                     enterprise_context_present=False,
                 )
-                conclusions_path = (
-                    report_paths.run_directory / "architecture_conclusions.json"
-                )
+                conclusions_path = report_paths.run_directory / "architecture_conclusions.json"
                 conclusions_path.write_text(
                     conclusion_result.model_dump_json(indent=2),
                     encoding="utf-8",
@@ -1067,25 +1022,19 @@ class AssessmentApplicationService:
                 assembler = create_architecture_assessment_assembler()
                 if not pack_on:
                     architecture_section = assembler.assemble_disabled(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         reason="architecture_pack_disabled",
                     )
                 else:
                     architecture_section = assembler.assemble(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         findings=rule_evaluation.findings,
                         conclusion_result=conclusion_result,
                         pack_enabled=True,
                         conclusions_enabled=conclusions_on,
                         include_findings=section_cfg.include_findings,
                         include_conclusions=section_cfg.include_conclusions,
-                        include_recommendation_groups=(
-                            section_cfg.include_recommendation_groups
-                        ),
+                        include_recommendation_groups=(section_cfg.include_recommendation_groups),
                         include_coverage=section_cfg.include_coverage,
                         include_limitations=section_cfg.include_limitations,
                         include_traceability=section_cfg.include_traceability,
@@ -1125,9 +1074,7 @@ class AssessmentApplicationService:
                         )
                         if architecture_pack_result is not None
                         else 7,
-                        rules_executed=len(
-                            architecture_pack_result.evaluation.rules_evaluated
-                        )
+                        rules_executed=len(architecture_pack_result.evaluation.rules_evaluated)
                         if architecture_pack_result is not None
                         else 0,
                         enterprise_context_used=False,
@@ -1162,9 +1109,7 @@ class AssessmentApplicationService:
                 td_assembler = create_technical_debt_assessment_assembler()
                 if not td_pack_on:
                     technical_debt_section = td_assembler.assemble_disabled(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         reason="technical_debt_pack_disabled",
                     )
                 else:
@@ -1174,16 +1119,10 @@ class AssessmentApplicationService:
                         else None
                     )
                     matched = len(pack_eval.findings) if pack_eval is not None else 0
-                    executed = (
-                        len(pack_eval.rules_evaluated) if pack_eval is not None else 0
-                    )
-                    skipped = (
-                        len(pack_eval.rules_skipped) if pack_eval is not None else 0
-                    )
+                    executed = len(pack_eval.rules_evaluated) if pack_eval is not None else 0
+                    skipped = len(pack_eval.rules_skipped) if pack_eval is not None else 0
                     technical_debt_section = td_assembler.assemble(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         findings=rule_evaluation.findings,
                         pack_enabled=True,
                         complexity_evidence_enabled=complexity_evidence_collection_enabled(
@@ -1291,16 +1230,12 @@ class AssessmentApplicationService:
                 if dependency_pack_result is not None
                 else None
             )
-            if (
-                dependency_evidence is None
-                and dependency_evidence_collection_enabled(loaded_settings)
+            if dependency_evidence is None and dependency_evidence_collection_enabled(
+                loaded_settings
             ):
-                dep_evidence_service = create_dependency_evidence_service(
-                    loaded_settings
-                )
+                dep_evidence_service = create_dependency_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
                 _paths, texts = load_dependency_manifest_texts(
                     relative_paths=inventory_paths,
@@ -1309,14 +1244,11 @@ class AssessmentApplicationService:
                     max_chars=loaded_settings.evidence.dependency.max_file_chars,
                 )
                 dependency_evidence = dep_evidence_service.collect(
-                    repository_id=str(
-                        getattr(repository, "name", None) or repository.path
-                    ),
+                    repository_id=str(getattr(repository, "name", None) or repository.path),
                     relative_paths=inventory_paths,
                     file_texts=texts,
                     configuration_fingerprint=(
-                        f"evidence.dependency.enabled="
-                        f"{loaded_settings.evidence.dependency.enabled}"
+                        f"evidence.dependency.enabled={loaded_settings.evidence.dependency.enabled}"
                     ),
                 )
 
@@ -1330,25 +1262,19 @@ class AssessmentApplicationService:
                 dependency_evidence_declaration_count = evidence_write.declaration_count
 
             if dependency_assessment_section_enabled(loaded_settings):
-                dep_section_cfg = dependency_assessment_section_settings(
-                    loaded_settings
-                )
+                dep_section_cfg = dependency_assessment_section_settings(loaded_settings)
                 dep_assembler = create_dependency_assessment_assembler()
                 dep_pack_on = dependency_pack_enabled(loaded_settings)
                 if not dep_pack_on:
                     dependency_section = dep_assembler.assemble_disabled(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         reason="dependency_pack_disabled",
                     )
                     if dependency_evidence is not None:
                         dependency_section = dependency_section.model_copy(
                             update={
                                 "evidence_pipeline": "dependency.manifest",
-                                "evidence_fingerprint": (
-                                    dependency_evidence.evidence_fingerprint
-                                ),
+                                "evidence_fingerprint": (dependency_evidence.evidence_fingerprint),
                             }
                         )
                 else:
@@ -1357,23 +1283,13 @@ class AssessmentApplicationService:
                         if dependency_pack_result is not None
                         else None
                     )
-                    pack_findings = (
-                        pack_eval.findings if pack_eval is not None else ()
-                    )
+                    pack_findings = pack_eval.findings if pack_eval is not None else ()
                     matched = len(pack_findings)
-                    executed = (
-                        len(pack_eval.rules_evaluated) if pack_eval is not None else 0
-                    )
-                    skipped = (
-                        len(pack_eval.rules_skipped) if pack_eval is not None else 0
-                    )
-                    evidence_on = dependency_evidence_collection_enabled(
-                        loaded_settings
-                    )
+                    executed = len(pack_eval.rules_evaluated) if pack_eval is not None else 0
+                    skipped = len(pack_eval.rules_skipped) if pack_eval is not None else 0
+                    evidence_on = dependency_evidence_collection_enabled(loaded_settings)
                     dependency_section = dep_assembler.assemble(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         findings=pack_findings,
                         pack_enabled=True,
                         evidence_enabled=evidence_on,
@@ -1381,9 +1297,7 @@ class AssessmentApplicationService:
                         include_coverage=dep_section_cfg.include_coverage,
                         include_limitations=dep_section_cfg.include_limitations,
                         include_traceability=dep_section_cfg.include_traceability,
-                        include_execution_summary=(
-                            dep_section_cfg.include_execution_summary
-                        ),
+                        include_execution_summary=(dep_section_cfg.include_execution_summary),
                         include_synthesis=dep_section_cfg.include_synthesis,
                         dependency_evidence=dependency_evidence,
                         evidence_pipeline=(
@@ -1459,34 +1373,26 @@ class AssessmentApplicationService:
                 and repository_sensitive_evidence_collection_enabled(loaded_settings)
             ):
                 rs_settings = loaded_settings.evidence.repository_sensitive
-                rs_service = create_repository_sensitive_evidence_service(
-                    loaded_settings
-                )
+                rs_service = create_repository_sensitive_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
-                _candidates, texts, binaries, load_errors = (
-                    load_repository_sensitive_inputs(
-                        relative_paths=inventory_paths,
-                        repository_root=Path(repository.path),
-                        ignore_path_markers=rs_settings.ignore_path_markers,
-                        max_files=rs_settings.max_files,
-                        max_file_chars=rs_settings.max_file_chars,
-                        max_file_bytes=rs_settings.max_file_bytes,
-                    )
+                _candidates, texts, binaries, load_errors = load_repository_sensitive_inputs(
+                    relative_paths=inventory_paths,
+                    repository_root=Path(repository.path),
+                    ignore_path_markers=rs_settings.ignore_path_markers,
+                    max_files=rs_settings.max_files,
+                    max_file_chars=rs_settings.max_file_chars,
+                    max_file_bytes=rs_settings.max_file_bytes,
                 )
                 repository_sensitive_evidence = rs_service.collect(
-                    repository_id=str(
-                        getattr(repository, "name", None) or repository.path
-                    ),
+                    repository_id=str(getattr(repository, "name", None) or repository.path),
                     relative_paths=inventory_paths,
                     file_texts=texts,
                     file_binaries=binaries,
                     load_errors=load_errors,
                     configuration_fingerprint=(
-                        f"evidence.repository_sensitive.enabled="
-                        f"{rs_settings.enabled}"
+                        f"evidence.repository_sensitive.enabled={rs_settings.enabled}"
                     ),
                 )
                 rs_write = write_repository_sensitive_evidence_artifact(
@@ -1494,9 +1400,7 @@ class AssessmentApplicationService:
                     report_paths.run_directory,
                 )
                 repository_sensitive_evidence_artifact = rs_write.path
-                repository_sensitive_evidence_status = (
-                    repository_sensitive_evidence.status.value
-                )
+                repository_sensitive_evidence_status = repository_sensitive_evidence.status.value
                 repository_sensitive_evidence_artifact_count = rs_write.artifact_count
                 repository_sensitive_evidence_configuration_fact_count = (
                     rs_write.configuration_fact_count
@@ -1528,12 +1432,9 @@ class AssessmentApplicationService:
 
             if repository_testing_evidence_collection_enabled(loaded_settings):
                 rt_settings = loaded_settings.evidence.repository_testing
-                rt_service = create_repository_testing_evidence_service(
-                    loaded_settings
-                )
+                rt_service = create_repository_testing_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
                 if not inventory_paths:
                     from codestrata.application.evidence.repository_testing.limitations import (
@@ -1549,39 +1450,30 @@ class AssessmentApplicationService:
                         AggregatedRepositoryTestingEvidence,
                     )
 
-                    repo_id = str(
-                        getattr(repository, "name", None) or repository.path
-                    )
+                    repo_id = str(getattr(repository, "name", None) or repository.path)
                     repository_testing_evidence = AggregatedRepositoryTestingEvidence(
-                        bundle_id=make_bundle_id(
-                            repository_id=repo_id, fingerprint="insufficient"
-                        ),
+                        bundle_id=make_bundle_id(repository_id=repo_id, fingerprint="insufficient"),
                         repository_id=repo_id,
                         status=RepositoryTestingParseStatus.INSUFFICIENT_EVIDENCE,
                         limitations=standard_limitations(),
                         evidence_fingerprint="insufficient",
                     )
                 else:
-                    _rt_meta, rt_texts, rt_load_errors = (
-                        load_repository_testing_inputs(
-                            relative_paths=inventory_paths,
-                            repository_root=Path(repository.path),
-                            ignore_path_markers=rt_settings.ignore_path_markers,
-                            max_files=rt_settings.max_files,
-                            max_file_chars=rt_settings.max_file_chars,
-                            max_file_bytes=rt_settings.max_file_bytes,
-                        )
+                    _rt_meta, rt_texts, rt_load_errors = load_repository_testing_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rt_settings.ignore_path_markers,
+                        max_files=rt_settings.max_files,
+                        max_file_chars=rt_settings.max_file_chars,
+                        max_file_bytes=rt_settings.max_file_bytes,
                     )
                     repository_testing_evidence = rt_service.collect(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         relative_paths=inventory_paths,
                         file_texts=rt_texts,
                         load_errors=rt_load_errors,
                         configuration_fingerprint=(
-                            f"evidence.repository_testing.enabled="
-                            f"{rt_settings.enabled}"
+                            f"evidence.repository_testing.enabled={rt_settings.enabled}"
                         ),
                     )
                 rt_write = write_repository_testing_evidence_artifact(
@@ -1589,9 +1481,7 @@ class AssessmentApplicationService:
                     report_paths.run_directory,
                 )
                 repository_testing_evidence_artifact = rt_write.path
-                repository_testing_evidence_status = (
-                    repository_testing_evidence.status.value
-                )
+                repository_testing_evidence_status = repository_testing_evidence.status.value
                 repository_testing_evidence_candidate_count = rt_write.candidate_count
                 repository_testing_evidence_framework_count = rt_write.framework_count
         except Exception as error:  # noqa: BLE001 - isolate evidence failures
@@ -1621,12 +1511,9 @@ class AssessmentApplicationService:
 
             if repository_cloud_evidence_collection_enabled(loaded_settings):
                 rc_settings = loaded_settings.evidence.repository_cloud
-                rc_service = create_repository_cloud_evidence_service(
-                    loaded_settings
-                )
+                rc_service = create_repository_cloud_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
                 if not inventory_paths:
                     from codestrata.application.evidence.repository_cloud.limitations import (
@@ -1642,39 +1529,30 @@ class AssessmentApplicationService:
                         AggregatedRepositoryCloudEvidence,
                     )
 
-                    repo_id = str(
-                        getattr(repository, "name", None) or repository.path
-                    )
+                    repo_id = str(getattr(repository, "name", None) or repository.path)
                     repository_cloud_evidence = AggregatedRepositoryCloudEvidence(
-                        bundle_id=make_bundle_id(
-                            repository_id=repo_id, fingerprint="insufficient"
-                        ),
+                        bundle_id=make_bundle_id(repository_id=repo_id, fingerprint="insufficient"),
                         repository_id=repo_id,
                         status=RepositoryCloudParseStatus.INSUFFICIENT_EVIDENCE,
                         limitations=cloud_standard_limitations(),
                         evidence_fingerprint="insufficient",
                     )
                 else:
-                    _rc_meta, rc_texts, rc_load_errors = (
-                        load_repository_cloud_inputs(
-                            relative_paths=inventory_paths,
-                            repository_root=Path(repository.path),
-                            ignore_path_markers=rc_settings.ignore_path_markers,
-                            max_files=rc_settings.max_files,
-                            max_file_chars=rc_settings.max_file_chars,
-                            max_file_bytes=rc_settings.max_file_bytes,
-                        )
+                    _rc_meta, rc_texts, rc_load_errors = load_repository_cloud_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rc_settings.ignore_path_markers,
+                        max_files=rc_settings.max_files,
+                        max_file_chars=rc_settings.max_file_chars,
+                        max_file_bytes=rc_settings.max_file_bytes,
                     )
                     repository_cloud_evidence = rc_service.collect(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         relative_paths=inventory_paths,
                         file_texts=rc_texts,
                         load_errors=rc_load_errors,
                         configuration_fingerprint=(
-                            f"evidence.repository_cloud.enabled="
-                            f"{rc_settings.enabled}"
+                            f"evidence.repository_cloud.enabled={rc_settings.enabled}"
                         ),
                     )
                 rc_write = write_repository_cloud_evidence_artifact(
@@ -1682,9 +1560,7 @@ class AssessmentApplicationService:
                     report_paths.run_directory,
                 )
                 repository_cloud_evidence_artifact = rc_write.path
-                repository_cloud_evidence_status = (
-                    repository_cloud_evidence.status.value
-                )
+                repository_cloud_evidence_status = repository_cloud_evidence.status.value
                 repository_cloud_evidence_candidate_count = rc_write.candidate_count
                 repository_cloud_evidence_technology_count = rc_write.technology_count
         except Exception as error:  # noqa: BLE001 - isolate evidence failures
@@ -1714,12 +1590,9 @@ class AssessmentApplicationService:
 
             if repository_ai_readiness_evidence_collection_enabled(loaded_settings):
                 rar_settings = loaded_settings.evidence.repository_ai_readiness
-                rar_service = create_repository_ai_readiness_evidence_service(
-                    loaded_settings
-                )
+                rar_service = create_repository_ai_readiness_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
                 if not inventory_paths:
                     from codestrata.application.evidence.repository_ai_readiness.limitations import (  # noqa: E501
@@ -1735,41 +1608,30 @@ class AssessmentApplicationService:
                         AggregatedRepositoryAiReadinessEvidence,
                     )
 
-                    repo_id = str(
-                        getattr(repository, "name", None) or repository.path
-                    )
-                    repository_ai_readiness_evidence = (
-                        AggregatedRepositoryAiReadinessEvidence(
-                            bundle_id=make_bundle_id(
-                                repository_id=repo_id, fingerprint="insufficient"
-                            ),
-                            repository_id=repo_id,
-                            status=RepositoryAiReadinessParseStatus.INSUFFICIENT_EVIDENCE,
-                            limitations=ai_readiness_standard_limitations(),
-                            evidence_fingerprint="insufficient",
-                        )
+                    repo_id = str(getattr(repository, "name", None) or repository.path)
+                    repository_ai_readiness_evidence = AggregatedRepositoryAiReadinessEvidence(
+                        bundle_id=make_bundle_id(repository_id=repo_id, fingerprint="insufficient"),
+                        repository_id=repo_id,
+                        status=RepositoryAiReadinessParseStatus.INSUFFICIENT_EVIDENCE,
+                        limitations=ai_readiness_standard_limitations(),
+                        evidence_fingerprint="insufficient",
                     )
                 else:
-                    _rar_meta, rar_texts, rar_load_errors = (
-                        load_repository_ai_readiness_inputs(
-                            relative_paths=inventory_paths,
-                            repository_root=Path(repository.path),
-                            ignore_path_markers=rar_settings.ignore_path_markers,
-                            max_files=rar_settings.max_files,
-                            max_file_chars=rar_settings.max_file_chars,
-                            max_file_bytes=rar_settings.max_file_bytes,
-                        )
+                    _rar_meta, rar_texts, rar_load_errors = load_repository_ai_readiness_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rar_settings.ignore_path_markers,
+                        max_files=rar_settings.max_files,
+                        max_file_chars=rar_settings.max_file_chars,
+                        max_file_bytes=rar_settings.max_file_bytes,
                     )
                     repository_ai_readiness_evidence = rar_service.collect(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         relative_paths=inventory_paths,
                         file_texts=rar_texts,
                         load_errors=rar_load_errors,
                         configuration_fingerprint=(
-                            f"evidence.repository_ai_readiness.enabled="
-                            f"{rar_settings.enabled}"
+                            f"evidence.repository_ai_readiness.enabled={rar_settings.enabled}"
                         ),
                     )
                 rar_write = write_repository_ai_readiness_evidence_artifact(
@@ -1780,12 +1642,8 @@ class AssessmentApplicationService:
                 repository_ai_readiness_evidence_status = (
                     repository_ai_readiness_evidence.status.value
                 )
-                repository_ai_readiness_evidence_candidate_count = (
-                    rar_write.candidate_count
-                )
-                repository_ai_readiness_evidence_technology_count = (
-                    rar_write.technology_count
-                )
+                repository_ai_readiness_evidence_candidate_count = rar_write.candidate_count
+                repository_ai_readiness_evidence_technology_count = rar_write.technology_count
         except Exception as error:  # noqa: BLE001 - isolate evidence failures
             repository_ai_readiness_evidence_artifact = None
             repository_ai_readiness_evidence_status = "failed"
@@ -1813,12 +1671,9 @@ class AssessmentApplicationService:
 
             if repository_performance_evidence_collection_enabled(loaded_settings):
                 rpe_settings = loaded_settings.evidence.repository_performance
-                rpe_service = create_repository_performance_evidence_service(
-                    loaded_settings
-                )
+                rpe_service = create_repository_performance_evidence_service(loaded_settings)
                 inventory_paths = tuple(
-                    str(path)
-                    for path in getattr(repository, "files", ()) or ()
+                    str(path) for path in getattr(repository, "files", ()) or ()
                 )
                 if not inventory_paths:
                     from codestrata.application.evidence.repository_performance.limitations import (
@@ -1834,41 +1689,30 @@ class AssessmentApplicationService:
                         AggregatedRepositoryPerformanceEvidence,
                     )
 
-                    repo_id = str(
-                        getattr(repository, "name", None) or repository.path
-                    )
-                    repository_performance_evidence = (
-                        AggregatedRepositoryPerformanceEvidence(
-                            bundle_id=make_bundle_id(
-                                repository_id=repo_id, fingerprint="insufficient"
-                            ),
-                            repository_id=repo_id,
-                            status=RepositoryPerformanceParseStatus.INSUFFICIENT_EVIDENCE,
-                            limitations=performance_standard_limitations(),
-                            evidence_fingerprint="insufficient",
-                        )
+                    repo_id = str(getattr(repository, "name", None) or repository.path)
+                    repository_performance_evidence = AggregatedRepositoryPerformanceEvidence(
+                        bundle_id=make_bundle_id(repository_id=repo_id, fingerprint="insufficient"),
+                        repository_id=repo_id,
+                        status=RepositoryPerformanceParseStatus.INSUFFICIENT_EVIDENCE,
+                        limitations=performance_standard_limitations(),
+                        evidence_fingerprint="insufficient",
                     )
                 else:
-                    _rpe_meta, rpe_texts, rpe_load_errors = (
-                        load_repository_performance_inputs(
-                            relative_paths=inventory_paths,
-                            repository_root=Path(repository.path),
-                            ignore_path_markers=rpe_settings.ignore_path_markers,
-                            max_files=rpe_settings.max_files,
-                            max_file_chars=rpe_settings.max_file_chars,
-                            max_file_bytes=rpe_settings.max_file_bytes,
-                        )
+                    _rpe_meta, rpe_texts, rpe_load_errors = load_repository_performance_inputs(
+                        relative_paths=inventory_paths,
+                        repository_root=Path(repository.path),
+                        ignore_path_markers=rpe_settings.ignore_path_markers,
+                        max_files=rpe_settings.max_files,
+                        max_file_chars=rpe_settings.max_file_chars,
+                        max_file_bytes=rpe_settings.max_file_bytes,
                     )
                     repository_performance_evidence = rpe_service.collect(
-                        repository_id=str(
-                            getattr(repository, "name", None) or repository.path
-                        ),
+                        repository_id=str(getattr(repository, "name", None) or repository.path),
                         relative_paths=inventory_paths,
                         file_texts=rpe_texts,
                         load_errors=rpe_load_errors,
                         configuration_fingerprint=(
-                            f"evidence.repository_performance.enabled="
-                            f"{rpe_settings.enabled}"
+                            f"evidence.repository_performance.enabled={rpe_settings.enabled}"
                         ),
                     )
                 rpe_write = write_repository_performance_evidence_artifact(
@@ -1879,12 +1723,8 @@ class AssessmentApplicationService:
                 repository_performance_evidence_status = (
                     repository_performance_evidence.status.value
                 )
-                repository_performance_evidence_candidate_count = (
-                    rpe_write.candidate_count
-                )
-                repository_performance_evidence_technology_count = (
-                    rpe_write.technology_count
-                )
+                repository_performance_evidence_candidate_count = rpe_write.candidate_count
+                repository_performance_evidence_technology_count = rpe_write.technology_count
         except Exception as error:  # noqa: BLE001 - isolate evidence failures
             repository_performance_evidence_artifact = None
             repository_performance_evidence_status = "failed"
@@ -2074,19 +1914,11 @@ class AssessmentApplicationService:
                         if security_pack_result is not None
                         else None
                     )
-                    pack_findings = (
-                        pack_eval.findings if pack_eval is not None else ()
-                    )
+                    pack_findings = pack_eval.findings if pack_eval is not None else ()
                     matched = len(pack_findings)
-                    executed = (
-                        len(pack_eval.rules_evaluated) if pack_eval is not None else 0
-                    )
-                    skipped = (
-                        len(pack_eval.rules_skipped) if pack_eval is not None else 0
-                    )
-                    evidence_on = bool(
-                        loaded_settings.evidence.repository_sensitive.enabled
-                    )
+                    executed = len(pack_eval.rules_evaluated) if pack_eval is not None else 0
+                    skipped = len(pack_eval.rules_skipped) if pack_eval is not None else 0
+                    evidence_on = bool(loaded_settings.evidence.repository_sensitive.enabled)
                     evidence_available = repository_sensitive_evidence is not None
                     security_section = sec_assembler.assemble(
                         repository_id=repo_id,
@@ -2104,9 +1936,7 @@ class AssessmentApplicationService:
                             security_pack_result.evidence_pipeline
                             if security_pack_result is not None
                             else (
-                                "repository_sensitive"
-                                if evidence_available
-                                else "not_configured"
+                                "repository_sensitive" if evidence_available else "not_configured"
                             )
                         ),
                         evidence_fingerprint=(
@@ -2203,9 +2033,7 @@ class AssessmentApplicationService:
                             not_matched,
                             not_applicable,
                             failed,
-                        ) = _count_rule_execution_statuses(
-                            testing_pack_result.rule_execution_facts
-                        )
+                        ) = _count_rule_execution_statuses(testing_pack_result.rule_execution_facts)
                     testing_section = test_assembler.assemble(
                         repository_id=repo_id,
                         findings=pack_findings,
@@ -2321,9 +2149,7 @@ class AssessmentApplicationService:
                             not_matched,
                             not_applicable,
                             failed,
-                        ) = _count_rule_execution_statuses(
-                            cloud_pack_result.rule_execution_facts
-                        )
+                        ) = _count_rule_execution_statuses(cloud_pack_result.rule_execution_facts)
                     cloud_section = cloud_assembler.assemble(
                         repository_id=repo_id,
                         findings=pack_findings,
@@ -2363,9 +2189,7 @@ class AssessmentApplicationService:
                             f"{loaded_settings.evidence.repository_cloud.enabled}"
                         ),
                         diagnostics=(
-                            cloud_pack_result.diagnostics
-                            if cloud_pack_result is not None
-                            else ()
+                            cloud_pack_result.diagnostics if cloud_pack_result is not None else ()
                         ),
                         include_findings=cloud_cfg.include_findings,
                         include_coverage=cloud_cfg.include_coverage,
@@ -2789,23 +2613,16 @@ class AssessmentApplicationService:
         architecture_report_conclusion_count = None
         architecture_report_recommendation_group_count = None
         architecture_report_adapter_ms = None
-        include_architecture_assessment_artifact = (
-            architecture_assessment_artifact is not None
-        )
+        include_architecture_assessment_artifact = architecture_assessment_artifact is not None
         report_architecture_cfg = loaded_settings.report.sections.architecture
-        if (
-            report_architecture_cfg.enabled
-            and architecture_section_for_report is not None
-        ):
+        if report_architecture_cfg.enabled and architecture_section_for_report is not None:
             from codestrata.reporting.architecture.adapter import ArchitectureReportAdapter
 
             adapter_started = perf_counter()
             try:
                 architecture_report_section = ArchitectureReportAdapter().adapt(
                     architecture_section_for_report,
-                    include_executive_summary=(
-                        report_architecture_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_architecture_cfg.include_executive_summary),
                     include_metrics=report_architecture_cfg.include_metrics,
                     include_conclusions=report_architecture_cfg.include_conclusions,
                     include_recommendation_groups=(
@@ -2817,27 +2634,17 @@ class AssessmentApplicationService:
                     include_traceability=report_architecture_cfg.include_traceability,
                     include_strengths=report_architecture_cfg.include_strengths,
                 )
-                architecture_report_adapter_ms = round(
-                    (perf_counter() - adapter_started) * 1000, 2
-                )
+                architecture_report_adapter_ms = round((perf_counter() - adapter_started) * 1000, 2)
                 architecture_report_status = architecture_report_section.status
-                architecture_report_section_version = (
-                    architecture_report_section.section_version
-                )
-                architecture_report_finding_count = len(
-                    architecture_report_section.findings
-                )
-                architecture_report_conclusion_count = len(
-                    architecture_report_section.conclusions
-                )
+                architecture_report_section_version = architecture_report_section.section_version
+                architecture_report_finding_count = len(architecture_report_section.findings)
+                architecture_report_conclusion_count = len(architecture_report_section.conclusions)
                 architecture_report_recommendation_group_count = len(
                     architecture_report_section.recommendation_groups
                 )
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 architecture_report_section = None
-                architecture_report_adapter_ms = round(
-                    (perf_counter() - adapter_started) * 1000, 2
-                )
+                architecture_report_adapter_ms = round((perf_counter() - adapter_started) * 1000, 2)
                 architecture_report_status = "failed"
                 warn(
                     "Architecture report section could not be built; "
@@ -2851,9 +2658,7 @@ class AssessmentApplicationService:
                 "section was available for this run."
             )
         technical_debt_report_section = None
-        technical_debt_report_enabled = (
-            loaded_settings.report.sections.technical_debt.enabled
-        )
+        technical_debt_report_enabled = loaded_settings.report.sections.technical_debt.enabled
         technical_debt_report_status = None
         technical_debt_report_section_version = None
         technical_debt_report_finding_count = None
@@ -2861,29 +2666,20 @@ class AssessmentApplicationService:
         technical_debt_report_hotspot_count = None
         technical_debt_report_adapter_ms = None
         report_technical_debt_cfg = loaded_settings.report.sections.technical_debt
-        if (
-            report_technical_debt_cfg.enabled
-            and technical_debt_section_for_report is not None
-        ):
+        if report_technical_debt_cfg.enabled and technical_debt_section_for_report is not None:
             from codestrata.reporting.technical_debt.adapter import TechnicalDebtReportAdapter
 
             td_adapter_started = perf_counter()
             try:
                 technical_debt_report_section = TechnicalDebtReportAdapter().adapt(
                     technical_debt_section_for_report,
-                    include_executive_summary=(
-                        report_technical_debt_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_technical_debt_cfg.include_executive_summary),
                     include_metrics=report_technical_debt_cfg.include_metrics,
                     include_themes=report_technical_debt_cfg.include_themes,
                     include_hotspots=report_technical_debt_cfg.include_hotspots,
                     include_conclusions=report_technical_debt_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_technical_debt_cfg.include_recommendations
-                    ),
-                    include_test_observation=(
-                        report_technical_debt_cfg.include_test_observation
-                    ),
+                    include_recommendations=(report_technical_debt_cfg.include_recommendations),
+                    include_test_observation=(report_technical_debt_cfg.include_test_observation),
                     include_coverage=report_technical_debt_cfg.include_coverage,
                     include_limitations=report_technical_debt_cfg.include_limitations,
                     include_traceability=report_technical_debt_cfg.include_traceability,
@@ -2896,9 +2692,7 @@ class AssessmentApplicationService:
                     technical_debt_report_section.section_version
                 )
                 technical_debt_report_finding_count = int(
-                    technical_debt_report_section.metadata.get(
-                        "production_finding_count", "0"
-                    )
+                    technical_debt_report_section.metadata.get("production_finding_count", "0")
                     or "0"
                 )
                 technical_debt_report_conclusion_count = len(
@@ -2933,31 +2727,20 @@ class AssessmentApplicationService:
         dependency_report_hotspot_count = None
         dependency_report_adapter_ms = None
         report_dependency_cfg = loaded_settings.report.sections.dependency
-        if (
-            report_dependency_cfg.enabled
-            and dependency_section_for_report is not None
-        ):
+        if report_dependency_cfg.enabled and dependency_section_for_report is not None:
             from codestrata.reporting.dependency.adapter import DependencyReportAdapter
 
             dep_adapter_started = perf_counter()
             try:
                 dependency_report_section = DependencyReportAdapter().adapt(
                     dependency_section_for_report,
-                    include_executive_summary=(
-                        report_dependency_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_dependency_cfg.include_executive_summary),
                     include_landscape=report_dependency_cfg.include_landscape,
-                    include_production_health=(
-                        report_dependency_cfg.include_production_health
-                    ),
-                    include_test_observations=(
-                        report_dependency_cfg.include_test_observations
-                    ),
+                    include_production_health=(report_dependency_cfg.include_production_health),
+                    include_test_observations=(report_dependency_cfg.include_test_observations),
                     include_hotspots=report_dependency_cfg.include_hotspots,
                     include_conclusions=report_dependency_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_dependency_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_dependency_cfg.include_recommendations),
                     include_coverage=report_dependency_cfg.include_coverage,
                     include_limitations=report_dependency_cfg.include_limitations,
                     include_traceability=report_dependency_cfg.include_traceability,
@@ -2966,21 +2749,12 @@ class AssessmentApplicationService:
                     (perf_counter() - dep_adapter_started) * 1000, 2
                 )
                 dependency_report_status = dependency_report_section.status
-                dependency_report_section_version = (
-                    dependency_report_section.section_version
-                )
+                dependency_report_section_version = dependency_report_section.section_version
                 dependency_report_finding_count = int(
-                    dependency_report_section.metadata.get(
-                        "production_finding_count", "0"
-                    )
-                    or "0"
+                    dependency_report_section.metadata.get("production_finding_count", "0") or "0"
                 )
-                dependency_report_conclusion_count = len(
-                    dependency_report_section.conclusions
-                )
-                dependency_report_hotspot_count = len(
-                    dependency_report_section.manifest_hotspots
-                )
+                dependency_report_conclusion_count = len(dependency_report_section.conclusions)
+                dependency_report_hotspot_count = len(dependency_report_section.manifest_hotspots)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 dependency_report_section = None
                 dependency_report_adapter_ms = round(
@@ -3007,53 +2781,35 @@ class AssessmentApplicationService:
         security_report_hotspot_count = None
         security_report_adapter_ms = None
         report_security_cfg = loaded_settings.report.sections.security
-        if (
-            report_security_cfg.enabled
-            and security_section_for_report is not None
-        ):
+        if report_security_cfg.enabled and security_section_for_report is not None:
             from codestrata.reporting.security.adapter import SecurityReportAdapter
 
             sec_adapter_started = perf_counter()
             try:
                 security_report_section = SecurityReportAdapter().adapt(
                     security_section_for_report,
-                    include_executive_summary=(
-                        report_security_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_security_cfg.include_executive_summary),
                     include_coverage=report_security_cfg.include_coverage,
                     include_findings=report_security_cfg.include_findings,
                     include_themes=report_security_cfg.include_themes,
                     include_hotspots=report_security_cfg.include_hotspots,
                     include_conclusions=report_security_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_security_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_security_cfg.include_recommendations),
                     include_diagnostics=report_security_cfg.include_diagnostics,
                     include_limitations=report_security_cfg.include_limitations,
                     include_traceability=report_security_cfg.include_traceability,
                 )
-                security_report_adapter_ms = round(
-                    (perf_counter() - sec_adapter_started) * 1000, 2
-                )
+                security_report_adapter_ms = round((perf_counter() - sec_adapter_started) * 1000, 2)
                 security_report_status = security_report_section.status
-                security_report_section_version = (
-                    security_report_section.section_version
-                )
+                security_report_section_version = security_report_section.section_version
                 security_report_finding_count = int(
-                    security_report_section.metadata.get(
-                        "production_finding_count", "0"
-                    )
-                    or "0"
+                    security_report_section.metadata.get("production_finding_count", "0") or "0"
                 )
-                security_report_conclusion_count = len(
-                    security_report_section.conclusions
-                )
+                security_report_conclusion_count = len(security_report_section.conclusions)
                 security_report_hotspot_count = len(security_report_section.hotspots)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 security_report_section = None
-                security_report_adapter_ms = round(
-                    (perf_counter() - sec_adapter_started) * 1000, 2
-                )
+                security_report_adapter_ms = round((perf_counter() - sec_adapter_started) * 1000, 2)
                 security_report_status = "failed"
                 warn(
                     "Security report section could not be built; "
@@ -3074,51 +2830,34 @@ class AssessmentApplicationService:
         testing_report_conclusion_count = None
         testing_report_adapter_ms = None
         report_testing_cfg = loaded_settings.report.sections.testing
-        if (
-            report_testing_cfg.enabled
-            and testing_section_for_report is not None
-        ):
+        if report_testing_cfg.enabled and testing_section_for_report is not None:
             from codestrata.reporting.testing.adapter import TestingReportAdapter
 
             test_adapter_started = perf_counter()
             try:
                 testing_report_section = TestingReportAdapter().adapt(
                     testing_section_for_report,
-                    include_executive_summary=(
-                        report_testing_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_testing_cfg.include_executive_summary),
                     include_coverage=report_testing_cfg.include_coverage,
                     include_inventory=report_testing_cfg.include_inventory,
-                    include_execution_summary=(
-                        report_testing_cfg.include_execution_summary
-                    ),
+                    include_execution_summary=(report_testing_cfg.include_execution_summary),
                     include_themes=report_testing_cfg.include_themes,
                     include_conclusions=report_testing_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_testing_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_testing_cfg.include_recommendations),
                     include_diagnostics=report_testing_cfg.include_diagnostics,
                     include_limitations=report_testing_cfg.include_limitations,
                     include_traceability=report_testing_cfg.include_traceability,
                 )
-                testing_report_adapter_ms = round(
-                    (perf_counter() - test_adapter_started) * 1000, 2
-                )
+                testing_report_adapter_ms = round((perf_counter() - test_adapter_started) * 1000, 2)
                 testing_report_status = testing_report_section.status
-                testing_report_section_version = (
-                    testing_report_section.section_version
-                )
+                testing_report_section_version = testing_report_section.section_version
                 testing_report_finding_count = int(
                     testing_report_section.metadata.get("finding_count", "0") or "0"
                 )
-                testing_report_conclusion_count = len(
-                    testing_report_section.conclusions
-                )
+                testing_report_conclusion_count = len(testing_report_section.conclusions)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 testing_report_section = None
-                testing_report_adapter_ms = round(
-                    (perf_counter() - test_adapter_started) * 1000, 2
-                )
+                testing_report_adapter_ms = round((perf_counter() - test_adapter_started) * 1000, 2)
                 testing_report_status = "failed"
                 warn(
                     "Test report section could not be built; "
@@ -3149,26 +2888,18 @@ class AssessmentApplicationService:
                 )
                 cloud_report_section = CloudReportAdapter().adapt(
                     cloud_section_for_report,
-                    include_executive_summary=(
-                        report_cloud_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_cloud_cfg.include_executive_summary),
                     include_coverage=report_cloud_cfg.include_coverage,
                     include_inventory=include_inventory,
-                    include_execution_summary=(
-                        report_cloud_cfg.include_execution_summary
-                    ),
+                    include_execution_summary=(report_cloud_cfg.include_execution_summary),
                     include_themes=report_cloud_cfg.include_themes,
                     include_conclusions=report_cloud_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_cloud_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_cloud_cfg.include_recommendations),
                     include_diagnostics=report_cloud_cfg.include_diagnostics,
                     include_limitations=report_cloud_cfg.include_limitations,
                     include_traceability=report_cloud_cfg.include_traceability,
                 )
-                cloud_report_adapter_ms = round(
-                    (perf_counter() - cloud_adapter_started) * 1000, 2
-                )
+                cloud_report_adapter_ms = round((perf_counter() - cloud_adapter_started) * 1000, 2)
                 cloud_report_status = cloud_report_section.status
                 cloud_report_section_version = cloud_report_section.section_version
                 cloud_report_finding_count = int(
@@ -3177,9 +2908,7 @@ class AssessmentApplicationService:
                 cloud_report_conclusion_count = len(cloud_report_section.conclusions)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 cloud_report_section = None
-                cloud_report_adapter_ms = round(
-                    (perf_counter() - cloud_adapter_started) * 1000, 2
-                )
+                cloud_report_adapter_ms = round((perf_counter() - cloud_adapter_started) * 1000, 2)
                 cloud_report_status = "failed"
                 warn(
                     "Cloud report section could not be built; "
@@ -3193,9 +2922,7 @@ class AssessmentApplicationService:
                 "section was available for this run."
             )
         ai_readiness_report_section = None
-        ai_readiness_report_enabled = (
-            loaded_settings.report.sections.ai_readiness.enabled
-        )
+        ai_readiness_report_enabled = loaded_settings.report.sections.ai_readiness.enabled
         ai_readiness_report_status = None
         ai_readiness_report_section_version = None
         ai_readiness_report_finding_count = None
@@ -3212,19 +2939,13 @@ class AssessmentApplicationService:
                 )
                 ai_readiness_report_section = AiReadinessReportAdapter().adapt(
                     ai_readiness_section_for_report,
-                    include_executive_summary=(
-                        report_ai_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_ai_cfg.include_executive_summary),
                     include_coverage=report_ai_cfg.include_coverage,
                     include_inventory=include_inventory,
-                    include_execution_summary=(
-                        report_ai_cfg.include_execution_summary
-                    ),
+                    include_execution_summary=(report_ai_cfg.include_execution_summary),
                     include_themes=report_ai_cfg.include_themes,
                     include_conclusions=report_ai_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_ai_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_ai_cfg.include_recommendations),
                     include_diagnostics=report_ai_cfg.include_diagnostics,
                     include_limitations=report_ai_cfg.include_limitations,
                     include_traceability=report_ai_cfg.include_traceability,
@@ -3233,15 +2954,11 @@ class AssessmentApplicationService:
                     (perf_counter() - ai_adapter_started) * 1000, 2
                 )
                 ai_readiness_report_status = ai_readiness_report_section.status
-                ai_readiness_report_section_version = (
-                    ai_readiness_report_section.section_version
-                )
+                ai_readiness_report_section_version = ai_readiness_report_section.section_version
                 ai_readiness_report_finding_count = int(
                     ai_readiness_report_section.metadata.get("finding_count", "0") or "0"
                 )
-                ai_readiness_report_conclusion_count = len(
-                    ai_readiness_report_section.conclusions
-                )
+                ai_readiness_report_conclusion_count = len(ai_readiness_report_section.conclusions)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 ai_readiness_report_section = None
                 ai_readiness_report_adapter_ms = round(
@@ -3260,9 +2977,7 @@ class AssessmentApplicationService:
                 "assessment section was available for this run."
             )
         performance_report_section = None
-        performance_report_enabled = (
-            loaded_settings.report.sections.performance.enabled
-        )
+        performance_report_enabled = loaded_settings.report.sections.performance.enabled
         performance_report_status = None
         performance_report_section_version = None
         performance_report_finding_count = None
@@ -3279,19 +2994,13 @@ class AssessmentApplicationService:
                 )
                 performance_report_section = PerformanceReportAdapter().adapt(
                     performance_section_for_report,
-                    include_executive_summary=(
-                        report_perf_cfg.include_executive_summary
-                    ),
+                    include_executive_summary=(report_perf_cfg.include_executive_summary),
                     include_coverage=report_perf_cfg.include_coverage,
                     include_inventory=include_inventory,
-                    include_execution_summary=(
-                        report_perf_cfg.include_execution_summary
-                    ),
+                    include_execution_summary=(report_perf_cfg.include_execution_summary),
                     include_themes=report_perf_cfg.include_themes,
                     include_conclusions=report_perf_cfg.include_conclusions,
-                    include_recommendations=(
-                        report_perf_cfg.include_recommendations
-                    ),
+                    include_recommendations=(report_perf_cfg.include_recommendations),
                     include_diagnostics=report_perf_cfg.include_diagnostics,
                     include_limitations=report_perf_cfg.include_limitations,
                     include_traceability=report_perf_cfg.include_traceability,
@@ -3300,15 +3009,11 @@ class AssessmentApplicationService:
                     (perf_counter() - perf_adapter_started) * 1000, 2
                 )
                 performance_report_status = performance_report_section.status
-                performance_report_section_version = (
-                    performance_report_section.section_version
-                )
+                performance_report_section_version = performance_report_section.section_version
                 performance_report_finding_count = int(
                     performance_report_section.metadata.get("finding_count", "0") or "0"
                 )
-                performance_report_conclusion_count = len(
-                    performance_report_section.conclusions
-                )
+                performance_report_conclusion_count = len(performance_report_section.conclusions)
             except Exception as error:  # noqa: BLE001 - isolate report adapter failures
                 performance_report_section = None
                 performance_report_adapter_ms = round(
@@ -3391,18 +3096,10 @@ class AssessmentApplicationService:
                 report_ms=None,
                 graph_ms=graph_elapsed_ms,
                 rules_ms=rules_elapsed_ms,
-                files_loaded=(
-                    shared_source_stats.files_loaded if shared_source_stats else None
-                ),
-                files_skipped=(
-                    shared_source_stats.files_skipped if shared_source_stats else None
-                ),
-                cache_hits=(
-                    shared_source_stats.cache_hits if shared_source_stats else None
-                ),
-                cache_misses=(
-                    shared_source_stats.cache_misses if shared_source_stats else None
-                ),
+                files_loaded=(shared_source_stats.files_loaded if shared_source_stats else None),
+                files_skipped=(shared_source_stats.files_skipped if shared_source_stats else None),
+                cache_hits=(shared_source_stats.cache_hits if shared_source_stats else None),
+                cache_misses=(shared_source_stats.cache_misses if shared_source_stats else None),
                 peak_rss_mb=peak_memory,
             ),
             assessment_rule_evaluation=rule_evaluation,
@@ -3522,9 +3219,7 @@ class AssessmentApplicationService:
             repository_sensitive_evidence_configuration_fact_count=(
                 repository_sensitive_evidence_configuration_fact_count
             ),
-            repository_sensitive_evidence_artifact=(
-                repository_sensitive_evidence_artifact
-            ),
+            repository_sensitive_evidence_artifact=(repository_sensitive_evidence_artifact),
             repository_testing_evidence_status=repository_testing_evidence_status,
             repository_testing_evidence_candidate_count=(
                 repository_testing_evidence_candidate_count
@@ -3532,43 +3227,27 @@ class AssessmentApplicationService:
             repository_testing_evidence_framework_count=(
                 repository_testing_evidence_framework_count
             ),
-            repository_testing_evidence_artifact=(
-                repository_testing_evidence_artifact
-            ),
+            repository_testing_evidence_artifact=(repository_testing_evidence_artifact),
             repository_cloud_evidence_status=repository_cloud_evidence_status,
-            repository_cloud_evidence_candidate_count=(
-                repository_cloud_evidence_candidate_count
-            ),
-            repository_cloud_evidence_technology_count=(
-                repository_cloud_evidence_technology_count
-            ),
-            repository_cloud_evidence_artifact=(
-                repository_cloud_evidence_artifact
-            ),
-            repository_ai_readiness_evidence_status=(
-                repository_ai_readiness_evidence_status
-            ),
+            repository_cloud_evidence_candidate_count=(repository_cloud_evidence_candidate_count),
+            repository_cloud_evidence_technology_count=(repository_cloud_evidence_technology_count),
+            repository_cloud_evidence_artifact=(repository_cloud_evidence_artifact),
+            repository_ai_readiness_evidence_status=(repository_ai_readiness_evidence_status),
             repository_ai_readiness_evidence_candidate_count=(
                 repository_ai_readiness_evidence_candidate_count
             ),
             repository_ai_readiness_evidence_technology_count=(
                 repository_ai_readiness_evidence_technology_count
             ),
-            repository_ai_readiness_evidence_artifact=(
-                repository_ai_readiness_evidence_artifact
-            ),
-            repository_performance_evidence_status=(
-                repository_performance_evidence_status
-            ),
+            repository_ai_readiness_evidence_artifact=(repository_ai_readiness_evidence_artifact),
+            repository_performance_evidence_status=(repository_performance_evidence_status),
             repository_performance_evidence_candidate_count=(
                 repository_performance_evidence_candidate_count
             ),
             repository_performance_evidence_technology_count=(
                 repository_performance_evidence_technology_count
             ),
-            repository_performance_evidence_artifact=(
-                repository_performance_evidence_artifact
-            ),
+            repository_performance_evidence_artifact=(repository_performance_evidence_artifact),
             security_assessment_status=security_assessment_status,
             security_assessment_finding_count=security_assessment_finding_count,
             security_assessment_artifact=security_assessment_artifact,
@@ -3724,12 +3403,8 @@ class AssessmentApplicationService:
                             engine_assessment_id=publish.engine_assessment_id,
                             platform_assessment_id=publish.assessment_id,
                             repository_name=repository.name,
-                            html_report_path=(
-                                result.html_report_path if write_reports else None
-                            ),
-                            json_report_path=(
-                                result.json_report_path if write_reports else None
-                            ),
+                            html_report_path=(result.html_report_path if write_reports else None),
+                            json_report_path=(result.json_report_path if write_reports else None),
                         )
                         if (
                             artifact_batch.status in {"failed", "partial"}
@@ -3746,10 +3421,8 @@ class AssessmentApplicationService:
                             )
                             if artifact_policy.intelligence_processing_active():
                                 try:
-                                    intelligence = (
-                                        platform_client.process_assessment_intelligence(
-                                            assessment_id=publish.assessment_id,
-                                        )
+                                    intelligence = platform_client.process_assessment_intelligence(
+                                        assessment_id=publish.assessment_id,
                                     )
                                     status = str(intelligence.get("status", "unknown"))
                                     active_console.print(
@@ -4476,9 +4149,7 @@ def _build_command_result(
 
     evaluation = rule_evaluation if isinstance(rule_evaluation, RuleEvaluationResult) else None
     phase3_recommendations = (
-        recommendation_result
-        if isinstance(recommendation_result, RecommendationResult)
-        else None
+        recommendation_result if isinstance(recommendation_result, RecommendationResult) else None
     )
     customer_findings = merge_customer_findings(
         analysis_result.findings,
@@ -4518,9 +4189,7 @@ def _build_command_result(
     if architecture_conclusion_count is not None:
         graph_fields["architecture_conclusion_count"] = architecture_conclusion_count
     if architecture_conclusions_artifact is not None:
-        graph_fields["architecture_conclusions_artifact_path"] = (
-            architecture_conclusions_artifact
-        )
+        graph_fields["architecture_conclusions_artifact_path"] = architecture_conclusions_artifact
     if architecture_assessment_status is not None:
         graph_fields["architecture_assessment_status"] = architecture_assessment_status
     if architecture_assessment_finding_count is not None:
@@ -4528,9 +4197,7 @@ def _build_command_result(
             architecture_assessment_finding_count
         )
     if architecture_assessment_artifact is not None:
-        graph_fields["architecture_assessment_artifact_path"] = (
-            architecture_assessment_artifact
-        )
+        graph_fields["architecture_assessment_artifact_path"] = architecture_assessment_artifact
     if technical_debt_assessment_status is not None:
         graph_fields["technical_debt_assessment_status"] = technical_debt_assessment_status
     if technical_debt_assessment_finding_count is not None:
@@ -4538,19 +4205,13 @@ def _build_command_result(
             technical_debt_assessment_finding_count
         )
     if technical_debt_assessment_artifact is not None:
-        graph_fields["technical_debt_assessment_artifact_path"] = (
-            technical_debt_assessment_artifact
-        )
+        graph_fields["technical_debt_assessment_artifact_path"] = technical_debt_assessment_artifact
     if dependency_assessment_status is not None:
         graph_fields["dependency_assessment_status"] = dependency_assessment_status
     if dependency_assessment_finding_count is not None:
-        graph_fields["dependency_assessment_finding_count"] = (
-            dependency_assessment_finding_count
-        )
+        graph_fields["dependency_assessment_finding_count"] = dependency_assessment_finding_count
     if dependency_assessment_artifact is not None:
-        graph_fields["dependency_assessment_artifact_path"] = (
-            dependency_assessment_artifact
-        )
+        graph_fields["dependency_assessment_artifact_path"] = dependency_assessment_artifact
     if dependency_evidence_status is not None:
         graph_fields["dependency_evidence_status"] = dependency_evidence_status
     if dependency_evidence_declaration_count is not None:
@@ -4560,9 +4221,7 @@ def _build_command_result(
     if dependency_evidence_artifact is not None:
         graph_fields["dependency_evidence_artifact_path"] = dependency_evidence_artifact
     if repository_sensitive_evidence_status is not None:
-        graph_fields["repository_sensitive_evidence_status"] = (
-            repository_sensitive_evidence_status
-        )
+        graph_fields["repository_sensitive_evidence_status"] = repository_sensitive_evidence_status
     if repository_sensitive_evidence_artifact_count is not None:
         graph_fields["repository_sensitive_evidence_artifact_count"] = (
             repository_sensitive_evidence_artifact_count
@@ -4576,9 +4235,7 @@ def _build_command_result(
             repository_sensitive_evidence_artifact
         )
     if repository_testing_evidence_status is not None:
-        graph_fields["repository_testing_evidence_status"] = (
-            repository_testing_evidence_status
-        )
+        graph_fields["repository_testing_evidence_status"] = repository_testing_evidence_status
     if repository_testing_evidence_candidate_count is not None:
         graph_fields["repository_testing_evidence_candidate_count"] = (
             repository_testing_evidence_candidate_count
@@ -4592,9 +4249,7 @@ def _build_command_result(
             repository_testing_evidence_artifact
         )
     if repository_cloud_evidence_status is not None:
-        graph_fields["repository_cloud_evidence_status"] = (
-            repository_cloud_evidence_status
-        )
+        graph_fields["repository_cloud_evidence_status"] = repository_cloud_evidence_status
     if repository_cloud_evidence_candidate_count is not None:
         graph_fields["repository_cloud_evidence_candidate_count"] = (
             repository_cloud_evidence_candidate_count
@@ -4604,9 +4259,7 @@ def _build_command_result(
             repository_cloud_evidence_technology_count
         )
     if repository_cloud_evidence_artifact is not None:
-        graph_fields["repository_cloud_evidence_artifact_path"] = (
-            repository_cloud_evidence_artifact
-        )
+        graph_fields["repository_cloud_evidence_artifact_path"] = repository_cloud_evidence_artifact
     if repository_ai_readiness_evidence_status is not None:
         graph_fields["repository_ai_readiness_evidence_status"] = (
             repository_ai_readiness_evidence_status
@@ -4642,17 +4295,13 @@ def _build_command_result(
     if security_assessment_status is not None:
         graph_fields["security_assessment_status"] = security_assessment_status
     if security_assessment_finding_count is not None:
-        graph_fields["security_assessment_finding_count"] = (
-            security_assessment_finding_count
-        )
+        graph_fields["security_assessment_finding_count"] = security_assessment_finding_count
     if security_assessment_artifact is not None:
         graph_fields["security_assessment_artifact_path"] = security_assessment_artifact
     if testing_assessment_status is not None:
         graph_fields["testing_assessment_status"] = testing_assessment_status
     if testing_assessment_finding_count is not None:
-        graph_fields["testing_assessment_finding_count"] = (
-            testing_assessment_finding_count
-        )
+        graph_fields["testing_assessment_finding_count"] = testing_assessment_finding_count
     if testing_assessment_artifact is not None:
         graph_fields["testing_assessment_artifact_path"] = testing_assessment_artifact
     if cloud_assessment_status is not None:
@@ -4668,35 +4317,23 @@ def _build_command_result(
             ai_readiness_assessment_finding_count
         )
     if ai_readiness_assessment_artifact is not None:
-        graph_fields["ai_readiness_assessment_artifact_path"] = (
-            ai_readiness_assessment_artifact
-        )
+        graph_fields["ai_readiness_assessment_artifact_path"] = ai_readiness_assessment_artifact
     if performance_assessment_status is not None:
         graph_fields["performance_assessment_status"] = performance_assessment_status
     if performance_assessment_finding_count is not None:
-        graph_fields["performance_assessment_finding_count"] = (
-            performance_assessment_finding_count
-        )
+        graph_fields["performance_assessment_finding_count"] = performance_assessment_finding_count
     if performance_assessment_artifact is not None:
-        graph_fields["performance_assessment_artifact_path"] = (
-            performance_assessment_artifact
-        )
+        graph_fields["performance_assessment_artifact_path"] = performance_assessment_artifact
     if architecture_report_enabled is not None:
         graph_fields["architecture_report_enabled"] = architecture_report_enabled
     if architecture_report_status is not None:
         graph_fields["architecture_report_status"] = architecture_report_status
     if architecture_report_section_version is not None:
-        graph_fields["architecture_report_section_version"] = (
-            architecture_report_section_version
-        )
+        graph_fields["architecture_report_section_version"] = architecture_report_section_version
     if architecture_report_finding_count is not None:
-        graph_fields["architecture_report_finding_count"] = (
-            architecture_report_finding_count
-        )
+        graph_fields["architecture_report_finding_count"] = architecture_report_finding_count
     if architecture_report_conclusion_count is not None:
-        graph_fields["architecture_report_conclusion_count"] = (
-            architecture_report_conclusion_count
-        )
+        graph_fields["architecture_report_conclusion_count"] = architecture_report_conclusion_count
     if architecture_report_recommendation_group_count is not None:
         graph_fields["architecture_report_recommendation_group_count"] = (
             architecture_report_recommendation_group_count
@@ -4712,41 +4349,27 @@ def _build_command_result(
             technical_debt_report_section_version
         )
     if technical_debt_report_finding_count is not None:
-        graph_fields["technical_debt_report_finding_count"] = (
-            technical_debt_report_finding_count
-        )
+        graph_fields["technical_debt_report_finding_count"] = technical_debt_report_finding_count
     if technical_debt_report_conclusion_count is not None:
         graph_fields["technical_debt_report_conclusion_count"] = (
             technical_debt_report_conclusion_count
         )
     if technical_debt_report_hotspot_count is not None:
-        graph_fields["technical_debt_report_hotspot_count"] = (
-            technical_debt_report_hotspot_count
-        )
+        graph_fields["technical_debt_report_hotspot_count"] = technical_debt_report_hotspot_count
     if technical_debt_report_adapter_ms is not None:
-        graph_fields["technical_debt_report_adapter_ms"] = (
-            technical_debt_report_adapter_ms
-        )
+        graph_fields["technical_debt_report_adapter_ms"] = technical_debt_report_adapter_ms
     if dependency_report_enabled is not None:
         graph_fields["dependency_report_enabled"] = dependency_report_enabled
     if dependency_report_status is not None:
         graph_fields["dependency_report_status"] = dependency_report_status
     if dependency_report_section_version is not None:
-        graph_fields["dependency_report_section_version"] = (
-            dependency_report_section_version
-        )
+        graph_fields["dependency_report_section_version"] = dependency_report_section_version
     if dependency_report_finding_count is not None:
-        graph_fields["dependency_report_finding_count"] = (
-            dependency_report_finding_count
-        )
+        graph_fields["dependency_report_finding_count"] = dependency_report_finding_count
     if dependency_report_conclusion_count is not None:
-        graph_fields["dependency_report_conclusion_count"] = (
-            dependency_report_conclusion_count
-        )
+        graph_fields["dependency_report_conclusion_count"] = dependency_report_conclusion_count
     if dependency_report_hotspot_count is not None:
-        graph_fields["dependency_report_hotspot_count"] = (
-            dependency_report_hotspot_count
-        )
+        graph_fields["dependency_report_hotspot_count"] = dependency_report_hotspot_count
     if dependency_report_adapter_ms is not None:
         graph_fields["dependency_report_adapter_ms"] = dependency_report_adapter_ms
     if security_report_enabled is not None:
@@ -4754,15 +4377,11 @@ def _build_command_result(
     if security_report_status is not None:
         graph_fields["security_report_status"] = security_report_status
     if security_report_section_version is not None:
-        graph_fields["security_report_section_version"] = (
-            security_report_section_version
-        )
+        graph_fields["security_report_section_version"] = security_report_section_version
     if security_report_finding_count is not None:
         graph_fields["security_report_finding_count"] = security_report_finding_count
     if security_report_conclusion_count is not None:
-        graph_fields["security_report_conclusion_count"] = (
-            security_report_conclusion_count
-        )
+        graph_fields["security_report_conclusion_count"] = security_report_conclusion_count
     if security_report_hotspot_count is not None:
         graph_fields["security_report_hotspot_count"] = security_report_hotspot_count
     if security_report_adapter_ms is not None:
@@ -4776,9 +4395,7 @@ def _build_command_result(
     if testing_report_finding_count is not None:
         graph_fields["testing_report_finding_count"] = testing_report_finding_count
     if testing_report_conclusion_count is not None:
-        graph_fields["testing_report_conclusion_count"] = (
-            testing_report_conclusion_count
-        )
+        graph_fields["testing_report_conclusion_count"] = testing_report_conclusion_count
     if testing_report_adapter_ms is not None:
         graph_fields["testing_report_adapter_ms"] = testing_report_adapter_ms
     if cloud_report_enabled is not None:
@@ -4798,17 +4415,11 @@ def _build_command_result(
     if ai_readiness_report_status is not None:
         graph_fields["ai_readiness_report_status"] = ai_readiness_report_status
     if ai_readiness_report_section_version is not None:
-        graph_fields["ai_readiness_report_section_version"] = (
-            ai_readiness_report_section_version
-        )
+        graph_fields["ai_readiness_report_section_version"] = ai_readiness_report_section_version
     if ai_readiness_report_finding_count is not None:
-        graph_fields["ai_readiness_report_finding_count"] = (
-            ai_readiness_report_finding_count
-        )
+        graph_fields["ai_readiness_report_finding_count"] = ai_readiness_report_finding_count
     if ai_readiness_report_conclusion_count is not None:
-        graph_fields["ai_readiness_report_conclusion_count"] = (
-            ai_readiness_report_conclusion_count
-        )
+        graph_fields["ai_readiness_report_conclusion_count"] = ai_readiness_report_conclusion_count
     if ai_readiness_report_adapter_ms is not None:
         graph_fields["ai_readiness_report_adapter_ms"] = ai_readiness_report_adapter_ms
     if performance_report_enabled is not None:
@@ -4816,17 +4427,11 @@ def _build_command_result(
     if performance_report_status is not None:
         graph_fields["performance_report_status"] = performance_report_status
     if performance_report_section_version is not None:
-        graph_fields["performance_report_section_version"] = (
-            performance_report_section_version
-        )
+        graph_fields["performance_report_section_version"] = performance_report_section_version
     if performance_report_finding_count is not None:
-        graph_fields["performance_report_finding_count"] = (
-            performance_report_finding_count
-        )
+        graph_fields["performance_report_finding_count"] = performance_report_finding_count
     if performance_report_conclusion_count is not None:
-        graph_fields["performance_report_conclusion_count"] = (
-            performance_report_conclusion_count
-        )
+        graph_fields["performance_report_conclusion_count"] = performance_report_conclusion_count
     if performance_report_adapter_ms is not None:
         graph_fields["performance_report_adapter_ms"] = performance_report_adapter_ms
     if roadmap_report_enabled is not None:
@@ -4997,9 +4602,7 @@ def _cleanup_ephemeral_github_clone(
     try:
         removed = dispose_ephemeral_repository(repository)
     except OSError as error:
-        message = (
-            f"Failed to clean up ephemeral GitHub clone at {repository.path}: {error}"
-        )
+        message = f"Failed to clean up ephemeral GitHub clone at {repository.path}: {error}"
         logger.warning(message)
         if warn is not None:
             warn(message)
@@ -5109,9 +4712,7 @@ def _print_success_summary(
             f"Recommendations artifact: {_display_path(result.recommendations_artifact_path)}"
         )
     if result.architecture_assessment_status is not None:
-        console.print(
-            f"Architecture assessment: {result.architecture_assessment_status}"
-        )
+        console.print(f"Architecture assessment: {result.architecture_assessment_status}")
     if result.architecture_assessment_finding_count is not None:
         console.print(
             f"Architecture assessment findings: {result.architecture_assessment_finding_count}"
@@ -5122,9 +4723,7 @@ def _print_success_summary(
             f"{_display_path(result.architecture_assessment_artifact_path)}"
         )
     if result.technical_debt_assessment_status is not None:
-        console.print(
-            f"Technical debt assessment: {result.technical_debt_assessment_status}"
-        )
+        console.print(f"Technical debt assessment: {result.technical_debt_assessment_status}")
     if result.technical_debt_assessment_finding_count is not None:
         console.print(
             "Technical debt primary (production) findings: "
@@ -5136,13 +4735,10 @@ def _print_success_summary(
             f"{_display_path(result.technical_debt_assessment_artifact_path)}"
         )
     if result.dependency_assessment_status is not None:
-        console.print(
-            f"Dependency assessment: {result.dependency_assessment_status}"
-        )
+        console.print(f"Dependency assessment: {result.dependency_assessment_status}")
     if result.dependency_assessment_finding_count is not None:
         console.print(
-            "Dependency assessment findings: "
-            f"{result.dependency_assessment_finding_count}"
+            f"Dependency assessment findings: {result.dependency_assessment_finding_count}"
         )
     if result.dependency_assessment_artifact_path is not None:
         console.print(
@@ -5153,8 +4749,7 @@ def _print_success_summary(
         console.print(f"Dependency evidence: {result.dependency_evidence_status}")
     if result.dependency_evidence_declaration_count is not None:
         console.print(
-            "Dependency evidence declarations: "
-            f"{result.dependency_evidence_declaration_count}"
+            f"Dependency evidence declarations: {result.dependency_evidence_declaration_count}"
         )
     if result.dependency_evidence_artifact_path is not None:
         console.print(
@@ -5163,13 +4758,11 @@ def _print_success_summary(
         )
     if result.repository_sensitive_evidence_status is not None:
         console.print(
-            "Repository-sensitive evidence: "
-            f"{result.repository_sensitive_evidence_status}"
+            f"Repository-sensitive evidence: {result.repository_sensitive_evidence_status}"
         )
     if result.repository_sensitive_evidence_artifact_count is not None:
         console.print(
-            "Repository-sensitive artifacts: "
-            f"{result.repository_sensitive_evidence_artifact_count}"
+            f"Repository-sensitive artifacts: {result.repository_sensitive_evidence_artifact_count}"
         )
     if result.repository_sensitive_evidence_configuration_fact_count is not None:
         console.print(
@@ -5182,19 +4775,14 @@ def _print_success_summary(
             f"{_display_path(result.repository_sensitive_evidence_artifact_path)}"
         )
     if result.repository_testing_evidence_status is not None:
-        console.print(
-            "Repository-testing evidence: "
-            f"{result.repository_testing_evidence_status}"
-        )
+        console.print(f"Repository-testing evidence: {result.repository_testing_evidence_status}")
     if result.repository_testing_evidence_candidate_count is not None:
         console.print(
-            "Repository-testing candidates: "
-            f"{result.repository_testing_evidence_candidate_count}"
+            f"Repository-testing candidates: {result.repository_testing_evidence_candidate_count}"
         )
     if result.repository_testing_evidence_framework_count is not None:
         console.print(
-            "Repository-testing frameworks: "
-            f"{result.repository_testing_evidence_framework_count}"
+            f"Repository-testing frameworks: {result.repository_testing_evidence_framework_count}"
         )
     if result.repository_testing_evidence_artifact_path is not None:
         console.print(
@@ -5202,10 +4790,7 @@ def _print_success_summary(
             f"{_display_path(result.repository_testing_evidence_artifact_path)}"
         )
     if result.repository_cloud_evidence_status is not None:
-        console.print(
-            "Repository-cloud evidence: "
-            f"{result.repository_cloud_evidence_status}"
-        )
+        console.print(f"Repository-cloud evidence: {result.repository_cloud_evidence_status}")
     if result.repository_cloud_evidence_candidate_count is not None:
         console.print(
             "Repository-cloud evidence candidates: "
@@ -5223,8 +4808,7 @@ def _print_success_summary(
         )
     if result.repository_ai_readiness_evidence_status is not None:
         console.print(
-            "Repository AI-readiness evidence: "
-            f"{result.repository_ai_readiness_evidence_status}"
+            f"Repository AI-readiness evidence: {result.repository_ai_readiness_evidence_status}"
         )
     if result.repository_ai_readiness_evidence_candidate_count is not None:
         console.print(
@@ -5243,8 +4827,7 @@ def _print_success_summary(
         )
     if result.repository_performance_evidence_status is not None:
         console.print(
-            "Repository performance evidence: "
-            f"{result.repository_performance_evidence_status}"
+            f"Repository performance evidence: {result.repository_performance_evidence_status}"
         )
     if result.repository_performance_evidence_candidate_count is not None:
         console.print(
@@ -5264,10 +4847,7 @@ def _print_success_summary(
     if result.security_assessment_status is not None:
         console.print(f"Security assessment: {result.security_assessment_status}")
     if result.security_assessment_finding_count is not None:
-        console.print(
-            "Security assessment findings: "
-            f"{result.security_assessment_finding_count}"
-        )
+        console.print(f"Security assessment findings: {result.security_assessment_finding_count}")
     if result.security_assessment_artifact_path is not None:
         console.print(
             "Security assessment artifact: "
@@ -5276,33 +4856,24 @@ def _print_success_summary(
     if result.testing_assessment_status is not None:
         console.print(f"Test assessment: {result.testing_assessment_status}")
     if result.testing_assessment_finding_count is not None:
-        console.print(
-            "Test assessment findings: "
-            f"{result.testing_assessment_finding_count}"
-        )
+        console.print(f"Test assessment findings: {result.testing_assessment_finding_count}")
     if result.testing_assessment_artifact_path is not None:
         console.print(
-            "Test assessment artifact: "
-            f"{_display_path(result.testing_assessment_artifact_path)}"
+            f"Test assessment artifact: {_display_path(result.testing_assessment_artifact_path)}"
         )
     if result.cloud_assessment_status is not None:
         console.print(f"Cloud assessment: {result.cloud_assessment_status}")
     if result.cloud_assessment_finding_count is not None:
-        console.print(
-            "Cloud assessment findings: "
-            f"{result.cloud_assessment_finding_count}"
-        )
+        console.print(f"Cloud assessment findings: {result.cloud_assessment_finding_count}")
     if result.cloud_assessment_artifact_path is not None:
         console.print(
-            "Cloud assessment artifact: "
-            f"{_display_path(result.cloud_assessment_artifact_path)}"
+            f"Cloud assessment artifact: {_display_path(result.cloud_assessment_artifact_path)}"
         )
     if result.ai_readiness_assessment_status is not None:
         console.print(f"AI Readiness assessment: {result.ai_readiness_assessment_status}")
     if result.ai_readiness_assessment_finding_count is not None:
         console.print(
-            "AI Readiness assessment findings: "
-            f"{result.ai_readiness_assessment_finding_count}"
+            f"AI Readiness assessment findings: {result.ai_readiness_assessment_finding_count}"
         )
     if result.ai_readiness_assessment_artifact_path is not None:
         console.print(
@@ -5313,8 +4884,7 @@ def _print_success_summary(
         console.print(f"Performance assessment: {result.performance_assessment_status}")
     if result.performance_assessment_finding_count is not None:
         console.print(
-            "Performance assessment findings: "
-            f"{result.performance_assessment_finding_count}"
+            f"Performance assessment findings: {result.performance_assessment_finding_count}"
         )
     if result.performance_assessment_artifact_path is not None:
         console.print(
@@ -5323,29 +4893,20 @@ def _print_success_summary(
         )
     if result.architecture_report_enabled:
         console.print(
-            "Architecture report section: "
-            f"{result.architecture_report_status or 'unavailable'}"
+            f"Architecture report section: {result.architecture_report_status or 'unavailable'}"
         )
     if result.technical_debt_report_enabled:
         console.print(
-            "Technical debt report section: "
-            f"{result.technical_debt_report_status or 'unavailable'}"
+            f"Technical debt report section: {result.technical_debt_report_status or 'unavailable'}"
         )
     if result.dependency_report_enabled:
         console.print(
-            "Dependency report section: "
-            f"{result.dependency_report_status or 'unavailable'}"
+            f"Dependency report section: {result.dependency_report_status or 'unavailable'}"
         )
     if result.security_report_enabled:
-        console.print(
-            "Security report section: "
-            f"{result.security_report_status or 'unavailable'}"
-        )
+        console.print(f"Security report section: {result.security_report_status or 'unavailable'}")
     if result.testing_report_enabled:
-        console.print(
-            "Test report section: "
-            f"{result.testing_report_status or 'unavailable'}"
-        )
+        console.print(f"Test report section: {result.testing_report_status or 'unavailable'}")
     if result.architecture_conclusion_count is not None:
         console.print(f"Architecture conclusions: {result.architecture_conclusion_count}")
     if result.architecture_conclusions_artifact_path is not None:

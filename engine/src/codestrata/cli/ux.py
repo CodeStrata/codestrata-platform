@@ -10,7 +10,7 @@ from __future__ import annotations
 import os
 import shutil
 import sys
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import TextIO
 
@@ -33,7 +33,7 @@ _CLI_STATE_FILE = "cli-state.toml"
 _ONBOARDING_KEY = "onboarding_completed"
 
 
-class MessageKind(str, Enum):
+class MessageKind(StrEnum):
     """Consistent message prefixes (text + optional color)."""
 
     SUCCESS = "Success"

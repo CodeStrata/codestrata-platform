@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 from codestrata.ai.aws_config import probe_aws_session_for_bedrock
 from codestrata.ai.providers.factory import (
@@ -22,7 +22,7 @@ from codestrata.ai.providers.factory import (
 from codestrata.config.settings import DEFAULT_BEDROCK_MODEL_ID, CodestrataSettings
 
 
-class ConfigStatus(str, Enum):
+class ConfigStatus(StrEnum):
     """Human-facing configuration status for a provider."""
 
     CONFIGURED = "Configured"

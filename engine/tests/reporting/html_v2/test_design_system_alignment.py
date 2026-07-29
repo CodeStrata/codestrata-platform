@@ -6,13 +6,14 @@ import re
 from collections import Counter
 from pathlib import Path
 
+from tests.reporting.html_v2.test_html_report_v2 import _report_input
+
 from codestrata.reporting.html_v2 import HtmlReportRenderer, build_html_report_view_model
 from codestrata.reporting.html_v2.styles import (
     AUTHORITATIVE_SELECTORS,
     REPORT_CSS,
     css_without_print,
 )
-from tests.reporting.html_v2.test_html_report_v2 import _report_input
 
 
 def _top_level_selector_count(css: str, selector: str) -> int:

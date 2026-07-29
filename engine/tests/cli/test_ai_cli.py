@@ -46,7 +46,9 @@ def test_ai_onboarding_screen() -> None:
     assert status.exit_code == 0
     out = status.stdout
     assert "AI is optional" in out
-    assert "works fully without AI" in out or "works without AI" in out.lower() or "without AI" in out
+    assert (
+        "works fully without AI" in out or "works without AI" in out.lower() or "without AI" in out
+    )
     assert "executive summaries" in out.lower() or "recommendations" in out.lower()
     assert "Amazon Bedrock (Recommended)" in out
     assert "OpenAI" in out
@@ -104,9 +106,7 @@ def test_ai_doctor_unsupported_provider(tmp_path: Path) -> None:
     assert "Unsupported provider" in out
 
 
-def test_ai_doctor_reports_credential_source_for_bedrock(
-    monkeypatch, tmp_path: Path
-) -> None:
+def test_ai_doctor_reports_credential_source_for_bedrock(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("AWS_PROFILE", "doctor-profile")
     monkeypatch.setenv("AWS_REGION", "us-east-1")
     monkeypatch.delenv("AWS_ACCESS_KEY_ID", raising=False)

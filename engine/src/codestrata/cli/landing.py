@@ -11,11 +11,11 @@ import os
 import shutil
 import sys
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 from rich.align import Align
-from rich.console import Console, Group
+from rich.console import Console, Group, RenderableType
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
@@ -44,7 +44,7 @@ PRODUCT_CATEGORY = "Engineering Intelligence"
 EDITION = "Community Edition"
 
 
-class WordmarkSize(str, Enum):
+class WordmarkSize(StrEnum):
     LARGE = "large"
     MEDIUM = "medium"
     COMPACT = "compact"
@@ -320,18 +320,10 @@ def render_landing(
     banner_budget = max_banner_width_for_terminal(width)
 
     # Step down when art exceeds the terminal or the ~75% banner budget.
-    while (
-        size is not WordmarkSize.COMPACT
-        and (
-            wordmark_width(art) > width - 2
-            or wordmark_width(art) > banner_budget
-        )
+    while size is not WordmarkSize.COMPACT and (
+        wordmark_width(art) > width - 2 or wordmark_width(art) > banner_budget
     ):
-        size = (
-            WordmarkSize.MEDIUM
-            if size is WordmarkSize.LARGE
-            else WordmarkSize.COMPACT
-        )
+        size = WordmarkSize.MEDIUM if size is WordmarkSize.LARGE else WordmarkSize.COMPACT
         art = wordmark_art(size)
     if wordmark_width(art) > width - 2:
         art = _WORDMARK_COMPACT
@@ -409,12 +401,10 @@ def render_landing(
     if len(links) > width:
         links = "codestrata --help"
 
-    blocks: list[object] = []
+    blocks: list[RenderableType] = []
     if include_first_run and not onboarding_completed():
         welcome = (
-            "Welcome to CodeStrata Community Edition."
-            if width >= 42
-            else "Welcome to CodeStrata."
+            "Welcome to CodeStrata Community Edition." if width >= 42 else "Welcome to CodeStrata."
         )
         blocks.append(_center_styled(welcome, BRIGHT_WHITE, width, enabled=use_color))
         blocks.append(Text(""))
@@ -450,8 +440,7 @@ def render_automation_fallback() -> None:
 
     version = get_package_version()
     sys.stdout.write(
-        f"CodeStrata Community Edition {version}\n"
-        "Run `codestrata --help` for commands.\n"
+        f"CodeStrata Community Edition {version}\nRun `codestrata --help` for commands.\n"
     )
 
 

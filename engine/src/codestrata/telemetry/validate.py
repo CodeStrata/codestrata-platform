@@ -5,8 +5,9 @@ from __future__ import annotations
 import json
 import platform
 import sys
+from collections.abc import Mapping
 from datetime import UTC, datetime
-from typing import Any, Mapping
+from typing import Any, cast
 
 from codestrata.package_metadata import get_package_version
 from codestrata.telemetry.constants import (
@@ -105,4 +106,4 @@ def redact_for_display(payload: Mapping[str, Any]) -> dict[str, Any]:
     """Return a JSON-serializable copy (already privacy-safe by construction)."""
 
     validate_payload(payload)
-    return json.loads(json.dumps(payload, sort_keys=True))
+    return cast(dict[str, Any], json.loads(json.dumps(payload, sort_keys=True)))

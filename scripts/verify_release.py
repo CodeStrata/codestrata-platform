@@ -6,7 +6,7 @@ publish, or create remotes.
 
 Default steps:
   1. security_check
-  2. ruff check .
+  2. ruff check . (Community Engine tree)
   3. mypy engine/src
   4. pytest -m "not network"
   5. export-public-repos
@@ -15,7 +15,8 @@ Default steps:
 Optional:
   --full-export-install   run export validation with fresh-venv Engine smoke
   --with-clean-install    run packaging clean-install smoke
-  --with-acceptance       run ``codestrata acceptance run`` (live / heavy)
+  --with-acceptance       run ``codestrata acceptance run`` (live / heavy; requires
+                          CODESTRATA_MAINTAINER_CLI)
   --skip-export / --skip-tests / --skip-lint  omit selected steps
 
 Examples:
@@ -34,6 +35,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+ENGINE = ROOT / "engine"
 
 
 @dataclass(frozen=True)
@@ -77,12 +79,15 @@ def build_steps(args: argparse.Namespace) -> list[Step]:
 
     if not args.skip_lint:
         ruff = _require_tool("ruff")
+        # Community Engine release gate (matches engine/CONTRIBUTING.md).
+        # Do not lint the full monorepo root: Platform/historical debt is out of
+        # Community Engine release scope.
         if ruff:
-            steps.append(Step("ruff", [ruff, "check", "."]))
+            steps.append(Step("ruff", [ruff, "check", "."], cwd=ENGINE))
         else:
-            steps.append(Step("ruff", [py, "-m", "ruff", "check", "."]))
+            steps.append(Step("ruff", [py, "-m", "ruff", "check", "."], cwd=ENGINE))
 
-        steps.append(Step("mypy", [py, "-m", "mypy", "engine/src"]))
+        steps.append(Step("mypy", [py, "-m", "mypy", "src"], cwd=ENGINE))
 
     if not args.skip_tests:
         steps.append(
@@ -161,8 +166,7 @@ def main(argv: list[str] | None = None) -> int:
         "--full-export-install",
         action="store_true",
         help=(
-            "Run validate-public-exports without --skip-install "
-            "(fresh venv Engine smoke; slower)."
+            "Run validate-public-exports without --skip-install (fresh venv Engine smoke; slower)."
         ),
     )
     parser.add_argument(

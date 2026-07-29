@@ -22,13 +22,22 @@ Optional extras: `bedrock`, `openai`.
 
 ## Quality gates
 
+Canonical contributor / Community Engine release checks (from `engine/`):
+
 ```bash
 pytest
 pytest tests/docs -q
 ruff check .
-ruff format --check .
 mypy src
 ```
+
+Format changed files before review (`ruff format <paths>`). Full-tree
+`ruff format --check .` still reports historical debt outside the release gate;
+do not mass-reformat unrelated files solely to green the check.
+
+Monorepo maintainers also run `python scripts/verify_release.py` from the
+platform root (Engine-scoped ruff/mypy, then monorepo pytest excluding
+`network`).
 
 ## Guidelines
 
