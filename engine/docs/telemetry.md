@@ -1,6 +1,5 @@
-# Anonymous Telemetry (Community Edition)
+# Anonymous telemetry (Community Edition)
 
-**Status:** Phase 14.3  
 **Default:** Disabled  
 **Schema:** `1.0.0`
 
@@ -10,7 +9,7 @@ versioned, and **explicit opt-in only**.
 ## Principles
 
 | Principle | Behavior |
-| --- | --- |
+| --------- | -------- |
 | Disabled by default | No events leave the machine until you opt in |
 | Explicit opt-in | First-run prompt defaults to **No**; or `codestrata telemetry enable` |
 | Transparent | `codestrata telemetry show` prints the exact payload shape |
@@ -63,4 +62,4 @@ No. Events queue under `~/.codestrata/telemetry-queue.jsonl`.
 **How do I get a new anonymous id?**  
 `codestrata telemetry reset`.
 
-See also: [`../PRIVACY.md`](../PRIVACY.md).
+See also: [PRIVACY.md](../PRIVACY.md).

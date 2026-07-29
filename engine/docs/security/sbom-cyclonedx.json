@@ -685,22 +685,22 @@
         {
           "comment": "from packaging metadata Project-URL: Documentation",
           "type": "documentation",
-          "url": "https://github.com/sknampally/codestrata#readme"
+          "url": "https://github.com/CodeStrata/codestrata-engine#readme"
         },
         {
           "comment": "from packaging metadata Project-URL: Issues",
           "type": "issue-tracker",
-          "url": "https://github.com/sknampally/codestrata/issues"
+          "url": "https://github.com/CodeStrata/codestrata-engine/issues"
         },
         {
           "comment": "from packaging metadata Project-URL: Repository",
           "type": "vcs",
-          "url": "https://github.com/sknampally/codestrata"
+          "url": "https://github.com/CodeStrata/codestrata-engine"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
           "type": "website",
-          "url": "https://github.com/sknampally/codestrata"
+          "url": "https://github.com/CodeStrata/codestrata-engine"
         }
       ],
       "licenses": [
@@ -728,22 +728,22 @@
         {
           "comment": "from packaging metadata Project-URL: Documentation",
           "type": "documentation",
-          "url": "https://github.com/sknampally/codestrata#readme"
+          "url": "https://github.com/CodeStrata/codestrata-engine#readme"
         },
         {
           "comment": "from packaging metadata Project-URL: Issues",
           "type": "issue-tracker",
-          "url": "https://github.com/sknampally/codestrata/issues"
+          "url": "https://github.com/CodeStrata/codestrata-engine/issues"
         },
         {
           "comment": "from packaging metadata Project-URL: Repository",
           "type": "vcs",
-          "url": "https://github.com/sknampally/codestrata"
+          "url": "https://github.com/CodeStrata/codestrata-engine"
         },
         {
           "comment": "from packaging metadata Project-URL: Homepage",
           "type": "website",
-          "url": "https://github.com/sknampally/codestrata"
+          "url": "https://github.com/CodeStrata/codestrata-engine"
         }
       ],
       "licenses": [

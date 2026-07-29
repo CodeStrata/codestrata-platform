@@ -50,7 +50,7 @@ OFFICIAL_EXAMPLES: tuple[ExampleEntry, ...] = (
     ExampleEntry(
         name="codestrata-examples",
         kind="showcase",
-        location="https://github.com/sknampally/codestrata-examples",
+        location="https://github.com/CodeStrata/codestrata-examples",
         notes="Pinned real-world showcases (Spring PetClinic, eShop, Laravel)",
     ),
 )

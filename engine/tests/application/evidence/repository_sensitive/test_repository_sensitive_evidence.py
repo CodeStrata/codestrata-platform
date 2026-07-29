@@ -316,6 +316,10 @@ def test_placeholders_and_redaction() -> None:
     assert facts["redacted_preview"] == REDACTED_PREVIEW
     assert facts["value_fingerprint"] is not None
     assert "super-secret" not in json.dumps(facts, default=str)
+    empty = value_facts("", sensitive=True)
+    assert empty["is_empty"] is True
+    assert empty["redacted_preview"] == "[EMPTY]"
+    assert empty["placeholder_status"] is PlaceholderStatus.EMPTY
 
 
 def test_oversized_and_coverage_reconcile() -> None:

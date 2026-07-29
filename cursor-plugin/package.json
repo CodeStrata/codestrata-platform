@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sknampally/codestrata-cursor"
+    "url": "https://github.com/CodeStrata/codestrata-cursor"
   },
   "homepage": "https://docs.codestrata.ai/extensions/cursor",
   "bugs": {
-    "url": "https://github.com/sknampally/codestrata-cursor/issues"
+    "url": "https://github.com/CodeStrata/codestrata-cursor/issues"
   },
   "qna": "marketplace",
   "funding": {

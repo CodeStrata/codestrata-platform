@@ -1,6 +1,6 @@
 # CodeStrata Examples
 
-[![Related: Engine](https://img.shields.io/badge/requires-codestrata--engine-blue.svg)](https://github.com/sknampally/codestrata-engine)
+[![Related: Engine](https://img.shields.io/badge/requires-codestrata--engine-blue.svg)](https://github.com/CodeStrata/codestrata-engine)
 
 Pinned **real-world open-source showcases** for demonstrating CodeStrata on
 recognized applications — without vendoring third-party source into this
@@ -32,7 +32,7 @@ remain internal monorepo fixtures.
 
 | Repository | Role |
 | ---------- | ---- |
-| [codestrata-engine](https://github.com/sknampally/codestrata-engine) | Assessment CLI you must install first |
+| [codestrata-engine](https://github.com/CodeStrata/codestrata-engine) | Assessment CLI you must install first |
 | **codestrata-examples** (this repo) | Showcase manifests, fetch scripts, attribution, curated summaries |
 | Platform (private) | RAG / Knowledge Graph — not required for baseline showcases |
 
@@ -76,7 +76,7 @@ Curated results: [expected-results/](expected-results/).
 
 * Python 3.12+
 * `git` on `PATH`
-* [codestrata-engine](https://github.com/sknampally/codestrata-engine) installed
+* [codestrata-engine](https://github.com/CodeStrata/codestrata-engine) installed
   (`codestrata` on `PATH`)
 * Network access to GitHub for the fetch step
 

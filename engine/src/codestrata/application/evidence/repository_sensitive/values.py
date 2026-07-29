@@ -62,10 +62,14 @@ def classify_placeholder(value: str) -> tuple[PlaceholderStatus, str | None, Val
 
 
 def redact_preview(value: str, *, sensitive: bool = True) -> str:
-    """Return a safe preview. Never returns the complete sensitive value."""
+    """Return a safe preview. Never returns the complete sensitive value.
 
-    if not value:
-        return ""
+    Always returns a nonempty token so evidence models that require
+    ``redacted_preview`` can accept empty configuration literals.
+    """
+
+    if not value.strip():
+        return "[EMPTY]"
     if not sensitive:
         # Still bound length for non-sensitive flags/URLs.
         compact = value.strip()

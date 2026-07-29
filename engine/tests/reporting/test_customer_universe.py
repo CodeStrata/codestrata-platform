@@ -21,6 +21,7 @@ from codestrata.models.enums import (
     Risk,
     Severity,
 )
+from codestrata.models.evidence import Evidence
 from codestrata.reporting.assessment_json import build_assessment_json_document
 from codestrata.reporting.customer_universe import (
     resolve_customer_findings,
@@ -134,3 +135,69 @@ def test_customer_universe_merges_phase1_and_phase3(tmp_path: Path) -> None:
     assert '"finding_count": 2' in findings_json
     assert '"recommendation_count": 1' in recommendations_json
     assert "Evaluate reusable Kubernetes deployment packaging" in recommendations_json
+
+
+def test_related_finding_ids_aligned_to_final_customer_findings(tmp_path: Path) -> None:
+    """Dedupe survivors keep traceability; unknown IDs are dropped."""
+
+    kept = Finding(
+        id=uuid4(),
+        rule_id="SEC001",
+        title="Sensitive configuration",
+        description="First evidence row",
+        category=Phase1FindingCategory.SECURITY,
+        severity=Severity.HIGH,
+        source=Phase1FindingSource.DETERMINISTIC,
+        evidence=[Evidence(file_path=".env", description="env A")],
+    )
+    dropped = Finding(
+        id=uuid4(),
+        rule_id="SEC001",
+        title="Sensitive configuration",
+        description="Second evidence row",
+        category=Phase1FindingCategory.SECURITY,
+        severity=Severity.HIGH,
+        source=Phase1FindingSource.DETERMINISTIC,
+        evidence=[Evidence(file_path=".env.local", description="env B")],
+    )
+    unique = Finding(
+        id=uuid4(),
+        rule_id="ARCH001",
+        title="Architecture components detected",
+        description="Structural signal",
+        category=Phase1FindingCategory.ARCHITECTURE,
+        severity=Severity.LOW,
+        source=Phase1FindingSource.DETERMINISTIC,
+    )
+    recommendation = Recommendation(
+        id=uuid4(),
+        rule_id="REC.SEC.001",
+        title="Review committed secrets",
+        description="Rotate and remove secrets",
+        rationale="Sensitive configuration detected",
+        priority=Priority.HIGH,
+        category=RecommendationCategory.SECURITY,
+        risk=Risk.HIGH,
+        related_finding_ids=[str(dropped.id), "not-a-finding", str(unique.id)],
+    )
+    report_input = _report_input(
+        tmp_path,
+        phase1_findings=[kept, dropped, unique],
+        phase1_recommendations=[recommendation],
+    )
+
+    findings = resolve_customer_findings(report_input)
+    finding_ids = {item.id for item in findings}
+    assert len(findings) == 2
+
+    recommendations = resolve_customer_recommendations(report_input)
+    assert len(recommendations) == 1
+    related = recommendations[0].related_finding_ids
+    assert related
+    assert set(related) <= finding_ids
+    assert "not-a-finding" not in related
+
+    document = build_assessment_json_document(report_input)
+    report_finding_ids = {item["id"] for item in document["assessment"]["findings"]}
+    for item in document["assessment"]["deterministic_recommendations"]:
+        assert set(item["related_finding_ids"]) <= report_finding_ids

@@ -1,6 +1,6 @@
 # Recommendation engine
 
-Deterministic recommendations mapped from Phase 3 findings.
+Deterministic recommendations mapped from assessment findings.
 
 ```text
 findings.json
@@ -13,10 +13,10 @@ recommendations.json
 ## Guarantees
 
 * Consumes findings and read-only graph context
-* Never mutates Repository Graph, EKG, Assessment Graph, bindings, or findings
+* Never mutates Repository Graph, Assessment Graph, bindings, or findings
 * Never calls AI
-* Phase 3 `codestrata.domain.recommendations.Recommendation` is distinct from Phase 1
-  modernization recommendation DTOs and from AI enrichment narratives
+* Domain `Recommendation` records are distinct from optional AI enrichment
+  narratives
 
 ## Artifact
 
@@ -28,4 +28,8 @@ Deterministic recommendations are the source of truth. Optional
 [AI enrichment](ai-enrichment.md) may narrate them but must not create, delete,
 or rewrite this artifact.
 
-See also [architecture/recommendation-engine.md](architecture/recommendation-engine.md).
+## Related
+
+- [rule-engine.md](rule-engine.md)
+- [report-generation.md](report-generation.md)
+- [modernization-roadmap.md](modernization-roadmap.md)

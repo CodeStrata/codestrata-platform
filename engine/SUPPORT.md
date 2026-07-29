@@ -6,7 +6,7 @@ Thanks for using **CodeStrata Community Edition**.
 
 1. Read [docs/quick-start.md](docs/quick-start.md) and
    [docs/troubleshooting.md](docs/troubleshooting.md).
-2. Search [existing GitHub Issues](https://github.com/sknampally/codestrata/issues).
+2. Search [existing GitHub Issues](https://github.com/CodeStrata/codestrata-engine/issues).
 3. Open a new issue with:
    * `codestrata version` output
    * The exact command you ran (sanitize secrets)

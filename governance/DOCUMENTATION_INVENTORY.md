@@ -40,7 +40,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/ai-enrichment.md`
 - `engine/docs/analysis-intelligence/README.md`
 - `engine/docs/analysis-intelligence/ai-readiness/README.md`
-- `engine/docs/analysis-intelligence/ai-readiness/configuration.md`
 - `engine/docs/analysis-intelligence/ai-readiness/hygiene-rules.md`
 - `engine/docs/analysis-intelligence/ai-readiness/inventory.md`
 - `engine/docs/analysis-intelligence/ai-readiness/report.md`
@@ -90,12 +89,10 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/analysis-intelligence/architecture/configuration.md`
 - `engine/docs/analysis-intelligence/architecture/evidence.md`
 - `engine/docs/analysis-intelligence/architecture/examples.md`
-- `engine/docs/analysis-intelligence/architecture/migration.md`
 - `engine/docs/analysis-intelligence/architecture/rule-pack.md`
 - `engine/docs/analysis-intelligence/architecture/rules.md`
 - `engine/docs/analysis-intelligence/architecture/severity.md`
 - `engine/docs/analysis-intelligence/cloud/README.md`
-- `engine/docs/analysis-intelligence/cloud/configuration.md`
 - `engine/docs/analysis-intelligence/cloud/hygiene-rules.md`
 - `engine/docs/analysis-intelligence/cloud/inventory.md`
 - `engine/docs/analysis-intelligence/cloud/report.md`
@@ -126,9 +123,7 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/analysis-intelligence/evidence-providers/provider-registry.md`
 - `engine/docs/analysis-intelligence/evidence-providers/python.md`
 - `engine/docs/analysis-intelligence/evidence.md`
-- `engine/docs/analysis-intelligence/incremental-rules.md`
 - `engine/docs/analysis-intelligence/performance/README.md`
-- `engine/docs/analysis-intelligence/performance/configuration.md`
 - `engine/docs/analysis-intelligence/performance/hygiene-rules.md`
 - `engine/docs/analysis-intelligence/performance/inventory.md`
 - `engine/docs/analysis-intelligence/performance/report.md`
@@ -139,13 +134,10 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/analysis-intelligence/repository-sensitive-evidence.md`
 - `engine/docs/analysis-intelligence/repository-test-evidence.md`
 - `engine/docs/analysis-intelligence/rule-authoring.md`
-- `engine/docs/analysis-intelligence/rule-lifecycle.md`
-- `engine/docs/analysis-intelligence/rule-platform-migration.md`
 - `engine/docs/analysis-intelligence/security/README.md`
 - `engine/docs/analysis-intelligence/security/assessment-inventory.md`
 - `engine/docs/analysis-intelligence/security/configuration.md`
 - `engine/docs/analysis-intelligence/security/hygiene-rules.md`
-- `engine/docs/analysis-intelligence/security/ownership-boundaries.md`
 - `engine/docs/analysis-intelligence/security/report.md`
 - `engine/docs/analysis-intelligence/security/synthesis.md`
 - `engine/docs/analysis-intelligence/shared-rule-platform.md`
@@ -157,7 +149,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/analysis-intelligence/technical-debt/complexity-rules.md`
 - `engine/docs/analysis-intelligence/technical-debt/rule-pack.md`
 - `engine/docs/analysis-intelligence/technical-debt/synthesis.md`
-- `engine/docs/analysis-intelligence/testing-rules.md`
 - `engine/docs/analysis-intelligence/testing/README.md`
 - `engine/docs/analysis-intelligence/testing/configuration.md`
 - `engine/docs/analysis-intelligence/testing/hygiene-rules.md`
@@ -167,7 +158,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/architecture-guide.md`
 - `engine/docs/architecture/README.md`
 - `engine/docs/architecture/ai-enrichment.md`
-- `engine/docs/architecture/analysis-intelligence-conventions.md`
 - `engine/docs/architecture/assess-runtime-graphs.md`
 - `engine/docs/architecture/assessment-graph.md`
 - `engine/docs/architecture/html-report-v2.md`
@@ -175,7 +165,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/architecture/rule-engine.md`
 - `engine/docs/assessment-framework/README.md`
 - `engine/docs/assessment-framework/examples.md`
-- `engine/docs/assessment-framework/report-structure.md`
 - `engine/docs/assessment-graph.md`
 - `engine/docs/capabilities.md`
 - `engine/docs/coding-standards.md`
@@ -190,10 +179,8 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/report-contract.md`
 - `engine/docs/report-generation.md`
 - `engine/docs/repository-graph.md`
-- `engine/docs/repository-knowledge/README.md`
 - `engine/docs/repository-onboarding.md`
 - `engine/docs/rule-engine.md`
-- `engine/docs/runtime-performance.md`
 - `engine/docs/runtime.md`
 - `engine/examples/README.md`
 - `platform/README.md`
@@ -248,7 +235,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/analysis-intelligence/cloud/taxonomy.md`
 - `engine/docs/analysis-intelligence/dependency/taxonomy.md`
 - `engine/docs/analysis-intelligence/evidence-providers/coverage.md`
-- `engine/docs/analysis-intelligence/evidence-providers/limitations.md`
 - `engine/docs/analysis-intelligence/performance/domain-foundation.md`
 - `engine/docs/analysis-intelligence/performance/taxonomy.md`
 - `engine/docs/analysis-intelligence/security/domain-foundation.md`
@@ -384,14 +370,11 @@ restate normative principles or domain concepts as competing sources of truth.
 - `ROADMAP.md`
 - `engine/SECURITY.md`
 - `engine/docs/COMMUNITY_EDITION_CHECKLIST.md`
-- `engine/docs/RELEASE_NOTES-0.1.0.md`
 - `engine/docs/mvp-acceptance.md`
 - `engine/docs/mvp-regression.md`
-- `engine/docs/release-readiness.md`
 - `engine/docs/roadmap.md`
 - `engine/docs/security/README.md`
 - `engine/docs/security/architecture.md`
-- `engine/docs/security/production-hardening-checklist.md`
 - `engine/docs/security/threat-model.md`
 
 ### User Documentation
@@ -409,7 +392,6 @@ restate normative principles or domain concepts as competing sources of truth.
 - `engine/docs/mcp/README.md`
 - `engine/docs/mcp/client-examples.md`
 - `engine/docs/mcp/overview.md`
-- `engine/docs/mcp/repository-knowledge/README.md`
 - `engine/docs/mcp/security.md`
 - `engine/docs/mcp/setup.md`
 - `engine/docs/mcp/tools.md`

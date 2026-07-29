@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sknampally/codestrata-vscode"
+    "url": "https://github.com/CodeStrata/codestrata-vscode"
   },
   "homepage": "https://docs.codestrata.ai/extensions/vscode",
   "bugs": {
-    "url": "https://github.com/sknampally/codestrata-vscode/issues"
+    "url": "https://github.com/CodeStrata/codestrata-vscode/issues"
   },
   "qna": "marketplace",
   "funding": {

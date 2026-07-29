@@ -35,5 +35,3 @@ Engineering KG    ──┘
 AG feeds the [Rule Engine](rule-engine.md) and
 [Recommendation Engine](recommendation-engine.md). Rules and recommendations
 never write back into AG.
-
-Longer design ADR: [architecture/assessment-graph.md](architecture/assessment-graph.md).

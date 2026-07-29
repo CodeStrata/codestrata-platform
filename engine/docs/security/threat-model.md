@@ -1,7 +1,7 @@
 # Threat model (Community Edition)
 
-**Status:** Phase 5.24  
-**Scope:** Local CLI / optional MCP on localhost; GitHub clone; optional Bedrock/OpenAI
+**Scope:** Local CLI / optional MCP on localhost; GitHub clone; optional
+Bedrock/OpenAI. Hosted multi-tenant Platform isolation is out of scope.
 
 ## Assets
 
@@ -56,3 +56,44 @@
 * Optional extras (`bedrock`, `openai`, `mcp`, `pgvector`) expand the attack surface when installed
 * Extension entry points execute with CLI privileges; only enable packages you trust
 * Hosted multi-tenant isolation still out of CE scope
+
+## Hardening checklist
+
+Use before a Community release candidate or production-like local deployment.
+
+### Defaults
+
+- [ ] Profile `community` (or `local`) — Enterprise KG disabled
+- [ ] Assess runs with `--no-ai` unless AI is intentionally required
+- [ ] MCP disabled unless explicitly enabled; bind `127.0.0.1`
+- [ ] Knowledge store / projection disabled unless needed
+- [ ] `token_env` used for GitHub auth (no embedded tokens)
+
+### Runtime bounds
+
+- [ ] `analysis.runtime.max_source_files` appropriate for target repos
+- [ ] `analysis.runtime.max_source_chars` / workers reviewed
+- [ ] Provider timeouts configured (Bedrock/OpenAI/PMD/git)
+
+### Supply chain
+
+- [ ] `pip-audit` clean for runtime dependencies (ignore or upgrade known
+      dev-only issues)
+- [ ] Optional extras reviewed separately (`bedrock`, `openai`, `mcp`,
+      `pgvector`)
+- [ ] Prefer `python scripts/verify_release.py` / `codestrata release check`
+      for the full maintainer gate
+
+### Community surface
+
+- [ ] Public export validation passes
+- [ ] Platform and Enterprise-only packages are absent from the Community
+      Engine distribution
+- [ ] Extension hook `codestrata.extensions` present when shipping extensions
+
+### Verification
+
+- [ ] `ruff check .`
+- [ ] `mypy src` (or project-equivalent)
+- [ ] `pytest`
+- [ ] Fresh Engine install + assess smoke

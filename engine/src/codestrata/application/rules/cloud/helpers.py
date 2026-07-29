@@ -249,7 +249,7 @@ def make_metadata(
         supported_languages=(),
         tags=("cloud", PACK_ID, "hygiene", "dimension:cloud"),
         remediation_summary=observation_note(rule_id),
-        documentation_reference=("docs/analysis-intelligence/cloud/hygiene-rules.md"),
+        documentation_reference=("docs/analysis-intelligence/shared-rule-platform.md"),
         enabled_by_default=True,
         experimental=False,
         requires_enterprise_context=False,

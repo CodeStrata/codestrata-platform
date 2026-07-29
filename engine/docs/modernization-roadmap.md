@@ -1,8 +1,10 @@
 # Modernization Roadmap Engine
 
-Phase 5.10 converts existing assessment findings and recommendations into a
-deterministic phased modernization plan. It does **not** re-run assessments,
-invent findings, or call AI models.
+Converts existing assessment findings and recommendations into a deterministic
+phased modernization plan. It does **not** re-run assessments, invent findings,
+or call AI models.
+
+This Engine sequencing is **not** CodeStrata Platform Strategic Roadmap.
 
 ## Configuration
 
@@ -16,15 +18,15 @@ include_limitations = true
 include_evidence = true
 ```
 
-When enabled, `codestrata assess` adds `assessment.roadmap` to `report.json` and a
-**Implementation Sequence** section to the HTML report (`#phased-modernization-plan`).
-This Engine assess sequencing is not CodeStrata Platform Strategic Roadmap.
-Schema version remains `1.2` (additive key only).
+When enabled, `codestrata assess` adds `assessment.roadmap` to `report.json` and
+an **Implementation Sequence** section to the HTML report
+(`#phased-modernization-plan`). Report schema stays additive
+(compatible with schema `1.2`).
 
-## Phases
+## Plan stages
 
-| Phase | Typical categories |
-| --- | --- |
+| Stage | Typical categories |
+| ----- | ------------------ |
 | Stabilize | testing, build, documentation, governance, configuration, CI/CD, reliability |
 | Secure | security |
 | Modernize | architecture, dependency, maintainability, modernization, technical debt, cloud, AI readiness, unknown |
@@ -32,12 +34,17 @@ Schema version remains `1.2` (additive key only).
 
 ## Mapping rules
 
-- **Group** recommendations by `(phase, category)`; duplicate recommendation IDs collapse.
-- **Priority** is the highest priority among grouped recommendations (`immediate`/`critical` → critical).
-- **Effort** uses explicit effort when present; otherwise action-count buckets (`xs`…`xl`).
-- **Risk** uses explicit risk when present, otherwise priority, then escalates from finding severity.
-- **Dependencies** are cross-phase only: Secure→Stabilize; Modernize→Secure+Stabilize; Optimize→prior phases.
-- **Identifiers** are stable digests of phase, category, and sorted recommendation IDs.
+- **Group** recommendations by `(stage, category)`; duplicate recommendation IDs collapse.
+- **Priority** is the highest priority among grouped recommendations
+  (`immediate`/`critical` → critical).
+- **Effort** uses explicit effort when present; otherwise action-count buckets
+  (`xs`…`xl`).
+- **Risk** uses explicit risk when present, otherwise priority, then escalates
+  from finding severity.
+- **Dependencies** are cross-stage only: Secure→Stabilize;
+  Modernize→Secure+Stabilize; Optimize→prior stages.
+- **Identifiers** are stable digests of stage, category, and sorted
+  recommendation IDs.
 
 ## CLI
 
@@ -49,3 +56,9 @@ codestrata roadmap generate --recommendations recommendations.json [--findings f
 ```
 
 `generate` reads existing artifacts only; it does not mutate repositories.
+
+## Related
+
+- [report-generation.md](report-generation.md)
+- [recommendation-engine.md](recommendation-engine.md)
+- [community-vs-platform.md](community-vs-platform.md)

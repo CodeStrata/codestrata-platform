@@ -13,18 +13,13 @@ Assessment** report.
 **Audience:** engineers and engineering leaders evaluating a codebase for
 modernization, due diligence, or portfolio discovery.
 
-> **Public mirror.** Prefer changes in the private `codestrata-platform` monorepo;
-> this repository is generated for Community distribution.
-
 ## Documentation
 
 | Need | Where |
 | ---- | ----- |
-| **Install, first assessment, reports, extensions** | [Public docs](https://docs.codestrata.ai/getting-started/) (`docs/` in monorepo) |
-| Community vs Platform | [docs.codestrata.ai/community/vs-platform](https://docs.codestrata.ai/community/vs-platform) |
-| Engine contracts / architecture (maintainers) | [docs/README.md](docs/README.md) in this repository |
-
-Do not treat Engine `docs/` journey pointers as a second public portal.
+| Install, first assessment, reports, extensions | [Public docs](https://docs.codestrata.ai/getting-started/) |
+| Community vs Platform | [Community vs Platform](https://docs.codestrata.ai/community/vs-platform) |
+| Engine contracts and contributor docs | [docs/README.md](docs/README.md) in this repository |
 
 ---
 
@@ -34,24 +29,25 @@ Do not treat Engine `docs/` journey pointers as a second public portal.
 | -------- | ------------------------- |
 | A fast read on stack, risks, and next steps | Local or GitHub `codestrata assess` |
 | Evidence you can trust | Deterministic rules (AI optional, never invents findings) |
-| Something you can share | Self-contained HTML Report v2 + JSON artifacts |
+| Something you can share | Self-contained HTML + JSON assessment artifacts |
 | Automation | CLI, optional MCP, optional Agent Framework |
 
 **Not in Community Engine:** hosted SaaS, SSO/billing, multi-tenant control planes,
 or CodeStrata Platform capabilities (Engineering Knowledge Graph, Repository
 Retrieval / Answering, Portfolio Intelligence, Executive Intelligence, Strategic
-Roadmap). Details: [Community vs Platform](https://docs.codestrata.ai/community/vs-platform).
+Roadmap). Details:
+[Community vs Platform](https://docs.codestrata.ai/community/vs-platform).
 
 ---
 
 ## How CodeStrata fits together
 
-| Repository | Role | Public? |
-| ---------- | ---- | ------- |
+| Product | Role | Public? |
+| ------- | ---- | ------- |
 | **codestrata-engine** (this repo) | Assessment CLI, reports, Engine docs | Yes |
 | **codestrata-examples** | Pinned real-world showcase manifests + fetch scripts | Yes |
-| **CodeStrata Platform** (`platform/` in the monorepo) | Engineering Knowledge Graph, Retrieval, Answering, Portfolio / Executive Intelligence | Private |
-| **CodeStrata VS Code Extension** / **CodeStrata Cursor Extension** | Editor integrations | Community packages (`vscode-plugin/`, `cursor-plugin/`) |
+| **CodeStrata Platform** | Knowledge Graph, Retrieval, Answering, Portfolio / Executive Intelligence | Commercial product |
+| **VS Code / Cursor extensions** | Editor integrations | Community packages |
 
 Product statement: *The Engine produces structured engineering intelligence.
 The Platform stores, connects, retrieves, and reasons over that intelligence.*
@@ -60,28 +56,29 @@ The Platform stores, connects, retrieves, and reasons over that intelligence.*
 
 ## Quick start
 
-Requires **Python 3.12+**. Portal: [docs/README.md](docs/README.md) ·
-[docs/quick-start.md](docs/quick-start.md).
+Requires **Python 3.12+**. Guides:
+[docs/quick-start.md](docs/quick-start.md) ·
+[docs/installation.md](docs/installation.md).
 
 ```bash
+git clone https://github.com/CodeStrata/codestrata-engine.git
+cd codestrata-engine
+
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -e '.[mcp]'   # from this Engine checkout (not monorepo root)
+python -m pip install -e '.[mcp]'
 codestrata version
 codestrata init
 codestrata doctor
 codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 ```
 
-> Monorepo tip: installing the workspace root package does **not** install the
-> Community CLI. Always `pip install -e .` from `engine/` (or this Engine
-> checkout). If you see `ModuleNotFoundError: codestrata`, verify the active
-> interpreter with:
->
-> ```bash
-> python -c "import codestrata; print(codestrata.__file__)"
-> ```
+If you see `ModuleNotFoundError: codestrata`, confirm the active interpreter:
+
+```bash
+python -c "import codestrata; print(codestrata.__file__)"
+```
 
 Open the newest `reports/sample-js-app/<timestamp>/report.html`.
 
@@ -91,14 +88,10 @@ Assess your own tree:
 codestrata assess --repo /path/to/your-app --output reports --no-ai
 ```
 
-CI sample: [examples/github-actions/codestrata-assess.yml](examples/github-actions/codestrata-assess.yml).
-
 Guides: [docs/getting-started.md](docs/getting-started.md) ·
 [docs/installation.md](docs/installation.md) ·
 [docs/tutorial.md](docs/tutorial.md) ·
 [docs/community-vs-platform.md](docs/community-vs-platform.md).
-
----
 
 ## What an assessment does
 
@@ -119,7 +112,7 @@ Deterministic rules → findings → recommendations
         │
         ├──────────────────┐
         ▼                  ▼
-HTML + JSON reports   optional AI narrative (one Bedrock call)
+HTML + JSON reports   optional AI narrative (one provider call)
 ```
 
 Default mode is **deterministic** (`--no-ai`: zero provider calls). Optional
@@ -152,16 +145,14 @@ codestrata assess --config codestrata.toml --output reports --no-ai
 **Execution profile** (optional): `--profile local` — see
 [docs/configuration-profiles.md](docs/configuration-profiles.md).
 
-**Optional AI narrative** (Bedrock; never rewrites findings):
+**Optional AI narrative** (Bedrock or OpenAI; never rewrites findings):
 
 ```bash
-aws sso login --profile <profile-name>
 codestrata assess --config codestrata.toml --output reports --with-ai
 ```
 
-**Real-world showcases** (separate public repo): install Engine, then follow
-[codestrata-examples](https://github.com/sknampally/codestrata-examples) for
-pinned third-party applications assessed on demand.
+**Real-world showcases** (separate public repo):
+[codestrata-examples](https://github.com/CodeStrata/codestrata-examples).
 
 ---
 
@@ -179,8 +170,6 @@ reports/<repository-name>/<YYYYMMDD-HHMMSS>/
 
 How to read reports: [docs/report-interpretation.md](docs/report-interpretation.md).
 
-Demo HTML snapshots: [docs/images/](docs/images/).
-
 ---
 
 ## Supported technologies
@@ -191,11 +180,10 @@ Demo HTML snapshots: [docs/images/](docs/images/).
 | Build / deps | Maven, npm, Composer, NuGet / MSBuild |
 | CI | GitHub Actions discovery |
 | Static analysis | Optional PMD (Java) |
-| AI enrichment | Optional Amazon Bedrock Converse |
+| AI enrichment | Optional Amazon Bedrock or OpenAI |
 | Sources | Local filesystem, GitHub HTTPS/SSH |
 
-This public package ships `test-fixtures/sample-js-app` for offline smoke.
-Additional language fixtures live in the private monorepo.
+This package ships `test-fixtures/sample-js-app` for offline smoke tests.
 
 ---
 

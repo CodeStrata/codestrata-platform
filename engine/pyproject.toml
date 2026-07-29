@@ -83,10 +83,10 @@ codestrata = "codestrata.cli:app"
 
 
 [project.urls]
-Homepage = "https://github.com/sknampally/codestrata"
-Repository = "https://github.com/sknampally/codestrata"
-Documentation = "https://github.com/sknampally/codestrata#readme"
-Issues = "https://github.com/sknampally/codestrata/issues"
+Homepage = "https://github.com/CodeStrata/codestrata-engine"
+Repository = "https://github.com/CodeStrata/codestrata-engine"
+Documentation = "https://github.com/CodeStrata/codestrata-engine#readme"
+Issues = "https://github.com/CodeStrata/codestrata-engine/issues"
 
 
 [tool.setuptools]

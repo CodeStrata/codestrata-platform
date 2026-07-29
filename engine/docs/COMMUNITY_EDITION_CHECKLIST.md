@@ -17,8 +17,7 @@ Use this checklist before tagging a public GitHub Community Edition release.
 - [ ] [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md)
 - [ ] [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [ ] [SUPPORT.md](../SUPPORT.md)
-- [ ] [CHANGELOG.md](../../CHANGELOG.md) updated for the release
-- [ ] [docs/RELEASE_NOTES-0.1.0.md](RELEASE_NOTES-0.1.0.md) (or versioned notes) reviewed
+- [ ] [CHANGELOG.md](../../CHANGELOG.md) updated for the release (version notes reviewed)
 
 ## Metadata
 

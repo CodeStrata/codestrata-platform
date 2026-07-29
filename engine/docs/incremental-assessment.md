@@ -1,16 +1,6 @@
 # Incremental assessment
 
-**Status:** Phase 2F complete (2F.1 planning + 2F.2 execution + 2F.3 operations).
-
 Public product name: **CodeStrata**. Internal package/CLI/config remain `codestrata`.
-
-## Phase 2F roadmap
-
-| Sub-phase | Scope |
-| --------- | ----- |
-| **2F.1** | Fingerprints, change classification, impact, reuse policy, deterministic plan |
-| **2F.2** | Selective execution, inventory merge, stage rebuild, merge validation, full-rebuild fallback |
-| **2F.3 (this)** | Post-execution validation, semantic equivalence, telemetry, explainability, provenance, controlled CLI/MCP rollout |
 
 ## Purpose
 
@@ -61,7 +51,7 @@ rollout_mode = "off"   # default
 | `off` | blocked | blocked |
 | `plan_only` | allowed | blocked |
 | `opt_in` | allowed | explicit CLI/MCP/API only |
-| `default_with_fallback` | modeled/tested | **not** activated as default in 2F.3 |
+| `default_with_fallback` | modeled/tested | **not** activated as the product default |
 
 Legacy `enabled` / `execution_enabled` map safely when `rollout_mode` is omitted.
 Conflicting combinations are rejected. Hard safety fallbacks cannot be disabled.
@@ -108,12 +98,13 @@ Four new tools (existing 20 granular + 5 agent tools unchanged):
 
 ## Validation, metrics, explainability
 
-- `IncrementalValidationService` — execution, plan, fallback, reuse, AI integrity; optional semantic equivalence
-- `AssessmentSemanticComparator` — canonical normalization; ignores run/snapshot/timestamps only
-- `IncrementalMetricsCalculator` — actual reuse/recompute ratios; fallback counts as zero reuse
-- `IncrementalExplainabilityService` — deterministic reason codes; no speculative language
-- `IncrementalExecutionRecord` — primary DTO for CLI/MCP inspection
-- Provenance under `{knowledge}/incremental_executions/` (additive JSON records)
+After an incremental execution, the Engine:
+
+- validates plan/execution integrity and optional semantic equivalence
+- computes reuse/recompute metrics (fallback counts as zero reuse)
+- emits deterministic explainability reason codes (no speculative language)
+- persists an execution record for CLI/MCP inspection under
+  `{knowledge}/incremental_executions/`
 
 ## Supported scenarios
 
@@ -133,11 +124,14 @@ Four new tools (existing 20 granular + 5 agent tools unchanged):
 - AI reuse (always disabled)
 - any case where safety cannot be proven → full rebuild
 
-## Golden equivalence testing
+## Shared rules and incremental reuse
 
-Use `tests/application/incremental/equivalence_helpers.py` to compare
-incremental vs clean full `AssessmentCommandResult` artifacts without reading
-report files.
+Each shared `RuleMetadata` may declare `incremental_behaviors`.
+`rule_invalidation_fingerprint` combines rule ID, version, config, and context.
+
+Incremental rule reuse is **conservative** today: plans recompute
+(`reuse_claimed=false`, `actual_reuse_count=0`). Selective reuse requires proven
+compatibility, provenance, equivalence, and telemetry before it is enabled.
 
 ## Security
 
@@ -145,13 +139,11 @@ No caller-defined steps, fingerprints, SQL, blob access, report reads, shell/Git
 commands, path traversal, unbounded explanations, or disabling hard fallbacks.
 Execution records never expose absolute paths, credentials, or source code.
 
-## Phase 2 completion
+## Related
 
-Phase 2 (knowledge + agents + MCP + incremental foundation through 2F.3) is
-complete for controlled opt-in use. Full assessment remains the default product
-path.
-
-## Related products
+Contributors can use
+`tests/application/incremental/equivalence_helpers.py` to compare incremental
+vs clean full assessment artifacts without reading report files.
 
 Advanced organizational knowledge capabilities are available in CodeStrata
 Platform. See [community-vs-platform.md](community-vs-platform.md).

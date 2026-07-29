@@ -45,7 +45,6 @@ versions, then coordinate disclosure with you.
 
 ## Related documentation
 
-* [Threat model](docs/security/threat-model.md)
+* [Threat model](docs/security/threat-model.md) (includes hardening checklist)
 * [Security architecture](docs/security/architecture.md)
-* [Production hardening checklist](docs/security/production-hardening-checklist.md)
 * [MCP security](docs/mcp/security.md)

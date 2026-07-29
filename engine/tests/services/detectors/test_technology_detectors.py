@@ -9,6 +9,7 @@ from codestrata.services.detectors import (
     JavaScriptTechnologyDetector,
     JavaTechnologyDetector,
     PhpTechnologyDetector,
+    PythonTechnologyDetector,
 )
 
 
@@ -146,6 +147,74 @@ def test_php_detector_detects_laravel_and_phpunit(
     assert "PHPUnit" in technology_names
 
 
+def test_python_detector_surfaces_nested_fastapi_in_polyglot_workspace(
+    tmp_path: Path,
+) -> None:
+    """Python detector should keep backend FastAPI visible beside a TS frontend."""
+
+    frontend = tmp_path / "frontend"
+    backend = tmp_path / "backend" / "app"
+    frontend.mkdir(parents=True)
+    backend.mkdir(parents=True)
+
+    (frontend / "package.json").write_text(
+        json.dumps(
+            {
+                "dependencies": {"react": "^19.0.0"},
+                "devDependencies": {"typescript": "^5.0.0"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (frontend / "main.ts").write_text("export const app = true;\n", encoding="utf-8")
+    # Root package.json mirrors common fullstack monorepo layouts.
+    (tmp_path / "package.json").write_text(
+        json.dumps({"private": True, "workspaces": ["frontend", "backend"]}),
+        encoding="utf-8",
+    )
+    (tmp_path / "frontend" / "app.js").write_text("console.log('ui');\n", encoding="utf-8")
+
+    (tmp_path / "pyproject.toml").write_text(
+        '[tool.uv.workspace]\nmembers = ["backend"]\n',
+        encoding="utf-8",
+    )
+    (tmp_path / "backend" / "pyproject.toml").write_text(
+        """
+[project]
+name = "backend"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.30.0",
+]
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+""".strip()
+        + "\n",
+        encoding="utf-8",
+    )
+    (backend / "main.py").write_text(
+        "from fastapi import FastAPI\n\napp = FastAPI()\n",
+        encoding="utf-8",
+    )
+
+    repository = create_repository(tmp_path)
+    python_names = {
+        technology.name for technology in PythonTechnologyDetector().detect(repository)
+    }
+    assert "Python" in python_names
+    assert "FastAPI" in python_names
+    assert "pytest" in python_names
+
+    composite = CompositeTechnologyDetector(
+        detectors=[
+            JavaScriptTechnologyDetector(),
+            PythonTechnologyDetector(),
+        ]
+    )
+    combined = {technology.name for technology in composite.detect(repository)}
+    assert {"Python", "FastAPI", "TypeScript", "JavaScript", "Node.js"} <= combined
+
+
 def test_composite_detector_combines_supported_ecosystems(
     tmp_path: Path,
 ) -> None:
@@ -163,6 +232,10 @@ def test_composite_detector_combines_supported_ecosystems(
         "<?php echo 'hello';",
         encoding="utf-8",
     )
+    (tmp_path / "app.py").write_text(
+        "print('hello')\n",
+        encoding="utf-8",
+    )
 
     repository = create_repository(tmp_path)
 
@@ -171,6 +244,7 @@ def test_composite_detector_combines_supported_ecosystems(
             JavaTechnologyDetector(),
             JavaScriptTechnologyDetector(),
             PhpTechnologyDetector(),
+            PythonTechnologyDetector(),
         ]
     )
 
@@ -181,3 +255,4 @@ def test_composite_detector_combines_supported_ecosystems(
     assert "Java" in technology_names
     assert "JavaScript" in technology_names
     assert "PHP" in technology_names
+    assert "Python" in technology_names

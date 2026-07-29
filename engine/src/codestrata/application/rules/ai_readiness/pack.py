@@ -61,7 +61,7 @@ class AiReadinessRulePack:
     supported_languages: tuple[str, ...] = ()
     default_enabled: bool = False
     requires_enterprise_context: bool = False
-    documentation_reference: str = "docs/analysis-intelligence/ai-readiness/hygiene-rules.md"
+    documentation_reference: str = "docs/analysis-intelligence/shared-rule-platform.md"
     configuration_requirements: tuple[str, ...] = (
         "rules.enabled=true",
         "rules.ai_readiness.enabled=true",

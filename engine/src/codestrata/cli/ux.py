@@ -25,7 +25,7 @@ DOCS_VSCODE = f"{DOCS_HOME}/extensions/vscode"
 DOCS_CURSOR = f"{DOCS_HOME}/extensions/cursor"
 DOCS_CLI = f"{DOCS_HOME}/reference/cli"
 WEBSITE = "https://codestrata.ai"
-GITHUB_ISSUES = "https://github.com/sknampally/codestrata/issues"
+GITHUB_ISSUES = "https://github.com/CodeStrata/codestrata-engine/issues"
 
 # Local state (not telemetry). Lives under the Engine knowledge/workspace parent.
 _CLI_STATE_DIRNAME = ".codestrata"

@@ -4,9 +4,8 @@
 
 | Doc | Purpose |
 | --- | ------- |
-| [threat-model.md](threat-model.md) | Community Edition threat model (operational) |
+| [threat-model.md](threat-model.md) | Community Edition threat model and hardening checklist |
 | [architecture.md](architecture.md) | Security architecture notes (implementation) |
-| [production-hardening-checklist.md](production-hardening-checklist.md) | Pre-RC checklist (operational) |
 | [sbom-cyclonedx.json](sbom-cyclonedx.json) | CycloneDX SBOM snapshot (dev environment) |
 
 Policy: [../../SECURITY.md](../../SECURITY.md)

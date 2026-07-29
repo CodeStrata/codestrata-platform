@@ -2,62 +2,60 @@
 
 <!-- documentation-visibility: public-contributor -->
 
-**Audience:** Engine maintainers and Community contributors working on the Engine.
+**Audience:** Community users and contributors working on CodeStrata Engine.
 
-**Public product documentation** (install, first assessment, reports, extensions,
-Community vs Platform) lives in the documentation portal:
+**Product journeys** (install, first assessment, reports, extensions, Community
+vs Platform) are canonical in the public portal:
 
-- Canonical public URL: [https://docs.codestrata.ai](https://docs.codestrata.ai)
+- [https://docs.codestrata.ai](https://docs.codestrata.ai)
 
 ```text
-Public journeys  →  docs.codestrata.ai (codestrata-docs)
-Engine contracts →  docs/ in this repository (codestrata-engine)
+Public journeys  →  docs.codestrata.ai
+Engine contracts →  docs/ in this repository
 ```
 
-Do **not** duplicate end-user tutorials here. Journey pages below are pointers
-to the public portal.
+Prefer linking the portal for end-user tutorials. Keep Engine `docs/` focused on
+CLI contracts, architecture, MCP, security, and contributor guidance.
 
-## Public journey pointers
+## Getting started
 
-| Topic | Pointer |
-| ----- | ------- |
+| Topic | Document |
+| ----- | -------- |
 | Getting Started | [getting-started.md](getting-started.md) |
 | Installation | [installation.md](installation.md) |
 | Quick Start | [quick-start.md](quick-start.md) |
 | First assessment | [tutorial.md](tutorial.md) |
 | Reports | [report-interpretation.md](report-interpretation.md) |
-| AI Providers | [ai-enrichment.md](ai-enrichment.md) |
-| CLI (overview) | [cli-reference.md](cli-reference.md) |
-| Anonymous telemetry (opt-in) | [telemetry.md](telemetry.md) |
-| Privacy policy | [../PRIVACY.md](../PRIVACY.md) |
+| AI enrichment | [ai-enrichment.md](ai-enrichment.md) |
+| CLI reference | [cli-reference.md](cli-reference.md) |
+| Telemetry (opt-in) | [telemetry.md](telemetry.md) |
+| Privacy | [../PRIVACY.md](../PRIVACY.md) |
 | Examples | [examples.md](examples.md) |
 | Community vs Platform | [community-vs-platform.md](community-vs-platform.md) |
 | Troubleshooting | [troubleshooting.md](troubleshooting.md) |
 
-## Engine technical documentation (canonical here)
+## Technical reference
 
 | Document | Description |
 | -------- | ----------- |
-| [configuration-profiles.md](configuration-profiles.md) | Profiles and Engine configuration depth |
+| [configuration-profiles.md](configuration-profiles.md) | Execution profiles and configuration |
 | [public-contracts.md](public-contracts.md) | Community SDK/CLI contracts |
 | [report-contract.md](report-contract.md) | Report schema contract |
 | [report-generation.md](report-generation.md) | HTML/JSON generation |
-| [capabilities.md](capabilities.md) | Capability matrix |
-| [runtime.md](runtime.md) | Assess runtime |
+| [runtime.md](runtime.md) | Assess runtime and performance controls |
 | [architecture-guide.md](architecture-guide.md) | Architecture overview |
-| [architecture/](architecture/) | Architecture deep dives |
+| [rule-engine.md](rule-engine.md) | Deterministic rule engine |
+| [analysis-intelligence/shared-rule-platform.md](analysis-intelligence/shared-rule-platform.md) | Shared Rule Platform |
+| [analysis-intelligence/rule-authoring.md](analysis-intelligence/rule-authoring.md) | Shared rule authoring |
 | [mcp/README.md](mcp/README.md) | MCP technical reference |
 | [apis.md](apis.md) | Integration surfaces |
-| [security/](security/) | Threat model / hardening |
+| [security/](security/) | Threat model and hardening |
 | [extension-architecture.md](extension-architecture.md) | Extension API |
-| [contributor-guide.md](contributor-guide.md) | Engine contributor guide |
-| [RELEASE_NOTES-0.1.0.md](RELEASE_NOTES-0.1.0.md) | Engine release notes |
-
-Deep analysis-intelligence and assessment-framework methodology docs remain in
-the private monorepo until public contributor editions are published.
+| [contributor-guide.md](contributor-guide.md) | Contributor guide |
+| [CHANGELOG.md](../CHANGELOG.md) | Changelog / release notes |
 
 ## Related entry points
 
-- [engine README](../README.md)
+- [README.md](../README.md)
 - [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [https://docs.codestrata.ai](https://docs.codestrata.ai)

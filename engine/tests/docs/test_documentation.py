@@ -138,7 +138,6 @@ def test_required_developer_docs_exist() -> None:
         DOCS / "tutorial.md",
         DOCS / "community-edition.md",
         DOCS / "COMMUNITY_EDITION_CHECKLIST.md",
-        DOCS / "RELEASE_NOTES-0.1.0.md",
         ROOT / "NOTICE",
         ROOT / "SUPPORT.md",
         ROOT / "LICENSE",

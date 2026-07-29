@@ -90,7 +90,7 @@ class PhpLanguageEvidenceProvider:
                     CAP_BUILD_DEPENDENCIES,
                 ),
             ),
-            documentation_reference=("docs/analysis-intelligence/evidence-providers/php.md"),
+            documentation_reference=("docs/rule-engine.md"),
         )
 
     @property

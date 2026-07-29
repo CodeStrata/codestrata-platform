@@ -15,5 +15,5 @@ Typical flow:
 3. Run `codestrata assess --repo <path> --output reports --no-ai`
 4. Compare with curated expected results where provided
 
-Public repository: [codestrata-examples](https://github.com/sknampally/codestrata-examples)
+Public repository: [codestrata-examples](https://github.com/CodeStrata/codestrata-examples)
 (when published).

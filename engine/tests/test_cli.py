@@ -48,7 +48,7 @@ def test_about_command() -> None:
     assert info.summary in result.stdout
     assert f"Website: {info.website}" in result.stdout
     assert f"GitHub: {info.github}" in result.stdout
-    assert "https://github.com/sknampally/codestrata" in result.stdout
+    assert "https://github.com/CodeStrata/codestrata-engine" in result.stdout
     assert "aimf" not in result.stdout.lower()
 
 

@@ -1,14 +1,14 @@
-# Contributor Guide
+# Contributor guide
 
 How to develop CodeStrata Engine safely and consistently.
 
-Also see monorepo [CONTRIBUTING.md](../CONTRIBUTING.md),
+Also see [CONTRIBUTING.md](../CONTRIBUTING.md),
 [coding-standards.md](coding-standards.md), [SECURITY.md](../SECURITY.md),
-and the documentation portal [README.md](README.md).
+and the documentation index [README.md](README.md).
 
 ## Development setup
 
-From the **Engine** tree (`engine/` in the monorepo, or `codestrata-engine`):
+From a `codestrata-engine` checkout:
 
 ```bash
 python3.12 -m venv .venv
@@ -24,12 +24,11 @@ codestrata version
 pytest -q tests/test_cli.py
 ```
 
-Monorepo maintainers also install Platform per root CONTRIBUTING.md.
-
 ## Where docs live
 
-Prefer the journey portal ([README.md](README.md)) over inventing parallel guides.
-Reference Governance and Knowledge; do not duplicate them.
+Prefer the public portal ([https://docs.codestrata.ai](https://docs.codestrata.ai))
+for end-user journeys. Keep Engine `docs/` for contracts, architecture, MCP,
+security, and contributor guidance ([README.md](README.md)).
 
 ## Quality gates (required before PR)
 
@@ -54,15 +53,15 @@ pytest tests/docs -q
 * Match existing package layout (`application` / `domain` / `infrastructure`).
 * Do not commit secrets, `.env`, or large `reports/` trees.
 * Update docs when CLI, artifacts, or configuration change.
-* Never resurrect pre-rename package/CLI/config identifiers in user-facing surfaces.
+* Keep Community Edition surfaces free of Platform-only assumptions.
 
 ## Adding a language fixture
 
 1. Create `test-fixtures/sample-<lang>-app/` with a minimal build manifest.
 2. Add a short README with `codestrata assess --repo …` instructions.
-3. Link it from test-fixtures/README.md.
+3. Link it from `test-fixtures/README.md`.
 4. Ensure documentation validation still passes (`tests/docs`).
-5. Do **not** add language samples to the public `examples/` (showcase) tree.
+5. Do **not** add language samples to the public showcase examples tree.
 
 ## Documentation conventions
 

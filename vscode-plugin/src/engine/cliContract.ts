@@ -132,4 +132,4 @@ export const ENGINE_INSTALL_HINT =
   "Then set codestrata.engine.executable if the CLI is not on PATH.";
 
 export const ENGINE_DOCS_QUICK_START =
-  "https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md";
+  "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md";

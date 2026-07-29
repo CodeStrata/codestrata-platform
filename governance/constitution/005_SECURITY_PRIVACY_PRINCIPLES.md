@@ -36,8 +36,7 @@ in existing security docs.
 
 ## 3. Engineering controls (pointers)
 
-- Threat model: [engine/docs/security/threat-model.md](../../engine/docs/security/threat-model.md)
-- Hardening checklist: [engine/docs/security/production-hardening-checklist.md](../../engine/docs/security/production-hardening-checklist.md)
+- Threat model (includes hardening checklist): [engine/docs/security/threat-model.md](../../engine/docs/security/threat-model.md)
 - Release security gate: `scripts/security_check.py` via `verify_release`
 
 ## 4. Privacy commitments (outline)

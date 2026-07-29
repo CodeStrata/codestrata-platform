@@ -75,5 +75,5 @@ See [Security](/security/) and [Privacy](/security/privacy).
 
 ## Detailed reference
 
-[codestrata-cursor](https://github.com/sknampally/codestrata-cursor)
+[codestrata-cursor](https://github.com/CodeStrata/codestrata-cursor)
 (public mirror when published).

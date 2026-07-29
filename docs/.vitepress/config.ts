@@ -224,7 +224,7 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: "github", link: "https://github.com/sknampally/codestrata-engine" },
+      { icon: "github", link: "https://github.com/CodeStrata/codestrata-engine" },
     ],
     footer: {
       message: "",

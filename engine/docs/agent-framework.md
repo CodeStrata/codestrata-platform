@@ -1,10 +1,10 @@
 # CodeStrata Agent Framework
 
-Phase 2D adds a transport-neutral **Agent Framework** that coordinates existing
-application services. Agents are application-level orchestrators — not MCP
-clients, CLI adapters, chat bots, or alternate business-logic implementations.
+Transport-neutral workflows that coordinate existing Engine application
+services. Agents are orchestrators — not MCP clients, chat bots, or alternate
+business-logic implementations.
 
-Public product name: **CodeStrata**. Internal package/CLI/config remain `codestrata`.
+Public product name: **CodeStrata**. Package and CLI remain `codestrata`.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ Provide bounded, deterministic workflows that:
 - assemble grounded repository and modernization review packages
 
 Agents **orchestrate**; they do not reimplement scanning, graph construction,
-rules, recommendations, persistence, Bedrock, or report generation.
+rules, recommendations, persistence, AI providers, or report generation.
 
 ## Deterministic-first design
 
@@ -27,13 +27,13 @@ Core workflow behavior works fully without AI:
 - validation, evidence retrieval, and snapshot comparison are deterministic
 - AI is never required to decide whether an assessment completed
 
-This increment does **not** implement LLM-based tool selection, ReAct loops,
+The framework does **not** implement LLM-based tool selection, ReAct loops,
 autonomous retries, or reflection.
 
 ## Architecture
 
 ```text
-CLI / MCP / REST
+CLI / MCP / other adapters
         │
         ├───────────────┐
         │               │
@@ -56,7 +56,7 @@ Package: `codestrata.application.agents`
 | `knowledge_agent.py` | Persisted knowledge assembly |
 | `assessment_agent.py` | Assessment execution |
 | `validation_agent.py` | Completeness / grounding checks |
-| `planner.py` | `DeterministicAgentPlanner` + future `AgentPlanner` protocol |
+| `planner.py` | Deterministic planner (+ extension protocol) |
 | `policies.py` | Conservative execution bounds |
 | `evidence.py` | Grounded evidence records |
 | `factory.py` | Injectable composition |
@@ -76,12 +76,12 @@ captured evidence, and a validation outcome when applicable.
 
 ### Assessment workflow (recommended order)
 
-1. KnowledgeAgent resolves prior repository context (when registered)
-2. KnowledgeAgent captures previous assessment IDs
-3. AssessmentAgent calls `AssessmentApplicationService`
-4. KnowledgeAgent retrieves the new persisted run
-5. ValidationAgent validates the persisted run
-6. Orchestrator returns the grounded result
+1. Resolve prior repository context (when registered)
+2. Capture previous assessment IDs
+3. Call `AssessmentApplicationService`
+4. Retrieve the new persisted run
+5. Validate the persisted run
+6. Return the grounded result
 
 ### Review workflow
 
@@ -114,8 +114,6 @@ Issues use severities: `info`, `warning`, `error`, `blocking`.
 When `stop_on_blocking_validation` is true (default), the orchestrator marks the
 workflow `blocked` instead of successful completion.
 
-Phase 1 UUID findings are never treated as authoritative.
-
 ## Policies
 
 ```toml
@@ -130,8 +128,8 @@ stop_on_blocking_validation = true
 ```
 
 Omitted `[agents]` keeps defaults. Dependency depth cannot exceed 3. Existing
-`codestrata.toml` files remain valid without this section. AI provider settings stay
-under `[ai]` / `[aws]`.
+`codestrata.toml` files remain valid without this section. AI provider settings
+stay under `[ai]` / `[aws]`.
 
 ## Composition
 
@@ -148,10 +146,10 @@ result = orchestrator.review_repository(
 )
 ```
 
-Tests should inject fake services. Importing `codestrata.application.agents` does not
-open a database or call Bedrock.
+Tests should inject fake services. Importing `codestrata.application.agents`
+does not open a database or call an AI provider.
 
-## CLI / MCP adapters (Phase 2E)
+## CLI and MCP adapters
 
 Thin transport adapters call `AgentOrchestrator` only — no duplicated workflow
 logic.
@@ -171,11 +169,12 @@ Common options: `--config`, `--json`. Review also accepts bound overrides
 
 **`codestrata assess` vs `codestrata agent assess`**
 
-- `codestrata assess` — direct `AssessmentApplicationService` entry (reports + persistence)
-- `codestrata agent assess` — orchestrated assessment plus prior context, persisted IDs,
-  validation, evidence summaries, and workflow steps
+- `codestrata assess` — direct assessment entry (reports + persistence)
+- `codestrata agent assess` — orchestrated assessment plus prior context,
+  persisted IDs, validation, evidence summaries, and workflow steps
 
-Exit codes: `0` completed, `1` blocked (validation), `2` configuration/execution failure.
+Exit codes: `0` completed, `1` blocked (validation), `2` configuration/execution
+failure.
 
 ### MCP: high-level agent tools
 
@@ -187,9 +186,8 @@ Additive tools on the CodeStrata FastMCP server:
 - `compare_snapshots_with_agents`
 - `review_modernization_with_agents`
 
-Granular tools (20) remain for precise queries. Agent tools return bounded
-multi-step workflow results. Blocking validation is returned as a structured
-result, not necessarily as an MCP protocol error.
+Granular tools remain for precise queries. Agent tools return bounded multi-step
+workflow results. Blocking validation is returned as a structured result.
 
 `create_mcp_server(..., agent_orchestrator=…)` accepts an injected orchestrator;
 when omitted, the factory composes one from the same query/assessment services.
@@ -208,12 +206,9 @@ when omitted, the factory composes one from the same query/assessment services.
 - No new recommendation / rule / graph engines
 - Review narratives remain deterministic aggregations (no required AI prose)
 
-## Related Phase 2 capability
+## Related
 
-**Phase 2F** incremental assessment (including 2F.3 validation, telemetry,
-explainability, and `codestrata incremental` / MCP tools) is complete for controlled
-opt-in use. Agent workflows are unchanged. See
-[incremental-assessment.md](incremental-assessment.md).
-
-Advanced organizational capabilities after local agents are available in
-CodeStrata Platform. See [community-vs-platform.md](community-vs-platform.md).
+- [incremental-assessment.md](incremental-assessment.md)
+- [mcp-server.md](mcp-server.md)
+- [community-vs-platform.md](community-vs-platform.md) — organizational
+  capabilities beyond local agents

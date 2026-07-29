@@ -1,6 +1,6 @@
 """Technical debt taxonomy categories (Phase 4.3.1).
 
-Aligned with docs/assessment-framework/rule-taxonomy.md. These are methodology
+Aligned with docs/analysis-intelligence/shared-rule-platform.md. These are methodology
 identifiers for future rules and assessment metadata — not executable rules.
 """
 

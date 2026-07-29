@@ -98,9 +98,8 @@ output when AI is unavailable or fails.
                                  advisor.json
 ```
 
-Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md),
-[engine/docs/runtime-performance.md](engine/docs/runtime-performance.md), and siblings under
-[engine/docs/](engine/docs/).
+Topic docs: [engine/docs/runtime.md](engine/docs/runtime.md) (includes performance
+controls) and siblings under [engine/docs/](engine/docs/).
 
 ## Design principles
 
@@ -351,28 +350,30 @@ Details: [docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analys
 `LegacyRuleAdapter` and `RuleExecutionFacade` connect the Assessment Graph
 `RuleEngine` to the Shared Rule Platform without changing `codestrata assess`.
 Adapted legacy evaluation preserves Finding IDs. See
-[docs/analysis-intelligence/rule-platform-migration.md](engine/docs/analysis-intelligence/rule-platform-migration.md).
+[engine/docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analysis-intelligence/shared-rule-platform.md).
 
-### Assessment Framework (Phase 4.1.2)
+### Assessment Framework
 
 Methodology for dimensions, rule taxonomy, evidence/confidence, scoring design,
 business impact vs severity, modernization waves, and CTO report structure.
-Documentation only—no production scoring. See
-[docs/assessment-framework/README.md](engine/docs/assessment-framework/README.md).
+Documentation for Community contributors lives under Engine shared-rule and
+report docs (no separate assessment-framework tree in the Community export).
+See [engine/docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analysis-intelligence/shared-rule-platform.md)
+and [engine/docs/report-generation.md](engine/docs/report-generation.md).
 
-### Architecture Intelligence (Phase 4.2.1 / 4.2.1a / 4.2.2)
+### Architecture Intelligence
 
 Initial production pack `architecture.core` (v1.0.0) registers seven SharedRules.
-Phase **4.2.1a** hardens precision: architectural-unit selection (nested packages
+Precision hardening includes architectural-unit selection (nested packages
 collapsed), dependency normalization (parent/child, type-only, init/registration),
 separated extraction vs classification coverage, and tighter coupling/direction
 applicability. Discoverable via `codestrata rules` / MCP. Merged into `codestrata assess`
 only when `[rules] enabled` and `[rules.architecture] enabled`.
 
-Phase **4.2.2** adds Language Evidence Providers that collect and normalize
-language facts for reuse by shared architecture rules. The provider pipeline is
-**disabled by default** (`[evidence.language] enabled = false`); when disabled,
-assessment behavior is unchanged.
+Language Evidence Providers collect and normalize language facts for reuse by
+shared architecture rules. The provider pipeline is **disabled by default**
+(`[evidence.language] enabled = false`); when disabled, assessment behavior is
+unchanged.
 
 ```text
 paths + source texts → ArchitectureAnalysisView
@@ -383,19 +384,24 @@ opt-in:
 providers → AggregatedLanguageEvidence → ArchitectureAnalysisView
 ```
 
-Details: [docs/analysis-intelligence/architecture/README.md](engine/docs/analysis-intelligence/architecture/README.md)
-and [docs/analysis-intelligence/evidence-providers/README.md](engine/docs/analysis-intelligence/evidence-providers/README.md).
+Details: [engine/docs/analysis-intelligence/shared-rule-platform.md](engine/docs/analysis-intelligence/shared-rule-platform.md)
+and [engine/docs/rule-engine.md](engine/docs/rule-engine.md).
 
-Phase **4.2.3** adds Architecture Conclusions: deterministic grouping and
-interpretation of architecture findings into explainable conclusions and
-consolidated recommendations. Disabled by default
+Architecture Conclusions: deterministic grouping and interpretation of
+architecture findings into explainable conclusions and consolidated
+recommendations. Disabled by default
 (`[analysis.architecture_conclusions] enabled = false`). Findings remain
-unchanged. See
-[docs/analysis-intelligence/architecture-conclusions/README.md](engine/docs/analysis-intelligence/architecture-conclusions/README.md).
+unchanged.
 
-Phase **4.2.4** adds an optional Architecture Assessment section (`architecture-assessment.json`) composed from existing findings and optional conclusions. Disabled by default (`[assessment.sections.architecture] enabled = false`). See [docs/analysis-intelligence/architecture-assessment/README.md](engine/docs/analysis-intelligence/architecture-assessment/README.md).
+An optional Architecture Assessment section (`architecture-assessment.json`)
+is composed from existing findings and optional conclusions. Disabled by
+default (`[assessment.sections.architecture] enabled = false`).
 
-Phase **4.2.5** integrates that section into customer `report.json` and HTML via `ArchitectureReportAdapter` (`assessment.architecture`). Disabled by default (`[report.sections.architecture] enabled = false`). Schema remains `1.2` with an optional additive field. No scoring or AI narrative. See [docs/analysis-intelligence/architecture-reporting/README.md](engine/docs/analysis-intelligence/architecture-reporting/README.md).
+That section can be projected into customer `report.json` and HTML via
+`ArchitectureReportAdapter` (`assessment.architecture`). Disabled by default
+(`[report.sections.architecture] enabled = false`). Schema remains additive.
+No scoring or AI narrative. See
+[engine/docs/report-generation.md](engine/docs/report-generation.md).
 
 ## Repository authentication
 

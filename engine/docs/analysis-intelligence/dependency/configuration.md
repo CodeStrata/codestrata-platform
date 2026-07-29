@@ -54,7 +54,7 @@ enabled = false
 | true | true | true (evidence collection failed) | `failed` |
 
 Primary `finding_ids` are production-only. Complete inventory is in
-`all_finding_ids`. See [assessment-inventory.md](assessment-inventory.md).
+`all_finding_ids`. See assessment-inventory.md.
 
 When `include_synthesis = true` (default), themes/conclusions/recommendations are
 attached after inventory assembly. See [synthesis.md](synthesis.md).

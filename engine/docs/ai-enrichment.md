@@ -1,10 +1,9 @@
 # AI Providers / enrichment
 
-> **Canonical public overview:** [AI Providers](https://docs.codestrata.ai/ai-providers/)  
-> Monorepo: `docs/ai-providers/`
+> **Canonical public overview:** [AI Providers](https://docs.codestrata.ai/ai-providers/)
 
-Optional AI is a capability of CodeStrata Engine. Public setup overview lives in
-the docs portal. Engine provider wiring and maintainer detail follows.
+Optional AI is a Community Engine capability. Public setup lives in the docs
+portal; Engine provider wiring follows.
 
 Optional one-call leadership narrative over deterministic findings and
 recommendations. Customer-facing name: **Modernization Advisor**. Internal
@@ -71,5 +70,8 @@ CLI exit code remains 0 for enrichment-only failure.
 
 `advisor.json` (written only on successful enrichment).
 
-See also [architecture/ai-enrichment.md](architecture/ai-enrichment.md) and
-[report-generation.md](report-generation.md).
+## Related
+
+- [report-generation.md](report-generation.md)
+- [runtime.md](runtime.md)
+- [cli-reference.md](cli-reference.md)

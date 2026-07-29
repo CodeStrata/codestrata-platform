@@ -168,7 +168,7 @@ const footerMust = [
   "https://codestrata.ai/#partner",
   "https://codestrata.ai/#faq",
   "https://codestrata.ai/privacy",
-  "https://github.com/sknampally/ai-modernization-factory",
+  "https://github.com/CodeStrata/codestrata-engine",
 ];
 for (const href of footerMust) {
   if (!home.includes(href)) {

@@ -13,13 +13,13 @@ export type AiProviderChoice =
 
 const PROVIDER_DOCS: Record<Exclude<AiProviderChoice, "skip">, string> = {
   bedrock:
-    "https://github.com/sknampally/codestrata-engine/blob/main/docs/ai-enrichment.md",
+    "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/ai-enrichment.md",
   openai:
-    "https://github.com/sknampally/codestrata-engine/blob/main/docs/ai-enrichment.md",
+    "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/ai-enrichment.md",
   "azure-openai":
-    "https://github.com/sknampally/codestrata-engine/blob/main/docs/ai-enrichment.md",
+    "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/ai-enrichment.md",
   anthropic:
-    "https://github.com/sknampally/codestrata-engine/blob/main/docs/ai-enrichment.md",
+    "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/ai-enrichment.md",
 };
 
 export async function offerOptionalAiSetup(): Promise<void> {

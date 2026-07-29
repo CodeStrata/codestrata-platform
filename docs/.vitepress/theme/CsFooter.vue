@@ -51,7 +51,7 @@ function extAttrs(href) {
             </li>
             <li>
               <a
-                href="https://github.com/sknampally/ai-modernization-factory"
+                href="https://github.com/CodeStrata/codestrata-engine"
                 target="_blank"
                 rel="noopener noreferrer"
                 >Open source engine</a

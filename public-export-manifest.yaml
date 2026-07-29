@@ -138,6 +138,7 @@ exports:
       - "CONTRIBUTING.md"
       - "SECURITY.md"
       - "SUPPORT.md"
+      - "CHANGELOG.md"
       - "codestrata.toml"
       - ".env.example"
       - ".github/**"
@@ -149,29 +150,29 @@ exports:
       - "**/complexity/fixtures/**"
       - ".DS_Store"
       - "**/.DS_Store"
-      # Stale docs/tests that referenced pre-move Enterprise paths (if any remain).
-      - "tests/interfaces/mcp/test_mcp_enterprise_tools.py"
       - "reports/**"
-      # Private / historical / Platform-adjacent Engine documentation.
-      - "docs/enterprise-knowledge-graph/**"
-      - "docs/reviews/**"
-      - "docs/design/**"
-      - "docs/mvp-acceptance.md"
-      - "docs/mvp-regression.md"
-      - "docs/release-readiness.md"
-      - "docs/roadmap.md"
+      # Maintainer-only / leftover implementer documentation (not Community journeys).
       - "docs/COMMUNITY_EDITION_CHECKLIST.md"
-      - "docs/modernization-roadmap.md"
       - "docs/assessment-framework/**"
-      - "docs/analysis-intelligence/**"
-      - "docs/mcp/repository-knowledge/**"
-      - "docs/repository-knowledge/**"
+      # Analysis Intelligence: ship only shared-rule-platform + rule-authoring.
+      - "docs/analysis-intelligence/architecture/**"
+      - "docs/analysis-intelligence/architecture-assessment/**"
+      - "docs/analysis-intelligence/architecture-conclusions/**"
+      - "docs/analysis-intelligence/architecture-reporting/**"
+      - "docs/analysis-intelligence/dependency/**"
+      - "docs/analysis-intelligence/evidence-providers/**"
+      - "docs/analysis-intelligence/security/**"
+      - "docs/analysis-intelligence/technical-debt/**"
+      - "docs/analysis-intelligence/testing/**"
+      - "docs/analysis-intelligence/evidence.md"
+      - "docs/analysis-intelligence/suppression.md"
     validation:
       require_files:
         - LICENSE
         - NOTICE
         - PRIVACY.md
         - README.md
+        - CHANGELOG.md
         - pyproject.toml
         - src/codestrata/__init__.py
         - src/codestrata/extensions/__init__.py
@@ -187,14 +188,19 @@ exports:
       forbid_globs:
         - "platform/**"
         - "governance/**"
-        - "docs/mvp-acceptance.md"
-        - "docs/mvp-regression.md"
-        - "docs/release-readiness.md"
-        - "docs/roadmap.md"
         - "docs/assessment-framework/**"
-        - "docs/analysis-intelligence/**"
-        - "docs/mcp/repository-knowledge/**"
-        - "docs/repository-knowledge/**"
+        - "docs/COMMUNITY_EDITION_CHECKLIST.md"
+        - "docs/analysis-intelligence/architecture/**"
+        - "docs/analysis-intelligence/architecture-assessment/**"
+        - "docs/analysis-intelligence/architecture-conclusions/**"
+        - "docs/analysis-intelligence/architecture-reporting/**"
+        - "docs/analysis-intelligence/dependency/**"
+        - "docs/analysis-intelligence/evidence-providers/**"
+        - "docs/analysis-intelligence/security/**"
+        - "docs/analysis-intelligence/technical-debt/**"
+        - "docs/analysis-intelligence/testing/**"
+        - "docs/analysis-intelligence/evidence.md"
+        - "docs/analysis-intelligence/suppression.md"
         - "**/reports/**"
       commands:
         - "python -m pip install -e '.[dev]'"

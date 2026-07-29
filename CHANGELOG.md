@@ -98,7 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cache, bounded file-read workers, source-file/char limits, and peak-RSS timing
 * Deterministic benchmark harness (`scripts/bench_runtime_performance.py`) and
   report under `reports/performance-benchmark/`
-* Docs: [engine/docs/runtime-performance.md](engine/docs/runtime-performance.md)
+* Docs: [engine/docs/runtime.md](engine/docs/runtime.md)
 
 ### Changed
 
@@ -113,18 +113,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 * CLI (`codestrata version`, `codestrata scan`, `codestrata assess`) with local and GitHub sources
-* Phase 1 analysis: detection, analyzers, optional PMD static analysis
+* Analysis: detection, analyzers, optional PMD static analysis
 * Repository Inventory, Repository Graph, Engineering Knowledge Graph
 * Knowledge Pipeline and Assessment Graph
 * Dependency and version extraction (Maven / npm manifests)
 * Deterministic Rule Engine → `findings.json`
 * Deterministic Recommendation Engine → `recommendations.json`
 * Optional one-call Bedrock AI enrichment → `advisor.json`
-* HTML Report v2 (`report.html`) and companion `report.json`
+* HTML Report (`report.html`) and companion `report.json`
 * Deterministic mode (zero AI calls) and AI mode (exactly one call)
-* Open-source documentation, examples, and community files for the MVP release
+* Multi-language detection and evidence: Java, JavaScript/TypeScript, Python, PHP, C#/.NET
+* Local knowledge store, optional MCP server extra, and Agent Framework
+* Execution profiles (`community`, `local`, `enterprise`, `bedrock`, `openai`)
+* Open-source documentation, examples, and community files for the Community Edition release
 
 ### Notes
 
 * Deterministic findings and recommendations are the source of truth.
 * AI enrichment is interpretive only and does not mutate deterministic artifacts.
+* Community defaults include repository assessment, local graphs, deterministic
+  rules, and HTML/JSON reports. Engineering Knowledge Graph organizational
+  features and Platform services (SSO, billing, multi-tenancy) are not Community
+  defaults.
+* This release uses the **CodeStrata** package and CLI exclusively.
+* Known limitations: alpha software status; many analysis packs are feature-gated
+  and off by default; broader executive/CTO report methodology may be ahead of
+  runtime presentation.

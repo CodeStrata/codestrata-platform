@@ -33,8 +33,8 @@ def test_get_package_version_falls_back_when_not_installed(monkeypatch) -> None:
 
 def test_about_info_matches_project_urls() -> None:
     info = get_about_info()
-    assert info.website == "https://github.com/sknampally/codestrata"
-    assert info.github == "https://github.com/sknampally/codestrata"
+    assert info.website == "https://github.com/CodeStrata/codestrata-engine"
+    assert info.github == "https://github.com/CodeStrata/codestrata-engine"
     assert "CodeStrata" in info.summary
     about = format_about()
     assert f"Website: {info.website}" in about

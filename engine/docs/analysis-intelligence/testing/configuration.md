@@ -57,8 +57,8 @@ gates:
 enabled = false
 ```
 
-See [../repository-test-evidence.md](../repository-test-evidence.md) and
-[hygiene-rules.md](hygiene-rules.md).
+See ../repository-test-evidence.md and
+hygiene-rules.md.
 
 ## Gate matrix
 

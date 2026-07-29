@@ -38,4 +38,4 @@ Command and UI copy should say **Engineering Assessment** and **CodeStrata Engin
 
 Do not duplicate Engine documentation. Link to the Engine Quick Start and related docs instead:
 
-https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md
+https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md

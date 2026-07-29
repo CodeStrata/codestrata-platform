@@ -29,8 +29,8 @@ enabled/used flags, success/failure, timestamps.
 Source code, repository names/URLs, file names/paths, findings, recommendations,
 reports, prompts, AI responses, credentials, hostname, username, or email.
 
-Full policy: repository [`PRIVACY.md`](https://github.com/sknampally/codestrata-engine/blob/main/PRIVACY.md)
-and Engine docs [`telemetry.md`](https://github.com/sknampally/codestrata-engine/blob/main/docs/telemetry.md).
+Full policy: repository [`PRIVACY.md`](https://github.com/CodeStrata/codestrata-engine/blob/main/PRIVACY.md)
+and Engine docs [`telemetry.md`](https://github.com/CodeStrata/codestrata-engine/blob/main/docs/telemetry.md).
 
 ## Local assessment
 

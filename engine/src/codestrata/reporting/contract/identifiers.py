@@ -115,3 +115,29 @@ def remap_related_finding_ids(
         if (mapped := finding_id_map.get(str(item))) is not None and mapped in known
     }
     return tuple(sorted(remapped))
+
+
+def align_related_finding_ids(
+    related_finding_ids: Any,
+    *,
+    allowed_finding_ids: set[str] | frozenset[str],
+    alias_to_allowed: dict[str, str] | None = None,
+) -> tuple[str, ...]:
+    """Keep only related finding IDs that exist in the final customer finding set.
+
+    ``alias_to_allowed`` remaps pre-dedupe / alternate IDs onto a surviving
+    finding ID (for example when multiple findings collapse on rule+title).
+    Unknown IDs are dropped; empty results are allowed.
+    """
+
+    aliases = alias_to_allowed or {}
+    kept: set[str] = set()
+    for item in related_finding_ids or ():
+        candidate = str(item)
+        if candidate in allowed_finding_ids:
+            kept.add(candidate)
+            continue
+        remapped = aliases.get(candidate)
+        if remapped is not None and remapped in allowed_finding_ids:
+            kept.add(remapped)
+    return tuple(sorted(kept))

@@ -11,7 +11,7 @@ Repository Inventory (manifest + fingerprints)
      ↓
 Repository Graph (nodes + relationships)
      ↓
-Dependency extraction (Maven / package.json)
+Dependency extraction (Maven / package.json and related manifests)
 ```
 
 ## What it contains
@@ -26,7 +26,7 @@ Dependency extraction (Maven / package.json)
 
 * Full source file bodies
 * Secrets and absolute host paths in customer-facing reports
-* Lockfile-only resolution (v0.1.0 uses manifest-declared versions)
+* Lockfile-only resolution (manifest-declared versions are used)
 
 ## Artifacts
 
@@ -38,8 +38,13 @@ Under `reports/<repo>/<run>/graphs/`:
 
 ## Boundaries
 
-* Phase 1 `Repository` / `RepositoryFacts` remain scanner and analyzer DTOs.
-* The Repository Graph is adapted from inventory; it is not collapsed into Phase 1 models.
+* Scanner and analyzer DTOs remain separate from the graph model.
+* The Repository Graph is adapted from inventory; it is not collapsed into
+  scanner DTOs.
 * Graph construction never calls AI.
 
-See also [runtime.md](runtime.md) and [assessment-graph.md](assessment-graph.md).
+## Related
+
+- [runtime.md](runtime.md)
+- [assessment-graph.md](assessment-graph.md)
+- [rule-engine.md](rule-engine.md)

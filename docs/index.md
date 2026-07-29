@@ -16,7 +16,7 @@ hero:
       link: /getting-started/install
     - theme: alt
       text: View GitHub
-      link: https://github.com/sknampally/codestrata-engine
+      link: https://github.com/CodeStrata/codestrata-engine
 
 features:
   - title: Install Engine

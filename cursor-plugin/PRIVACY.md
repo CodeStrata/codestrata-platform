@@ -26,4 +26,4 @@ Cursor’s own models and privacy controls are separate from CodeStrata — revi
 Optional AI uses Engine provider configuration (Bedrock / OpenAI / Azure OpenAI / Anthropic).  
 Never confuse AI keys with Platform API keys.
 
-Engine docs: https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md
+Engine docs: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md

@@ -1,4 +1,4 @@
-# MCP Setup
+# MCP setup
 
 ## Configuration
 
@@ -37,6 +37,8 @@ codestrata mcp tools --config codestrata.toml
 codestrata mcp health --config codestrata.toml
 ```
 
+Install the optional extra first: `pip install 'codestrata[mcp]'`.
+
 ## Memory vs pgvector
 
 | Mode | Notes |
@@ -52,4 +54,18 @@ Never silently falls back from pgvector to memory.
 - **streamable-http** (`--transport http`) — localhost developer use
 - **sse** — supported by the MCP SDK when needed
 
-No remote authentication or public multi-user hosting in this phase.
+Community Edition does not provide remote authentication or public multi-user
+hosting. Keep HTTP bound to `127.0.0.1`.
+
+## Community vs Platform
+
+Local MCP assessment tools are Community Engine features. Organizational RAG /
+portfolio tools appear only when CodeStrata Platform is installed separately.
+See [../mcp-server.md](../mcp-server.md) and
+[../community-vs-platform.md](../community-vs-platform.md).
+
+## Related
+
+- [security.md](security.md)
+- [troubleshooting.md](troubleshooting.md)
+- [../cli-reference.md](../cli-reference.md)

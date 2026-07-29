@@ -22,6 +22,7 @@ from codestrata.reporting.contract.enums import (
 from codestrata.reporting.contract.identifiers import (
     build_finding_id_map,
     remap_related_finding_ids,
+    align_related_finding_ids,
     stable_finding_id,
     stable_recommendation_id,
 )
@@ -40,6 +41,7 @@ __all__ = [
     "REPORT_CONTRACT_VERSION",
     "REPORT_HTML_VERSION",
     "VOLATILE_JSON_PATHS",
+    "align_related_finding_ids",
     "build_finding_id_map",
     "build_report_manifest",
     "remap_related_finding_ids",

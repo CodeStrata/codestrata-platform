@@ -32,4 +32,4 @@ Supported Node: **20.x or 22.x** (host tests via `@vscode/test-electron` work be
 
 Do not duplicate Engine documentation. Link to:
 
-https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md
+https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md

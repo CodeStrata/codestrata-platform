@@ -192,7 +192,7 @@ export async function installEngine(options?: {
         "Install Python 3.12+ from https://www.python.org/downloads/",
         "Or install uv (https://docs.astral.sh/uv/) / pipx, then retry.",
         "Manual: python -m pip install 'codestrata[mcp]'",
-        "Docs: https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md",
+        "Docs: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md",
       ],
     };
   }
@@ -276,9 +276,9 @@ function defaultTroubleshooting(): string[] {
     "Retry with CodeStrata: Install CodeStrata Engine.",
     "Manual install: python -m pip install 'codestrata[mcp]'",
     "Then set codestrata.engine.executable to the absolute path if needed.",
-    "Quick Start: https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md",
+    "Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md",
   ];
 }
 
 export const ENGINE_DOCS_TROUBLESHOOTING =
-  "https://github.com/sknampally/codestrata-engine/blob/main/docs/troubleshooting.md";
+  "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md";

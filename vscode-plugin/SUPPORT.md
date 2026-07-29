@@ -7,9 +7,9 @@
 
 1. Command Palette → **CodeStrata: Open CodeStrata Output**
 2. **CodeStrata: Check CodeStrata Environment**
-3. Engine Quick Start: https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md
-4. Engine troubleshooting: https://github.com/sknampally/codestrata-engine/blob/main/docs/troubleshooting.md
-5. Extension issues: https://github.com/sknampally/codestrata-vscode/issues
+3. Engine Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md
+4. Engine troubleshooting: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md
+5. Extension issues: https://github.com/CodeStrata/codestrata-vscode/issues
 
 ## Community scope
 

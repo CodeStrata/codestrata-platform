@@ -1,18 +1,17 @@
 # Report generation
 
-Customer-facing CodeStrata Engineering Assessment (HTML) and companion JSON.
+Customer-facing CodeStrata Engineering Assessment (HTML) and companion JSON for
+the Community Edition.
 
 ```text
-ModernizationReportInput
-        │  (+ Phase 3 findings / recommendations / optional Advisor)
+Assessment inputs
+        │  (+ findings / recommendations / optional Advisor)
         ▼
-build_customer_report_document()
+Customer report document
         ▼
-CustomerReportDocument  (alias: HtmlReportViewModel)
+HTML renderer
         ▼
-HtmlReportRenderer.render()
-        ▼
-report.html (self-contained, branded, HTML report version 3.0)
+report.html (self-contained, branded)
 ```
 
 ## Artifacts
@@ -44,6 +43,19 @@ public docs portal).
 11. Optional AI Enhancements (when AI enrichment present)
 12. Technical Appendix (evidence, graphs, artifacts, rule IDs)
 
+## Current Engineering Assessment vs future executive report
+
+Today’s production deliverable is the **Engineering Assessment** above
+(hero KPIs, findings, recommendations, optional domain sections). A richer
+CTO-oriented executive report (broader dimension scoring, investment narrative,
+and methodology appendix) remains future presentation work on the same
+deterministic findings and recommendations — it is not a second analysis
+pipeline.
+
+Optional domain assessment sections (for example architecture) may appear in
+`report.json` / HTML when their report gates are enabled. They consume
+in-memory assessment sections and do not implement a full executive redesign.
+
 ## Executive dashboard cards
 
 Factual, evidence-backed values only (no composite “health” or “readiness” scores):
@@ -52,7 +64,7 @@ Factual, evidence-backed values only (no composite “health” or “readiness�
 | ---- | ------ | ------- |
 | Files | Repository file count | integer |
 | Technologies | Detected technologies | integer |
-| Findings | Phase 3 / Phase 1 findings count | integer |
+| Findings | Findings count | integer |
 | Recommendations | Recommendation count | integer |
 | Test Files Detected | `StructureFacts.test_file_count` / `has_tests` | count, Detected, Not detected, or Unknown |
 | CI/CD | `CicdFacts.has_ci` / `pipeline_count` | Detected, Not detected, or Unknown |
@@ -69,6 +81,12 @@ Cloud signals counted: Docker, Kubernetes, Helm, Terraform, CloudFormation, Serv
 * Absolute host paths are not leaked into customer HTML
 * JSON artifact contracts are unchanged by presentation redesign
 * `CustomerReportDocument` is renderer-neutral (HTML today; PDF/Markdown later)
-* `ModernizationHTMLReportRenderer` is a thin facade over this renderer
 
-See also [architecture/html-report-v2.md](architecture/html-report-v2.md).
+## Related
+
+- [report-interpretation.md](report-interpretation.md)
+- [report-contract.md](report-contract.md)
+- [recommendation-engine.md](recommendation-engine.md)
+- [ai-enrichment.md](ai-enrichment.md)
+- [community-vs-platform.md](community-vs-platform.md) — Platform Strategic
+  Roadmap is separate from the Engine Implementation Sequence

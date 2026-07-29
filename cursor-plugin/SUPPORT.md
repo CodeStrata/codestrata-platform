@@ -7,8 +7,8 @@
 
 1. **CodeStrata: Open CodeStrata Output**
 2. **CodeStrata: Check CodeStrata Environment**
-3. Engine Quick Start: https://github.com/sknampally/codestrata-engine/blob/main/docs/quick-start.md
-4. Issues: https://github.com/sknampally/codestrata-cursor/issues
+3. Engine Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md
+4. Issues: https://github.com/CodeStrata/codestrata-cursor/issues
 
 ## Community scope
 

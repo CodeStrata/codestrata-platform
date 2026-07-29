@@ -29,6 +29,7 @@ from codestrata.services.detectors.javascript_technology_detector import (
     JavaScriptTechnologyDetector,
 )
 from codestrata.services.detectors.php_technology_detector import PhpTechnologyDetector
+from codestrata.services.detectors.python_technology_detector import PythonTechnologyDetector
 from codestrata.static_analysis.providers import PmdProvider
 from codestrata.static_analysis.service import StaticAnalysisService
 
@@ -65,6 +66,7 @@ def create_default_analysis_service(
             JavaScriptTechnologyDetector(),
             PhpTechnologyDetector(),
             CsharpTechnologyDetector(),
+            PythonTechnologyDetector(),
         ]
     )
 

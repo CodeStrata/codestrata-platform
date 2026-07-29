@@ -38,4 +38,4 @@ max_physical_lines = 50
 - Python method/constructor parameter counts exclude `self` / `cls`.
 - HIGH severity requires `value > 2 × threshold` (documented `severity_basis`).
 
-Assess wiring: [complexity-assessment.md](complexity-assessment.md).
+Assess wiring: complexity-assessment.md.

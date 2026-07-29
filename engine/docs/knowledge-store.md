@@ -1,20 +1,21 @@
 # Engineering knowledge store
 
-**Status:** Phase 2B Increment 3 (persistent knowledge query services).
+Local persistence for assessment knowledge used by CLI, MCP, and agents.
 
-Assessment opens the store by default (`.codestrata/knowledge/` via `[knowledge].directory`).
+Assessment opens the store by default (`.codestrata/knowledge/` via
+`[knowledge].directory`).
 
 ## Why SQLite + immutable JSON blobs
 
 SQLite indexes repositories, snapshots, runs, and artifact metadata. Graph and
 finding payloads remain content-addressed JSON under `blobs/` so schema-rich
-graphs are not forced into relational tables and stay byte-inspectable.
+graphs stay byte-inspectable and are not forced into relational tables.
 
 ## Layout
 
 ```text
 .codestrata/knowledge/
-  knowledge.sqlite          # schema version 2
+  knowledge.sqlite
   locks/
   blobs/
     manifests/
@@ -23,11 +24,12 @@ graphs are not forced into relational tables and stay byte-inspectable.
     recommendations/
     ai/
   tmp/
+  incremental_executions/   # optional incremental records
 ```
 
-## Schema version 2
+## Schema
 
-Adds:
+Current schema version **2** adds:
 
 - `repository_snapshots` — content fingerprint + manifest blob ref
 - `assessment_runs` — running / completed / failed / aborted
@@ -39,16 +41,11 @@ Migration from v1 is transactional and preserves repositories/aliases.
 
 | Concept | Identity |
 | ------- | -------- |
-| Repository | Durable UUID + canonical key (Increment 1) |
+| Repository | Durable UUID + canonical key |
 | Snapshot | `(repository_id, branch_key, content_fingerprint)` |
 | Assessment run | New UUID each execution; may reuse a snapshot |
 
 Content fingerprint (not timestamps) decides snapshot reuse.
-
-## Full recomputation
-
-Increment 2+ always runs the full deterministic pipeline. Fingerprints are stored
-for future incremental work; they do not skip analysis yet.
 
 ## Persistence failure semantics
 
@@ -74,17 +71,15 @@ manifest fingerprint.
 ## Reports vs knowledge
 
 Report retention (`keep=3`) does not delete knowledge store rows or blobs.
-Knowledge retention policy is deferred.
-
 Reports remain derived outputs. Query services never read `report.json`,
 `report.html`, or run-directory artifacts.
 
-## Knowledge query services (Increment 3)
+## Knowledge query services
 
 Transport-neutral application API:
 
 ```text
-CLI / FastMCP / REST / agents
+CLI / FastMCP / agents
         ↓
 KnowledgeQueryService
         ↓
@@ -108,23 +103,22 @@ Composition helper:
 
 ### Authoritative findings
 
-Query APIs expose **Phase 3** stable findings and recommendations
-(`finding:…`, `recommendation:…`). Phase 1 UUID report findings are not part of
-this knowledge API.
+Query APIs expose stable findings and recommendations (`finding:…`,
+`recommendation:…`). Analyzer-only UUID findings are not part of this knowledge
+API.
 
 ### Artifact validation
 
 Artifacts are selected by run + kind, hash-verified, JSON-parsed, and validated
-against existing domain codecs. Missing required deterministic artifacts raise
-typed errors. Optional AI artifacts return `None` when absent. Corrupt or
-incompatible payloads raise application query errors (never silent substitution).
+against domain codecs. Missing required deterministic artifacts raise typed
+errors. Optional AI artifacts return `None` when absent. Corrupt or incompatible
+payloads raise application query errors (never silent substitution).
 
 ### Historical snapshot comparison
 
-`compare_repository_snapshots` diffs two persisted manifests via
-`RepositoryManifestDiffer`. Results include added / modified / deleted /
-metadata-changed paths. Rename detection is deferred (rename = delete + add).
-Comparison does not read the live working tree.
+`compare_repository_snapshots` diffs two persisted manifests. Results include
+added / modified / deleted / metadata-changed paths. Rename detection is
+deferred (rename = delete + add). Comparison does not read the live working tree.
 
 ### Explanations
 
@@ -136,13 +130,13 @@ do not fabricate missing evidence.
 
 Loaded from the immutable Repository Graph. Dependency traversal uses
 `depends_on` edges, default depth 1, maximum depth 3, with cycle protection and
-result bounds. No relational graph indexes or graph database in this increment.
+result bounds.
 
 ### Why MCP must use query services
 
-Future FastMCP (and REST/CLI/agent) adapters must call `KnowledgeQueryService`
-rather than opening SQLite or blob files. That keeps validation, privacy
-filtering, and DTO stability in one application boundary.
+MCP (and CLI/agent) adapters must call `KnowledgeQueryService` rather than
+opening SQLite or blob files. That keeps validation, privacy filtering, and DTO
+stability in one application boundary.
 
 ## Legacy aliases
 
@@ -150,16 +144,10 @@ Conflicting optional `legacy_repository_key` aliases are skipped during
 `register_or_resolve` and never merge distinct GitHub repositories. Explicit
 `add_alias` still raises on conflict.
 
-## Deferred
+## Related
 
-- REST adapters
-- Incremental graph **execution** with opt-in CLI/MCP rollout (Phase 2F complete;
-  default assess path remains full rebuild — see
-  [incremental-assessment.md](incremental-assessment.md))
-- Additive incremental execution records under
-  `{knowledge}/incremental_executions/`
-- Knowledge retention / GC of unreferenced blobs
-- Catalog-level EKG deduplication across repositories
-- Relational graph indexes / graph database
-- Rename detection in snapshot comparison
-- Persisted engine fingerprints on snapshots (2F.1 infers from run metadata)
+- [incremental-assessment.md](incremental-assessment.md) — opt-in incremental
+  assessment (full rebuild remains the default assess path)
+- [mcp-server.md](mcp-server.md)
+- [community-vs-platform.md](community-vs-platform.md) — Platform RAG /
+  organizational knowledge beyond the local store

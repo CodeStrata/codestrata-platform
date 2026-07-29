@@ -39,7 +39,7 @@ Normalized language evidence (`SourceUnitEvidence`, `DependencyEvidence`,
 `FrameworkUsageEvidence`) can feed `ArchitectureAnalysisView` when
 `[evidence.language] enabled = true`. Providers collect facts; this view and the
 shared rules still own architectural meaning and judgments. See
-[../evidence-providers/README.md](../evidence-providers/README.md).
+../evidence-providers/README.md.
 
 ## Finding identity
 

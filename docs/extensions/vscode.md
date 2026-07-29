@@ -68,5 +68,5 @@ Credentials are **not** stored in the extension.
 ## Detailed reference
 
 Repository and packaging docs:
-[codestrata-vscode](https://github.com/sknampally/codestrata-vscode)
+[codestrata-vscode](https://github.com/CodeStrata/codestrata-vscode)
 (public mirror when published).

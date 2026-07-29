@@ -111,7 +111,7 @@ def make_metadata(
         tags=("security", PACK_ID, "hygiene", "dimension:security"),
         remediation_summary=remediation,
         documentation_reference=(
-            "docs/analysis-intelligence/security/hygiene-rules.md"
+            "docs/analysis-intelligence/shared-rule-platform.md"
         ),
         enabled_by_default=True,
         experimental=False,

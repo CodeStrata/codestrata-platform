@@ -37,7 +37,7 @@ class TechnicalDebtRulePack:
     default_enabled: bool = False
     requires_enterprise_context: bool = False
     documentation_reference: str = (
-        "docs/analysis-intelligence/technical-debt/rule-pack.md"
+        "docs/analysis-intelligence/shared-rule-platform.md"
     )
     configuration_requirements: tuple[str, ...] = (
         "rules.enabled=true",

@@ -143,7 +143,6 @@ defaults.
 ## Related
 
 * [runtime.md](runtime.md)
-* [runtime-performance.md](runtime-performance.md)
 * [ai-enrichment.md](ai-enrichment.md)
 * [cli-reference.md](cli-reference.md)
 * [troubleshooting.md](troubleshooting.md)

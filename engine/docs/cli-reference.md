@@ -1,10 +1,9 @@
-# CLI Reference
+# CLI reference
 
-> **Canonical public overview:** [CLI](https://docs.codestrata.ai/reference/cli)  
-> Monorepo: `docs/reference/cli.md`
+> **Canonical public overview:** [CLI](https://docs.codestrata.ai/reference/cli)
 
-Public journey commands are documented in the docs portal. The remainder of this
-file is the **Engine CLI implementation reference** for maintainers (flags,
+Public journey commands are documented in the docs portal. This file is the
+**Engine CLI reference** for Community Edition users and contributors (flags,
 behaviors, contracts).
 
 Primary commands for CodeStrata. Run `codestrata COMMAND --help` for full
@@ -89,8 +88,9 @@ Guide: [mcp/setup.md](mcp/setup.md).
 
 Portal guide: [AI Providers](https://docs.codestrata.ai/ai-providers/).
 
-When Platform CLI is explicitly enabled, Platform packages may also expose RAG
-provider helpers; Community ``codestrata ai`` remains the assess discovery surface.
+When CodeStrata Platform is installed separately, additional RAG provider
+helpers may appear. Community `codestrata ai` remains the assess discovery
+surface for Bedrock / OpenAI enrichment.
 
 ## Analysis intelligence helpers
 
@@ -101,15 +101,55 @@ provider helpers; Community ``codestrata ai`` remains the assess discovery surfa
 | `codestrata architecture` | Architecture conclusions / assessment / report helpers |
 | `codestrata report validate` | Validate report contract JSON |
 
-## Platform / ops
+## Optional analysis packs
+
+Architecture, cloud, performance, AI readiness, and related packs are **opt-in**
+and default **disabled**. Evidence, rules, analysis, and report gates are
+independent: enabling rules does not collect evidence or write an assessment
+section; enabling a report section does not run analysis.
+
+Common pattern (Cloud shown; AI readiness and performance use the same shape
+with `ai_readiness` / `performance` keys):
+
+```toml
+[analysis.cloud]
+enabled = false
+# include_synthesis = true
+
+[evidence.repository_cloud]
+enabled = false
+
+[rules]
+enabled = false
+
+[rules.cloud]
+enabled = false
+
+[report.sections.cloud]
+enabled = false
+```
+
+AI readiness uses `[analysis.ai_readiness]`,
+`[evidence.repository_ai_readiness]`, `[rules.ai_readiness]`, and
+`[report.sections.ai_readiness]`.
+
+Performance uses `[analysis.performance]`,
+`[evidence.repository_performance]`, `[rules.performance]`, and
+`[report.sections.performance]`.
+
+When analysis is enabled and the pack is on, assessment JSON is written with
+inventories and (unless `include_synthesis = false`) deterministic synthesis.
+Existing configs without these keys remain valid. Shared rule defaults:
+[analysis-intelligence/shared-rule-platform.md](analysis-intelligence/shared-rule-platform.md).
+
+## Other command groups
 
 | Command group | Purpose |
 | ------------- | ------- |
 | `codestrata agent` | Agent Framework workflows |
 | `codestrata incremental` | Incremental assessment (opt-in) |
-| `codestrata enterprise` | Enterprise Knowledge Graph |
+| `codestrata enterprise` | Enterprise Knowledge Graph (not a Community default) |
 | `codestrata roadmap` | Modernization roadmap helpers |
-| `codestrata acceptance` | MVP acceptance harness |
 | `codestrata release` | Release readiness helpers |
 
 ## First-run tips

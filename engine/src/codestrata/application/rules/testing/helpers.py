@@ -208,7 +208,7 @@ def make_metadata(
         tags=("testing", PACK_ID, "hygiene", "dimension:testing"),
         remediation_summary=remediation,
         documentation_reference=(
-            "docs/analysis-intelligence/testing/hygiene-rules.md"
+            "docs/analysis-intelligence/shared-rule-platform.md"
         ),
         enabled_by_default=True,
         experimental=False,

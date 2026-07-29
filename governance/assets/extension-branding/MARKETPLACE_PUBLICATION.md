@@ -31,7 +31,7 @@ Do **not** treat local VSIX presence as Marketplace publication.
 
 Publisher namespace `codestrata` must be created/claimed on Visual Studio
 Marketplace and Open VSX before first upload. Prefer public repository URLs under
-`github.com/codestrata/*` when org repos exist — do not rename extension IDs after
+`github.com/CodeStrata/*` when org repos exist — do not rename extension IDs after
 publish.
 
 ## Branding assets

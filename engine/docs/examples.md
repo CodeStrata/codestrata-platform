@@ -1,19 +1,25 @@
 # Examples
 
-> **Canonical documentation:** [docs.codestrata.ai/community/examples](https://docs.codestrata.ai/community/examples)  
+> **Canonical documentation:**
+> [docs.codestrata.ai/community/examples](https://docs.codestrata.ai/community/examples)
 
-This page is an **Engine maintainer pointer**. End-user journeys live in the public
-CodeStrata documentation portal (`docs/` → codestrata-docs).
+End-user showcase journeys live in the public CodeStrata documentation portal.
+This page points Engine users and contributors at the right local resources.
 
-## Purpose
+## In this repository
 
-Public entry for CodeStrata Examples.
+| Resource | Purpose |
+| -------- | ------- |
+| `test-fixtures/sample-js-app` | Offline smoke sample for `codestrata assess` |
+| [examples/README.md](../examples/README.md) | Engine package examples note |
+| [examples/github-actions/](../examples/github-actions/) | Sample CI workflow |
 
-## For Engine maintainers
+## External showcases
 
-Manifest/fetch implementation detail: ../../examples/README.md and engine/examples/.
+Pinned real-world applications:
+[codestrata-examples](https://github.com/CodeStrata/codestrata-examples).
 
-## Related Engine technical docs
+## Related Engine docs
 
 | Topic | Location |
 | ----- | -------- |

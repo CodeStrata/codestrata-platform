@@ -1,8 +1,8 @@
-# MCP Security
+# MCP security
 
-## Read-only model (Phase 5.7)
+## Read-only model
 
-Tools must not:
+Community MCP tools must not:
 
 - write files or edit repositories
 - run git / shell / package installs
@@ -26,8 +26,15 @@ or cross-repository results are rejected by retrieval scope checks.
 ## HTTP defaults
 
 `host = 127.0.0.1` — localhost only. Do not bind `0.0.0.0` without an external
-access-control plan (out of scope here).
+access-control plan (out of scope for Community Edition).
 
 ## Artifact paths
 
 `allow_artifact_paths = false` by default.
+
+## Related
+
+- [setup.md](setup.md)
+- [troubleshooting.md](troubleshooting.md)
+- [../security/threat-model.md](../security/threat-model.md)
+- [../mcp-server.md](../mcp-server.md)

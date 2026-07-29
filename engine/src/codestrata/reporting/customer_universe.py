@@ -7,7 +7,7 @@ must all resolve from these helpers so leadership surfaces never disagree.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid5
@@ -35,6 +35,7 @@ from codestrata.reporting.contract.enums import (
     normalize_severity,
 )
 from codestrata.reporting.contract.identifiers import (
+    align_related_finding_ids,
     build_finding_id_map,
     remap_related_finding_ids,
     stable_finding_id,
@@ -192,13 +193,60 @@ def resolve_customer_recommendations(
     from codestrata.reporting.prioritization import prioritize_customer_recommendations
 
     findings = resolve_customer_findings(report_input)
+    allowed_finding_ids = {item.id for item in findings}
+    aliases = _related_finding_aliases(report_input, findings)
     finding_id_map = build_finding_id_map(list(report_input.analysis_result.findings))
     merged = merge_customer_recommendations(
         report_input.analysis_result.recommendations,
         result=report_input.assessment_recommendation_result,
         finding_id_map=finding_id_map,
     )
-    return prioritize_customer_recommendations(merged, findings)
+    aligned = tuple(
+        replace(
+            item,
+            related_finding_ids=align_related_finding_ids(
+                item.related_finding_ids,
+                allowed_finding_ids=allowed_finding_ids,
+                alias_to_allowed=aliases,
+            ),
+        )
+        for item in merged
+    )
+    return prioritize_customer_recommendations(aligned, findings)
+
+
+def _related_finding_aliases(
+    report_input: ModernizationReportInput,
+    customer_findings: Sequence[CustomerFinding],
+) -> dict[str, str]:
+    """Map pre-dedupe finding IDs onto the surviving customer finding ID.
+
+    When multiple findings collapse on ``rule_id::title``, recommendations that
+    referenced a dropped finding still retain traceability to the survivor.
+    """
+
+    by_key = {_finding_dedupe_key(item): item.id for item in customer_findings}
+    aliases: dict[str, str] = {}
+
+    for finding in report_input.analysis_result.findings:
+        customer = _from_phase1_finding(finding)
+        survivor = by_key.get(_finding_dedupe_key(customer))
+        if survivor is None:
+            continue
+        aliases[str(finding.id)] = survivor
+        aliases[customer.id] = survivor
+
+    evaluation = report_input.assessment_rule_evaluation
+    if evaluation is not None:
+        for finding in evaluation.findings:
+            customer = _from_phase3_finding(finding)
+            survivor = by_key.get(_finding_dedupe_key(customer))
+            if survivor is None:
+                continue
+            aliases[str(finding.id)] = survivor
+            aliases[customer.id] = survivor
+
+    return aliases
 
 
 def customer_findings_payload(

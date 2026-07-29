@@ -21,8 +21,8 @@ _FALLBACK_SUMMARY = (
     "CodeStrata Engine: deterministic Engineering Assessment and "
     "Engineering Intelligence for software repositories."
 )
-_FALLBACK_HOMEPAGE = "https://github.com/sknampally/codestrata"
-_FALLBACK_REPOSITORY = "https://github.com/sknampally/codestrata"
+_FALLBACK_HOMEPAGE = "https://github.com/CodeStrata/codestrata-engine"
+_FALLBACK_REPOSITORY = "https://github.com/CodeStrata/codestrata-engine"
 
 
 @dataclass(frozen=True, slots=True)
