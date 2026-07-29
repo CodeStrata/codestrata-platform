@@ -245,6 +245,7 @@ exports:
         - LICENSE
         - SECURITY.md
         - README.md
+        - codestrata.toml
         - real-world/README.md
         - real-world/THIRD_PARTY.md
         - real-world/MANIFEST_SCHEMA.md

@@ -1,0 +1,32 @@
+# CodeStrata Engine — Community Edition configuration for showcase workflows.
+# Shipped with codestrata-examples so standalone clones can assess without a
+# parent monorepo codestrata.toml.
+#
+# Documented flow (from this repository root):
+#   python real-world/scripts/fetch_example.py spring-petclinic
+#   codestrata assess \
+#     --repo .codestrata-examples/spring-petclinic \
+#     --output reports/showcases/spring-petclinic \
+#     --profile community \
+#     --no-ai
+#   # or: python real-world/scripts/run_showcase.py spring-petclinic
+#
+# [repository].path is unused when --repo is passed on the CLI.
+
+[repository]
+path = "."
+profile = "community"
+
+[workspace]
+directory = ".codestrata/workspace"
+clean_before_clone = true
+
+[knowledge]
+directory = ".codestrata/knowledge"
+enabled = false
+
+[static_analysis]
+enabled = false
+
+[ai]
+provider = "bedrock"

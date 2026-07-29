@@ -1,7 +1,9 @@
 """Fetch pinned third-party showcase repositories safely.
 
-Designed to be importable from the monorepo root scripts/ wrapper and from the
-portable path under examples/real-world/scripts/ for public export.
+Portable for standalone ``codestrata-examples`` clones and for the monorepo
+``examples/`` tree. Default workspace root is the examples repository itself
+(never the monorepo parent). Monorepo wrappers under ``scripts/`` invoke this
+module unchanged.
 """
 
 from __future__ import annotations
@@ -68,8 +70,8 @@ class ShowcaseManifest:
         return url
 
 
-def repo_root_from_here() -> Path:
-    """Locate monorepo / examples root containing real-world/manifests."""
+def examples_root_from_here() -> Path:
+    """Locate the examples repository root (directory containing real-world/manifests)."""
 
     here = Path(__file__).resolve()
     for candidate in [here.parent, *here.parents]:
@@ -80,6 +82,22 @@ def repo_root_from_here() -> Path:
         if manifests.is_dir():
             return candidate / "examples"
     raise FetchExampleError("Unable to locate examples/real-world/manifests")
+
+
+def repo_root_from_here() -> Path:
+    """Backward-compatible alias for :func:`examples_root_from_here`."""
+
+    return examples_root_from_here()
+
+
+def default_workspace_root(examples_root: Path | None = None) -> Path:
+    """Return the workspace root for fetches and reports.
+
+    Always the examples repository itself (standalone clone or monorepo
+    ``examples/`` tree). Never the monorepo parent.
+    """
+
+    return (examples_root or examples_root_from_here()).resolve()
 
 
 def manifests_dir(examples_root: Path | None = None) -> Path:
@@ -404,7 +422,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--repo-root",
         type=Path,
         default=None,
-        help="Monorepo root (default: discover from this file)",
+        help=(
+            "Workspace root for .codestrata-examples/ and reports/ "
+            "(default: examples repository root containing real-world/)"
+        ),
     )
     parser.add_argument("--force", action="store_true", help="Replace existing destination")
     parser.add_argument("--cleanup", action="store_true", help="Delete fetched destination")
@@ -416,16 +437,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_arg_parser()
     args = parser.parse_args(argv)
     try:
-        examples_root = repo_root_from_here()
-        # If we resolved to examples/, monorepo root is parent.
-        repo_root = args.repo_root
-        if repo_root is None:
-            repo_root = (
-                examples_root.parent
-                if (examples_root / "real-world").is_dir()
-                else examples_root
-            )
-        repo_root = repo_root.resolve()
+        examples_root = examples_root_from_here()
+        repo_root = (
+            args.repo_root.resolve()
+            if args.repo_root is not None
+            else default_workspace_root(examples_root)
+        )
 
         if args.list:
             ids = list_manifest_ids(examples_root=examples_root)

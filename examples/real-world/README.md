@@ -1,7 +1,7 @@
 # Real-world showcases
 
 Pinned third-party open-source applications for demonstrating CodeStrata on
-realistic codebases **without** vendoring upstream source into the monorepo.
+realistic codebases **without** vendoring upstream source into this repository.
 
 ## Layout
 
@@ -9,13 +9,13 @@ realistic codebases **without** vendoring upstream source into the monorepo.
 real-world/
 ├── manifests/           # one YAML per showcase (exact commit SHA required)
 ├── scripts/
-│   ├── fetch_example.py # safe fetch (also via scripts/fetch_example.py)
-│   └── run_showcase.py  # fetch + assess + summary (scripts/run_showcase.py)
+│   ├── fetch_example.py # safe fetch
+│   └── run_showcase.py  # fetch + assess + summary
 ├── MANIFEST_SCHEMA.md
 └── THIRD_PARTY.md
 ```
 
-Fetched trees land under the monorepo root:
+Fetched trees land under the **examples repository root**:
 
 ```text
 .codestrata-examples/<fetch_destination>/
@@ -28,24 +28,19 @@ reports/showcases/<example-id>/
 ```
 
 Both paths are gitignored. Curated, bounded summaries live in
-`examples/expected-results/<example-id>/` for public distribution.
+`expected-results/<example-id>/` for public distribution.
+
+A root `codestrata.toml` in this repository supplies Community Engine settings
+so `codestrata assess` and `run_showcase.py` work from a standalone clone.
 
 ## Commands
 
-From a **codestrata-examples** checkout (portable):
+From a **codestrata-examples** checkout:
 
 ```bash
 python real-world/scripts/fetch_example.py --list
 python real-world/scripts/fetch_example.py spring-petclinic
 python real-world/scripts/run_showcase.py spring-petclinic
-```
-
-From the **codestrata-platform** monorepo (wrappers):
-
-```bash
-python scripts/fetch_example.py --list
-python scripts/fetch_example.py spring-petclinic
-python scripts/run_showcase.py spring-petclinic
 ```
 
 Equivalent assess (after fetch):
@@ -57,6 +52,11 @@ codestrata assess \
   --profile community \
   --no-ai
 ```
+
+From the private **codestrata-platform** monorepo, the same portable scripts
+live under `examples/real-world/scripts/`. Convenience wrappers also exist at
+`scripts/fetch_example.py` and `scripts/run_showcase.py` (they invoke the
+portable scripts; the default workspace is still `examples/`).
 
 Note: the product profile name is `community` (there is no `balanced` profile).
 

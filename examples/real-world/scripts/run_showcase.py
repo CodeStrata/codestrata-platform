@@ -18,10 +18,11 @@ if str(_SCRIPTS) not in sys.path:
 
 from fetch_example import (  # noqa: E402
     FetchExampleError,
+    default_workspace_root,
+    examples_root_from_here,
     fetch_example,
     list_manifest_ids,
     load_manifest,
-    repo_root_from_here,
 )
 
 
@@ -196,6 +197,7 @@ def run_showcase(
     output_root.mkdir(parents=True, exist_ok=True)
 
     selected_profile = profile or manifest.recommended_profile
+    config_path = repo_root / "codestrata.toml"
     started = time.perf_counter()
     cmd = [
         "codestrata",
@@ -208,6 +210,8 @@ def run_showcase(
         selected_profile,
         "--no-ai",
     ]
+    if config_path.is_file():
+        cmd.extend(["--config", str(config_path)])
     completed = subprocess.run(cmd, cwd=repo_root, capture_output=True, text=True)
     elapsed_s = round(time.perf_counter() - started, 2)
 
@@ -262,6 +266,7 @@ def run_showcase(
             "--profile",
             selected_profile,
             "--no-ai",
+            *(["--config", "codestrata.toml"] if config_path.is_file() else []),
         ],
         "exit_code": completed.returncode,
         "elapsed_seconds": elapsed_s,
@@ -351,14 +356,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--profile", default=None)
     parser.add_argument("--force-fetch", action="store_true")
-    parser.add_argument("--repo-root", type=Path, default=None)
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help=(
+            "Workspace root for .codestrata-examples/ and reports/ "
+            "(default: examples repository root containing real-world/)"
+        ),
+    )
     args = parser.parse_args(argv)
     try:
-        examples_root = repo_root_from_here()
-        repo_root = args.repo_root or (
-            examples_root.parent if (examples_root / "real-world").is_dir() else examples_root
+        examples_root = examples_root_from_here()
+        repo_root = (
+            args.repo_root.resolve()
+            if args.repo_root is not None
+            else default_workspace_root(examples_root)
         )
-        repo_root = repo_root.resolve()
         if args.list:
             print("\n".join(list_manifest_ids(examples_root=examples_root)))
             return 0

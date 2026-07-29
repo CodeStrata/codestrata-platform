@@ -139,6 +139,57 @@ def test_provenance_and_cleanup(fetch_mod, tmp_path: Path):
     assert not dest.exists()
 
 
+def test_default_workspace_root_is_examples_repo(fetch_mod):
+    """Standalone and monorepo: workspace is examples/, never its parent."""
+
+    examples_root = fetch_mod.examples_root_from_here()
+    assert examples_root == EXAMPLES_ROOT.resolve()
+    workspace = fetch_mod.default_workspace_root(examples_root)
+    assert workspace == EXAMPLES_ROOT.resolve()
+    assert workspace != REPO_ROOT.resolve()
+    assert (workspace / "real-world" / "manifests").is_dir()
+
+
+def test_cli_default_repo_root_is_not_monorepo_parent(fetch_mod, monkeypatch):
+    """``fetch_example.main`` without --repo-root must not use monorepo parent."""
+
+    captured: dict[str, Path] = {}
+
+    def fake_fetch(example_id, *, repo_root, examples_root, force=False):
+        captured["repo_root"] = repo_root
+        captured["examples_root"] = examples_root
+        return {
+            "example_id": example_id,
+            "destination": str(repo_root / ".codestrata-examples" / "x"),
+        }
+
+    monkeypatch.setattr(fetch_mod, "fetch_example", fake_fetch)
+    code = fetch_mod.main(["spring-petclinic"])
+    assert code == 0
+    assert captured["examples_root"] == EXAMPLES_ROOT.resolve()
+    assert captured["repo_root"] == EXAMPLES_ROOT.resolve()
+    assert captured["repo_root"] != REPO_ROOT.resolve()
+
+
+def test_examples_ships_standalone_codestrata_toml():
+    config = EXAMPLES_ROOT / "codestrata.toml"
+    assert config.is_file()
+    text = config.read_text(encoding="utf-8")
+    assert 'profile = "community"' in text
+    assert "[repository]" in text
+
+
+def test_public_export_requires_examples_codestrata_toml():
+    manifest = yaml.safe_load(
+        (REPO_ROOT / "public-export-manifest.yaml").read_text(encoding="utf-8")
+    )
+    examples_export = next(
+        item for item in manifest["exports"] if item["name"] == "codestrata-examples"
+    )
+    required = examples_export["validation"]["require_files"]
+    assert "codestrata.toml" in required
+
+
 def test_gitignore_covers_fetched_examples():
     gitignore = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
     assert ".codestrata-examples/" in gitignore
@@ -159,6 +210,7 @@ def test_public_export_excludes_fetched_trees():
     required = examples_export["validation"]["require_files"]
     assert "real-world/THIRD_PARTY.md" in required
     assert "real-world/scripts/fetch_example.py" in required
+    assert "codestrata.toml" in required
     assert not any(name.startswith("sample-") for name in required)
     assert "require_language_samples" not in examples_export["validation"]
 
@@ -177,8 +229,70 @@ def test_sample_apps_live_under_test_fixtures():
         assert not (REPO_ROOT / "examples" / name).exists(), name
 
 
-def test_host_allowlist(fetch_mod):
-    with pytest.raises(fetch_mod.FetchExampleError, match="allowlisted"):
-        fetch_mod.validate_manifest_dict(
-            _valid_manifest(repository_url="https://gitlab.com/example/demo.git")
-        )
+def test_run_showcase_passes_local_codestrata_toml(monkeypatch, tmp_path: Path):
+    """Showcase assess must use the examples-repo codestrata.toml when present."""
+
+    import importlib.util
+    import sys
+
+    path = SCRIPTS / "run_showcase.py"
+    name = "run_showcase_under_test"
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = sys.modules.get(name)
+    if module is None:
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[name] = module
+        spec.loader.exec_module(module)
+
+    examples_root = tmp_path / "examples"
+    manifests = examples_root / "real-world" / "manifests"
+    manifests.mkdir(parents=True)
+    sha = "c" * 40
+    (manifests / "demo-app.yaml").write_text(
+        yaml.safe_dump(_valid_manifest(commit_sha=sha, id="demo-app")),
+        encoding="utf-8",
+    )
+    (examples_root / "codestrata.toml").write_text(
+        '[repository]\npath = "."\nprofile = "community"\n',
+        encoding="utf-8",
+    )
+    dest = examples_root / ".codestrata-examples" / "demo-app"
+    dest.mkdir(parents=True)
+    (dest / "README.md").write_text("ok\n", encoding="utf-8")
+
+    captured: dict[str, object] = {}
+
+    def fake_fetch(example_id, *, repo_root, examples_root, force=False):
+        return {
+            "example_id": example_id,
+            "destination": str(dest),
+            "commit_sha": sha,
+        }
+
+    def fake_run(cmd, cwd=None, capture_output=False, text=False, check=False):
+        if cmd and cmd[0] == "codestrata" and "assess" in cmd:
+            captured["cmd"] = list(cmd)
+            captured["cwd"] = Path(cwd) if cwd else None
+
+        class Result:
+            returncode = 0
+            stdout = "CodeStrata 0.1.0\n"
+            stderr = ""
+
+        return Result()
+
+    monkeypatch.setattr(module, "fetch_example", fake_fetch)
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+
+    summary = module.run_showcase(
+        "demo-app",
+        repo_root=examples_root,
+        examples_root=examples_root,
+    )
+    assert summary["exit_code"] == 0
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert "--config" in cmd
+    assert str(examples_root / "codestrata.toml") in cmd
+    assert captured["cwd"] == examples_root

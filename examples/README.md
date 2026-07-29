@@ -22,9 +22,10 @@ demos; maintainers who refresh pinned revisions.
 | Reproducible runs | Exact commit SHAs in manifests (never floating `main`) |
 | Safe automation | Fetch scripts that refuse arbitrary URLs and skip installs |
 | Bounded artifacts | Curated `expected-results/` summaries (not raw report trees) |
+| Standalone config | Root `codestrata.toml` so assess works without a monorepo |
 
 Language sample apps used in automated tests are **not** published here; they
-remain internal monorepo fixtures.
+remain Engine `test-fixtures/` (Community ships `sample-js-app` only).
 
 ---
 
@@ -34,7 +35,7 @@ remain internal monorepo fixtures.
 | ---------- | ---- |
 | [codestrata-engine](https://github.com/CodeStrata/codestrata-engine) | Assessment CLI you must install first |
 | **codestrata-examples** (this repo) | Showcase manifests, fetch scripts, attribution, curated summaries |
-| Platform (private) | RAG / Knowledge Graph — not required for baseline showcases |
+| Platform (private) | Portfolio / RAG — not required for baseline showcases |
 
 Product statement: *The Engine produces structured engineering intelligence.
 The Platform stores, connects, retrieves, and reasons over that intelligence.*
@@ -46,6 +47,7 @@ The Platform stores, connects, retrieves, and reasons over that intelligence.*
 ```text
 .
 ├── README.md
+├── codestrata.toml         # Community config for showcase assess
 ├── real-world/
 │   ├── manifests/          # one YAML per showcase (pinned SHA required)
 │   ├── scripts/            # portable fetch + showcase runners
@@ -82,11 +84,24 @@ Curated results: [expected-results/](expected-results/).
 
 Baseline showcases use `--profile community --no-ai` (no AI credentials).
 
-### Fetch and assess (portable scripts)
-
-From this repository root:
+### Install Engine (once)
 
 ```bash
+git clone https://github.com/CodeStrata/codestrata-engine.git
+cd codestrata-engine
+python3.12 -m venv .venv
+source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -e .
+codestrata version
+```
+
+### Fetch and assess (from this repository)
+
+```bash
+git clone https://github.com/CodeStrata/codestrata-examples.git
+cd codestrata-examples
+
 python real-world/scripts/fetch_example.py --list
 python real-world/scripts/fetch_example.py spring-petclinic
 
@@ -103,12 +118,12 @@ One-shot (fetch + assess + summary):
 python real-world/scripts/run_showcase.py spring-petclinic
 ```
 
-Fetched trees land under `.codestrata-examples/` (gitignored). Never commit
-upstream source or raw report directories.
+Fetched trees land under `.codestrata-examples/` (gitignored). Assessment
+output lands under `reports/showcases/` (gitignored). Never commit upstream
+source or raw report directories.
 
-In the private monorepo, equivalent wrappers also exist as
-In the private monorepo, convenience wrappers also exist at
-`scripts/fetch_example.py` and `scripts/run_showcase.py`.
+This repository ships a root `codestrata.toml` so those commands work without
+any parent monorepo configuration.
 
 More detail: [real-world/README.md](real-world/README.md).
 
@@ -116,7 +131,7 @@ More detail: [real-world/README.md](real-world/README.md).
 
 ## What is not included
 
-* CodeStrata-owned `sample-*-app` language fixtures
+* CodeStrata-owned `sample-*-app` language fixtures (except Engine's bundled JS sample)
 * Golden mini-app `sample-reports/`
 * Fetched third-party source trees
 * Local assess report directories, caches, or credentials
