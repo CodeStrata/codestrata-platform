@@ -4,8 +4,10 @@
 # Export staging only; this file never pushes or creates remote repositories.
 #
 # Each export declares:
+#   owner: GitHub organization (CodeStrata)
+#   repository: GitHub repository name
 #   visibility: public | private
-#   destination_repository: GitHub repository name
+#   destination_repository: legacy alias of repository (kept for compatibility)
 #
 # Public (Community): codestrata-engine, codestrata-examples
 # Private mirrors: codestrata-cursor, codestrata-vscode, codestrata-docs
@@ -127,6 +129,8 @@ exports:
   - name: codestrata-engine
     description: Community Edition assessment engine (CLI, MCP, packaging)
     source_root: engine
+    owner: CodeStrata
+    repository: codestrata-engine
     destination_repository: codestrata-engine
     visibility: public
     destination_layout: flat
@@ -219,6 +223,8 @@ exports:
   - name: codestrata-examples
     description: Real-world showcase manifests, fetch scripts, attribution, curated expected results
     source_root: examples
+    owner: CodeStrata
+    repository: codestrata-examples
     destination_repository: codestrata-examples
     visibility: public
     destination_layout: flat
@@ -263,6 +269,8 @@ exports:
   - name: codestrata-cursor
     description: CodeStrata Cursor Extension (Community Engine client; private mirror)
     source_root: cursor-plugin
+    owner: CodeStrata
+    repository: codestrata-cursor
     destination_repository: codestrata-cursor
     visibility: private
     destination_layout: flat
@@ -314,6 +322,8 @@ exports:
   - name: codestrata-vscode
     description: CodeStrata VS Code Extension (Community Engine client; private mirror)
     source_root: vscode-plugin
+    owner: CodeStrata
+    repository: codestrata-vscode
     destination_repository: codestrata-vscode
     visibility: private
     destination_layout: flat
@@ -359,6 +369,8 @@ exports:
   - name: codestrata-docs
     description: CodeStrata documentation portal source (private mirror; docs.codestrata.ai)
     source_root: docs
+    owner: CodeStrata
+    repository: codestrata-docs
     destination_repository: codestrata-docs
     visibility: private
     destination_layout: flat

@@ -227,12 +227,17 @@ Maintainers follow this sequence. Do not skip validation.
 5. **Commit** monorepo changes (when explicitly requested).
 6. **Push** the monorepo branch / merge per team process.
 7. **Tag** only after the monorepo revision is accepted.
-8. **Publish** public mirrors from staging in a **separate intentional step**
+8. **Publish** destination mirrors from staging in a **separate intentional step**
    (not part of the export scripts):
-   1. Validate exports
-   2. Sync staging trees into the public mirror clones (scripted in a later phase)
-   3. Open PRs on the public mirrors from the sync bot/account
-   4. Tag releases from mirror repos only after the platform commit is reviewed
+   1. Create missing GitHub repositories **manually** with the correct visibility
+      (public: engine/examples; private: vscode/cursor/docs)
+   2. Validate exports
+   3. Dry-run: `python scripts/publish-repository-mirrors.py --repo <name>`
+   4. Push only with: `python scripts/publish-repository-mirrors.py --repo <name> --push --confirm`
+   5. Tag releases from mirror repos only after the platform commit is reviewed
+
+See [`governance/release/EXTRACTION_HARDENING.md`](../governance/release/EXTRACTION_HARDENING.md)
+for bootstrap vs update behavior, snapshot exclusion, and no-force policy.
 
 ### Emergency fixes without divergence
 

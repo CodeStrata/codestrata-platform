@@ -25,6 +25,27 @@ except ImportError:  # pragma: no cover
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "public-export-manifest.yaml"
 
+
+def _git_head(root: Path) -> str | None:
+    """Return current HEAD commit SHA, or None if unavailable."""
+
+    import subprocess
+
+    try:
+        completed = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=str(root),
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return None
+    if completed.returncode != 0:
+        return None
+    return completed.stdout.strip() or None
+
+
 # Directory names pruned during source walks so generated trees are never copied.
 _PRUNE_DIR_NAMES = frozenset(
     {
@@ -353,6 +374,7 @@ def main(argv: list[str] | None = None) -> int:
                     export_name=str(export["name"]),
                     manifest_version=manifest.get("version"),
                     mode=mode,
+                    source_commit=_git_head(ROOT),
                 )
             except Exception as snapshot_error:  # noqa: BLE001
                 print(f"  warning: export snapshot not written: {snapshot_error}")

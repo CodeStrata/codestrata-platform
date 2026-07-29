@@ -88,9 +88,26 @@ SURFACE_CLASSIFICATIONS: dict[str, dict[str, str]] = {
 
 
 def destination_repository(item: dict[str, Any]) -> str:
-    """Resolve destination GitHub repository name (legacy key supported)."""
+    """Resolve destination GitHub repository name (legacy keys supported)."""
 
-    return str(item.get("destination_repository") or item.get("public_repository") or item["name"])
+    return str(
+        item.get("repository")
+        or item.get("destination_repository")
+        or item.get("public_repository")
+        or item["name"]
+    )
+
+
+def destination_owner(item: dict[str, Any], *, default: str = "CodeStrata") -> str:
+    """Resolve GitHub organization/owner for a mirror destination."""
+
+    return str(item.get("owner") or default).strip()
+
+
+def destination_full_name(item: dict[str, Any]) -> str:
+    """Return ``owner/repository`` for a mirror destination."""
+
+    return f"{destination_owner(item)}/{destination_repository(item)}"
 
 
 def export_visibility(item: dict[str, Any]) -> str:
@@ -128,6 +145,8 @@ def build_surface_inventory(root: Path = ROOT) -> dict[str, Any]:
             {
                 "name": item.get("name"),
                 "source_root": item.get("source_root"),
+                "owner": destination_owner(item),
+                "repository": destination_repository(item),
                 "destination_repository": destination_repository(item),
                 "visibility": export_visibility(item),
                 "classification": export_classification(item),

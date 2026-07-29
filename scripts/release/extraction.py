@@ -33,15 +33,23 @@ def write_export_snapshot(
     export_name: str,
     manifest_version: object,
     mode: str,
+    source_commit: str | None = None,
 ) -> Path:
     """Write a bootstrap/update marker into a staged export repository."""
 
     fingerprint = tree_fingerprint(staging_repo)
+    # Fingerprint must ignore the snapshot file itself when recomputed later.
+    fingerprint = {
+        key: value
+        for key, value in fingerprint.items()
+        if key != ".codestrata-export-snapshot.json"
+    }
     payload = {
         "export_name": export_name,
         "manifest_version": manifest_version,
         "extraction_tooling_version": RELEASE_TOOLING_VERSION,
         "mode": mode,
+        "source_commit": source_commit,
         "generated_at": datetime.now(UTC).replace(microsecond=0).isoformat().replace(
             "+00:00", "Z"
         ),

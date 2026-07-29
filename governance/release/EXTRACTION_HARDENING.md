@@ -82,3 +82,41 @@ Extraction scripts:
 - do **not** push
 - do **not** publish Marketplace packages
 - do **not** use signing credentials
+
+## Publishing mirrors (separate intentional step)
+
+Use [`scripts/publish-repository-mirrors.py`](../../scripts/publish-repository-mirrors.py)
+only after export + validation. Repository creation on GitHub is **manual** and
+must precede the first publish.
+
+| Destination | Visibility |
+| --- | --- |
+| `CodeStrata/codestrata-engine` | public |
+| `CodeStrata/codestrata-examples` | public |
+| `CodeStrata/codestrata-vscode` | private |
+| `CodeStrata/codestrata-cursor` | private |
+| `CodeStrata/codestrata-docs` | private |
+
+```bash
+# Dry-run (default): selected repositories
+python scripts/publish-repository-mirrors.py --repo codestrata-engine
+
+# Dry-run all destinations (explicit --all)
+python scripts/publish-repository-mirrors.py --all
+
+# Real push (requires clean tree, matching snapshot, verified visibility)
+python scripts/publish-repository-mirrors.py --repo codestrata-engine --push --confirm
+```
+
+Policy:
+
+- Default is **dry-run**; `--push` alone is insufficient — also pass `--confirm`
+- **No force-push** ( `--force` is rejected )
+- Does **not** create GitHub repositories
+- Does **not** tag or create releases
+- Excludes `.codestrata-export-snapshot.json` from mirror commits
+- **Bootstrap** (empty existing remote): single initial commit on `main`
+- **Update** (existing `main`): replace tracked content, normal commit, fast-forward push only
+- Private destinations refuse publish when visibility cannot be verified
+- Public destinations refuse publish when GitHub visibility is not public
+- Source monorepo working tree must be clean; staging snapshot `source_commit` must match `HEAD`

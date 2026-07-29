@@ -86,21 +86,23 @@ Security: [engine/SECURITY.md](engine/SECURITY.md) ·
 
 ---
 
-## Generated public repositories
+## Generated repository mirrors
 
-Public GitHub repositories are **generated mirrors**. Develop only here, then
-export intentionally. Handbook: [platform/README.md](platform/README.md).
+Destination repositories are **generated mirrors**. Develop only here, then
+export and publish intentionally. Handbook: [platform/README.md](platform/README.md).
 
-| Monorepo path | Public repository |
-| ------------- | ----------------- |
-| `engine/` | `codestrata-engine` |
-| `examples/` | `codestrata-examples` |
-| `docs/` | `codestrata-docs` |
-| `cursor-plugin/` | `codestrata-cursor` |
-| `vscode-plugin/` | `codestrata-vscode` |
+| Monorepo path | Destination | Visibility |
+| ------------- | ----------- | ---------- |
+| `engine/` | `CodeStrata/codestrata-engine` | **public** |
+| `examples/` | `CodeStrata/codestrata-examples` | **public** |
+| `docs/` | `CodeStrata/codestrata-docs` | **private** |
+| `cursor-plugin/` | `CodeStrata/codestrata-cursor` | **private** |
+| `vscode-plugin/` | `CodeStrata/codestrata-vscode` | **private** |
 
 ```bash
 python scripts/verify_release.py --skip-lint --skip-tests
+python scripts/export-public-repos.py --clean
+python scripts/publish-repository-mirrors.py --repo codestrata-engine   # dry-run
 ```
 
 Related products outside this monorepo: `codestrata-ui`, `codestrata-site`.
