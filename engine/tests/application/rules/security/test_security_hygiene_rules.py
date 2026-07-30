@@ -252,6 +252,28 @@ def test_credential_literal_and_placeholder_precision() -> None:
         {"m": [item.summary for item in result.matches]}
     )
     assert "super-secret" not in serialized
+    for item in result.matches:
+        assert item.severity.value == "high"
+        assert "Context: Production source" in item.summary
+        assert item.evidence[0].attributes.get("security_context") == "production"
+
+
+def test_credential_literal_ci_expression_is_informational() -> None:
+    from codestrata.domain.rules.enums import RuleSeverity
+
+    gha = _fact(
+        path=".github/workflows/pr.yml",
+        key="env_github_token",
+        family=ConfigurationKeyFamily.SECRET,
+        value_kind=ValueKind.LITERAL,
+        redacted="${{ secrets.GITHUB_TOKEN }}",
+    )
+    result = CredentialLiteralRule().evaluate(_context(_bundle(facts=(gha,))))
+    assert len(result.matches) == 1
+    match = result.matches[0]
+    assert match.severity is RuleSeverity.INFORMATIONAL
+    assert match.evidence[0].attributes.get("security_context") == "ci_expression"
+    assert "CI secret reference" in match.summary
 
 
 def test_transport_auth_cors_debug_rules() -> None:

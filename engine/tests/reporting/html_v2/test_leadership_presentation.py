@@ -27,12 +27,13 @@ def _finding(
     severity: str,
     category: str,
     finding_id: str = "f1",
+    description: str = "desc",
 ) -> FindingView:
     return FindingView(
         finding_id=finding_id,
         rule_id="rule-1",
         title=title,
-        description="desc",
+        description=description,
         severity=severity,
         category=category,
     )
@@ -67,6 +68,32 @@ def test_filters_informational_language_detection() -> None:
         category="technology",
     )
     assert is_leadership_signal_finding(finding) is False
+
+
+def test_filters_non_actionable_security_context_markers() -> None:
+    finding = _finding(
+        title="Credential literal in configuration",
+        severity="low",
+        category="security",
+        description=(
+            "Configuration key holds a literal. "
+            "Context: CI secret reference (ci-secret-expression)."
+        ),
+    )
+    assert is_leadership_signal_finding(finding) is False
+
+
+def test_keeps_actionable_production_security_finding() -> None:
+    finding = _finding(
+        title="Credential literal in configuration",
+        severity="high",
+        category="security",
+        description=(
+            "Configuration key holds a literal. "
+            "Context: Production source (path-production)."
+        ),
+    )
+    assert is_leadership_signal_finding(finding) is True
 
 
 def test_key_takeaways_prefer_engineering_risk_and_priority_action() -> None:

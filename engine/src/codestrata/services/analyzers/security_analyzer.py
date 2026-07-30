@@ -469,16 +469,34 @@ class SecurityAnalyzer:
         evidence: str,
         metadata: dict[str, object],
     ) -> Finding:
-        """Create a security finding."""
+        """Create a security finding with repository context classification."""
 
-        description = f"{title} in {relative_path}: {evidence}"
+        from codestrata.application.security.context import (
+            adjust_phase1_severity,
+            classify_security_context,
+            contextual_summary_suffix,
+        )
+
+        decision = classify_security_context(
+            path=relative_path,
+            value=str(evidence),
+            redacted_preview=str(evidence),
+        )
+        adjusted = adjust_phase1_severity(severity, decision)
+        # Preserve critical production private-key / known-secret severity.
+        if decision.context.value == "production" and severity is Severity.CRITICAL:
+            adjusted = Severity.CRITICAL
+        description = (
+            f"{title} in {relative_path}: {evidence}"
+            f"{contextual_summary_suffix(decision)}"
+        )
 
         return Finding(
             rule_id=rule_id,
             title=title,
             description=description,
             category=FindingCategory.SECURITY,
-            severity=severity,
+            severity=adjusted,
             source=FindingSource.STATIC_ANALYSIS,
             evidence=[
                 Evidence(
@@ -490,6 +508,9 @@ class SecurityAnalyzer:
             affected_technologies=[],
             metadata={
                 "path": relative_path,
+                "security_context": decision.context.value,
+                "security_context_reasons": ",".join(decision.reasons),
+                "classification": decision.path_role or "unknown",
                 **metadata,
             },
         )

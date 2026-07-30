@@ -162,23 +162,30 @@ def evidence_artifact(
     item: SensitiveArtifactEvidence,
     message: str,
     security_category: SecurityCategory,
+    security_context: str | None = None,
+    security_context_reasons: str | None = None,
 ) -> RuleEvidence:
+    attributes: dict[str, str] = {
+        "evidence_id": item.evidence_id,
+        "path": item.path,
+        "kind": item.kind.value,
+        "inspection_status": item.inspection_status.value,
+        "content_classifications": ",".join(
+            classification.value for classification in item.content_classifications
+        ),
+        "classification": item.classification.value,
+        "security_category": security_category.value,
+    }
+    if security_context:
+        attributes["security_context"] = security_context
+    if security_context_reasons:
+        attributes["security_context_reasons"] = security_context_reasons
     return RuleEvidence(
         kind=RuleEvidenceKind.FILE_LOCATION,
         subject_reference=item.evidence_id,
         message=message,
         safe_location=item.path,
-        attributes={
-            "evidence_id": item.evidence_id,
-            "path": item.path,
-            "kind": item.kind.value,
-            "inspection_status": item.inspection_status.value,
-            "content_classifications": ",".join(
-                classification.value for classification in item.content_classifications
-            ),
-            "classification": item.classification.value,
-            "security_category": security_category.value,
-        },
+        attributes=attributes,
         provenance="aggregated_repository_sensitive_evidence",
     )
 
@@ -188,30 +195,37 @@ def evidence_configuration(
     item: ConfigurationFactEvidence,
     message: str,
     security_category: SecurityCategory,
+    security_context: str | None = None,
+    security_context_reasons: str | None = None,
 ) -> RuleEvidence:
+    attributes: dict[str, str] = {
+        "evidence_id": item.evidence_id,
+        "path": item.path,
+        "normalized_key": item.normalized_key,
+        "key_family": item.key_family.value,
+        "value_kind": item.value_kind.value,
+        "placeholder_status": item.placeholder_status.value,
+        "redacted_preview": item.redacted_preview,
+        "value_fingerprint": item.value_fingerprint or "",
+        "classification": item.classification.value,
+        "section": item.section or "",
+        "literal_boolean": (
+            "" if item.literal_boolean is None else str(item.literal_boolean).lower()
+        ),
+        "is_wildcard_origin": str(item.is_wildcard_origin).lower(),
+        "security_category": security_category.value,
+    }
+    if security_context:
+        attributes["security_context"] = security_context
+    if security_context_reasons:
+        attributes["security_context_reasons"] = security_context_reasons
     return RuleEvidence(
         kind=RuleEvidenceKind.CONFIGURATION_KEY,
         subject_reference=item.evidence_id,
         message=message,
         safe_location=item.path,
         line_start=item.line_start,
-        attributes={
-            "evidence_id": item.evidence_id,
-            "path": item.path,
-            "normalized_key": item.normalized_key,
-            "key_family": item.key_family.value,
-            "value_kind": item.value_kind.value,
-            "placeholder_status": item.placeholder_status.value,
-            "redacted_preview": item.redacted_preview,
-            "value_fingerprint": item.value_fingerprint or "",
-            "classification": item.classification.value,
-            "section": item.section or "",
-            "literal_boolean": (
-                "" if item.literal_boolean is None else str(item.literal_boolean).lower()
-            ),
-            "is_wildcard_origin": str(item.is_wildcard_origin).lower(),
-            "security_category": security_category.value,
-        },
+        attributes=attributes,
         provenance="aggregated_repository_sensitive_evidence",
     )
 

@@ -112,8 +112,28 @@ def is_leadership_signal_finding(finding: FindingView) -> bool:
     severity = finding.severity.strip().lower()
     if severity in _INFORMATIONAL:
         return False
+    # Security context metadata (when present on customer FindingView.description
+    # or title) already demotes non-actionable items via informational severity.
+    # Also drop explicit non-actionable security framing in titles.
     title = finding.title.strip().lower()
     category = finding.category.strip().lower()
+    description = (finding.description or "").strip().lower()
+    if category == "security" and any(
+        marker in description
+        for marker in (
+            "context: ci secret reference",
+            "context: configuration schema",
+            "context: dependency metadata",
+            "context: mock credential",
+            "context: test fixture",
+            "context: test code",
+            "context: documentation",
+            "context: sample/example",
+            "context: generated file",
+            "context: build artifact",
+        )
+    ):
+        return False
     if category == "technology" and any(marker in title for marker in _LOW_SIGNAL_TITLE_MARKERS):
         return False
     if any(marker in title for marker in _LOW_SIGNAL_TITLE_MARKERS) and severity in {

@@ -245,6 +245,8 @@ _SEC_EVIDENCE_METADATA_KEYS = (
     "literal_boolean",
     "is_wildcard_origin",
     "security_category",
+    "security_context",
+    "security_context_reasons",
 )
 
 

@@ -71,6 +71,11 @@ generic evidence truth, package registries, CVE databases, or SAST engines.
 Security rules interpret evidence into shared Findings; they do not introduce a
 parallel `SecurityFinding` type.
 
+After detection, a **security context classification** stage labels where
+evidence originated (production, test, CI expression, schema metadata, etc.)
+and adjusts severity/confidence without dropping matches. See
+[security-context-classification.md](security-context-classification.md).
+
 | Concern | Owner |
 | ------- | ----- |
 | Manifest / lockfile parsing | Dependency evidence |

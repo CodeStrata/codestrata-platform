@@ -99,17 +99,28 @@ class PrivateKeyMaterialRule:
         return _security_applicability(context)
 
     def evaluate(self, context: RuleExecutionContext) -> SharedRuleEvaluationResult:
+        from codestrata.application.security.context import (
+            adjust_rule_confidence,
+            adjust_rule_severity,
+            classify_security_context,
+            contextual_summary_suffix,
+        )
+
         evidence = repository_sensitive_evidence(context)
         assert evidence is not None
         matches: list[RuleMatch] = []
         for item in evidence.artifacts:
             if not has_private_key_material(item):
                 continue
+            decision = classify_security_context(path=item.path)
+            severity = adjust_rule_severity(RuleSeverity.HIGH, decision)
+            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
             subject = (
                 RULE_PRIVATE_KEY_MATERIAL,
                 item.evidence_id,
                 item.path,
                 item.classification.value,
+                decision.context.value,
             )
             matches.append(
                 match(
@@ -119,17 +130,21 @@ class PrivateKeyMaterialRule:
                         f"Inspected artifact '{item.path}' "
                         f"({item.classification.value}) contains a supported "
                         "private-key content signature. No key body is retained."
+                        f"{contextual_summary_suffix(decision)}"
                     ),
-                    severity=RuleSeverity.HIGH,
-                    confidence=RuleConfidence.HIGH,
+                    severity=severity,
+                    confidence=confidence,
                     evidence=(
                         evidence_artifact(
                             item=item,
                             message=(
                                 "content_classification=private_key_material; "
-                                f"inspection_status={item.inspection_status.value}"
+                                f"inspection_status={item.inspection_status.value}; "
+                                f"security_context={decision.context.value}"
                             ),
                             security_category=SecurityCategory.PRIVATE_KEY,
+                            security_context=decision.context.value,
+                            security_context_reasons=",".join(decision.reasons),
                         ),
                     ),
                     subject_keys=subject,
@@ -164,38 +179,59 @@ class CredentialLiteralRule:
         return _security_applicability(context)
 
     def evaluate(self, context: RuleExecutionContext) -> SharedRuleEvaluationResult:
+        from codestrata.application.security.context import (
+            adjust_rule_confidence,
+            adjust_rule_severity,
+            classify_security_context,
+            contextual_summary_suffix,
+        )
+
         evidence = repository_sensitive_evidence(context)
         assert evidence is not None
         matches: list[RuleMatch] = []
         for item in evidence.configuration_facts:
             if not is_literal_credential(item):
                 continue
+            decision = classify_security_context(
+                path=item.path,
+                value=item.redacted_preview,
+                normalized_key=item.normalized_key,
+                redacted_preview=item.redacted_preview,
+            )
+            severity = adjust_rule_severity(RuleSeverity.HIGH, decision)
+            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
             subject = (
                 RULE_CREDENTIAL_LITERAL,
                 item.evidence_id,
                 item.path,
                 item.normalized_key,
                 item.classification.value,
+                decision.context.value,
+            )
+            summary = (
+                f"Configuration key '{item.normalized_key}' in '{item.path}' "
+                f"({item.classification.value}) holds a non-empty literal "
+                f"credential/secret value (redacted={item.redacted_preview})."
+                f"{contextual_summary_suffix(decision)}"
             )
             matches.append(
                 match(
                     rule_id=RULE_CREDENTIAL_LITERAL,
                     title="Credential literal in configuration",
-                    summary=(
-                        f"Configuration key '{item.normalized_key}' in '{item.path}' "
-                        f"({item.classification.value}) holds a non-empty literal "
-                        f"credential/secret value (redacted={item.redacted_preview})."
-                    ),
-                    severity=RuleSeverity.HIGH,
-                    confidence=RuleConfidence.HIGH,
+                    summary=summary,
+                    severity=severity,
+                    confidence=confidence,
                     evidence=(
                         evidence_configuration(
                             item=item,
                             message=(
                                 f"key_family={item.key_family.value}; "
-                                f"value_kind={item.value_kind.value}"
+                                f"value_kind={item.value_kind.value}; "
+                                f"security_context={decision.context.value}"
                             ),
                             security_category=SecurityCategory.CREDENTIAL,
+                            security_context=decision.context.value,
+                            security_context_reasons=",".join(decision.reasons),
                         ),
                     ),
                     subject_keys=subject,
@@ -230,18 +266,34 @@ class PlaceholderCredentialRule:
         return _security_applicability(context)
 
     def evaluate(self, context: RuleExecutionContext) -> SharedRuleEvaluationResult:
+        from codestrata.application.security.context import (
+            adjust_rule_confidence,
+            adjust_rule_severity,
+            classify_security_context,
+            contextual_summary_suffix,
+        )
+
         evidence = repository_sensitive_evidence(context)
         assert evidence is not None
         matches: list[RuleMatch] = []
         for item in evidence.configuration_facts:
             if not is_placeholder_credential(item):
                 continue
+            decision = classify_security_context(
+                path=item.path,
+                value=item.redacted_preview,
+                normalized_key=item.normalized_key,
+                redacted_preview=item.redacted_preview,
+            )
+            severity = adjust_rule_severity(RuleSeverity.LOW, decision)
+            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
             subject = (
                 RULE_PLACEHOLDER_CREDENTIAL,
                 item.evidence_id,
                 item.path,
                 item.normalized_key,
                 item.classification.value,
+                decision.context.value,
             )
             matches.append(
                 match(
@@ -251,16 +303,20 @@ class PlaceholderCredentialRule:
                         f"Configuration key '{item.normalized_key}' in '{item.path}' "
                         f"({item.classification.value}) uses a recognized placeholder "
                         "credential value. This is not classified as an active secret."
+                        f"{contextual_summary_suffix(decision)}"
                     ),
-                    severity=RuleSeverity.LOW,
-                    confidence=RuleConfidence.HIGH,
+                    severity=severity,
+                    confidence=confidence,
                     evidence=(
                         evidence_configuration(
                             item=item,
                             message=(
-                                f"placeholder_status={item.placeholder_status.value}"
+                                f"placeholder_status={item.placeholder_status.value}; "
+                                f"security_context={decision.context.value}"
                             ),
                             security_category=SecurityCategory.CREDENTIAL,
+                            security_context=decision.context.value,
+                            security_context_reasons=",".join(decision.reasons),
                         ),
                     ),
                     subject_keys=subject,
