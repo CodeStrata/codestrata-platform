@@ -37,10 +37,14 @@ class RecommendationEngine:
     def evaluate(self, context: RecommendationContext) -> RecommendationResult:
         """Evaluate providers without mutating graphs/findings or calling AI."""
 
-        recommendations: list[Recommendation] = []
+        from codestrata.application.traceability.recommendation import (
+            merge_recommendation_traceability,
+        )
+
+        recommendations_by_id: dict[str, Recommendation] = {}
+        recommendation_order: list[str] = []
         evaluated: list[str] = []
         skipped: list[str] = []
-        seen_ids: set[str] = set()
         matched_finding_ids: set[str] = set()
 
         finding_rule_ids = {finding.rule_id for finding in context.findings}
@@ -57,16 +61,24 @@ class RecommendationEngine:
                 if produced:
                     matched_finding_ids.add(finding.id)
                 for recommendation in produced:
-                    if recommendation.id in seen_ids:
+                    existing = recommendations_by_id.get(recommendation.id)
+                    if existing is None:
+                        recommendations_by_id[recommendation.id] = recommendation
+                        recommendation_order.append(recommendation.id)
                         continue
-                    seen_ids.add(recommendation.id)
-                    recommendations.append(recommendation)
+                    recommendations_by_id[recommendation.id] = merge_recommendation_traceability(
+                        existing,
+                        recommendation,
+                        findings=context.findings,
+                    )
 
         unmatched = tuple(
             finding.id for finding in context.findings if finding.id not in matched_finding_ids
         )
         return RecommendationResult.from_recommendations(
-            recommendations=tuple(recommendations),
+            recommendations=tuple(
+                recommendations_by_id[item_id] for item_id in recommendation_order
+            ),
             providers_evaluated=tuple(evaluated),
             providers_skipped=tuple(skipped),
             unmatched_finding_ids=unmatched,

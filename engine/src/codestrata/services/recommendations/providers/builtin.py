@@ -74,6 +74,13 @@ def _base(
     subject_keys: tuple[str, ...] = (),
     metadata: dict[str, object] | None = None,
 ) -> Recommendation:
+    from codestrata.application.traceability.recommendation import (
+        select_primary_finding_id,
+    )
+    from codestrata.domain.recommendations.enums import RecommendationType
+    from codestrata.domain.traceability import EvidenceCompleteness
+
+    finding_ids = (finding.id,)
     return Recommendation.create(
         provider_id=provider_id,
         title=title,
@@ -81,7 +88,11 @@ def _base(
         rationale=rationale,
         priority=priority or priority_from_finding_severity(finding.severity),
         category=category,
-        related_finding_ids=(finding.id,),
+        related_finding_ids=finding_ids,
+        supporting_finding_ids=finding_ids,
+        primary_finding_id=select_primary_finding_id((finding,)) or finding.id,
+        recommendation_type=RecommendationType.FINDING_BACKED,
+        evidence_completeness=EvidenceCompleteness.COMPLETE,
         actions=actions,
         evidence=_evidence_from_finding(finding),
         affected_node_ids=finding.affected_assessment_node_ids,

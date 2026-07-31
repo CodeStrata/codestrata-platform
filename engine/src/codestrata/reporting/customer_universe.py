@@ -1,7 +1,8 @@
 """Single customer-facing finding and recommendation universe.
 
-HTML, report.json, findings.json, recommendations.json, and summary metrics
-must all resolve from these helpers so leadership surfaces never disagree.
+``report.json`` is the canonical machine-readable artifact (Epic 2 Slice 2.6).
+HTML, findings.json, recommendations.json, and summary metrics must all resolve
+from these helpers so leadership surfaces never disagree with report.json.
 """
 
 from __future__ import annotations
@@ -71,6 +72,12 @@ class CustomerFinding:
     affected_technologies: tuple[str, ...]
     metadata: dict[str, Any]
     phase1: Phase1Finding | None = None
+    # Epic 2 Slice 2.6 — EvidenceRef traceability (dual-carry with thin evidence).
+    evidence_refs: tuple[Any, ...] = ()
+    primary_evidence_id: str | None = None
+    synthesized_from_evidence_ids: tuple[str, ...] = ()
+    evidence_completeness: str = "legacy"
+    limitations: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -94,6 +101,12 @@ class CustomerRecommendation:
     # Phase 7.1.3 — presentation ordering metadata (deterministic).
     priority_score: float = 0.0
     presentation_bucket: str = "future"
+    # Epic 2 Slice 2.3 — dual-written with related_finding_ids.
+    supporting_finding_ids: tuple[str, ...] = ()
+    primary_finding_id: str | None = None
+    recommendation_type: str = "legacy"
+    evidence_completeness: str = "legacy"
+    limitations: tuple[str, ...] = ()
 
 
 def resolve_customer_findings(
@@ -151,29 +164,37 @@ def merge_customer_recommendations(
     result: RecommendationResult | None = None,
     finding_id_map: dict[str, str] | None = None,
 ) -> tuple[CustomerRecommendation, ...]:
-    """Merge Phase-1 and Phase-3 recommendations into one customer universe."""
+    """Merge Phase-1 and Phase-3 recommendations into one customer universe.
 
-    items: list[CustomerRecommendation] = []
-    seen: set[str] = set()
+    Duplicate rule+title keys union finding traceability instead of first-wins.
+    """
+
+    by_key: dict[str, CustomerRecommendation] = {}
+    order: list[str] = []
     id_map = finding_id_map or {}
 
     for recommendation in sorted_recommendations(phase1_recommendations):
         customer = _from_phase1_recommendation(recommendation, finding_id_map=id_map)
         key = _recommendation_dedupe_key(customer)
-        if key in seen:
+        existing = by_key.get(key)
+        if existing is None:
+            by_key[key] = customer
+            order.append(key)
             continue
-        seen.add(key)
-        items.append(customer)
+        by_key[key] = _merge_customer_recommendation_traceability(existing, customer)
 
     if result is not None:
         for recommendation in result.recommendations:
             customer = _from_phase3_recommendation(recommendation)
             key = _recommendation_dedupe_key(customer)
-            if key in seen:
+            existing = by_key.get(key)
+            if existing is None:
+                by_key[key] = customer
+                order.append(key)
                 continue
-            seen.add(key)
-            items.append(customer)
+            by_key[key] = _merge_customer_recommendation_traceability(existing, customer)
 
+    items = [by_key[key] for key in order]
     items.sort(
         key=lambda item: (
             _priority_rank(item.priority),
@@ -201,18 +222,75 @@ def resolve_customer_recommendations(
         result=report_input.assessment_recommendation_result,
         finding_id_map=finding_id_map,
     )
-    aligned = tuple(
-        replace(
-            item,
-            related_finding_ids=align_related_finding_ids(
-                item.related_finding_ids,
-                allowed_finding_ids=allowed_finding_ids,
-                alias_to_allowed=aliases,
-            ),
-        )
-        for item in merged
-    )
+    aligned = tuple(_align_customer_recommendation_findings(item, allowed_finding_ids, aliases) for item in merged)
     return prioritize_customer_recommendations(aligned, findings)
+
+
+def _align_customer_recommendation_findings(
+    item: CustomerRecommendation,
+    allowed_finding_ids: set[str],
+    aliases: dict[str, str],
+) -> CustomerRecommendation:
+    related = align_related_finding_ids(
+        item.related_finding_ids,
+        allowed_finding_ids=allowed_finding_ids,
+        alias_to_allowed=aliases,
+    )
+    supporting_source = item.supporting_finding_ids or item.related_finding_ids
+    supporting = align_related_finding_ids(
+        supporting_source,
+        allowed_finding_ids=allowed_finding_ids,
+        alias_to_allowed=aliases,
+    )
+    # Compatibility dual-write: keep both collections identical after alignment.
+    finding_ids = tuple(sorted(set(related) | set(supporting)))
+    primary = item.primary_finding_id
+    if primary is not None:
+        primary = aliases.get(primary, primary)
+        if primary not in finding_ids:
+            primary = finding_ids[0] if finding_ids else None
+    elif finding_ids:
+        primary = finding_ids[0]
+    return replace(
+        item,
+        related_finding_ids=finding_ids,
+        supporting_finding_ids=finding_ids,
+        primary_finding_id=primary,
+    )
+
+
+def _merge_customer_recommendation_traceability(
+    preferred: CustomerRecommendation,
+    other: CustomerRecommendation,
+) -> CustomerRecommendation:
+    finding_ids = tuple(
+        sorted(
+            set(preferred.supporting_finding_ids or preferred.related_finding_ids)
+            | set(other.supporting_finding_ids or other.related_finding_ids)
+        )
+    )
+    limitations = tuple(sorted(set(preferred.limitations) | set(other.limitations)))
+    primary = preferred.primary_finding_id
+    if primary not in finding_ids:
+        primary = other.primary_finding_id if other.primary_finding_id in finding_ids else None
+    if primary is None and finding_ids:
+        primary = finding_ids[0]
+    completeness = preferred.evidence_completeness
+    if finding_ids and (
+        preferred.evidence_completeness == "complete" or other.evidence_completeness == "complete"
+    ):
+        completeness = "complete"
+    elif finding_ids:
+        completeness = "partial" if completeness == "legacy" else completeness
+    return replace(
+        preferred,
+        related_finding_ids=finding_ids,
+        supporting_finding_ids=finding_ids,
+        primary_finding_id=primary,
+        recommendation_type="merged",
+        evidence_completeness=completeness,
+        limitations=limitations,
+    )
 
 
 def _related_finding_aliases(
@@ -334,6 +412,14 @@ def customer_finding_json(item: CustomerFinding) -> dict[str, Any]:
         "severity": normalize_severity(item.severity),
         "source": item.source,
         "evidence": deduped_evidence,
+        "evidence_refs": [
+            {"evidence_id": str(getattr(ref, "evidence_id", ref))}
+            for ref in item.evidence_refs
+        ],
+        "primary_evidence_id": item.primary_evidence_id,
+        "synthesized_from_evidence_ids": list(item.synthesized_from_evidence_ids),
+        "evidence_completeness": item.evidence_completeness,
+        "limitations": list(item.limitations),
         "affected_technologies": list(item.affected_technologies),
         "metadata": dict(item.metadata),
         "provider_name": item.metadata.get("provider_name"),
@@ -348,6 +434,13 @@ def customer_finding_json(item: CustomerFinding) -> dict[str, Any]:
 
 
 def customer_recommendation_json(item: CustomerRecommendation) -> dict[str, Any]:
+    supporting = list(item.supporting_finding_ids or item.related_finding_ids)
+    related = list(item.related_finding_ids or item.supporting_finding_ids)
+    # Compatibility dual-write in customer JSON.
+    if supporting != related:
+        merged = sorted(set(supporting) | set(related))
+        supporting = merged
+        related = merged
     return {
         "id": item.id,
         "rule_id": item.rule_id,
@@ -358,7 +451,12 @@ def customer_recommendation_json(item: CustomerRecommendation) -> dict[str, Any]
         "category": item.category,
         "effort": normalize_effort(item.effort),
         "risk": normalize_risk(item.risk),
-        "related_finding_ids": list(item.related_finding_ids),
+        "related_finding_ids": related,
+        "supporting_finding_ids": supporting,
+        "primary_finding_id": item.primary_finding_id,
+        "recommendation_type": item.recommendation_type,
+        "evidence_completeness": item.evidence_completeness,
+        "limitations": list(item.limitations),
         "actions": list(item.actions),
         "dependencies": list(item.dependencies),
         "evidence": [_sanitize_evidence_row(row) for row in item.evidence],
@@ -448,6 +546,11 @@ def _from_phase3_finding(finding: Phase3Finding) -> CustomerFinding:
         affected_technologies=(),
         metadata=dict(finding.metadata),
         phase1=None,
+        evidence_refs=tuple(finding.evidence_refs),
+        primary_evidence_id=finding.primary_evidence_id,
+        synthesized_from_evidence_ids=tuple(finding.synthesized_from_evidence_ids),
+        evidence_completeness=finding.evidence_completeness.value,
+        limitations=tuple(finding.limitations),
     )
 
 
@@ -469,6 +572,10 @@ def _from_phase1_recommendation(
         effort=str(getattr(recommendation.effort, "value", recommendation.effort)),
         risk=str(getattr(recommendation.risk, "value", recommendation.risk)),
         related_finding_ids=related,
+        supporting_finding_ids=related,
+        primary_finding_id=related[0] if related else None,
+        recommendation_type="legacy" if not related else "finding_backed",
+        evidence_completeness="legacy" if not related else "complete",
         actions=tuple(str(item) for item in recommendation.actions),
         dependencies=tuple(str(item) for item in recommendation.dependencies),
         evidence=tuple(
@@ -490,6 +597,13 @@ def _from_phase3_recommendation(
     rule_id = recommendation.metadata.get("rule_id")
     if not isinstance(rule_id, str) or not rule_id.strip():
         rule_id = f"provider:{recommendation.provider_id}"
+    supporting = tuple(
+        str(item)
+        for item in (
+            recommendation.supporting_finding_ids or recommendation.related_finding_ids
+        )
+    )
+    related = tuple(str(item) for item in recommendation.related_finding_ids) or supporting
     return CustomerRecommendation(
         id=recommendation.id,
         rule_id=rule_id,
@@ -500,7 +614,13 @@ def _from_phase3_recommendation(
         category=recommendation.category.value,
         effort=Effort.UNKNOWN.value,
         risk=Risk.MEDIUM.value,
-        related_finding_ids=tuple(str(item) for item in recommendation.related_finding_ids),
+        related_finding_ids=related,
+        supporting_finding_ids=supporting or related,
+        primary_finding_id=recommendation.primary_finding_id
+        or ((supporting or related)[0] if (supporting or related) else None),
+        recommendation_type=recommendation.recommendation_type.value,
+        evidence_completeness=recommendation.evidence_completeness.value,
+        limitations=tuple(recommendation.limitations),
         actions=tuple(
             (
                 action.title

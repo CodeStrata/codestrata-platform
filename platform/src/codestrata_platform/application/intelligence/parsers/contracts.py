@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import Any, Protocol
 
 from codestrata_platform.domain.artifact.enums import ArtifactType
 
@@ -19,6 +19,8 @@ class ParsedEvidenceReference:
     checksum: str | None = None
     redacted_excerpt: str | None = None
     source_artifact_id: str | None = None
+    # Epic 2 Slice 2.8 — preserve canonical evidence_id when present (no remapping).
+    evidence_id: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -36,6 +38,11 @@ class ParsedFinding:
     evidence_references: tuple[ParsedEvidenceReference, ...] = ()
     remediation_reference: str | None = None
     metadata: dict[str, str] = field(default_factory=dict)
+    # Compact Epic 2 Finding traceability (full collections remain on canonical_report).
+    primary_evidence_id: str | None = None
+    synthesized_from_evidence_ids: tuple[str, ...] = ()
+    evidence_completeness: str | None = None
+    limitations: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -51,6 +58,11 @@ class ParsedRecommendation:
     related_finding_ids: tuple[str, ...] = ()
     roadmap_horizon: str | None = None
     metadata: dict[str, str] = field(default_factory=dict)
+    supporting_finding_ids: tuple[str, ...] = ()
+    primary_finding_id: str | None = None
+    recommendation_type: str | None = None
+    evidence_completeness: str | None = None
+    limitations: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,6 +81,14 @@ class ParsedAssessmentIntelligence:
     metrics: tuple[ParsedMetric, ...] = ()
     recommendations: tuple[ParsedRecommendation, ...] = ()
     diagnostics: tuple[str, ...] = ()
+    # Epic 2 Slice 2.8 — Pattern A: retain full report.json as authoritative document.
+    # Decomposed findings/recommendations are projections, not a second SoT.
+    canonical_report: dict[str, Any] | None = None
+    assessment_evidence: tuple[dict[str, Any], ...] = ()
+    priority_actions: tuple[dict[str, Any], ...] = ()
+    # Repository-scoped assessment roadmap from report.json — NOT Platform Strategic Roadmap.
+    assessment_roadmap: dict[str, Any] | None = None
+    traceability_status: str = "legacy"
 
 
 @dataclass(frozen=True, slots=True)

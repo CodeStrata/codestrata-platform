@@ -264,6 +264,43 @@ body {{
   text-wrap: pretty;
 }}
 .section-verdict {{ margin: 1.25rem 0 0; }}
+.assessment-results {{ margin-top: 0.25rem; }}
+.assessment-head-coverage {{
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--cs-fog-surface);
+}}
+.assessment-head-coverage .meta {{ margin: 0 0 0.65rem; }}
+.assessment-head-coverage h4 {{ margin: 0.35rem 0 0.25rem; font-size: 0.95rem; }}
+.assessment-head-findings {{ margin: 1rem 0 0; }}
+.assessment-head-findings h4 {{ margin: 0 0 0.45rem; }}
+.assessment-ccl {{ margin: 1rem 0 0; }}
+.assessment-ccl-group {{ margin: 1rem 0 0; }}
+.assessment-ccl-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.tech-inventory-group {{ margin: 1rem 0 0; }}
+.tech-inventory-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.tech-inventory-limitations {{ margin: 1rem 0 0; }}
+.tech-inventory-limitations h4 {{ margin: 0 0 0.35rem; font-size: 0.95rem; }}
+.arch-intel-group {{ margin: 1rem 0 0; }}
+.arch-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.td-intel-group {{ margin: 1rem 0 0; }}
+.td-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.dep-intel-group {{ margin: 1rem 0 0; }}
+.dep-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.sec-intel-group {{ margin: 1rem 0 0; }}
+.sec-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.cloud-intel-group {{ margin: 1rem 0 0; }}
+.cloud-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.ai-intel-group {{ margin: 1rem 0 0; }}
+.ai-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.mod-intel-group {{ margin: 1rem 0 0; }}
+.mod-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.mod-intel-group h5 {{ margin: 0.75rem 0 0.35rem; font-size: 0.95rem; }}
+.eis-intel-group {{ margin: 1rem 0 0; }}
+.eis-intel-group h4 {{ margin: 0 0 0.45rem; font-size: 1rem; }}
+.eis-intel-group h5 {{ margin: 0.75rem 0 0.35rem; font-size: 0.95rem; }}
 .verdict-body {{
   margin: 0.35rem 0 0;
   font-size: 1.12rem;
@@ -505,6 +542,27 @@ article.card {{
 }}
 .item-header {{ margin-bottom: 0.45rem; }}
 .card-desc {{ margin: 0.35rem 0 0.55rem; }}
+.evidence-panel {{ margin-top: 0.75rem; }}
+.evidence-card {{
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.7rem 0.85rem;
+  margin: 0.45rem 0;
+  background: var(--surface-2);
+}}
+.why-action {{
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  border-left: 3px solid var(--border-2);
+  background: var(--surface-2);
+}}
+.why-action h4 {{ margin: 0 0 0.35rem; font-size: 0.92rem; }}
+.limitations {{
+  margin: 0.55rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}}
+.limitations ul {{ margin: 0.25rem 0 0; padding-left: 1.15rem; }}
 .chip-row {{ display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.35rem 0 0.55rem; }}
 .chip {{
   display: inline-flex;

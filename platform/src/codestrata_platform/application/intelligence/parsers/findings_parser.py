@@ -144,6 +144,7 @@ def _parse_evidence_list(
                 checksum=optional_string(entry.get("checksum")),
                 redacted_excerpt=optional_string(entry.get("redacted_excerpt")),
                 source_artifact_id=source_artifact_id,
+                evidence_id=optional_string(entry.get("evidence_id")),
             )
         )
     return tuple(items)

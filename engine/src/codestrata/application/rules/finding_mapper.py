@@ -115,6 +115,36 @@ class RuleFindingMapper:
 
             metadata.update(enrich_performance_metadata(str(match.rule_id)))
             metadata.update(_performance_evidence_metadata(match))
+
+        from codestrata.application.traceability.rule_evidence import (
+            evidence_refs_from_rule_match,
+            pack_is_traceable,
+        )
+        from codestrata.application.traceability.selection import (
+            synthesize_finding_traceability,
+        )
+        from codestrata.domain.traceability import EvidenceCompleteness
+
+        if pack_is_traceable(str(match.rule_id), match.provenance):
+            raw_refs, map_limits, source_count = evidence_refs_from_rule_match(match)
+            (
+                evidence_refs,
+                primary_evidence_id,
+                synthesized_from,
+                completeness,
+                limits,
+            ) = synthesize_finding_traceability(
+                raw_refs,
+                expected_count=source_count,
+                limitations=map_limits,
+            )
+        else:
+            evidence_refs = ()
+            primary_evidence_id = None
+            synthesized_from = ()
+            completeness = EvidenceCompleteness.LEGACY
+            limits = ("evidence_ref_mapping_deferred_for_pack",)
+
         return Finding.create(
             rule_id=str(match.rule_id),
             title=match.title,
@@ -124,6 +154,11 @@ class RuleFindingMapper:
             evidence=evidence,
             metadata=metadata,
             subject_keys=tuple(subjects),
+            evidence_refs=evidence_refs,
+            primary_evidence_id=primary_evidence_id,
+            synthesized_from_evidence_ids=synthesized_from,
+            evidence_completeness=completeness,
+            limitations=limits,
         )
 
     def map_matches(

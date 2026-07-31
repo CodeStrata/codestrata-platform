@@ -4,6 +4,7 @@ from codestrata.domain.recommendations.enums import (
     RecommendationCategory,
     RecommendationPriority,
     RecommendationSource,
+    RecommendationType,
 )
 from codestrata.domain.recommendations.ids import build_recommendation_id
 from codestrata.domain.recommendations.models import (
@@ -23,5 +24,6 @@ __all__ = [
     "RecommendationPriority",
     "RecommendationResult",
     "RecommendationSource",
+    "RecommendationType",
     "build_recommendation_id",
 ]

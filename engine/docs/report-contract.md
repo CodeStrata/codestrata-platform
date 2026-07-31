@@ -68,12 +68,33 @@ evidence links, and roadmap traceability.
 - Related finding IDs link to in-page finding anchors
 - Machine-readable JSON remains separate from HTML presentation
 
+## Traceability interchange (Epic 2)
+
+Schema **1.2** remains the version. Additive collections on `assessment` form
+the deterministic chain:
+
+`evidence` → `findings` → `deterministic_recommendations` → `priority_actions`
+→ `roadmap` → `report.json` → HTML / MCP / Platform.
+
+MCP and Platform must preserve these collections and supporting reference lists
+when transporting or ingesting `report.json`. They must not strip unknown
+additive fields, silently filter unresolved IDs, remap canonical IDs, or rebuild
+relationships. Legacy / incomplete reports are accepted without fabricating
+traceability and may be marked `legacy` or `incomplete`.
+
+`assessment.roadmap` is the **Assessment Roadmap** (repository-scoped). It is
+distinct from any Platform **Strategic Roadmap** (portfolio / commercial).
+
+AI grounding, RAG, and Knowledge Graph authority are out of scope for this
+contract surface (later Platform epics).
+
 ## Community vs Platform
 
 | Concern | Community (`report.json` 1.2) | Platform |
 | ------- | ----------------------------- | -------- |
 | Stable fields | Schema 1.2 + additive optional sections | May store / project additional organizational views |
 | Consumers | CLI, local MCP, CI, Community extensions | Platform APIs and org experiences |
+| Canonical SoT | `report.json` document | Prefer retain full artifact blob; projections are not a second SoT |
 | This doc | Authoritative for Community | Does not define Platform-only fields |
 
 Public journeys: [https://docs.codestrata.ai/reports/](https://docs.codestrata.ai/reports/).

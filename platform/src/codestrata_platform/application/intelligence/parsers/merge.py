@@ -31,12 +31,40 @@ def merge_parsed_intelligence(
         for _, parsed in ordered
         for diagnostic in parsed.diagnostics
     )
+    # Prefer report_json as the canonical interchange document (Pattern A).
+    canonical_report = None
+    assessment_evidence: tuple = ()
+    priority_actions: tuple = ()
+    assessment_roadmap = None
+    traceability_status = "legacy"
+    for artifact_type, parsed in ordered:
+        if artifact_type is ArtifactType.REPORT_JSON and parsed.canonical_report is not None:
+            canonical_report = parsed.canonical_report
+            assessment_evidence = parsed.assessment_evidence
+            priority_actions = parsed.priority_actions
+            assessment_roadmap = parsed.assessment_roadmap
+            traceability_status = parsed.traceability_status
+            break
+    if canonical_report is None:
+        for _, parsed in ordered:
+            if parsed.canonical_report is not None:
+                canonical_report = parsed.canonical_report
+                assessment_evidence = parsed.assessment_evidence
+                priority_actions = parsed.priority_actions
+                assessment_roadmap = parsed.assessment_roadmap
+                traceability_status = parsed.traceability_status
+                break
     return ParsedAssessmentIntelligence(
         schema_version=schema_version,
         findings=findings,
         metrics=metrics,
         recommendations=recommendations,
         diagnostics=diagnostics,
+        canonical_report=canonical_report,
+        assessment_evidence=assessment_evidence,
+        priority_actions=priority_actions,
+        assessment_roadmap=assessment_roadmap,
+        traceability_status=traceability_status,
     )
 
 

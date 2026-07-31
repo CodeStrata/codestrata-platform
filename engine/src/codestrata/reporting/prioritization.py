@@ -157,6 +157,11 @@ def prioritize_customer_recommendations(
                 phase1=item.phase1,
                 priority_score=score,
                 presentation_bucket=bucket,
+                supporting_finding_ids=item.supporting_finding_ids,
+                primary_finding_id=item.primary_finding_id,
+                recommendation_type=item.recommendation_type,
+                evidence_completeness=item.evidence_completeness,
+                limitations=item.limitations,
             )
         )
 

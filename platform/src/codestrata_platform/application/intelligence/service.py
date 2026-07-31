@@ -69,7 +69,7 @@ from codestrata_platform.domain.intelligence import (
 )
 from codestrata_platform.domain.repository import RepositoryRepository
 
-PARSER_VERSION = "1.0.0"
+PARSER_VERSION = "1.1.0"
 
 _CATEGORY_MAP = {item.value: item for item in FindingCategory}
 _SEVERITY_MAP = {item.value: item for item in FindingSeverity}
@@ -325,6 +325,8 @@ class DefaultAssessmentIntelligenceService:
                         assessment_id=command.assessment_id,
                     )
                 )
+            if parsed.diagnostics:
+                record.diagnostics = tuple(parsed.diagnostics)
             record.complete()
         except Exception as error:
             reason = safe_failure_summary(error, limit=1000)
@@ -600,7 +602,11 @@ def _require_storage(storage: ArtifactStorage | None) -> ArtifactStorage:
 def _to_domain_finding(parsed: ParsedFinding, *, assessment_id) -> Finding:
     evidence = tuple(
         EvidenceReference(
-            evidence_id=EvidenceReferenceId.generate(),
+            evidence_id=(
+                EvidenceReferenceId(item.evidence_id)
+                if item.evidence_id
+                else EvidenceReferenceId.generate()
+            ),
             path_reference=item.path_reference,
             line_start=item.line_start,
             line_end=item.line_end,

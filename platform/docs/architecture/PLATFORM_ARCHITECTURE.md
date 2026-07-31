@@ -28,6 +28,7 @@ and exposes results through CLI, HTML/JSON reports, and MCP.
 | Report generation | HTML v2 + `report.json` (schema 1.2); does **not** yet render architecture assessment sections |
 | MCP exposure | FastMCP “CodeStrata” server over stdio with tools/resources/prompts |
 | Agent capabilities | Application `AgentOrchestrator` (deterministic multi-agent workflows) + separate AI enrichment agent path |
+| Assessment vs Strategic Roadmap | Engine `assessment.roadmap` is repository-scoped / Priority Action backed; Platform Strategic Roadmap is portfolio-scoped and separate |
 | Future product capabilities | Technical Debt / Security / Performance / Modernization intelligence packs; full CTO report redesign — **planned** |
 
 ---

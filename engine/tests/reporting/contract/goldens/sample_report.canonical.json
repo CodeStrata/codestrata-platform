@@ -48,14 +48,19 @@
         "description": "d",
         "effort": "m",
         "evidence": [],
+        "evidence_completeness": "legacy",
         "id": "672b18af-845d-5ce6-9b18-d87bc75ab2f6",
+        "limitations": [],
         "presentation_bucket": "future",
+        "primary_finding_id": null,
         "priority": "high",
         "priority_score": 68.0,
         "rationale": "r",
+        "recommendation_type": "legacy",
         "related_finding_ids": [],
         "risk": "high",
         "rule_id": "REC001",
+        "supporting_finding_ids": [],
         "title": "Urgent rec"
       },
       {
@@ -67,17 +72,23 @@
         "description": "d",
         "effort": "s",
         "evidence": [],
+        "evidence_completeness": "legacy",
         "id": "e2a6d3f7-6d64-51ee-b5f0-35d69a78eeb7",
+        "limitations": [],
         "presentation_bucket": "future",
+        "primary_finding_id": null,
         "priority": "low",
         "priority_score": 31.0,
         "rationale": "r",
+        "recommendation_type": "legacy",
         "related_finding_ids": [],
         "risk": "low",
         "rule_id": "REC002",
+        "supporting_finding_ids": [],
         "title": "Later rec"
       }
     ],
+    "evidence": [],
     "executive_summary": {
       "ci_detected": null,
       "cloud_capabilities": [],
@@ -117,17 +128,22 @@
             "line_number": 2
           }
         ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
         "group_id": null,
         "id": "d32e2442-b9d5-585e-993d-1981cc68ae27",
+        "limitations": [],
         "metadata": {},
         "modernization_relevance": null,
         "occurrence_count": null,
+        "primary_evidence_id": null,
         "provider_category": null,
         "provider_name": null,
         "provider_priority": null,
         "rule_id": "TEST001",
         "severity": "high",
         "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
         "title": "A finding"
       },
       {
@@ -144,22 +160,28 @@
             "line_number": null
           }
         ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
         "group_id": null,
         "id": "3de48705-da3e-502d-97a2-7850fe88b871",
+        "limitations": [],
         "metadata": {},
         "modernization_relevance": null,
         "occurrence_count": null,
+        "primary_evidence_id": null,
         "provider_category": null,
         "provider_name": null,
         "provider_priority": null,
         "rule_id": "TEST002",
         "severity": "medium",
         "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
         "title": "B finding"
       }
     ],
     "mode": "deterministic",
     "organization_name": null,
+    "priority_actions": [],
     "report_title": "Engineering Assessment",
     "repository": {
       "default_branch": "main",
@@ -192,6 +214,7 @@
       "cloud_capabilities": [],
       "critical_high_finding_count": 1,
       "deterministic_recommendation_count": 2,
+      "evidence_count": 0,
       "finding_count": 2,
       "findings_by_severity": {
         "critical": 0,
@@ -201,6 +224,7 @@
         "medium": 1
       },
       "phase_count": 0,
+      "priority_action_count": 0,
       "recommendation_count": 2,
       "recommendations_by_priority": {
         "critical": 0,
@@ -208,6 +232,7 @@
         "low": 1,
         "medium": 0
       },
+      "roadmap_initiative_count": 0,
       "static_analysis_status": "disabled",
       "summary_text": "Analyzed repository 'sample-app' with 2 scanned file(s). Detected 2 finding(s) (0 critical) and 2 recommendation(s) (1 critical/high priority).",
       "technology_count": 2,

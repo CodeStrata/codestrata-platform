@@ -9,6 +9,8 @@ Assessment MCP:
 Report MCP:
 
 - Audience-oriented presentation (`assessment.architecture` in `report.json`)
+- Canonical Epic 2 traceability collections via `inspect_assessment_report*`
+  (`assessment.evidence`, findings, recommendations, Priority Actions, roadmap)
 
 Tools:
 
@@ -21,5 +23,9 @@ Tools:
 - `inspect_architecture_report_coverage`
 - `inspect_architecture_report_limitations`
 - `inspect_architecture_report_traceability`
+- `inspect_assessment_report`
+- `get_assessment_report_entity`
+- `inspect_assessment_report_traceability`
 
 Does not expose source code, absolute paths, unbounded evidence, or stack traces.
+Does not regenerate Priority Actions, roadmap initiatives, or Evidence IDs.
