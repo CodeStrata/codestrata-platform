@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:assessment:77631676328e924c1621dcb7deed6b68e8a4faf168eef146625f6fae1bd4e0e1",
+    "graph_type": "assessment",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:77631676328e924c1621dcb7deed6b68e8a4faf168eef146625f6fae1bd4e0e1",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730",
+      "node_type": "knowledge_concept_reference",
+      "properties": {
+        "canonical_key": "python",
+        "knowledge_node_type": "language",
+        "source_knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+        "source_knowledge_node_id": "ekg:language:python"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:7dcb830afd71db2a4d6fb8e426b22d5036744216a07baad2ebbc2a4e0f2175cb",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "file",
+        "source_repository_graph_id": "graph:repo:sample-python-app:7e83d9e0a6da5eaad6b3a645bb4f6f720a9bcc2b807e4bc3c7eacc571fffcc61",
+        "source_repository_node_id": "repo:sample-python-app:file:tests/test_health.py"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:a841540edf4b4118279880c535829703ce8b2abf31d80339893fd33ba3c71dd5",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "file",
+        "source_repository_graph_id": "graph:repo:sample-python-app:7e83d9e0a6da5eaad6b3a645bb4f6f720a9bcc2b807e4bc3c7eacc571fffcc61",
+        "source_repository_node_id": "repo:sample-python-app:file:src/sample_python_app/app.py"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:d86de4cdd1a463513a1976a091552f837d5f472df06d3238a1e3372fe8765458",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "file",
+        "source_repository_graph_id": "graph:repo:sample-python-app:7e83d9e0a6da5eaad6b3a645bb4f6f720a9bcc2b807e4bc3c7eacc571fffcc61",
+        "source_repository_node_id": "repo:sample-python-app:file:src/sample_python_app/__init__.py"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=python on file",
+          "path": null,
+          "source_id": "repo:sample-python-app:file:src/sample_python_app/__init__.py",
+          "start_line": null,
+          "symbol_id": "repo:sample-python-app:file:src/sample_python_app/__init__.py"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:sample-python-app:file:src/sample_python_app/__init__.py=>ekg:language:python:python",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:sample-python-app:file:src/sample_python_app/__init__.py=>ekg:language:python:python",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "file_language=python on file",
+            "path": null,
+            "source_id": "repo:sample-python-app:file:src/sample_python_app/__init__.py",
+            "start_line": null,
+            "symbol_id": "repo:sample-python-app:file:src/sample_python_app/__init__.py"
+          }
+        ],
+        "matched_key": "python",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "file_language"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:d86de4cdd1a463513a1976a091552f837d5f472df06d3238a1e3372fe8765458",
+      "target_node_id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=python on file",
+          "path": null,
+          "source_id": "repo:sample-python-app:file:src/sample_python_app/app.py",
+          "start_line": null,
+          "symbol_id": "repo:sample-python-app:file:src/sample_python_app/app.py"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:sample-python-app:file:src/sample_python_app/app.py=>ekg:language:python:python",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:sample-python-app:file:src/sample_python_app/app.py=>ekg:language:python:python",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "file_language=python on file",
+            "path": null,
+            "source_id": "repo:sample-python-app:file:src/sample_python_app/app.py",
+            "start_line": null,
+            "symbol_id": "repo:sample-python-app:file:src/sample_python_app/app.py"
+          }
+        ],
+        "matched_key": "python",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "file_language"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:a841540edf4b4118279880c535829703ce8b2abf31d80339893fd33ba3c71dd5",
+      "target_node_id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=python on file",
+          "path": null,
+          "source_id": "repo:sample-python-app:file:tests/test_health.py",
+          "start_line": null,
+          "symbol_id": "repo:sample-python-app:file:tests/test_health.py"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:sample-python-app:file:tests/test_health.py=>ekg:language:python:python",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:sample-python-app:file:tests/test_health.py=>ekg:language:python:python",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "file_language=python on file",
+            "path": null,
+            "source_id": "repo:sample-python-app:file:tests/test_health.py",
+            "start_line": null,
+            "symbol_id": "repo:sample-python-app:file:tests/test_health.py"
+          }
+        ],
+        "matched_key": "python",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "file_language"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:7dcb830afd71db2a4d6fb8e426b22d5036744216a07baad2ebbc2a4e0f2175cb",
+      "target_node_id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# TEST-ONLY Kubernetes stub for Cloud Readiness validation. Do not apply.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codestrata-validation-cloud-signals
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codestrata-validation-cloud-signals
+  template:
+    metadata:
+      labels:
+        app: codestrata-validation-cloud-signals
+    spec:
+      containers:
+        - name: api
+          image: codestrata-validation-cloud-signals:test-only
+          ports:
+            - containerPort: 8080

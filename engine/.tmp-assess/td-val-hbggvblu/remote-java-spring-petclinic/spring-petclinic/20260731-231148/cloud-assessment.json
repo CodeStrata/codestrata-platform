@@ -1,0 +1,1639 @@
+{
+  "all_finding_ids": [
+    "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+    "finding:cloud.cloud-011:2fdbb8fb97a58521",
+    "finding:cloud.cloud-040:dea4e53b3772f64f",
+    "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+    "finding:cloud.cloud-061:9aa8b184f6df3f86"
+  ],
+  "artifact_schema_id": "codestrata.cloud_assessment",
+  "assessment_id": "cloud-assessment:44cfc89cd09d23c6",
+  "capability": "cloud",
+  "cloud_pack_id": "cloud.core",
+  "cloud_pack_version": "1.0.0",
+  "conclusion_ids": [
+    "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609",
+    "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:00a01bbcd172c25d21d5",
+    "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74",
+    "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd",
+    "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215",
+    "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6",
+    "cloud-conclusion:cloud.conclusion.rule-execution-summary:2338606f0bb9f406d8d2",
+    "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7"
+  ],
+  "conclusions": [
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:cloud.cloud-040:dea4e53b3772f64f"
+      ],
+      "kind": "cloud_deployment_automation_observed",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.cloud-deployment-automation-observed",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:4324aa3c97665f43"
+      ],
+      "rule_ids": [
+        "cloud.cloud-040"
+      ],
+      "summary": "1 finding report cloud-related deployment pipeline artifacts.",
+      "technical_interpretation": "Pipeline artifacts are automation signals. They do not establish successful production delivery.",
+      "theme_ids": [
+        "cloud-theme:34c6230e7d2e"
+      ],
+      "title": "Cloud deployment automation observed"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "repository",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:00a01bbcd172c25d21d5",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+        "finding:cloud.cloud-011:2fdbb8fb97a58521",
+        "finding:cloud.cloud-040:dea4e53b3772f64f",
+        "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+        "finding:cloud.cloud-061:9aa8b184f6df3f86"
+      ],
+      "kind": "cloud_hygiene_landscape_identified",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.cloud-hygiene-landscape-identified",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [],
+      "rule_ids": [
+        "cloud.cloud-001",
+        "cloud.cloud-002",
+        "cloud.cloud-010",
+        "cloud.cloud-011",
+        "cloud.cloud-020",
+        "cloud.cloud-021",
+        "cloud.cloud-030",
+        "cloud.cloud-040",
+        "cloud.cloud-050",
+        "cloud.cloud-060",
+        "cloud.cloud-061"
+      ],
+      "summary": "The supported Cloud Hygiene rules produced 5 findings across 5 matched rules.",
+      "technical_interpretation": "This conclusion summarizes supported Cloud Hygiene rule execution and finding counts only.",
+      "theme_ids": [
+        "cloud-theme:0d6ed0d22bb8"
+      ],
+      "title": "Cloud hygiene landscape identified"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74",
+      "conclusion_version": "1.0.0",
+      "confidence": "medium",
+      "finding_ids": [
+        "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+      ],
+      "kind": "cloud_technology_coverage_observed",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.cloud-technology-coverage-observed",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:39647cf1fda38fa0"
+      ],
+      "rule_ids": [
+        "cloud.cloud-060"
+      ],
+      "summary": "1 finding report multiple cloud evidence families in one repository.",
+      "technical_interpretation": "Family coverage summarizes distinct technology signal groups. It does not establish cloud readiness.",
+      "theme_ids": [
+        "cloud-theme:137334f04e70"
+      ],
+      "title": "Cloud technology coverage observed"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+      ],
+      "kind": "containerization_observed",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.containerization-observed",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:713def010565a8db"
+      ],
+      "rule_ids": [
+        "cloud.cloud-010"
+      ],
+      "summary": "1 finding report containerization artifacts in repository evidence.",
+      "technical_interpretation": "Container artifacts are packaging signals. They do not establish runtime orchestration maturity.",
+      "theme_ids": [
+        "cloud-theme:8ee669a05474"
+      ],
+      "title": "Containerization observed"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215",
+      "conclusion_version": "1.0.0",
+      "confidence": "medium",
+      "finding_ids": [
+        "finding:cloud.cloud-061:9aa8b184f6df3f86"
+      ],
+      "kind": "deployment_without_platform_observed",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.deployment-without-platform-observed",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:5a3146adb8d28dca"
+      ],
+      "rule_ids": [
+        "cloud.cloud-061"
+      ],
+      "summary": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+      "technical_interpretation": "This gap describes missing platform markers alongside deployment assets. It does not claim cloud usage is absent.",
+      "theme_ids": [
+        "cloud-theme:79fb125a8bd2"
+      ],
+      "title": "Deployment assets without platform evidence observed"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:cloud.cloud-011:2fdbb8fb97a58521"
+      ],
+      "kind": "kubernetes_orchestration_observed",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.kubernetes-orchestration-observed",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:19145b6baa946120"
+      ],
+      "rule_ids": [
+        "cloud.cloud-011"
+      ],
+      "summary": "1 finding report Kubernetes, Helm, or OpenShift orchestration artifacts.",
+      "technical_interpretation": "Orchestration manifests are repository deployment signals. They do not establish cluster health or production operation.",
+      "theme_ids": [
+        "cloud-theme:4327f993d23f"
+      ],
+      "title": "Kubernetes / orchestration adoption observed"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.rule-execution-summary:2338606f0bb9f406d8d2",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [],
+      "kind": "rule_execution_summary",
+      "metadata": {},
+      "policy_id": "cloud.conclusion.rule-execution-summary",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [],
+      "rule_ids": [
+        "cloud.cloud-001",
+        "cloud.cloud-002",
+        "cloud.cloud-010",
+        "cloud.cloud-011",
+        "cloud.cloud-020",
+        "cloud.cloud-021",
+        "cloud.cloud-030",
+        "cloud.cloud-040",
+        "cloud.cloud-050",
+        "cloud.cloud-060",
+        "cloud.cloud-061"
+      ],
+      "summary": "Rule execution coverage: 11 executed, 5 matched, 6 not matched; evidence status repository_cloud.",
+      "technical_interpretation": "Applicable registered hygiene rules versus matched outcomes are inventory facts, not cloud readiness scores.",
+      "theme_ids": [
+        "cloud-theme:6fcde23f9f77"
+      ],
+      "title": "Cloud Hygiene rule execution summary"
+    },
+    {
+      "assessment_dimensions": [
+        "cloud"
+      ],
+      "audience": "status",
+      "business_impact": "unknown",
+      "conclusion_id": "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [],
+      "kind": "unsupported_cloud_analysis_scope",
+      "metadata": {
+        "limitation_count": "4"
+      },
+      "policy_id": "cloud.conclusion.unsupported-cloud-analysis-scope",
+      "provenance": "cloud_synthesis",
+      "recommendation_ids": [
+        "cloud-recommendation:213f3e8fe6e1ede9"
+      ],
+      "rule_ids": [],
+      "summary": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+      "technical_interpretation": "Synthesis uses repository-observable Cloud Hygiene evidence only. Provider APIs and readiness scores are not evaluated.",
+      "theme_ids": [
+        "cloud-theme:b8a8a19ed930"
+      ],
+      "title": "Unsupported cloud analysis scope acknowledged"
+    }
+  ],
+  "confidence_inventory": {
+    "buckets": [
+      {
+        "count": 5,
+        "key": "high"
+      }
+    ]
+  },
+  "configuration_fingerprint": "01c7942d9bd973ae",
+  "coverage": {
+    "areas": [
+      {
+        "area_id": "cloud_capability_requested",
+        "denominator": 1,
+        "limitations": [
+          "hygiene_rules_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "cloud_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "cloud_evidence_availability",
+        "denominator": 1,
+        "limitations": [
+          "findings_and_execution_facts_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "cloud_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "cloud_findings_evaluated",
+        "denominator": 5,
+        "limitations": [
+          "hygiene_findings_only"
+        ],
+        "maturity": "medium",
+        "numerator": 5,
+        "provenance": "cloud_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "cloud_inventory_complete",
+        "denominator": 1,
+        "limitations": [
+          "inventory_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "cloud_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "cloud_rules_enabled",
+        "denominator": 11,
+        "limitations": [],
+        "maturity": "medium",
+        "numerator": 11,
+        "provenance": "cloud_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      }
+    ]
+  },
+  "diagnostics": [],
+  "enterprise_context_used": false,
+  "evidence_fingerprint": "d3d2f8ab23bbc2e8",
+  "evidence_pipeline": "repository_cloud",
+  "execution_summary": {
+    "cloud_rules_planned": 11,
+    "conclusion_count": 8,
+    "findings_by_rule": {
+      "cloud.cloud-010": 1,
+      "cloud.cloud-011": 1,
+      "cloud.cloud-040": 1,
+      "cloud.cloud-060": 1,
+      "cloud.cloud-061": 1
+    },
+    "pack_enabled": true,
+    "pack_id": "cloud.core",
+    "pack_version": "1.0.0",
+    "recommendation_count": 6,
+    "rules_executed": 11,
+    "rules_failed": 0,
+    "rules_matched": 5,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 6,
+    "theme_count": 8,
+    "total_finding_count": 5,
+    "visible_finding_count": 5
+  },
+  "finding_ids": [
+    "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+    "finding:cloud.cloud-011:2fdbb8fb97a58521",
+    "finding:cloud.cloud-040:dea4e53b3772f64f",
+    "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+    "finding:cloud.cloud-061:9aa8b184f6df3f86"
+  ],
+  "finding_inventory": {
+    "confidence_counts": {
+      "high": 5
+    },
+    "finding_count": 5,
+    "finding_ids": [
+      "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+      "finding:cloud.cloud-011:2fdbb8fb97a58521",
+      "finding:cloud.cloud-040:dea4e53b3772f64f",
+      "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+      "finding:cloud.cloud-061:9aa8b184f6df3f86"
+    ],
+    "rule_counts": {
+      "cloud.cloud-010": 1,
+      "cloud.cloud-011": 1,
+      "cloud.cloud-040": 1,
+      "cloud.cloud-060": 1,
+      "cloud.cloud-061": 1
+    },
+    "severity_counts": {
+      "informational": 4,
+      "low": 1
+    }
+  },
+  "findings": [
+    "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+    "finding:cloud.cloud-011:2fdbb8fb97a58521",
+    "finding:cloud.cloud-040:dea4e53b3772f64f",
+    "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+    "finding:cloud.cloud-061:9aa8b184f6df3f86"
+  ],
+  "graph_fingerprint": "",
+  "limitations": [
+    {
+      "affected_capability": "statelessness",
+      "category": "statelessness-not-evaluated",
+      "importance": "contextual",
+      "limitation_id": "cloud-limitation:02355b1dc810",
+      "provenance": "cloud_assessment",
+      "remediation_guidance": null,
+      "summary": "Application statelessness is not evaluated."
+    },
+    {
+      "affected_capability": "cloud_rules",
+      "category": "other",
+      "importance": "critical",
+      "limitation_id": "cloud-limitation:72795e326f59",
+      "provenance": "cloud_assessment",
+      "remediation_guidance": null,
+      "summary": "Cloud Hygiene rules consume AggregatedRepositoryCloudEvidence only; inventory never re-reads repository files or calls cloud provider APIs."
+    },
+    {
+      "affected_capability": "cloud_readiness",
+      "category": "no-cloud-readiness-conclusion",
+      "importance": "critical",
+      "limitation_id": "cloud-limitation:bf01e5ad027b",
+      "provenance": "cloud_assessment",
+      "remediation_guidance": null,
+      "summary": "Cloud Hygiene findings are repository-observable technology signals only. Zero findings does not mean the repository is cloud ready or portable."
+    },
+    {
+      "affected_capability": "config_externalization",
+      "category": "config-externalization-not-evaluated",
+      "importance": "contextual",
+      "limitation_id": "cloud-limitation:e1b7e93c4bd1",
+      "provenance": "cloud_assessment",
+      "remediation_guidance": null,
+      "summary": "Configuration externalization is not evaluated."
+    }
+  ],
+  "metadata": {
+    "assessment_milestone": "4.7.5",
+    "families_observed": "3",
+    "overall_posture_summary": "Cloud Hygiene inventory shows 5 findings across 5 matched rules of 11 executed (3 technology families observed). Implications remain informational to low and do not establish cloud readiness.",
+    "summary": "Cloud Hygiene pack produced 5 findings from repository-cloud evidence.",
+    "synthesis_version": "1.0.0"
+  },
+  "recommendation_ids": [
+    "cloud-recommendation:213f3e8fe6e1ede9",
+    "cloud-recommendation:39647cf1fda38fa0",
+    "cloud-recommendation:713def010565a8db",
+    "cloud-recommendation:4324aa3c97665f43",
+    "cloud-recommendation:5a3146adb8d28dca",
+    "cloud-recommendation:19145b6baa946120"
+  ],
+  "recommendations": [
+    {
+      "action": "Interpret Cloud synthesis as hygiene inventory only until additional cloud analysis capabilities exist.",
+      "audience": "status",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "kind": "acknowledge_unsupported_cloud_analysis_scope",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "Documented limitations keep conclusions from overstating cloud readiness or portability.",
+      "recommendation_id": "cloud-recommendation:213f3e8fe6e1ede9",
+      "rule_ids": [],
+      "theme_ids": [
+        "cloud-theme:b8a8a19ed930"
+      ],
+      "title": "Acknowledge unsupported cloud analysis scope"
+    },
+    {
+      "action": "Review the linked Findings and confirm the observed technology families remain intentional for this repository.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+      ],
+      "kind": "review_cloud_technology_coverage",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "Technology coverage themes summarize inventory facts without readiness scoring.",
+      "recommendation_id": "cloud-recommendation:39647cf1fda38fa0",
+      "rule_ids": [
+        "cloud.cloud-060"
+      ],
+      "theme_ids": [
+        "cloud-theme:137334f04e70"
+      ],
+      "title": "Review cloud technology coverage"
+    },
+    {
+      "action": "Review the linked containerization findings and confirm Dockerfile or Compose assets remain current.",
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+      ],
+      "kind": "review_containerization_signals",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "CLOUD-010 matched on container artifacts; review stays observation-oriented.",
+      "recommendation_id": "cloud-recommendation:713def010565a8db",
+      "rule_ids": [
+        "cloud.cloud-010"
+      ],
+      "theme_ids": [
+        "cloud-theme:8ee669a05474"
+      ],
+      "title": "Review containerization signals"
+    },
+    {
+      "action": "Review the linked deployment findings and confirm pipeline assets remain intentional.",
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:cloud.cloud-040:dea4e53b3772f64f"
+      ],
+      "kind": "review_deployment_pipeline_signals",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "CLOUD-040 matched on deployment pipeline artifacts; review does not prescribe CI/CD redesign.",
+      "recommendation_id": "cloud-recommendation:4324aa3c97665f43",
+      "rule_ids": [
+        "cloud.cloud-040"
+      ],
+      "theme_ids": [
+        "cloud-theme:34c6230e7d2e"
+      ],
+      "title": "Review deployment pipeline signals"
+    },
+    {
+      "action": "Review the linked findings and confirm whether platform markers are intentionally absent for this repository.",
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:cloud.cloud-061:9aa8b184f6df3f86"
+      ],
+      "kind": "review_deployment_without_platform",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "CLOUD-061 matched on deployment assets without platform markers; review stays observation-oriented.",
+      "recommendation_id": "cloud-recommendation:5a3146adb8d28dca",
+      "rule_ids": [
+        "cloud.cloud-061"
+      ],
+      "theme_ids": [
+        "cloud-theme:79fb125a8bd2"
+      ],
+      "title": "Review deployment assets without platform markers"
+    },
+    {
+      "action": "Review the linked orchestration findings and confirm manifests remain intentional for this repository.",
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:cloud.cloud-011:2fdbb8fb97a58521"
+      ],
+      "kind": "review_orchestration_signals",
+      "metadata": {},
+      "provenance": "cloud_synthesis",
+      "rationale": "CLOUD-011 matched on orchestration artifacts; review does not prescribe cluster migration.",
+      "recommendation_id": "cloud-recommendation:19145b6baa946120",
+      "rule_ids": [
+        "cloud.cloud-011"
+      ],
+      "theme_ids": [
+        "cloud-theme:4327f993d23f"
+      ],
+      "title": "Review orchestration signals"
+    }
+  ],
+  "repository_id": "spring-petclinic",
+  "rule_inventory": {
+    "entries": [
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-001"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-002"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "cloud.cloud-010"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "cloud.cloud-011"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-020"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-021"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-030"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "cloud.cloud-040"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "cloud.cloud-050"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "cloud.cloud-060"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "cloud.cloud-061"
+      }
+    ],
+    "rules_executed": 11,
+    "rules_failed": 0,
+    "rules_matched": 5,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 6,
+    "rules_planned": 11
+  },
+  "schema_name": "cloud-assessment",
+  "section_id": "assessment.cloud",
+  "section_version": "1.2.0",
+  "severity_inventory": {
+    "buckets": [
+      {
+        "count": 4,
+        "key": "informational"
+      },
+      {
+        "count": 1,
+        "key": "low"
+      }
+    ]
+  },
+  "status": "succeeded",
+  "synthesis": {
+    "conclusion_ids": [
+      "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609",
+      "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:00a01bbcd172c25d21d5",
+      "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74",
+      "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd",
+      "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215",
+      "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6",
+      "cloud-conclusion:cloud.conclusion.rule-execution-summary:2338606f0bb9f406d8d2",
+      "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7"
+    ],
+    "conclusions": [
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f"
+        ],
+        "kind": "cloud_deployment_automation_observed",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.cloud-deployment-automation-observed",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:4324aa3c97665f43"
+        ],
+        "rule_ids": [
+          "cloud.cloud-040"
+        ],
+        "summary": "1 finding report cloud-related deployment pipeline artifacts.",
+        "technical_interpretation": "Pipeline artifacts are automation signals. They do not establish successful production delivery.",
+        "theme_ids": [
+          "cloud-theme:34c6230e7d2e"
+        ],
+        "title": "Cloud deployment automation observed"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "repository",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:00a01bbcd172c25d21d5",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+          "finding:cloud.cloud-011:2fdbb8fb97a58521",
+          "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+          "finding:cloud.cloud-061:9aa8b184f6df3f86"
+        ],
+        "kind": "cloud_hygiene_landscape_identified",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.cloud-hygiene-landscape-identified",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [],
+        "rule_ids": [
+          "cloud.cloud-001",
+          "cloud.cloud-002",
+          "cloud.cloud-010",
+          "cloud.cloud-011",
+          "cloud.cloud-020",
+          "cloud.cloud-021",
+          "cloud.cloud-030",
+          "cloud.cloud-040",
+          "cloud.cloud-050",
+          "cloud.cloud-060",
+          "cloud.cloud-061"
+        ],
+        "summary": "The supported Cloud Hygiene rules produced 5 findings across 5 matched rules.",
+        "technical_interpretation": "This conclusion summarizes supported Cloud Hygiene rule execution and finding counts only.",
+        "theme_ids": [
+          "cloud-theme:0d6ed0d22bb8"
+        ],
+        "title": "Cloud hygiene landscape identified"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74",
+        "conclusion_version": "1.0.0",
+        "confidence": "medium",
+        "finding_ids": [
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "kind": "cloud_technology_coverage_observed",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.cloud-technology-coverage-observed",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:39647cf1fda38fa0"
+        ],
+        "rule_ids": [
+          "cloud.cloud-060"
+        ],
+        "summary": "1 finding report multiple cloud evidence families in one repository.",
+        "technical_interpretation": "Family coverage summarizes distinct technology signal groups. It does not establish cloud readiness.",
+        "theme_ids": [
+          "cloud-theme:137334f04e70"
+        ],
+        "title": "Cloud technology coverage observed"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+        ],
+        "kind": "containerization_observed",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.containerization-observed",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:713def010565a8db"
+        ],
+        "rule_ids": [
+          "cloud.cloud-010"
+        ],
+        "summary": "1 finding report containerization artifacts in repository evidence.",
+        "technical_interpretation": "Container artifacts are packaging signals. They do not establish runtime orchestration maturity.",
+        "theme_ids": [
+          "cloud-theme:8ee669a05474"
+        ],
+        "title": "Containerization observed"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215",
+        "conclusion_version": "1.0.0",
+        "confidence": "medium",
+        "finding_ids": [
+          "finding:cloud.cloud-061:9aa8b184f6df3f86"
+        ],
+        "kind": "deployment_without_platform_observed",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.deployment-without-platform-observed",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:5a3146adb8d28dca"
+        ],
+        "rule_ids": [
+          "cloud.cloud-061"
+        ],
+        "summary": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+        "technical_interpretation": "This gap describes missing platform markers alongside deployment assets. It does not claim cloud usage is absent.",
+        "theme_ids": [
+          "cloud-theme:79fb125a8bd2"
+        ],
+        "title": "Deployment assets without platform evidence observed"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:cloud.cloud-011:2fdbb8fb97a58521"
+        ],
+        "kind": "kubernetes_orchestration_observed",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.kubernetes-orchestration-observed",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:19145b6baa946120"
+        ],
+        "rule_ids": [
+          "cloud.cloud-011"
+        ],
+        "summary": "1 finding report Kubernetes, Helm, or OpenShift orchestration artifacts.",
+        "technical_interpretation": "Orchestration manifests are repository deployment signals. They do not establish cluster health or production operation.",
+        "theme_ids": [
+          "cloud-theme:4327f993d23f"
+        ],
+        "title": "Kubernetes / orchestration adoption observed"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.rule-execution-summary:2338606f0bb9f406d8d2",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [],
+        "kind": "rule_execution_summary",
+        "metadata": {},
+        "policy_id": "cloud.conclusion.rule-execution-summary",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [],
+        "rule_ids": [
+          "cloud.cloud-001",
+          "cloud.cloud-002",
+          "cloud.cloud-010",
+          "cloud.cloud-011",
+          "cloud.cloud-020",
+          "cloud.cloud-021",
+          "cloud.cloud-030",
+          "cloud.cloud-040",
+          "cloud.cloud-050",
+          "cloud.cloud-060",
+          "cloud.cloud-061"
+        ],
+        "summary": "Rule execution coverage: 11 executed, 5 matched, 6 not matched; evidence status repository_cloud.",
+        "technical_interpretation": "Applicable registered hygiene rules versus matched outcomes are inventory facts, not cloud readiness scores.",
+        "theme_ids": [
+          "cloud-theme:6fcde23f9f77"
+        ],
+        "title": "Cloud Hygiene rule execution summary"
+      },
+      {
+        "assessment_dimensions": [
+          "cloud"
+        ],
+        "audience": "status",
+        "business_impact": "unknown",
+        "conclusion_id": "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [],
+        "kind": "unsupported_cloud_analysis_scope",
+        "metadata": {
+          "limitation_count": "4"
+        },
+        "policy_id": "cloud.conclusion.unsupported-cloud-analysis-scope",
+        "provenance": "cloud_synthesis",
+        "recommendation_ids": [
+          "cloud-recommendation:213f3e8fe6e1ede9"
+        ],
+        "rule_ids": [],
+        "summary": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+        "technical_interpretation": "Synthesis uses repository-observable Cloud Hygiene evidence only. Provider APIs and readiness scores are not evaluated.",
+        "theme_ids": [
+          "cloud-theme:b8a8a19ed930"
+        ],
+        "title": "Unsupported cloud analysis scope acknowledged"
+      }
+    ],
+    "diagnostics": [],
+    "overall_posture_summary": "Cloud Hygiene inventory shows 5 findings across 5 matched rules of 11 executed (3 technology families observed). Implications remain informational to low and do not establish cloud readiness.",
+    "recommendation_ids": [
+      "cloud-recommendation:213f3e8fe6e1ede9",
+      "cloud-recommendation:39647cf1fda38fa0",
+      "cloud-recommendation:713def010565a8db",
+      "cloud-recommendation:4324aa3c97665f43",
+      "cloud-recommendation:5a3146adb8d28dca",
+      "cloud-recommendation:19145b6baa946120"
+    ],
+    "recommendations": [
+      {
+        "action": "Interpret Cloud synthesis as hygiene inventory only until additional cloud analysis capabilities exist.",
+        "audience": "status",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:8309064244d1b5dd0ae7"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "kind": "acknowledge_unsupported_cloud_analysis_scope",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "Documented limitations keep conclusions from overstating cloud readiness or portability.",
+        "recommendation_id": "cloud-recommendation:213f3e8fe6e1ede9",
+        "rule_ids": [],
+        "theme_ids": [
+          "cloud-theme:b8a8a19ed930"
+        ],
+        "title": "Acknowledge unsupported cloud analysis scope"
+      },
+      {
+        "action": "Review the linked Findings and confirm the observed technology families remain intentional for this repository.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "kind": "review_cloud_technology_coverage",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "Technology coverage themes summarize inventory facts without readiness scoring.",
+        "recommendation_id": "cloud-recommendation:39647cf1fda38fa0",
+        "rule_ids": [
+          "cloud.cloud-060"
+        ],
+        "theme_ids": [
+          "cloud-theme:137334f04e70"
+        ],
+        "title": "Review cloud technology coverage"
+      },
+      {
+        "action": "Review the linked containerization findings and confirm Dockerfile or Compose assets remain current.",
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+        ],
+        "kind": "review_containerization_signals",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "CLOUD-010 matched on container artifacts; review stays observation-oriented.",
+        "recommendation_id": "cloud-recommendation:713def010565a8db",
+        "rule_ids": [
+          "cloud.cloud-010"
+        ],
+        "theme_ids": [
+          "cloud-theme:8ee669a05474"
+        ],
+        "title": "Review containerization signals"
+      },
+      {
+        "action": "Review the linked deployment findings and confirm pipeline assets remain intentional.",
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:689989a8c5479f5a0609"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f"
+        ],
+        "kind": "review_deployment_pipeline_signals",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "CLOUD-040 matched on deployment pipeline artifacts; review does not prescribe CI/CD redesign.",
+        "recommendation_id": "cloud-recommendation:4324aa3c97665f43",
+        "rule_ids": [
+          "cloud.cloud-040"
+        ],
+        "theme_ids": [
+          "cloud-theme:34c6230e7d2e"
+        ],
+        "title": "Review deployment pipeline signals"
+      },
+      {
+        "action": "Review the linked findings and confirm whether platform markers are intentionally absent for this repository.",
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:bb7f40005827a00ed215"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:cloud.cloud-061:9aa8b184f6df3f86"
+        ],
+        "kind": "review_deployment_without_platform",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "CLOUD-061 matched on deployment assets without platform markers; review stays observation-oriented.",
+        "recommendation_id": "cloud-recommendation:5a3146adb8d28dca",
+        "rule_ids": [
+          "cloud.cloud-061"
+        ],
+        "theme_ids": [
+          "cloud-theme:79fb125a8bd2"
+        ],
+        "title": "Review deployment assets without platform markers"
+      },
+      {
+        "action": "Review the linked orchestration findings and confirm manifests remain intentional for this repository.",
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "cloud-conclusion:cloud.conclusion.kubernetes-orchestration-observed:900b68e952d4e0f69fb6"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:cloud.cloud-011:2fdbb8fb97a58521"
+        ],
+        "kind": "review_orchestration_signals",
+        "metadata": {},
+        "provenance": "cloud_synthesis",
+        "rationale": "CLOUD-011 matched on orchestration artifacts; review does not prescribe cluster migration.",
+        "recommendation_id": "cloud-recommendation:19145b6baa946120",
+        "rule_ids": [
+          "cloud.cloud-011"
+        ],
+        "theme_ids": [
+          "cloud-theme:4327f993d23f"
+        ],
+        "title": "Review orchestration signals"
+      }
+    ],
+    "status": "succeeded",
+    "synthesis_version": "1.0.0",
+    "theme_ids": [
+      "cloud-theme:0d6ed0d22bb8",
+      "cloud-theme:6fcde23f9f77",
+      "cloud-theme:8ee669a05474",
+      "cloud-theme:4327f993d23f",
+      "cloud-theme:34c6230e7d2e",
+      "cloud-theme:137334f04e70",
+      "cloud-theme:79fb125a8bd2",
+      "cloud-theme:b8a8a19ed930"
+    ],
+    "themes": [
+      {
+        "counts": {
+          "families_observed": 3,
+          "finding_count": 5,
+          "rules_executed": 11,
+          "rules_matched": 5
+        },
+        "description": "The supported Cloud Hygiene rules produced 5 findings across 5 matched rules.",
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+          "finding:cloud.cloud-011:2fdbb8fb97a58521",
+          "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+          "finding:cloud.cloud-061:9aa8b184f6df3f86"
+        ],
+        "kind": "cloud_hygiene_landscape",
+        "ordering_key": "00_landscape",
+        "rule_ids": [
+          "cloud.cloud-001",
+          "cloud.cloud-002",
+          "cloud.cloud-010",
+          "cloud.cloud-011",
+          "cloud.cloud-020",
+          "cloud.cloud-021",
+          "cloud.cloud-030",
+          "cloud.cloud-040",
+          "cloud.cloud-050",
+          "cloud.cloud-060",
+          "cloud.cloud-061"
+        ],
+        "scope": "repository",
+        "theme_id": "cloud-theme:0d6ed0d22bb8",
+        "title": "Cloud hygiene landscape"
+      },
+      {
+        "counts": {
+          "rules_executed": 11,
+          "rules_failed": 0,
+          "rules_matched": 5,
+          "rules_not_applicable": 0,
+          "rules_not_matched": 6,
+          "rules_planned": 11
+        },
+        "description": "Rule execution coverage: 11 executed, 5 matched, 6 not matched; evidence status repository_cloud.",
+        "finding_ids": [],
+        "kind": "rule_execution_coverage",
+        "ordering_key": "01_rule_execution",
+        "rule_ids": [
+          "cloud.cloud-001",
+          "cloud.cloud-002",
+          "cloud.cloud-010",
+          "cloud.cloud-011",
+          "cloud.cloud-020",
+          "cloud.cloud-021",
+          "cloud.cloud-030",
+          "cloud.cloud-040",
+          "cloud.cloud-050",
+          "cloud.cloud-060",
+          "cloud.cloud-061"
+        ],
+        "scope": "coverage",
+        "theme_id": "cloud-theme:6fcde23f9f77",
+        "title": "Rule execution coverage"
+      },
+      {
+        "counts": {
+          "finding_count": 1
+        },
+        "description": "1 finding report containerization artifacts in repository evidence.",
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+        ],
+        "kind": "containerization_maturity",
+        "ordering_key": "12_containers",
+        "rule_ids": [
+          "cloud.cloud-010"
+        ],
+        "scope": "hygiene",
+        "theme_id": "cloud-theme:8ee669a05474",
+        "title": "Containerization maturity"
+      },
+      {
+        "counts": {
+          "finding_count": 1
+        },
+        "description": "1 finding report Kubernetes, Helm, or OpenShift orchestration artifacts.",
+        "finding_ids": [
+          "finding:cloud.cloud-011:2fdbb8fb97a58521"
+        ],
+        "kind": "kubernetes_orchestration_adoption",
+        "ordering_key": "13_orchestration",
+        "rule_ids": [
+          "cloud.cloud-011"
+        ],
+        "scope": "hygiene",
+        "theme_id": "cloud-theme:4327f993d23f",
+        "title": "Kubernetes / orchestration adoption"
+      },
+      {
+        "counts": {
+          "finding_count": 1
+        },
+        "description": "1 finding report cloud-related deployment pipeline artifacts.",
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f"
+        ],
+        "kind": "cloud_deployment_automation",
+        "ordering_key": "17_deployment",
+        "rule_ids": [
+          "cloud.cloud-040"
+        ],
+        "scope": "hygiene",
+        "theme_id": "cloud-theme:34c6230e7d2e",
+        "title": "Cloud deployment automation"
+      },
+      {
+        "counts": {
+          "families_observed": 3,
+          "finding_count": 1
+        },
+        "description": "1 finding report multiple cloud evidence families in one repository.",
+        "finding_ids": [
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "kind": "cloud_technology_coverage",
+        "ordering_key": "18_technology_coverage",
+        "rule_ids": [
+          "cloud.cloud-060"
+        ],
+        "scope": "coverage",
+        "theme_id": "cloud-theme:137334f04e70",
+        "title": "Cloud technology coverage"
+      },
+      {
+        "counts": {
+          "finding_count": 1
+        },
+        "description": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+        "finding_ids": [
+          "finding:cloud.cloud-061:9aa8b184f6df3f86"
+        ],
+        "kind": "deployment_without_platform",
+        "ordering_key": "19_without_platform",
+        "rule_ids": [
+          "cloud.cloud-061"
+        ],
+        "scope": "hygiene",
+        "theme_id": "cloud-theme:79fb125a8bd2",
+        "title": "Deployment assets without platform evidence"
+      },
+      {
+        "counts": {
+          "limitation_count": 4
+        },
+        "description": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+        "finding_ids": [],
+        "kind": "unsupported_analysis_scope",
+        "ordering_key": "30_unsupported_scope",
+        "rule_ids": [],
+        "scope": "status",
+        "theme_id": "cloud-theme:b8a8a19ed930",
+        "title": "Unsupported cloud analysis scope"
+      }
+    ]
+  },
+  "technology_family_inventory": {
+    "entries": [
+      {
+        "family_id": "platforms",
+        "finding_count": 0,
+        "finding_ids": [],
+        "observed": false,
+        "technologies": []
+      },
+      {
+        "family_id": "containers",
+        "finding_count": 2,
+        "finding_ids": [
+          "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "observed": true,
+        "technologies": []
+      },
+      {
+        "family_id": "orchestration",
+        "finding_count": 2,
+        "finding_ids": [
+          "finding:cloud.cloud-011:2fdbb8fb97a58521",
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "observed": true,
+        "technologies": []
+      },
+      {
+        "family_id": "iac",
+        "finding_count": 0,
+        "finding_ids": [],
+        "observed": false,
+        "technologies": []
+      },
+      {
+        "family_id": "serverless",
+        "finding_count": 0,
+        "finding_ids": [],
+        "observed": false,
+        "technologies": []
+      },
+      {
+        "family_id": "managed_services",
+        "finding_count": 0,
+        "finding_ids": [],
+        "observed": false,
+        "technologies": []
+      },
+      {
+        "family_id": "deployment_pipelines",
+        "finding_count": 2,
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+        ],
+        "observed": true,
+        "technologies": []
+      }
+    ],
+    "families_observed": 3,
+    "families_total": 7
+  },
+  "theme_ids": [
+    "cloud-theme:0d6ed0d22bb8",
+    "cloud-theme:6fcde23f9f77",
+    "cloud-theme:8ee669a05474",
+    "cloud-theme:4327f993d23f",
+    "cloud-theme:34c6230e7d2e",
+    "cloud-theme:137334f04e70",
+    "cloud-theme:79fb125a8bd2",
+    "cloud-theme:b8a8a19ed930"
+  ],
+  "themes": [
+    {
+      "counts": {
+        "families_observed": 3,
+        "finding_count": 5,
+        "rules_executed": 11,
+        "rules_matched": 5
+      },
+      "description": "The supported Cloud Hygiene rules produced 5 findings across 5 matched rules.",
+      "finding_ids": [
+        "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+        "finding:cloud.cloud-011:2fdbb8fb97a58521",
+        "finding:cloud.cloud-040:dea4e53b3772f64f",
+        "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+        "finding:cloud.cloud-061:9aa8b184f6df3f86"
+      ],
+      "kind": "cloud_hygiene_landscape",
+      "ordering_key": "00_landscape",
+      "rule_ids": [
+        "cloud.cloud-001",
+        "cloud.cloud-002",
+        "cloud.cloud-010",
+        "cloud.cloud-011",
+        "cloud.cloud-020",
+        "cloud.cloud-021",
+        "cloud.cloud-030",
+        "cloud.cloud-040",
+        "cloud.cloud-050",
+        "cloud.cloud-060",
+        "cloud.cloud-061"
+      ],
+      "scope": "repository",
+      "theme_id": "cloud-theme:0d6ed0d22bb8",
+      "title": "Cloud hygiene landscape"
+    },
+    {
+      "counts": {
+        "rules_executed": 11,
+        "rules_failed": 0,
+        "rules_matched": 5,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 6,
+        "rules_planned": 11
+      },
+      "description": "Rule execution coverage: 11 executed, 5 matched, 6 not matched; evidence status repository_cloud.",
+      "finding_ids": [],
+      "kind": "rule_execution_coverage",
+      "ordering_key": "01_rule_execution",
+      "rule_ids": [
+        "cloud.cloud-001",
+        "cloud.cloud-002",
+        "cloud.cloud-010",
+        "cloud.cloud-011",
+        "cloud.cloud-020",
+        "cloud.cloud-021",
+        "cloud.cloud-030",
+        "cloud.cloud-040",
+        "cloud.cloud-050",
+        "cloud.cloud-060",
+        "cloud.cloud-061"
+      ],
+      "scope": "coverage",
+      "theme_id": "cloud-theme:6fcde23f9f77",
+      "title": "Rule execution coverage"
+    },
+    {
+      "counts": {
+        "finding_count": 1
+      },
+      "description": "1 finding report containerization artifacts in repository evidence.",
+      "finding_ids": [
+        "finding:cloud.cloud-010:6903fdc3d8e7ec3a"
+      ],
+      "kind": "containerization_maturity",
+      "ordering_key": "12_containers",
+      "rule_ids": [
+        "cloud.cloud-010"
+      ],
+      "scope": "hygiene",
+      "theme_id": "cloud-theme:8ee669a05474",
+      "title": "Containerization maturity"
+    },
+    {
+      "counts": {
+        "finding_count": 1
+      },
+      "description": "1 finding report Kubernetes, Helm, or OpenShift orchestration artifacts.",
+      "finding_ids": [
+        "finding:cloud.cloud-011:2fdbb8fb97a58521"
+      ],
+      "kind": "kubernetes_orchestration_adoption",
+      "ordering_key": "13_orchestration",
+      "rule_ids": [
+        "cloud.cloud-011"
+      ],
+      "scope": "hygiene",
+      "theme_id": "cloud-theme:4327f993d23f",
+      "title": "Kubernetes / orchestration adoption"
+    },
+    {
+      "counts": {
+        "finding_count": 1
+      },
+      "description": "1 finding report cloud-related deployment pipeline artifacts.",
+      "finding_ids": [
+        "finding:cloud.cloud-040:dea4e53b3772f64f"
+      ],
+      "kind": "cloud_deployment_automation",
+      "ordering_key": "17_deployment",
+      "rule_ids": [
+        "cloud.cloud-040"
+      ],
+      "scope": "hygiene",
+      "theme_id": "cloud-theme:34c6230e7d2e",
+      "title": "Cloud deployment automation"
+    },
+    {
+      "counts": {
+        "families_observed": 3,
+        "finding_count": 1
+      },
+      "description": "1 finding report multiple cloud evidence families in one repository.",
+      "finding_ids": [
+        "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+      ],
+      "kind": "cloud_technology_coverage",
+      "ordering_key": "18_technology_coverage",
+      "rule_ids": [
+        "cloud.cloud-060"
+      ],
+      "scope": "coverage",
+      "theme_id": "cloud-theme:137334f04e70",
+      "title": "Cloud technology coverage"
+    },
+    {
+      "counts": {
+        "finding_count": 1
+      },
+      "description": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+      "finding_ids": [
+        "finding:cloud.cloud-061:9aa8b184f6df3f86"
+      ],
+      "kind": "deployment_without_platform",
+      "ordering_key": "19_without_platform",
+      "rule_ids": [
+        "cloud.cloud-061"
+      ],
+      "scope": "hygiene",
+      "theme_id": "cloud-theme:79fb125a8bd2",
+      "title": "Deployment assets without platform evidence"
+    },
+    {
+      "counts": {
+        "limitation_count": 4
+      },
+      "description": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+      "finding_ids": [],
+      "kind": "unsupported_analysis_scope",
+      "ordering_key": "30_unsupported_scope",
+      "rule_ids": [],
+      "scope": "status",
+      "theme_id": "cloud-theme:b8a8a19ed930",
+      "title": "Unsupported cloud analysis scope"
+    }
+  ],
+  "traceability": {
+    "edges": [
+      {
+        "edge_id": "cloud-trace:1166dfb58f84d886",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-conclusion:cloud.conclusion.containerization-observed:d0732b2b9cfb2e9a89dd"
+      },
+      {
+        "edge_id": "cloud-trace:14de60fef47e3203",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud_capability_requested"
+      },
+      {
+        "edge_id": "cloud-trace:1c117e7f0588b4ab",
+        "relation": "section_to_finding",
+        "source_id": "assessment.cloud",
+        "target_id": "finding:cloud.cloud-060:78a220cb4fa1e7ba"
+      },
+      {
+        "edge_id": "cloud-trace:1c2a7b48c7e22b8e",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-recommendation:5a3146adb8d28dca"
+      },
+      {
+        "edge_id": "cloud-trace:2833fe7ba0d548f1",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-limitation:72795e326f59"
+      },
+      {
+        "edge_id": "cloud-trace:315b68d3efeb403a",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-limitation:e1b7e93c4bd1"
+      },
+      {
+        "edge_id": "cloud-trace:370aa33bc5ddc4f7",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-conclusion:cloud.conclusion.cloud-technology-coverage-observed:6608e2c08a1b48f30f74"
+      },
+      {
+        "edge_id": "cloud-trace:4131a0f1b2580fcc",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-recommendation:19145b6baa946120"
+      },
+      {
+        "edge_id": "cloud-trace:4575584fe5d90ccf",
+        "relation": "section_to_theme",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-theme:b8a8a19ed930"
+      },
+      {
+        "edge_id": "cloud-trace:5073bc6e41359597",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-recommendation:39647cf1fda38fa0"
+      },
+      {
+        "edge_id": "cloud-trace:5435472c40a6a5f3",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-recommendation:213f3e8fe6e1ede9"
+      },
+      {
+        "edge_id": "cloud-trace:5c12f8c2ecd3fc2f",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.cloud",
+        "target_id": "cloud-limitation:bf01e5ad027b"
+      }
+    ]
+  }
+}

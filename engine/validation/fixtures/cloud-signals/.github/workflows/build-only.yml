@@ -1,0 +1,10 @@
+# TEST-ONLY build workflow — must NOT become a confirmed deployment-pipeline finding.
+name: build-validation-stub
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build placeholder
+        run: echo "codestrata validation stub — compile only, no deploy"

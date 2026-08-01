@@ -134,23 +134,22 @@ def test_technical_debt_finding_maps_measurement_and_keeps_id() -> None:
     assert first.evidence_refs[0].measurement.measured_value == 0
 
 
-def test_architecture_deferred_leaves_empty_refs() -> None:
+def test_architecture_pack_is_traceable() -> None:
     evidence = (
         RuleEvidence(
             kind=RuleEvidenceKind.SYMBOL,
             subject_reference="unit:payments",
-            message="Layer violation",
+            message="Framework leakage",
             safe_location="src/payments/Api.java",
+            attributes={"evidence_id": "arch-ev-1", "provider_id": "language"},
         ),
     )
     finding = _map(
-        "architecture.layer-dependency",
+        "architecture.framework-leakage",
         "architecture.core",
         evidence,
         RuleCategory.ARCHITECTURE,
     )
-    assert finding.evidence_refs == ()
-    assert finding.evidence_completeness.value == "legacy"
-    assert "evidence_ref_mapping_deferred_for_pack" in finding.limitations
-    # Existing thin evidence still present.
-    assert finding.evidence
+    assert finding.evidence_refs
+    assert finding.evidence_completeness.value != "legacy"
+    assert "evidence_ref_mapping_deferred_for_pack" not in finding.limitations

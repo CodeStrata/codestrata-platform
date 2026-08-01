@@ -1,0 +1,6 @@
+{
+  "repository_id": "remote-typescript-angular",
+  "schema_version": "1.2",
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "https://github.com/gothinkster/angular-realworld-example-app.git@dd99ed2cf39c805d719f943c5d7061a5683d98a8"
+}

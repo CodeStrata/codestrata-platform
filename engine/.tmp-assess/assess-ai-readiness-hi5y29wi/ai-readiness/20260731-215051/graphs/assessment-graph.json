@@ -1,0 +1,96 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:assessment:25401c08e5bacbc41b52897ea1ae11e84b5b7fa8741a5bb75ed353cbb71e7b77",
+    "graph_type": "assessment",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:25401c08e5bacbc41b52897ea1ae11e84b5b7fa8741a5bb75ed353cbb71e7b77",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730",
+      "node_type": "knowledge_concept_reference",
+      "properties": {
+        "canonical_key": "python",
+        "knowledge_node_type": "language",
+        "source_knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+        "source_knowledge_node_id": "ekg:language:python"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:0583fb7def8a2e90f2ff874d96fc913e68ba2a031e94e55b2e0c62d3e1695467",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "file",
+        "source_repository_graph_id": "graph:repo:ai-readiness:16da5f30eb4c7b48483ce810f958c9af06e6b61dbd08704b1cec77b0ab7a9e9f",
+        "source_repository_node_id": "repo:ai-readiness:file:src/agent.py"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=python on file",
+          "path": null,
+          "source_id": "repo:ai-readiness:file:src/agent.py",
+          "start_line": null,
+          "symbol_id": "repo:ai-readiness:file:src/agent.py"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:ai-readiness:file:src/agent.py=>ekg:language:python:python",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:ai-readiness:file:src/agent.py=>ekg:language:python:python",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "file_language=python on file",
+            "path": null,
+            "source_id": "repo:ai-readiness:file:src/agent.py",
+            "start_line": null,
+            "symbol_id": "repo:ai-readiness:file:src/agent.py"
+          }
+        ],
+        "matched_key": "python",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "file_language"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:0583fb7def8a2e90f2ff874d96fc913e68ba2a031e94e55b2e0c62d3e1695467",
+      "target_node_id": "ag:knowledge-concept-ref:b80b7a57bc196bdde02676832199840ce77b09d65e5d5542b92a891606b28730"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+repository_id = "remote-java-spring-petclinic"
+display_name = "Spring Petclinic (Java / Maven)"
+source_type = "remote"
+remote_url = "https://github.com/spring-projects/spring-petclinic.git"
+pinned_ref = "f182358d02e4a68e52bdbabf55ca7800288511e7"
+expected_commit = "f182358d02e4a68e52bdbabf55ca7800288511e7"
+expected_results_path = "expectations/remote-java-spring-petclinic.json"
+tags = [
+  "set-4-13",
+  "medium",
+  "real-world",
+  "remote",
+  "java",
+  "maven",
+  "spring-boot",
+  "tests-present",
+  "architecture",
+  "technical-debt",
+  "dependency",
+  "cloud",
+  "modernization",
+  "set-4-2",
+  "network",
+]
+languages = ["java"]
+notes = """Repository B (+G-lite): public Spring Petclinic. Apache-2.0.
+Pinned commit f182358d02e4a68e52bdbabf55ca7800288511e7 (dogfood pin 2026-07-29).
+Layered structure, tests, Maven, docker-compose/devcontainer.
+Optional network validation via --include-remote. No submodules required."""
+enabled = true

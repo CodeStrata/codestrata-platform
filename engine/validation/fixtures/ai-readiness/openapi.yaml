@@ -1,0 +1,13 @@
+# TEST-ONLY OpenAPI stub for AI Readiness API-boundary detection.
+# Static validation only — not a live service.
+openapi: "3.0.3"
+info:
+  title: CodeStrata AI Readiness Validation Stub
+  version: "0.0.0-test"
+paths:
+  /health:
+    get:
+      summary: Health check stub
+      responses:
+        "200":
+          description: OK

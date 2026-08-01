@@ -1,0 +1,19 @@
+repository_id = "local-library-npm"
+display_name = "Local npm library fixture"
+source_type = "local"
+local_path = "fixtures/library-npm"
+expected_results_path = "expectations/local-library-npm.json"
+tags = [
+  "local",
+  "javascript",
+  "npm",
+  "library",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "javascript",
+]
+notes = """Local npm library fixture"""
+enabled = true

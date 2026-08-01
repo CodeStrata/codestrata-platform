@@ -1,0 +1,374 @@
+{
+  "schema_version": "1.2",
+  "expect_ai_executed": false,
+  "expected_artifacts": [
+    "report.json"
+  ],
+  "finding_count": {
+    "minimum": 1
+  },
+  "technology_inventory": {
+    "required_languages": [
+      "Python"
+    ],
+    "forbidden_languages": [
+      "Java",
+      "PHP"
+    ],
+    "required_frameworks": [
+      "FastAPI"
+    ],
+    "forbidden_frameworks": [
+      "Express",
+      "Laravel",
+      "Spring Boot"
+    ],
+    "required_dependency_ecosystems": [
+      "pip"
+    ],
+    "allowed_ambiguous_facts": [],
+    "evidence_notes": "Pinned remote repository inspected for intent. remote-python-fastapi MIT template includes frontend (JS/TS allowed); Java/PHP still forbidden as negative control."
+  },
+  "security": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "security.private-key-material",
+      "security.placeholder-credential",
+      "SEC002"
+    ],
+    "allowed_findings": [
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "copier\\.yml$",
+        "rationale": "Template env literals in copier.yml accepted-as-ambiguous until product suppressions exist"
+      },
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "\\.env$",
+        "rationale": "Sample .env literals accepted-as-ambiguous until product suppressions exist"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_raw_values": [],
+    "not_applicable_rule_ids": [
+      "security.tls-verification-disabled",
+      "security.hostname-verification-disabled",
+      "security.authentication-disabled",
+      "security.permissive-cors-origin",
+      "security.debug-enabled"
+    ],
+    "evidence_notes": "Negative control. Repo ships Docker/compose and template/sample env literals (copier.yml, .env) scored ambiguous until product suppressions exist."
+  },
+  "architecture": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "allowed_findings": [
+      {
+        "rule_id": "ARCH004",
+        "rationale": "Legacy missing-tests inventory signal; ambiguous"
+      },
+      {
+        "rule_id": "ARCH005",
+        "rationale": "Legacy test-structure inventory signal; ambiguous"
+      },
+      {
+        "rule_id": "ARCH001",
+        "rationale": "Legacy component inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH002",
+        "rationale": "Legacy API inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH003",
+        "rationale": "Legacy persistence inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH007",
+        "rationale": "Legacy single-app inventory; ambiguous if present"
+      }
+    ],
+    "forbidden_rule_ids": [
+      "architecture.dependency-cycle",
+      "architecture.invalid-dependency-direction",
+      "architecture.layer-boundary-violation",
+      "architecture.excessive-cross-module-coupling",
+      "architecture.component-concentration",
+      "architecture.framework-leakage",
+      "architecture.enterprise-standard-mismatch"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_unsupported_claims": [
+      "microservices",
+      "well-architected",
+      "production-ready architecture",
+      "loosely coupled",
+      "scalable",
+      "resilient"
+    ],
+    "evidence_notes": "Negative control. remote-python-fastapi pinned MIT template."
+  },
+  "technical_debt": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "allowed_findings": [],
+    "forbidden_rule_ids": [
+      "technical_debt.large-callable",
+      "technical_debt.excessive-branching",
+      "technical_debt.deep-nesting",
+      "technical_debt.excessive-parameters",
+      "technical_debt.oversized-type"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "low technical debt",
+      "high technical debt",
+      "rewrite required",
+      "poor maintainability",
+      "developer productivity",
+      "financial debt",
+      "delivery delay"
+    ],
+    "evidence_notes": "Negative control. remote-python-fastapi pinned MIT template."
+  },
+  "dependency": {
+    "required_manifests": [],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "dependency.unresolved-version",
+      "dependency.mutable-version",
+      "dependency.unbounded-requirement",
+      "dependency.conflicting-exact-versions",
+      "dependency.duplicate-declaration"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "dependencies are healthy",
+      "secure supply chain",
+      "no dependency risk",
+      "dependencies are current",
+      "licenses are compliant",
+      "no vulnerabilities",
+      "upgrade-ready",
+      "safe dependency posture"
+    ],
+    "evidence_notes": "Negative control. remote-python-fastapi pinned MIT template."
+  },
+  "cloud": {
+    "required_signal_families": [],
+    "forbidden_signal_families": [
+      {
+        "family_id": "platform",
+        "rationale": "No cloud provider artifacts"
+      },
+      {
+        "family_id": "orchestration",
+        "rationale": "No Kubernetes/Helm"
+      },
+      {
+        "family_id": "iac",
+        "rationale": "No IaC"
+      },
+      {
+        "family_id": "serverless",
+        "rationale": "No serverless config"
+      },
+      {
+        "family_id": "managed_service",
+        "rationale": "No managed-service markers"
+      },
+      {
+        "family_id": "deployment",
+        "rationale": "No confirmed deployment pipelines"
+      }
+    ],
+    "required_findings": [],
+    "forbidden_rule_ids": [
+      "cloud.cloud-001",
+      "cloud.cloud-002",
+      "cloud.cloud-011",
+      "cloud.cloud-020",
+      "cloud.cloud-021",
+      "cloud.cloud-030",
+      "cloud.cloud-040",
+      "cloud.cloud-050",
+      "cloud.cloud-060"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "cloud ready",
+      "migration ready",
+      "cloud native architecture",
+      "production ready",
+      "highly available",
+      "secure cloud posture",
+      "cost optimized",
+      "operationally mature",
+      "successfully deployed",
+      "no cloud risks"
+    ],
+    "evidence_notes": "Negative control. Repo includes Docker/compose (container family allowed). cloud-010/cloud-061 may appear from compose artifacts; scored ambiguous until product accuracy improves."
+  },
+  "ai_readiness": {
+    "required_signal_families": [],
+    "forbidden_signal_families": [
+      {
+        "family_id": "api_boundary",
+        "rationale": "Must not invent AI API-boundary signals"
+      },
+      {
+        "family_id": "documentation",
+        "rationale": "Must not invent AI documentation signals"
+      },
+      {
+        "family_id": "data_retrieval",
+        "rationale": "Must not invent RAG/data-retrieval readiness"
+      },
+      {
+        "family_id": "ai_integration",
+        "rationale": "Must not imply LLM/AI integration"
+      },
+      {
+        "family_id": "tool_mcp",
+        "rationale": "Must not imply MCP tools"
+      },
+      {
+        "family_id": "workflow_agent",
+        "rationale": "Must not invent agent workflows"
+      },
+      {
+        "family_id": "observability_governance",
+        "rationale": "Must not invent AI governance"
+      }
+    ],
+    "required_signals": [],
+    "forbidden_signals": [],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "ai_readiness.ai-001",
+      "ai_readiness.ai-002",
+      "ai_readiness.ai-003",
+      "ai_readiness.ai-010",
+      "ai_readiness.ai-011",
+      "ai_readiness.ai-020",
+      "ai_readiness.ai-021",
+      "ai_readiness.ai-022",
+      "ai_readiness.ai-030",
+      "ai_readiness.ai-031",
+      "ai_readiness.ai-032",
+      "ai_readiness.ai-040",
+      "ai_readiness.ai-041",
+      "ai_readiness.ai-050",
+      "ai_readiness.ai-051",
+      "ai_readiness.ai-060",
+      "ai_readiness.ai-061"
+    ],
+    "required_recommendations": [],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)deploy rag",
+        "rationale": "no RAG deploy claim"
+      },
+      {
+        "title_pattern": "(?i)autonomous agent",
+        "rationale": "no autonomous agent claim"
+      },
+      {
+        "title_pattern": "(?i)productionize ai",
+        "rationale": "no productionize claim"
+      },
+      {
+        "title_pattern": "(?i)responsible ai",
+        "rationale": "no certification claim"
+      },
+      {
+        "title_pattern": "(?i)ai ready",
+        "rationale": "no readiness claim"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "ai ready",
+      "agent ready",
+      "rag ready",
+      "production ai ready",
+      "mature ai platform",
+      "strong ai foundation",
+      "governed ai",
+      "safe ai implementation",
+      "high-quality data",
+      "responsible ai compliant",
+      "no ai readiness risks"
+    ],
+    "evidence_notes": "Negative control. remote-python-fastapi pinned MIT template."
+  },
+  "modernization": {
+    "require_finding_backed_authority": true,
+    "require_priority_action_backed_roadmap": true,
+    "allow_legacy_recommendations": true,
+    "maximum_false_positive_count": 0,
+    "allowed_recommendations": [
+      {
+        "title_pattern": "(?i)before modernization",
+        "rationale": "Phase-1 legacy testing rec; not PA-eligible"
+      },
+      {
+        "title_pattern": "(?i)quality gates",
+        "rationale": "Phase-1 legacy CI rec; not PA-eligible"
+      }
+    ],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)become cloud native",
+        "rationale": "Vague unsupported theme"
+      },
+      {
+        "title_pattern": "(?i)rewrite (the |required|application)",
+        "rationale": "No rewrite claim"
+      },
+      {
+        "title_pattern": "(?i)^enable ai\\b|\\benable ai\\b",
+        "rationale": "No enable-AI modernization claim"
+      },
+      {
+        "title_pattern": "(?i)production readiness",
+        "rationale": "No prod readiness"
+      },
+      {
+        "title_pattern": "(?i)guaranteed",
+        "rationale": "No guaranteed outcome"
+      }
+    ],
+    "forbidden_priority_actions": [
+      {
+        "title_pattern": "(?i)cloud ready|ai ready|production ready",
+        "rationale": "No invented readiness PAs"
+      }
+    ],
+    "forbidden_roadmap_phases": [
+      "optimize"
+    ],
+    "forbidden_conclusions": [
+      "modernization ready",
+      "production ready",
+      "transformation ready",
+      "rewrite required",
+      "guaranteed improvement",
+      "exact ROI",
+      "successful migration",
+      "become cloud native",
+      "enable AI",
+      "transform the architecture",
+      "security certification",
+      "cloud ready",
+      "ai ready",
+      "production deployment",
+      "enterprise ready"
+    ],
+    "evidence_notes": "Remote negative control: forbid unsupported modernization/production claims without finding backing."
+  },
+  "notes": "remote-python-fastapi pinned MIT template."
+}

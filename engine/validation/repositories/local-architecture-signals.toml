@@ -1,0 +1,19 @@
+repository_id = "local-architecture-signals"
+display_name = "Local architecture signals fixture"
+source_type = "local"
+local_path = "fixtures/architecture-signals"
+assessment_config = "configs/local-architecture-signals.toml"
+expected_results_path = "expectations/local-architecture-signals.json"
+tags = [
+  "local",
+  "fixture",
+  "architecture",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "java",
+]
+notes = """Local architecture signals fixture"""
+enabled = true

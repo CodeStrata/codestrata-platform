@@ -1,0 +1,20 @@
+repository_id = "local-sample-csharp"
+display_name = "Local sample C# (ASP.NET + NuGet)"
+source_type = "local"
+local_path = "../../test-fixtures/sample-csharp-app"
+expected_results_path = "expectations/local-sample-csharp.json"
+tags = [
+  "local",
+  "csharp",
+  "nuget",
+  "aspnet",
+  "tests-present",
+  "real-world",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "csharp",
+]
+notes = """Local sample C# (ASP.NET + NuGet)"""
+enabled = true

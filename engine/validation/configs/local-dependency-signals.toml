@@ -1,0 +1,23 @@
+# Assessment overlay for dependency-signals precision fixture only.
+# Not used by the six-repository ACTIVE_VALIDATION_SET.
+#
+# Explicit pack overrides skip smart activation's evidence flip, so
+# evidence.dependency must be enabled here (defaults to false).
+
+[repository]
+path = "."
+
+[evidence.dependency]
+enabled = true
+
+[rules]
+enabled = true
+
+[rules.dependency]
+enabled = true
+
+[assessment.sections.dependency]
+enabled = true
+
+[ai]
+enabled = false

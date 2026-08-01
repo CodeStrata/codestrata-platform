@@ -1,0 +1,177 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:assessment:7457998be03545700c761224ce7820da73ddcdd267d059ed0f8e27561adcba6c",
+    "graph_type": "assessment",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:7457998be03545700c761224ce7820da73ddcdd267d059ed0f8e27561adcba6c",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "ag:knowledge-concept-ref:2ba5bea4f5112df3ee8a5374dd3bcb1256f38c59cb39131ad2c40ef10fb18636",
+      "node_type": "knowledge_concept_reference",
+      "properties": {
+        "canonical_key": "javascript",
+        "knowledge_node_type": "language",
+        "source_knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+        "source_knowledge_node_id": "ekg:language:javascript"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:knowledge-concept-ref:b3439aec8ad8cd704f8b3bbb5ce2b4470d1b082ae18d68f94e82bc9ddd136c47",
+      "node_type": "knowledge_concept_reference",
+      "properties": {
+        "canonical_key": "nodejs",
+        "knowledge_node_type": "runtime",
+        "source_knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+        "source_knowledge_node_id": "ekg:runtime:nodejs"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:0b9c8b5ce60ba4e586b2b2f841866eec2c61b681507f07e9e5f333f8c8f5fb2b",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "file",
+        "source_repository_graph_id": "graph:repo:sample-js-app:6bdb30c5cd2ced35b568d648ccd9861ab437821ad6b508dd7c8a2aa8756472be",
+        "source_repository_node_id": "repo:sample-js-app:file:src/index.js"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [],
+      "id": "ag:repository-entity-ref:1ddeb970f196d34ea8818a4bc4ce8b0b1fc4bdc41ac2b246b38ca225bd86a9fa",
+      "node_type": "repository_entity_reference",
+      "properties": {
+        "repository_node_type": "dependency",
+        "source_repository_graph_id": "graph:repo:sample-js-app:6bdb30c5cd2ced35b568d648ccd9861ab437821ad6b508dd7c8a2aa8756472be",
+        "source_repository_node_id": "repo:sample-js-app:dependency:nodejs:_:nodejs"
+      },
+      "provenance": [],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "dependency_name=nodejs on dependency",
+          "path": null,
+          "source_id": "repo:sample-js-app:dependency:nodejs:_:nodejs",
+          "start_line": null,
+          "symbol_id": "repo:sample-js-app:dependency:nodejs:_:nodejs"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:sample-js-app:dependency:nodejs:_:nodejs=>ekg:runtime:nodejs:nodejs",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:sample-js-app:dependency:nodejs:_:nodejs=>ekg:runtime:nodejs:nodejs",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "dependency_name=nodejs on dependency",
+            "path": null,
+            "source_id": "repo:sample-js-app:dependency:nodejs:_:nodejs",
+            "start_line": null,
+            "symbol_id": "repo:sample-js-app:dependency:nodejs:_:nodejs"
+          }
+        ],
+        "matched_key": "nodejs",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "dependency_name"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:1ddeb970f196d34ea8818a4bc4ce8b0b1fc4bdc41ac2b246b38ca225bd86a9fa",
+      "target_node_id": "ag:knowledge-concept-ref:b3439aec8ad8cd704f8b3bbb5ce2b4470d1b082ae18d68f94e82bc9ddd136c47"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=javascript on file",
+          "path": null,
+          "source_id": "repo:sample-js-app:file:src/index.js",
+          "start_line": null,
+          "symbol_id": "repo:sample-js-app:file:src/index.js"
+        }
+      ],
+      "id": "ag-rel:binds_to_knowledge:kb:exact_canonical_key:repo:sample-js-app:file:src/index.js=>ekg:language:javascript:javascript",
+      "properties": {
+        "binding_id": "kb:exact_canonical_key:repo:sample-js-app:file:src/index.js=>ekg:language:javascript:javascript",
+        "binding_provenance": [
+          {
+            "confidence": 1.0,
+            "extractor_id": "knowledge-pipeline",
+            "extractor_version": "1.1.0",
+            "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+            "source_type": "deterministic_analyzer"
+          }
+        ],
+        "binding_type": "uses_concept",
+        "confidence": 1.0,
+        "evidence_references": [
+          {
+            "content_hash": null,
+            "end_line": null,
+            "evidence_type": "repository_graph_observation",
+            "excerpt": "file_language=javascript on file",
+            "path": null,
+            "source_id": "repo:sample-js-app:file:src/index.js",
+            "start_line": null,
+            "symbol_id": "repo:sample-js-app:file:src/index.js"
+          }
+        ],
+        "matched_key": "javascript",
+        "matching_strategy": "exact_canonical_key",
+        "observation_kind": "file_language"
+      },
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "binds_to_knowledge",
+      "source_node_id": "ag:repository-entity-ref:0b9c8b5ce60ba4e586b2b2f841866eec2c61b681507f07e9e5f333f8c8f5fb2b",
+      "target_node_id": "ag:knowledge-concept-ref:2ba5bea4f5112df3ee8a5374dd3bcb1256f38c59cb39131ad2c40ef10fb18636"
+    }
+  ]
+}

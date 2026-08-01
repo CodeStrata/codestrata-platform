@@ -1,0 +1,2903 @@
+{
+  "artifact_schema_id": "codestrata.repository_testing_evidence",
+  "build_configuration_facts": [
+    {
+      "command_projection": null,
+      "detail": "useJUnitPlatform",
+      "evidence_id": "test-config:095793aabac1adece8895161",
+      "fact_kind": "test_task_configuration",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "build.gradle",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "build.gradle",
+        "transformation_chain": []
+      },
+      "source_type": "gradle"
+    },
+    {
+      "command_projection": null,
+      "detail": "junit-jupiter",
+      "evidence_id": "test-config:4b94aa9d1b7a2c3e56a60113",
+      "fact_kind": "dependency",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      },
+      "source_type": "maven"
+    },
+    {
+      "command_projection": null,
+      "detail": "jacoco",
+      "evidence_id": "test-config:5f753768813334aa4d9a0c8d",
+      "fact_kind": "plugin",
+      "framework": "jacoco",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      },
+      "source_type": "maven"
+    },
+    {
+      "command_projection": null,
+      "detail": "junit",
+      "evidence_id": "test-config:9819b45ecad92ba94d600a80",
+      "fact_kind": "dependency",
+      "framework": "junit",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      },
+      "source_type": "maven"
+    },
+    {
+      "command_projection": null,
+      "detail": "testImplementation",
+      "evidence_id": "test-config:c830c783bce64f1cf714c6a6",
+      "fact_kind": "test_dependency_configuration",
+      "framework": null,
+      "metadata": {},
+      "path": "build.gradle",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "build.gradle",
+        "transformation_chain": []
+      },
+      "source_type": "gradle"
+    }
+  ],
+  "bundle_id": "test-evidence:11b312aa96d185e3",
+  "ci_test_invocation_facts": [
+    {
+      "command_projection": "./gradlew build",
+      "conditional": false,
+      "continue_on_error": false,
+      "evidence_id": "test-ci:322a5d8f912d32b3543bc6ed",
+      "framework": null,
+      "job_or_step": "Build with Gradle",
+      "metadata": {},
+      "path": ".github/workflows/gradle-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "ci_workflow_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_ci_collector",
+        "source_path": ".github/workflows/gradle-build.yml",
+        "transformation_chain": []
+      },
+      "tool": "gradle"
+    },
+    {
+      "command_projection": "./mvnw -B verify",
+      "conditional": false,
+      "continue_on_error": false,
+      "evidence_id": "test-ci:bedd8501db3d352949c38f38",
+      "framework": "surefire",
+      "job_or_step": "Build with Maven Wrapper",
+      "metadata": {},
+      "path": ".github/workflows/maven-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "ci_workflow_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_ci_collector",
+        "source_path": ".github/workflows/maven-build.yml",
+        "transformation_chain": []
+      },
+      "tool": "maven"
+    }
+  ],
+  "coverage": {
+    "build_manifests_inspected": 3,
+    "candidate_files_inspected": 20,
+    "candidate_test_files_discovered": 20,
+    "ci_files_inspected": 3,
+    "coverage_configurations": 1,
+    "fixture_support_candidates": 0,
+    "frameworks_declared": 4,
+    "frameworks_structurally_observed": 26,
+    "languages_represented": [
+      "java"
+    ],
+    "malformed_files": 0,
+    "marker_facts": 16,
+    "note": "Coverage describes inspected repository-observable testing candidates only; undiscovered tests may still exist and zero evidence does not establish that tests are absent or that the repository is release ready.",
+    "repository_files_considered": 130,
+    "skipped_files": 0,
+    "source_roles_represented": [
+      "integration_test",
+      "unit_test"
+    ],
+    "structurally_confirmed_test_files": 17,
+    "supported_test_files_parsed": 20,
+    "unsupported_candidate_files": 0
+  },
+  "coverage_facts": [
+    {
+      "detail": "pom.xml",
+      "evidence_id": "test-coverage:ec55834518bdc574a6a9c610",
+      "fact_type": "coverage_configuration",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "coverage_path_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_coverage_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      },
+      "tool": "jacoco"
+    }
+  ],
+  "diagnostics": [],
+  "evidence_fingerprint": "71b4b097600723d2",
+  "file_candidates": [
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:1291a07cda0af514e221bdac",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 3168
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:193b3b924d30c6ff0423ffe9",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "role": "integration_test",
+      "size_bytes": 5148
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:350cb124d764f63a8ed76bcf",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 3815
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-file:36755d31de8951da12b71bd1",
+      "language_hint": null,
+      "metadata": {},
+      "path": "src/test/jmeter/petclinic_test_plan.jmx",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/jmeter/petclinic_test_plan.jmx",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 32098
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:4e6e5fb2d0381b009ec46e17",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "role": "integration_test",
+      "size_bytes": 4213
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:50ece469c4cf6fc73cd068d6",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 10303
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-file:61947546dd11e4f4627b3605",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 1529
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:696d6e8b77f309e5cc09906e",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 3018
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:869bf60acb3874e7c5993822",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "role": "integration_test",
+      "size_bytes": 2645
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-file:99639549fbcdd1b71d405cdb",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 1901
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:9a10d7c992b8eb6b65ea1396",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 1313
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:9f1c9bc08e662c35b86b1095",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 4231
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:a5250233a57981ea7743e16e",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 10342
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:a7d56bb284afd1e0e8507186",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 9292
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:afc6ca2647cebd37be59a300",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 2731
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:d866837733062734a8170749",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 1575
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:e29704d5019d23575a3d801b",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "role": "integration_test",
+      "size_bytes": 2478
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:ee524bbf4cdd93bf7483d38e",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 2616
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:fa778bde2c9a579a26b30b86",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 4629
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:fc3a52f49af2796dbd03e990",
+      "language_hint": "java",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 1326
+    }
+  ],
+  "fixture_facts": [],
+  "framework_facts": [
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:07f05d9e3e1764e8ee1ebe77",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:090be7cfdf0b8bd1e6385246",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:0eca3ab6a247825948a9a346",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:154a1bad8f03d7a79f07b80c",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "declared",
+      "declared_version": null,
+      "detail": "maven:junit-jupiter",
+      "evidence_id": "test-framework:22bf3127ad641533206d1a1b",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:23737fd53eb5979e6a0a61ed",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:26eeddb97934cd83f9d60664",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "declared",
+      "declared_version": null,
+      "detail": "maven:jacoco",
+      "evidence_id": "test-framework:2c9461fa58c5c4bec281015c",
+      "framework": "jacoco",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:2d0c9943f35e22bc2b262b7e",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:3aaa83b3b38394c40ef640e8",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "configured",
+      "declared_version": null,
+      "detail": "useJUnitPlatform",
+      "evidence_id": "test-framework:4b7a2cb2756e68efbc7cbbb1",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "build.gradle",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "build.gradle",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:572ba62015d87ba7b1bc4936",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:6057e28b21cd5ee78065dc86",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:6fb4fc6ecfefce1d19ae641e",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:75e2dc404a8fc19dece59ce7",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:8105f1d7b89afa39b1a43556",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:89e82a73d1c3da0c9b2b2bbf",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:99c8ff9818dba9e13397748a",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:9d6b11f6d98b352f3a3e2b3f",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:9d92e7ad54b116c91637cd2d",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:a3fcf7e46187f940e6f3cc4b",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:a48c472650f55789cfcc96d0",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "declared",
+      "declared_version": null,
+      "detail": "maven:junit",
+      "evidence_id": "test-framework:adefef22e1d926ede5c5ee1a",
+      "framework": "junit",
+      "metadata": {},
+      "path": "pom.xml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pom.xml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:c9ebff205aa43dd63a9423e0",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "declared",
+      "declared_version": null,
+      "detail": "gradle:junit",
+      "evidence_id": "test-framework:ccf88d1ff9616e3dde85ce81",
+      "framework": "junit",
+      "metadata": {},
+      "path": "build.gradle",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "build.gradle",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:d207638559c6465bc5f25b80",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:d4bb9d5f47ed8d610d40a8ac",
+      "framework": "junit_jupiter",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:db6b1c1f230c9d7844ade227",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:de52b4de3d478f9c38792e83",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:fc54413a6007042e840a61d7",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:fd3577599c094c7d7e7d04a0",
+      "framework": "junit",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "test-limitation:af8ea08b4529",
+      "summary": "Repository snapshot only."
+    },
+    {
+      "category": "tests-not-executed",
+      "limitation_id": "test-limitation:ac68a547595b",
+      "summary": "Tests are not executed."
+    },
+    {
+      "category": "no-pass-fail-evaluation",
+      "limitation_id": "test-limitation:bbef7e1c9468",
+      "summary": "Test pass/fail status is not evaluated."
+    },
+    {
+      "category": "no-runtime-coverage",
+      "limitation_id": "test-limitation:51ebd69b8039",
+      "summary": "Runtime code coverage is not measured."
+    },
+    {
+      "category": "framework-detection-bounded",
+      "limitation_id": "test-limitation:0cef62c3dd27",
+      "summary": "Framework detection is limited to supported declarations and structural indicators."
+    },
+    {
+      "category": "test-type-convention-based",
+      "limitation_id": "test-limitation:0fe6267b7a93",
+      "summary": "Test-type classification is based on repository conventions and explicit configuration."
+    },
+    {
+      "category": "no-test-effectiveness",
+      "limitation_id": "test-limitation:2c959e1963cc",
+      "summary": "Test effectiveness and assertion quality are not evaluated."
+    },
+    {
+      "category": "no-test-to-source-mapping",
+      "limitation_id": "test-limitation:b05f1d829534",
+      "summary": "Test-to-production-code coverage is not evaluated."
+    },
+    {
+      "category": "no-remote-ci-history",
+      "limitation_id": "test-limitation:d5523e27836e",
+      "summary": "Remote CI execution history is not inspected."
+    },
+    {
+      "category": "markers-not-judged",
+      "limitation_id": "test-limitation:a9a6d422331d",
+      "summary": "Disabled or skipped markers are collected without judging whether they are justified."
+    },
+    {
+      "category": "fixture-content-not-evaluated",
+      "limitation_id": "test-limitation:3db77905ab44",
+      "summary": "Fixture and test-data content is not evaluated."
+    },
+    {
+      "category": "generated-vendor-exclusions",
+      "limitation_id": "test-limitation:f65fe9e021c5",
+      "summary": "Generated, vendored, binary, unsupported, or oversized files may be excluded."
+    },
+    {
+      "category": "no-release-readiness",
+      "limitation_id": "test-limitation:0d48d82271fb",
+      "summary": "No conclusion about release readiness can be drawn."
+    }
+  ],
+  "marker_facts": [
+    {
+      "evidence_id": "test-marker:059116cbe096d045c22d47f9",
+      "line_start": 45,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:154524b99fbb8b1d7a6d9875",
+      "line_start": 54,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:1654fd91b0dbaf19f8d5b926",
+      "line_start": 44,
+      "marker_text": "enabled=false",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:5beecacc824e32516a21a8cb",
+      "line_start": 45,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:5e5f495ccfec7372680bc6bf",
+      "line_start": 32,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:6052b56761c78af95cb85c50",
+      "line_start": 45,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:88c15707a8ee11cbc0babffd",
+      "line_start": 54,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:a0eb3a1ec17ddc39bd62879a",
+      "line_start": 46,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:bd8d8203fe3370f04df24ab9",
+      "line_start": 40,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:c368528082c9ca1ba87a4a65",
+      "line_start": 53,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:d4d7a6bf5f57e5c26df50354",
+      "line_start": 44,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:e115db144653442b848c122c",
+      "line_start": 42,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:ef213d42fc7df68939d84128",
+      "line_start": 44,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:f4969e9125109283e31df62d",
+      "line_start": 59,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:f809096889d814e517a73f34",
+      "line_start": 60,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      }
+    },
+    {
+      "evidence_id": "test-marker:ff8be03865c1759e2ad1c5fb",
+      "line_start": 31,
+      "marker_text": "@Disabled",
+      "marker_type": "disabled",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "marker_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_marker_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "repository_id": "remote-java-spring-petclinic",
+  "schema_name": "repository-testing-evidence",
+  "schema_version": "1.0.0",
+  "status": "succeeded",
+  "structural_test_facts": [
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:02ce69c1eb0be6f29e5bca29",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        19,
+        35
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_test": 1,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "evidence_id": "test-file:1508876d6d4a28ebd58ef781",
+      "framework_hints": [],
+      "line_hints": [],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {}
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:3e920ddd6798feeb0ed4a94f",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        20,
+        21,
+        29,
+        30,
+        31,
+        51,
+        54,
+        81,
+        87
+      ],
+      "marker_counts": {
+        "java_disabled": 1
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 1,
+        "java_spring_boot_test": 1,
+        "java_test": 2,
+        "org_junit": 5
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:4f017660f1f65946c31aa9af",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        25,
+        50,
+        61,
+        77
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_spring_boot_test": 1,
+        "java_test": 2,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:6a7e530daf8e3209fe093d5b",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        20,
+        21,
+        22,
+        44,
+        45,
+        82,
+        92
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_test": 2,
+        "org_junit": 3
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:6cbc6a01a96a1f940cf615ca",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        21,
+        22,
+        41,
+        43,
+        44,
+        45,
+        61,
+        67
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_spring_boot_test": 1,
+        "java_test": 3,
+        "org_junit": 2
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:6f454b50a6e7681d01674b74",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        19,
+        20,
+        21,
+        22,
+        53,
+        54,
+        89,
+        97,
+        110,
+        123,
+        136,
+        149,
+        165,
+        181,
+        191,
+        201,
+        217,
+        232,
+        244,
+        256
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_test": 14,
+        "org_junit": 4
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:77e8536c556b9d07068ddbec",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        20,
+        27,
+        75,
+        89,
+        98,
+        109,
+        128,
+        147,
+        157,
+        185,
+        206,
+        217,
+        237,
+        253,
+        279
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_test": 13,
+        "org_junit": 2
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:7b4b25d44ad2a47740583f08",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        19,
+        20,
+        31,
+        32,
+        38
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_test": 1,
+        "org_junit": 2
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:8a89df65f6af589ad5a91547",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        31,
+        32,
+        40,
+        65,
+        70,
+        75,
+        90,
+        102,
+        113
+      ],
+      "marker_counts": {
+        "java_disabled": 1
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 1,
+        "java_test": 6,
+        "org_junit": 7
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:95f08fd418b246a6c1b484e1",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        18,
+        28
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_test": 1,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:b4f8764441fdbe8a552aa7e7",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        19,
+        20,
+        21,
+        59,
+        60,
+        104,
+        112,
+        123,
+        134,
+        142,
+        149,
+        158,
+        170,
+        183,
+        195,
+        202,
+        216,
+        231
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_test": 13,
+        "org_junit": 3
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "evidence_id": "test-file:bc5eed0e919b152de0bd98b0",
+      "framework_hints": [],
+      "line_hints": [],
+      "marker_counts": {},
+      "metadata": {},
+      "path": "src/test/jmeter/petclinic_test_plan.jmx",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/jmeter/petclinic_test_plan.jmx",
+        "transformation_chain": []
+      },
+      "structural_counts": {}
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:c4faa5987a0b3fe36715f091",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        21,
+        34,
+        46,
+        52,
+        59
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_spring_boot_test": 1,
+        "java_test": 3,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:c682d86f9bdc418544d84fad",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        12,
+        28,
+        40
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_spring_boot_test": 1,
+        "java_test": 1,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:ef3b0055a745a4270183ae13",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        26,
+        27,
+        28,
+        45,
+        46,
+        68,
+        75,
+        86,
+        96
+      ],
+      "marker_counts": {
+        "java_disabled": 2
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 2,
+        "java_test": 4,
+        "org_junit": 3
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:f67707fa1cfcf8392b94147b",
+      "framework_hints": [
+        "junit",
+        "junit_jupiter"
+      ],
+      "line_hints": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        42,
+        55,
+        63,
+        70
+      ],
+      "marker_counts": {
+        "java_disabled": 1
+      },
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_disabled": 1,
+        "java_test": 3,
+        "org_junit": 5
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:fb25b54ae663bb23dd097262",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        24,
+        48,
+        64
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_test": 2,
+        "org_junit": 1
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:fc03b9b902ccac1b1d3de63b",
+      "framework_hints": [
+        "junit"
+      ],
+      "line_hints": [
+        3,
+        16,
+        39,
+        86
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "java_test": 2,
+        "org_junit": 2
+      }
+    },
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_inspected",
+      "evidence_id": "test-file:fc1e5e4d6c9ff8b7afbe727c",
+      "framework_hints": [],
+      "line_hints": [],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "java"
+      },
+      "path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+        "transformation_chain": []
+      },
+      "structural_counts": {}
+    }
+  ],
+  "test_type_facts": [
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:1c1fc7e6cb0322fe3c2dfa09",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:28a6da43eac99b7b1211e485",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetTypeFormatterTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "integration_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:35fc8e1551d83617b05a44d4",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "integration_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:421e1b9a337094793d702909",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:4dacb21513a38282ff767480",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/model/ValidatorTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "integration_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:4ea708f668f6871ecf4e81e5",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "integration_test"
+    },
+    {
+      "detail": "integration_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:7938707f263c63206f7b5663",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "integration_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:8373e3c15627f3cd13313485",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetValidatorTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:8a02a73a8f68a84abb591bfe",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:905f7f21c40bb85e3003462d",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:ab526ef58da5d6502a6ff616",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-type:aeed3d796fb5cf5b051104c5",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/MysqlTestApplication.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:b39f407c3171ac36564e9034",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/ClinicServiceTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-type:cc3c0c8d22c44b785eabb400",
+      "metadata": {},
+      "path": "src/test/jmeter/petclinic_test_plan.jmx",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/jmeter/petclinic_test_plan.jmx",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:d1cb7c0ef77c9ee8a01ba636",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/CrashControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:d36b9b79b62764826fb7df13",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "integration_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:dc75c1f53a22dee8c83af0d7",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/PostgresIntegrationTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "integration_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:e4cf31f054e690977358ae04",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/vet/VetControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:e61c6ccc8f889d90ba7d54b6",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    },
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention"
+      ],
+      "evidence_id": "test-type:f77db34c9cf097c0afc1beab",
+      "metadata": {},
+      "path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "src/test/java/org/springframework/samples/petclinic/service/EntityUtils.java",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    }
+  ]
+}

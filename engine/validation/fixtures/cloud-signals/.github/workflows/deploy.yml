@@ -1,0 +1,13 @@
+# TEST-ONLY GitHub Actions workflow stub for confirmed deployment-pipeline detection.
+# Static validation only — do not execute.
+name: deploy-validation-stub
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder deploy marker
+        # Body includes a deploy-step token so evidence confirms this as a
+        # deployment pipeline (not a build-only workflow). Not executed.
+        run: echo "codestrata validation stub — kubectl apply --dry-run=client -f k8s/"

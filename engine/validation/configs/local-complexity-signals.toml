@@ -1,0 +1,17 @@
+# Assessment overlay for complexity-signals precision fixture only.
+# Not used by the six-repository ACTIVE_VALIDATION_SET.
+
+[repository]
+path = "."
+
+[rules]
+enabled = true
+
+[rules.technical_debt]
+enabled = true
+
+[assessment.sections.technical_debt]
+enabled = true
+
+[ai]
+enabled = false

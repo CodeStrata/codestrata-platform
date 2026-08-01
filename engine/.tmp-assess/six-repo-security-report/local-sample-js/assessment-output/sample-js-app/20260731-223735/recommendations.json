@@ -1,0 +1,316 @@
+{
+  "providers_evaluated": [
+    "codestrata-rec-missing-ci-workflow",
+    "codestrata-rec-missing-license",
+    "codestrata-rec-missing-tests",
+    "codestrata-rec-npm-lockfile-missing"
+  ],
+  "providers_skipped": [
+    "codestrata-rec-java-language-level",
+    "codestrata-rec-large-repository",
+    "codestrata-rec-maven-wrapper-missing",
+    "codestrata-rec-missing-node-engine",
+    "codestrata-rec-missing-readme",
+    "codestrata-rec-unsupported-spring-boot"
+  ],
+  "recommendation_count": 8,
+  "recommendations": [
+    {
+      "actions": [
+        "Establish test baseline: Create a minimal automated test suite that can run locally.",
+        "Prioritize critical paths: Cover authentication, data mutations, and other high-risk flows first.",
+        "Add test execution to CI: Fail the pipeline when tests fail so regressions are caught early."
+      ],
+      "category": "testing",
+      "dependencies": [],
+      "description": "Introduce automated tests for critical paths and wire them into CI.",
+      "effort": "unknown",
+      "evidence": [
+        {
+          "evidence_type": "finding",
+          "excerpt": "Missing tests",
+          "path": null,
+          "source_id": "finding:codestrata-rule-missing-tests:643ce6d6c29a6fe7"
+        },
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "source_files=1 test_files=0",
+          "path": null,
+          "source_id": "sample-js-app"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "id": "recommendation:codestrata-rec-missing-tests:1c1080a9db963603",
+      "limitations": [],
+      "presentation_bucket": "near_term",
+      "primary_finding_id": "finding:codestrata-rule-missing-tests:643ce6d6c29a6fe7",
+      "priority": "medium",
+      "priority_score": 91.0,
+      "rationale": "No test files or conventional test directories were found while source files are present.",
+      "recommendation_type": "finding_backed",
+      "related_finding_ids": [
+        "finding:codestrata-rule-missing-tests:643ce6d6c29a6fe7"
+      ],
+      "risk": "medium",
+      "rule_id": "provider:codestrata-rec-missing-tests",
+      "supporting_finding_ids": [
+        "finding:codestrata-rule-missing-tests:643ce6d6c29a6fe7"
+      ],
+      "title": "Establish a test baseline"
+    },
+    {
+      "actions": [
+        "Generate lockfile: Run the package manager install and commit the produced lockfile.",
+        "Use ci installs in pipelines: Prefer npm ci (or yarn/pnpm frozen lockfile installs) in CI."
+      ],
+      "category": "dependency",
+      "dependencies": [],
+      "description": "Add package-lock.json (or yarn/pnpm lock) for reproducible installs.",
+      "effort": "unknown",
+      "evidence": [
+        {
+          "evidence_type": "finding",
+          "excerpt": "NPM lockfile missing",
+          "path": null,
+          "source_id": "finding:codestrata-rule-npm-lockfile-missing:9759ef00ff4389cf"
+        },
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "package.json without lockfile",
+          "path": "package.json",
+          "source_id": "sample-js-app"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "id": "recommendation:codestrata-rec-npm-lockfile-missing:66d73666faf7d517",
+      "limitations": [],
+      "presentation_bucket": "near_term",
+      "primary_finding_id": "finding:codestrata-rule-npm-lockfile-missing:9759ef00ff4389cf",
+      "priority": "medium",
+      "priority_score": 90.0,
+      "rationale": "package.json is present, but no npm/yarn/pnpm lockfile was found in the repository inventory.",
+      "recommendation_type": "finding_backed",
+      "related_finding_ids": [
+        "finding:codestrata-rule-npm-lockfile-missing:9759ef00ff4389cf"
+      ],
+      "risk": "medium",
+      "rule_id": "provider:codestrata-rec-npm-lockfile-missing",
+      "supporting_finding_ids": [
+        "finding:codestrata-rule-npm-lockfile-missing:9759ef00ff4389cf"
+      ],
+      "title": "Commit an npm lockfile"
+    },
+    {
+      "actions": [
+        "Select a license: Agree on an open-source or proprietary license with stakeholders.",
+        "Add LICENSE file: Commit LICENSE (or LICENSE.md) at the repository root."
+      ],
+      "category": "governance",
+      "dependencies": [],
+      "description": "Choose and commit a license file so consumers know usage terms.",
+      "effort": "unknown",
+      "evidence": [
+        {
+          "evidence_type": "finding",
+          "excerpt": "Missing LICENSE",
+          "path": null,
+          "source_id": "finding:codestrata-rule-missing-license:0c795c2dfa7db589"
+        },
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "LICENSE basename not present in inventory paths",
+          "path": null,
+          "source_id": "sample-js-app"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "id": "recommendation:codestrata-rec-missing-license:37660eebaf275c5b",
+      "limitations": [],
+      "presentation_bucket": "near_term",
+      "primary_finding_id": "finding:codestrata-rule-missing-license:0c795c2dfa7db589",
+      "priority": "medium",
+      "priority_score": 86.0,
+      "rationale": "No LICENSE file was found in the repository inventory.",
+      "recommendation_type": "finding_backed",
+      "related_finding_ids": [
+        "finding:codestrata-rule-missing-license:0c795c2dfa7db589"
+      ],
+      "risk": "medium",
+      "rule_id": "provider:codestrata-rec-missing-license",
+      "supporting_finding_ids": [
+        "finding:codestrata-rule-missing-license:0c795c2dfa7db589"
+      ],
+      "title": "Add an explicit LICENSE"
+    },
+    {
+      "actions": [
+        "Introduce an automated test suite covering critical application behavior before broader modernization changes."
+      ],
+      "category": "testing",
+      "dependencies": [],
+      "description": "Introduce an automated test suite covering critical application behavior before broader modernization changes.",
+      "effort": "m",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "structure.has_tests=false; test_file_count=0",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "705ac575-e2c8-5f40-89b2-37f3978475a1",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "high",
+      "priority_score": 66.0,
+      "rationale": "Repository structure facts indicate no automated tests were detected (test_file_count=0). Modernization without regression coverage increases the likelihood of undetected behavior changes.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "high",
+      "rule_id": "REC.TESTING.001",
+      "supporting_finding_ids": [],
+      "title": "Establish automated tests before modernization"
+    },
+    {
+      "actions": [
+        "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change."
+      ],
+      "category": "ci_cd",
+      "dependencies": [],
+      "description": "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change.",
+      "effort": "m",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "cicd.has_ci=false",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "bba327aa-2f64-5a9f-ac1d-fba479c5b580",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "high",
+      "priority_score": 51.0,
+      "rationale": "CI/CD facts indicate no CI platform or pipeline was detected. Without automated gates, modernization changes are harder to validate consistently.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "medium",
+      "rule_id": "REC.CICD.001",
+      "supporting_finding_ids": [],
+      "title": "Establish CI build, test, and quality gates"
+    },
+    {
+      "actions": [
+        "Create workflow directory: Add .github/workflows/ that installs dependencies and runs tests.",
+        "Gate merges on CI: Require the workflow to pass before merging protected branches."
+      ],
+      "category": "build",
+      "dependencies": [],
+      "description": "Add CI (for example GitHub Actions) for build and test on every change.",
+      "effort": "unknown",
+      "evidence": [
+        {
+          "evidence_type": "finding",
+          "excerpt": "Missing CI workflow",
+          "path": null,
+          "source_id": "finding:codestrata-rule-missing-ci-workflow:6bf587a321816add"
+        },
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "no paths under .github/workflows/",
+          "path": null,
+          "source_id": "sample-js-app"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "id": "recommendation:codestrata-rec-missing-ci-workflow:bbc0152abde3d662",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": "finding:codestrata-rule-missing-ci-workflow:6bf587a321816add",
+      "priority": "low",
+      "priority_score": 51.0,
+      "rationale": "No GitHub Actions workflow paths were found under .github/workflows/.",
+      "recommendation_type": "finding_backed",
+      "related_finding_ids": [
+        "finding:codestrata-rule-missing-ci-workflow:6bf587a321816add"
+      ],
+      "risk": "medium",
+      "rule_id": "provider:codestrata-rec-missing-ci-workflow",
+      "supporting_finding_ids": [
+        "finding:codestrata-rule-missing-ci-workflow:6bf587a321816add"
+      ],
+      "title": "Add a CI workflow"
+    },
+    {
+      "actions": [
+        "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes."
+      ],
+      "category": "cloud",
+      "dependencies": [],
+      "description": "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes.",
+      "effort": "m",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "cloud.has_docker=false; cloud.has_kubernetes=false; cloud.has_terraform=false; cloud.has_cloudformation=false; cloud.has_serverless=false",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "medium",
+      "priority_score": 36.0,
+      "rationale": "Cloud readiness facts show no Docker, Kubernetes, Terraform, CloudFormation, or serverless assets. Without a deployment baseline, modernization delivery remains difficult to reproduce and validate.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "medium",
+      "rule_id": "REC.CLOUD.001",
+      "supporting_finding_ids": [],
+      "title": "Create a deployment baseline for modernization"
+    },
+    {
+      "actions": [
+        "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it."
+      ],
+      "category": "architecture",
+      "dependencies": [],
+      "description": "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it.",
+      "effort": "l",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "architecture.has_api_layer=false; architecture.has_service_layer=false; architecture.has_persistence_layer=false",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "4ab3ff2a-b70f-530d-89c7-352d0ef3c1d7",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "medium",
+      "priority_score": 34.0,
+      "rationale": "Architecture facts show no detected API, service, or persistence layering in an application repository. Weak separation of concerns can increase change risk during modernization.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "medium",
+      "rule_id": "REC.ARCHITECTURE.001",
+      "supporting_finding_ids": [],
+      "title": "Review separation of concerns across application layers"
+    }
+  ],
+  "unmatched_finding_ids": [
+    "finding:codestrata-rule-node-engine-detected:c9e03456e5563be4"
+  ],
+  "version": "1.0.0"
+}

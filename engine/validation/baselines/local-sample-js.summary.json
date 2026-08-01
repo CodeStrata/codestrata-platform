@@ -1,0 +1,61 @@
+{
+  "ai_executed": false,
+  "application_indicators": [
+    "web_application"
+  ],
+  "dependency_ecosystems": [
+    "npm"
+  ],
+  "finding_rule_ids": [
+    "ARCH004",
+    "CLOUD009",
+    "DEP002",
+    "DEP003",
+    "build.system.summary",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "codestrata-rule-missing-tests",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing",
+    "repository.metrics.summary"
+  ],
+  "findings_count": 11,
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "workspace test-fixtures/sample-js-app",
+  "repository_composition_facts": [
+    "has_build_system=true",
+    "has_dependency_manifest=true",
+    "has_tests=False"
+  ],
+  "repository_id": "local-sample-js",
+  "schema_version": "1.2",
+  "technologies": [
+    "Express",
+    "JavaScript",
+    "Jest",
+    "Node.js",
+    "npm"
+  ],
+  "technologies_by_category": {
+    "build_systems": [
+      "npm"
+    ],
+    "frameworks": [
+      "Express"
+    ],
+    "languages": [
+      "JavaScript"
+    ],
+    "runtimes": [
+      "Node.js"
+    ],
+    "testing": [
+      "Jest"
+    ]
+  },
+  "technology_versions": {
+    "Express": "^4.21.0",
+    "Jest": "^29.7.0",
+    "Node.js": ">=18"
+  }
+}

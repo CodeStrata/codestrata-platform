@@ -1,0 +1,19 @@
+repository_id = "local-serverless-signals"
+display_name = "Local serverless signals fixture"
+source_type = "local"
+local_path = "fixtures/serverless-signals"
+expected_results_path = "expectations/local-serverless-signals.json"
+tags = [
+  "local",
+  "fixture",
+  "cloud",
+  "serverless",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "python",
+]
+notes = """Local serverless signals fixture"""
+enabled = true

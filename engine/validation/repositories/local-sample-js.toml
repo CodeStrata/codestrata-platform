@@ -1,0 +1,21 @@
+repository_id = "local-sample-js"
+display_name = "Local sample JavaScript (npm baseline)"
+source_type = "local"
+local_path = "../../test-fixtures/sample-js-app"
+expected_results_path = "expectations/local-sample-js.json"
+tags = [
+  "set-4-13",
+  "fast",
+  "real-world",
+  "local",
+  "javascript",
+  "npm",
+  "technology-inventory",
+  "dependency",
+  "tests-absent",
+  "set-4-2",
+]
+languages = ["javascript"]
+notes = """Repository A: small JS/Express app on npm. Limited/absent tests.
+Baseline Technology Inventory and Dependency validation. Apache-owned fixture."""
+enabled = true

@@ -1,0 +1,2 @@
+# TEST-ONLY dependencies for AI Readiness validation. Do not install for runtime use.
+openai>=1.40.0

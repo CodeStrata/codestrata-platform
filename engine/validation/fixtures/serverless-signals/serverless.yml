@@ -1,0 +1,14 @@
+service: codestrata-validation-serverless-stub
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: us-east-1
+
+functions:
+  validationStub:
+    handler: handler.main
+    events:
+      - http:
+          path: health
+          method: get

@@ -1,0 +1,20 @@
+repository_id = "local-sample-java"
+display_name = "Local sample Java (Maven + Spring Boot)"
+source_type = "local"
+local_path = "../../test-fixtures/sample-java-app"
+expected_results_path = "expectations/local-sample-java.json"
+tags = [
+  "local",
+  "java",
+  "maven",
+  "spring-boot",
+  "tests-absent",
+  "real-world",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "java",
+]
+notes = """Local sample Java (Maven + Spring Boot)"""
+enabled = true

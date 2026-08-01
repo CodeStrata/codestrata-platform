@@ -158,21 +158,22 @@ def test_match_mapping_deterministic_and_preserves_parents() -> None:
     assert "ev:dep2" in first[0].parent_evidence_ids
 
 
-def test_deferred_pack_returns_empty_with_limitation() -> None:
+def test_architecture_pack_maps_evidence_refs() -> None:
     evidence = (
         RuleEvidence(
             kind=RuleEvidenceKind.SYMBOL,
             subject_reference="unit:a",
             message="architecture",
             safe_location="src/a.py",
+            attributes={"evidence_id": "arch-ev-a", "provider_id": "language"},
         ),
     )
-    match = _match(evidence, rule_id="architecture.layer-dependency")
+    match = _match(evidence, rule_id="architecture.framework-leakage")
     match = match.model_copy(update={"provenance": "architecture.core"})
     refs, limits, count = evidence_refs_from_rule_match(match)
-    assert refs == ()
     assert count == 1
-    assert "evidence_ref_mapping_deferred_for_pack" in limits
+    assert refs
+    assert "evidence_ref_mapping_deferred_for_pack" not in limits
 
 
 def test_merge_unions_evidence_refs_without_changing_id() -> None:

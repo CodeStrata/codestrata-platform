@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "codestrata-validation-expected-results-0.1",
+  "title": "CodeStrata validation expected results",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string" },
+    "expected_assessment_status": { "type": "string" },
+    "expected_coverage_states": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "technology_facts_expected": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "technology_facts_forbidden": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_finding_rule_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_finding_rule_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "finding_count": { "$ref": "#/$defs/count_range" },
+    "maximum_allowed_false_positives": { "type": "integer", "minimum": 0 },
+    "minimum_required_detections": { "type": "integer", "minimum": 0 },
+    "expected_recommendation_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_recommendation_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_recommendation_categories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "recommendation_count": { "$ref": "#/$defs/count_range" },
+    "expected_priority_action_categories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_roadmap_phases": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_evidence_paths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_evidence_paths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_assessment_heads": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expect_ai_executed": { "type": "boolean" },
+    "technology_inventory": { "type": "object" },
+    "security": { "type": "object" },
+    "architecture": { "type": "object" },
+    "technical_debt": { "type": "object" },
+    "dependency": { "type": "object" },
+    "cloud": { "type": "object" },
+    "ai_readiness": { "type": "object" },
+    "modernization": { "type": "object" },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "count_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minimum": { "type": "integer", "minimum": 0 },
+        "maximum": { "type": "integer", "minimum": 0 },
+        "exact": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

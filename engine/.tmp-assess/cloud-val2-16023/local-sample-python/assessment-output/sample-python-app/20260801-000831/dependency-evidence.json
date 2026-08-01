@@ -1,0 +1,273 @@
+{
+  "artifact_schema_id": "codestrata.dependency_evidence",
+  "bundles": [
+    {
+      "coverage": {
+        "declarations_collected": 2,
+        "manifests_discovered": 1,
+        "manifests_excluded": 0,
+        "manifests_failed": 0,
+        "manifests_parsed": 1,
+        "manifests_partially_parsed": 0,
+        "manifests_supported": 1,
+        "unresolved_expression_count": 0,
+        "unsupported_construct_count": 0
+      },
+      "declarations": [
+        {
+          "classification": "source",
+          "configuration_name": null,
+          "declaration_kind": "runtime",
+          "ecosystem": "python",
+          "environment_marker": null,
+          "evidence_id": "ev:5128fdf807daf8c8858ef18d",
+          "extras": [],
+          "group_name": null,
+          "is_dependency_management": false,
+          "is_editable": false,
+          "is_local_path": false,
+          "manifest_type": "pyproject.toml",
+          "metadata": {},
+          "normalized_identity": "flask",
+          "optional": false,
+          "original_identity": "flask",
+          "profile": null,
+          "provenance": {
+            "configuration_fingerprint": "dependency_assessment",
+            "extraction_method": "python_manifest_parse",
+            "notes": [],
+            "origin": "manifest",
+            "provider_id": "dependency.python.manifest",
+            "provider_version": "1.0.0",
+            "source_analyzer": "dependency_evidence",
+            "source_path": "pyproject.toml",
+            "transformation_chain": [
+              "python"
+            ]
+          },
+          "raw_version": ">=3.0.0",
+          "resolved_version_local": null,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "path": "pyproject.toml",
+            "snippet": "flask>=3.0.0"
+          },
+          "unsupported_reason": null,
+          "version_availability": "available",
+          "version_resolution_status": "resolved"
+        },
+        {
+          "classification": "source",
+          "configuration_name": null,
+          "declaration_kind": "optional",
+          "ecosystem": "python",
+          "environment_marker": null,
+          "evidence_id": "ev:22c30cd79dc3970e3b8e1813",
+          "extras": [],
+          "group_name": "dev",
+          "is_dependency_management": false,
+          "is_editable": false,
+          "is_local_path": false,
+          "manifest_type": "pyproject.toml",
+          "metadata": {},
+          "normalized_identity": "pytest",
+          "optional": false,
+          "original_identity": "pytest",
+          "profile": null,
+          "provenance": {
+            "configuration_fingerprint": "dependency_assessment",
+            "extraction_method": "python_manifest_parse",
+            "notes": [],
+            "origin": "manifest",
+            "provider_id": "dependency.python.manifest",
+            "provider_version": "1.0.0",
+            "source_analyzer": "dependency_evidence",
+            "source_path": "pyproject.toml",
+            "transformation_chain": [
+              "python"
+            ]
+          },
+          "raw_version": ">=8.0.0",
+          "resolved_version_local": null,
+          "source": {
+            "line_end": null,
+            "line_start": null,
+            "path": "pyproject.toml",
+            "snippet": "pytest>=8.0.0"
+          },
+          "unsupported_reason": null,
+          "version_availability": "available",
+          "version_resolution_status": "resolved"
+        }
+      ],
+      "diagnostics": [],
+      "ecosystem": "python",
+      "manifests": [
+        {
+          "classification": "source",
+          "declaration_count": 2,
+          "diagnostics": [],
+          "ecosystem": "python",
+          "evidence_id": "ev:ebdda0681bff413c692a0401",
+          "manifest_type": "pyproject.toml",
+          "parse_status": "succeeded",
+          "path": "pyproject.toml",
+          "provenance": {
+            "configuration_fingerprint": "dependency_assessment",
+            "extraction_method": "toml_parse",
+            "notes": [],
+            "origin": "manifest",
+            "provider_id": "dependency.python.manifest",
+            "provider_version": "1.0.0",
+            "source_analyzer": "dependency_evidence",
+            "source_path": "pyproject.toml",
+            "transformation_chain": [
+              "python"
+            ]
+          },
+          "unresolved_expressions": [],
+          "unsupported_constructs": []
+        }
+      ],
+      "provider_id": "dependency.python.manifest",
+      "provider_version": "1.0.0",
+      "schema_version": "1.1.0",
+      "status": "succeeded"
+    }
+  ],
+  "contributing_provider_ids": [
+    "dependency.python.manifest"
+  ],
+  "coverage": {
+    "declarations_collected": 2,
+    "manifests_discovered": 1,
+    "manifests_excluded": 0,
+    "manifests_failed": 0,
+    "manifests_parsed": 1,
+    "manifests_partially_parsed": 0,
+    "manifests_supported": 1,
+    "unresolved_expression_count": 0,
+    "unsupported_construct_count": 0
+  },
+  "declarations": [
+    {
+      "classification": "source",
+      "configuration_name": null,
+      "declaration_kind": "runtime",
+      "ecosystem": "python",
+      "environment_marker": null,
+      "evidence_id": "ev:5128fdf807daf8c8858ef18d",
+      "extras": [],
+      "group_name": null,
+      "is_dependency_management": false,
+      "is_editable": false,
+      "is_local_path": false,
+      "manifest_type": "pyproject.toml",
+      "metadata": {},
+      "normalized_identity": "flask",
+      "optional": false,
+      "original_identity": "flask",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "dependency_assessment",
+        "extraction_method": "python_manifest_parse",
+        "notes": [],
+        "origin": "manifest",
+        "provider_id": "dependency.python.manifest",
+        "provider_version": "1.0.0",
+        "source_analyzer": "dependency_evidence",
+        "source_path": "pyproject.toml",
+        "transformation_chain": [
+          "python"
+        ]
+      },
+      "raw_version": ">=3.0.0",
+      "resolved_version_local": null,
+      "source": {
+        "line_end": null,
+        "line_start": null,
+        "path": "pyproject.toml",
+        "snippet": "flask>=3.0.0"
+      },
+      "unsupported_reason": null,
+      "version_availability": "available",
+      "version_resolution_status": "resolved"
+    },
+    {
+      "classification": "source",
+      "configuration_name": null,
+      "declaration_kind": "optional",
+      "ecosystem": "python",
+      "environment_marker": null,
+      "evidence_id": "ev:22c30cd79dc3970e3b8e1813",
+      "extras": [],
+      "group_name": "dev",
+      "is_dependency_management": false,
+      "is_editable": false,
+      "is_local_path": false,
+      "manifest_type": "pyproject.toml",
+      "metadata": {},
+      "normalized_identity": "pytest",
+      "optional": false,
+      "original_identity": "pytest",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "dependency_assessment",
+        "extraction_method": "python_manifest_parse",
+        "notes": [],
+        "origin": "manifest",
+        "provider_id": "dependency.python.manifest",
+        "provider_version": "1.0.0",
+        "source_analyzer": "dependency_evidence",
+        "source_path": "pyproject.toml",
+        "transformation_chain": [
+          "python"
+        ]
+      },
+      "raw_version": ">=8.0.0",
+      "resolved_version_local": null,
+      "source": {
+        "line_end": null,
+        "line_start": null,
+        "path": "pyproject.toml",
+        "snippet": "pytest>=8.0.0"
+      },
+      "unsupported_reason": null,
+      "version_availability": "available",
+      "version_resolution_status": "resolved"
+    }
+  ],
+  "diagnostics": [],
+  "evidence_fingerprint": "cf1b5169fca8fac1",
+  "manifests": [
+    {
+      "classification": "source",
+      "declaration_count": 2,
+      "diagnostics": [],
+      "ecosystem": "python",
+      "evidence_id": "ev:ebdda0681bff413c692a0401",
+      "manifest_type": "pyproject.toml",
+      "parse_status": "succeeded",
+      "path": "pyproject.toml",
+      "provenance": {
+        "configuration_fingerprint": "dependency_assessment",
+        "extraction_method": "toml_parse",
+        "notes": [],
+        "origin": "manifest",
+        "provider_id": "dependency.python.manifest",
+        "provider_version": "1.0.0",
+        "source_analyzer": "dependency_evidence",
+        "source_path": "pyproject.toml",
+        "transformation_chain": [
+          "python"
+        ]
+      },
+      "unresolved_expressions": [],
+      "unsupported_constructs": []
+    }
+  ],
+  "repository_id": "repository",
+  "schema_version": "1.1.0",
+  "status": "succeeded"
+}

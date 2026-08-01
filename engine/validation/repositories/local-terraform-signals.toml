@@ -1,0 +1,19 @@
+repository_id = "local-terraform-signals"
+display_name = "Local Terraform IaC signals fixture"
+source_type = "local"
+local_path = "fixtures/terraform-signals"
+expected_results_path = "expectations/local-terraform-signals.json"
+tags = [
+  "local",
+  "fixture",
+  "cloud",
+  "terraform",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "hcl",
+]
+notes = """Local Terraform IaC signals fixture"""
+enabled = true

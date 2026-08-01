@@ -1,0 +1,253 @@
+{
+  "artifact_schema_id": "codestrata.repository_testing_evidence",
+  "build_configuration_facts": [
+    {
+      "command_projection": null,
+      "detail": "pytest",
+      "evidence_id": "test-config:039f8aa485faf1912e6be7cc",
+      "fact_kind": "test_tool_declaration",
+      "framework": "pytest",
+      "metadata": {},
+      "path": "pyproject.toml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pyproject.toml",
+        "transformation_chain": []
+      },
+      "source_type": "python_project"
+    }
+  ],
+  "bundle_id": "test-evidence:5d60405c9fb60927",
+  "ci_test_invocation_facts": [],
+  "coverage": {
+    "build_manifests_inspected": 1,
+    "candidate_files_inspected": 1,
+    "candidate_test_files_discovered": 1,
+    "ci_files_inspected": 0,
+    "coverage_configurations": 0,
+    "fixture_support_candidates": 0,
+    "frameworks_declared": 1,
+    "frameworks_structurally_observed": 1,
+    "languages_represented": [
+      "python"
+    ],
+    "malformed_files": 0,
+    "marker_facts": 0,
+    "note": "Coverage describes inspected repository-observable testing candidates only; undiscovered tests may still exist and zero evidence does not establish that tests are absent or that the repository is release ready.",
+    "repository_files_considered": 5,
+    "skipped_files": 0,
+    "source_roles_represented": [
+      "unit_test"
+    ],
+    "structurally_confirmed_test_files": 1,
+    "supported_test_files_parsed": 1,
+    "unsupported_candidate_files": 0
+  },
+  "coverage_facts": [],
+  "diagnostics": [],
+  "evidence_fingerprint": "8d8e5b3d1e853fe9",
+  "file_candidates": [
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-file:354019913b08fad3ac287ff2",
+      "language_hint": "python",
+      "metadata": {},
+      "path": "tests/test_health.py",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "tests/test_health.py",
+        "transformation_chain": []
+      },
+      "role": "unit_test",
+      "size_bytes": 108
+    }
+  ],
+  "fixture_facts": [],
+  "framework_facts": [
+    {
+      "basis": "declared",
+      "declared_version": null,
+      "detail": "python_project:pytest",
+      "evidence_id": "test-framework:4e4245395748f700df4230ce",
+      "framework": "pytest",
+      "metadata": {},
+      "path": "pyproject.toml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "pyproject.toml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "basis": "structurally_observed",
+      "declared_version": null,
+      "detail": "structural_token",
+      "evidence_id": "test-framework:be5ddaf4de2dc3ec8ba9b41a",
+      "framework": "pytest",
+      "metadata": {},
+      "path": "tests/test_health.py",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "tests/test_health.py",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "test-limitation:af8ea08b4529",
+      "summary": "Repository snapshot only."
+    },
+    {
+      "category": "tests-not-executed",
+      "limitation_id": "test-limitation:ac68a547595b",
+      "summary": "Tests are not executed."
+    },
+    {
+      "category": "no-pass-fail-evaluation",
+      "limitation_id": "test-limitation:bbef7e1c9468",
+      "summary": "Test pass/fail status is not evaluated."
+    },
+    {
+      "category": "no-runtime-coverage",
+      "limitation_id": "test-limitation:51ebd69b8039",
+      "summary": "Runtime code coverage is not measured."
+    },
+    {
+      "category": "framework-detection-bounded",
+      "limitation_id": "test-limitation:0cef62c3dd27",
+      "summary": "Framework detection is limited to supported declarations and structural indicators."
+    },
+    {
+      "category": "test-type-convention-based",
+      "limitation_id": "test-limitation:0fe6267b7a93",
+      "summary": "Test-type classification is based on repository conventions and explicit configuration."
+    },
+    {
+      "category": "no-test-effectiveness",
+      "limitation_id": "test-limitation:2c959e1963cc",
+      "summary": "Test effectiveness and assertion quality are not evaluated."
+    },
+    {
+      "category": "no-test-to-source-mapping",
+      "limitation_id": "test-limitation:b05f1d829534",
+      "summary": "Test-to-production-code coverage is not evaluated."
+    },
+    {
+      "category": "no-remote-ci-history",
+      "limitation_id": "test-limitation:d5523e27836e",
+      "summary": "Remote CI execution history is not inspected."
+    },
+    {
+      "category": "markers-not-judged",
+      "limitation_id": "test-limitation:a9a6d422331d",
+      "summary": "Disabled or skipped markers are collected without judging whether they are justified."
+    },
+    {
+      "category": "fixture-content-not-evaluated",
+      "limitation_id": "test-limitation:3db77905ab44",
+      "summary": "Fixture and test-data content is not evaluated."
+    },
+    {
+      "category": "generated-vendor-exclusions",
+      "limitation_id": "test-limitation:f65fe9e021c5",
+      "summary": "Generated, vendored, binary, unsupported, or oversized files may be excluded."
+    },
+    {
+      "category": "no-release-readiness",
+      "limitation_id": "test-limitation:0d48d82271fb",
+      "summary": "No conclusion about release readiness can be drawn."
+    }
+  ],
+  "marker_facts": [],
+  "repository_id": "sample-python-app",
+  "schema_name": "repository-testing-evidence",
+  "schema_version": "1.0.0",
+  "status": "succeeded",
+  "structural_test_facts": [
+    {
+      "classification": "test",
+      "confirmation_level": "structurally_confirmed",
+      "evidence_id": "test-file:06fc3e8caf4ceace6116c630",
+      "framework_hints": [
+        "pytest"
+      ],
+      "line_hints": [
+        4
+      ],
+      "marker_counts": {},
+      "metadata": {
+        "language_hint": "python"
+      },
+      "path": "tests/test_health.py",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "structural_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_structural_collector",
+        "source_path": "tests/test_health.py",
+        "transformation_chain": []
+      },
+      "structural_counts": {
+        "python_def_test": 1
+      }
+    }
+  ],
+  "test_type_facts": [
+    {
+      "detail": "unit_test",
+      "discovery_bases": [
+        "directory_convention",
+        "filename_convention"
+      ],
+      "evidence_id": "test-type:56ab0f45f0c1366b3fb76840",
+      "metadata": {},
+      "path": "tests/test_health.py",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_discovery",
+        "source_path": "tests/test_health.py",
+        "transformation_chain": []
+      },
+      "test_type": "unit_test"
+    }
+  ]
+}

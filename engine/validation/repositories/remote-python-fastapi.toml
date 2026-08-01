@@ -1,0 +1,21 @@
+repository_id = "remote-python-fastapi"
+display_name = "FastAPI full-stack template (Python)"
+source_type = "remote"
+remote_url = "https://github.com/fastapi/full-stack-fastapi-template.git"
+pinned_ref = "c9e70d65c74f7adda417fc8de0757207ff77514c"
+expected_commit = "c9e70d65c74f7adda417fc8de0757207ff77514c"
+expected_results_path = "expectations/remote-python-fastapi.json"
+tags = [
+  "remote",
+  "python",
+  "fastapi",
+  "medium",
+  "network",
+  "real-world",
+  "set-4-13",
+]
+languages = [
+  "python",
+]
+notes = """FastAPI full-stack template (Python)"""
+enabled = true

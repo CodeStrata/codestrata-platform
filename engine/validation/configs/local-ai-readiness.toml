@@ -1,0 +1,28 @@
+# Validation-only assessment config for the AI readiness fixture.
+# Enables AI Readiness evidence/rules/report. Does not enable AI enrichment.
+# Community Edition compatible; offline; no Platform/RAG/KG.
+#
+# repository.path satisfies config validation; the harness still passes the
+# concrete assessed path via run_assessment(repo=...).
+
+[repository]
+path = "fixtures/ai-readiness"
+profile = "community"
+
+[evidence.repository_ai_readiness]
+enabled = true
+
+[analysis.ai_readiness]
+enabled = true
+
+[rules.ai_readiness]
+enabled = true
+
+[report.sections.ai_readiness]
+enabled = true
+
+[static_analysis]
+enabled = false
+
+[knowledge]
+enabled = false

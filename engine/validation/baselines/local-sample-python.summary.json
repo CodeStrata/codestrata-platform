@@ -1,0 +1,54 @@
+{
+  "ai_executed": false,
+  "application_indicators": [
+    "has_tests",
+    "web_application"
+  ],
+  "dependency_ecosystems": [
+    "pip",
+    "python"
+  ],
+  "finding_rule_ids": [
+    "ARCH005",
+    "CLOUD009",
+    "DEP003",
+    "build.system.summary",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "repository.metrics.summary"
+  ],
+  "findings_count": 7,
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "workspace test-fixtures/sample-python-app",
+  "repository_composition_facts": [
+    "has_build_system=true",
+    "has_dependency_manifest=true",
+    "has_tests=True"
+  ],
+  "repository_id": "local-sample-python",
+  "schema_version": "1.2",
+  "technologies": [
+    "Flask",
+    "Python",
+    "pip",
+    "pytest"
+  ],
+  "technologies_by_category": {
+    "build_systems": [
+      "pip"
+    ],
+    "frameworks": [
+      "Flask"
+    ],
+    "languages": [
+      "Python"
+    ],
+    "testing": [
+      "pytest"
+    ]
+  },
+  "technology_versions": {
+    "Flask": ">=3.0.0",
+    "pytest": ">=8.0.0"
+  }
+}

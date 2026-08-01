@@ -1,0 +1,3684 @@
+{
+  "assessment": {
+    "activation": {
+      "mode": "default",
+      "packs": [
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "security",
+          "reason": "Security hygiene is enabled by default"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "inventory:requirements.txt",
+            "manifest:python:requirements.txt"
+          ],
+          "pack_id": "dependency",
+          "reason": "Dependency manifests detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "architecture",
+          "reason": "Insufficient architecture structure signals"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "td_language:python"
+          ],
+          "pack_id": "technical_debt",
+          "reason": "Supported language present for technical debt rules"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "testing",
+          "reason": "No test assets detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "cloud",
+          "reason": "No cloud packaging signals detected"
+        },
+        {
+          "decision": "forced_on",
+          "enabled": true,
+          "evidence": [
+            "rules.ai_readiness.enabled",
+            "analysis.ai_readiness.enabled",
+            "report.sections.ai_readiness.enabled",
+            "evidence.repository_ai_readiness.enabled"
+          ],
+          "pack_id": "ai_readiness",
+          "reason": "Explicit configuration override (rules.ai_readiness.enabled, analysis.ai_readiness.enabled, report.sections.ai_readiness.enabled, evidence.repository_ai_readiness.enabled)"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "performance",
+          "reason": "Performance remains opt-in under default activation"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "roadmap",
+          "reason": "Roadmap presentation enabled to surface deterministic recommendations"
+        }
+      ]
+    },
+    "ai": {
+      "candidate_finding_count": null,
+      "estimated_input_tokens": null,
+      "evidence_coverage": null,
+      "executed": false,
+      "executive_summary": null,
+      "failure_code": null,
+      "failure_detail": null,
+      "failure_message": null,
+      "fallback_used": false,
+      "included_finding_count": null,
+      "input_tokens": null,
+      "internal_execution_artifact": null,
+      "key_risks": [],
+      "latency_ms": null,
+      "limitations": [],
+      "model_id": null,
+      "omitted_informational_count": null,
+      "output_tokens": null,
+      "overall_assessment": null,
+      "phases": [],
+      "provider": null,
+      "provider_invoked": false,
+      "recommendations": [],
+      "result_included": false,
+      "stages_completed": [],
+      "static_analysis_profile": null,
+      "status": "not_requested",
+      "stop_reason": null,
+      "total_tokens": null
+    },
+    "ai_enrichment": null,
+    "ai_readiness": {
+      "ai_readiness_pack_id": "ai_readiness.core",
+      "ai_readiness_pack_version": "1.0.0",
+      "assessment_scope": "Repository-level AI Readiness Hygiene assessment for ai-readiness",
+      "assessment_status": "succeeded",
+      "capability_family_summary": {
+        "entries": [
+          {
+            "family_id": "ai_integrations",
+            "finding_count": 2,
+            "finding_ids": [
+              "finding:ai_readiness.ai-030:5da1704eb85200ab",
+              "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+            ],
+            "observed": true,
+            "signals": []
+          },
+          {
+            "family_id": "api_boundaries",
+            "finding_count": 1,
+            "finding_ids": [
+              "finding:ai_readiness.ai-003:d01deeac5d379335"
+            ],
+            "observed": true,
+            "signals": []
+          },
+          {
+            "family_id": "data_retrieval",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "signals": []
+          },
+          {
+            "family_id": "documentation_metadata",
+            "finding_count": 1,
+            "finding_ids": [
+              "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+            ],
+            "observed": true,
+            "signals": []
+          },
+          {
+            "family_id": "observability_governance",
+            "finding_count": 1,
+            "finding_ids": [
+              "finding:ai_readiness.ai-051:f3747a411f99d54b"
+            ],
+            "observed": true,
+            "signals": []
+          },
+          {
+            "family_id": "tool_mcp",
+            "finding_count": 2,
+            "finding_ids": [
+              "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+              "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+            ],
+            "observed": true,
+            "signals": []
+          },
+          {
+            "family_id": "workflow_agents",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "signals": []
+          }
+        ],
+        "families_observed": 5,
+        "families_total": 7,
+        "note": "Capability families summarize Finding-derived AI readiness signal groups only. They do not establish enablement suitability or produce scores."
+      },
+      "conclusions": [
+        {
+          "audience": "hygiene",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.ai-integration-maturity-observed:728e9b443797796311ef",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-030:5da1704eb85200ab"
+          ],
+          "kind": "ai_integration_maturity_observed",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:b157459578707c50"
+          ],
+          "summary": "1 finding report LLM SDK, prompt, or RAG pipeline signals.",
+          "theme_ids": [
+            "ai-readiness-theme:9ec935615be4"
+          ],
+          "title": "AI integration maturity observed"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.ai-readiness-hygiene-landscape-identified:16a8d438c81d7e4aee8c",
+          "confidence": "high",
+          "finding_count": 5,
+          "finding_ids": [
+            "finding:ai_readiness.ai-003:d01deeac5d379335",
+            "finding:ai_readiness.ai-030:5da1704eb85200ab",
+            "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+            "finding:ai_readiness.ai-051:f3747a411f99d54b",
+            "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+          ],
+          "kind": "ai_readiness_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "The supported AI Readiness Hygiene rules produced 5 findings across 5 matched rules.",
+          "theme_ids": [
+            "ai-readiness-theme:5aafdc287cb3"
+          ],
+          "title": "AI readiness hygiene landscape identified"
+        },
+        {
+          "audience": "hygiene",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.api-and-service-boundaries-observed:898f3e610446afa453d0",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-003:d01deeac5d379335"
+          ],
+          "kind": "api_and_service_boundaries_observed",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:55ce6ccd55595b10"
+          ],
+          "summary": "1 finding report API or service boundary signals in repository evidence.",
+          "theme_ids": [
+            "ai-readiness-theme:11cb83fee045"
+          ],
+          "title": "API and service boundaries observed"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.broad-ai-enablement-observed:303aa2c0b2fc0296d68b",
+          "confidence": "medium",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+          ],
+          "kind": "broad_ai_enablement_observed",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:f0349c2c6eab8e48"
+          ],
+          "summary": "1 finding report broad AI enablement foundations across multiple capability families.",
+          "theme_ids": [
+            "ai-readiness-theme:60bb57d38cf5"
+          ],
+          "title": "Broad AI enablement observed"
+        },
+        {
+          "audience": "hygiene",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.mcp-and-tool-ecosystem-observed:d148a8605ccdea441e81",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-040:a52fac7a0a5ee090"
+          ],
+          "kind": "mcp_and_tool_ecosystem_observed",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:03cd19a8941f314f"
+          ],
+          "summary": "1 finding report MCP or tool ecosystem signals.",
+          "theme_ids": [
+            "ai-readiness-theme:f3591d5c344d"
+          ],
+          "title": "MCP and tool ecosystem observed"
+        },
+        {
+          "audience": "hygiene",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.observability-and-governance-observed:2755c4d91b7de054d83e",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-051:f3747a411f99d54b"
+          ],
+          "kind": "observability_and_governance_observed",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:4f6bd921300b8000"
+          ],
+          "summary": "1 finding report observability or governance signals for AI-related assets.",
+          "theme_ids": [
+            "ai-readiness-theme:f6fd57f37393"
+          ],
+          "title": "Observability and governance observed"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.rule-execution-summary:06f3402e2cff11e02519",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_summary",
+          "recommendation_ids": [],
+          "summary": "Rule execution coverage: 17 executed, 5 matched, 12 not matched; evidence status repository_ai_readiness.",
+          "theme_ids": [
+            "ai-readiness-theme:6fcde23f9f77"
+          ],
+          "title": "AI Readiness Hygiene rule execution summary"
+        },
+        {
+          "audience": "status",
+          "conclusion_id": "ai-readiness-conclusion:ai_readiness.conclusion.unsupported-ai-readiness-analysis-scope:6998d412e125d8743339",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_ai_readiness_analysis_scope",
+          "recommendation_ids": [
+            "ai-readiness-recommendation:ea4e4b6eb89e17d9"
+          ],
+          "summary": "2 documented limitations bound this assessment: readiness scoring, AI/LLM execution, and report presentation remain out of scope.",
+          "theme_ids": [
+            "ai-readiness-theme:b8a8a19ed930"
+          ],
+          "title": "Unsupported AI readiness analysis scope acknowledged"
+        }
+      ],
+      "conclusions_displayed": 8,
+      "conclusions_total": 8,
+      "coverage_summary": {
+        "areas": [
+          {
+            "area_id": "ai_readiness_capability_requested",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "ai_readiness_evidence_availability",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "ai_readiness_findings_evaluated",
+            "denominator": 5,
+            "maturity": "medium",
+            "numerator": 5,
+            "status": "measured"
+          },
+          {
+            "area_id": "ai_readiness_inventory_complete",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "ai_readiness_rules_enabled",
+            "denominator": 17,
+            "maturity": "medium",
+            "numerator": 17,
+            "status": "measured"
+          }
+        ],
+        "evidence_pipeline": "repository_ai_readiness",
+        "evidence_status": "",
+        "note": "Coverage describes AI Readiness assessment capability areas only. Agent execution, RAG suitability, and readiness scores are not measured."
+      },
+      "diagnostics": [],
+      "diagnostics_displayed": 0,
+      "diagnostics_total": 0,
+      "execution_summary": {
+        "conclusion_count": 8,
+        "entries": [
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-001"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-002"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "ai_readiness.ai-003"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-010"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-011"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-020"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-021"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-022"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "ai_readiness.ai-030"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-031"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-032"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "ai_readiness.ai-040"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-041"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-050"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "ai_readiness.ai-051"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "ai_readiness.ai-060"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "ai_readiness.ai-061"
+          }
+        ],
+        "note": "Rule execution summarizes registered AI Readiness Hygiene rules only. Zero findings are a bounded inventory outcome and do not establish enablement suitability.",
+        "recommendation_count": 6,
+        "rules_executed": 17,
+        "rules_failed": 0,
+        "rules_matched": 5,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 12,
+        "rules_planned": 17,
+        "theme_count": 8,
+        "total_finding_count": 5
+      },
+      "executive_summary": "AI Readiness Hygiene inventory shows 5 findings across 5 matched rules of 17 executed (5 capability families observed). Implications remain informational to low and do not establish ai readiness.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "inventory_summary": {
+        "by_confidence": [
+          {
+            "count": 4,
+            "key": "high"
+          },
+          {
+            "count": 1,
+            "key": "low"
+          }
+        ],
+        "by_rule": [
+          {
+            "count": 1,
+            "key": "ai_readiness.ai-003"
+          },
+          {
+            "count": 1,
+            "key": "ai_readiness.ai-030"
+          },
+          {
+            "count": 1,
+            "key": "ai_readiness.ai-040"
+          },
+          {
+            "count": 1,
+            "key": "ai_readiness.ai-051"
+          },
+          {
+            "count": 1,
+            "key": "ai_readiness.ai-060"
+          }
+        ],
+        "by_severity": [
+          {
+            "count": 3,
+            "key": "informational"
+          },
+          {
+            "count": 2,
+            "key": "low"
+          }
+        ],
+        "finding_count": 5,
+        "finding_ids": [
+          "finding:ai_readiness.ai-003:d01deeac5d379335",
+          "finding:ai_readiness.ai-030:5da1704eb85200ab",
+          "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+          "finding:ai_readiness.ai-051:f3747a411f99d54b",
+          "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+        ],
+        "finding_ids_displayed": 5,
+        "none_detected_statement": null
+      },
+      "limitations": [
+        {
+          "category": "other",
+          "limitation_id": "ai-readiness-limitation:7e88481c3a76",
+          "summary": "AI Readiness Hygiene rules consume AggregatedRepositoryAiReadinessEvidence only; inventory and synthesis never re-read repository files, execute AI/LLM calls, or produce readiness scores. Report presentation is not implemented."
+        },
+        {
+          "category": "no-ai-readiness-conclusion",
+          "limitation_id": "ai-readiness-limitation:abccd9c6398c",
+          "summary": "AI Readiness Hygiene findings are repository-observable signals only. Zero findings does not mean the repository is AI ready, agent ready, or suitable for RAG."
+        }
+      ],
+      "limitations_displayed": 2,
+      "limitations_total": 2,
+      "metadata": {
+        "assessment_section_id": "assessment.ai_readiness",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_ai_readiness",
+        "families_observed": "5",
+        "finding_count": "5",
+        "finding_id_display_limit": "32",
+        "theme_limit": "12"
+      },
+      "overall_posture_summary": "AI Readiness Hygiene inventory shows 5 findings across 5 matched rules of 17 executed (5 capability families observed). Implications remain informational to low and do not establish ai readiness.",
+      "recommendation_groups": [
+        {
+          "group": "AI readiness signals",
+          "recommendations": [
+            {
+              "action": "Review the linked AI integration findings and confirm each observed marker remains intentional.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.ai-integration-maturity-observed:728e9b443797796311ef"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:ai_readiness.ai-030:5da1704eb85200ab"
+              ],
+              "kind": "review_ai_integration_signals",
+              "presentation_group": "AI readiness signals",
+              "rationale": "AI-030/031/032 matched on AI integration signals; review does not prescribe architecture changes.",
+              "recommendation_id": "ai-readiness-recommendation:b157459578707c50",
+              "rule_ids": [
+                "ai_readiness.ai-030"
+              ],
+              "title": "Review AI integration signals"
+            },
+            {
+              "action": "Review the linked AI Readiness Hygiene findings and confirm the observed API and service boundary markers remain intentional.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.api-and-service-boundaries-observed:898f3e610446afa453d0"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:ai_readiness.ai-003:d01deeac5d379335"
+              ],
+              "kind": "review_api_and_service_boundary_signals",
+              "presentation_group": "AI readiness signals",
+              "rationale": "AI-001/002/003 matched on API boundary signals; review keeps inventory signals actionable without claiming ai readiness.",
+              "recommendation_id": "ai-readiness-recommendation:55ce6ccd55595b10",
+              "rule_ids": [
+                "ai_readiness.ai-003"
+              ],
+              "title": "Review API and service boundary signals"
+            },
+            {
+              "action": "Review the linked MCP and tool findings and confirm packaging artifacts remain intentional.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.mcp-and-tool-ecosystem-observed:d148a8605ccdea441e81"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:ai_readiness.ai-040:a52fac7a0a5ee090"
+              ],
+              "kind": "review_mcp_and_tool_signals",
+              "presentation_group": "AI readiness signals",
+              "rationale": "AI-040 matched on MCP or tool signals; review stays observation-oriented.",
+              "recommendation_id": "ai-readiness-recommendation:03cd19a8941f314f",
+              "rule_ids": [
+                "ai_readiness.ai-040"
+              ],
+              "title": "Review MCP and tool signals"
+            },
+            {
+              "action": "Review the linked observability and governance findings and confirm each marker remains intentional.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.observability-and-governance-observed:2755c4d91b7de054d83e"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:ai_readiness.ai-051:f3747a411f99d54b"
+              ],
+              "kind": "review_observability_and_governance_signals",
+              "presentation_group": "AI readiness signals",
+              "rationale": "AI-050/051 matched on observability or governance signals; review stays observation-oriented.",
+              "recommendation_id": "ai-readiness-recommendation:4f6bd921300b8000",
+              "rule_ids": [
+                "ai_readiness.ai-051"
+              ],
+              "title": "Review observability and governance signals"
+            }
+          ]
+        },
+        {
+          "group": "Foundations and coverage",
+          "recommendations": [
+            {
+              "action": "Review the linked Findings and confirm the observed capability families remain intentional for this repository.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.broad-ai-enablement-observed:303aa2c0b2fc0296d68b"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+              ],
+              "kind": "review_broad_ai_enablement",
+              "presentation_group": "Foundations and coverage",
+              "rationale": "Broad enablement themes summarize inventory facts without claiming ai readiness.",
+              "recommendation_id": "ai-readiness-recommendation:f0349c2c6eab8e48",
+              "rule_ids": [
+                "ai_readiness.ai-060"
+              ],
+              "title": "Review broad AI enablement signals"
+            }
+          ]
+        },
+        {
+          "group": "Scope acknowledgements",
+          "recommendations": [
+            {
+              "action": "Interpret AI Readiness synthesis as hygiene inventory only until additional analysis capabilities exist.",
+              "audience": "status",
+              "conclusion_ids": [
+                "ai-readiness-conclusion:ai_readiness.conclusion.unsupported-ai-readiness-analysis-scope:6998d412e125d8743339"
+              ],
+              "conditional": true,
+              "finding_ids": [],
+              "kind": "acknowledge_unsupported_ai_readiness_analysis_scope",
+              "presentation_group": "Scope acknowledgements",
+              "rationale": "Documented limitations keep conclusions from claiming ai readiness or prescribing enablement paths.",
+              "recommendation_id": "ai-readiness-recommendation:ea4e4b6eb89e17d9",
+              "rule_ids": [],
+              "title": "Acknowledge unsupported AI readiness analysis scope"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Interpret AI Readiness synthesis as hygiene inventory only until additional analysis capabilities exist.",
+          "audience": "status",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.unsupported-ai-readiness-analysis-scope:6998d412e125d8743339"
+          ],
+          "conditional": true,
+          "finding_ids": [],
+          "kind": "acknowledge_unsupported_ai_readiness_analysis_scope",
+          "presentation_group": "Scope acknowledgements",
+          "rationale": "Documented limitations keep conclusions from claiming ai readiness or prescribing enablement paths.",
+          "recommendation_id": "ai-readiness-recommendation:ea4e4b6eb89e17d9",
+          "rule_ids": [],
+          "title": "Acknowledge unsupported AI readiness analysis scope"
+        },
+        {
+          "action": "Review the linked AI integration findings and confirm each observed marker remains intentional.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.ai-integration-maturity-observed:728e9b443797796311ef"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:ai_readiness.ai-030:5da1704eb85200ab"
+          ],
+          "kind": "review_ai_integration_signals",
+          "presentation_group": "AI readiness signals",
+          "rationale": "AI-030/031/032 matched on AI integration signals; review does not prescribe architecture changes.",
+          "recommendation_id": "ai-readiness-recommendation:b157459578707c50",
+          "rule_ids": [
+            "ai_readiness.ai-030"
+          ],
+          "title": "Review AI integration signals"
+        },
+        {
+          "action": "Review the linked AI Readiness Hygiene findings and confirm the observed API and service boundary markers remain intentional.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.api-and-service-boundaries-observed:898f3e610446afa453d0"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:ai_readiness.ai-003:d01deeac5d379335"
+          ],
+          "kind": "review_api_and_service_boundary_signals",
+          "presentation_group": "AI readiness signals",
+          "rationale": "AI-001/002/003 matched on API boundary signals; review keeps inventory signals actionable without claiming ai readiness.",
+          "recommendation_id": "ai-readiness-recommendation:55ce6ccd55595b10",
+          "rule_ids": [
+            "ai_readiness.ai-003"
+          ],
+          "title": "Review API and service boundary signals"
+        },
+        {
+          "action": "Review the linked Findings and confirm the observed capability families remain intentional for this repository.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.broad-ai-enablement-observed:303aa2c0b2fc0296d68b"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+          ],
+          "kind": "review_broad_ai_enablement",
+          "presentation_group": "Foundations and coverage",
+          "rationale": "Broad enablement themes summarize inventory facts without claiming ai readiness.",
+          "recommendation_id": "ai-readiness-recommendation:f0349c2c6eab8e48",
+          "rule_ids": [
+            "ai_readiness.ai-060"
+          ],
+          "title": "Review broad AI enablement signals"
+        },
+        {
+          "action": "Review the linked MCP and tool findings and confirm packaging artifacts remain intentional.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.mcp-and-tool-ecosystem-observed:d148a8605ccdea441e81"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:ai_readiness.ai-040:a52fac7a0a5ee090"
+          ],
+          "kind": "review_mcp_and_tool_signals",
+          "presentation_group": "AI readiness signals",
+          "rationale": "AI-040 matched on MCP or tool signals; review stays observation-oriented.",
+          "recommendation_id": "ai-readiness-recommendation:03cd19a8941f314f",
+          "rule_ids": [
+            "ai_readiness.ai-040"
+          ],
+          "title": "Review MCP and tool signals"
+        },
+        {
+          "action": "Review the linked observability and governance findings and confirm each marker remains intentional.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "ai-readiness-conclusion:ai_readiness.conclusion.observability-and-governance-observed:2755c4d91b7de054d83e"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:ai_readiness.ai-051:f3747a411f99d54b"
+          ],
+          "kind": "review_observability_and_governance_signals",
+          "presentation_group": "AI readiness signals",
+          "rationale": "AI-050/051 matched on observability or governance signals; review stays observation-oriented.",
+          "recommendation_id": "ai-readiness-recommendation:4f6bd921300b8000",
+          "rule_ids": [
+            "ai_readiness.ai-051"
+          ],
+          "title": "Review observability and governance signals"
+        }
+      ],
+      "recommendations_displayed": 6,
+      "recommendations_total": 6,
+      "repository_name": "ai-readiness",
+      "schema_name": "report.ai_readiness",
+      "section_id": "report.ai_readiness",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "AI Readiness assessment completed using supported repository-ai-readiness evidence and hygiene rules.",
+      "synthesis_status": "succeeded",
+      "themes": [
+        {
+          "finding_count": 5,
+          "finding_ids": [
+            "finding:ai_readiness.ai-003:d01deeac5d379335",
+            "finding:ai_readiness.ai-030:5da1704eb85200ab",
+            "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+            "finding:ai_readiness.ai-051:f3747a411f99d54b",
+            "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+          ],
+          "kind": "ai_readiness_hygiene_landscape",
+          "rule_ids": [
+            "ai_readiness.ai-001",
+            "ai_readiness.ai-002",
+            "ai_readiness.ai-003",
+            "ai_readiness.ai-010",
+            "ai_readiness.ai-011",
+            "ai_readiness.ai-020",
+            "ai_readiness.ai-021",
+            "ai_readiness.ai-022",
+            "ai_readiness.ai-030",
+            "ai_readiness.ai-031",
+            "ai_readiness.ai-032",
+            "ai_readiness.ai-040",
+            "ai_readiness.ai-041",
+            "ai_readiness.ai-050",
+            "ai_readiness.ai-051",
+            "ai_readiness.ai-060",
+            "ai_readiness.ai-061"
+          ],
+          "scope": "repository",
+          "summary": "The supported AI Readiness Hygiene rules produced 5 findings across 5 matched rules.",
+          "theme_id": "ai-readiness-theme:5aafdc287cb3",
+          "title": "AI readiness hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_coverage",
+          "rule_ids": [
+            "ai_readiness.ai-001",
+            "ai_readiness.ai-002",
+            "ai_readiness.ai-003",
+            "ai_readiness.ai-010",
+            "ai_readiness.ai-011",
+            "ai_readiness.ai-020",
+            "ai_readiness.ai-021",
+            "ai_readiness.ai-022",
+            "ai_readiness.ai-030",
+            "ai_readiness.ai-031",
+            "ai_readiness.ai-032",
+            "ai_readiness.ai-040",
+            "ai_readiness.ai-041",
+            "ai_readiness.ai-050",
+            "ai_readiness.ai-051",
+            "ai_readiness.ai-060",
+            "ai_readiness.ai-061"
+          ],
+          "scope": "coverage",
+          "summary": "Rule execution coverage: 17 executed, 5 matched, 12 not matched; evidence status repository_ai_readiness.",
+          "theme_id": "ai-readiness-theme:6fcde23f9f77",
+          "title": "Rule execution coverage"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-003:d01deeac5d379335"
+          ],
+          "kind": "api_and_service_boundaries",
+          "rule_ids": [
+            "ai_readiness.ai-003"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report API or service boundary signals in repository evidence.",
+          "theme_id": "ai-readiness-theme:11cb83fee045",
+          "title": "API and service boundaries"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-030:5da1704eb85200ab"
+          ],
+          "kind": "ai_integration_maturity",
+          "rule_ids": [
+            "ai_readiness.ai-030"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report LLM SDK, prompt, or RAG pipeline signals.",
+          "theme_id": "ai-readiness-theme:9ec935615be4",
+          "title": "AI integration maturity"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-040:a52fac7a0a5ee090"
+          ],
+          "kind": "mcp_and_tool_ecosystem",
+          "rule_ids": [
+            "ai_readiness.ai-040"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report MCP or tool ecosystem signals.",
+          "theme_id": "ai-readiness-theme:f3591d5c344d",
+          "title": "MCP and tool ecosystem"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-051:f3747a411f99d54b"
+          ],
+          "kind": "observability_and_governance",
+          "rule_ids": [
+            "ai_readiness.ai-051"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report observability or governance signals for AI-related assets.",
+          "theme_id": "ai-readiness-theme:f6fd57f37393",
+          "title": "Observability and governance"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+          ],
+          "kind": "broad_ai_enablement",
+          "rule_ids": [
+            "ai_readiness.ai-060"
+          ],
+          "scope": "coverage",
+          "summary": "1 finding report broad AI enablement foundations across multiple capability families.",
+          "theme_id": "ai-readiness-theme:60bb57d38cf5",
+          "title": "Broad AI enablement"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "status",
+          "summary": "2 documented limitations bound this assessment: readiness scoring, AI/LLM execution, and report presentation remain out of scope.",
+          "theme_id": "ai-readiness-theme:b8a8a19ed930",
+          "title": "Unsupported AI readiness analysis scope"
+        }
+      ],
+      "themes_displayed": 8,
+      "themes_total": 8,
+      "title": "AI Readiness Intelligence",
+      "traceability": {
+        "edge_count": 12,
+        "finding_ids": [
+          "finding:ai_readiness.ai-003:d01deeac5d379335",
+          "finding:ai_readiness.ai-030:5da1704eb85200ab",
+          "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+          "finding:ai_readiness.ai-051:f3747a411f99d54b",
+          "finding:ai_readiness.ai-060:b0db33e2b56ba1f1"
+        ],
+        "sample_edges": [
+          {
+            "edge_id": "ai-readiness-trace:014b21642bb0e4ac",
+            "relation": "section_to_finding",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "finding:ai_readiness.ai-030:5da1704eb85200ab"
+          },
+          {
+            "edge_id": "ai-readiness-trace:03d1e156f7012e05",
+            "relation": "section_to_theme",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-theme:6fcde23f9f77"
+          },
+          {
+            "edge_id": "ai-readiness-trace:0579a4d821feed3a",
+            "relation": "section_to_theme",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-theme:f3591d5c344d"
+          },
+          {
+            "edge_id": "ai-readiness-trace:184d2a2e5d341a0d",
+            "relation": "section_to_theme",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-theme:9ec935615be4"
+          },
+          {
+            "edge_id": "ai-readiness-trace:2170f8ea6555360e",
+            "relation": "section_to_finding",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "finding:ai_readiness.ai-003:d01deeac5d379335"
+          },
+          {
+            "edge_id": "ai-readiness-trace:25e3bd43f7c71dd8",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai_readiness_findings_evaluated"
+          },
+          {
+            "edge_id": "ai-readiness-trace:36615a7cc16b6d4f",
+            "relation": "section_to_finding",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "finding:ai_readiness.ai-051:f3747a411f99d54b"
+          },
+          {
+            "edge_id": "ai-readiness-trace:40926aa72f629627",
+            "relation": "section_to_theme",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-theme:60bb57d38cf5"
+          },
+          {
+            "edge_id": "ai-readiness-trace:4570a52f73567ce6",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-recommendation:b157459578707c50"
+          },
+          {
+            "edge_id": "ai-readiness-trace:54c44063d070d787",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-recommendation:4f6bd921300b8000"
+          },
+          {
+            "edge_id": "ai-readiness-trace:552951bd32c495b2",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-conclusion:ai_readiness.conclusion.mcp-and-tool-ecosystem-observed:d148a8605ccdea441e81"
+          },
+          {
+            "edge_id": "ai-readiness-trace:6b6b187f3eef24d3",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.ai_readiness",
+            "target_id": "ai-readiness-recommendation:03cd19a8941f314f"
+          }
+        ],
+        "summary": "12 traceability edges link the AI Readiness assessment section to packs, findings, themes, conclusions, and limitations. Finding references use Finding IDs only."
+      }
+    },
+    "comparison": null,
+    "coverage": {
+      "ai_interpretation": "not_requested",
+      "deterministic_analysis": "completed",
+      "static_analysis": "disabled"
+    },
+    "dependency": {
+      "assessment_scope": "Repository-level declared-dependency assessment for ai-readiness",
+      "conclusion_groups": [
+        {
+          "audience": "production_health",
+          "conclusions": [
+            {
+              "audience": "production_health",
+              "conclusion_id": "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090",
+              "confidence": "high",
+              "finding_count": 0,
+              "kind": "no_production_hygiene_findings",
+              "recommendation_ids": [
+                "dep-recommendation:246b1a6328c1b5d6"
+              ],
+              "summary": "Under current Dependency Intelligence hygiene rules, no production-source findings were emitted.",
+              "theme_ids": [
+                "dep-theme:7dd11590d4d8"
+              ],
+              "title": "No production dependency hygiene findings"
+            }
+          ],
+          "recommendations": []
+        },
+        {
+          "audience": "coverage",
+          "conclusions": [
+            {
+              "audience": "coverage",
+              "conclusion_id": "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d",
+              "confidence": "high",
+              "finding_count": 0,
+              "kind": "declared_dependencies_only",
+              "recommendation_ids": [
+                "dep-recommendation:20f8274796c6666e"
+              ],
+              "summary": "Dependency Intelligence inspects declared-manifest facts only. Transitive/resolved dependency graphs are not constructed.",
+              "theme_ids": [
+                "dep-theme:7dd11590d4d8"
+              ],
+              "title": "Declared dependencies only"
+            }
+          ],
+          "recommendations": []
+        },
+        {
+          "audience": "repository",
+          "conclusions": [
+            {
+              "audience": "repository",
+              "conclusion_id": "dep-conclusion:dependency.conclusion.dependency-landscape-identified:b03de1ccac11acf38791",
+              "confidence": "high",
+              "finding_count": 0,
+              "kind": "dependency_landscape_identified",
+              "recommendation_ids": [],
+              "summary": "1 declared dependency fact(s) across 1 manifest(s) and 1 ecosystem(s).",
+              "theme_ids": [
+                "dep-theme:7dd11590d4d8"
+              ],
+              "title": "Dependency landscape identified"
+            }
+          ],
+          "recommendations": []
+        }
+      ],
+      "conclusions": [
+        {
+          "audience": "coverage",
+          "conclusion_id": "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "declared_dependencies_only",
+          "recommendation_ids": [
+            "dep-recommendation:20f8274796c6666e"
+          ],
+          "summary": "Dependency Intelligence inspects declared-manifest facts only. Transitive/resolved dependency graphs are not constructed.",
+          "theme_ids": [
+            "dep-theme:7dd11590d4d8"
+          ],
+          "title": "Declared dependencies only"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "dep-conclusion:dependency.conclusion.dependency-landscape-identified:b03de1ccac11acf38791",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "dependency_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "1 declared dependency fact(s) across 1 manifest(s) and 1 ecosystem(s).",
+          "theme_ids": [
+            "dep-theme:7dd11590d4d8"
+          ],
+          "title": "Dependency landscape identified"
+        },
+        {
+          "audience": "production_health",
+          "conclusion_id": "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "no_production_hygiene_findings",
+          "recommendation_ids": [
+            "dep-recommendation:246b1a6328c1b5d6"
+          ],
+          "summary": "Under current Dependency Intelligence hygiene rules, no production-source findings were emitted.",
+          "theme_ids": [
+            "dep-theme:7dd11590d4d8"
+          ],
+          "title": "No production dependency hygiene findings"
+        }
+      ],
+      "coverage": {
+        "diagnostic_samples": [],
+        "diagnostic_total": 0,
+        "evidence_fingerprint": "9cc3d3a93a025a05",
+        "evidence_schema_version": "1.1.0",
+        "evidence_status": "succeeded",
+        "manifests_discovered": 1,
+        "manifests_failed": 0,
+        "manifests_parsed": 1,
+        "manifests_partially_parsed": 0,
+        "manifests_supported": 1,
+        "note": "Diagnostics are coverage signals, not hygiene findings.",
+        "production_parse_failures": 0,
+        "proven_unresolved_count": 0,
+        "test_fixture_parse_failures": 0,
+        "unsupported_construct_count": 0,
+        "unsupported_resolution_count": 0
+      },
+      "dependency_pack_id": "dependency.core",
+      "dependency_pack_version": "1.0.0",
+      "diagnostics": [],
+      "diagnostics_total": 0,
+      "executive_summary": "No production dependency hygiene findings were detected by the enabled repository-local rules. This assessment covers declared-manifest facts only and does not represent a resolved or transitive dependency graph. No composite dependency-health score, vulnerability verdict, license assessment, or latest-version advice is included.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "hotspot_presentation_note": "Hotspots are shown in inventory presentation order (production before test/fixture before unknown; then highest severity, distinct rules, finding count, path). This is not a risk or priority ranking.",
+      "hygiene_findings": [],
+      "hygiene_findings_displayed": 0,
+      "hygiene_findings_total": 0,
+      "landscape": [
+        {
+          "count": 1,
+          "group": "totals",
+          "key": "declarations_collected",
+          "label": "Declarations collected"
+        },
+        {
+          "count": 1,
+          "group": "totals",
+          "key": "manifests_supported",
+          "label": "Supported manifests"
+        },
+        {
+          "count": 1,
+          "group": "declaration_kind",
+          "key": "production_active",
+          "label": "Production active dependencies"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_management",
+          "label": "Production dependency-management declarations"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_plugins",
+          "label": "Production build plugins"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_test_dev",
+          "label": "Production test/development declarations"
+        },
+        {
+          "count": 0,
+          "group": "source_role",
+          "key": "test_declarations",
+          "label": "Test/fixture declarations"
+        },
+        {
+          "count": 0,
+          "group": "source_role",
+          "key": "unknown_declarations",
+          "label": "Unknown-role declarations"
+        },
+        {
+          "count": 1,
+          "group": "ecosystem",
+          "key": "ecosystem:python",
+          "label": "Ecosystem: python"
+        },
+        {
+          "count": 1,
+          "group": "manifest_type",
+          "key": "manifest_type:requirements.txt",
+          "label": "Manifest type: requirements.txt"
+        },
+        {
+          "count": 1,
+          "group": "version_resolution",
+          "key": "version_resolution:resolved",
+          "label": "Version resolution: resolved"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "cve-data-not-assessed",
+          "importance": "material",
+          "limitation_id": "dep-limitation:0aa84a2422a7",
+          "summary": "No CVE, advisory, or vulnerability database is consulted."
+        },
+        {
+          "category": "other",
+          "importance": "material",
+          "limitation_id": "dep-limitation:1a0256ecf8f5",
+          "summary": "npm / package.json ecosystems are out of scope for this milestone. No framework or DependencyRole classification is inferred."
+        },
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:28d3a81db99d",
+          "summary": "Business impact remains unknown without explicit enterprise context for dependency assessment."
+        },
+        {
+          "category": "version-freshness-not-assessed",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:6215686b0836",
+          "summary": "Declared vs latest version comparison is not performed."
+        },
+        {
+          "category": "external-registry-not-queried",
+          "importance": "material",
+          "limitation_id": "dep-limitation:68776a1e45c7",
+          "summary": "No package-registry or internet calls are made. Version freshness and remote metadata are not assessed."
+        },
+        {
+          "category": "manifest-parsing-not-owned",
+          "importance": "material",
+          "limitation_id": "dep-limitation:787e8e7b5923",
+          "summary": "Dependency Intelligence does not reparse Maven, Gradle, or Python manifests. Rules consume Dependency Evidence only."
+        },
+        {
+          "category": "license-not-assessed",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:be9e6f97fff5",
+          "summary": "License compliance analysis is not performed."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "material",
+          "limitation_id": "dep-limitation:f477af9db7cf",
+          "summary": "Inventory and hygiene cover declared-manifest facts only. Transitive dependencies are not resolved. Build tools are not executed. Gradle support is static-parse only."
+        }
+      ],
+      "manifest_hotspots": [
+        {
+          "active_declaration_count": 1,
+          "dependency_management_count": 0,
+          "diagnostics_count": 0,
+          "distinct_rule_count": 0,
+          "ecosystem": "python",
+          "highest_severity": "informational",
+          "hotspot_id": "dep-hotspot:3ed52e84d1ee5fe2",
+          "hygiene_finding_count": 0,
+          "manifest_type": "requirements.txt",
+          "path": "requirements.txt",
+          "plugin_count": 0,
+          "presentation_order": 1,
+          "source_role": "production"
+        }
+      ],
+      "metadata": {
+        "assessment_section_id": "assessment.dependency",
+        "configuration_fingerprint": "section_enabled=True|include_findings=True|include_coverage=True|include_limitations=True|include_traceability=True|include_execution_summary=True|include_synthesis=True|pack_enabled=True",
+        "diagnostic_sample_limit": "20",
+        "evidence_fingerprint": "9cc3d3a93a025a05",
+        "evidence_pipeline": "dependency.manifest",
+        "finding_display_limit": "20",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "test_finding_count": "0"
+      },
+      "production_health": {
+        "affected_manifests": [],
+        "conclusions": [
+          {
+            "audience": "production_health",
+            "conclusion_id": "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090",
+            "confidence": "high",
+            "finding_count": 0,
+            "kind": "no_production_hygiene_findings",
+            "recommendation_ids": [
+              "dep-recommendation:246b1a6328c1b5d6"
+            ],
+            "summary": "Under current Dependency Intelligence hygiene rules, no production-source findings were emitted.",
+            "theme_ids": [
+              "dep-theme:7dd11590d4d8"
+            ],
+            "title": "No production dependency hygiene findings"
+          }
+        ],
+        "finding_count": 0,
+        "findings": [],
+        "findings_displayed": 0,
+        "findings_total": 0,
+        "none_detected_statement": "No production dependency hygiene findings were detected by the enabled repository-local rules.",
+        "recommendations": []
+      },
+      "recommendation_groups": [
+        {
+          "audience": "production_health",
+          "conclusions": [],
+          "recommendations": [
+            {
+              "action": "No production dependency hygiene findings require remediation under the current rule pack and evidence contract.",
+              "audience": "production_health",
+              "conclusion_ids": [
+                "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090"
+              ],
+              "conditional": false,
+              "kind": "acknowledge_no_production_findings",
+              "rationale": "The production-primary finding inventory contains zero matches.",
+              "recommendation_id": "dep-recommendation:246b1a6328c1b5d6",
+              "title": "Acknowledge empty production hygiene inventory"
+            }
+          ]
+        },
+        {
+          "audience": "coverage",
+          "conclusions": [],
+          "recommendations": [
+            {
+              "action": "If transitive or resolved-graph risk assessment is required, add a separate resolved-graph analysis capability; this inventory remains declared-manifest only.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d"
+              ],
+              "conditional": true,
+              "kind": "add_resolved_graph_analysis",
+              "rationale": "Current evidence and synthesis intentionally exclude transitive resolution and registry lookups.",
+              "recommendation_id": "dep-recommendation:20f8274796c6666e",
+              "title": "Add resolved-graph analysis when transitive risk is in scope"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "If transitive or resolved-graph risk assessment is required, add a separate resolved-graph analysis capability; this inventory remains declared-manifest only.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d"
+          ],
+          "conditional": true,
+          "kind": "add_resolved_graph_analysis",
+          "rationale": "Current evidence and synthesis intentionally exclude transitive resolution and registry lookups.",
+          "recommendation_id": "dep-recommendation:20f8274796c6666e",
+          "title": "Add resolved-graph analysis when transitive risk is in scope"
+        },
+        {
+          "action": "No production dependency hygiene findings require remediation under the current rule pack and evidence contract.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090"
+          ],
+          "conditional": false,
+          "kind": "acknowledge_no_production_findings",
+          "rationale": "The production-primary finding inventory contains zero matches.",
+          "recommendation_id": "dep-recommendation:246b1a6328c1b5d6",
+          "title": "Acknowledge empty production hygiene inventory"
+        }
+      ],
+      "repository_name": "ai-readiness",
+      "section_id": "report.dependency",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Dependency assessment completed using declared-manifest evidence.",
+      "test_observations": {
+        "affected_manifests": [],
+        "conclusions": [],
+        "finding_count": 0,
+        "findings": [],
+        "findings_displayed": 0,
+        "findings_total": 0,
+        "present": false,
+        "recommendations": [],
+        "summary": "No test/fixture dependency hygiene findings were recorded for this assessment.",
+        "title": "No separate test/fixture observations"
+      },
+      "title": "Dependency Assessment",
+      "traceability": {
+        "edge_count": 27,
+        "relation_types": [
+          "conclusion_to_manifest",
+          "conclusion_to_theme",
+          "recommendation_to_conclusion",
+          "section_to_theme"
+        ],
+        "sample_edges": [
+          {
+            "relation": "recommendation_to_conclusion",
+            "source_id": "dep-recommendation:246b1a6328c1b5d6",
+            "target_id": "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090"
+          },
+          {
+            "relation": "recommendation_to_conclusion",
+            "source_id": "dep-recommendation:20f8274796c6666e",
+            "target_id": "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d"
+          },
+          {
+            "relation": "conclusion_to_theme",
+            "source_id": "dep-conclusion:dependency.conclusion.dependency-landscape-identified:b03de1ccac11acf38791",
+            "target_id": "dep-theme:7dd11590d4d8"
+          },
+          {
+            "relation": "conclusion_to_theme",
+            "source_id": "dep-conclusion:dependency.conclusion.declared-dependencies-only:539704829371001a044d",
+            "target_id": "dep-theme:7dd11590d4d8"
+          },
+          {
+            "relation": "conclusion_to_theme",
+            "source_id": "dep-conclusion:dependency.conclusion.no-production-hygiene-findings:32ca0c45c9ef884ab090",
+            "target_id": "dep-theme:7dd11590d4d8"
+          },
+          {
+            "relation": "conclusion_to_manifest",
+            "source_id": "dep-conclusion:dependency.conclusion.dependency-landscape-identified:b03de1ccac11acf38791",
+            "target_id": "dep-manifest:63e6ef4b9075e391"
+          },
+          {
+            "relation": "section_to_theme",
+            "source_id": "assessment.dependency",
+            "target_id": "dep-theme:f5707e33b5ef"
+          },
+          {
+            "relation": "section_to_theme",
+            "source_id": "assessment.dependency",
+            "target_id": "dep-theme:7dd11590d4d8"
+          }
+        ],
+        "summary": "Showing 8 of 27 traceability edges (recommendation→conclusion, conclusion→theme/finding/hotspot/manifest/diagnostic)."
+      }
+    },
+    "deterministic_recommendations": [
+      {
+        "actions": [
+          "Establish test baseline: Create a minimal automated test suite that can run locally.",
+          "Prioritize critical paths: Cover authentication, data mutations, and other high-risk flows first.",
+          "Add test execution to CI: Fail the pipeline when tests fail so regressions are caught early."
+        ],
+        "category": "testing",
+        "dependencies": [],
+        "description": "Introduce automated tests for critical paths and wire them into CI.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Missing tests",
+            "path": null,
+            "source_id": "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "source_files=1 test_files=0",
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_finding_id": "finding:codestrata-rule-missing-tests:1a71fe47adfba287",
+        "priority": "medium",
+        "priority_score": 91.0,
+        "rationale": "No test files or conventional test directories were found while source files are present.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-missing-tests",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+        ],
+        "title": "Establish a test baseline"
+      },
+      {
+        "actions": [
+          "Select a license: Agree on an open-source or proprietary license with stakeholders.",
+          "Add LICENSE file: Commit LICENSE (or LICENSE.md) at the repository root."
+        ],
+        "category": "governance",
+        "dependencies": [],
+        "description": "Choose and commit a license file so consumers know usage terms.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Missing LICENSE",
+            "path": null,
+            "source_id": "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "LICENSE basename not present in inventory paths",
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_finding_id": "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d",
+        "priority": "medium",
+        "priority_score": 86.0,
+        "rationale": "No LICENSE file was found in the repository inventory.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-missing-license",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+        ],
+        "title": "Add an explicit LICENSE"
+      },
+      {
+        "actions": [
+          "Introduce an automated test suite covering critical application behavior before broader modernization changes."
+        ],
+        "category": "testing",
+        "dependencies": [],
+        "description": "Introduce an automated test suite covering critical application behavior before broader modernization changes.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "structure.has_tests=false; test_file_count=0",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "705ac575-e2c8-5f40-89b2-37f3978475a1",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "high",
+        "priority_score": 66.0,
+        "rationale": "Repository structure facts indicate no automated tests were detected (test_file_count=0). Modernization without regression coverage increases the likelihood of undetected behavior changes.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "high",
+        "rule_id": "REC.TESTING.001",
+        "supporting_finding_ids": [],
+        "title": "Establish automated tests before modernization"
+      },
+      {
+        "actions": [
+          "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change."
+        ],
+        "category": "ci_cd",
+        "dependencies": [],
+        "description": "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cicd.has_ci=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "bba327aa-2f64-5a9f-ac1d-fba479c5b580",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "high",
+        "priority_score": 51.0,
+        "rationale": "CI/CD facts indicate no CI platform or pipeline was detected. Without automated gates, modernization changes are harder to validate consistently.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CICD.001",
+        "supporting_finding_ids": [],
+        "title": "Establish CI build, test, and quality gates"
+      },
+      {
+        "actions": [
+          "Create workflow directory: Add .github/workflows/ that installs dependencies and runs tests.",
+          "Gate merges on CI: Require the workflow to pass before merging protected branches."
+        ],
+        "category": "build",
+        "dependencies": [],
+        "description": "Add CI (for example GitHub Actions) for build and test on every change.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Missing CI workflow",
+            "path": null,
+            "source_id": "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "no paths under .github/workflows/",
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0",
+        "priority": "low",
+        "priority_score": 51.0,
+        "rationale": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-missing-ci-workflow",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+        ],
+        "title": "Add a CI workflow"
+      },
+      {
+        "actions": [
+          "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes."
+        ],
+        "category": "cloud",
+        "dependencies": [],
+        "description": "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cloud.has_docker=false; cloud.has_kubernetes=false; cloud.has_terraform=false; cloud.has_cloudformation=false; cloud.has_serverless=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "medium",
+        "priority_score": 36.0,
+        "rationale": "Cloud readiness facts show no Docker, Kubernetes, Terraform, CloudFormation, or serverless assets. Without a deployment baseline, modernization delivery remains difficult to reproduce and validate.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CLOUD.001",
+        "supporting_finding_ids": [],
+        "title": "Create a deployment baseline for modernization"
+      },
+      {
+        "actions": [
+          "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it."
+        ],
+        "category": "architecture",
+        "dependencies": [],
+        "description": "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it.",
+        "effort": "l",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "architecture.has_api_layer=false; architecture.has_service_layer=false; architecture.has_persistence_layer=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "4ab3ff2a-b70f-530d-89c7-352d0ef3c1d7",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "medium",
+        "priority_score": 34.0,
+        "rationale": "Architecture facts show no detected API, service, or persistence layering in an application repository. Weak separation of concerns can increase change risk during modernization.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.ARCHITECTURE.001",
+        "supporting_finding_ids": [],
+        "title": "Review separation of concerns across application layers"
+      }
+    ],
+    "evidence": [],
+    "executive_summary": {
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 0,
+      "file_count": 4,
+      "finding_count": 13,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 0,
+        "info": 5,
+        "low": 6,
+        "medium": 2
+      },
+      "recommendation_count": 7,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 2,
+        "low": 1,
+        "medium": 4
+      },
+      "summary_text": "Analyzed repository 'ai-readiness' with 4 scanned file(s). Detected 13 finding(s) (0 critical) and 7 recommendation(s) (2 critical/high priority). No automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 2,
+      "tests_detected": false
+    },
+    "findings": [
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "governance",
+        "customer_visibility": null,
+        "description": "No LICENSE file was found in the repository inventory.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "LICENSE basename not present in inventory paths",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d",
+        "limitations": [],
+        "metadata": {},
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-missing-license",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Missing LICENSE"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "testing",
+        "customer_visibility": null,
+        "description": "No test files or conventional test directories were found while source files are present.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "source_files=1 test_files=0",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-missing-tests:1a71fe47adfba287",
+        "limitations": [],
+        "metadata": {
+          "source_file_count": 1
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-missing-tests",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Missing tests"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "ai_readiness",
+        "customer_visibility": null,
+        "description": "Repository AI-readiness evidence includes AI-related assets without known observability or governance signals. This does not claim observability is absent.",
+        "evidence": [
+          {
+            "evidence_type": "file_location",
+            "excerpt": "ai_related_asset; confirmation=structurally_confirmed",
+            "node_id": null,
+            "path": "src/openai_agent.py",
+            "source_id": "ai-readiness-ai:bcea020ccb4c2e1e7c5e97d2"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "ai_related_asset; confirmation=structurally_confirmed",
+            "node_id": null,
+            "path": "mcp.json",
+            "source_id": "ai-readiness-tool:53f46d7797796c6d23af385b"
+          },
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "ai_related_assets=true; observability_governance_kinds=0",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai_readiness.ai-051:summary"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:ai_readiness.ai-051:f3747a411f99d54b",
+        "limitations": [
+          "evidence_ref_mapping_deferred_for_pack"
+        ],
+        "metadata": {
+          "ai_readiness_category": "ai_readiness.observability_and_governance",
+          "assessment_dimensions": "ai_readiness",
+          "business_impact": "unknown",
+          "confidence": "high",
+          "confirmation_level": "structurally_confirmed",
+          "detail": "llm_sdk_marker",
+          "evidence_id": "ai-readiness-ai:bcea020ccb4c2e1e7c5e97d2",
+          "line_start": "3",
+          "observation_only": "true",
+          "pack_id": "ai_readiness.core",
+          "pack_version": "1.0.0",
+          "path": "src/openai_agent.py",
+          "provenance": "ai_readiness.core",
+          "remediation": "Observation only: review the repository AI-readiness evidence facts for ai_readiness.ai-051. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "0,ai_readiness.ai-051,ai_without_observability",
+          "taxonomy_id": "ai_readiness.observability_and_governance"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ai_readiness.ai-051",
+        "severity": "low",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "AI-related assets without observability evidence"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "ai_readiness",
+        "customer_visibility": null,
+        "description": "Repository AI-readiness evidence does not include known API boundary or OpenAPI signals among inspected candidates.",
+        "evidence": [
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "api_boundary_kinds=0; openapi_facts=0",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai_readiness.ai-003:summary"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:ai_readiness.ai-003:d01deeac5d379335",
+        "limitations": [
+          "evidence_ref_mapping_deferred_for_pack"
+        ],
+        "metadata": {
+          "ai_readiness_category": "ai_readiness.api_and_service_boundaries",
+          "assessment_dimensions": "ai_readiness",
+          "business_impact": "unknown",
+          "confidence": "low",
+          "observation_only": "true",
+          "openapi_fact_count": "0",
+          "pack_id": "ai_readiness.core",
+          "pack_version": "1.0.0",
+          "provenance": "ai_readiness.core",
+          "remediation": "Observation only: review the repository AI-readiness evidence facts for ai_readiness.ai-003. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "0,ai_readiness.ai-003,limited_api",
+          "taxonomy_id": "ai_readiness.api_and_service_boundaries"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ai_readiness.ai-003",
+        "severity": "low",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Limited API or service boundary evidence"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "No files were found under conventional test or specification directories",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "No files were found under conventional test or specification directories",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "d356ee11-6e35-5aa8-b4f9-37c4717a1497",
+        "limitations": [],
+        "metadata": {
+          "test_file_count": 0
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH004",
+        "severity": "low",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "No conventional test structure detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "build",
+        "customer_visibility": null,
+        "description": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "no paths under .github/workflows/",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai-readiness"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0",
+        "limitations": [],
+        "metadata": {},
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-missing-ci-workflow",
+        "severity": "low",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Missing CI workflow"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud_readiness",
+        "customer_visibility": null,
+        "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "436d4b2b-636c-5e80-b3d9-73c9a7f64ed1",
+        "limitations": [],
+        "metadata": {
+          "capabilities": []
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "CLOUD009",
+        "severity": "low",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "No cloud deployment assets detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "python"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "python dependency locking is not configured for: requirements.txt.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "python dependency locking is not configured for: requirements.txt.",
+            "file_path": "requirements.txt",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "3e9b8d30-39f8-5466-9a84-658bd84e41fa",
+        "limitations": [],
+        "metadata": {
+          "ecosystem": "python",
+          "manifest_paths": [
+            "requirements.txt"
+          ]
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP003",
+        "severity": "low",
+        "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
+        "title": "Dependency locking is not configured"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "ai_readiness",
+        "customer_visibility": null,
+        "description": "Observed 3 AI-readiness evidence families (ai_integration,documentation,tool_mcp). This does not establish AI readiness.",
+        "evidence": [
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "family_count=3; families=ai_integration,documentation,tool_mcp",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai_readiness.ai-060:summary"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:ai_readiness.ai-060:b0db33e2b56ba1f1",
+        "limitations": [
+          "evidence_ref_mapping_deferred_for_pack"
+        ],
+        "metadata": {
+          "ai_readiness_category": "ai_readiness.miscellaneous",
+          "assessment_dimensions": "ai_readiness",
+          "business_impact": "unknown",
+          "confidence": "high",
+          "families": "ai_integration,documentation,tool_mcp",
+          "family_count": "3",
+          "observation_only": "true",
+          "pack_id": "ai_readiness.core",
+          "pack_version": "1.0.0",
+          "provenance": "ai_readiness.core",
+          "remediation": "Observation only: review the repository AI-readiness evidence facts for ai_readiness.ai-060. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "ai_integration,documentation,tool_mcp,ai_readiness.ai-060,broad_foundations",
+          "taxonomy_id": "ai_readiness.miscellaneous",
+          "technologies": "llm_sdk,mcp,mcp_server,readme"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ai_readiness.ai-060",
+        "severity": "informational",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Broad AI-readiness evidence foundations"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "ai_readiness",
+        "customer_visibility": null,
+        "description": "Repository AI-readiness evidence includes LLM SDK or AI framework signals (llm_sdk).",
+        "evidence": [
+          {
+            "evidence_type": "file_location",
+            "excerpt": "llm_fact; confirmation=structurally_confirmed",
+            "node_id": null,
+            "path": "src/openai_agent.py",
+            "source_id": "ai-readiness-ai:bcea020ccb4c2e1e7c5e97d2"
+          },
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "llm_kinds=llm_sdk",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai_readiness.ai-030:summary"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:ai_readiness.ai-030:5da1704eb85200ab",
+        "limitations": [
+          "evidence_ref_mapping_deferred_for_pack"
+        ],
+        "metadata": {
+          "ai_readiness_category": "ai_readiness.existing_ai_llm_integrations",
+          "assessment_dimensions": "ai_readiness",
+          "business_impact": "unknown",
+          "confidence": "high",
+          "confirmation_level": "structurally_confirmed",
+          "detail": "llm_sdk_marker",
+          "evidence_id": "ai-readiness-ai:bcea020ccb4c2e1e7c5e97d2",
+          "line_start": "3",
+          "observation_only": "true",
+          "pack_id": "ai_readiness.core",
+          "pack_version": "1.0.0",
+          "path": "src/openai_agent.py",
+          "provenance": "ai_readiness.core",
+          "remediation": "Observation only: review the repository AI-readiness evidence facts for ai_readiness.ai-030. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "ai_readiness.ai-030,llm,llm_sdk",
+          "taxonomy_id": "ai_readiness.existing_ai_llm_integrations"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ai_readiness.ai-030",
+        "severity": "informational",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "LLM SDK or AI framework signals detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "ai_readiness",
+        "customer_visibility": null,
+        "description": "Repository AI-readiness evidence includes tool or MCP integration signals (mcp_server).",
+        "evidence": [
+          {
+            "evidence_type": "file_location",
+            "excerpt": "tool_mcp_fact; confirmation=structurally_confirmed",
+            "node_id": null,
+            "path": "mcp.json",
+            "source_id": "ai-readiness-tool:53f46d7797796c6d23af385b"
+          },
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "tool_mcp_kinds=mcp_server",
+            "node_id": null,
+            "path": null,
+            "source_id": "ai_readiness.ai-040:summary"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:ai_readiness.ai-040:a52fac7a0a5ee090",
+        "limitations": [
+          "evidence_ref_mapping_deferred_for_pack"
+        ],
+        "metadata": {
+          "ai_readiness_category": "ai_readiness.tool_and_mcp_integration",
+          "assessment_dimensions": "ai_readiness",
+          "business_impact": "unknown",
+          "confidence": "high",
+          "confirmation_level": "structurally_confirmed",
+          "detail": "mcp_config",
+          "evidence_id": "ai-readiness-tool:53f46d7797796c6d23af385b",
+          "line_start": "2",
+          "observation_only": "true",
+          "pack_id": "ai_readiness.core",
+          "pack_version": "1.0.0",
+          "path": "mcp.json",
+          "provenance": "ai_readiness.core",
+          "remediation": "Observation only: review the repository AI-readiness evidence facts for ai_readiness.ai-040. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "ai_readiness.ai-040,mcp_server,tool_mcp",
+          "taxonomy_id": "ai_readiness.tool_and_mcp_integration"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ai_readiness.ai-040",
+        "severity": "informational",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Tool or MCP integration signals detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "pip",
+          "Python"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "No supported build system was detected in repository 'ai-readiness'.",
+        "evidence": [],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "7e5695d3-68b7-5d17-a43b-e0bc1d94945b",
+        "limitations": [],
+        "metadata": {
+          "build_files": [],
+          "build_systems": [],
+          "inferred_commands": [],
+          "java_source_versions": [],
+          "java_target_versions": [],
+          "lock_files": [],
+          "modules": [],
+          "multi_module": false,
+          "multiple_build_systems": false,
+          "packaging_types": [],
+          "plugins": [],
+          "wrapper_files": []
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "build.system.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
+        "title": "Build System"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "pip",
+          "Python"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Collected structural metrics for repository 'ai-readiness'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": "requirements.txt",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "86b3ac8a-013b-55c2-81f8-113c5307aac9",
+        "limitations": [],
+        "metadata": {
+          "build_files": 1,
+          "configuration_files": 1,
+          "docker_files": 0,
+          "github_workflows": 0,
+          "kubernetes_manifests": 0,
+          "source_files": 1,
+          "test_files": 0,
+          "total_files": 4
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "repository.metrics.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
+        "title": "Repository Metrics"
+      }
+    ],
+    "generated_at": "2026-07-31T21:54:50.205960Z",
+    "mode": "deterministic",
+    "organization_name": null,
+    "priority_actions": [
+      {
+        "action_id": "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17",
+        "action_type": "recommendation_backed",
+        "category": "testing",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_recommendation_id": "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17",
+        "priority": "medium",
+        "priority_score": 91.0,
+        "rationale": "No test files or conventional test directories were found while source files are present.",
+        "risk": "medium",
+        "summary": "Introduce automated tests for critical paths and wire them into CI.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17"
+        ],
+        "title": "Establish a test baseline"
+      },
+      {
+        "action_id": "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044",
+        "action_type": "recommendation_backed",
+        "category": "governance",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_recommendation_id": "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044",
+        "priority": "medium",
+        "priority_score": 86.0,
+        "rationale": "No LICENSE file was found in the repository inventory.",
+        "risk": "medium",
+        "summary": "Choose and commit a license file so consumers know usage terms.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044"
+        ],
+        "title": "Add an explicit LICENSE"
+      },
+      {
+        "action_id": "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac",
+        "action_type": "recommendation_backed",
+        "category": "build",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_recommendation_id": "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac",
+        "priority": "low",
+        "priority_score": 51.0,
+        "rationale": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "risk": "medium",
+        "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac"
+        ],
+        "title": "Add a CI workflow"
+      }
+    ],
+    "report_title": "Engineering Assessment",
+    "repository": {
+      "default_branch": null,
+      "file_count": 4,
+      "name": "ai-readiness",
+      "reference": "validation/fixtures/ai-readiness",
+      "source_type": "local"
+    },
+    "repository_facts": {
+      "architecture": {
+        "has_api_layer": false,
+        "has_domain_layer": false,
+        "has_persistence_layer": false,
+        "has_service_layer": false,
+        "is_multi_application": false
+      },
+      "build": {
+        "build_files": [],
+        "build_systems": [],
+        "inferred_commands": [],
+        "java_source_versions": [],
+        "java_target_versions": [],
+        "lock_files": [],
+        "modules": [],
+        "multi_module": false,
+        "multiple_build_systems": false,
+        "packaging_types": [],
+        "plugins": [],
+        "wrapper_files": []
+      },
+      "cicd": {
+        "ci_platforms": [],
+        "has_build": false,
+        "has_ci": false,
+        "has_deployment": false,
+        "has_deployment_workflow": false,
+        "has_security_scanning": false,
+        "has_tests": false,
+        "job_count": 0,
+        "pipeline_count": 0,
+        "pipeline_files": [],
+        "pipelines": [],
+        "providers": [],
+        "uses_artifacts": false,
+        "uses_caching": false,
+        "uses_containers": false,
+        "uses_matrix_builds": false
+      },
+      "cloud": {
+        "cloud_capabilities": [],
+        "has_cloudformation": false,
+        "has_devcontainer": false,
+        "has_docker": false,
+        "has_docker_compose": false,
+        "has_helm": false,
+        "has_kubernetes": false,
+        "has_serverless": false,
+        "has_terraform": false
+      },
+      "dependencies": {
+        "cloud_sdks": [],
+        "database_drivers": [],
+        "dependencies": [],
+        "dependency_count": 0,
+        "development_dependency_count": 0,
+        "direct_dependency_count": 0,
+        "dynamic_version_dependencies": [],
+        "framework_dependencies": [],
+        "logging_libraries": [],
+        "manifests": [
+          {
+            "ecosystem": "python",
+            "has_version_management": false,
+            "lockfile": false,
+            "manifest_type": "manifest",
+            "path": "requirements.txt",
+            "version_management_source": null
+          }
+        ],
+        "outdated_dependencies": [],
+        "security_libraries": [],
+        "test_dependency_count": 0,
+        "testing_libraries": [],
+        "unmanaged_version_dependencies": []
+      },
+      "security": {
+        "dangerous_execution_count": 0,
+        "secret_finding_count": 0,
+        "sensitive_file_count": 0,
+        "weak_crypto_count": 0
+      },
+      "structure": {
+        "application_count": 1,
+        "architecture_layers": [],
+        "file_count": 4,
+        "has_tests": false,
+        "source_file_count": 1,
+        "test_file_count": 0
+      },
+      "technology": {
+        "build_tools": [
+          "pip"
+        ],
+        "detected_technologies": [
+          "pip",
+          "Python"
+        ],
+        "frameworks": [],
+        "programming_languages": [
+          "Python"
+        ],
+        "test_frameworks": []
+      }
+    },
+    "roadmap": {
+      "assumptions": [
+        "Roadmap initiatives are derived from Priority Actions; assessments are not re-run.",
+        "Recommendation and Finding references are derived from referenced Priority Actions.",
+        "Phase assignment follows Priority Action horizon and category rules."
+      ],
+      "confidence": "high",
+      "engine_version": "1.0.0",
+      "initiatives": [
+        {
+          "category": "testing",
+          "confidence": "high",
+          "depends_on_initiative_ids": [],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+          "initiative_id": "roadmap-initiative:stabilize:testing:sha256:f88e03fb6",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "stabilize",
+          "phase_label": "Stabilize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17",
+          "priority": "medium",
+          "risk": "medium",
+          "sequence": 0,
+          "summary": "Introduce automated tests for critical paths and wire them into CI.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17"
+          ],
+          "title": "Establish a test baseline"
+        },
+        {
+          "category": "governance",
+          "confidence": "high",
+          "depends_on_initiative_ids": [],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+          "initiative_id": "roadmap-initiative:stabilize:governance:sha256:222584426",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "stabilize",
+          "phase_label": "Stabilize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044",
+          "priority": "medium",
+          "risk": "medium",
+          "sequence": 1,
+          "summary": "Choose and commit a license file so consumers know usage terms.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044"
+          ],
+          "title": "Add an explicit LICENSE"
+        },
+        {
+          "category": "build",
+          "confidence": "high",
+          "depends_on_initiative_ids": [
+            "roadmap-initiative:stabilize:governance:sha256:222584426",
+            "roadmap-initiative:stabilize:testing:sha256:f88e03fb6"
+          ],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+          "initiative_id": "roadmap-initiative:modernize:build:sha256:e54f7cf2d",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "modernize",
+          "phase_label": "Modernize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac",
+          "priority": "low",
+          "risk": "medium",
+          "sequence": 2,
+          "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac"
+          ],
+          "title": "Add a CI workflow"
+        }
+      ],
+      "initiatives_displayed": 3,
+      "initiatives_total": 3,
+      "limitations": [
+        "Does not produce schedules, dates, cost estimates, or portfolio plans.",
+        "Does not mutate repositories or create external tracker tickets.",
+        "Does not invent Priority Actions, Recommendations, or Findings."
+      ],
+      "metadata": {
+        "engine_version": "1.0.0",
+        "initiative_count": "3",
+        "phase_count": "2",
+        "priority_action_count": "3",
+        "source": "priority_actions"
+      },
+      "phases": [
+        {
+          "initiative_ids": [
+            "roadmap-initiative:stabilize:testing:sha256:f88e03fb6",
+            "roadmap-initiative:stabilize:governance:sha256:222584426"
+          ],
+          "initiatives": [
+            {
+              "category": "testing",
+              "confidence": "high",
+              "depends_on_initiative_ids": [],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+              "initiative_id": "roadmap-initiative:stabilize:testing:sha256:f88e03fb6",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "stabilize",
+              "phase_label": "Stabilize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17",
+              "priority": "medium",
+              "risk": "medium",
+              "sequence": 0,
+              "summary": "Introduce automated tests for critical paths and wire them into CI.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-missing-tests:1a71fe47adfba287"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-missing-tests:f08f6ed536697f17"
+              ],
+              "title": "Establish a test baseline"
+            },
+            {
+              "category": "governance",
+              "confidence": "high",
+              "depends_on_initiative_ids": [],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+              "initiative_id": "roadmap-initiative:stabilize:governance:sha256:222584426",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "stabilize",
+              "phase_label": "Stabilize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044",
+              "priority": "medium",
+              "risk": "medium",
+              "sequence": 1,
+              "summary": "Choose and commit a license file so consumers know usage terms.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-missing-license:7b8e868a2cc8a34d"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-missing-license:7fed9f47e9b3e044"
+              ],
+              "title": "Add an explicit LICENSE"
+            }
+          ],
+          "objective": "Restore foundational engineering hygiene so later change is safe and observable.",
+          "phase": "stabilize",
+          "phase_id": "roadmap-phase:stabilize",
+          "sequence": 0,
+          "title": "Stabilize"
+        },
+        {
+          "initiative_ids": [
+            "roadmap-initiative:modernize:build:sha256:e54f7cf2d"
+          ],
+          "initiatives": [
+            {
+              "category": "build",
+              "confidence": "high",
+              "depends_on_initiative_ids": [
+                "roadmap-initiative:stabilize:governance:sha256:222584426",
+                "roadmap-initiative:stabilize:testing:sha256:f88e03fb6"
+              ],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+              "initiative_id": "roadmap-initiative:modernize:build:sha256:e54f7cf2d",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "modernize",
+              "phase_label": "Modernize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac",
+              "priority": "low",
+              "risk": "medium",
+              "sequence": 2,
+              "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-missing-ci-workflow:06c518efff3366a0"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-missing-ci-workflow:fa1259f92d0692ac"
+              ],
+              "title": "Add a CI workflow"
+            }
+          ],
+          "objective": "Address structural, dependency, and platform modernization recommendations.",
+          "phase": "modernize",
+          "phase_id": "roadmap-phase:modernize",
+          "sequence": 2,
+          "title": "Modernize"
+        }
+      ],
+      "schema_name": "modernization-roadmap",
+      "section_id": "assessment.roadmap",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "summary": "3 initiative(s) across 2 phase(s) derived from 3 Priority Action(s)."
+    },
+    "security": {
+      "assessment_scope": "Repository-level Security hygiene assessment for ai-readiness",
+      "assessment_status": "succeeded",
+      "conclusions": [
+        {
+          "audience": "production_health",
+          "conclusion_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:d58ea176794909db0d3b",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "no_production_findings_in_supported_scope",
+          "recommendation_ids": [
+            "sec-recommendation:c58cc9ecfbcc16b4"
+          ],
+          "summary": "No production-role findings were emitted by the 8 enabled Security hygiene rules within the supported repository evidence scope.",
+          "theme_ids": [
+            "sec-theme:aba52cdcd90f"
+          ],
+          "title": "No production findings in supported scope"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:258ebfc6330350ed270f",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "security_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+          "theme_ids": [
+            "sec-theme:0ef0f17047eb"
+          ],
+          "title": "Security hygiene landscape identified"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "unsupported_security_analysis_scope",
+          "recommendation_ids": [
+            "sec-recommendation:2514ad8dce72c028",
+            "sec-recommendation:0635d7d6c0039bdf",
+            "sec-recommendation:be8cd403f9d873c9"
+          ],
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_ids": [
+            "sec-theme:867cd4de36bc"
+          ],
+          "title": "Unsupported Security analysis scope"
+        }
+      ],
+      "conclusions_displayed": 3,
+      "conclusions_total": 3,
+      "coverage_summary": {
+        "artifacts_inspected": 0,
+        "candidate_artifacts_discovered": 0,
+        "configuration_facts_collected": 0,
+        "evidence_schema_name": "repository-sensitive-evidence",
+        "evidence_schema_version": "1.1.0",
+        "evidence_status": "succeeded",
+        "formats_represented": [
+          "json"
+        ],
+        "malformed_files": 0,
+        "note": "Coverage describes supported repository-sensitive evidence only. Candidate artifacts are not proof of secrets. Zero findings are scoped to supported evidence; runtime and Git history are not assessed.",
+        "rules_executed": 8,
+        "rules_registered": 8,
+        "skipped_files": 0,
+        "source_roles_represented": [],
+        "structured_files_parsed": 0,
+        "unsupported_binaries": 0
+      },
+      "diagnostics": [
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:1917af10e16a",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:1ac94649821b",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:7650b1acea40",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:7695ac2e7532",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:981cd201c413",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:b1631d0ee2e0",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:dea655b27b18",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:fb590a87a51a",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        }
+      ],
+      "diagnostics_displayed": 8,
+      "diagnostics_total": 8,
+      "executive_summary": "The supported repository Security hygiene rules emitted no production-role findings within the available evidence scope. This result does not establish that the repository or deployed application is secure.",
+      "finding_summary": {
+        "additional_observations": [],
+        "additional_observations_displayed": 0,
+        "all_finding_count": 0,
+        "by_category": [],
+        "by_rule": [],
+        "by_severity": [],
+        "hotspot_count": 0,
+        "locations_represented": 0,
+        "none_detected_statement": "No production-role findings were emitted by the supported repository Security hygiene rules within the available evidence scope.",
+        "production_finding_count": 0,
+        "production_findings": [],
+        "production_findings_displayed": 0,
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      "generated_from_assessment_section_version": "1.3.0",
+      "hotspot_presentation_note": "Hotspots order repository locations by finding concentration for presentation only. They do not assert risk, vulnerability, or priority.",
+      "hotspots": [],
+      "hotspots_displayed": 0,
+      "hotspots_total": 0,
+      "limitations": [
+        {
+          "category": "security-evidence-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:13a498eeebd8",
+          "summary": "Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment."
+        },
+        {
+          "category": "foundation-only",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:1c64314414dd",
+          "summary": "Security Intelligence Phase 4.5.5 organizes repository-local hygiene Findings into inventories and deterministic synthesis. Zero findings does not mean the repository is secure."
+        },
+        {
+          "category": "no-git-history-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:1f15b2697bf3",
+          "summary": "No git-history security analysis is performed."
+        },
+        {
+          "category": "no-data-flow-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:5f805d1ca2ad",
+          "summary": "No taint or data-flow analysis is performed."
+        },
+        {
+          "category": "rules-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:93a53f56ad3e",
+          "summary": "Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules."
+        },
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:cfdf7999a500",
+          "summary": "Business impact remains unknown for hygiene findings."
+        },
+        {
+          "category": "no-runtime-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:ea39a330990f",
+          "summary": "No runtime security analysis or secret validity checks."
+        },
+        {
+          "category": "no-package-registry-query",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:edcdfedf3465",
+          "summary": "No package registry access is performed."
+        },
+        {
+          "category": "no-external-vulnerability-metadata",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:f40950317d0f",
+          "summary": "No external vulnerability metadata, CVE, or package registry queries."
+        },
+        {
+          "category": "no-sast",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:fead453a4f20",
+          "summary": "No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis."
+        }
+      ],
+      "limitations_displayed": 10,
+      "limitations_total": 10,
+      "metadata": {
+        "all_finding_count": "0",
+        "assessment_section_id": "assessment.security",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_sensitive",
+        "finding_display_limit": "20",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "theme_limit": "12"
+      },
+      "recommendation_groups": [
+        {
+          "group": "Coverage expansion",
+          "recommendations": [
+            {
+              "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+              "audience": "production_health",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:d58ea176794909db0d3b"
+              ],
+              "conditional": true,
+              "kind": "acknowledge_no_production_findings_in_supported_scope",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Zero production findings within supported scope are not a security certification.",
+              "recommendation_id": "sec-recommendation:c58cc9ecfbcc16b4",
+              "title": "Acknowledge no production findings in supported scope"
+            },
+            {
+              "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+              ],
+              "conditional": true,
+              "kind": "add_external_dependency_vulnerability_analysis",
+              "presentation_group": "Coverage expansion",
+              "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:2514ad8dce72c028",
+              "title": "Add external dependency vulnerability analysis"
+            },
+            {
+              "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+              ],
+              "conditional": true,
+              "kind": "add_git_history_secret_scanning",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Git history analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:0635d7d6c0039bdf",
+              "title": "Add Git history secret scanning"
+            },
+            {
+              "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+              ],
+              "conditional": true,
+              "kind": "add_runtime_security_validation",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Runtime analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:be8cd403f9d873c9",
+              "title": "Add runtime security validation"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:d58ea176794909db0d3b"
+          ],
+          "conditional": true,
+          "kind": "acknowledge_no_production_findings_in_supported_scope",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Zero production findings within supported scope are not a security certification.",
+          "recommendation_id": "sec-recommendation:c58cc9ecfbcc16b4",
+          "title": "Acknowledge no production findings in supported scope"
+        },
+        {
+          "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+          ],
+          "conditional": true,
+          "kind": "add_external_dependency_vulnerability_analysis",
+          "presentation_group": "Coverage expansion",
+          "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:2514ad8dce72c028",
+          "title": "Add external dependency vulnerability analysis"
+        },
+        {
+          "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+          ],
+          "conditional": true,
+          "kind": "add_git_history_secret_scanning",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Git history analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:0635d7d6c0039bdf",
+          "title": "Add Git history secret scanning"
+        },
+        {
+          "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4554b7f4ee114145e0c9"
+          ],
+          "conditional": true,
+          "kind": "add_runtime_security_validation",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Runtime analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:be8cd403f9d873c9",
+          "title": "Add runtime security validation"
+        }
+      ],
+      "recommendations_displayed": 4,
+      "recommendations_total": 4,
+      "repository_name": "ai-readiness",
+      "schema_name": "report.security",
+      "section_id": "report.security",
+      "section_version": "1.0.0",
+      "security_pack_id": "security.core",
+      "security_pack_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Security assessment completed using supported repository-sensitive evidence and hygiene rules.",
+      "synthesis_status": "empty",
+      "themes": [
+        {
+          "finding_count": 0,
+          "kind": "security_hygiene_landscape",
+          "rule_ids": [
+            "security.private-key-material",
+            "security.credential-literal",
+            "security.placeholder-credential",
+            "security.tls-verification-disabled",
+            "security.hostname-verification-disabled",
+            "security.authentication-disabled",
+            "security.permissive-cors-origin",
+            "security.debug-enabled"
+          ],
+          "scope": "repository",
+          "source_role": "production",
+          "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+          "theme_id": "sec-theme:0ef0f17047eb",
+          "title": "Security hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "kind": "evidence_coverage",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Repository-sensitive evidence collection status is succeeded; 0 candidate artifacts were discovered and 0 configuration facts were collected within supported formats.",
+          "theme_id": "sec-theme:d221d632b81d",
+          "title": "Evidence coverage"
+        },
+        {
+          "finding_count": 0,
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_id": "sec-theme:867cd4de36bc",
+          "title": "Unsupported analysis scope"
+        },
+        {
+          "finding_count": 0,
+          "kind": "no_production_findings",
+          "rule_ids": [],
+          "scope": "production",
+          "source_role": "production",
+          "summary": "No production-role findings were emitted by the supported repository security hygiene rules.",
+          "theme_id": "sec-theme:aba52cdcd90f",
+          "title": "No production findings"
+        }
+      ],
+      "themes_displayed": 4,
+      "themes_total": 4,
+      "title": "Security Intelligence",
+      "traceability": {
+        "edge_count": 21,
+        "sample_edges": [
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.security",
+            "target_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:258ebfc6330350ed270f"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:edcdfedf3465"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.security",
+            "target_id": "security.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:ea39a330990f"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:93a53f56ad3e"
+          },
+          {
+            "relation": "section_to_theme",
+            "source_id": "assessment.security",
+            "target_id": "sec-theme:aba52cdcd90f"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:c58cc9ecfbcc16b4"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:2514ad8dce72c028"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:cfdf7999a500"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:0635d7d6c0039bdf"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:5f805d1ca2ad"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:13a498eeebd8"
+          }
+        ],
+        "summary": "21 assessment traceability edges available; showing 12 bounded samples."
+      }
+    },
+    "static_analysis": {
+      "duration_ms": null,
+      "eligible_file_count": 0,
+      "files_analyzed": 0,
+      "finding_count": 0,
+      "grouped_finding_count": 0,
+      "groups": [],
+      "informational_count": 0,
+      "message": "PMD static analysis was disabled for this assessment.",
+      "observations": [],
+      "primary_count": 0,
+      "profile": null,
+      "provider": "PMD",
+      "provider_version": null,
+      "providers": [
+        {
+          "duration_ms": null,
+          "eligible_file_count": 0,
+          "files_analyzed": 0,
+          "finding_count": 0,
+          "grouped_finding_count": 0,
+          "informational_count": 0,
+          "message": "PMD static analysis was disabled for this assessment.",
+          "primary_count": 0,
+          "profile": null,
+          "provider": "PMD",
+          "provider_id": "pmd",
+          "provider_version": null,
+          "raw_observation_count": 0,
+          "rulesets": null,
+          "status": "disabled",
+          "supporting_count": 0,
+          "suppressed_from_html_count": 0,
+          "warnings": []
+        }
+      ],
+      "raw_observation_count": 0,
+      "rulesets": null,
+      "status": "disabled",
+      "supporting_count": 0,
+      "suppressed_from_html_count": 0
+    },
+    "summary": {
+      "ai_executed": false,
+      "ai_recommendation_count": 0,
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 0,
+      "deterministic_recommendation_count": 7,
+      "evidence_count": 0,
+      "finding_count": 13,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 0,
+        "info": 5,
+        "low": 6,
+        "medium": 2
+      },
+      "phase_count": 0,
+      "priority_action_count": 3,
+      "recommendation_count": 7,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 2,
+        "low": 1,
+        "medium": 4
+      },
+      "roadmap_initiative_count": 3,
+      "static_analysis_status": "disabled",
+      "summary_text": "Analyzed repository 'ai-readiness' with 4 scanned file(s). Detected 13 finding(s) (0 critical) and 7 recommendation(s) (2 critical/high priority). No automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 2,
+      "tests_detected": false
+    },
+    "technical_debt": {
+      "assessment_scope": "Repository-level static technical debt assessment for ai-readiness",
+      "conclusions": [
+        {
+          "audience": "production_health",
+          "conclusion_id": "td-conclusion:technical_debt.conclusion.no-production-findings:b64c77f985421f103d85",
+          "confidence": "high",
+          "finding_count": 0,
+          "hotspot_count": 0,
+          "kind": "no_production_findings",
+          "policy_id": "technical_debt.conclusion.no-production-findings",
+          "recommendation_ids": [
+            "td-recommendation:bdefd9784c07d9d4"
+          ],
+          "source_role": "production",
+          "summary": "Under current Technical Debt complexity rules and thresholds, no production-source findings were emitted.",
+          "theme_ids": [],
+          "title": "No production complexity-threshold findings"
+        }
+      ],
+      "coverage_summary": [
+        {
+          "area_id": "complexity_coverage",
+          "display": "Complete for the analyzed source set.",
+          "label": "Complexity coverage",
+          "note": "files_excluded=0",
+          "ratio": 1.0,
+          "status": "measured"
+        },
+        {
+          "area_id": "debt_rule_coverage",
+          "display": "Unavailable",
+          "label": "Debt rule coverage",
+          "note": "Complexity SharedRules evaluated against collected evidence.",
+          "ratio": null,
+          "status": "measured"
+        },
+        {
+          "area_id": "dependency_support_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Dependency-support coverage",
+          "note": "Dependency support-window analysis is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "duplication_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Duplication coverage",
+          "note": "Duplication detection is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "enterprise_context_coverage",
+          "display": "Enterprise context was not supplied for this repository assessment.",
+          "label": "Enterprise-context coverage",
+          "note": "Enterprise context was not supplied for this assessment.",
+          "ratio": null,
+          "status": "not_applicable"
+        }
+      ],
+      "enterprise_context_used": false,
+      "executive_summary": "No production-source complexity findings were identified under the current technical debt rules and coverage. 1 production-facing conclusion was generated.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "hotspot_presentation_note": "Hotspots are shown in inventory order (highest severity, then finding count, then path/unit). This is presentation order, not a priority score.",
+      "key_metrics": [
+        {
+          "key": "production_findings",
+          "label": "Production findings",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "production_hotspots",
+          "label": "Production hotspots shown",
+          "note": "0 production hotspots in inventory (presentation order, not priority).",
+          "value": "0"
+        },
+        {
+          "key": "significant_themes",
+          "label": "Significant themes",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "conclusions",
+          "label": "Conclusions",
+          "note": null,
+          "value": "1"
+        },
+        {
+          "key": "complexity_coverage",
+          "label": "Complexity coverage",
+          "note": null,
+          "value": "100.0%"
+        },
+        {
+          "key": "test_findings",
+          "label": "Test findings (separate)",
+          "note": "Presented as test-maintainability observation only.",
+          "value": "0"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:28d3a81db99d",
+          "summary": "Business impact remains unknown for repository-only technical debt assessment without explicit enterprise context."
+        },
+        {
+          "category": "other",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:44a96efdac7c",
+          "summary": "JavaScript and TypeScript complexity metrics are unsupported in Phase 4.3; only Python and Java collectors are available."
+        },
+        {
+          "category": "effort-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:8cf2e946fb95",
+          "summary": "No engineering-hours, staffing, or schedule estimate is produced by this assessment section."
+        },
+        {
+          "category": "financial-cost-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:9baf8f9a8886",
+          "summary": "No financial cost, interest-rate, or dollar estimate is computed for technical debt."
+        },
+        {
+          "category": "workspace-content-excluded",
+          "importance": "informational",
+          "limitation_id": "td-limitation:c99ec05283e7",
+          "summary": "Paths under .codestrata/ and other shared ignore markers are excluded from complexity measurement."
+        },
+        {
+          "category": "other",
+          "importance": "informational",
+          "limitation_id": "td-limitation:d3545084789c",
+          "summary": "Cognitive complexity is not measured. Branch-point counts are structural keyword/operator counts, not certified cyclomatic products."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:db50f36548fa",
+          "summary": "Technical debt findings are based on static repository evidence. Runtime behavior and productivity loss are not observed."
+        }
+      ],
+      "metadata": {
+        "assessment_section_id": "assessment.technical_debt",
+        "configuration_fingerprint": "4cc1ba15f040b02a",
+        "evidence_fingerprint": "aa40019044393ad9",
+        "evidence_pipeline": "language.complexity",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "test_finding_count": "0"
+      },
+      "recommendations": [
+        {
+          "action": "No production complexity-threshold findings require remediation under the current rule pack and thresholds.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "td-conclusion:technical_debt.conclusion.no-production-findings:b64c77f985421f103d85"
+          ],
+          "conditional": false,
+          "rationale": "The production-primary inventory contains zero matching findings.",
+          "recommendation_id": "td-recommendation:bdefd9784c07d9d4",
+          "title": "Acknowledge empty production complexity inventory"
+        }
+      ],
+      "repository_name": "ai-readiness",
+      "section_id": "report.technical_debt",
+      "section_version": "1.0.0",
+      "significant_themes": [],
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Technical debt assessment completed using static complexity evidence.",
+      "technical_debt_pack_id": "technical_debt.core",
+      "technical_debt_pack_version": "1.0.0",
+      "test_observation": {
+        "conclusion_ids": [],
+        "finding_count": 0,
+        "present": false,
+        "summary": "No test-source complexity findings were recorded for this assessment.",
+        "title": "No separate test-maintainability observation"
+      },
+      "title": "Technical Debt Assessment",
+      "top_production_hotspots": [],
+      "traceability_summary": {
+        "edge_count": 11,
+        "relation_types": [
+          "recommendation_to_conclusion",
+          "section_to_conclusion",
+          "section_to_limitation",
+          "section_to_pack",
+          "section_to_recommendation"
+        ],
+        "sample_edges": [
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:8cf2e946fb95"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-recommendation:bdefd9784c07d9d4"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:d3545084789c"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.technical_debt",
+            "target_id": "technical_debt.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:28d3a81db99d"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:b64c77f985421f103d85"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:44a96efdac7c"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:c99ec05283e7"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:9baf8f9a8886"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:db50f36548fa"
+          },
+          {
+            "relation": "recommendation_to_conclusion",
+            "source_id": "td-recommendation:bdefd9784c07d9d4",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:b64c77f985421f103d85"
+          }
+        ],
+        "summary": "11 traceability relationships across 5 relation types."
+      }
+    },
+    "technologies": [
+      {
+        "category": "build_tool",
+        "confidence": 0.85,
+        "name": "pip",
+        "source": "python_manifest",
+        "version": null
+      },
+      {
+        "category": "language",
+        "confidence": 1.0,
+        "name": "Python",
+        "source": "file_extension_or_python_manifest",
+        "version": null
+      }
+    ],
+    "timing": {
+      "ai_ms": null,
+      "analysis_ms": 1.27,
+      "cache_hits": 0,
+      "cache_misses": 1,
+      "evidence_ms": null,
+      "files_loaded": 1,
+      "files_skipped": 0,
+      "graph_ms": 30.1,
+      "knowledge_ms": null,
+      "peak_rss_mb": 90.59,
+      "report_ms": 17.16,
+      "rules_ms": 178.07,
+      "scan_ms": 0.4,
+      "static_analysis_ms": null,
+      "total_ms": 263.53
+    },
+    "warnings": []
+  },
+  "manifest": {
+    "brand_report_name": "Engineering Assessment",
+    "codestrata_version": "0.1.0",
+    "contract_version": "1.0.0",
+    "edition": "community",
+    "enabled_sections": [
+      "executive_summary",
+      "technologies",
+      "findings",
+      "recommendations",
+      "technical_debt",
+      "dependency",
+      "security",
+      "ai_readiness",
+      "roadmap"
+    ],
+    "generated_at": "2026-07-31T21:54:50.205960Z",
+    "generation_mode": "deterministic",
+    "html_report_version": "3.0",
+    "product_name": "CodeStrata",
+    "report_type": "engineering_assessment",
+    "report_version": "1.2",
+    "repository_id": "9f6d472b-6421-4ed1-9fbf-1cd7d885a705",
+    "scan_id": "de73fde1-4a7d-43a1-bf9b-f61188bc42ca",
+    "schema_version": "1.2",
+    "volatile_fields": [
+      "assessment.generated_at",
+      "assessment.timing",
+      "assessment.ai.latency_ms",
+      "assessment.static_analysis",
+      "manifest.generated_at"
+    ]
+  },
+  "report_version": "1.2",
+  "schema_version": "1.2"
+}

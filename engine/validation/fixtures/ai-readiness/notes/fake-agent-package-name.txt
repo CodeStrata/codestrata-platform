@@ -1,0 +1,4 @@
+Negative control: package name alone is not an AI agent workflow.
+
+Hypothetical distribution name for review: codestrata-fake-agent-utils
+(not installed; not imported; must not invent workflow_agent or ai_integration).

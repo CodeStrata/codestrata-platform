@@ -1,0 +1,13 @@
+{
+  "name": "codestrata-validation-library",
+  "version": "0.1.0",
+  "description": "Minimal npm library validation fixture",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ]
+}

@@ -1,0 +1,19 @@
+repository_id = "local-cli-python"
+display_name = "Local Python CLI fixture"
+source_type = "local"
+local_path = "fixtures/cli-python"
+expected_results_path = "expectations/local-cli-python.json"
+tags = [
+  "local",
+  "python",
+  "cli",
+  "tests-absent",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "python",
+]
+notes = """Local Python CLI fixture"""
+enabled = true

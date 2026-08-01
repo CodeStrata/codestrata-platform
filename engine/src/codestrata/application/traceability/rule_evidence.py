@@ -34,6 +34,7 @@ TRACEABLE_PACK_PREFIXES: tuple[str, ...] = (
     "security.",
     "dependency.",
     "technical_debt.",
+    "architecture.",
 )
 
 _KIND_MAP: dict[RuleEvidenceKind, EvidenceKind] = {
@@ -346,6 +347,11 @@ def _map_measurement(attrs: dict[str, str]) -> EvidenceMeasurement | None:
             threshold = None
 
     try:
+        scope = MeasurementScope.CALLABLE
+        if (attrs.get("type_kind") or "").strip():
+            scope = MeasurementScope.TYPE
+        elif (attrs.get("callable_kind") or "").strip():
+            scope = MeasurementScope.CALLABLE
         if threshold is None:
             return EvidenceMeasurement.available(
                 metric_id=f"measurement.{metric}",
@@ -354,7 +360,7 @@ def _map_measurement(attrs: dict[str, str]) -> EvidenceMeasurement | None:
                 value_type=MeasurementValueType.INTEGER
                 if isinstance(number, int)
                 else MeasurementValueType.NUMBER,
-                scope=MeasurementScope.CALLABLE,
+                scope=scope,
             )
         return EvidenceMeasurement.available(
             metric_id=f"measurement.{metric}",
@@ -370,7 +376,7 @@ def _map_measurement(attrs: dict[str, str]) -> EvidenceMeasurement | None:
                 if number > threshold
                 else MeasurementComparisonResult.PASSES
             ),
-            scope=MeasurementScope.CALLABLE,
+            scope=scope,
             threshold_source="rule_threshold",
         )
     except (TraceabilityValidationError, ValueError):

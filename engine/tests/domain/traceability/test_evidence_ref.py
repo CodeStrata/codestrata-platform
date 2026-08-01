@@ -151,6 +151,24 @@ def test_dedupe_merges_nonconflicting_parents_and_limitations() -> None:
     assert result[0].location is not None
 
 
+def test_dedupe_merges_same_evidence_id_different_rule_id() -> None:
+    left = EvidenceRef(
+        evidence_id="ev:1",
+        rule_id="security.credential-literal",
+        location=EvidenceLocation(path="config/app.properties"),
+    )
+    right = EvidenceRef(
+        evidence_id="ev:1",
+        rule_id="security.placeholder-credential",
+        confidence="medium",
+    )
+    result = dedupe_evidence_refs((left, right))
+    assert len(result) == 1
+    assert result[0].rule_id == "security.credential-literal"
+    assert result[0].confidence == "medium"
+    assert result[0].location is not None
+
+
 def test_contradictory_duplicate_rejection() -> None:
     left = EvidenceRef(
         evidence_id="ev:1",

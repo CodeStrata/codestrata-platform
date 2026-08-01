@@ -1,0 +1,166 @@
+{
+  "artifact_schema_id": "codestrata.repository_sensitive_evidence",
+  "artifacts": [],
+  "configuration_facts": [
+    {
+      "classification": "source",
+      "evidence_id": "ev:19d20488a0e175600b74682c",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "credential",
+      "line_start": 5,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "spring_datasource_password",
+      "parse_status": "succeeded",
+      "path": "src/main/resources/application-mysql.properties",
+      "placeholder_kind": "environment_variable",
+      "placeholder_status": "environment_interpolation",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "src/main/resources/application-mysql.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "[REDACTED]",
+      "section": null,
+      "value_fingerprint": "1bfe4a123c8308537c1badfd4b07415796a8b4abd2d3d214fa9485d429fe96f0",
+      "value_kind": "environment_reference",
+      "value_length": 23
+    },
+    {
+      "classification": "source",
+      "evidence_id": "ev:10c4fc2b4e17b4920124b401",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "credential",
+      "line_start": 5,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "spring_datasource_password",
+      "parse_status": "succeeded",
+      "path": "src/main/resources/application-postgres.properties",
+      "placeholder_kind": "environment_variable",
+      "placeholder_status": "environment_interpolation",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "src/main/resources/application-postgres.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "[REDACTED]",
+      "section": null,
+      "value_fingerprint": "03f2893360d1654cdff12bca345f940c1c3cfbd4be924541f78760359de048a7",
+      "value_kind": "environment_reference",
+      "value_length": 26
+    }
+  ],
+  "coverage": {
+    "candidate_files_discovered": 0,
+    "configuration_facts_collected": 2,
+    "content_signatures_evaluated": 0,
+    "files_inspected": 2,
+    "formats_represented": [
+      "json",
+      "properties",
+      "yaml"
+    ],
+    "malformed_files": 2,
+    "metadata_only_files": 0,
+    "note": "Coverage describes inspected repository-visible candidates only; it does not claim a complete security scan of the repository.",
+    "placeholder_facts": 2,
+    "production_artifacts": 0,
+    "skipped_files": 0,
+    "structured_files_parsed": 2,
+    "test_artifacts": 0,
+    "unknown_artifacts": 0,
+    "unsupported_binaries": 0
+  },
+  "diagnostics": [
+    {
+      "classification": "source",
+      "diagnostic_code": "malformed_yaml",
+      "diagnostic_id": "rs-diagnostic:4a9dac890633",
+      "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+      "path": "k8s/db.yml"
+    },
+    {
+      "classification": "source",
+      "diagnostic_code": "malformed_yaml",
+      "diagnostic_id": "rs-diagnostic:f0529165909c",
+      "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+      "path": "k8s/petclinic.yml"
+    }
+  ],
+  "evidence_fingerprint": "56cbc88ddc214df8",
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "rs-limitation:1b144cfd65ec",
+      "summary": "Evidence reflects the current repository snapshot only."
+    },
+    {
+      "category": "no-git-history",
+      "limitation_id": "rs-limitation:ac28adfc1d58",
+      "summary": "Git history is not scanned for historical secrets or credential commits."
+    },
+    {
+      "category": "no-runtime-environment",
+      "limitation_id": "rs-limitation:34ac23e5c221",
+      "summary": "Runtime environment variables and deployed secrets are not inspected."
+    },
+    {
+      "category": "no-secret-validity-verification",
+      "limitation_id": "rs-limitation:91bbb0cbf5b6",
+      "summary": "Observed literals are not verified as active or valid secrets."
+    },
+    {
+      "category": "no-entropy-analysis",
+      "limitation_id": "rs-limitation:a761c80b56a8",
+      "summary": "Entropy-based secret detection is not performed."
+    },
+    {
+      "category": "no-external-credential-validation",
+      "limitation_id": "rs-limitation:fb221f7118c7",
+      "summary": "External credential validation and live service checks are not performed."
+    },
+    {
+      "category": "no-certificate-trust-validation",
+      "limitation_id": "rs-limitation:8f6e0c568ad5",
+      "summary": "Certificate trust chains and expiry are not validated."
+    },
+    {
+      "category": "no-keystore-decryption",
+      "limitation_id": "rs-limitation:842c06a941df",
+      "summary": "Keystore and PKCS#12 entries are not decrypted or enumerated."
+    },
+    {
+      "category": "no-arbitrary-source-scanning",
+      "limitation_id": "rs-limitation:e81e58f802a6",
+      "summary": "Arbitrary source-code credential regex scanning is not performed."
+    },
+    {
+      "category": "no-vulnerability-interpretation",
+      "limitation_id": "rs-limitation:ddc29fb28a45",
+      "summary": "No vulnerability, severity, compliance, or remediation interpretation is applied."
+    }
+  ],
+  "repository_id": "remote-java-spring-petclinic",
+  "schema_name": "repository-sensitive-evidence",
+  "schema_version": "1.1.0",
+  "status": "partially_succeeded"
+}

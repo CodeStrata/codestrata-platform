@@ -1,0 +1,23 @@
+{
+  "assessment_graph_id": "graph:assessment:a2ee06e611f1e0d19fc66d723eee1addf0fc54dd81440c38576edf7a1aa187b0",
+  "assessment_node_count": 56,
+  "assessment_relationship_count": 53,
+  "assessment_source_fingerprint": "sha256:a2ee06e611f1e0d19fc66d723eee1addf0fc54dd81440c38576edf7a1aa187b0",
+  "binding_count": 53,
+  "engineering_knowledge_persisted": true,
+  "engineering_knowledge_persistence_note": "Builtin catalog is small; full Engineering Knowledge Graph snapshot is persisted.",
+  "knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+  "knowledge_node_count": 38,
+  "knowledge_relationship_count": 31,
+  "knowledge_source_fingerprint": "catalog:codestrata-core:1.0.0",
+  "matched_concepts_by_knowledge_type": {
+    "build_tool": 2,
+    "framework": 1,
+    "language": 50
+  },
+  "repository_graph_id": "graph:repo:spring-petclinic:7c95a765765ae162704a996ddadac5481f0f166c385207fff05ca2a908f290ba",
+  "repository_node_count": 163,
+  "repository_relationship_count": 162,
+  "repository_source_fingerprint": "sha256:7c95a765765ae162704a996ddadac5481f0f166c385207fff05ca2a908f290ba",
+  "unmatched_observation_count": 83
+}

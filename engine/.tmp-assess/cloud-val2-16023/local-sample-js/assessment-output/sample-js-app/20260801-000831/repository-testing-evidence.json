@@ -1,0 +1,149 @@
+{
+  "artifact_schema_id": "codestrata.repository_testing_evidence",
+  "build_configuration_facts": [
+    {
+      "command_projection": "node --test",
+      "detail": "test",
+      "evidence_id": "test-config:7ea4b85bcee49173df537c7f",
+      "fact_kind": "test_script",
+      "framework": null,
+      "metadata": {},
+      "path": "package.json",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "package.json",
+        "transformation_chain": []
+      },
+      "source_type": "npm"
+    }
+  ],
+  "bundle_id": "test-evidence:c59d83f6efae94cf",
+  "ci_test_invocation_facts": [],
+  "coverage": {
+    "build_manifests_inspected": 1,
+    "candidate_files_inspected": 0,
+    "candidate_test_files_discovered": 0,
+    "ci_files_inspected": 0,
+    "coverage_configurations": 0,
+    "fixture_support_candidates": 0,
+    "frameworks_declared": 1,
+    "frameworks_structurally_observed": 0,
+    "languages_represented": [],
+    "malformed_files": 0,
+    "marker_facts": 0,
+    "note": "Coverage describes inspected repository-observable testing candidates only; undiscovered tests may still exist and zero evidence does not establish that tests are absent or that the repository is release ready.",
+    "repository_files_considered": 3,
+    "skipped_files": 0,
+    "source_roles_represented": [],
+    "structurally_confirmed_test_files": 0,
+    "supported_test_files_parsed": 0,
+    "unsupported_candidate_files": 0
+  },
+  "coverage_facts": [],
+  "diagnostics": [],
+  "evidence_fingerprint": "2a9a14b6d8215f77",
+  "file_candidates": [],
+  "fixture_facts": [],
+  "framework_facts": [
+    {
+      "basis": "declared",
+      "declared_version": "29.7.0",
+      "detail": "package.json:jest",
+      "evidence_id": "test-framework:01addad779bb7b5b5e12b3f4",
+      "framework": "jest",
+      "metadata": {},
+      "path": "package.json",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_testing.enabled=True",
+        "extraction_method": "manifest_token_scan",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_testing.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_testing_build_collector",
+        "source_path": "package.json",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "test-limitation:af8ea08b4529",
+      "summary": "Repository snapshot only."
+    },
+    {
+      "category": "tests-not-executed",
+      "limitation_id": "test-limitation:ac68a547595b",
+      "summary": "Tests are not executed."
+    },
+    {
+      "category": "no-pass-fail-evaluation",
+      "limitation_id": "test-limitation:bbef7e1c9468",
+      "summary": "Test pass/fail status is not evaluated."
+    },
+    {
+      "category": "no-runtime-coverage",
+      "limitation_id": "test-limitation:51ebd69b8039",
+      "summary": "Runtime code coverage is not measured."
+    },
+    {
+      "category": "framework-detection-bounded",
+      "limitation_id": "test-limitation:0cef62c3dd27",
+      "summary": "Framework detection is limited to supported declarations and structural indicators."
+    },
+    {
+      "category": "test-type-convention-based",
+      "limitation_id": "test-limitation:0fe6267b7a93",
+      "summary": "Test-type classification is based on repository conventions and explicit configuration."
+    },
+    {
+      "category": "no-test-effectiveness",
+      "limitation_id": "test-limitation:2c959e1963cc",
+      "summary": "Test effectiveness and assertion quality are not evaluated."
+    },
+    {
+      "category": "no-test-to-source-mapping",
+      "limitation_id": "test-limitation:b05f1d829534",
+      "summary": "Test-to-production-code coverage is not evaluated."
+    },
+    {
+      "category": "no-remote-ci-history",
+      "limitation_id": "test-limitation:d5523e27836e",
+      "summary": "Remote CI execution history is not inspected."
+    },
+    {
+      "category": "markers-not-judged",
+      "limitation_id": "test-limitation:a9a6d422331d",
+      "summary": "Disabled or skipped markers are collected without judging whether they are justified."
+    },
+    {
+      "category": "fixture-content-not-evaluated",
+      "limitation_id": "test-limitation:3db77905ab44",
+      "summary": "Fixture and test-data content is not evaluated."
+    },
+    {
+      "category": "generated-vendor-exclusions",
+      "limitation_id": "test-limitation:f65fe9e021c5",
+      "summary": "Generated, vendored, binary, unsupported, or oversized files may be excluded."
+    },
+    {
+      "category": "no-release-readiness",
+      "limitation_id": "test-limitation:0d48d82271fb",
+      "summary": "No conclusion about release readiness can be drawn."
+    }
+  ],
+  "marker_facts": [],
+  "repository_id": "sample-js-app",
+  "schema_name": "repository-testing-evidence",
+  "schema_version": "1.0.0",
+  "status": "succeeded",
+  "structural_test_facts": [],
+  "test_type_facts": []
+}

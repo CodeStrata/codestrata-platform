@@ -1,0 +1,19 @@
+repository_id = "local-complexity-signals"
+display_name = "Local complexity signals fixture"
+source_type = "local"
+local_path = "fixtures/complexity-signals"
+assessment_config = "configs/local-complexity-signals.toml"
+expected_results_path = "expectations/local-complexity-signals.json"
+tags = [
+  "local",
+  "fixture",
+  "technical-debt",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "python",
+]
+notes = """Local complexity signals fixture"""
+enabled = true

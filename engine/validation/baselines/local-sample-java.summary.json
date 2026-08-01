@@ -1,0 +1,6 @@
+{
+  "repository_id": "local-sample-java",
+  "schema_version": "1.2",
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "workspace test-fixtures/sample-java-app"
+}

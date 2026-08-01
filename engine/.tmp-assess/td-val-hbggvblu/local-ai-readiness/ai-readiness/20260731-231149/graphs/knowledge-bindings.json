@@ -1,0 +1,90 @@
+{
+  "bindings": [
+    {
+      "binding_id": "kb:exact_canonical_key:repo:ai-readiness:file:src/openai_agent.py=>ekg:language:python:python",
+      "binding_type": "uses_concept",
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=python on file",
+          "path": null,
+          "source_id": "repo:ai-readiness:file:src/openai_agent.py",
+          "start_line": null,
+          "symbol_id": "repo:ai-readiness:file:src/openai_agent.py"
+        }
+      ],
+      "knowledge_node_id": "ekg:language:python",
+      "knowledge_node_type": "language",
+      "matched_key": "python",
+      "matching_strategy": "exact_canonical_key",
+      "observation_kind": "file_language",
+      "provenance": [
+        {
+          "confidence": 1.0,
+          "extractor_id": "knowledge-pipeline",
+          "extractor_version": "1.1.0",
+          "source_id": "knowledge-pipeline:exact-canonical:1.1.0",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "repository_node_id": "repo:ai-readiness:file:src/openai_agent.py",
+      "repository_node_type": "file"
+    }
+  ],
+  "considered_repository_node_ids": [
+    "repo:ai-readiness:file:README.md",
+    "repo:ai-readiness:file:mcp.json",
+    "repo:ai-readiness:file:src/openai_agent.py"
+  ],
+  "knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+  "knowledge_source_fingerprint": "catalog:codestrata-core:1.0.0",
+  "matching_strategy": "exact_canonical_key",
+  "repository_graph_id": "graph:repo:ai-readiness:c28e93ae3a0bc374003ce64921228778d27efa266f0e1599688178b6d52e5641",
+  "repository_source_fingerprint": "sha256:c28e93ae3a0bc374003ce64921228778d27efa266f0e1599688178b6d52e5641",
+  "result_version": "1.2.0",
+  "unmatched_observations": [
+    {
+      "candidate_key": "markdown",
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=markdown on file",
+          "path": null,
+          "source_id": "repo:ai-readiness:file:README.md",
+          "start_line": null,
+          "symbol_id": "repo:ai-readiness:file:README.md"
+        }
+      ],
+      "observation_kind": "file_language",
+      "repository_node_id": "repo:ai-readiness:file:README.md",
+      "repository_node_type": "file"
+    },
+    {
+      "candidate_key": "json",
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_graph_observation",
+          "excerpt": "file_language=json on file",
+          "path": null,
+          "source_id": "repo:ai-readiness:file:mcp.json",
+          "start_line": null,
+          "symbol_id": "repo:ai-readiness:file:mcp.json"
+        }
+      ],
+      "observation_kind": "file_language",
+      "repository_node_id": "repo:ai-readiness:file:mcp.json",
+      "repository_node_type": "file"
+    }
+  ],
+  "unmatched_repository_node_ids": [
+    "repo:ai-readiness:file:README.md",
+    "repo:ai-readiness:file:mcp.json"
+  ]
+}

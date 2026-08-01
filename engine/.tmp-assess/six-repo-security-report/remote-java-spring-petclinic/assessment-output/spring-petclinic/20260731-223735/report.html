@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src data:; font-src 'none'; connect-src 'none'; object-src 'none'; script-src 'none'; style-src 'unsafe-inline'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="generator" content="CodeStrata Engineering Assessment">
+<title>CodeStrata Engineering Assessment — spring-petclinic</title>
+<style>
+:root {
+  /* Design System light theme (report / print face) */
+  --cs-bg: #f7f5f2;
+  --cs-bg-2: #efeae3;
+  --cs-surface: #ffffff;
+  --cs-surface-2: #fbfaf8;
+  --cs-ink: #1a1f24;
+  --cs-muted: #5c6e88;
+  --cs-border: #e4ddd3;
+  --cs-border-2: #d4cbc0;
+  --cs-accent: #b06a24;
+  --cs-accent-bright: #d98a3d;
+  --cs-accent-soft: #f6efe8;
+  --cs-accent-fg: #ffffff;
+  --cs-mineral: #4fb3a5;
+  --cs-danger: #e06c5b;
+  --cs-fog: #5c6e88;
+  --cs-fog-surface: #eef1f5;
+  --cs-fog-border: #c5cedb;
+  --cs-teal: #4fb3a5;
+  --cs-shadow: 0 10px 30px rgba(26, 31, 36, 0.06);
+  --cs-radius: 16px;
+  --cs-radius-control: 10px;
+  --cs-critical: #b42318;
+  --cs-high: #c4320a;
+  --cs-medium: #a15c07;
+  --cs-low: #0f7b6c;
+  --cs-info: #3e4c59;
+  --cs-ai: #0b6e99;
+  --cs-good: var(--cs-mineral);
+  --cs-risk: var(--cs-danger);
+  --cs-font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --cs-font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --cs-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --cs-space-1: 0.25rem;
+  --cs-space-2: 0.5rem;
+  --cs-space-3: 0.75rem;
+  --cs-space-4: 1rem;
+  --cs-space-5: 1.5rem;
+  --cs-space-6: 2rem;
+  --cs-space-8: 3rem;
+  --cs-max-content: 1120px;
+  --cs-prose: 680px;
+
+  /* Report stylesheet aliases (stable for existing HTML report CSS). */
+  --bg: var(--cs-bg);
+  --bg-2: var(--cs-bg-2);
+  --surface: var(--cs-surface);
+  --surface-2: var(--cs-surface-2);
+  --ink: var(--cs-ink);
+  --muted: var(--cs-muted);
+  --border: var(--cs-border);
+  --border-2: var(--cs-border-2);
+  --accent: var(--cs-accent);
+  --accent-soft: var(--cs-accent-soft);
+  --teal: var(--cs-teal);
+  --shadow: var(--cs-shadow);
+  --radius: var(--cs-radius);
+  --critical: var(--cs-critical);
+  --high: var(--cs-high);
+  --medium: var(--cs-medium);
+  --low: var(--cs-low);
+  --info: var(--cs-info);
+  --ai: var(--cs-ai);
+  --good: var(--cs-good);
+  --risk: var(--cs-risk);
+  --fog: var(--cs-fog);
+}
+* { box-sizing: border-box; }
+html { overflow-x: hidden; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #efe6dc 0%, transparent 55%),
+    radial-gradient(900px 400px at 100% 0%, #e7eef2 0%, transparent 50%),
+    var(--bg);
+  color: var(--ink);
+  font: 17px/1.6 var(--cs-font-sans);
+}
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  z-index: 100;
+  border: 1px solid var(--border);
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+.page {
+  max-width: var(--cs-max-content);
+  margin: 0 auto;
+  padding: var(--cs-space-6) var(--cs-space-5) var(--cs-space-8);
+}
+
+/* —— Cover / hero —— */
+.hero {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.6rem 1.35rem;
+  margin-bottom: 1.25rem;
+}
+.hero-brand { margin-bottom: 1rem; }
+.brand-logo {
+  display: block;
+  width: 140px;
+  height: 40px;
+  max-width: 140px;
+  object-fit: contain;
+  margin-bottom: 0.65rem;
+}
+.brand-name {
+  /* Kept for back-compat; cover no longer emits duplicate text branding. */
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 650;
+  font-family: var(--cs-font-sans);
+}
+.hero-eyebrow {
+  margin: 0.45rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.report-title {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-family: var(--cs-font-display);
+  font-weight: 600;
+  text-wrap: balance;
+}
+.hero-lede {
+  margin: 0.65rem 0 0;
+  max-width: var(--cs-prose);
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.4vw, 1.14rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.hero-meta, .report-identity {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.meta-item { display: flex; flex-direction: column; gap: 0.15rem; }
+.meta-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 550;
+  font-family: var(--cs-font-sans);
+}
+.meta-value {
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.hero-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.9rem 1rem;
+  min-height: 100%;
+}
+.kpi-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 650;
+}
+.kpi-value {
+  margin: 0.25rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+.kpi-hint { color: var(--muted); font-size: 0.85rem; }
+.kpi-score .kpi-value { color: var(--teal); }
+.kpi-severity-critical .kpi-value { color: var(--critical); }
+.kpi-severity-high .kpi-value { color: var(--high); }
+.kpi-severity-medium .kpi-value { color: var(--medium); }
+.kpi-severity-low .kpi-value { color: var(--low); }
+.kpi-severity-informational .kpi-value,
+.kpi-severity-none-detected .kpi-value,
+.kpi-severity-unknown .kpi-value { color: var(--info); }
+
+/* —— TOC —— */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.35rem 1.2rem;
+  margin-bottom: 1.25rem;
+}
+.toc ol {
+  margin: 0.35rem 0 0;
+  padding-left: 1.25rem;
+  columns: 2;
+  column-gap: 2rem;
+}
+.toc li { break-inside: avoid; margin: 0.35rem 0; }
+.toc a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.toc a:hover, .toc a:focus {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+.toc a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* —— Sections —— */
+.section-eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--cs-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.section-eyebrow span { color: var(--accent); }
+.section-note {
+  margin: 0 0 1rem;
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.section-head h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--cs-font-display);
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  text-wrap: balance;
+  max-width: 680px;
+}
+.section {
+  margin: 1.75rem 0 0;
+  padding: 1.35rem 0 0;
+  border-top: 1px solid var(--border);
+}
+.section:first-of-type { border-top: 0; }
+.section-anchor-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.subsection {
+  margin: 1.35rem 0 0;
+  padding: 1.15rem 0 0;
+  border-top: 1px solid var(--border);
+}
+.subsection:first-of-type { border-top: 0; padding-top: 0; }
+.subsection > h3 {
+  margin: 0 0 0.55rem;
+  font-family: var(--cs-font-display);
+  font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.subsection h3, .subsection h4, .domain-block h3, .domain-block h4 {
+  font-family: var(--cs-font-display);
+}
+.subsection h4, .domain-block h4, .content-card h4, .card h4, .conclusion-card h4,
+.recommendation-card h4 {
+  margin: 0 0 0.4rem;
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.section-capability > .section-head h2 { margin-bottom: 0.25rem; }
+.takeaways { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+.takeaways li {
+  margin: 0.45rem 0;
+  line-height: 1.5;
+  max-width: 62rem;
+  text-wrap: pretty;
+}
+.section-verdict { margin: 1.25rem 0 0; }
+.assessment-results { margin-top: 0.25rem; }
+.assessment-head-coverage {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  background: var(--cs-fog-surface);
+}
+.assessment-head-coverage .meta { margin: 0 0 0.65rem; }
+.assessment-head-coverage h4 { margin: 0.35rem 0 0.25rem; font-size: 0.95rem; }
+.assessment-head-findings { margin: 1rem 0 0; }
+.assessment-head-findings h4 { margin: 0 0 0.45rem; }
+.assessment-ccl { margin: 1rem 0 0; }
+.assessment-ccl-group { margin: 1rem 0 0; }
+.assessment-ccl-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.tech-inventory-group { margin: 1rem 0 0; }
+.tech-inventory-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.tech-inventory-limitations { margin: 1rem 0 0; }
+.tech-inventory-limitations h4 { margin: 0 0 0.35rem; font-size: 0.95rem; }
+.arch-intel-group { margin: 1rem 0 0; }
+.arch-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.td-intel-group { margin: 1rem 0 0; }
+.td-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.dep-intel-group { margin: 1rem 0 0; }
+.dep-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.sec-intel-group { margin: 1rem 0 0; }
+.sec-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.cloud-intel-group { margin: 1rem 0 0; }
+.cloud-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.ai-intel-group { margin: 1rem 0 0; }
+.ai-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.mod-intel-group { margin: 1rem 0 0; }
+.mod-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.mod-intel-group h5 { margin: 0.75rem 0 0.35rem; font-size: 0.95rem; }
+.eis-intel-group { margin: 1rem 0 0; }
+.eis-intel-group h4 { margin: 0 0 0.45rem; font-size: 1rem; }
+.eis-intel-group h5 { margin: 0.75rem 0 0.35rem; font-size: 0.95rem; }
+.verdict-body {
+  margin: 0.35rem 0 0;
+  font-size: 1.12rem;
+  line-height: 1.6;
+  max-width: 46rem;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.exec-narrative h3 {
+  margin: 1rem 0 0.35rem;
+  font-size: 1.08rem;
+  font-weight: 640;
+  font-family: var(--cs-font-sans);
+}
+.exec-narrative p {
+  margin: 0;
+  max-width: 60ch;
+  text-wrap: pretty;
+}
+.ema-lede {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 46rem;
+  color: var(--ink);
+}
+.muted, .provenance, .section-note { color: var(--muted); }
+
+/* —— Domain shared components —— */
+.domain-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.55rem 0.85rem;
+  margin: 0 0 0.75rem;
+}
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--cs-fog-surface);
+  color: var(--fog);
+  border: 1px solid var(--cs-fog-border);
+}
+.status-badge-succeeded, .status-badge-complete, .status-badge-ok {
+  background: #edfcf7;
+  color: var(--low);
+  border-color: #b6e6d8;
+}
+.status-badge-partial, .status-badge-limited {
+  background: #fffaeb;
+  color: var(--medium);
+  border-color: #f0d9a8;
+}
+.status-badge-failed, .status-badge-error {
+  background: #fef3f2;
+  color: var(--critical);
+  border-color: #f2c4c0;
+}
+.metric-grid, .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.85rem;
+  margin: 0.85rem 0 1.1rem;
+  align-items: stretch;
+}
+.metric-card, .grid > .card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  box-shadow: var(--shadow);
+  padding: 0.9rem 1rem;
+  min-height: 100%;
+}
+.metric-card .label, .grid > .card .label, .label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 650;
+}
+.metric-card .value, .grid > .card .value, .value {
+  margin: 0.15rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.content-card, .conclusion-card, .recommendation-card, .card-stack > .card,
+article.card {
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.95rem 1.05rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  margin: 0;
+}
+.card-stack {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0.75rem 0 1rem;
+}
+.card-stack > .card, .card-stack > .content-card,
+.card-stack > .conclusion-card, .card-stack > .recommendation-card {
+  margin: 0;
+}
+.conclusion-card {
+  border-left: 3px solid var(--accent);
+}
+.recommendation-card {
+  border-left: 3px solid var(--teal);
+}
+.coverage-panel, .limitation-panel {
+  margin: 0.85rem 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  background: var(--surface-2);
+}
+.limitation-panel {
+  border-left: 3px solid var(--cs-fog-border);
+}
+.coverage-panel ul, .limitation-panel ul, .plain {
+  margin: 0.35rem 0 0;
+  padding-left: 1.15rem;
+}
+.technical-metadata {
+  font-family: var(--cs-font-mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+/* —— Stats / severity / findings —— */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+.stat-card {
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.9rem 0.95rem;
+  background: linear-gradient(180deg, var(--surface), var(--surface-2));
+  min-height: 100%;
+}
+.stat-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 650;
+}
+.stat-value {
+  margin: 0.35rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.stat-hint {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.tech-badges { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1rem; }
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-weight: 650;
+}
+.tech-badge em {
+  font-style: normal;
+  color: var(--muted);
+  font-weight: 550;
+  font-size: 0.85em;
+}
+.table-card { margin-top: 0.5rem; }
+.severity-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+.severity-card {
+  border-radius: var(--cs-radius-control);
+  border: 1px solid var(--border);
+  padding: 0.85rem 0.7rem;
+  text-align: center;
+  background: var(--surface-2);
+}
+.severity-label {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.severity-count {
+  margin: 0.35rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.45rem;
+  font-weight: 650;
+}
+.severity-critical { background: #fef3f2; }
+.severity-critical .severity-count { color: var(--critical); }
+.severity-high { background: #fff4ed; }
+.severity-high .severity-count { color: var(--high); }
+.severity-medium { background: #fffaeb; }
+.severity-medium .severity-count { color: var(--medium); }
+.severity-low { background: #edfcf7; }
+.severity-low .severity-count { color: var(--low); }
+.severity-informational { background: #f4f6f8; }
+.item-card {
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.9rem 1rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.item-header { margin-bottom: 0.45rem; }
+.card-desc { margin: 0.35rem 0 0.55rem; }
+.evidence-panel { margin-top: 0.75rem; }
+.evidence-card {
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.7rem 0.85rem;
+  margin: 0.45rem 0;
+  background: var(--surface-2);
+}
+.why-action {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  border-left: 3px solid var(--border-2);
+  background: var(--surface-2);
+}
+.why-action h4 { margin: 0 0 0.35rem; font-size: 0.92rem; }
+.limitations {
+  margin: 0.55rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.limitations ul { margin: 0.25rem 0 0; padding-left: 1.15rem; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.35rem 0 0.55rem; }
+.chip {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: baseline;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border-2);
+  font-size: 0.82rem;
+}
+.chip em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.outcome { margin: 0; color: var(--ink); }
+.outcome em {
+  font-style: normal;
+  color: var(--muted);
+  margin-right: 0.35rem;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.roadmap { display: grid; gap: 1rem; }
+.roadmap-lane h3 { margin: 0 0 0.55rem; font-size: 1rem; }
+.count-pill {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--cs-fog-surface);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.section-ai {
+  border-color: #9cc5d9;
+}
+.td-test-observation {
+  border-left: 3px solid var(--cs-fog-border);
+  background: var(--surface-2);
+}
+.ai-panel { padding: 0.15rem; }
+.ai-banner {
+  background: #e6f4f8;
+  color: var(--ai);
+  border: 1px solid #9cc5d9;
+  border-radius: var(--cs-radius-control);
+  padding: 0.7rem 0.85rem;
+  margin: 0 0 0.9rem;
+  font-weight: 600;
+}
+.ai-headline { margin: 0 0 0.45rem; font-size: 1.2rem; }
+.badge {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.severity-critical,
+.priority-immediate,
+.priority-critical { background: #fde8e8; color: var(--critical); }
+.severity-high, .priority-high { background: #feecdc; color: var(--high); }
+.severity-medium, .priority-medium { background: #fbf1de; color: var(--medium); }
+.severity-low,
+.priority-low,
+.severity-informational,
+.severity-info { background: #e1f5f0; color: var(--low); }
+.meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0;
+}
+.meta dt {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.meta dd { margin: 0.1rem 0 0; }
+
+/* —— Technical identifiers —— */
+code, .cmd, .trace-id, .technical-metadata {
+  font-family: var(--cs-font-mono);
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.trace-id {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+.trace-line {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* —— Tables —— */
+.table-wrap, .table-wrapper, .responsive-table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.55rem 0 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  background: var(--surface);
+}
+.table-wrap > table, .table-wrapper > table, .responsive-table > table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 0;
+  border: 0;
+}
+.section table, .subsection table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+th, td {
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  vertical-align: top;
+}
+th {
+  color: var(--muted);
+  font-weight: 650;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--surface-2);
+}
+td { overflow-wrap: anywhere; word-break: normal; }
+td code { font-size: 0.82em; }
+tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surface-2) 80%, transparent); }
+.evidence { margin-top: 0.45rem; }
+.evidence summary, .tech-block summary {
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: 650;
+}
+.evidence summary:focus-visible, .tech-block summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.tech-block {
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.75rem 0.9rem;
+  margin: 0 0 0.7rem;
+  background: var(--surface-2);
+}
+.tech-block summary { list-style: none; }
+.tech-block summary::-webkit-details-marker { display: none; }
+.ids { color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+.actions { padding-left: 1.2rem; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.more-note { margin-top: 0.75rem; }
+
+/* —— Footer —— */
+.site-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  text-align: left;
+}
+.site-footer p { margin: 0.35rem 0; max-width: 70ch; }
+.site-footer strong { color: var(--ink); }
+.copyright { font-weight: 600; color: var(--ink); margin-top: 0.45rem !important; }
+
+/* —— Responsive —— */
+@media (max-width: 1024px) {
+  .toc ol { columns: 1; }
+}
+@media (max-width: 820px) {
+  .severity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .split { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .page { padding: 1rem 0.85rem 2rem; }
+  .hero { padding: 1.15rem 1rem 1.1rem; }
+  .hero-kpis { grid-template-columns: 1fr; }
+  .metric-grid, .grid, .stat-grid { grid-template-columns: 1fr; }
+}
+
+/* —— Print —— */
+@media print {
+  @page { margin: 1.4cm; }
+  body { background: #fff; color: #000; }
+  .skip-link { display: none !important; }
+  .section-anchor-only { display: none !important; }
+  .page { max-width: none; padding: 0; }
+  .toc {
+    box-shadow: none;
+    columns: 1;
+    break-after: page;
+  }
+  .toc ol { columns: 1; }
+  .toc a { text-decoration: none; color: #000; }
+  .hero {
+    box-shadow: none;
+    break-after: page;
+    background: #fff;
+  }
+  .section, .subsection, .item-card, .stat-card, .kpi,
+  .metric-card, .content-card, .conclusion-card, .recommendation-card, .card {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+  .hero-kpis { break-inside: avoid; }
+  .table-wrap, .table-wrapper, .responsive-table {
+    overflow: visible;
+    border: 0;
+  }
+  .site-footer { border-top: 1px solid #ccc; }
+  a { color: inherit; text-decoration: none; }
+  tbody tr:nth-child(even) { background: transparent; }
+}</style>
+</head>
+<body>
+<a class="skip-link" href="#contents">Skip to contents</a>
+<div class="page">
+<header class="hero" id="cover">
+<div class="hero-brand">
+<img class="brand-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAAAoCAYAAAAsTRLGAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJF9kL1LQlEYxn+aYfRFUDQ1OEmFRWgfQy0qFIGDmNIHFFyvpoHa4d4b1f/Q3NzUFjQUTkFje1DRn9AauJTd3qOV9kEHXp4fz3k4vOcBr89QquQDyhXHSi3FAmvrGwH/E36GGSRM0DBtFU0mExLhU7+f2h0erbcT+q3f9/+e7lzeNkVfZcZNZTngGRVO7jtK84HwkCVLCR9pLjT5RHO2yReNTDoVF74RHjCLRk74QTiUbfMLbVwu7ZkfO+jte/OVzIpov8wICRbl73OkiTAj3fydnW5k4+yiOMRihwJFHAJExVGUyAsvU8FkkpBwmCmZWd3xz+5anq1g4Qy8sZa32QWXGRg8b3nBLeh7g6t5ZVjGV6Oems/ejoSb3FOFzmPXfV4F/xjU7133peq69VPoeITr2jv9zVoaYabXmQAAAFZlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA5KGAAcAAAASAAAARKACAAQAAAABAAAAjKADAAQAAAABAAAAKAAAAABBU0NJSQAAAFNjcmVlbnNob3QrQwdkAAAB1WlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyI+CiAgICAgICAgIDxleGlmOlBpeGVsWURpbWVuc2lvbj40MDwvZXhpZjpQaXhlbFlEaW1lbnNpb24+CiAgICAgICAgIDxleGlmOlBpeGVsWERpbWVuc2lvbj4xNDA8L2V4aWY6UGl4ZWxYRGltZW5zaW9uPgogICAgICAgICA8ZXhpZjpVc2VyQ29tbWVudD5TY3JlZW5zaG90PC9leGlmOlVzZXJDb21tZW50PgogICAgICA8L3JkZjpEZXNjcmlwdGlvbj4KICAgPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KYsF4cQAAC3pJREFUeAHtWglYVdUW/pkHQUEInEhwlrQUEFPRZ70XaU45lGafpT5t+sR5NrUnTqmZmK9MTXP4niVoTqRmJjklIJSoGIMggyLgZRaQ8e21rud6r166HOhd431nf989Zw9rrX3O3v9d61/7XpNqUaAUZQVquQKmtZRTxJQV4BVQAKMAQdYKKICRtVyKsAIYBQOyVkABjKzlUoQVwCgYkLUCCmBkLZcirABGwYCsFVAAI2u5FGEFMAoGZK2AAhhZy6UIm8tZgrWfbcPF8Gg5KjXKPt/TC3MCJtU4rgz8NVdAFmD+LLDQUrCtgLovSklJKcLDw1FWVoZ27duhjYdH3Y3p0VSpVEi+mQITE8Dby0uPhOGusuIC5N6MRWVZKRxbd4aNo6thpb+4hCzAkFf4s0BDtupSEhISMGPWXERERqK8rFxjok+f3li5fBmefbarpq8+ldDQY5g2YxabyFVlyjJVXlyIC5vn4PZvYTp6Dm4d0HfaJti5PM39xTl3kB0fxXU3H3+YmlvoyNelUVVZgbTIE6z6VAdv2DZtVhczNeqYNKS/N6SkpGDgoKHIyLjDL+Tk1BT29va4KTwBFQeHJjh54hjatWvL7fpcdu3aU0fAVCN03iAUZCTBxMwMTT0EgKsqoUq+Coh/kljaNcHgNSdgZeeA9KgfcTZoCj/miM8vcl99npl0Cawh7/VgM30CgvB0j5fra1JHv8GQ3srKSgwf+TqDxd7eDocPHUBCXCx+jYrAD8dD4ejoiLy8fCxctFjnBalBf/m5di0WqWlpj41pd8THJ4A+hv4iROMxMVdYtqKiQtsEVDdiGCzU6RewEf5LvoH/R8EYsOwAKL6VFeULz3MaJfnZyEtP0OgW3EpEUZb6+QoyklFw+wZvvnh6qJKu4J7qtka2QoS43JRY3E38DfeL8jT95SVFj9kkOwRUqZAHIvvZcZd0bErjhu519jDBh08hNj7JkP0axz07tMFrQ/9e4/ijA1euXEW//mr5Hdu34tVhQ3VEvtyyFStXfQwLS0tcjo5Eo0aNeOPnL/wQwcH7kZuby/KtWrXEjOlTMXHCeI1+VHQ0xk+YhPT0W9zX07cHBg0aiCVLl3FbCkkElLnzFiBk/wEGJw06Ozth9aoVGDliOMveCNuHiO1LuD5wxSE4uHXkOl1yiM/cL2Yu8/ux7Ug4tVczRhXiOQMCv2MPQZ7Ce9wilim4nYSuIwLgOXgyYvZvxO/Hv0a12Hgq5MXcew2B78RlSI/+Cec3Ted+7cuoLy/BwsYOyee+w6971+B+oXotSMa5gxd6v78OjZxaaKvUWK+zh6kPWOhp5OpHXlLHenNzM7wycMBjL/TuO5ORkpyIROF1CCxUZs+djy1btqGgoAB+fr3R5RlPBsXsOfPwn73fsMytW7cw9s23uN/a2gr9+/cTZPcmNgR9xuPaF7K37asdDMQxo1/Diy/0x927Kkx+5z2cP3+BRZ3admNPQo3TayYi9ugW5KXFiVY1mrp74qmOPoLDuAlwePJms5K4uHTuiWZd+khNvl87sgWFd1Jg39ydN/za4c24HroNpqZmaNt/FNq9OFo4LVMBhIO4vG8985VmXXrr2HDzHQBTM3NkXg/HxS0LGCwtvV5EpwHjBXBdcDc+WhMWdRRraMgivdo2yEPI3fRH9bXbhupRUWrAtBcZkaXwIoZKUnIytm//msVWr1qOSf+cyPV33/sA+4THWbzkI4x9YwwOHjqMrKxsEBBDjxyCl1d3FBcXo2+/F5CT8/CbqG3v4IEQdOv2HNubNXsutu/YicAVq3D8+yPCo3QQ3/ZAxIR8itJ8FW8kbaaNw1NoLTxBl2Hvw8LWXmz4a7Cyd9Rslp/gG8RrtIupmQWGfPKj+PY3524KIxY29uyJXD2f5z5TcyvE/7ALGVfPofvY+fCbEqSXw9g0cYbP+I8YPG3/Nop1CbzEoSiTu1+YI56nqfb0eut1Bow6nNQ+pOidXUanjY0NS1M6XZty6YFHMhMu++23xmlUJk6cwIAhMBAIiItQ6datG4OF6ra2thg9+nWsWr2Gmlwke9T46XQYf6ieeEMdlmNjY6nJhTbEvddgJIYFIzXiGPOakrxsUBhKjTgu+Mx+BoskX9PdvdcgDVhIhjbYqe1zgtPEgEJfYWYq0oR9KqUFOXyv6dK4RVvQh7zdzQuHUZSdzqRbkqcw9T8FjDSRse4+Pt74SngMypQKi4pgb2enM/W9e/dwOyOD+9xbt0ZCQiLXiWNYWDxMV1u2eBirSSYlJZXlWrRQf4slo4+2JXs0Hrh8pSSmuRcWFkGlygFlblTMLK3R0X8cf4iPJJ09gF+/WYtiQV5jj25F9zfmanRrqljZOeoMUZp+cdtC3H8ADhMRah71SjoKWg0i1Gc2fIB8LaJt6yQ/5ZblYdK+XYy8q2Faj2G46tClP9xGBxoWNCDh20OdKhLhp1Azbao6HZXUPl6zDp9t+lzwF1skJcbB07MzD2VlZaGkpASShyLAScWzc2dOwcMjIjWpuTSWnHxTqvK9Uyc1eSWekxh/XWdMapBnIlKaHRfJ6bQECgpBHV9+GynhwtuIzKYgQ2QuMku1SM0vfDEL5SX3RGgbzAS4cfM2wmvtwOXg9QatRe0OZLAQsfZ6c4EIa88g/1YCTi4bY1BXW0AW6ZULFpqoLjraDyjV27TxQL++ftz8V+ByAY5/MzmlE9nPv9gsPl/y2MiRI5jj+Hh7c5sAFrRRTWApy9ko9Ki4urrAza2V5qCPQlPo92r3Tuc8O3fvYTnp4uOtPmgsLb2P02E/M7Emcv3DyR+xaPFSHDkaKgioieAqzsj6PRJxJ3dxOFKntNW4ffkM8lLUQGNiLAybWanDLM1Rfq9AmkrvvSQ3i8FCg50GTuDsi8jsnWvndeRNxOGfiSDFVLRtUipNxb33ELh08hVcqBHuXNXVZQEDF1lp9ZP0MPQeFHZeHT4Kl6Ki9b7WMyILojMZ+qZTIa+z+uO1XCeyTNlSZmYWE9w9u3fiZf+XkJefj5f8ByIxUf2t9/BwR5o4r2khQldqahrrSmn1ssAV+HTDRhHizOHr6wtLEerCzpxBdVU1li5ZhOnTpgqiexcnl7+Joky1JzOzsIJIa0Q6XcK2rJs44aUP98LO9WlUVZThu6l9+WyGCDBlSn5TNmjS6u5j5qLTK2qyTsoHhSxxIfIszbr6CW4kvBWd1wivY9W4KUZsUmdqP69/V5z1/CzCohWfKvsvpVR/MVJ+OSoId2N49BmK4pwMZMaGC90ifq5Bq0OZ43DjDy6yAPMHdow2RBu8fv0GnD13HpdjYnizXF1dMW7cWMycPl2EHmudZ/l0QxC+3RciDtniQQSYyG3AlA8wdMhgjVxSUrI41Z0pfpuKQIU4IBw2dAinzFOnzWQZCTDUWPfJegSHiEND8RMFeS/iSLNnzcA7kyexhyEZ4ixRu5cj49oFlIoNpmIpMiDn9t3hKzIV7d+UKCWOO7FTHMRd52/9qM2XEPK+L9t4FDCqG5dxbtMM5kFk06WzL1p5/wPRe1bqAIbkYvYHiVQ6gs9r6OCQ+Mp5oUuZFhVK7Slkng0K4Pb/LWD47R5cyGNUiV1zaNJEu1tvnUKXtbW15oxGnxCRaVMRVqRzHH0yUh8R3OrqKgEYZ6lL752yj6rKchGqXPSOS50kZy5CFJFlQ6UkL4vTY0NZDXsPsT7EoaRCYC4TXqURE17xy6rMUm8Ps+qXUziXro6Phub2a+WBBb2Ml4obeh5lXP4KyCK9+szXFiykK0dW31xK35NfgXoDhrxGbYsc2draVOSMuwL1DknGfVxltie9AvX2ME/6BZT5jbsCCmCMu94NfjYFMA1+C437AgpgjLveDX42BTANfguN+wIKYIy73g1+NgUwDX4LjfsCCmCMu94NfjYFMA1+C437Av8FN6uGdsTxhAkAAAAASUVORK5CYII=" alt="CodeStrata" width="140" height="40">
+<p class="hero-eyebrow" aria-label="Report edition">Community Edition · Deterministic</p>
+<h1 class="report-title">Engineering Assessment</h1>
+<p class="hero-lede">Engineering Intelligence for the current repository state. Optional AI enhancements do not replace findings or recommendations.</p>
+</div>
+<div class="hero-meta report-identity">
+<div class="meta-item"><span class="meta-label">Repository</span><span class="meta-value">spring-<wbr>petclinic</span></div>
+<div class="meta-item"><span class="meta-label">Generated</span><span class="meta-value">2026-<wbr>07-<wbr>31 22:<wbr>37 UTC</span></div>
+<div class="meta-item"><span class="meta-label">Report version</span><span class="meta-value">3.<wbr>0</span></div>
+<div class="meta-item"><span class="meta-label">Assessment mode</span><span class="meta-value">Deterministic</span></div>
+<div class="meta-item"><span class="meta-label">AI status</span><span class="meta-value">not_<wbr>requested</span></div>
+</div>
+<div class="hero-kpis">
+<article class="kpi kpi-severity-medium"><p class="kpi-label">Highest Finding Severity</p><p class="kpi-value">Medium</p></article>
+<article class="kpi kpi-cloud"><p class="kpi-label">Cloud Enablement Signals</p><p class="kpi-value">2 of 7</p><span class="kpi-hint">Established</span></article>
+<article class="kpi kpi-cicd"><p class="kpi-label">CI/CD</p><p class="kpi-value">Detected</p></article>
+</div>
+</header>
+<nav class="toc" id="contents" aria-label="Table of contents">
+<p class="section-eyebrow" aria-hidden="true"><span>00</span> // CONTENTS</p>
+<div class="section-head"><h2>Contents</h2></div>
+<ol>
+<li><a href="#leadership-verdict">Leadership Verdict</a></li>
+<li><a href="#executive-summary">Executive Summary</a></li>
+<li><a href="#engineering-intelligence-summary">Engineering Intelligence Summary</a></li>
+<li><a href="#key-takeaways">Key Takeaways</a></li>
+<li><a href="#priority-actions">Priority Actions</a></li>
+<li><a href="#engineering-risks">Engineering Risks</a></li>
+<li><a href="#assessment-results">Assessment Results</a></li>
+<li><a href="#technology-inventory">Technology Inventory</a></li>
+<li><a href="#architecture-intelligence">Architecture Intelligence</a></li>
+<li><a href="#technical-debt-intelligence">Technical Debt Intelligence</a></li>
+<li><a href="#dependency-intelligence">Dependency Intelligence</a></li>
+<li><a href="#security-intelligence">Security Intelligence</a></li>
+<li><a href="#cloud-readiness">Cloud Readiness</a></li>
+<li><a href="#ai-readiness">AI Readiness</a></li>
+<li><a href="#modernization-assessment">Modernization Assessment</a></li>
+<li><a href="#phased-modernization-plan">Roadmap</a></li>
+<li><a href="#technical-appendix">Technical Appendix</a></li>
+</ol>
+</nav>
+<section class="section section-verdict" id="leadership-verdict">
+<div class="section-head"><h2>Leadership Verdict</h2></div>
+<p class="verdict-body">Overall assessment signals include medium-severity findings and are not risk-free (highest finding severity: Medium). Primary engineering risk: Framework concerns are leaking into the domain model, with 6 additional medium-or-higher signal(s). Immediate recommendation: address the highest-severity risks before expanding platform work.</p>
+</section>
+<section class="section" id="executive-summary">
+<p class="section-eyebrow" aria-hidden="true"><span>01</span> // EXECUTIVE SUMMARY</p>
+<div class="section-head"><h2>Executive Summary</h2></div>
+<p class="section-note">Leadership narrative for the assessed repository.</p><div class="exec-narrative">
+<h3>Should I care?</h3>
+<p>Yes, with measured urgency—Gradle, Maven, Spring Boot, Java has medium-severity engineering risks that are actionable now.</p>
+<h3>Why now?</h3>
+<p>Addressing them now protects delivery confidence and avoids carrying avoidable debt into modernization work.</p>
+<h3>What should my team do next?</h3>
+<p>Review Engineering Risks and close the highest-severity items first.</p>
+</div>
+</section>
+<section class="section" id="engineering-intelligence-summary">
+<p class="section-eyebrow" aria-hidden="true"><span>02</span> // ENGINEERING INTELLIGENCE SUMMARY</p>
+<div class="section-head"><h2>Engineering Intelligence Summary</h2></div>
+<p class="section-note">One-page synthesis of enabled assessment heads. Does not introduce new conclusions.</p><div class='domain-header'><span class='status-badge status-badge-partial'>Partially assessed</span><span class='muted'>The assessment summarizes deterministic observations from the enabled assessment heads.</span></div>
+<div class="eis-intel-group" data-group="overall_status">
+<h4>Overall assessment status</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Checks assessed</td><td>52</td><td>—</td></tr><tr><td>Assessment heads with results</td><td>7 / 8</td><td>Counts reflect enabled assessment heads only</td></tr><tr><td>Findings</td><td>26</td><td>—</td></tr><tr><td>Recommendations</td><td>14</td><td>—</td></tr><tr><td>Priority Actions</td><td>0</td><td>Canonical Priority Actions; see Priority Actions section</td></tr><tr><td>Highest finding severity</td><td>Medium</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="eis-intel-group" data-group="assessment_heads">
+<h4>Assessment heads assessed</h4>
+<p class="muted">Status and counts from each assessment head. Detailed findings remain in Assessment Results.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Assessment head</th><th>Status</th><th>Findings</th><th>Recommendations</th><th>Confidence</th><th>Coverage</th></tr></thead>
+<tbody><tr><td><a class="id-link" href="#technology-inventory">Technology Inventory</a></td><td>Inventory generated</td><td>0</td><td>0</td><td>High confidence</td><td>No findings reported</td></tr><tr><td><a class="id-link" href="#architecture-intelligence">Architecture Intelligence</a></td><td>Succeeded</td><td>8</td><td>3</td><td>Confidence unavailable</td><td>Legacy or inline evidence</td></tr><tr><td><a class="id-link" href="#technical-debt-intelligence">Technical Debt Intelligence</a></td><td>Succeeded</td><td>5</td><td>1</td><td>Confidence unavailable</td><td>Evidence available</td></tr><tr><td><a class="id-link" href="#dependency-intelligence">Dependency Intelligence</a></td><td>Succeeded</td><td>1</td><td>3</td><td>Confidence unavailable</td><td>Legacy or inline evidence</td></tr><tr><td><a class="id-link" href="#security-intelligence">Security Intelligence</a></td><td>Partially succeeded</td><td>0</td><td>6</td><td>Confidence unavailable</td><td>No findings reported</td></tr><tr><td><a class="id-link" href="#cloud-readiness">Cloud Readiness</a></td><td>Succeeded</td><td>9</td><td>1</td><td>Confidence unavailable</td><td>Legacy or inline evidence</td></tr><tr><td><a class="id-link" href="#ai-readiness">AI Readiness</a></td><td>Not available</td><td>0</td><td>0</td><td>Confidence unavailable</td><td>Evidence unavailable</td></tr><tr><td><a class="id-link" href="#modernization-assessment">Modernization Assessment</a></td><td>Partially assessed</td><td>2</td><td>0</td><td>Confidence unavailable</td><td>Legacy or inline evidence</td></tr></tbody>
+</table></div>
+</div>
+<div class="eis-intel-group" data-group="observations">
+<h4>High-level engineering observations</h4>
+<ul class="plain"><li>7 assessment head(s) contributed deterministic results within the assessed scope.</li><li>26 finding(s) and 14 recommendation(s) were produced across enabled assessment heads.</li><li>0 Priority Action(s) were produced from grounded recommendations.</li><li>Highest finding severity observed: Medium.</li><li>1 roadmap phase(s) are represented in the Priority Action-backed plan.</li><li>Findings by severity — medium: 7; low: 2; info: 11; informational: 6.</li></ul>
+</div>
+<div class="eis-intel-group" data-group="cross_head">
+<h4>Cross-head summary</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Total findings</td><td>26</td><td>—</td></tr><tr><td>Total recommendations</td><td>14</td><td>—</td></tr><tr><td>Total Priority Actions</td><td>0</td><td>—</td></tr><tr><td>Roadmap phases</td><td>1</td><td>—</td></tr><tr><td>Roadmap initiatives</td><td>1</td><td>—</td></tr><tr><td>Contributing assessment heads</td><td>7</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="eis-intel-group" data-group="priority_actions">
+<h4>Priority Action summary</h4>
+<p><strong>Total actions:</strong> 0. Full detail remains in <a class="id-link" href="#priority-actions">Priority Actions</a>.</p>
+<div class="split">
+<div><h5>By priority</h5><ul class="plain"><li>None</li></ul></div>
+<div><h5>By horizon</h5><ul class="plain"><li>None</li></ul></div>
+</div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Technology Inventory</td><td>assessed</td><td>No findings reported</td><td>High confidence</td></tr><tr><td>Architecture Intelligence</td><td>assessed</td><td>Legacy or inline evidence</td><td>Confidence unavailable</td></tr><tr><td>Technical Debt Intelligence</td><td>assessed</td><td>Evidence available</td><td>Confidence unavailable</td></tr><tr><td>Dependency Intelligence</td><td>assessed</td><td>Legacy or inline evidence</td><td>Confidence unavailable</td></tr><tr><td>Security Intelligence</td><td>partially_assessed</td><td>No findings reported</td><td>Confidence unavailable</td></tr><tr><td>Cloud Readiness</td><td>assessed</td><td>Legacy or inline evidence</td><td>Confidence unavailable</td></tr><tr><td>AI Readiness</td><td>not_available</td><td>Evidence unavailable</td><td>Confidence unavailable</td></tr><tr><td>Modernization Assessment</td><td>partially_assessed</td><td>Legacy or inline evidence</td><td>Confidence unavailable</td></tr><tr><td>Priority Actions</td><td>none_reported</td><td>0</td><td>Canonical Priority Action universe</td></tr><tr><td>Roadmap</td><td>available</td><td>1 phase(s), 1 initiative(s)</td><td>Planning guidance only; see Roadmap section</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+<p class="muted">Weakest-signal confidence across contributing assessment heads.</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Based only on enabled assessment heads.</li><li>Runtime behavior not evaluated.</li><li>Disabled heads reduce completeness.</li><li>Some assessment heads were not enabled or not available, which reduces completeness.</li><li>Technology Inventory lists detections from this assessment only. It is not an assessment of modernity, readiness, or architecture quality.</li><li>Some detected technologies do not include an exact version.</li><li>version unavailable</li><li>Detailed evidence mapping is not yet available for this assessment area.</li><li>Architecture Intelligence reflects static repository structure only.</li><li>Runtime architecture, deployed topology, and service behavior were not assessed.</li><li>Layer or boundary classification coverage is incomplete for some units.</li><li>Architecture assessment is based on static analysis of source dependencies and declared structure. Runtime behavior is not observed.</li><li>Architecture strengths remain empty until explicit positive evidence providers and conclusions are enabled.</li><li>No runtime traces, production telemetry, or load behavior were assessed.</li><li>Business impact remains unknown because Engineering Knowledge Graph context was not supplied.</li><li>The assessed scope focused on static complexity signals.</li><li>Broader technical debt categories were not evaluated.</li><li>Duplication, deprecated technology, upgrade risk, and runtime maintainability were not assessed.</li><li>Remediation cost, rewrite effort, and delivery impact were not estimated.</li><li>Business impact remains unknown for repository-only technical debt assessment without explicit enterprise context.</li><li>No engineering-hours, staffing, or schedule estimate is produced by this assessment section.</li><li>No financial cost, interest-rate, or dollar estimate is computed for technical debt.</li><li>Paths under .codestrata/ and other shared ignore markers are excluded from complexity measurement.</li><li>Cognitive complexity is not measured. Branch-point counts are structural keyword/operator counts, not certified cyclomatic products.</li><li>Technical debt findings are based on static repository evidence. Runtime behavior and productivity loss are not observed.</li><li>Only declaration hygiene was assessed for supported ecosystems.</li><li>No registry lookups, CVE analysis, license validation, or dependency freshness checks were performed.</li><li>Supported ecosystems and package managers only; unsupported manifests may be omitted.</li><li>npm / package.json ecosystems are out of scope for this milestone. No framework or DependencyRole classification is inferred.</li><li>Business impact remains unknown without explicit enterprise context for dependency assessment.</li><li>Declared vs latest version comparison is not performed.</li><li>Dependency Intelligence does not reparse Maven, Gradle, or Python manifests. Rules consume Dependency Evidence only.</li><li>Inventory and hygiene cover declared-manifest facts only. Transitive dependencies are not resolved. Build tools are not executed. Gradle support is static-parse only.</li><li>Some manifests failed or partially parsed; declaration hygiene coverage may be incomplete.</li><li>Static repository assessment only.</li><li>Runtime security was not evaluated.</li><li>No penetration testing was performed.</li><li>No DAST was performed.</li><li>No full commercial SAST analysis was performed.</li><li>No network exposure was assessed.</li><li>No vulnerability database lookup was performed.</li><li>No CVE analysis was performed.</li><li>No compliance certification was performed.</li><li>No cloud runtime configuration was inspected.</li><li>Absence of findings does not prove absence of risk.</li><li>Sensitive literal observations are not validated live credentials.</li><li>Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment.</li><li>No git-history security analysis is performed.</li><li>No taint or data-flow analysis is performed.</li><li>Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules.</li><li>Business impact remains unknown for hygiene findings.</li><li>No runtime security analysis or secret validity checks.</li><li>No package registry access is performed.</li><li>No external vulnerability metadata, CVE, or package registry queries.</li><li>No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis.</li><li>Security coverage was partial for this assessment.</li><li>Some files were malformed or skipped; security hygiene coverage may be incomplete.</li><li>No security findings were produced within the assessed repository scope.</li><li>Repository evidence only.</li><li>No cloud-provider API calls.</li><li>No live infrastructure inspection.</li><li>No deployed runtime state.</li><li>No network or identity posture inspection.</li><li>No cost analysis.</li><li>No resilience or availability validation.</li><li>No runtime scalability assessment.</li><li>Externalized configuration not fully assessed.</li><li>Statelessness not fully assessed.</li><li>No numeric cloud-readiness score.</li><li>Detected declarations do not prove successful deployment.</li><li>Application statelessness is not evaluated.</li><li>Cloud Hygiene rules consume AggregatedRepositoryCloudEvidence only; inventory never re-reads repository files or calls cloud provider APIs.</li><li>Configuration externalization is not evaluated.</li><li>Assessment not currently available for this section.</li><li>Modernization Assessment is a synthesis of deterministic findings, recommendations, Priority Actions, and roadmap initiatives from enabled assessment heads.</li><li>Modernization Assessment is derived from enabled assessment heads.</li><li>Disabled or unavailable heads reduce completeness.</li><li>No delivery estimate was produced.</li><li>No cost estimate was produced.</li><li>No staffing estimate was produced.</li><li>No business-case or ROI analysis was performed.</li><li>No runtime transformation validation was performed.</li><li>Roadmap sequencing is deterministic guidance, not a delivery commitment.</li><li>Legacy entities may have limited traceability.</li><li>Absence of Priority Actions does not establish absence of modernization need.</li><li>Some initiatives lack supporting finding IDs because source recommendations were not finding-grounded.</li><li>14 finding(s) are not referenced by any roadmap initiative recommendation.</li><li>Does not produce schedules, dates, cost estimates, or portfolio plans.</li><li>Does not mutate repositories or create external tracker tickets.</li><li>Does not invent findings or recommendations beyond the provided inputs.</li><li>Roadmap initiatives are derived only from existing assessment findings and recommendations; assessments are not re-run.</li><li>Phase assignment is deterministic from recommendation category (stabilize / secure / modernize / optimize).</li><li>Priority, effort, and risk are mapped from recommendation and finding attributes using fixed rules (no AI estimation).</li><li>Cross-phase dependencies follow Stabilize → Secure → Modernize → Optimize.</li><li>No deterministic modernization Priority Actions were produced from the assessed scope. Absence of Priority Actions does not establish absence of modernization need.</li><li>Legacy roadmap items are visibly marked and may have limited traceability.</li><li>Some assessment results could not yet be assigned to a customer-facing assessment section.</li></ul>
+</div>
+</div>
+</section>
+<section class="section" id="key-takeaways">
+<p class="section-eyebrow" aria-hidden="true"><span>03</span> // KEY TAKEAWAYS</p>
+<div class="section-head"><h2>Key Takeaways</h2></div>
+<p class="section-note">Concise leadership bullets for scanning and handoff.</p><ul class="takeaways">
+<li>Highest engineering risk: Framework concerns are leaking into the domain model (medium).</li>
+<li>No Priority Actions were produced; address findings directly where present.</li>
+<li>Delivery readiness — tests: 20; CI/CD: Detected.</li>
+<li>Cloud readiness signal: 2 of 7.</li>
+</ul>
+</section>
+<section class="section" id="priority-actions">
+<p class="section-eyebrow" aria-hidden="true"><span>04</span> // PRIORITY ACTIONS</p>
+<div class="section-head"><h2>Priority Actions</h2></div>
+<p class="section-note">Priority-ordered actions linked to findings. Order matches the Roadmap section below.</p><p class="muted">No Priority Actions were produced for this assessment. Findings may still appear above when present.</p>
+</section>
+<section class="section" id="engineering-risks">
+<p class="section-eyebrow" aria-hidden="true"><span>05</span> // ENGINEERING RISKS</p>
+<div class="section-head"><h2>Engineering Risks</h2></div>
+<p class="section-note">Meaningful risks grouped by theme.</p><div class="risk-theme"><h3>Architecture</h3><ul class="plain"><li>Framework concerns are leaking into the domain model (medium)</li></ul></div>
+<div class="risk-theme"><h3>Technical debt</h3><ul class="plain"><li>Complex branching is increasing change risk (medium)</li><li>Oversized methods are hard to change safely (medium)</li></ul></div>
+<div class="risk-theme"><h3>Testing</h3><ul class="plain"><li>Skipped or disabled tests are weakening delivery confidence (medium)</li></ul></div>
+</section>
+<section class="section assessment-results" id="assessment-results">
+<p class="section-eyebrow" aria-hidden="true"><span>06</span> // ASSESSMENT RESULTS</p>
+<div class="section-head"><h2>Assessment Results</h2></div>
+<p class="section-note">Customer-facing assessment heads with coverage, pack content, and linked findings or recommendations.</p><section class="subsection" id="technology-inventory">
+<div class="section-head"><h3>Technology Inventory</h3></div>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Inventory generated</dd></div>
+<div><dt>Findings</dt><dd>0</dd></div>
+<div><dt>Recommendations</dt><dd>0</dd></div>
+<div><dt>Evidence</dt><dd>No findings reported</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class="tech-inventory-group" data-group="languages">
+<h4>Languages</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Type</th><th>Version</th><th>Version state</th><th>Confidence</th><th>Evidence</th></tr></thead>
+<tbody><tr><td>Java</td><td>language</td><td>17</td><td>Exact detected version</td><td>High</td><td><code class="trace-id">file_extension</code></td></tr></tbody>
+</table></div>
+</div>
+<div class="tech-inventory-group" data-group="frameworks_libraries">
+<h4>Frameworks and major libraries</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Type</th><th>Version</th><th>Version state</th><th>Confidence</th><th>Evidence</th></tr></thead>
+<tbody><tr><td>JUnit</td><td>testing</td><td>—</td><td>Version unavailable</td><td>High</td><td><code class="trace-id">pom.xml</code></td></tr><tr><td>Spring Boot</td><td>framework</td><td>4.1.0</td><td>Exact detected version</td><td>High</td><td><code class="trace-id">pom.xml</code></td></tr></tbody>
+</table></div>
+</div>
+<div class="tech-inventory-group" data-group="build_package">
+<h4>Build and package systems</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Type</th><th>Version</th><th>Version state</th><th>Confidence</th><th>Evidence</th></tr></thead>
+<tbody><tr><td>Gradle</td><td>build tool</td><td>—</td><td>Version unavailable</td><td>High</td><td><code class="trace-id">build.gradle</code>, <code class="trace-id">gradlew</code>, <code class="trace-id">gradlew.bat</code>, <code class="trace-id">settings.gradle</code></td></tr><tr><td>Maven</td><td>build tool</td><td>—</td><td>Version unavailable</td><td>High</td><td><code class="trace-id">pom.xml</code></td></tr></tbody>
+</table></div>
+</div>
+<div class="tech-inventory-group" data-group="dependency_ecosystems">
+<h4>Dependency ecosystems</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Type</th><th>Version</th><th>Version state</th><th>Confidence</th><th>Evidence</th></tr></thead>
+<tbody><tr><td>gradle</td><td>ecosystem</td><td>—</td><td>Version unavailable</td><td>Unavailable</td><td><code class="trace-id">build.gradle</code></td></tr><tr><td>maven</td><td>ecosystem</td><td>—</td><td>Version unavailable</td><td>Unavailable</td><td><code class="trace-id">pom.xml</code></td></tr></tbody>
+</table></div>
+</div>
+<div class="tech-inventory-group" data-group="repository_composition">
+<h4>Repository composition</h4>
+<p class="muted">Counts reflect files observed during this assessment scan. They are not a certification of production deployment scope.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th>Value</th></tr></thead>
+<tbody><tr><td>Total analyzed files</td><td>131</td></tr><tr><td>Source files observed</td><td>49</td></tr><tr><td>Test files observed</td><td>20</td></tr><tr><td>Application / service indicators</td><td>1</td></tr><tr><td>Dependency manifests</td><td><code class="trace-id">build.gradle</code>, <code class="trace-id">pom.xml</code></td></tr><tr><td>Build files</td><td><code class="trace-id">build.gradle</code>, <code class="trace-id">pom.xml</code>, <code class="trace-id">settings.gradle</code></td></tr><tr><td>Dependency ecosystems</td><td>gradle, maven</td></tr></tbody>
+</table></div>
+</div>
+<div class="table-card">
+<h4>Runtime and platform version highlights</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Label</th><th>Value</th><th>Kind</th></tr></thead>
+<tbody><tr><td>Java language level</td><td>17</td><td>runtime</td></tr><tr><td>Spring Boot</td><td>4.<wbr>1.<wbr>0</td><td>framework</td></tr><tr><td>Maven: org.springframework.boot:spring-boot-starter-parent</td><td>4.<wbr>1.<wbr>0</td><td>dependency</td></tr><tr><td>Maven: org.webjars:webjars-locator-lite</td><td>1.<wbr>1.<wbr>3</td><td>dependency</td></tr><tr><td>Maven: org.webjars.npm:bootstrap</td><td>5.<wbr>3.<wbr>8</td><td>dependency</td></tr><tr><td>Maven: org.webjars.npm:font-awesome</td><td>4.<wbr>7.<wbr>0</td><td>dependency</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Technology inventory</td><td>inventory_generated</td><td>5 inventoried fact(s)</td><td>Inventory generated</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>High</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Technology Inventory lists detections from this assessment only. It is not an assessment of modernity, readiness, or architecture quality.</li><li>Some detected technologies do not include an exact version.</li><li>version unavailable</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="architecture-intelligence">
+<div class="section-head"><h3>Architecture Intelligence</h3></div>
+<span id="architecture-assessment" class="section-anchor-only" aria-hidden="true">Architecture Assessment</span>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Succeeded</dd></div>
+<div><dt>Findings</dt><dd>8</dd></div>
+<div><dt>Recommendations</dt><dd>3</dd></div>
+<div><dt>Evidence</dt><dd>Legacy or inline evidence</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge'>Succeeded</span><span class='muted'>Architecture assessment completed using static repository evidence.</span></div>
+<div class="arch-intel-group" data-group="architecture_overview">
+<h4>Architecture overview</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Assessment status</td><td>Succeeded</td><td>—</td></tr><tr><td>Assessment scope</td><td>Repository-level static architecture assessment for spring-petclinic</td><td>Static repository evidence only</td></tr><tr><td>Architecture findings</td><td>8</td><td>Zero findings do not certify healthy architecture</td></tr><tr><td>Architecture recommendations</td><td>3</td><td>—</td></tr><tr><td>Architecture conclusions</td><td>3</td><td>—</td></tr><tr><td>Observed structural units</td><td>6</td><td>Derived from finding and conclusion affected scopes</td></tr><tr><td>Extraction coverage</td><td>Complete for the analyzed source set.</td><td>—</td></tr><tr><td>Classification coverage</td><td>Partial (33.3%).</td><td>Partial coverage; interpret conclusions as provisional where noted.</td></tr></tbody>
+</table></div>
+</div>
+<div class="arch-intel-group" data-group="structural_inventory">
+<h4>Structural inventory</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Kind</th><th>Detail</th></tr></thead>
+<tbody><tr><td>Architecture graph fingerprint</td><td>graph signal</td><td>present</td></tr><tr><td>jakarta.persistence</td><td>observed unit</td><td>—</td></tr><tr><td>jpa</td><td>observed unit</td><td>—</td></tr><tr><td>org.springframework.samples.petclinic.model</td><td>observed unit</td><td>—</td></tr><tr><td>src/main/java/org/springframework/samples/petclinic/model/baseentity.java</td><td>observed unit</td><td>—</td></tr><tr><td>src/main/java/org/springframework/samples/petclinic/model/namedentity.java</td><td>observed unit</td><td>—</td></tr><tr><td>src/main/java/org/springframework/samples/petclinic/model/person.java</td><td>observed unit</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<h4>Architecture conclusions</h4>
+<article class='content-card conclusion-card card'><h4>Framework types appear in an independent boundary</h4><p>Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/namedentity.java.</p><p class='muted technical-metadata'>Confidence: medium</p><p class='muted'>Highest medium; 1 source finding</p><p class='muted'>Scope: jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/namedentity.java</p><p class="trace-line">Supporting findings: <a class="id-link" href="#finding-finding:architecture.framework-leakage:5bb3e2050ce9380f">finding:architecture.framework-leakage:5bb3e2050ce9380f</a></p></article>
+<div class="arch-intel-group" data-group="key_architecture_findings">
+<h4>Key architecture findings</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Scope</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#finding-id-2d4a6fdb-ff31-5a14-b5ce-39ea4bad3819'>API layer detected</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-ec53dcfb-d3e4-51f9-a6d4-3d967e079a0f'>Application architecture components detected</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-id-9b006163-bf37-51d5-b962-c08552b6d9a2'>Persistence layer detected</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-id-70a71619-37ad-58f6-9f2f-cebfa943796a'>Single-application architecture detected</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-aadc8c94-9d99-5a4b-a7c1-d104ac83568f'>Test structure detected</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:architecture.framework-leakage:2e7d513b52a76df5'>Framework symbol in domain boundary</a></td><td>medium</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:architecture.framework-leakage:5bb3e2050ce9380f'>Framework symbol in domain boundary</a></td><td>medium</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:architecture.framework-leakage:6bc8d09be1063a9c'>Framework symbol in domain boundary</a></td><td>medium</td><td>unavailable</td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="arch-intel-group" data-group="architecture_recommendations">
+<h4>Architecture recommendations</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Recommendation</th><th>Priority</th><th>Supporting findings</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#recommendation-recgroup:7f0e7eaef58ccb71'>Respond to: Framework types appear in an independent boundary</a></td><td>—</td><td><a class="id-link" href="#finding-finding:architecture.framework-leakage:2e7d513b52a76df5">finding:architecture.framework-leakage:2e7d513b52a76df5</a></td></tr><tr><td><a class='id-link' href='#recommendation-recgroup:ace7cff029c9130a'>Respond to: Framework types appear in an independent boundary</a></td><td>—</td><td><a class="id-link" href="#finding-finding:architecture.framework-leakage:6bc8d09be1063a9c">finding:architecture.framework-leakage:6bc8d09be1063a9c</a></td></tr><tr><td><a class='id-link' href='#recommendation-recgroup:d09f474212b88b4f'>Respond to: Framework types appear in an independent boundary</a></td><td>—</td><td><a class="id-link" href="#finding-finding:architecture.framework-leakage:5bb3e2050ce9380f">finding:architecture.framework-leakage:5bb3e2050ce9380f</a></td></tr></tbody>
+</table></div>
+</div>
+<div class="arch-intel-group" data-group="graph_evidence">
+<h4>Graph and relationship evidence</h4>
+<p class="muted">Compact graph references only. Full graph payloads are not embedded.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Identity</th><th>Relationship</th><th>Kind</th><th>Cycle</th><th>Location</th><th>Graph ref</th></tr></thead>
+<tbody><tr><td>conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d → finding:architecture.framework-leakage:5bb3e2050ce9380f</td><td>conclusion_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268 → finding:architecture.framework-leakage:2e7d513b52a76df5</td><td>conclusion_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d → finding:architecture.framework-leakage:6bc8d09be1063a9c</td><td>conclusion_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>finding:architecture.framework-leakage:2e7d513b52a76df5 → jakarta.persistence</td><td>finding_to_evidence</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>finding:architecture.framework-leakage:5bb3e2050ce9380f → jakarta.persistence</td><td>finding_to_evidence</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>finding:architecture.framework-leakage:6bc8d09be1063a9c → jakarta.persistence</td><td>finding_to_evidence</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:7f0e7eaef58ccb71 → finding:architecture.framework-leakage:2e7d513b52a76df5</td><td>recommendation_group_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:ace7cff029c9130a → finding:architecture.framework-leakage:6bc8d09be1063a9c</td><td>recommendation_group_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:d09f474212b88b4f → finding:architecture.framework-leakage:5bb3e2050ce9380f</td><td>recommendation_group_to_finding</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:7f0e7eaef58ccb71 → finding-remediation:finding:architecture.framework-leakage:2e7d513b52a76df5</td><td>recommendation_group_to_recommendation</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:ace7cff029c9130a → finding-remediation:finding:architecture.framework-leakage:6bc8d09be1063a9c</td><td>recommendation_group_to_recommendation</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr><tr><td>recgroup:d09f474212b88b4f → finding-remediation:finding:architecture.framework-leakage:5bb3e2050ce9380f</td><td>recommendation_group_to_recommendation</td><td>traceability_edge</td><td>—</td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Build-metadata coverage</td><td>unsupported</td><td>Not measured by the current provider set.</td><td>Build-metadata coverage is not measured here.</td></tr><tr><td>Classification coverage</td><td>partial</td><td>Partial (33.3%).</td><td>Partial coverage; interpret conclusions as provisional where noted.</td></tr><tr><td>Enterprise-context coverage</td><td>not_applicable</td><td>Enterprise context was not supplied for this repository assessment.</td><td>Enterprise context was not supplied.</td></tr><tr><td>Extraction coverage</td><td>measured</td><td>Complete for the analyzed source set.</td><td>—</td></tr><tr><td>Framework coverage</td><td>unsupported</td><td>Not measured by the current provider set.</td><td>Framework coverage is not yet measured as a ratio.</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Architecture Intelligence reflects static repository structure only.</li><li>Runtime architecture, deployed topology, and service behavior were not assessed.</li><li>Layer or boundary classification coverage is incomplete for some units.</li><li>Architecture assessment is based on static analysis of source dependencies and declared structure. Runtime behavior is not observed.</li><li>Architecture strengths remain empty until explicit positive evidence providers and conclusions are enabled.</li><li>No runtime traces, production telemetry, or load behavior were assessed.</li><li>Business impact remains unknown because Engineering Knowledge Graph context was not supplied.</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="technical-debt-intelligence">
+<div class="section-head"><h3>Technical Debt Intelligence</h3></div>
+<span id="technical-debt-assessment" class="section-anchor-only" aria-hidden="true">Technical Debt Assessment</span>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Succeeded</dd></div>
+<div><dt>Findings</dt><dd>5</dd></div>
+<div><dt>Recommendations</dt><dd>1</dd></div>
+<div><dt>Evidence</dt><dd>Evidence available</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge'>Succeeded</span><span class='muted'>Technical debt assessment completed using static complexity evidence.</span></div>
+<div class="td-intel-group" data-group="technical_debt_overview">
+<h4>Technical debt overview</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Assessment status</td><td>Succeeded</td><td>—</td></tr><tr><td>Assessment scope</td><td>Repository-level static technical debt assessment for spring-petclinic</td><td>Static complexity signals only</td></tr><tr><td>Technical debt findings</td><td>5</td><td>Zero findings do not certify low technical debt</td></tr><tr><td>Hotspots</td><td>3</td><td>Only findings with supporting evidence are listed</td></tr><tr><td>Measured evidence</td><td>3</td><td>—</td></tr><tr><td>Threshold exceedances</td><td>3</td><td>—</td></tr><tr><td>Affected paths</td><td>2</td><td>—</td></tr><tr><td>Affected symbols</td><td>0</td><td>—</td></tr><tr><td>Technical debt recommendations</td><td>1</td><td>—</td></tr><tr><td>Complexity coverage</td><td>Complete for the analyzed source set.</td><td>files_excluded=0</td></tr><tr><td>Debt rule coverage</td><td>Unavailable</td><td>Complexity SharedRules evaluated against collected evidence.</td></tr></tbody>
+</table></div>
+</div>
+<div class="td-intel-group" data-group="technical_debt_measurements">
+<h4>Technical debt measurements</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th>Observed</th><th>Operator</th><th>Threshold</th><th>Scope</th><th>Location</th><th>Availability</th><th>Limitations</th></tr></thead>
+<tbody><tr><td>branch_point_count</td><td>13</td><td>gt</td><td>10</td><td>callable</td><td><code class="trace-id">src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java</code></td><td>available</td><td>snippet_omitted_unverified_redaction</td></tr><tr><td>physical_line_count</td><td>51</td><td>gt</td><td>50</td><td>callable</td><td><code class="trace-id">src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java</code></td><td>available</td><td>snippet_omitted_unverified_redaction</td></tr><tr><td>physical_line_count</td><td>93</td><td>gt</td><td>50</td><td>callable</td><td><code class="trace-id">src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java</code></td><td>available</td><td>snippet_omitted_unverified_redaction</td></tr></tbody>
+</table></div>
+</div>
+<div class="td-intel-group" data-group="technical_debt_hotspots">
+<h4>Technical debt hotspots</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Path</th><th>Symbol</th><th>Metric</th><th>Value</th><th>Threshold</th><th>Severity</th><th>Confidence</th><th>Finding</th><th>Evidence</th></tr></thead>
+<tbody><tr><td><code class='trace-id'>src/test/java/org/springframework/samples/petclinic/PetClinicConcurrencyTests.java</code></td><td>—</td><td>physical_line_count</td><td>93</td><td>50</td><td>medium</td><td>high</td><td><a class='id-link' href='#finding-finding:technical_debt.large-callable:dae19c3d10a14034'>finding:technical_debt.large-callable:dae19c3d10a14034</a></td><td><a class="id-link" href="#evidence-ev:8b52bb46241393f915168e5e">ev:8b52bb46241393f915168e5e</a></td></tr><tr><td><code class='trace-id'>src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java</code></td><td>—</td><td>branch_point_count</td><td>13</td><td>10</td><td>medium</td><td>high</td><td><a class='id-link' href='#finding-finding:technical_debt.excessive-branching:fca3fe7058044448'>finding:technical_debt.excessive-branching:fca3fe7058044448</a></td><td><a class="id-link" href="#evidence-ev:0e828d3cba28bb66048a1701">ev:0e828d3cba28bb66048a1701</a></td></tr><tr><td><code class='trace-id'>src/test/java/org/springframework/samples/petclinic/system/I18nPropertiesSyncTest.java</code></td><td>—</td><td>physical_line_count</td><td>51</td><td>50</td><td>medium</td><td>high</td><td><a class='id-link' href='#finding-finding:technical_debt.large-callable:ff02d5e666df264a'>finding:technical_debt.large-callable:ff02d5e666df264a</a></td><td><a class="id-link" href="#evidence-ev:2bbc27a7d52ac0e053930f8a">ev:2bbc27a7d52ac0e053930f8a</a></td></tr></tbody>
+</table></div>
+</div>
+<div class="td-intel-group" data-group="key_technical_debt_findings">
+<h4>Key technical debt findings</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Severity</th><th>Confidence</th><th>Evidence</th><th>Scope</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#finding-d25c05b3-261f-502f-aa81-b6ba032f5085'>Build System</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-e80e2275-4ee5-5d41-b739-2f87bd5acce0'>Repository Metrics</a></td><td>info</td><td>unavailable</td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:technical_debt.excessive-branching:fca3fe7058044448'>Excessive branching</a></td><td>medium</td><td>high</td><td><a class="id-link" href="#evidence-ev:0e828d3cba28bb66048a1701">ev:0e828d3cba28bb66048a1701</a></td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:technical_debt.large-callable:dae19c3d10a14034'>Large callable</a></td><td>medium</td><td>high</td><td><a class="id-link" href="#evidence-ev:8b52bb46241393f915168e5e">ev:8b52bb46241393f915168e5e</a></td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:technical_debt.large-callable:ff02d5e666df264a'>Large callable</a></td><td>medium</td><td>high</td><td><a class="id-link" href="#evidence-ev:2bbc27a7d52ac0e053930f8a">ev:2bbc27a7d52ac0e053930f8a</a></td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="td-intel-group" data-group="technical_debt_recommendations">
+<h4>Technical debt recommendations</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Recommendation</th><th>Priority</th><th>Supporting findings</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#recommendation-td-recommendation:43c69b8c48079a10'>Acknowledge empty production complexity inventory</a></td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Complexity coverage</td><td>measured</td><td>Complete for the analyzed source set.</td><td>files_excluded=0</td></tr><tr><td>Debt rule coverage</td><td>measured</td><td>Unavailable</td><td>Complexity SharedRules evaluated against collected evidence.</td></tr><tr><td>Dependency-support coverage</td><td>unsupported</td><td>Not measured by the current provider set.</td><td>Dependency support-window analysis is not implemented.</td></tr><tr><td>Duplication coverage</td><td>unsupported</td><td>Not measured by the current provider set.</td><td>Duplication detection is not implemented.</td></tr><tr><td>Enterprise-context coverage</td><td>not_applicable</td><td>Enterprise context was not supplied for this repository assessment.</td><td>Enterprise context was not supplied for this assessment.</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>The assessed scope focused on static complexity signals.</li><li>Broader technical debt categories were not evaluated.</li><li>Duplication, deprecated technology, upgrade risk, and runtime maintainability were not assessed.</li><li>Remediation cost, rewrite effort, and delivery impact were not estimated.</li><li>Business impact remains unknown for repository-only technical debt assessment without explicit enterprise context.</li><li>No engineering-hours, staffing, or schedule estimate is produced by this assessment section.</li><li>No financial cost, interest-rate, or dollar estimate is computed for technical debt.</li><li>Paths under .codestrata/ and other shared ignore markers are excluded from complexity measurement.</li><li>Cognitive complexity is not measured. Branch-point counts are structural keyword/operator counts, not certified cyclomatic products.</li><li>Technical debt findings are based on static repository evidence. Runtime behavior and productivity loss are not observed.</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="dependency-intelligence">
+<div class="section-head"><h3>Dependency Intelligence</h3></div>
+<span id="dependency-assessment" class="section-anchor-only" aria-hidden="true">Dependency Assessment</span>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Succeeded</dd></div>
+<div><dt>Findings</dt><dd>1</dd></div>
+<div><dt>Recommendations</dt><dd>3</dd></div>
+<div><dt>Evidence</dt><dd>Legacy or inline evidence</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge'>Succeeded</span><span class='muted'>Dependency assessment completed using declared-manifest evidence.</span></div>
+<div class="dep-intel-group" data-group="dependency_overview">
+<h4>Dependency overview</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Assessment status</td><td>Succeeded</td><td>—</td></tr><tr><td>Assessment scope</td><td>Repository-level declared-dependency assessment for spring-petclinic</td><td>Declaration hygiene only</td></tr><tr><td>Dependency hygiene findings</td><td>1</td><td>Zero findings do not mean a healthy or secure dependency posture</td></tr><tr><td>Dependency recommendations</td><td>3</td><td>—</td></tr><tr><td>Detected ecosystems</td><td>2</td><td>—</td></tr><tr><td>Manifest inventory</td><td>2</td><td>—</td></tr><tr><td>Declarations collected</td><td>65</td><td>—</td></tr><tr><td>Supported manifests</td><td>2</td><td>—</td></tr><tr><td>Production active dependencies</td><td>47</td><td>—</td></tr><tr><td>Manifests discovered</td><td>2</td><td>—</td></tr><tr><td>Manifests parsed</td><td>0</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="dep-intel-group" data-group="dependency_ecosystems">
+<h4>Ecosystems</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Ecosystem</th><th>Manifests</th><th>Declarations</th><th>Parse status</th><th>Version availability</th><th>Note</th></tr></thead>
+<tbody><tr><td>gradle</td><td>1</td><td>27</td><td>partially_parsed</td><td>not_applicable</td><td>—</td></tr><tr><td>maven</td><td>1</td><td>38</td><td>partially_parsed</td><td>not_applicable</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="dep-intel-group" data-group="dependency_manifest_inventory">
+<h4>Manifest inventory</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Path</th><th>Ecosystem</th><th>Manifest type</th><th>Parse status</th><th>Findings</th><th>Limitations</th></tr></thead>
+<tbody><tr><td><code class='trace-id'>build.gradle</code></td><td>gradle</td><td>build.gradle</td><td>partial</td><td>0</td><td>—</td></tr><tr><td><code class='trace-id'>pom.xml</code></td><td>maven</td><td>pom.xml</td><td>partial</td><td>0</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="dep-intel-group" data-group="dependency_hygiene_findings">
+<h4>Hygiene findings</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Severity</th><th>Confidence</th><th>Rule</th><th>Path</th><th>Ecosystem</th><th>Evidence</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#finding-e039f3ef-ccd7-5a94-a113-c0612f11d70c'>Dependency locking is not configured</a></td><td>low</td><td>unavailable</td><td><code>DEP003</code></td><td>—</td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="dep-intel-group" data-group="dependency_recommendations">
+<h4>Dependency recommendations</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Recommendation</th><th>Priority</th><th>Supporting findings</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#recommendation-dep-recommendation:5b3af61eccdafc39'>Acknowledge empty production hygiene inventory</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-dep-recommendation:820e3a5ef103fc40'>Add resolved-graph analysis when transitive risk is in scope</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-dep-recommendation:ed953217b5a1a3d4'>Expand Gradle resolution coverage when needed</a></td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Diagnostics</td><td>available</td><td>11</td><td>Diagnostics are coverage signals, not hygiene findings.</td></tr><tr><td>Manifests discovered</td><td>available</td><td>2</td><td>—</td></tr><tr><td>Manifests parsed</td><td>available</td><td>0</td><td>—</td></tr><tr><td>Manifests partially parsed</td><td>partial</td><td>2</td><td>Partial parse does not imply healthy dependencies</td></tr><tr><td>Manifests supported</td><td>available</td><td>2</td><td>—</td></tr><tr><td>Unsupported constructs</td><td>available</td><td>8</td><td>—</td></tr><tr><td>Unsupported resolutions</td><td>available</td><td>6</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Only declaration hygiene was assessed for supported ecosystems.</li><li>No registry lookups, CVE analysis, license validation, or dependency freshness checks were performed.</li><li>Supported ecosystems and package managers only; unsupported manifests may be omitted.</li><li>npm / package.json ecosystems are out of scope for this milestone. No framework or DependencyRole classification is inferred.</li><li>Business impact remains unknown without explicit enterprise context for dependency assessment.</li><li>Declared vs latest version comparison is not performed.</li><li>Dependency Intelligence does not reparse Maven, Gradle, or Python manifests. Rules consume Dependency Evidence only.</li><li>Inventory and hygiene cover declared-manifest facts only. Transitive dependencies are not resolved. Build tools are not executed. Gradle support is static-parse only.</li><li>Some manifests failed or partially parsed; declaration hygiene coverage may be incomplete.</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="security-intelligence">
+<div class="section-head"><h3>Security Intelligence</h3></div>
+<span id="security-assessment" class="section-anchor-only" aria-hidden="true">Security Assessment</span>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Partially succeeded</dd></div>
+<div><dt>Findings</dt><dd>0</dd></div>
+<div><dt>Recommendations</dt><dd>6</dd></div>
+<div><dt>Evidence</dt><dd>No findings reported</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge status-badge-partial'>Partially succeeded</span><span class='muted'>Security assessment produced usable results with partial evidence or rule evaluation limitations.</span></div>
+<div class="sec-intel-group" data-group="security_overview">
+<h4>Security overview</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Assessment status</td><td>Partially succeeded</td><td>—</td></tr><tr><td>Assessment scope</td><td>Repository-level Security hygiene assessment for spring-petclinic</td><td>Static repository-sensitive evidence only</td></tr><tr><td>Security findings</td><td>0</td><td>Zero findings do not mean the repository is secure</td></tr><tr><td>Security recommendations</td><td>6</td><td>—</td></tr><tr><td>Candidate artifacts discovered</td><td>0</td><td>Candidates are not proof of secrets</td></tr><tr><td>Artifacts inspected</td><td>2</td><td>—</td></tr><tr><td>Configuration facts collected</td><td>2</td><td>Fact counts only; values are not shown</td></tr><tr><td>Rules executed</td><td>8</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<p class='muted'>No security findings were produced within the assessed repository scope. This assessment evaluated static repository evidence only. Absence of findings should not be interpreted as absence of security risk. Runtime, network, vulnerability, and penetration-testing coverage was not included.</p>
+<div class="sec-intel-group" data-group="security_recommendations">
+<h4>Security recommendations</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Recommendation</th><th>Priority</th><th>Supporting findings</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#recommendation-sec-recommendation:c0f800150bc404f5'>Acknowledge no production findings in supported scope</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-sec-recommendation:8bb99fc0759fb5c3'>Add external dependency vulnerability analysis</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-sec-recommendation:643c8e09a7c7240f'>Add Git history secret scanning</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-sec-recommendation:8906a030e72c7d6c'>Add runtime security validation</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-sec-recommendation:3889502149a33acf'>Correct malformed supported configuration</a></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#recommendation-sec-recommendation:397aafb039e3ccc9'>Expand supported evidence coverage</a></td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Artifacts inspected</td><td>available</td><td>2</td><td>—</td></tr><tr><td>Candidate artifacts discovered</td><td>available</td><td>0</td><td>Candidates are not proof of secrets</td></tr><tr><td>Configuration facts collected</td><td>available</td><td>2</td><td>Values are not shown</td></tr><tr><td>Coverage note</td><td>available</td><td>Coverage describes supported repository-sensitive evidence only. Candidate artifacts are not proof of secrets. Zero findings are scoped to supported evidence; runtime and Git history are not assessed.</td><td>—</td></tr><tr><td>Evidence status</td><td>partial</td><td>partially_succeeded</td><td>—</td></tr><tr><td>Formats represented</td><td>available</td><td>json, properties, yaml</td><td>—</td></tr><tr><td>Malformed files</td><td>limited</td><td>2</td><td>Parse failures limit security hygiene coverage</td></tr><tr><td>Rules executed</td><td>available</td><td>8</td><td>—</td></tr><tr><td>Rules registered</td><td>available</td><td>8</td><td>—</td></tr><tr><td>Source roles represented</td><td>available</td><td>production</td><td>—</td></tr><tr><td>Structured files parsed</td><td>available</td><td>2</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Static repository assessment only.</li><li>Runtime security was not evaluated.</li><li>No penetration testing was performed.</li><li>No DAST was performed.</li><li>No full commercial SAST analysis was performed.</li><li>No network exposure was assessed.</li><li>No vulnerability database lookup was performed.</li><li>No CVE analysis was performed.</li><li>No compliance certification was performed.</li><li>No cloud runtime configuration was inspected.</li><li>Absence of findings does not prove absence of risk.</li><li>Sensitive literal observations are not validated live credentials.</li><li>Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment.</li><li>No git-history security analysis is performed.</li><li>No taint or data-flow analysis is performed.</li><li>Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules.</li><li>Business impact remains unknown for hygiene findings.</li><li>No runtime security analysis or secret validity checks.</li><li>No package registry access is performed.</li><li>No external vulnerability metadata, CVE, or package registry queries.</li><li>No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis.</li><li>Security coverage was partial for this assessment.</li><li>Some files were malformed or skipped; security hygiene coverage may be incomplete.</li><li>No security findings were produced within the assessed repository scope.</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="cloud-readiness">
+<div class="section-head"><h3>Cloud Readiness</h3></div>
+<span id="cloud-assessment" class="section-anchor-only" aria-hidden="true">Cloud Assessment</span>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Succeeded</dd></div>
+<div><dt>Findings</dt><dd>9</dd></div>
+<div><dt>Recommendations</dt><dd>1</dd></div>
+<div><dt>Evidence</dt><dd>Legacy or inline evidence</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge'>Succeeded</span><span class='muted'>Cloud assessment completed using supported repository-cloud evidence and hygiene rules.</span></div>
+<div class="cloud-intel-group" data-group="cloud_overview">
+<h4>Cloud overview</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Assessment status</td><td>Succeeded</td><td>—</td></tr><tr><td>Assessment scope</td><td>Repository-level Cloud Hygiene assessment for spring-petclinic</td><td>Repository-observable signals only</td></tr><tr><td>Cloud findings</td><td>9</td><td>Zero findings do not establish cloud readiness</td></tr><tr><td>Cloud recommendations</td><td>1</td><td>—</td></tr><tr><td>Technology families observed</td><td>3 / 7</td><td>Signals are repository-observable only</td></tr><tr><td>Observable signal rows</td><td>3</td><td>Detected declarations do not prove successful deployment</td></tr></tbody>
+</table></div>
+</div>
+<div class="cloud-intel-group" data-group="containers">
+<h4>Containers</h4>
+<p class="muted">Repository-observable declarations only. Detected signals do not prove successful deployment.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Signal</th><th>Family</th><th>Path</th><th>Finding</th><th>Evidence</th><th>Note</th></tr></thead>
+<tbody><tr><td>Repository signals associated with containers were detected.</td><td><code>containers</code></td><td>—</td><td><a class="id-link" href="#finding-finding:cloud.cloud-010:6903fdc3d8e7ec3a">finding:cloud.cloud-010:6903fdc3d8e7ec3a</a></td><td>—</td><td>Container declarations do not establish cloud readiness.</td></tr></tbody>
+</table></div>
+</div>
+<div class="cloud-intel-group" data-group="deployment_pipelines">
+<h4>Deployment pipelines</h4>
+<p class="muted">Repository-observable declarations only. Detected signals do not prove successful deployment.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Signal</th><th>Family</th><th>Path</th><th>Finding</th><th>Evidence</th><th>Note</th></tr></thead>
+<tbody><tr><td>Repository signals associated with deployment pipelines were detected.</td><td><code>deployment_pipelines</code></td><td>—</td><td><a class="id-link" href="#finding-finding:cloud.cloud-040:dea4e53b3772f64f">finding:cloud.cloud-040:dea4e53b3772f64f</a></td><td>—</td><td>Pipeline declarations do not prove successful delivery.</td></tr></tbody>
+</table></div>
+</div>
+<div class="cloud-intel-group" data-group="orchestration">
+<h4>Orchestration</h4>
+<p class="muted">Repository-observable declarations only. Detected signals do not prove successful deployment.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Signal</th><th>Family</th><th>Path</th><th>Finding</th><th>Evidence</th><th>Note</th></tr></thead>
+<tbody><tr><td>Repository signals associated with orchestration were detected.</td><td><code>orchestration</code></td><td>—</td><td><a class="id-link" href="#finding-finding:cloud.cloud-011:2fdbb8fb97a58521">finding:cloud.cloud-011:2fdbb8fb97a58521</a></td><td>—</td><td>Orchestration declarations do not prove successful deployment.</td></tr></tbody>
+</table></div>
+</div>
+<div class="cloud-intel-group" data-group="cloud_findings">
+<h4>Cloud findings</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Severity</th><th>Confidence</th><th>Rule</th><th>Path</th><th>Evidence</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#finding-cfe664e1-38f1-54e1-9061-46fc05db9622'>Automated deployment workflow detected</a></td><td>info</td><td>unavailable</td><td><code>CLOUD008</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-baa3cdff-07f9-57cf-8e7f-f592e428350c'>Cloud deployment readiness signals detected</a></td><td>info</td><td>unavailable</td><td><code>CLOUD010</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-id-5f196240-f777-5bc2-baef-056ef287a5ca'>Docker Compose environment detected</a></td><td>info</td><td>unavailable</td><td><code>CLOUD002</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-id-50c16218-51f7-5358-bd23-26a69c4f9eee'>Kubernetes deployment assets detected</a></td><td>info</td><td>unavailable</td><td><code>CLOUD003</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:cloud.cloud-040:dea4e53b3772f64f'>Cloud deployment pipeline detected</a></td><td>informational</td><td>unavailable</td><td><code>cloud.cloud-040</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:cloud.cloud-060:78a220cb4fa1e7ba'>Cloud-native repository indicators</a></td><td>informational</td><td>unavailable</td><td><code>cloud.cloud-060</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:cloud.cloud-010:6903fdc3d8e7ec3a'>Containerization detected</a></td><td>informational</td><td>unavailable</td><td><code>cloud.cloud-010</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:cloud.cloud-011:2fdbb8fb97a58521'>Kubernetes deployment detected</a></td><td>informational</td><td>unavailable</td><td><code>cloud.cloud-011</code></td><td>—</td><td>—</td></tr><tr><td><a class='id-link' href='#finding-finding:cloud.cloud-061:9aa8b184f6df3f86'>Cloud deployment assets without runtime platform evidence</a></td><td>low</td><td>unavailable</td><td><code>cloud.cloud-061</code></td><td>—</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="cloud-intel-group" data-group="cloud_recommendations">
+<h4>Cloud recommendations</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Recommendation</th><th>Priority</th><th>Supporting findings</th></tr></thead>
+<tbody><tr><td><a class='id-link' href='#recommendation-fc4f8d7d-ff3b-52aa-aeec-ba9a0e0709b8'>Evaluate reusable Kubernetes deployment packaging</a></td><td>low</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Cloud Capability Requested</td><td>measured</td><td>1 / 1; maturity: medium</td><td>—</td></tr><tr><td>Cloud Evidence Availability</td><td>measured</td><td>1 / 1; maturity: medium</td><td>—</td></tr><tr><td>Cloud Findings Evaluated</td><td>measured</td><td>5 / 5; maturity: medium</td><td>—</td></tr><tr><td>Cloud Inventory Complete</td><td>measured</td><td>1 / 1; maturity: medium</td><td>—</td></tr><tr><td>Cloud Rules Enabled</td><td>measured</td><td>11 / 11; maturity: medium</td><td>—</td></tr><tr><td>Coverage note</td><td>available</td><td>Coverage describes Cloud assessment capability areas only. Provider APIs, readiness scores, and portability verdicts are not measured.</td><td>—</td></tr><tr><td>Evidence pipeline</td><td>available</td><td>repository_cloud</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Repository evidence only.</li><li>No cloud-provider API calls.</li><li>No live infrastructure inspection.</li><li>No deployed runtime state.</li><li>No network or identity posture inspection.</li><li>No cost analysis.</li><li>No resilience or availability validation.</li><li>No runtime scalability assessment.</li><li>Externalized configuration not fully assessed.</li><li>Statelessness not fully assessed.</li><li>No numeric cloud-readiness score.</li><li>Detected declarations do not prove successful deployment.</li><li>Application statelessness is not evaluated.</li><li>Cloud Hygiene rules consume AggregatedRepositoryCloudEvidence only; inventory never re-reads repository files or calls cloud provider APIs.</li><li>Configuration externalization is not evaluated.</li></ul>
+</div>
+</div>
+</div>
+</section>
+<section class="subsection" id="ai-readiness">
+<div class="section-head"><h3>AI Readiness</h3></div>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Not available</dd></div>
+<div><dt>Findings</dt><dd>0</dd></div>
+<div><dt>Recommendations</dt><dd>0</dd></div>
+<div><dt>Evidence</dt><dd>Evidence unavailable</dd></div>
+</dl>
+</div>
+<p class="muted">Assessment not currently available.</p>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>AI Readiness</td><td>not_available</td><td>findings: 0; recommendations: 0; evidence: unavailable</td><td>Not available</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Assessment not currently available for this section.</li></ul>
+</div>
+</div>
+</section>
+<section class="subsection" id="modernization-assessment">
+<div class="section-head"><h3>Modernization Assessment</h3></div>
+
+<div class="assessment-head-coverage">
+<dl class="meta">
+<div><dt>Status</dt><dd>Partially assessed</dd></div>
+<div><dt>Findings</dt><dd>2</dd></div>
+<div><dt>Recommendations</dt><dd>0</dd></div>
+<div><dt>Evidence</dt><dd>Legacy or inline evidence</dd></div>
+</dl>
+</div>
+<div class="assessment-head-pack">
+<div class='domain-header'><span class='status-badge status-badge-partial'>Partially assessed</span><span class='muted'>The modernization assessment synthesizes deterministic findings and recommendations from the enabled assessment heads. The roadmap is planning guidance, not a delivery commitment.</span></div>
+<div class="mod-intel-group" data-group="modernization_overview">
+<h4>Modernization overview</h4>
+<p class="muted">Synthesis of deterministic findings, recommendations, Priority Actions, and roadmap initiatives. This is not an independent analyzer.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>
+<tbody><tr><td>Contributing assessment heads</td><td>4</td><td>Entities retain their original assessment-head classification</td></tr><tr><td>Supporting findings</td><td>0</td><td>—</td></tr><tr><td>Deterministic recommendations</td><td>1</td><td>—</td></tr><tr><td>Priority Actions</td><td>0</td><td>Absence of Priority Actions does not establish absence of modernization need</td></tr><tr><td>Roadmap initiatives</td><td>1</td><td>Legacy roadmap items have limited traceability</td></tr><tr><td>Roadmap phases represented</td><td>1</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="mod-intel-group" data-group="contributing_heads">
+<h4>Contributing assessment heads</h4>
+<p class="muted">Entities retain their original assessment-head classification. A Security recommendation remains Security Intelligence even when it contributes to modernization.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Assessment head</th><th>Findings</th><th>Recommendations</th><th>Priority Actions</th></tr></thead>
+<tbody><tr><td><a class="id-link" href="#architecture-intelligence">Architecture Intelligence</a></td><td>8</td><td>0</td><td>0</td></tr><tr><td><a class="id-link" href="#technical-debt-intelligence">Technical Debt Intelligence</a></td><td>5</td><td>0</td><td>0</td></tr><tr><td><a class="id-link" href="#dependency-intelligence">Dependency Intelligence</a></td><td>1</td><td>0</td><td>0</td></tr><tr><td><a class="id-link" href="#cloud-readiness">Cloud Readiness</a></td><td>9</td><td>1</td><td>0</td></tr></tbody>
+</table></div>
+</div>
+<p class='muted'>No deterministic modernization Priority Actions were produced from the assessed scope. Absence of Priority Actions does not establish absence of modernization need.</p>
+<div class="mod-intel-group" data-group="roadmap_phases">
+<h4>Roadmap phases</h4>
+<p class="muted">Legacy roadmap items are visibly marked and may have limited traceability. The roadmap is planning guidance, not a delivery commitment.</p>
+<h5>Modernize <span class='count-pill'>1</span> <span class="muted">(includes legacy items)</span></h5>
+<div class="table-wrap"><table>
+<thead><tr><th>Initiative</th><th>Sequence</th><th>Priority</th><th>Effort</th><th>Priority Actions</th><th>Evidence</th></tr></thead>
+<tbody><tr><td><a class="id-link" href="#roadmap-initiative-roadmap-initiative:modernize:cloud:sha256:97a77fcac">Evaluate reusable Kubernetes deployment packaging</a> <span class="badge">Legacy</span></td><td>0</td><td>low</td><td>m</td><td><span class="muted">Legacy — limited traceability</span></td><td>legacy</td></tr></tbody>
+</table></div>
+</div>
+<div class="mod-intel-group" data-group="modernization_themes">
+<h4>Key modernization themes</h4>
+<p class="muted">Themes are derived from assessment-head grouping of deterministic Priority Actions and recommendations. Free-form narrative themes are not invented.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Theme (assessment head)</th><th>Priority Actions</th><th>Recommendations</th><th>Top titles</th></tr></thead>
+<tbody><tr><td><a class="id-link" href="#cloud-readiness">Cloud Readiness</a></td><td>0</td><td>1</td><td>Evaluate reusable Kubernetes deployment packaging</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl" data-canonical="coverage-confidence-limitations">
+<div class="assessment-ccl-group" data-group="coverage">
+<h4>Coverage</h4>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Status</th><th>Display</th><th>Note</th></tr></thead>
+<tbody><tr><td>Contributing heads</td><td>available</td><td>4</td><td>Coverage depends on which assessment heads were enabled and supported</td></tr><tr><td>Supporting findings</td><td>none_reported</td><td>0</td><td>—</td></tr><tr><td>Supporting recommendations</td><td>available</td><td>1</td><td>—</td></tr><tr><td>Priority Actions</td><td>none_reported</td><td>0</td><td>Zero Priority Actions do not mean no modernization need</td></tr><tr><td>Roadmap initiatives</td><td>legacy</td><td>1</td><td>Legacy roadmap contributors have limited traceability</td></tr><tr><td>Roadmap status</td><td>available</td><td>succeeded</td><td>—</td></tr></tbody>
+</table></div>
+</div>
+<div class="assessment-ccl-group" data-group="confidence">
+<h4>Confidence</h4>
+<p>Unavailable</p>
+</div>
+<div class="assessment-ccl-group" data-group="limitations">
+<h4>Limitations</h4>
+<ul class="plain"><li>Modernization Assessment is derived from enabled assessment heads.</li><li>Disabled or unavailable heads reduce completeness.</li><li>No delivery estimate was produced.</li><li>No cost estimate was produced.</li><li>No staffing estimate was produced.</li><li>No business-case or ROI analysis was performed.</li><li>No runtime transformation validation was performed.</li><li>Roadmap sequencing is deterministic guidance, not a delivery commitment.</li><li>Legacy entities may have limited traceability.</li><li>Absence of Priority Actions does not establish absence of modernization need.</li><li>Some initiatives lack supporting finding IDs because source recommendations were not finding-grounded.</li><li>14 finding(s) are not referenced by any roadmap initiative recommendation.</li><li>Does not produce schedules, dates, cost estimates, or portfolio plans.</li><li>Does not mutate repositories or create external tracker tickets.</li><li>Does not invent findings or recommendations beyond the provided inputs.</li><li>Roadmap initiatives are derived only from existing assessment findings and recommendations; assessments are not re-run.</li><li>Phase assignment is deterministic from recommendation category (stabilize / secure / modernize / optimize).</li><li>Priority, effort, and risk are mapped from recommendation and finding attributes using fixed rules (no AI estimation).</li><li>Cross-phase dependencies follow Stabilize → Secure → Modernize → Optimize.</li><li>No deterministic modernization Priority Actions were produced from the assessed scope. Absence of Priority Actions does not establish absence of modernization need.</li><li>Legacy roadmap items are visibly marked and may have limited traceability.</li></ul>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section class="section" id="phased-modernization-plan">
+<p class="section-eyebrow" aria-hidden="true"><span>07</span> // ROADMAP</p>
+<div class="section-head"><h2>Roadmap</h2></div>
+<p class="section-note">Engine assess sequencing of Priority Actions (Stabilize → Secure → Modernize → Optimize). This is not CodeStrata Platform Strategic Roadmap.</p><p>1 initiative(s) across 1 phase(s) derived from 1 recommendation(s).</p>
+<div class='roadmap'><div class='roadmap-lane'><h3>Modernize <span class='count-pill'>1</span></h3><p class='muted'>Address structural, dependency, and platform modernization recommendations.</p><div class='card-stack'><article class='card item-card' id="roadmap-initiative-roadmap-initiative:modernize:cloud:sha256:97a77fcac"><h4><span class="badge">Legacy roadmap item</span> Evaluate reusable Kubernetes deployment packaging</h4><p><strong>Business outcome:</strong> Architecture, dependency, and modernization recommendations progress under control.</p><p class="muted"><em>Legacy roadmap item</em> — Limited traceability</p>
+<p><em>Evidence</em> Legacy evidence</p></article></div></div></div>
+</section>
+<section class="section" id="technical-appendix">
+<p class="section-eyebrow" aria-hidden="true"><span>09</span> // TECHNICAL APPENDIX</p>
+<div class="section-head"><h2>Technical Appendix</h2></div>
+<p class="section-note">Engineering reference: unclassified results, evidence, graphs, artifacts, metadata, and rule IDs.</p><details class="tech-block" id="unclassified-results" open>
+<summary>Unclassified Results</summary>
+<p class="muted">Some assessment results could not yet be assigned to a customer-facing assessment section.</p>
+<h4>Unclassified findings</h4>
+<article class="item-card finding" id="finding-finding:testing.test-001:94fa5f1b334deaa9">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Disabled or skipped tests detected</strong></header>
+<p class="card-desc">Observed 16 disabled or skipped test markers (disabled=16). Concentrated paths: src/test/java/org/springframework/samples/petclinic/MySqlIntegrationTests.java (2); src/test/java/org/springframework/samples/petclinic/owner/OwnerControllerTests.java (2); src/test/java/org/springframework/samples/petclinic/owner/PetControllerTests.java (2); src/test/java/org/springframework/samples/petclinic/owner/VisitControllerTests.java (2); src/test/java/org/springframework/samples/petclinic/system/WelcomeControllerTests.java (2).</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>testing.<wbr>test-<wbr>001:<wbr>94fa5f1b334deaa9</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">testing.<wbr>test-<wbr>001</code></dd></div>
+<div><dt>Category</dt><dd>testing</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>059116cbe096d045c22d47f9</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>154524b99fbb8b1d7a6d9875</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>1654fd91b0dbaf19f8d5b926</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MysqlTestApplication.<wbr>java</code> — marker_type=disabled; marker_text=enabled=false</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>5beecacc824e32516a21a8cb</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>5e5f495ccfec7372680bc6bf</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>6052b56761c78af95cb85c50</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>88c15707a8ee11cbc0babffd</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PostgresIntegrationTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>a0eb3a1ec17ddc39bd62879a</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>bd8d8203fe3370f04df24ab9</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetValidatorTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>c368528082c9ca1ba87a4a65</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>d4d7a6bf5f57e5c26df50354</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>e115db144653442b848c122c</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetTypeFormatterTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>ef213d42fc7df68939d84128</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>f4969e9125109283e31df62d</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>f809096889d814e517a73f34</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>test-<wbr>marker:<wbr>ff8be03865c1759e2ad1c5fb</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeControllerTests.<wbr>java</code> — marker_type=disabled; marker_text=@Disabled</li><li><strong>file_location</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>hotspot:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — marker_count=2</li><li><strong>file_location</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>hotspot:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerControllerTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerControllerTests.<wbr>java</code> — marker_count=2</li><li><strong>file_location</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>hotspot:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetControllerTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetControllerTests.<wbr>java</code> — marker_count=2</li><li><strong>file_location</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>hotspot:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitControllerTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitControllerTests.<wbr>java</code> — marker_count=2</li><li><strong>file_location</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>hotspot:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeControllerTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeControllerTests.<wbr>java</code> — marker_count=2</li><li><strong>repository_fact</strong> — <code>testing.<wbr>test-<wbr>001:<wbr>markers</code> — disabled_or_skipped_marker_count=16</li></ul></details>
+</article>
+<h4>Unclassified recommendations</h4>
+<p class="muted">No unclassified recommendations.</p>
+</details>
+<details class="tech-block" id="additional-domain-packs">
+<summary>Additional domain packs</summary>
+<h4>Testing Assessment</h4>
+<div class='domain-header'><span class='status-badge'>Succeeded</span><span class='muted'>Test assessment completed using supported repository-testing evidence and hygiene rules.</span></div>
+<h3>Overall Test Posture</h3>
+<p>Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.</p>
+<h3>Executive Summary</h3>
+<p>Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.</p>
+<h3>Assessment and Coverage Status</h3>
+<p><strong>Assessment status:</strong> succeeded</p>
+<div class="table-wrap responsive-table"><table><thead><tr><th>Area</th><th>Status</th><th>Numerator / Denominator</th><th>Maturity</th></tr></thead><tbody><tr><td><code>testing_capability_requested</code></td><td>measured</td><td>1 / 1</td><td>medium</td></tr><tr><td><code>testing_evidence_availability</code></td><td>measured</td><td>1 / 1</td><td>medium</td></tr><tr><td><code>testing_findings_evaluated</code></td><td>measured</td><td>1 / 1</td><td>medium</td></tr><tr><td><code>testing_inventory_complete</code></td><td>measured</td><td>1 / 1</td><td>medium</td></tr><tr><td><code>testing_rules_enabled</code></td><td>measured</td><td>4 / 4</td><td>medium</td></tr></tbody></table></div><p class='muted'>Coverage describes assessment capability areas only. Runtime coverage percentages and test execution results are not measured.</p>
+<h3>Rule Execution Summary</h3>
+<div class="table-wrap responsive-table"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Rules planned / executed</td><td>4 / 4</td></tr><tr><td>Matched / not matched / not applicable / failed</td><td>1 / 3 / 0 / 0</td></tr><tr><td>Findings / themes / conclusions / recommendations</td><td>1 / 4 / 4 / 2</td></tr></tbody></table></div><div class="table-wrap responsive-table"><table><thead><tr><th>Rule</th><th>Executed</th><th>Status</th><th>Findings</th></tr></thead><tbody><tr><td><code>testing.test-001</code></td><td>yes</td><td>matched</td><td>1</td></tr><tr><td><code>testing.test-002</code></td><td>yes</td><td>not_matched</td><td>0</td></tr><tr><td><code>testing.test-003</code></td><td>yes</td><td>not_matched</td><td>0</td></tr><tr><td><code>testing.test-005</code></td><td>yes</td><td>not_matched</td><td>0</td></tr></tbody></table></div><p class='muted'>Rule execution summarizes registered Test Hygiene rules only. Zero findings are a bounded inventory outcome and do not certify test sufficiency or readiness for release.</p>
+<h3>Inventory Summary</h3>
+<p class='muted'>By rule: testing.test-001=1</p><p class='muted'>By severity: medium=1</p><p class='muted'>By confidence: high=1</p>
+<p class='muted'>Finding IDs (showing 1 of 1):</p><ul><li><code>finding:testing.test-001:94fa5f1b334deaa9</code></li></ul>
+<h4>Themes</h4>
+<p class='muted'>Showing 4 of 4</p>
+<article class='content-card conclusion-card card'><h4>Testing hygiene landscape</h4><p>The supported Test Hygiene rules produced 1 finding across 1 matched rule.</p><p class='muted'>ID: <code>test-theme:7d43087ce51d</code> · Kind: testing_hygiene_landscape · Scope: repository · Findings: 1</p></article><article class='content-card conclusion-card card'><h4>Rule execution coverage</h4><p>Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.</p><p class='muted'>ID: <code>test-theme:6fcde23f9f77</code> · Kind: rule_execution_coverage · Scope: coverage · Findings: 0</p></article><article class='content-card conclusion-card card'><h4>Disabled or skipped tests</h4><p>1 finding report disabled, skipped, or ignored test markers in repository evidence.</p><p class='muted'>ID: <code>test-theme:3b79a497daf3</code> · Kind: disabled_or_skipped_tests · Scope: hygiene · Findings: 1</p></article><article class='content-card conclusion-card card'><h4>Unsupported test analysis scope</h4><p>6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.</p><p class='muted'>ID: <code>test-theme:b8a8a19ed930</code> · Kind: unsupported_analysis_scope · Scope: status · Findings: 0</p></article>
+<h4>Conclusions</h4>
+<p class='muted'>Showing 4 of 4</p>
+<article class='content-card conclusion-card card'><h4>Disabled or skipped tests observed</h4><p>1 finding report disabled, skipped, or ignored test markers in repository evidence.</p><p class='muted'>ID: <code>test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:3c9a8197305abbd53941</code> · Kind: disabled_or_skipped_tests_observed · Audience: hygiene · Confidence: high · Findings: 1</p></article><article class='content-card conclusion-card card'><h4>Test Hygiene rule execution summary</h4><p>Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.</p><p class='muted'>ID: <code>test-conclusion:testing.conclusion.rule-execution-summary:93e77deaaa5113c4dc10</code> · Kind: rule_execution_summary · Audience: coverage · Confidence: high · Findings: 0</p></article><article class='content-card conclusion-card card'><h4>Testing hygiene landscape identified</h4><p>The supported Test Hygiene rules produced 1 finding across 1 matched rule.</p><p class='muted'>ID: <code>test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:d6d03f82bf1a9baf69a1</code> · Kind: testing_hygiene_landscape_identified · Audience: repository · Confidence: high · Findings: 1</p></article><article class='content-card conclusion-card card'><h4>Unsupported test analysis scope acknowledged</h4><p>6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.</p><p class='muted'>ID: <code>test-conclusion:testing.conclusion.unsupported-test-analysis-scope:9d49692bfe3194e749c1</code> · Kind: unsupported_test_analysis_scope · Audience: status · Confidence: high · Findings: 0</p></article>
+<h4>Recommendations</h4>
+<p class='muted'>Showing 2 of 2</p>
+<h4>Test hygiene actions</h4><article class='card'><h5>Review disabled or skipped tests</h5><p><strong>Action:</strong> Review disabled, skipped, or ignored markers referenced by the linked findings and confirm each remains intentional.</p><p>TEST-001 matched on repository-observable markers; review keeps hygiene signals actionable without claiming test failure.</p><p class='muted'>ID: <code>test-recommendation:61eb52da7937d8a4</code> · Conditional · Audience: hygiene · Findings: <code>finding:testing.test-001:94fa5f1b334deaa9</code></p></article><h4>Scope acknowledgements</h4><article class='card'><h5>Acknowledge unsupported test analysis scope</h5><p><strong>Action:</strong> Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.</p><p>Documented limitations keep conclusions from overstating test quality or release readiness.</p><p class='muted'>ID: <code>test-recommendation:e3287ea581338c0b</code> · Conditional · Audience: status</p></article>
+<h4>Limitations</h4>
+<ul><li><strong>Coverage Not Measured</strong> — Runtime code coverage percentages are not measured; only repository-observable coverage configuration facts are used.</li><li><strong>Test Execution Not Performed</strong> — Test execution is not performed. Test pass/fail status is not evaluated.</li><li><strong>No Test Quality Conclusion</strong> — Test Hygiene findings are repository-local hygiene signals only. Zero findings does not mean the repository is well tested or release ready.</li><li><strong>Test To Source Mapping Not Implemented</strong> — Test-to-production-code relationships are not evaluated.</li><li><strong>Other</strong> — Test Hygiene rules consume AggregatedRepositoryTestingEvidence only and never re-read repository files.</li><li><strong>Mutation Testing Not Evaluated</strong> — Mutation testing is not evaluated.</li></ul>
+</details>
+<details class="tech-block" id="repository" open>
+<summary>Repository Profile</summary>
+<dl class="meta"><div><dt>Name</dt><dd>spring-<wbr>petclinic</dd></div><div><dt>Source</dt><dd>local</dd></div><div><dt>Files</dt><dd>131</dd></div><div><dt>Reference</dt><dd>.<wbr>codestrata-<wbr>examples/<wbr>spring-<wbr>petclinic</dd></div></dl>
+</details>
+<details class="tech-block" id="appendix-assessment-summary">
+<summary>Assessment Summary</summary>
+<p>26 finding(s) and 0 Priority Action(s) in this assessment.</p>
+<div class="split">
+<div>
+<p><strong>Hygiene and quality checks assessed:</strong> 52</p>
+<p><strong>Findings:</strong> 26</p>
+<p><strong>Recommendations:</strong> 0</p>
+</div>
+<div>
+<h3>By severity</h3>
+<ul class="plain"><li>medium: 7</li><li>low: 2</li><li>info: 11</li><li>informational: 6</li></ul>
+<h3>By priority</h3>
+<ul class="plain"><li>low: 1</li></ul>
+</div>
+</div>
+</details>
+<details class="tech-block" id="assessment-scope">
+<summary>Assessment Scope</summary>
+<p>Packs included in this assessment and packs intentionally not assessed.</p>
+<div class="split">
+<div>
+<h3>Assessed</h3>
+<ul class="plain"><li>Security</li><li>Dependencies</li><li>Architecture</li><li>Technical debt</li><li>Testing</li><li>Cloud readiness</li><li>Roadmap</li></ul>
+</div>
+<div>
+<h3>Not assessed</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Area</th><th>Reason</th></tr></thead>
+<tbody><tr><td>AI readiness</td><td>No AI/ML frameworks detected</td></tr><tr><td>Performance</td><td>Performance remains opt-in under default activation</td></tr></tbody>
+</table></div>
+</div>
+</div>
+</details>
+<details class="tech-block" id="findings-full">
+<summary>All Findings (with evidence)</summary>
+<article class="item-card finding" id="finding-finding:architecture.framework-leakage:2e7d513b52a76df5">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Framework symbol in domain boundary</strong></header>
+<p class="card-desc">Domain unit &#x27;org.springframework.samples.petclinic.model&#x27; references framework symbol &#x27;jakarta.persistence&#x27; (jpa), which may leak infrastructure concerns into a framework-independent boundary.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>architecture.<wbr>framework-<wbr>leakage:<wbr>2e7d513b52a76df5</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">architecture.<wbr>framework-<wbr>leakage</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>symbol</strong> — <code>jakarta.<wbr>persistence</code> — path <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>Person.<wbr>java</code> — jpa in domain unit</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:architecture.framework-leakage:5bb3e2050ce9380f">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Framework symbol in domain boundary</strong></header>
+<p class="card-desc">Domain unit &#x27;org.springframework.samples.petclinic.model&#x27; references framework symbol &#x27;jakarta.persistence&#x27; (jpa), which may leak infrastructure concerns into a framework-independent boundary.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>architecture.<wbr>framework-<wbr>leakage:<wbr>5bb3e2050ce9380f</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">architecture.<wbr>framework-<wbr>leakage</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>symbol</strong> — <code>jakarta.<wbr>persistence</code> — path <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>NamedEntity.<wbr>java</code> — jpa in domain unit</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:architecture.framework-leakage:6bc8d09be1063a9c">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Framework symbol in domain boundary</strong></header>
+<p class="card-desc">Domain unit &#x27;org.springframework.samples.petclinic.model&#x27; references framework symbol &#x27;jakarta.persistence&#x27; (jpa), which may leak infrastructure concerns into a framework-independent boundary.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>architecture.<wbr>framework-<wbr>leakage:<wbr>6bc8d09be1063a9c</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">architecture.<wbr>framework-<wbr>leakage</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>symbol</strong> — <code>jakarta.<wbr>persistence</code> — path <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>BaseEntity.<wbr>java</code> — jpa in domain unit</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:technical_debt.excessive-branching:fca3fe7058044448">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Excessive branching</strong></header>
+<p class="card-desc">Callable &#x27;I18nPropertiesSyncTest.checkNonInternationalizedStrings#0@39&#x27; has branch_point_count=13, which exceeds threshold 10.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>technical_<wbr>debt.<wbr>excessive-<wbr>branching:<wbr>fca3fe7058044448</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">technical_<wbr>debt.<wbr>excessive-<wbr>branching</code></dd></div>
+<div><dt>Category</dt><dd>technical_debt</dd></div>
+<div><dt>Evidence</dt><dd>Complete evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="evidence-panel">
+<h4>Evidence</h4>
+<div class="evidence-stack"><article class="evidence-card" id="evidence-ev:0e828d3cba28bb66048a1701">
+<p class="evidence-primary-label">Primary evidence</p>
+<p><em>Location</em> <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>I18nPropertiesSyncTest.<wbr>java</code>, lines 39–84</p>
+<p><em>Measurement</em> branch_point_count: 13 · Threshold: gt 10 · Comparison: fails</p>
+<p><em>Kind</em> other</p>
+<p><em>Mode</em> direct</p>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Source preview was omitted because safe redaction could not be verified.</li></ul></div>
+</article></div>
+</div>
+</article>
+<article class="item-card finding" id="finding-finding:technical_debt.large-callable:dae19c3d10a14034">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Large callable</strong></header>
+<p class="card-desc">Callable &#x27;PetClinicConcurrencyTests.testDuplicatePetNameRaceConditionIsBlocked#0@40&#x27; has physical_line_count=93, which exceeds threshold 50.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>technical_<wbr>debt.<wbr>large-<wbr>callable:<wbr>dae19c3d10a14034</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">technical_<wbr>debt.<wbr>large-<wbr>callable</code></dd></div>
+<div><dt>Category</dt><dd>technical_debt</dd></div>
+<div><dt>Evidence</dt><dd>Complete evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="evidence-panel">
+<h4>Evidence</h4>
+<div class="evidence-stack"><article class="evidence-card" id="evidence-ev:8b52bb46241393f915168e5e">
+<p class="evidence-primary-label">Primary evidence</p>
+<p><em>Location</em> <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PetClinicConcurrencyTests.<wbr>java</code>, lines 40–132</p>
+<p><em>Measurement</em> physical_line_count: 93 · Threshold: gt 50 · Comparison: fails</p>
+<p><em>Kind</em> other</p>
+<p><em>Mode</em> direct</p>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Source preview was omitted because safe redaction could not be verified.</li></ul></div>
+</article></div>
+</div>
+</article>
+<article class="item-card finding" id="finding-finding:technical_debt.large-callable:ff02d5e666df264a">
+<header class="item-header"><span class="badge severity-medium">medium</span> <strong>Large callable</strong></header>
+<p class="card-desc">Callable &#x27;I18nPropertiesSyncTest.checkI18nPropertyFilesAreInSync#0@86&#x27; has physical_line_count=51, which exceeds threshold 50.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>technical_<wbr>debt.<wbr>large-<wbr>callable:<wbr>ff02d5e666df264a</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">technical_<wbr>debt.<wbr>large-<wbr>callable</code></dd></div>
+<div><dt>Category</dt><dd>technical_debt</dd></div>
+<div><dt>Evidence</dt><dd>Complete evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="evidence-panel">
+<h4>Evidence</h4>
+<div class="evidence-stack"><article class="evidence-card" id="evidence-ev:2bbc27a7d52ac0e053930f8a">
+<p class="evidence-primary-label">Primary evidence</p>
+<p><em>Location</em> <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>I18nPropertiesSyncTest.<wbr>java</code>, lines 86–136</p>
+<p><em>Measurement</em> physical_line_count: 51 · Threshold: gt 50 · Comparison: fails</p>
+<p><em>Kind</em> other</p>
+<p><em>Mode</em> direct</p>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Source preview was omitted because safe redaction could not be verified.</li></ul></div>
+</article></div>
+</div>
+</article>
+<article class="item-card finding" id="finding-finding:cloud.cloud-061:9aa8b184f6df3f86">
+<header class="item-header"><span class="badge severity-low">low</span> <strong>Cloud deployment assets without runtime platform evidence</strong></header>
+<p class="card-desc">Observed cloud deployment assets without AWS, Azure, or GCP platform markers. This does not claim cloud usage is absent.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>cloud.<wbr>cloud-<wbr>061:<wbr>9aa8b184f6df3f86</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">cloud.<wbr>cloud-<wbr>061</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>815bc19198f03a8b5f7c80b2</code> — path <code>docker-<wbr>compose.<wbr>yml</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>9cdd5787b6591b10c0c9a4b9</code> — path <code>.<wbr>devcontainer/<wbr>Dockerfile</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>d3a745cd71d364e6afd75481</code> — path <code>.<wbr>devcontainer/<wbr>devcontainer.<wbr>json</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>98f58e0918a7262025cb7dea</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>gradle-<wbr>build.<wbr>yml</code> — deployment_asset; confirmation=structurally_inspected</li><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>dee814a1d11f13b412704468</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>ec3e895a8b2da9183e77afd0</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>maven-<wbr>build.<wbr>yml</code> — deployment_asset; confirmation=structurally_inspected</li><li><strong>file_location</strong> — <code>cloud-<wbr>orch:<wbr>7a1f47334cab6de3d5b261f7</code> — path <code>k8s/<wbr>petclinic.<wbr>yml</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>orch:<wbr>fd5874ca7b3f58326f6f0828</code> — path <code>k8s/<wbr>db.<wbr>yml</code> — deployment_asset; confirmation=structurally_confirmed</li><li><strong>repository_fact</strong> — <code>cloud.<wbr>cloud-<wbr>061:<wbr>summary</code> — deployment_asset_kinds=5; families=container,deployment,orchestration; platforms=0</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-e039f3ef-ccd7-5a94-a113-c0612f11d70c">
+<header class="item-header"><span class="badge severity-low">low</span> <strong>Dependency locking is not configured</strong></header>
+<p class="card-desc">gradle dependency locking is not configured for: build.gradle.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">e039f3ef-<wbr>ccd7-<wbr>5a94-<wbr>a113-<wbr>c0612f11d70c</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">DEP003</code></dd></div>
+<div><dt>Category</dt><dd>dependency</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>build.<wbr>gradle</code> — path <code>build.<wbr>gradle</code> — gradle dependency locking is not configured for: build.gradle.</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-id-2d4a6fdb-ff31-5a14-b5ce-39ea4bad3819">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>API layer detected</strong></header>
+<p class="card-desc">Detected 6 API-related files</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">2d4a6fdb-<wbr>ff31-<wbr>5a14-<wbr>b5ce-<wbr>39ea4bad3819</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">ARCH002</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerController.<wbr>java</code> — path <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerController.<wbr>java</code> — Detected 6 API-related files</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-ec53dcfb-d3e4-51f9-a6d4-3d967e079a0f">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Application architecture components detected</strong></header>
+<p class="card-desc">Detected architectural layers: controllers, repositories</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">ec53dcfb-<wbr>d3e4-<wbr>51f9-<wbr>a6d4-<wbr>3d967e079a0f</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">ARCH001</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>.<wbr></code> — path <code>.<wbr></code> — Detected architectural layers: controllers, repositories</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-id-9b006163-bf37-51d5-b962-c08552b6d9a2">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Persistence layer detected</strong></header>
+<p class="card-desc">Detected 5 persistence-related files</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">9b006163-<wbr>bf37-<wbr>51d5-<wbr>b962-<wbr>c08552b6d9a2</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">ARCH003</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>BaseEntity.<wbr>java</code> — path <code>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>BaseEntity.<wbr>java</code> — Detected 5 persistence-related files</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-id-70a71619-37ad-58f6-9f2f-cebfa943796a">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Single-application architecture detected</strong></header>
+<p class="card-desc">Architectural components appear within one repository application structure</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">70a71619-<wbr>37ad-<wbr>58f6-<wbr>9f2f-<wbr>cebfa943796a</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">ARCH007</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>.<wbr></code> — path <code>.<wbr></code> — Architectural components appear within one repository application structure</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-aadc8c94-9d99-5a4b-a7c1-d104ac83568f">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Test structure detected</strong></header>
+<p class="card-desc">Detected 20 files under test-related directories</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">aadc8c94-<wbr>9d99-<wbr>5a4b-<wbr>a7c1-<wbr>d104ac83568f</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">ARCH005</code></dd></div>
+<div><dt>Category</dt><dd>architecture</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — path <code>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java</code> — Detected 20 files under test-related directories</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:cloud.cloud-040:dea4e53b3772f64f">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Cloud deployment pipeline detected</strong></header>
+<p class="card-desc">Observed cloud deployment pipeline artifacts (github_actions).</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>cloud.<wbr>cloud-<wbr>040:<wbr>dea4e53b3772f64f</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">cloud.<wbr>cloud-<wbr>040</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>98f58e0918a7262025cb7dea</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>gradle-<wbr>build.<wbr>yml</code> — deployment_fact; confirmation=structurally_inspected</li><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>dee814a1d11f13b412704468</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — deployment_fact; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>deploy:<wbr>ec3e895a8b2da9183e77afd0</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>maven-<wbr>build.<wbr>yml</code> — deployment_fact; confirmation=structurally_inspected</li><li><strong>repository_fact</strong> — <code>cloud.<wbr>cloud-<wbr>040:<wbr>summary</code> — deployment_systems=github_actions</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:cloud.cloud-060:78a220cb4fa1e7ba">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Cloud-native repository indicators</strong></header>
+<p class="card-desc">Observed 3 cloud evidence families (container,deployment,orchestration). This does not establish cloud readiness.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>cloud.<wbr>cloud-<wbr>060:<wbr>78a220cb4fa1e7ba</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">cloud.<wbr>cloud-<wbr>060</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>repository_fact</strong> — <code>cloud.<wbr>cloud-<wbr>060:<wbr>summary</code> — family_count=3; families=container,deployment,orchestration</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:cloud.cloud-010:6903fdc3d8e7ec3a">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Containerization detected</strong></header>
+<p class="card-desc">Observed containerization artifacts (devcontainer,docker,docker_compose).</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>cloud.<wbr>cloud-<wbr>010:<wbr>6903fdc3d8e7ec3a</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">cloud.<wbr>cloud-<wbr>010</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>815bc19198f03a8b5f7c80b2</code> — path <code>docker-<wbr>compose.<wbr>yml</code> — container_fact; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>9cdd5787b6591b10c0c9a4b9</code> — path <code>.<wbr>devcontainer/<wbr>Dockerfile</code> — container_fact; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>container:<wbr>d3a745cd71d364e6afd75481</code> — path <code>.<wbr>devcontainer/<wbr>devcontainer.<wbr>json</code> — container_fact; confirmation=structurally_confirmed</li><li><strong>repository_fact</strong> — <code>cloud.<wbr>cloud-<wbr>010:<wbr>summary</code> — container_kinds=devcontainer,docker,docker_compose</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:cloud.cloud-011:2fdbb8fb97a58521">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Kubernetes deployment detected</strong></header>
+<p class="card-desc">Observed container orchestration artifacts (kubernetes).</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>cloud.<wbr>cloud-<wbr>011:<wbr>2fdbb8fb97a58521</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">cloud.<wbr>cloud-<wbr>011</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<div class="limitations"><em>Evidence limitations</em><ul><li>Detailed evidence mapping is not yet available for this assessment area.</li></ul></div>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file_location</strong> — <code>cloud-<wbr>orch:<wbr>7a1f47334cab6de3d5b261f7</code> — path <code>k8s/<wbr>petclinic.<wbr>yml</code> — orchestration_fact; confirmation=structurally_confirmed</li><li><strong>file_location</strong> — <code>cloud-<wbr>orch:<wbr>fd5874ca7b3f58326f6f0828</code> — path <code>k8s/<wbr>db.<wbr>yml</code> — orchestration_fact; confirmation=structurally_confirmed</li><li><strong>repository_fact</strong> — <code>cloud.<wbr>cloud-<wbr>011:<wbr>summary</code> — orchestration_kinds=kubernetes</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-cfe664e1-38f1-54e1-9061-46fc05db9622">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Automated deployment workflow detected</strong></header>
+<p class="card-desc">Detected 1 deployment-oriented workflow file(s)</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">cfe664e1-<wbr>38f1-<wbr>54e1-<wbr>9061-<wbr>46fc05db9622</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">CLOUD008</code></dd></div>
+<div><dt>Category</dt><dd>cloud_readiness</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — Detected 1 deployment-oriented workflow file(s)</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-baa3cdff-07f9-57cf-8e7f-f592e428350c">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Cloud deployment readiness signals detected</strong></header>
+<p class="card-desc">Detected cloud capabilities: deployment_workflows, devcontainer, docker_compose, kubernetes</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">baa3cdff-<wbr>07f9-<wbr>57cf-<wbr>8e7f-<wbr>f592e428350c</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">CLOUD010</code></dd></div>
+<div><dt>Category</dt><dd>cloud_readiness</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>.<wbr></code> — path <code>.<wbr></code> — Detected cloud capabilities: deployment_workflows, devcontainer, docker_compose, kubernetes</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-id-5f196240-f777-5bc2-baef-056ef287a5ca">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Docker Compose environment detected</strong></header>
+<p class="card-desc">Detected 1 Docker Compose configuration(s)</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">5f196240-<wbr>f777-<wbr>5bc2-<wbr>baef-<wbr>056ef287a5ca</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">CLOUD002</code></dd></div>
+<div><dt>Category</dt><dd>cloud_readiness</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>docker-<wbr>compose.<wbr>yml</code> — path <code>docker-<wbr>compose.<wbr>yml</code> — Detected 1 Docker Compose configuration(s)</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-id-50c16218-51f7-5358-bd23-26a69c4f9eee">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Kubernetes deployment assets detected</strong></header>
+<p class="card-desc">Detected 2 Kubernetes-related file(s)</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">50c16218-<wbr>51f7-<wbr>5358-<wbr>bd23-<wbr>26a69c4f9eee</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">CLOUD003</code></dd></div>
+<div><dt>Category</dt><dd>cloud_readiness</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>k8s/<wbr>db.<wbr>yml</code> — path <code>k8s/<wbr>db.<wbr>yml</code> — Detected 2 Kubernetes-related file(s)</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-d25c05b3-261f-502f-aa81-b6ba032f5085">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Build System</strong></header>
+<p class="card-desc">Detected build systems: gradle, maven.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">d25c05b3-<wbr>261f-<wbr>502f-<wbr>aa81-<wbr>b6ba032f5085</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">build.<wbr>system.<wbr>summary</code></dd></div>
+<div><dt>Category</dt><dd>maintainability</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>build.<wbr>gradle</code> — path <code>build.<wbr>gradle</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>gradlew</code> — path <code>gradlew</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>gradlew.<wbr>bat</code> — path <code>gradlew.<wbr>bat</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>mvnw</code> — path <code>mvnw</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>mvnw.<wbr>cmd</code> — path <code>mvnw.<wbr>cmd</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>pom.<wbr>xml</code> — path <code>pom.<wbr>xml</code> — Repository artifact used to detect the build system.</li><li><strong>file</strong> — <code>settings.<wbr>gradle</code> — path <code>settings.<wbr>gradle</code> — Repository artifact used to detect the build system.</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-e80e2275-4ee5-5d41-b739-2f87bd5acce0">
+<header class="item-header"><span class="badge severity-info">info</span> <strong>Repository Metrics</strong></header>
+<p class="card-desc">Collected structural metrics for repository &#x27;spring-petclinic&#x27;.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">e80e2275-<wbr>4ee5-<wbr>5d41-<wbr>b739-<wbr>2f87bd5acce0</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">repository.<wbr>metrics.<wbr>summary</code></dd></div>
+<div><dt>Category</dt><dd>maintainability</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>.<wbr>devcontainer/<wbr>Dockerfile</code> — path <code>.<wbr>devcontainer/<wbr>Dockerfile</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>deploy-<wbr>and-<wbr>test-<wbr>cluster.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>.<wbr>github/<wbr>workflows/<wbr>gradle-<wbr>build.<wbr>yml</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>gradle-<wbr>build.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>.<wbr>github/<wbr>workflows/<wbr>maven-<wbr>build.<wbr>yml</code> — path <code>.<wbr>github/<wbr>workflows/<wbr>maven-<wbr>build.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>build.<wbr>gradle</code> — path <code>build.<wbr>gradle</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>docker-<wbr>compose.<wbr>yml</code> — path <code>docker-<wbr>compose.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>gradlew</code> — path <code>gradlew</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>k8s/<wbr>db.<wbr>yml</code> — path <code>k8s/<wbr>db.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>k8s/<wbr>petclinic.<wbr>yml</code> — path <code>k8s/<wbr>petclinic.<wbr>yml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>mvnw</code> — path <code>mvnw</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>pom.<wbr>xml</code> — path <code>pom.<wbr>xml</code> — Repository artifact included in structural metrics.</li><li><strong>file</strong> — <code>settings.<wbr>gradle</code> — path <code>settings.<wbr>gradle</code> — Repository artifact included in structural metrics.</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:codestrata-rule-java-detected:5749ad5603067069">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Java 17 detected</strong></header>
+<p class="card-desc">Java is present and Maven declares language level 17.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>codestrata-<wbr>rule-<wbr>java-<wbr>detected:<wbr>5749ad5603067069</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">codestrata-<wbr>rule-<wbr>java-<wbr>detected</code></dd></div>
+<div><dt>Category</dt><dd>modernization</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>dependency:<wbr>jvm:<wbr>_<wbr>:<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PetClinicApplication.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PetClinicRuntimeHints.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>BaseEntity.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>NamedEntity.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>Person.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>package-<wbr>info.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>Owner.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerRepository.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>Pet.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetType.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetTypeFormatter.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetTypeRepository.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetValidator.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>Visit.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>package-<wbr>info.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>package-<wbr>info.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>CacheConfiguration.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>CrashController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WebConfiguration.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>package-<wbr>info.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>Specialty.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>Vet.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetController.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetRepository.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>Vets.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>main/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>package-<wbr>info.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MySqlIntegrationTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>MysqlTestApplication.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PetClinicConcurrencyTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PetClinicIntegrationTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>PostgresIntegrationTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>model/<wbr>ValidatorTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>OwnerControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetTypeFormatterTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>PetValidatorTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>owner/<wbr>VisitControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>service/<wbr>ClinicServiceTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>service/<wbr>EntityUtils.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>CrashControllerIntegrationTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>CrashControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>I18nPropertiesSyncTest.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>system/<wbr>WelcomeControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetControllerTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>file:<wbr>src/<wbr>test/<wbr>java/<wbr>org/<wbr>springframework/<wbr>samples/<wbr>petclinic/<wbr>vet/<wbr>VetTests.<wbr>java=<wbr>&gt;ekg:<wbr>language:<wbr>java:<wbr>java</code> — matched_key=java</li><li><strong>dependency_version</strong> — <code>dependency:<wbr>jvm:<wbr>java</code> — java.version=17</li></ul></details>
+</article>
+<article class="item-card finding" id="finding-finding:codestrata-rule-spring-boot-detected:68320b26eb166a7d">
+<header class="item-header"><span class="badge severity-informational">informational</span> <strong>Spring Boot 4.1.0 detected</strong></header>
+<p class="card-desc">Spring Boot is present at version 4.1.0.</p>
+<dl class="meta">
+<div><dt>Finding ID</dt><dd><code class="trace-id">finding:<wbr>codestrata-<wbr>rule-<wbr>spring-<wbr>boot-<wbr>detected:<wbr>68320b26eb166a7d</code></dd></div>
+<div><dt>Rule ID</dt><dd><code class="trace-id" title="Rule ID">codestrata-<wbr>rule-<wbr>spring-<wbr>boot-<wbr>detected</code></dd></div>
+<div><dt>Category</dt><dd>modernization</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Affected nodes</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Related recommendation</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Priority Actions influenced</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>knowledge_binding</strong> — <code>kb:<wbr>exact_<wbr>canonical_<wbr>key:<wbr>repo:<wbr>spring-<wbr>petclinic:<wbr>dependency:<wbr>maven:<wbr>org.<wbr>springframework.<wbr>boot:<wbr>spring-<wbr>boot=<wbr>&gt;ekg:<wbr>framework:<wbr>spring-<wbr>boot:<wbr>spring-<wbr>boot</code> — matched_key=spring-boot</li><li><strong>dependency_version</strong> — <code>dependency:<wbr>maven:<wbr>spring-<wbr>boot</code> — spring-boot=4.1.0</li></ul></details>
+</article>
+</details>
+<details class="tech-block" id="recommendations-full">
+<summary>All Recommendations (with actions)</summary>
+<article class="item-card recommendation" id="recommendation-fc4f8d7d-ff3b-52aa-aeec-ba9a0e0709b8">
+<header class="item-header"><span class="badge priority-future">Future</span> <strong>Evaluate reusable Kubernetes deployment packaging</strong></header>
+<div class="chip-row">
+<span class="chip"><em>Horizon</em> Future</span>
+<span class="chip"><em>Business impact</em> Incremental</span>
+<span class="chip"><em>Effort</em> Medium</span>
+<span class="chip"><em>Evidence</em> Legacy evidence</span>
+</div>
+<p class="outcome"><em>Business outcome</em> Evaluate whether reusable deployment packaging (such as Helm charts or an equivalent templating approach) would reduce duplication across environments. Helm is optional, not mandatory.</p>
+<p><em>Rationale:</em> Kubernetes assets were detected without Helm packaging. Reusable packaging can improve consistency, but teams may already use an equivalent approach.</p>
+<dl class="meta">
+<div><dt>Recommendation ID</dt><dd><code>fc4f8d7d-<wbr>ff3b-<wbr>52aa-<wbr>aeec-<wbr>ba9a0e0709b8</code></dd></div>
+<div><dt>Category</dt><dd>cloud</dd></div>
+<div><dt>Evidence</dt><dd>Legacy evidence</dd></div>
+<div><dt>Supported by</dt><dd><span class="muted">None</span></dd></div>
+<div><dt>Primary finding</dt><dd><span class="muted">None</span></dd></div>
+</dl>
+<h4>Actions</h4>
+<ol class="actions"><li><strong>1. Evaluate whether reusable deployment packaging (such as Helm charts or an equivalent templating approach) would reduce duplication across environments. Helm is optional, not mandatory.</strong> — Evaluate whether reusable deployment packaging (such as Helm charts or an equivalent templating approach) would reduce duplication across environments. Helm is optional, not mandatory.</li></ol>
+<details class="evidence"><summary>Evidence</summary><ul><li><strong>file</strong> — <code>repository-<wbr>facts</code> — path <code>repository-<wbr>facts</code> — cloud.has_kubernetes=true; cloud.has_helm=false</li></ul></details>
+</article>
+</details>
+<details class="tech-block" id="priority-actions-full">
+<summary>All Priority Actions (with actions)</summary>
+<p class="muted">No Priority Actions were produced for this run.</p>
+</details>
+<details class="tech-block" id="traceability">
+<summary>Traceability</summary>
+<p>Schema version: <code>1.2</code></p>
+<ul><li>Evidence: 3</li><li>Findings: 26</li><li>Recommendations: 1</li><li>Priority Actions: 0</li><li>Roadmap initiatives: 1</li><li>Legacy findings: 23</li><li>Partial findings: 0</li></ul>
+<p><em>Traceability chain</em></p>
+<ol><li>Roadmap initiative → Priority Action</li><li>Priority Action → Recommendation</li><li>Recommendation → Finding</li><li>Finding → Evidence</li></ol>
+<p>Evidence locations are repository-relative. Absolute paths, file:// URLs, secrets, full source files, and raw graph payloads are not shown.</p>
+
+</details>
+<details class="tech-block" id="artifacts">
+<summary>Graph and Artifact References</summary>
+<div class="table-wrap"><table>
+<thead><tr><th>Artifact</th><th>Relative path</th></tr></thead>
+<tbody><tr><td>Findings</td><td><code>findings.<wbr>json</code></td></tr><tr><td>Recommendations</td><td><code>recommendations.<wbr>json</code></td></tr><tr><td>Assessment JSON</td><td><code>report.<wbr>json</code></td></tr><tr><td>Repository Graph</td><td><code>graphs/<wbr>repository-<wbr>graph.<wbr>json</code></td></tr><tr><td>Assessment Graph</td><td><code>graphs/<wbr>assessment-<wbr>graph.<wbr>json</code></td></tr><tr><td>Graph Summary</td><td><code>graphs/<wbr>graph-<wbr>summary.<wbr>json</code></td></tr><tr><td>Architecture Assessment</td><td><code>architecture-<wbr>assessment.<wbr>json</code></td></tr></tbody>
+</table></div>
+</details>
+<details class="tech-block" id="metadata">
+<summary>Assessment Metadata</summary>
+<dl class="meta"><div><dt>Generated at (UTC)</dt><dd>2026-07-31T22:37:35.965742Z</dd></div><div><dt>Report title</dt><dd>Engineering Assessment</dd></div><div><dt>Report version</dt><dd>3.0</dd></div><div><dt>Engine version</dt><dd>0.1.0</dd></div><div><dt>Advisor version</dt><dd>—</dd></div><div><dt>Repository</dt><dd>spring-petclinic</dd></div><div><dt>Assessment mode</dt><dd>Deterministic</dd></div><div><dt>AI status</dt><dd>not_requested</dd></div><div><dt>Model ID</dt><dd>—</dd></div><div><dt>Total ms</dt><dd>628.14</dd></div><div><dt>Scan ms</dt><dd>7.57</dd></div><div><dt>Analysis ms</dt><dd>44.4</dd></div><div><dt>AI ms</dt><dd>—</dd></div><div><dt>Report ms</dt><dd>0.0</dd></div></dl>
+<h3>Warnings</h3>
+<ul><li>None</li></ul>
+</details>
+<p class="provenance">Findings and Priority Actions reflect repository evidence from this assessment. Modernization Advisor, when present, is interpretive commentary only.</p>
+</section>
+<footer class="site-footer">
+<p>Generated by CodeStrata Community Edition</p>
+<p>Engineering Assessment — current-state Engineering Intelligence. Mode: Deterministic. AI status: <code class="trace-id">not_requested</code> (optional; does not replace deterministic results).</p>
+<p>This Community report does not include CodeStrata Platform portfolio, executive, or Strategic Roadmap outputs.</p>
+<p>Report 3.0 · Engine 0.1.0 · Design System: <span class="trace-id">governance/assets/DESIGN-SYSTEM.md</span></p>
+<p class="copyright">© CodeStrata</p>
+</footer>
+</div>
+</body>
+</html>

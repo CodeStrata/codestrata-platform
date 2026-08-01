@@ -1,0 +1,6 @@
+{
+  "repository_id": "remote-php-bookstack",
+  "schema_version": "1.2",
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "https://github.com/BookStackApp/BookStack.git@4e406c41c4c8060a5795e74c66fb96362e54f400"
+}

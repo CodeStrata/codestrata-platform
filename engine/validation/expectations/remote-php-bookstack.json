@@ -1,0 +1,427 @@
+{
+  "schema_version": "1.2",
+  "expect_ai_executed": false,
+  "expected_artifacts": [
+    "report.json"
+  ],
+  "finding_count": {
+    "minimum": 1
+  },
+  "technology_inventory": {
+    "required_languages": [
+      "PHP"
+    ],
+    "forbidden_languages": [
+      "COBOL",
+      "Ruby"
+    ],
+    "required_dependency_ecosystems": [
+      "composer"
+    ],
+    "allowed_ambiguous_facts": [],
+    "required_frameworks": [
+      "Laravel"
+    ],
+    "evidence_notes": "Tier-3 real-world remote contract. Pinned MIT BookStack (BookStackApp/BookStack). Required PHP, Laravel, composer; npm/JS/TS front-end tooling may appear. Forbidden unrelated languages (COBOL, Ruby). Does not claim product-wide inventory accuracy."
+  },
+  "security": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "security.private-key-material",
+      "SEC002"
+    ],
+    "allowed_findings": [
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "\\.env",
+        "rationale": "Sample/env template literals (.env.example, .env.example.complete) accepted-as-ambiguous until product suppressions exist"
+      },
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "docker-compose\\.yml$",
+        "rationale": "Compose dev-service literals accepted-as-ambiguous for real-world Laravel apps"
+      },
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "crowdin\\.yml$",
+        "rationale": "Crowdin config placeholders accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "dev/api/",
+        "rationale": "Dev API fixture literals accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "security.credential-literal",
+        "path_pattern": "\\.forgejo/workflows/",
+        "rationale": "CI workflow test credential placeholders accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "security.placeholder-credential",
+        "path_pattern": "\\.env",
+        "rationale": "Env template placeholder credentials accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "security.placeholder-credential",
+        "path_pattern": "\\.forgejo/workflows/",
+        "rationale": "CI workflow placeholder credentials accepted-as-ambiguous"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_raw_values": [],
+    "not_applicable_rule_ids": [
+      "security.tls-verification-disabled",
+      "security.hostname-verification-disabled",
+      "security.authentication-disabled",
+      "security.permissive-cors-origin",
+      "security.debug-enabled"
+    ],
+    "evidence_notes": "Tier-3 remote contract. BookStack ships .env.example*, docker-compose.yml, CI fixtures with template/sample literals — accepted-as-ambiguous. Real private-key leakage (SEC002) still forbidden. SEC005/SEC006 heuristic hits not forbidden. Does not claim product-wide security accuracy."
+  },
+  "architecture": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "allowed_findings": [
+      {
+        "rule_id": "ARCH004",
+        "rationale": "Legacy missing-tests inventory signal; ambiguous"
+      },
+      {
+        "rule_id": "ARCH005",
+        "rationale": "Legacy test-structure inventory signal; ambiguous"
+      },
+      {
+        "rule_id": "ARCH001",
+        "rationale": "Legacy component inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH002",
+        "rationale": "Legacy API inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH003",
+        "rationale": "Legacy persistence inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "ARCH007",
+        "rationale": "Legacy single-app inventory; ambiguous if present"
+      },
+      {
+        "rule_id": "architecture.dependency-cycle",
+        "rationale": "Laravel modular domain graph produces dependency-cycle heuristics; accepted-as-ambiguous until product accuracy improves"
+      },
+      {
+        "rule_id": "architecture.excessive-cross-module-coupling",
+        "rationale": "BookStack multi-module Laravel layout triggers cross-module coupling heuristics; accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "architecture.framework-leakage",
+        "rationale": "Laravel factories/migrations use framework types by design; accepted-as-ambiguous"
+      }
+    ],
+    "forbidden_rule_ids": [
+      "architecture.invalid-dependency-direction",
+      "architecture.layer-boundary-violation",
+      "architecture.component-concentration",
+      "architecture.enterprise-standard-mismatch"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_unsupported_claims": [
+      "microservices",
+      "well-architected",
+      "production-ready architecture",
+      "loosely coupled",
+      "scalable",
+      "resilient"
+    ],
+    "evidence_notes": "Tier-3 remote contract. BookStack Laravel modular monolith: dependency-cycle, cross-module-coupling, and framework-leakage hits accepted-as-ambiguous. No required architecture TPs — contract validates absence of unsupported marketing claims only."
+  },
+  "technical_debt": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "allowed_findings": [
+      {
+        "rule_id": "technical_debt.large-callable",
+        "rationale": "Large Laravel controllers/services/migrations accepted-as-ambiguous for real-world apps"
+      },
+      {
+        "rule_id": "technical_debt.excessive-branching",
+        "rationale": "Complex Laravel business logic accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "technical_debt.deep-nesting",
+        "rationale": "Deep nesting in Laravel services accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "technical_debt.excessive-parameters",
+        "rationale": "Laravel repo/controller signatures accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "technical_debt.oversized-type",
+        "rationale": "Large Laravel model/service classes accepted-as-ambiguous"
+      }
+    ],
+    "forbidden_rule_ids": [],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "low technical debt",
+      "high technical debt",
+      "rewrite required",
+      "poor maintainability",
+      "developer productivity",
+      "financial debt",
+      "delivery delay"
+    ],
+    "evidence_notes": "Tier-3 remote contract. Production TD heuristics on real Laravel codebase accepted-as-ambiguous. No TD posture or rewrite claims forbidden."
+  },
+  "dependency": {
+    "required_manifests": [],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "dependency.unresolved-version",
+      "dependency.mutable-version",
+      "dependency.unbounded-requirement",
+      "dependency.conflicting-exact-versions",
+      "dependency.duplicate-declaration"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "dependencies are healthy",
+      "secure supply chain",
+      "no dependency risk",
+      "dependencies are current",
+      "licenses are compliant",
+      "no vulnerabilities",
+      "upgrade-ready",
+      "safe dependency posture"
+    ],
+    "evidence_notes": "Tier-3 remote contract. composer.json present; no dependency hygiene FPs required. Does not claim CVE/license/freshness accuracy."
+  },
+  "cloud": {
+    "required_signal_families": [],
+    "forbidden_signal_families": [
+      {
+        "family_id": "platform",
+        "rationale": "No cloud provider artifacts"
+      },
+      {
+        "family_id": "orchestration",
+        "rationale": "No Kubernetes/Helm"
+      },
+      {
+        "family_id": "iac",
+        "rationale": "No IaC"
+      },
+      {
+        "family_id": "serverless",
+        "rationale": "No serverless config"
+      },
+      {
+        "family_id": "managed_service",
+        "rationale": "No managed-service markers"
+      },
+      {
+        "family_id": "deployment",
+        "rationale": "No confirmed deployment pipelines"
+      }
+    ],
+    "required_findings": [],
+    "forbidden_rule_ids": [
+      "cloud.cloud-001",
+      "cloud.cloud-002",
+      "cloud.cloud-011",
+      "cloud.cloud-020",
+      "cloud.cloud-021",
+      "cloud.cloud-030",
+      "cloud.cloud-040",
+      "cloud.cloud-050",
+      "cloud.cloud-060"
+    ],
+    "allowed_findings": [
+      {
+        "rule_id": "cloud.cloud-010",
+        "rationale": "Containerization from dev/docker and docker-compose.yml accepted-as-ambiguous"
+      },
+      {
+        "rule_id": "cloud.cloud-061",
+        "rationale": "Deployment assets without provider platform markers accepted-as-ambiguous"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "cloud ready",
+      "migration ready",
+      "cloud native architecture",
+      "production ready",
+      "highly available",
+      "secure cloud posture",
+      "cost optimized",
+      "operationally mature",
+      "successfully deployed",
+      "no cloud risks"
+    ],
+    "evidence_notes": "Tier-3 remote contract. BookStack includes dev/docker/* and docker-compose.yml (container family allowed). cloud-010/cloud-061 accepted-as-ambiguous. No cloud-native readiness claims."
+  },
+  "ai_readiness": {
+    "required_signal_families": [],
+    "forbidden_signal_families": [
+      {
+        "family_id": "api_boundary",
+        "rationale": "Must not invent AI API-boundary signals"
+      },
+      {
+        "family_id": "documentation",
+        "rationale": "Must not invent AI documentation signals"
+      },
+      {
+        "family_id": "data_retrieval",
+        "rationale": "Must not invent RAG/data-retrieval readiness"
+      },
+      {
+        "family_id": "ai_integration",
+        "rationale": "Must not imply LLM/AI integration"
+      },
+      {
+        "family_id": "tool_mcp",
+        "rationale": "Must not imply MCP tools"
+      },
+      {
+        "family_id": "workflow_agent",
+        "rationale": "Must not invent agent workflows"
+      },
+      {
+        "family_id": "observability_governance",
+        "rationale": "Must not invent AI governance"
+      }
+    ],
+    "required_signals": [],
+    "forbidden_signals": [],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "ai_readiness.ai-001",
+      "ai_readiness.ai-002",
+      "ai_readiness.ai-003",
+      "ai_readiness.ai-010",
+      "ai_readiness.ai-011",
+      "ai_readiness.ai-020",
+      "ai_readiness.ai-021",
+      "ai_readiness.ai-022",
+      "ai_readiness.ai-030",
+      "ai_readiness.ai-031",
+      "ai_readiness.ai-032",
+      "ai_readiness.ai-040",
+      "ai_readiness.ai-041",
+      "ai_readiness.ai-050",
+      "ai_readiness.ai-051",
+      "ai_readiness.ai-060",
+      "ai_readiness.ai-061"
+    ],
+    "required_recommendations": [],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)deploy rag",
+        "rationale": "no RAG deploy claim"
+      },
+      {
+        "title_pattern": "(?i)autonomous agent",
+        "rationale": "no autonomous agent claim"
+      },
+      {
+        "title_pattern": "(?i)productionize ai",
+        "rationale": "no productionize claim"
+      },
+      {
+        "title_pattern": "(?i)responsible ai",
+        "rationale": "no certification claim"
+      },
+      {
+        "title_pattern": "(?i)ai ready",
+        "rationale": "no readiness claim"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "ai ready",
+      "agent ready",
+      "rag ready",
+      "production ai ready",
+      "mature ai platform",
+      "strong ai foundation",
+      "governed ai",
+      "safe ai implementation",
+      "high-quality data",
+      "responsible ai compliant",
+      "no ai readiness risks"
+    ],
+    "evidence_notes": "Tier-3 remote contract. No AI/agent/model/provider findings expected on BookStack. Absence of findings does not establish AI readiness."
+  },
+  "modernization": {
+    "require_finding_backed_authority": true,
+    "require_priority_action_backed_roadmap": true,
+    "allow_legacy_recommendations": true,
+    "maximum_false_positive_count": 0,
+    "allowed_recommendations": [
+      {
+        "title_pattern": "(?i)before modernization",
+        "rationale": "Phase-1 legacy testing rec; not PA-eligible"
+      },
+      {
+        "title_pattern": "(?i)quality gates",
+        "rationale": "Phase-1 legacy CI rec; not PA-eligible"
+      }
+    ],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)become cloud native",
+        "rationale": "Vague unsupported theme"
+      },
+      {
+        "title_pattern": "(?i)rewrite (the |required|application)",
+        "rationale": "No rewrite claim"
+      },
+      {
+        "title_pattern": "(?i)^enable ai\\b|\\benable ai\\b",
+        "rationale": "No enable-AI modernization claim"
+      },
+      {
+        "title_pattern": "(?i)production readiness",
+        "rationale": "No prod readiness"
+      },
+      {
+        "title_pattern": "(?i)guaranteed",
+        "rationale": "No guaranteed outcome"
+      }
+    ],
+    "forbidden_priority_actions": [
+      {
+        "title_pattern": "(?i)cloud ready|ai ready|production ready",
+        "rationale": "No invented readiness PAs"
+      }
+    ],
+    "forbidden_roadmap_phases": [
+      "optimize"
+    ],
+    "forbidden_conclusions": [
+      "modernization ready",
+      "production ready",
+      "transformation ready",
+      "rewrite required",
+      "guaranteed improvement",
+      "exact ROI",
+      "successful migration",
+      "become cloud native",
+      "enable AI",
+      "transform the architecture",
+      "security certification",
+      "cloud ready",
+      "ai ready",
+      "production deployment",
+      "enterprise ready"
+    ],
+    "evidence_notes": "Tier-3 remote contract. Forbid unsupported modernization/production claims without finding backing. Legacy Phase-1 recs allowed."
+  },
+  "notes": "Tier-3 real-world remote contract — remote-php-bookstack pinned MIT BookStack. Accepted ambiguities documented per pack; does not claim product-wide accuracy."
+}

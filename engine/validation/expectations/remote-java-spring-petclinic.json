@@ -1,0 +1,586 @@
+{
+  "schema_version": "1.2",
+  "expect_ai_executed": false,
+  "expected_artifacts": [
+    "report.json"
+  ],
+  "technology_facts_expected": [
+    "Java",
+    "Spring Boot",
+    "Maven",
+    "Gradle"
+  ],
+  "technology_facts_forbidden": [
+    "COBOL",
+    "Laravel",
+    "Rails",
+    "Python",
+    "JavaScript",
+    "TypeScript",
+    "OpenAI"
+  ],
+  "expected_assessment_heads": [
+    "technologies",
+    "findings",
+    "architecture",
+    "roadmap"
+  ],
+  "finding_count": {
+    "minimum": 1
+  },
+  "recommendation_count": {
+    "minimum": 1
+  },
+  "technology_inventory": {
+    "required_languages": [
+      "Java"
+    ],
+    "forbidden_languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "PHP",
+      "COBOL"
+    ],
+    "required_frameworks": [
+      "Spring Boot"
+    ],
+    "forbidden_frameworks": [
+      "Flask",
+      "Express",
+      "Django",
+      "Laravel",
+      "React"
+    ],
+    "required_build_systems": [
+      "Maven",
+      "Gradle"
+    ],
+    "forbidden_build_systems": [
+      "npm",
+      "pip",
+      "Composer"
+    ],
+    "required_dependency_ecosystems": [
+      "maven",
+      "gradle"
+    ],
+    "forbidden_dependency_ecosystems": [
+      "npm",
+      "pip"
+    ],
+    "required_testing": [
+      "JUnit"
+    ],
+    "forbidden_testing": [
+      "Jest",
+      "pytest"
+    ],
+    "required_versions": [
+      {
+        "name": "Java",
+        "version": "17",
+        "version_state": "exact",
+        "evidence_note": "pom.xml property java.version=17 (and Gradle toolchain)",
+        "rationale": "Declared Java language level"
+      },
+      {
+        "name": "Spring Boot",
+        "version": "4.1.0",
+        "version_state": "exact",
+        "evidence_note": "pom.xml spring-boot-starter-parent version / Gradle boot plugin",
+        "rationale": "Declared Spring Boot version"
+      }
+    ],
+    "expected_repository_facts": [
+      "has_tests=True",
+      "has_build_system=true"
+    ],
+    "forbidden_repository_facts": [
+      "has_tests=False"
+    ],
+    "expected_application_indicators": [
+      "web_application",
+      "has_tests"
+    ],
+    "forbidden_application_indicators": [
+      "ai_integration"
+    ],
+    "allowed_ambiguous_facts": [],
+    "evidence_notes": "Evidence: src/main/java/**; pom.xml + mvnw; build.gradle + gradlew; Spring Boot parent/plugin; JUnit test sources. Both Maven and Gradle are first-class build systems in this pin. Do not claim Python/JS/AI. Cloud signals exist but are validated in Cloud slices, not as primary languages."
+  },
+  "security": {
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "security.private-key-material",
+      "security.credential-literal",
+      "security.placeholder-credential",
+      "security.authentication-disabled",
+      "SEC002"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_raw_values": [],
+    "not_applicable_rule_ids": [],
+    "evidence_notes": "Negative control (uncontrolled remote): expect conservative Security output. No credential/private-key/auth-disabled findings without repository evidence. No inferred CVE/vulnerability findings (product has no CVE pack)."
+  },
+  "architecture": {
+    "required_findings": [
+      {
+        "rule_id": "architecture.framework-leakage",
+        "path_pattern": "model/",
+        "severity": "medium",
+        "expected_count": 3,
+        "rationale": "Domain entities BaseEntity/NamedEntity/Person use jakarta.persistence \u2014 repository-provable framework leakage into domain"
+      }
+    ],
+    "forbidden_findings": [],
+    "allowed_findings": [
+      {
+        "rule_id": "ARCH001",
+        "rationale": "Legacy analyzer layered-component inventory; scored ambiguous"
+      },
+      {
+        "rule_id": "ARCH002",
+        "rationale": "Legacy API/controller inventory; ambiguous"
+      },
+      {
+        "rule_id": "ARCH003",
+        "rationale": "Legacy persistence inventory; ambiguous"
+      },
+      {
+        "rule_id": "ARCH005",
+        "rationale": "Legacy test-structure signal; ambiguous"
+      },
+      {
+        "rule_id": "ARCH007",
+        "rationale": "Legacy single-application inventory; ambiguous"
+      }
+    ],
+    "forbidden_rule_ids": [
+      "architecture.dependency-cycle",
+      "architecture.layer-boundary-violation",
+      "architecture.enterprise-standard-mismatch"
+    ],
+    "forbidden_cycles": [],
+    "expected_rule_count_ranges": [
+      {
+        "rule_id": "architecture.framework-leakage",
+        "exact": 3
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "not_applicable_rule_ids": [
+      "architecture.enterprise-standard-mismatch"
+    ],
+    "forbidden_unsupported_claims": [
+      "microservices",
+      "well-architected",
+      "production-ready architecture",
+      "loosely coupled",
+      "scalable",
+      "resilient"
+    ],
+    "evidence_notes": "Pinned SHA f182358d. Packages: org.springframework.samples.petclinic.{model,owner,system,vet}. SharedRules primary graph is collapsed/acyclic; framework-leakage on domain model JPA is the primary evidence-authored Architecture TP. Do not require cycles, microservices, or runtime topology."
+  },
+  "technical_debt": {
+    "required_findings": [],
+    "forbidden_findings": [
+      {
+        "rule_id": "technical_debt.large-callable",
+        "path_pattern": "src/test/",
+        "rationale": "Test-source complexity must not become production TD findings"
+      },
+      {
+        "rule_id": "technical_debt.excessive-branching",
+        "path_pattern": "src/test/",
+        "rationale": "Test-source complexity must not become production TD findings"
+      }
+    ],
+    "allowed_findings": [],
+    "forbidden_rule_ids": [
+      "technical_debt.large-callable",
+      "technical_debt.excessive-branching",
+      "technical_debt.deep-nesting",
+      "technical_debt.excessive-parameters",
+      "technical_debt.oversized-type"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "low technical debt",
+      "high technical debt",
+      "rewrite required",
+      "poor maintainability",
+      "developer productivity",
+      "financial debt",
+      "delivery delay"
+    ],
+    "evidence_notes": "Pinned SHA. Prior TD hits were under src/test only (I18nPropertiesSyncTest, PetClinicConcurrencyTests). After production-context filtering, no production Technical Debt findings are required. Do not invent rewrite/debt-posture claims."
+  },
+  "dependency": {
+    "required_manifests": [
+      {
+        "path": "pom.xml",
+        "ecosystem": "maven",
+        "manifest_type": "pom.xml",
+        "parse_status": "partially_succeeded",
+        "rationale": "Root pom.xml present; partial parse due to parent/BOM not fetched and similar coverage limits"
+      },
+      {
+        "path": "build.gradle",
+        "ecosystem": "gradle",
+        "manifest_type": "build.gradle",
+        "parse_status": "partially_succeeded",
+        "rationale": "Gradle build present; unsupported interpolation remains diagnostics, not unresolved findings"
+      }
+    ],
+    "forbidden_manifests": [
+      {
+        "path_pattern": "package\\.json$",
+        "rationale": "Petclinic must not invent npm manifests"
+      }
+    ],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "dependency.unresolved-version",
+      "dependency.mutable-version",
+      "dependency.unbounded-requirement",
+      "dependency.conflicting-exact-versions",
+      "dependency.duplicate-declaration"
+    ],
+    "expected_partial_parses": [
+      "pom.xml",
+      "build.gradle"
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "dependencies are healthy",
+      "secure supply chain",
+      "no dependency risk",
+      "dependencies are current",
+      "licenses are compliant",
+      "no vulnerabilities",
+      "upgrade-ready",
+      "safe dependency posture"
+    ],
+    "evidence_notes": "Pinned SHA. Maven ${webjars-*.version} properties resolve locally \u2014 must not become unresolved-version. Gradle unsupported interpolation is diagnostic-only. No SNAPSHOT/latest/duplicate/conflict hygiene hits observed in declaration evidence. Do not invent CVE/license/freshness claims."
+  },
+  "cloud": {
+    "required_signal_families": [
+      {
+        "family_id": "container",
+        "rationale": "Pinned commit includes docker-compose.yml and .devcontainer Docker artifacts"
+      },
+      {
+        "family_id": "orchestration",
+        "rationale": "Pinned commit includes k8s/petclinic.yml and k8s/db.yml"
+      },
+      {
+        "family_id": "deployment",
+        "rationale": "Pinned commit includes confirmed GHA deploy-and-test-cluster workflow"
+      }
+    ],
+    "forbidden_signal_families": [
+      {
+        "family_id": "platform",
+        "rationale": "No AWS/Azure/GCP provider platform facts at pinned commit"
+      },
+      {
+        "family_id": "serverless",
+        "rationale": "No serverless framework artifacts"
+      },
+      {
+        "family_id": "managed_service",
+        "rationale": "No managed-service resource markers as Cloud evidence"
+      }
+    ],
+    "required_signals": [
+      {
+        "family_id": "container",
+        "signal_kind": "docker_compose",
+        "path": "docker-compose.yml",
+        "rationale": "Root compose file at pinned SHA"
+      },
+      {
+        "family_id": "orchestration",
+        "signal_kind": "kubernetes",
+        "path_pattern": "k8s/",
+        "rationale": "Kubernetes manifests under k8s/"
+      },
+      {
+        "family_id": "deployment",
+        "signal_kind": "github_actions",
+        "path_pattern": "deploy-and-test-cluster",
+        "rationale": "Confirmed deploy workflow (not build-only gradle/maven workflows)"
+      }
+    ],
+    "forbidden_signals": [
+      {
+        "family_id": "deployment",
+        "path_pattern": "gradle-build\\.yml",
+        "rationale": "Build-only Gradle workflow must not be a confirmed deployment signal"
+      },
+      {
+        "family_id": "deployment",
+        "path_pattern": "maven-build\\.yml",
+        "rationale": "Build-only Maven workflow must not be a confirmed deployment signal"
+      }
+    ],
+    "required_findings": [
+      {
+        "rule_id": "cloud.cloud-010",
+        "rationale": "Containerization from compose/devcontainer"
+      },
+      {
+        "rule_id": "cloud.cloud-011",
+        "rationale": "Kubernetes manifests under k8s/"
+      },
+      {
+        "rule_id": "cloud.cloud-040",
+        "rationale": "Confirmed deployment pipeline workflow"
+      },
+      {
+        "rule_id": "cloud.cloud-060",
+        "rationale": "Three active families at pinned commit"
+      },
+      {
+        "rule_id": "cloud.cloud-061",
+        "rationale": "Deployment assets without provider platform markers"
+      }
+    ],
+    "forbidden_rule_ids": [
+      "cloud.cloud-001",
+      "cloud.cloud-002",
+      "cloud.cloud-030",
+      "cloud.cloud-050"
+    ],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)migrate to cloud",
+        "rationale": "No cloud migration recommendation"
+      },
+      {
+        "title_pattern": "(?i)production readiness",
+        "rationale": "No production-readiness recommendation"
+      },
+      {
+        "title_pattern": "(?i)cloud-native transformation",
+        "rationale": "No transformation recommendation"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "cloud ready",
+      "migration ready",
+      "cloud native architecture",
+      "production ready",
+      "highly available",
+      "secure cloud posture",
+      "cost optimized",
+      "operationally mature",
+      "successfully deployed",
+      "no cloud risks"
+    ],
+    "evidence_notes": "Pinned SHA f182358d. Evidence: docker-compose.yml, .devcontainer/*, k8s/*.yml, .github/workflows/deploy-and-test-cluster.yml. Build-only gradle/maven workflows must not confirm deployment. Do not invent cloud-native readiness or provider topology."
+  },
+  "ai_readiness": {
+    "required_signal_families": [],
+    "forbidden_signal_families": [
+      {
+        "family_id": "api_boundary",
+        "rationale": "Spring controllers must not invent AI API-boundary readiness"
+      },
+      {
+        "family_id": "documentation",
+        "rationale": "Petclinic docs must not invent AI documentation signals"
+      },
+      {
+        "family_id": "data_retrieval",
+        "rationale": "JPA/DB usage must not invent RAG/data-retrieval readiness"
+      },
+      {
+        "family_id": "ai_integration",
+        "rationale": "Spring/JPA/Docker must not invent AI/model/provider integration"
+      },
+      {
+        "family_id": "tool_mcp",
+        "rationale": "Spring/Docker must not invent MCP/tool signals"
+      },
+      {
+        "family_id": "workflow_agent",
+        "rationale": "Build/CI must not invent agent workflows"
+      },
+      {
+        "family_id": "observability_governance",
+        "rationale": "Spring/Docker must not invent AI observability/governance"
+      }
+    ],
+    "required_signals": [],
+    "forbidden_signals": [],
+    "required_findings": [],
+    "forbidden_findings": [],
+    "forbidden_rule_ids": [
+      "ai_readiness.ai-001",
+      "ai_readiness.ai-002",
+      "ai_readiness.ai-003",
+      "ai_readiness.ai-010",
+      "ai_readiness.ai-011",
+      "ai_readiness.ai-020",
+      "ai_readiness.ai-021",
+      "ai_readiness.ai-022",
+      "ai_readiness.ai-030",
+      "ai_readiness.ai-031",
+      "ai_readiness.ai-032",
+      "ai_readiness.ai-040",
+      "ai_readiness.ai-041",
+      "ai_readiness.ai-050",
+      "ai_readiness.ai-051",
+      "ai_readiness.ai-060",
+      "ai_readiness.ai-061"
+    ],
+    "required_recommendations": [],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)deploy rag",
+        "rationale": "no RAG deploy claim"
+      },
+      {
+        "title_pattern": "(?i)autonomous agent",
+        "rationale": "no autonomous agent claim"
+      },
+      {
+        "title_pattern": "(?i)productionize ai",
+        "rationale": "no productionize claim"
+      },
+      {
+        "title_pattern": "(?i)responsible ai",
+        "rationale": "no certification claim"
+      },
+      {
+        "title_pattern": "(?i)ai ready",
+        "rationale": "no readiness claim"
+      }
+    ],
+    "maximum_false_positive_count": 0,
+    "forbidden_conclusions": [
+      "ai ready",
+      "agent ready",
+      "rag ready",
+      "production ai ready",
+      "mature ai platform",
+      "strong ai foundation",
+      "governed ai",
+      "safe ai implementation",
+      "high-quality data",
+      "responsible ai compliant",
+      "no ai readiness risks"
+    ],
+    "evidence_notes": "pinned SHA evidence-authored; no invented AI/agent/model/provider findings; Spring/JPA/Docker must not invent AI readiness or organizational claims. Absence of findings does not establish AI readiness."
+  },
+  "modernization": {
+    "require_finding_backed_authority": true,
+    "require_priority_action_backed_roadmap": true,
+    "allow_legacy_recommendations": true,
+    "maximum_false_positive_count": 0,
+    "required_recommendations": [],
+    "allowed_recommendations": [
+      {
+        "title_pattern": "(?i)Kubernetes deployment packaging",
+        "rationale": "Phase-1 legacy cloud packaging; not PA-eligible"
+      }
+    ],
+    "forbidden_recommendations": [
+      {
+        "title_pattern": "(?i)become cloud native",
+        "rationale": "Vague unsupported theme"
+      },
+      {
+        "title_pattern": "(?i)rewrite (the |required|application)",
+        "rationale": "No rewrite claim"
+      },
+      {
+        "title_pattern": "(?i)^enable ai\\b|\\benable ai\\b",
+        "rationale": "No enable-AI modernization claim"
+      },
+      {
+        "title_pattern": "(?i)modernize the platform",
+        "rationale": "Vague platform modernization"
+      },
+      {
+        "title_pattern": "(?i)improve engineering excellence",
+        "rationale": "Vague excellence claim"
+      },
+      {
+        "title_pattern": "(?i)transform the architecture",
+        "rationale": "Vague architecture transform"
+      },
+      {
+        "title_pattern": "(?i)guaranteed",
+        "rationale": "No guaranteed outcome"
+      },
+      {
+        "title_pattern": "(?i)exact ROI|high ROI",
+        "rationale": "No ROI claim"
+      },
+      {
+        "title_pattern": "(?i)framework.?leakage",
+        "rationale": "No modernization rec inventing PA path from architecture.framework-leakage"
+      },
+      {
+        "title_pattern": "(?i)successful migration",
+        "rationale": "No migration-success modernization rec"
+      }
+    ],
+    "required_priority_actions": [],
+    "forbidden_priority_actions": [
+      {
+        "title_pattern": "(?i)framework.?leakage",
+        "rationale": "No framework-leakage PA"
+      },
+      {
+        "title_pattern": "(?i)successful migration",
+        "rationale": "No migration-success PA"
+      },
+      {
+        "title_pattern": "(?i)cloud ready",
+        "rationale": "No cloud-ready PA"
+      }
+    ],
+    "required_roadmap_phases": [],
+    "forbidden_roadmap_phases": [
+      "optimize"
+    ],
+    "required_roadmap_initiatives": [
+      {
+        "title_pattern": "(?i)Cloud",
+        "phase": "modernize",
+        "initiative_type": "legacy",
+        "rationale": "No PAs \u2192 legacy recommendation-grouped roadmap must be marked legacy"
+      }
+    ],
+    "forbidden_roadmap_initiatives": [
+      {
+        "title_pattern": "(?i)successful migration",
+        "rationale": "No migration success initiative"
+      }
+    ],
+    "forbidden_conclusions": [
+      "modernization ready",
+      "production ready",
+      "transformation ready",
+      "rewrite required",
+      "guaranteed improvement",
+      "exact ROI",
+      "successful migration",
+      "become cloud native",
+      "enable AI",
+      "transform the architecture",
+      "security certification",
+      "cloud ready",
+      "ai ready"
+    ],
+    "evidence_notes": "Evidence-authored: architecture.framework-leakage and cloud.* findings have no Phase-3 modernization providers \u2192 zero finding-backed PAs. Java>=17 provider silent. Legacy cloud packaging rec allowed. Legacy Modernize\u2014Cloud roadmap must remain marked legacy. No runtime architecture or migration-success claims."
+  },
+  "notes": "Slices 4.3\u20134.10 \u2014 Repository B (Spring Petclinic pinned SHA)."
+}

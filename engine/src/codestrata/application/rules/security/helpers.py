@@ -225,6 +225,8 @@ def evidence_configuration(
         message=message,
         safe_location=item.path,
         line_start=item.line_start,
+        # Configuration facts are single-line; RuleEvidence requires both ends.
+        line_end=item.line_start if item.line_start is not None else None,
         attributes=attributes,
         provenance="aggregated_repository_sensitive_evidence",
     )
@@ -243,6 +245,10 @@ def is_credential_sensitive_fact(item: ConfigurationFactEvidence) -> bool:
 
 
 def is_literal_credential(item: ConfigurationFactEvidence) -> bool:
+    from codestrata.application.evidence.repository_sensitive.values import (
+        is_ci_secret_expression,
+    )
+
     if not is_credential_sensitive_fact(item):
         return False
     if item.is_empty or item.value_kind is ValueKind.EMPTY:
@@ -254,6 +260,9 @@ def is_literal_credential(item: ConfigurationFactEvidence) -> bool:
         PlaceholderStatus.ENVIRONMENT_INTERPOLATION,
         PlaceholderStatus.PLACEHOLDER_LITERAL,
     }:
+        return False
+    # Preserved CI expression previews must not count as live credential bodies.
+    if item.redacted_preview and is_ci_secret_expression(item.redacted_preview):
         return False
     return item.value_kind is ValueKind.LITERAL
 

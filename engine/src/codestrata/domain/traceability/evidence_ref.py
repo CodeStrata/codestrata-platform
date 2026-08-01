@@ -174,10 +174,12 @@ def _identity_conflicts(left: EvidenceRef, right: EvidenceRef) -> list[str]:
 
 def _merge_evidence_refs(preferred: EvidenceRef, other: EvidenceRef) -> EvidenceRef:
     conflicts = _identity_conflicts(preferred, other)
-    if conflicts:
+    # Multiple rules may cite the same evidence_id; keep preferred.rule_id.
+    fatal_conflicts = [name for name in conflicts if name != "rule_id"]
+    if fatal_conflicts:
         raise TraceabilityValidationError(
             "contradictory EvidenceRef fields for evidence_id="
-            f"{preferred.evidence_id!r}: {', '.join(conflicts)}"
+            f"{preferred.evidence_id!r}: {', '.join(fatal_conflicts)}"
         )
     updates: dict[str, Any] = {
         "parent_evidence_ids": merge_unique_sorted(

@@ -1,0 +1,305 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:repo:security-hygiene:cc13cc4cc6a5954e418174e73693fffb6489758f34e42c573f75512cc6868e6b",
+    "graph_type": "repository",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:cc13cc4cc6a5954e418174e73693fffb6489758f34e42c573f75512cc6868e6b",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "repo:security-hygiene",
+      "node_type": "repository",
+      "properties": {
+        "branch": null,
+        "name": "security-hygiene",
+        "revision": "working-tree",
+        "source_location": null,
+        "source_type": "local"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:security-hygiene:file:README.md",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "01509ad447f0762f76cf619d2fa900f60bc5762264a95b86b263428722e82519",
+        "executable": false,
+        "file_kind": "documentation",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Markdown",
+        "media_type": "text/markdown",
+        "path": "README.md",
+        "size_bytes": 691
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "config/app.properties",
+          "source_id": "file:config/app.properties",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:security-hygiene:file:config/app.properties",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "3f25f2406b016553912cff5f6216f562478ab1a3c1f7545bea8f838c10709151",
+        "executable": false,
+        "file_kind": "configuration",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Java Properties",
+        "media_type": "text/x-java-properties",
+        "path": "config/app.properties",
+        "size_bytes": 213
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "secrets/test-only.pem",
+          "source_id": "file:secrets/test-only.pem",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:security-hygiene:file:secrets/test-only.pem",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "bc94eb59af32dbab039ebb5811ed470c8c5ac810be6cab84ccf35eea76688021",
+        "executable": false,
+        "file_kind": "unknown",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": null,
+        "media_type": null,
+        "path": "secrets/test-only.pem",
+        "size_bytes": 191
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/app.py",
+          "source_id": "file:src/app.py",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:security-hygiene:file:src/app.py",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "6a99565e92581766c4cc8d1248c1fe2b9385a7a789431c4b353e08722ecb8da2",
+        "executable": false,
+        "file_kind": "source",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Python",
+        "media_type": "text/x-python",
+        "path": "src/app.py",
+        "size_bytes": 107
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:security-hygiene=>repo:security-hygiene:file:README.md",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:security-hygiene",
+      "target_node_id": "repo:security-hygiene:file:README.md"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "config/app.properties",
+          "source_id": "file:config/app.properties",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:security-hygiene=>repo:security-hygiene:file:config/app.properties",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:security-hygiene",
+      "target_node_id": "repo:security-hygiene:file:config/app.properties"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "secrets/test-only.pem",
+          "source_id": "file:secrets/test-only.pem",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:security-hygiene=>repo:security-hygiene:file:secrets/test-only.pem",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:security-hygiene",
+      "target_node_id": "repo:security-hygiene:file:secrets/test-only.pem"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/app.py",
+          "source_id": "file:src/app.py",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:security-hygiene=>repo:security-hygiene:file:src/app.py",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:security-hygiene",
+      "target_node_id": "repo:security-hygiene:file:src/app.py"
+    }
+  ]
+}

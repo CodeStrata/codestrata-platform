@@ -1,0 +1,22 @@
+repository_id = "local-sample-python"
+display_name = "Local sample Python (Flask + pytest)"
+source_type = "local"
+local_path = "../../test-fixtures/sample-python-app"
+expected_results_path = "expectations/local-sample-python.json"
+tags = [
+  "set-4-13",
+  "fast",
+  "real-world",
+  "local",
+  "python",
+  "pip",
+  "flask",
+  "tests-present",
+  "dependency",
+  "technical-debt",
+  "set-4-2",
+]
+languages = ["python"]
+notes = """Repository C: Python Flask service with pyproject.toml and pytest.
+Dependency, Testing, and Technical Debt validation. CodeStrata-owned fixture."""
+enabled = true

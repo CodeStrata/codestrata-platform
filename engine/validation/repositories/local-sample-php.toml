@@ -1,0 +1,20 @@
+repository_id = "local-sample-php"
+display_name = "Local sample PHP (Laravel + PHPUnit)"
+source_type = "local"
+local_path = "../../test-fixtures/sample-php-app"
+expected_results_path = "expectations/local-sample-php.json"
+tags = [
+  "local",
+  "php",
+  "composer",
+  "laravel",
+  "tests-present",
+  "real-world",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "php",
+]
+notes = """Local sample PHP (Laravel + PHPUnit)"""
+enabled = true

@@ -1,0 +1,123 @@
+{
+  "files": [
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "d46bd8e529cf5171f6252f35a96ea35a3c109e2ee69fd6e0cc9007b71ea09938"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": ".github/workflows/ci.yml",
+      "size_bytes": 433
+    },
+    {
+      "executable": false,
+      "file_kind": "documentation",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "b2468c707192b4dfe58f533598f1ff5a076216da35436d811920b48d04773057"
+      },
+      "generated": false,
+      "language": "Markdown",
+      "media_type": "text/markdown",
+      "path": "README.md",
+      "size_bytes": 1558
+    },
+    {
+      "executable": false,
+      "file_kind": "configuration",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "3f25f2406b016553912cff5f6216f562478ab1a3c1f7545bea8f838c10709151"
+      },
+      "generated": false,
+      "language": "Java Properties",
+      "media_type": "text/x-java-properties",
+      "path": "config/app.properties",
+      "size_bytes": 213
+    },
+    {
+      "executable": false,
+      "file_kind": "configuration",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "3c68f248a5e12539d400464e54452e0373f82114ca591c012e14f8dfad29a241"
+      },
+      "generated": false,
+      "language": "Java Properties",
+      "media_type": "text/x-java-properties",
+      "path": "config/safe-env-ref.properties",
+      "size_bytes": 93
+    },
+    {
+      "executable": false,
+      "file_kind": "documentation",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "b068a277f414409c9dad6d36a258132311632526f06ed62aa3a610751f5db30a"
+      },
+      "generated": false,
+      "language": "Markdown",
+      "media_type": "text/markdown",
+      "path": "docs/examples.md",
+      "size_bytes": 249
+    },
+    {
+      "executable": false,
+      "file_kind": "unknown",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "f1d128f19d7df1ddc10acb27e7e014abf1b3bc761cde2b01a86c77d5f9f36b28"
+      },
+      "generated": false,
+      "language": null,
+      "media_type": null,
+      "path": "secrets/test-only.pem",
+      "size_bytes": 110
+    },
+    {
+      "executable": false,
+      "file_kind": "source",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "6a99565e92581766c4cc8d1248c1fe2b9385a7a789431c4b353e08722ecb8da2"
+      },
+      "generated": false,
+      "language": "Python",
+      "media_type": "text/x-python",
+      "path": "src/app.py",
+      "size_bytes": 107
+    },
+    {
+      "executable": false,
+      "file_kind": "unknown",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "8583a81ad950b477eafde0c49fbc97993ccff6ce31e95bf00a0c6e9fedf71725"
+      },
+      "generated": false,
+      "language": null,
+      "media_type": null,
+      "path": "tests/fixtures/fake_secret.txt",
+      "size_bytes": 82
+    }
+  ],
+  "identity": {
+    "display_name": "security-hygiene",
+    "repository_key": "security-hygiene",
+    "source_location": null,
+    "source_type": "local"
+  },
+  "manifest_version": "1.0",
+  "metadata": {},
+  "revision": {
+    "branch": null,
+    "captured_at": null,
+    "revision_id": "working-tree",
+    "revision_type": "working_tree",
+    "tag": null
+  }
+}

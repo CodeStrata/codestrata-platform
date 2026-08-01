@@ -1,0 +1,23 @@
+repository_id = "local-ai-readiness"
+display_name = "Local AI readiness signals fixture"
+source_type = "local"
+local_path = "fixtures/ai-readiness"
+assessment_config = "configs/local-ai-readiness.toml"
+expected_results_path = "expectations/local-ai-readiness.json"
+tags = [
+  "controlled",
+  "set-4-13",
+  "fast",
+  "local",
+  "fixture",
+  "ai-readiness",
+  "mcp",
+  "llm",
+  "controlled-signal",
+  "set-4-2",
+]
+languages = ["python"]
+notes = """Repository F: controlled AI readiness fixture (openai path/import + mcp.json).
+Uses configs/local-ai-readiness.toml to enable the AI Readiness pack only.
+No API keys and no network calls. CodeStrata-owned."""
+enabled = true

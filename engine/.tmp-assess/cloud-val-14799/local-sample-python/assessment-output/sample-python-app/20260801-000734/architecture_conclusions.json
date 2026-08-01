@@ -1,0 +1,162 @@
+{
+  "enabled": true,
+  "relationships": [],
+  "clusters": [],
+  "conclusions": [
+    {
+      "conclusion_id": "conclusion:architecture.conclusion.insufficient-evidence:4cb00f74347554ebf814",
+      "conclusion_version": "1.0.0",
+      "policy_id": "architecture.conclusion.insufficient-evidence",
+      "category": "architecture.insufficient-evidence",
+      "title": "Architecture evidence is insufficient for strong conclusions",
+      "summary": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+      "technical_interpretation": "Extraction and/or classification coverage is below the threshold for confident boundary or coupling conclusions.",
+      "executive_interpretation": "Available static evidence is insufficient for a confident architecture judgment. Improve source coverage or layer classification before treating architecture as assessed.",
+      "affected_scope": [
+        "repository"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "taxonomy_ids": [],
+      "source_finding_ids": [],
+      "source_positive_evidence_ids": [],
+      "supporting_evidence_ids": [],
+      "primary_finding_id": null,
+      "related_finding_ids": [],
+      "severity_summary": {
+        "highest_severity": "informational",
+        "severity_counts": {
+          "informational": 0
+        },
+        "primary_finding_severity": null,
+        "source_finding_count": 0
+      },
+      "business_impact": "unknown",
+      "confidence": "low",
+      "coverage": {
+        "extraction_coverage": "1.0000",
+        "classification_coverage": "0.0000"
+      },
+      "materiality": "informational",
+      "modernization_relevance": "wave_0_validate_stabilize",
+      "consolidated_recommendation_ids": [
+        "recgroup:17bc3f9d0d8e3bd7"
+      ],
+      "report_sections": [
+        "architecture"
+      ],
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "provenance": "architecture_conclusions",
+      "status": "insufficient_evidence",
+      "metadata": {}
+    }
+  ],
+  "recommendation_groups": [
+    {
+      "recommendation_group_id": "recgroup:17bc3f9d0d8e3bd7",
+      "title": "Respond to: Architecture evidence is insufficient for strong conclusions",
+      "primary_action": "Review the underlying architecture findings and regenerate the dependency graph after structural changes.",
+      "rationale": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+      "affected_scope": [
+        "repository"
+      ],
+      "source_recommendation_ids": [],
+      "source_finding_ids": [],
+      "prerequisites": [
+        "Confirm classification coverage is adequate for the affected units."
+      ],
+      "effort_band": "medium",
+      "validation_steps": [
+        "Regenerate the architecture dependency graph.",
+        "Confirm related findings are resolved or intentionally accepted.",
+        "Re-run architecture conclusions and compare conclusion IDs."
+      ],
+      "sequencing_guidance": "Prefer resolving direct boundary violations before broad fan-out cleanup when both exist in the same scope.",
+      "modernization_wave": "wave_0_validate_stabilize",
+      "confidence": "low",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ]
+    }
+  ],
+  "summary": {
+    "conclusion_count": 1,
+    "finding_count": 0,
+    "material_conclusion_count": 0,
+    "highest_severity": "informational",
+    "business_impact": "unknown",
+    "coverage_notes": [
+      "extraction_coverage=1.0",
+      "classification_coverage=0.0"
+    ],
+    "limitations": [
+      "Conclusions interpret architecture findings; they are not new rule findings.",
+      "Business impact remains unknown for repository-only assessments."
+    ],
+    "headline": "1 architecture conclusion(s) from 0 finding(s)"
+  },
+  "telemetry": {
+    "enabled": true,
+    "relationship_count": 0,
+    "cluster_count": 0,
+    "conclusion_count": 1,
+    "recommendation_group_count": 1,
+    "policy_records": [
+      {
+        "policy_id": "architecture.conclusion.boundary-integrity",
+        "status": "not_applicable",
+        "message": null,
+        "conclusion_count": 0
+      },
+      {
+        "policy_id": "architecture.conclusion.broad-dependency-surface",
+        "status": "not_applicable",
+        "message": null,
+        "conclusion_count": 0
+      },
+      {
+        "policy_id": "architecture.conclusion.cyclic-dependency-structure",
+        "status": "not_applicable",
+        "message": null,
+        "conclusion_count": 0
+      },
+      {
+        "policy_id": "architecture.conclusion.enterprise-nonconformance",
+        "status": "not_applicable",
+        "message": "enterprise_context_absent",
+        "conclusion_count": 0
+      },
+      {
+        "policy_id": "architecture.conclusion.framework-boundary-erosion",
+        "status": "not_applicable",
+        "message": null,
+        "conclusion_count": 0
+      },
+      {
+        "policy_id": "architecture.conclusion.insufficient-evidence",
+        "status": "succeeded",
+        "message": "produced_1",
+        "conclusion_count": 1
+      },
+      {
+        "policy_id": "architecture.conclusion.positive-boundary-conformance",
+        "status": "skipped",
+        "message": "disabled_by_configuration",
+        "conclusion_count": 0
+      }
+    ],
+    "duration_ms": 0,
+    "configuration_fingerprint": "2e387299f024a55a",
+    "graph_fingerprint": "ae9bfc54011d7802a1f20096",
+    "enterprise_context_used": false,
+    "failure_count": 0
+  },
+  "diagnostics": []
+}

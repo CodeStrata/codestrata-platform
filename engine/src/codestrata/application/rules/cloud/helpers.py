@@ -154,6 +154,21 @@ def known_serverless_kinds(
     return tuple(sorted(values, key=lambda item: item.value))
 
 
+def deployment_fact_is_confirmed(item: CloudDeploymentFactEvidence) -> bool:
+    """True when a CI/CD artifact has confirmed cloud-deploy steps.
+
+    Path discovery may classify every workflow as a deployment candidate.
+    Build-only / echo-only workflows remain ``structurally_inspected`` and must
+    not count as deployment-pipeline findings or the deployment signal family.
+    """
+
+    return item.confirmation_level in {
+        EvidenceConfirmationLevel.STRUCTURALLY_CONFIRMED,
+        EvidenceConfirmationLevel.DECLARED,
+        EvidenceConfirmationLevel.CONFIGURED,
+    }
+
+
 def known_deployment_systems(
     evidence: AggregatedRepositoryCloudEvidence,
 ) -> tuple[CloudDeploymentSystem, ...]:
@@ -161,6 +176,7 @@ def known_deployment_systems(
         item.system
         for item in evidence.deployment_facts
         if item.system is not CloudDeploymentSystem.UNKNOWN
+        and deployment_fact_is_confirmed(item)
     }
     return tuple(sorted(values, key=lambda item: item.value))
 

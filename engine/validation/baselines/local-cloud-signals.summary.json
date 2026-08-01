@@ -1,0 +1,37 @@
+{
+  "ai_executed": false,
+  "application_indicators": [
+    "deployment-workflow",
+    "docker",
+    "docker-compose",
+    "kubernetes"
+  ],
+  "dependency_ecosystems": [],
+  "finding_rule_ids": [
+    "ARCH004",
+    "CLOUD001",
+    "CLOUD002",
+    "CLOUD003",
+    "CLOUD008",
+    "CLOUD010",
+    "build.system.summary",
+    "cloud.cloud-010",
+    "cloud.cloud-011",
+    "cloud.cloud-040",
+    "cloud.cloud-060",
+    "cloud.cloud-061",
+    "codestrata-rule-missing-license",
+    "repository.metrics.summary"
+  ],
+  "findings_count": 14,
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "engine/validation/fixtures/cloud-signals",
+  "repository_composition_facts": [
+    "has_tests=False"
+  ],
+  "repository_id": "local-cloud-signals",
+  "schema_version": "1.2",
+  "technologies": [],
+  "technologies_by_category": {},
+  "technology_versions": {}
+}

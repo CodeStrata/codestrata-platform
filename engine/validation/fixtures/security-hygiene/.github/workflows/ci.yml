@@ -1,0 +1,13 @@
+# TEST-ONLY: GitHub Actions workflow for security-hygiene validation fixture.
+# References CI secrets by name only — no literal credentials.
+name: ci-fixture
+on: [workflow_dispatch]
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Example secret reference (fixture)
+        env:
+          API_TOKEN: ${{ secrets.API_TOKEN }}
+        run: echo "fixture uses secret reference only"

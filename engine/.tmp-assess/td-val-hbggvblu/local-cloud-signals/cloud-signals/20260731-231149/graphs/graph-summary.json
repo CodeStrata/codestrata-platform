@@ -1,0 +1,19 @@
+{
+  "assessment_graph_id": "graph:assessment:e522098bf7f05657b7a1665511288476180df1c8cf05725ac4600eeed79441d3",
+  "assessment_node_count": 0,
+  "assessment_relationship_count": 0,
+  "assessment_source_fingerprint": "sha256:e522098bf7f05657b7a1665511288476180df1c8cf05725ac4600eeed79441d3",
+  "binding_count": 0,
+  "engineering_knowledge_persisted": true,
+  "engineering_knowledge_persistence_note": "Builtin catalog is small; full Engineering Knowledge Graph snapshot is persisted.",
+  "knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+  "knowledge_node_count": 38,
+  "knowledge_relationship_count": 31,
+  "knowledge_source_fingerprint": "catalog:codestrata-core:1.0.0",
+  "matched_concepts_by_knowledge_type": {},
+  "repository_graph_id": "graph:repo:cloud-signals:a8df6c2b81a0eb544591c74cdc1039964dd69faafb6cfe2cdf3c15a09ce82eb0",
+  "repository_node_count": 7,
+  "repository_relationship_count": 6,
+  "repository_source_fingerprint": "sha256:a8df6c2b81a0eb544591c74cdc1039964dd69faafb6cfe2cdf3c15a09ce82eb0",
+  "unmatched_observation_count": 6
+}

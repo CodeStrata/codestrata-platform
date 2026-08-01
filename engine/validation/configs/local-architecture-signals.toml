@@ -1,0 +1,17 @@
+# Assessment overlay for architecture-signals precision fixture only.
+# Not used by the six-repository ACTIVE_VALIDATION_SET.
+
+[repository]
+path = "."
+
+[rules]
+enabled = true
+
+[rules.architecture]
+enabled = true
+
+[assessment.sections.architecture]
+enabled = true
+
+[ai]
+enabled = false

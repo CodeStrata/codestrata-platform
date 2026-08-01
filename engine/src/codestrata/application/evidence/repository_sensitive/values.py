@@ -62,6 +62,13 @@ def classify_placeholder(value: str) -> tuple[PlaceholderStatus, str | None, Val
             "environment_variable",
             ValueKind.ENVIRONMENT_REFERENCE,
         )
+    # CI vault/OIDC expressions reference secrets by name — not secret bodies.
+    if is_ci_secret_expression(text):
+        return (
+            PlaceholderStatus.ENVIRONMENT_INTERPOLATION,
+            "ci_secret_expression",
+            ValueKind.ENVIRONMENT_REFERENCE,
+        )
     if lower in _PLACEHOLDER_LITERALS or lower.startswith("your_"):
         return PlaceholderStatus.PLACEHOLDER_LITERAL, lower, ValueKind.PLACEHOLDER
     if text.startswith("<") and text.endswith(">"):

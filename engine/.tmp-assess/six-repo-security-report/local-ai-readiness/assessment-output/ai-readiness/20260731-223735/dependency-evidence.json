@@ -1,0 +1,187 @@
+{
+  "artifact_schema_id": "codestrata.dependency_evidence",
+  "bundles": [
+    {
+      "coverage": {
+        "declarations_collected": 1,
+        "manifests_discovered": 1,
+        "manifests_excluded": 0,
+        "manifests_failed": 0,
+        "manifests_parsed": 1,
+        "manifests_partially_parsed": 0,
+        "manifests_supported": 1,
+        "unresolved_expression_count": 0,
+        "unsupported_construct_count": 0
+      },
+      "declarations": [
+        {
+          "classification": "source",
+          "configuration_name": null,
+          "declaration_kind": "runtime",
+          "ecosystem": "python",
+          "environment_marker": null,
+          "evidence_id": "ev:558d0593c851e267f609a33e",
+          "extras": [],
+          "group_name": null,
+          "is_dependency_management": false,
+          "is_editable": false,
+          "is_local_path": false,
+          "manifest_type": "requirements.txt",
+          "metadata": {},
+          "normalized_identity": "openai",
+          "optional": false,
+          "original_identity": "openai",
+          "profile": null,
+          "provenance": {
+            "configuration_fingerprint": "dependency_assessment",
+            "extraction_method": "python_manifest_parse",
+            "notes": [],
+            "origin": "manifest",
+            "provider_id": "dependency.python.manifest",
+            "provider_version": "1.0.0",
+            "source_analyzer": "dependency_evidence",
+            "source_path": "requirements.txt",
+            "transformation_chain": [
+              "python"
+            ]
+          },
+          "raw_version": ">=1.40.0",
+          "resolved_version_local": null,
+          "source": {
+            "line_end": 2,
+            "line_start": 2,
+            "path": "requirements.txt",
+            "snippet": "openai>=1.40.0"
+          },
+          "unsupported_reason": null,
+          "version_availability": "available",
+          "version_resolution_status": "resolved"
+        }
+      ],
+      "diagnostics": [],
+      "ecosystem": "python",
+      "manifests": [
+        {
+          "classification": "source",
+          "declaration_count": 1,
+          "diagnostics": [],
+          "ecosystem": "python",
+          "evidence_id": "ev:1d501cc21c5f9beb0194abf0",
+          "manifest_type": "requirements.txt",
+          "parse_status": "succeeded",
+          "path": "requirements.txt",
+          "provenance": {
+            "configuration_fingerprint": "dependency_assessment",
+            "extraction_method": "requirements_parse",
+            "notes": [],
+            "origin": "manifest",
+            "provider_id": "dependency.python.manifest",
+            "provider_version": "1.0.0",
+            "source_analyzer": "dependency_evidence",
+            "source_path": "requirements.txt",
+            "transformation_chain": [
+              "python"
+            ]
+          },
+          "unresolved_expressions": [],
+          "unsupported_constructs": []
+        }
+      ],
+      "provider_id": "dependency.python.manifest",
+      "provider_version": "1.0.0",
+      "schema_version": "1.1.0",
+      "status": "succeeded"
+    }
+  ],
+  "contributing_provider_ids": [
+    "dependency.python.manifest"
+  ],
+  "coverage": {
+    "declarations_collected": 1,
+    "manifests_discovered": 1,
+    "manifests_excluded": 0,
+    "manifests_failed": 0,
+    "manifests_parsed": 1,
+    "manifests_partially_parsed": 0,
+    "manifests_supported": 1,
+    "unresolved_expression_count": 0,
+    "unsupported_construct_count": 0
+  },
+  "declarations": [
+    {
+      "classification": "source",
+      "configuration_name": null,
+      "declaration_kind": "runtime",
+      "ecosystem": "python",
+      "environment_marker": null,
+      "evidence_id": "ev:558d0593c851e267f609a33e",
+      "extras": [],
+      "group_name": null,
+      "is_dependency_management": false,
+      "is_editable": false,
+      "is_local_path": false,
+      "manifest_type": "requirements.txt",
+      "metadata": {},
+      "normalized_identity": "openai",
+      "optional": false,
+      "original_identity": "openai",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "dependency_assessment",
+        "extraction_method": "python_manifest_parse",
+        "notes": [],
+        "origin": "manifest",
+        "provider_id": "dependency.python.manifest",
+        "provider_version": "1.0.0",
+        "source_analyzer": "dependency_evidence",
+        "source_path": "requirements.txt",
+        "transformation_chain": [
+          "python"
+        ]
+      },
+      "raw_version": ">=1.40.0",
+      "resolved_version_local": null,
+      "source": {
+        "line_end": 2,
+        "line_start": 2,
+        "path": "requirements.txt",
+        "snippet": "openai>=1.40.0"
+      },
+      "unsupported_reason": null,
+      "version_availability": "available",
+      "version_resolution_status": "resolved"
+    }
+  ],
+  "diagnostics": [],
+  "evidence_fingerprint": "9cc3d3a93a025a05",
+  "manifests": [
+    {
+      "classification": "source",
+      "declaration_count": 1,
+      "diagnostics": [],
+      "ecosystem": "python",
+      "evidence_id": "ev:1d501cc21c5f9beb0194abf0",
+      "manifest_type": "requirements.txt",
+      "parse_status": "succeeded",
+      "path": "requirements.txt",
+      "provenance": {
+        "configuration_fingerprint": "dependency_assessment",
+        "extraction_method": "requirements_parse",
+        "notes": [],
+        "origin": "manifest",
+        "provider_id": "dependency.python.manifest",
+        "provider_version": "1.0.0",
+        "source_analyzer": "dependency_evidence",
+        "source_path": "requirements.txt",
+        "transformation_chain": [
+          "python"
+        ]
+      },
+      "unresolved_expressions": [],
+      "unsupported_constructs": []
+    }
+  ],
+  "repository_id": "repository",
+  "schema_version": "1.1.0",
+  "status": "succeeded"
+}

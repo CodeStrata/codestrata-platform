@@ -1,0 +1,439 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:repo:cloud-signals:a8df6c2b81a0eb544591c74cdc1039964dd69faafb6cfe2cdf3c15a09ce82eb0",
+    "graph_type": "repository",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:a8df6c2b81a0eb544591c74cdc1039964dd69faafb6cfe2cdf3c15a09ce82eb0",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "repo:cloud-signals",
+      "node_type": "repository",
+      "properties": {
+        "branch": null,
+        "name": "cloud-signals",
+        "revision": "working-tree",
+        "source_location": null,
+        "source_type": "local"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": ".github/workflows/deploy.yml",
+          "source_id": "file:.github/workflows/deploy.yml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:.github/workflows/deploy.yml",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "f3fa1f6c7cdd78586c8d613e2d63cbab5112778ac801ebce24a0452f5b65b78e",
+        "executable": false,
+        "file_kind": "infrastructure",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "YAML",
+        "media_type": "application/yaml",
+        "path": ".github/workflows/deploy.yml",
+        "size_bytes": 282
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "Dockerfile",
+          "source_id": "file:Dockerfile",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:Dockerfile",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "9bf4b5257f665f0364ab2cdbe39cd59c18895dc3f0487ca8f1af987fb731f2d8",
+        "executable": false,
+        "file_kind": "infrastructure",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Dockerfile",
+        "media_type": null,
+        "path": "Dockerfile",
+        "size_bytes": 212
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:README.md",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "3295e3b7c688839ae57716db9e4053c7fdaaa732c0905fc1388c87b40a40a742",
+        "executable": false,
+        "file_kind": "documentation",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Markdown",
+        "media_type": "text/markdown",
+        "path": "README.md",
+        "size_bytes": 612
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "app/hello.sh",
+          "source_id": "file:app/hello.sh",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:app/hello.sh",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "0718a195b0beaf0ac57c150b926f6d4f94b26303dd7f4df517a8d4a4360e33d5",
+        "executable": false,
+        "file_kind": "unknown",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Shell",
+        "media_type": null,
+        "path": "app/hello.sh",
+        "size_bytes": 95
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "docker-compose.yml",
+          "source_id": "file:docker-compose.yml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:docker-compose.yml",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "f6fcab3235b3df19c20e7b63f23c8b0b52405845105015398740a07f7bc6e8a2",
+        "executable": false,
+        "file_kind": "infrastructure",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "YAML",
+        "media_type": "application/yaml",
+        "path": "docker-compose.yml",
+        "size_bytes": 190
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "k8s/deployment.yaml",
+          "source_id": "file:k8s/deployment.yaml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:cloud-signals:file:k8s/deployment.yaml",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "4926ef1db958f0730b507510e17ef00a3ef1446d72dcd3a1422b5258f4fef317",
+        "executable": false,
+        "file_kind": "infrastructure",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "YAML",
+        "media_type": "application/yaml",
+        "path": "k8s/deployment.yaml",
+        "size_bytes": 512
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": ".github/workflows/deploy.yml",
+          "source_id": "file:.github/workflows/deploy.yml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:.github/workflows/deploy.yml",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:.github/workflows/deploy.yml"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "Dockerfile",
+          "source_id": "file:Dockerfile",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:Dockerfile",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:Dockerfile"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:README.md",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:README.md"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "app/hello.sh",
+          "source_id": "file:app/hello.sh",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:app/hello.sh",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:app/hello.sh"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "docker-compose.yml",
+          "source_id": "file:docker-compose.yml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:docker-compose.yml",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:docker-compose.yml"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "k8s/deployment.yaml",
+          "source_id": "file:k8s/deployment.yaml",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:cloud-signals=>repo:cloud-signals:file:k8s/deployment.yaml",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:cloud-signals",
+      "target_node_id": "repo:cloud-signals:file:k8s/deployment.yaml"
+    }
+  ]
+}

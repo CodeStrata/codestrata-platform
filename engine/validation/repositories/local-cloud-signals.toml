@@ -1,0 +1,21 @@
+repository_id = "local-cloud-signals"
+display_name = "Local cloud/deployment signals fixture"
+source_type = "local"
+local_path = "fixtures/cloud-signals"
+expected_results_path = "expectations/local-cloud-signals.json"
+tags = [
+  "controlled",
+  "set-4-13",
+  "fast",
+  "local",
+  "fixture",
+  "cloud",
+  "docker",
+  "kubernetes",
+  "deployment",
+  "set-4-2",
+]
+languages = ["shell"]
+notes = """Repository D: controlled cloud/deployment fixture (Dockerfile, compose, k8s, GHA).
+CodeStrata-owned. No credentials. Static assessment only."""
+enabled = true

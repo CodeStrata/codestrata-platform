@@ -1,0 +1,319 @@
+{
+  "architecture_pack_id": "architecture.core",
+  "architecture_pack_version": "1.0.0",
+  "business_impact": "unknown",
+  "conclusion_ids": [
+    "conclusion:architecture.conclusion.insufficient-evidence:a15bf62e97148fa130e2"
+  ],
+  "conclusions": [
+    {
+      "affected_scope": [
+        "repository"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "business_impact": "unknown",
+      "category": "architecture.insufficient-evidence",
+      "conclusion_id": "conclusion:architecture.conclusion.insufficient-evidence:a15bf62e97148fa130e2",
+      "conclusion_version": "1.0.0",
+      "confidence": "low",
+      "consolidated_recommendation_ids": [
+        "recgroup:581b2ba33172503a"
+      ],
+      "coverage": {
+        "classification_coverage": "0.0000",
+        "extraction_coverage": "1.0000"
+      },
+      "executive_interpretation": "Available static evidence is insufficient for a confident architecture judgment. Improve source coverage or layer classification before treating architecture as assessed.",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "materiality": "informational",
+      "metadata": {},
+      "modernization_relevance": "wave_0_validate_stabilize",
+      "policy_id": "architecture.conclusion.insufficient-evidence",
+      "primary_finding_id": null,
+      "provenance": "architecture_conclusions",
+      "related_finding_ids": [],
+      "report_sections": [
+        "architecture"
+      ],
+      "severity_summary": {
+        "highest_severity": "informational",
+        "primary_finding_severity": null,
+        "severity_counts": {
+          "informational": 0
+        },
+        "source_finding_count": 0
+      },
+      "source_finding_ids": [],
+      "source_positive_evidence_ids": [],
+      "status": "insufficient_evidence",
+      "summary": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+      "supporting_evidence_ids": [],
+      "taxonomy_ids": [],
+      "technical_interpretation": "Extraction and/or classification coverage is below the threshold for confident boundary or coupling conclusions.",
+      "title": "Architecture evidence is insufficient for strong conclusions"
+    }
+  ],
+  "configuration_fingerprint": "82d17347a0e1b7a9",
+  "coverage": {
+    "areas": [
+      {
+        "area_id": "extraction_coverage",
+        "denominator": null,
+        "limitations": [],
+        "maturity": "high",
+        "numerator": null,
+        "provenance": "architecture_view",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "classification_coverage",
+        "denominator": null,
+        "limitations": [
+          "Low coverage reduces confidence in architecture meaning."
+        ],
+        "maturity": "low",
+        "numerator": null,
+        "provenance": "architecture_view",
+        "ratio": 0.0,
+        "status": "partial"
+      },
+      {
+        "area_id": "enterprise_context_coverage",
+        "denominator": null,
+        "limitations": [
+          "Enterprise context was not supplied."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "assessment_assembly",
+        "ratio": null,
+        "status": "not_applicable"
+      },
+      {
+        "area_id": "framework_coverage",
+        "denominator": null,
+        "limitations": [
+          "Framework coverage is not yet measured as a ratio."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "architecture_assessment",
+        "ratio": null,
+        "status": "unsupported"
+      },
+      {
+        "area_id": "build_metadata_coverage",
+        "denominator": null,
+        "limitations": [
+          "Build-metadata coverage is not measured here."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "architecture_assessment",
+        "ratio": null,
+        "status": "unsupported"
+      }
+    ]
+  },
+  "diagnostics": [],
+  "enterprise_context_used": false,
+  "evidence_fingerprint": "architecture_assessment",
+  "evidence_pipeline": "language_evidence",
+  "execution_summary": {
+    "architecture_rules_planned": 7,
+    "conclusion_count": 1,
+    "conclusion_policies_executed": 7,
+    "provider_failures": 0,
+    "providers_executed": 0,
+    "providers_planned": 0,
+    "recommendation_group_count": 1,
+    "rules_executed": 7,
+    "rules_insufficient_evidence": 0,
+    "rules_matched": 0,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 7,
+    "suppressed_finding_count": 0,
+    "visible_finding_count": 0
+  },
+  "finding_ids": [],
+  "finding_summaries": [],
+  "graph_fingerprint": "4bca24d627b3ffbaec6bcfb2",
+  "limitations": [
+    {
+      "affected_capability": "layer_classification",
+      "category": "partial-classification",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:2057dd2919bc",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Layer or boundary classification coverage is incomplete for some units."
+    },
+    {
+      "affected_capability": "architecture_assessment",
+      "category": "static-analysis-only",
+      "importance": "material",
+      "limitation_id": "arch-limitation:2612d5d918d6",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": "Validate critical findings with targeted design review or dynamic checks.",
+      "summary": "Architecture assessment is based on static analysis of source dependencies and declared structure. Runtime behavior is not observed."
+    },
+    {
+      "affected_capability": "architecture_strengths",
+      "category": "positive-evidence-unavailable",
+      "importance": "informational",
+      "limitation_id": "arch-limitation:364e9e75002e",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Architecture strengths remain empty until explicit positive evidence providers and conclusions are enabled."
+    },
+    {
+      "affected_capability": "architecture_assessment",
+      "category": "runtime-behavior-not-observed",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:3a84a0ce6e70",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "No runtime traces, production telemetry, or load behavior were assessed."
+    },
+    {
+      "affected_capability": "business_impact",
+      "category": "enterprise-context-unavailable",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:3aa718b4f40a",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Business impact remains unknown because Engineering Knowledge Graph context was not supplied."
+    }
+  ],
+  "metadata": {
+    "schema": "1.0.0",
+    "strengths_policy": "empty_until_positive_evidence"
+  },
+  "recommendation_group_ids": [
+    "recgroup:581b2ba33172503a"
+  ],
+  "recommendation_groups": [
+    {
+      "affected_scope": [
+        "repository"
+      ],
+      "confidence": "low",
+      "effort_band": "medium",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "modernization_wave": "wave_0_validate_stabilize",
+      "prerequisites": [
+        "Confirm classification coverage is adequate for the affected units."
+      ],
+      "primary_action": "Review the underlying architecture findings and regenerate the dependency graph after structural changes.",
+      "rationale": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+      "recommendation_group_id": "recgroup:581b2ba33172503a",
+      "sequencing_guidance": "Prefer resolving direct boundary violations before broad fan-out cleanup when both exist in the same scope.",
+      "source_finding_ids": [],
+      "source_recommendation_ids": [],
+      "title": "Respond to: Architecture evidence is insufficient for strong conclusions",
+      "validation_steps": [
+        "Regenerate the architecture dependency graph.",
+        "Confirm related findings are resolved or intentionally accepted.",
+        "Re-run architecture conclusions and compare conclusion IDs."
+      ]
+    }
+  ],
+  "repository_id": "security-hygiene",
+  "section_id": "assessment.architecture",
+  "section_version": "1.0.0",
+  "status": "succeeded",
+  "strengths": [],
+  "traceability": {
+    "edges": [
+      {
+        "edge_id": "trace:41f5f4e94b195a1f",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.architecture",
+        "target_id": "conclusion:architecture.conclusion.insufficient-evidence:a15bf62e97148fa130e2"
+      },
+      {
+        "edge_id": "trace:31c1bbad26e50435",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "extraction_coverage"
+      },
+      {
+        "edge_id": "trace:516b7b1c98dff425",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "framework_coverage"
+      },
+      {
+        "edge_id": "trace:7a43982e7fb355f8",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "enterprise_context_coverage"
+      },
+      {
+        "edge_id": "trace:bfba91e8ebe6644c",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "classification_coverage"
+      },
+      {
+        "edge_id": "trace:e333656d86fa7f1a",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "build_metadata_coverage"
+      },
+      {
+        "edge_id": "trace:2dd3d7e051ab5ba0",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:364e9e75002e"
+      },
+      {
+        "edge_id": "trace:3597401d15ac6d0c",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:2612d5d918d6"
+      },
+      {
+        "edge_id": "trace:9d0fa42545b3fa75",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:2057dd2919bc"
+      },
+      {
+        "edge_id": "trace:a21f4c9dcd3b7610",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:3a84a0ce6e70"
+      },
+      {
+        "edge_id": "trace:f54a11d4513a41a9",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:3aa718b4f40a"
+      },
+      {
+        "edge_id": "trace:40c27db75c6472f2",
+        "relation": "section_to_pack",
+        "source_id": "assessment.architecture",
+        "target_id": "architecture.core"
+      },
+      {
+        "edge_id": "trace:a424bf3e8560e2c5",
+        "relation": "section_to_recommendation_group",
+        "source_id": "assessment.architecture",
+        "target_id": "recgroup:581b2ba33172503a"
+      }
+    ]
+  }
+}

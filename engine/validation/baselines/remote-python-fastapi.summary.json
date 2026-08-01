@@ -1,0 +1,6 @@
+{
+  "repository_id": "remote-python-fastapi",
+  "schema_version": "1.2",
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "https://github.com/fastapi/full-stack-fastapi-template.git@c9e70d65c74f7adda417fc8de0757207ff77514c"
+}

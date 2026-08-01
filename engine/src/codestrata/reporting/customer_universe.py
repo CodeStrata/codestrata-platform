@@ -709,6 +709,16 @@ def _customer_to_phase1_recommendation(
 
 
 def _finding_dedupe_key(item: CustomerFinding) -> str:
+    """Dedupe key for customer findings.
+
+    Shared-rule findings use evidence-scoped IDs (``finding:…``). Collapsing
+    those on rule+title alone drops distinct credential/key hits that share a
+    title. Legacy/analyzer findings still collapse on rule+title.
+    """
+
+    finding_id = (item.id or "").strip().lower()
+    if finding_id.startswith("finding:"):
+        return f"id::{finding_id}"
     return f"{item.rule_id.strip().lower()}::{item.title.strip().lower()}"
 
 

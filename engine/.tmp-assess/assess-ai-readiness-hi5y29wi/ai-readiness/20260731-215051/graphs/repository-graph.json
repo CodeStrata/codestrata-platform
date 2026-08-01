@@ -1,0 +1,305 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:repo:ai-readiness:16da5f30eb4c7b48483ce810f958c9af06e6b61dbd08704b1cec77b0ab7a9e9f",
+    "graph_type": "repository",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:16da5f30eb4c7b48483ce810f958c9af06e6b61dbd08704b1cec77b0ab7a9e9f",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "repo:ai-readiness",
+      "node_type": "repository",
+      "properties": {
+        "branch": null,
+        "name": "ai-readiness",
+        "revision": "working-tree",
+        "source_location": null,
+        "source_type": "local"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:ai-readiness:file:README.md",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "d5bd5f562a75cf0430952df1e2a0283c8c2283aa03165ccd58fa97500ad992b6",
+        "executable": false,
+        "file_kind": "documentation",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Markdown",
+        "media_type": "text/markdown",
+        "path": "README.md",
+        "size_bytes": 572
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "mcp.json",
+          "source_id": "file:mcp.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:ai-readiness:file:mcp.json",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "e1b4cce3918a3f721bceb0944e593d727278a0ec2dc79128b7f98b9ee178a0a6",
+        "executable": false,
+        "file_kind": "unknown",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "JSON",
+        "media_type": "application/json",
+        "path": "mcp.json",
+        "size_bytes": 152
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "requirements.txt",
+          "source_id": "file:requirements.txt",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:ai-readiness:file:requirements.txt",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "1d706bb4bed922b92d81e11e1025428576b77cdd681995bd32ed62d46ca05d39",
+        "executable": false,
+        "file_kind": "dependency_manifest",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": null,
+        "media_type": null,
+        "path": "requirements.txt",
+        "size_bytes": 101
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/agent.py",
+          "source_id": "file:src/agent.py",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:ai-readiness:file:src/agent.py",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "9165599b750a77737d59caebba499c687d4292504665590c11b777c6507821e5",
+        "executable": false,
+        "file_kind": "source",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Python",
+        "media_type": "text/x-python",
+        "path": "src/agent.py",
+        "size_bytes": 410
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:ai-readiness=>repo:ai-readiness:file:README.md",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:ai-readiness",
+      "target_node_id": "repo:ai-readiness:file:README.md"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "mcp.json",
+          "source_id": "file:mcp.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:ai-readiness=>repo:ai-readiness:file:mcp.json",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:ai-readiness",
+      "target_node_id": "repo:ai-readiness:file:mcp.json"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "requirements.txt",
+          "source_id": "file:requirements.txt",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:ai-readiness=>repo:ai-readiness:file:requirements.txt",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:ai-readiness",
+      "target_node_id": "repo:ai-readiness:file:requirements.txt"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/agent.py",
+          "source_id": "file:src/agent.py",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:ai-readiness=>repo:ai-readiness:file:src/agent.py",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:ai-readiness",
+      "target_node_id": "repo:ai-readiness:file:src/agent.py"
+    }
+  ]
+}

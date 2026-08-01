@@ -1,0 +1,19 @@
+repository_id = "local-security-hygiene"
+display_name = "Local security hygiene fixture"
+source_type = "local"
+local_path = "fixtures/security-hygiene"
+expected_results_path = "expectations/local-security-hygiene.json"
+tags = [
+  "controlled",
+  "set-4-13",
+  "fast",
+  "local",
+  "fixture",
+  "security",
+  "controlled-signal",
+  "set-4-2",
+]
+languages = ["python"]
+notes = """Repository E: controlled security-hygiene fixture with fake credentials and
+non-functional private-key marker. No real secrets. CodeStrata-owned."""
+enabled = true

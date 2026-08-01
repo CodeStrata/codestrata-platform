@@ -1,0 +1,9 @@
+{
+  "name": "codestrata-validation-ai-negative",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Negative control: agent-utils dependency name only",
+  "dependencies": {
+    "agent-utils": "0.0.0-validation-stub"
+  }
+}

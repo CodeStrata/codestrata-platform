@@ -322,9 +322,12 @@ def test_placeholders_and_redaction() -> None:
     assert empty["placeholder_status"] is PlaceholderStatus.EMPTY
     gha = value_facts("${{ secrets.GITHUB_TOKEN }}", sensitive=True)
     assert gha["redacted_preview"] == "${{ secrets.GITHUB_TOKEN }}"
-    assert gha["value_kind"] is ValueKind.LITERAL
+    assert gha["value_kind"] is ValueKind.ENVIRONMENT_REFERENCE
+    assert gha["placeholder_status"] is PlaceholderStatus.ENVIRONMENT_INTERPOLATION
+    assert gha["placeholder_kind"] == "ci_secret_expression"
     oidc = value_facts("${{ steps.oidc.outputs.token }}", sensitive=True)
     assert "steps.oidc.outputs.token" in oidc["redacted_preview"]
+    assert oidc["value_kind"] is ValueKind.ENVIRONMENT_REFERENCE
     assert value_facts("real-hardcoded-pat-value", sensitive=True)[
         "redacted_preview"
     ] == REDACTED_PREVIEW

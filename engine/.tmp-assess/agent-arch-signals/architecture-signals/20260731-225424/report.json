@@ -1,0 +1,2937 @@
+{
+  "assessment": {
+    "activation": {
+      "mode": "default",
+      "packs": [
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "security",
+          "reason": "Security hygiene is enabled by default"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "dependency",
+          "reason": "No dependency manifests detected"
+        },
+        {
+          "decision": "forced_on",
+          "enabled": true,
+          "evidence": [
+            "rules.architecture.enabled"
+          ],
+          "pack_id": "architecture",
+          "reason": "Explicit configuration override (rules.architecture.enabled)"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "td_language:java"
+          ],
+          "pack_id": "technical_debt",
+          "reason": "Supported language present for technical debt rules"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "inventory_test:src/test/java/com/example/domain/TestOnlyImport.java",
+            "structure:has_tests",
+            "test_file_count:1"
+          ],
+          "pack_id": "testing",
+          "reason": "Test assets detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "cloud",
+          "reason": "No cloud packaging signals detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "ai_readiness",
+          "reason": "No AI/ML frameworks detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "performance",
+          "reason": "Performance remains opt-in under default activation"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "roadmap",
+          "reason": "Roadmap presentation enabled to surface deterministic recommendations"
+        }
+      ]
+    },
+    "ai": {
+      "candidate_finding_count": null,
+      "estimated_input_tokens": null,
+      "evidence_coverage": null,
+      "executed": false,
+      "executive_summary": null,
+      "failure_code": null,
+      "failure_detail": null,
+      "failure_message": null,
+      "fallback_used": false,
+      "included_finding_count": null,
+      "input_tokens": null,
+      "internal_execution_artifact": null,
+      "key_risks": [],
+      "latency_ms": null,
+      "limitations": [],
+      "model_id": null,
+      "omitted_informational_count": null,
+      "output_tokens": null,
+      "overall_assessment": null,
+      "phases": [],
+      "provider": null,
+      "provider_invoked": false,
+      "recommendations": [],
+      "result_included": false,
+      "stages_completed": [],
+      "static_analysis_profile": null,
+      "status": "not_requested",
+      "stop_reason": null,
+      "total_tokens": null
+    },
+    "ai_enrichment": null,
+    "comparison": null,
+    "coverage": {
+      "ai_interpretation": "not_requested",
+      "deterministic_analysis": "completed",
+      "static_analysis": "disabled"
+    },
+    "deterministic_recommendations": [
+      {
+        "actions": [
+          "Select a license: Agree on an open-source or proprietary license with stakeholders.",
+          "Add LICENSE file: Commit LICENSE (or LICENSE.md) at the repository root."
+        ],
+        "category": "governance",
+        "dependencies": [],
+        "description": "Choose and commit a license file so consumers know usage terms.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Missing LICENSE",
+            "path": null,
+            "source_id": "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "LICENSE basename not present in inventory paths",
+            "path": null,
+            "source_id": "architecture-signals"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_finding_id": "finding:codestrata-rule-missing-license:155a0f5e12a915ac",
+        "priority": "medium",
+        "priority_score": 86.0,
+        "rationale": "No LICENSE file was found in the repository inventory.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-missing-license",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+        ],
+        "title": "Add an explicit LICENSE"
+      },
+      {
+        "actions": [
+          "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change."
+        ],
+        "category": "ci_cd",
+        "dependencies": [],
+        "description": "Introduce continuous integration that builds the application, runs automated tests, and applies basic quality gates on every change.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cicd.has_ci=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "bba327aa-2f64-5a9f-ac1d-fba479c5b580",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "high",
+        "priority_score": 51.0,
+        "rationale": "CI/CD facts indicate no CI platform or pipeline was detected. Without automated gates, modernization changes are harder to validate consistently.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CICD.001",
+        "supporting_finding_ids": [],
+        "title": "Establish CI build, test, and quality gates"
+      },
+      {
+        "actions": [
+          "Create workflow directory: Add .github/workflows/ that installs dependencies and runs tests.",
+          "Gate merges on CI: Require the workflow to pass before merging protected branches."
+        ],
+        "category": "build",
+        "dependencies": [],
+        "description": "Add CI (for example GitHub Actions) for build and test on every change.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Missing CI workflow",
+            "path": null,
+            "source_id": "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "no paths under .github/workflows/",
+            "path": null,
+            "source_id": "architecture-signals"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd",
+        "priority": "low",
+        "priority_score": 51.0,
+        "rationale": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-missing-ci-workflow",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+        ],
+        "title": "Add a CI workflow"
+      },
+      {
+        "actions": [
+          "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes."
+        ],
+        "category": "cloud",
+        "dependencies": [],
+        "description": "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cloud.has_docker=false; cloud.has_kubernetes=false; cloud.has_terraform=false; cloud.has_cloudformation=false; cloud.has_serverless=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": null,
+        "priority": "medium",
+        "priority_score": 36.0,
+        "rationale": "Cloud readiness facts show no Docker, Kubernetes, Terraform, CloudFormation, or serverless assets. Without a deployment baseline, modernization delivery remains difficult to reproduce and validate.",
+        "recommendation_type": "legacy",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CLOUD.001",
+        "supporting_finding_ids": [],
+        "title": "Create a deployment baseline for modernization"
+      },
+      {
+        "actions": [
+          "Set java.version: Add java.version=17 (or your target LTS) under Maven properties.",
+          "Align CI JDK: Ensure CI and local toolchains use the same JDK major version."
+        ],
+        "category": "modernization",
+        "dependencies": [],
+        "description": "Set java.version (or compiler release/source) in the Maven POM.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "Java detected",
+            "path": null,
+            "source_id": "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/application/CycleB.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/application/Service.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/controller/Ui.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/domain/Clean.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/domain/CycleA.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/persistence/Repo.java=>ekg:language:java:java"
+          },
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/test/java/com/example/domain/TestOnlyImport.java=>ekg:language:java:java"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "id": "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_finding_id": "finding:codestrata-rule-java-detected:780b4e9df79d259b",
+        "priority": "medium",
+        "priority_score": 36.0,
+        "rationale": "Java is present but no Maven language-level property was extracted, so build and runtime baselines are ambiguous.",
+        "recommendation_type": "finding_backed",
+        "related_finding_ids": [
+          "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-java-language-level",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+        ],
+        "title": "Declare a Java language level"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "ev:4335160f163cc24164faeaae",
+        "graph_ref": {
+          "cycle_id": null,
+          "edge_ids": [
+            "com.example.controller->com.example.persistence"
+          ],
+          "graph_id": "assessment-graph",
+          "graph_kind": "assessment_graph",
+          "graph_version": null,
+          "limitations": [],
+          "node_ids": [],
+          "path_edge_ids": [],
+          "path_node_ids": [],
+          "primary_subject_id": null,
+          "reference_kind": "edge",
+          "relationship_type": null,
+          "source_evidence_ids": [],
+          "source_locations": []
+        },
+        "kind": "graph",
+        "limitations": [
+          "snippet_omitted_unverified_redaction"
+        ],
+        "location": {
+          "column_end": null,
+          "column_start": null,
+          "line_end": null,
+          "line_start": null,
+          "location_kind": "file",
+          "path": "src/com/example/controller/Ui.java",
+          "precision": "path_only",
+          "symbolic_reference": null
+        },
+        "pack_id": "architecture",
+        "production_mode": "direct",
+        "rule_id": "architecture.invalid-dependency-direction",
+        "rule_version": "1.0.0"
+      },
+      {
+        "evidence_id": "ev:71c6e9b59ef90236a30b2047",
+        "graph_ref": {
+          "cycle_id": null,
+          "edge_ids": [
+            "com.example.controller->com.example.persistence"
+          ],
+          "graph_id": "assessment-graph",
+          "graph_kind": "assessment_graph",
+          "graph_version": null,
+          "limitations": [],
+          "node_ids": [],
+          "path_edge_ids": [],
+          "path_node_ids": [],
+          "primary_subject_id": null,
+          "reference_kind": "edge",
+          "relationship_type": null,
+          "source_evidence_ids": [],
+          "source_locations": []
+        },
+        "kind": "graph",
+        "limitations": [
+          "snippet_omitted_unverified_redaction"
+        ],
+        "location": {
+          "column_end": null,
+          "column_start": null,
+          "line_end": null,
+          "line_start": null,
+          "location_kind": "file",
+          "path": "src/com/example/controller/Ui.java",
+          "precision": "path_only",
+          "symbolic_reference": null
+        },
+        "pack_id": "architecture",
+        "production_mode": "direct",
+        "rule_id": "architecture.layer-boundary-violation",
+        "rule_version": "1.0.0"
+      },
+      {
+        "evidence_id": "ev:d8deebf3253ac6ee9343ad13",
+        "graph_ref": {
+          "cycle_id": null,
+          "edge_ids": [
+            "com.example.domain->com.example.application"
+          ],
+          "graph_id": "assessment-graph",
+          "graph_kind": "assessment_graph",
+          "graph_version": null,
+          "limitations": [],
+          "node_ids": [],
+          "path_edge_ids": [],
+          "path_node_ids": [],
+          "primary_subject_id": null,
+          "reference_kind": "edge",
+          "relationship_type": null,
+          "source_evidence_ids": [],
+          "source_locations": []
+        },
+        "kind": "graph",
+        "limitations": [
+          "snippet_omitted_unverified_redaction"
+        ],
+        "location": {
+          "column_end": null,
+          "column_start": null,
+          "line_end": null,
+          "line_start": null,
+          "location_kind": "file",
+          "path": "src/com/example/domain/CycleA.java",
+          "precision": "path_only",
+          "symbolic_reference": null
+        },
+        "pack_id": "architecture",
+        "production_mode": "direct",
+        "rule_id": "architecture.invalid-dependency-direction",
+        "rule_version": "1.0.0"
+      },
+      {
+        "evidence_id": "ev:6e25e10a9045f8ce66e81fa1",
+        "graph_ref": {
+          "cycle_id": null,
+          "edge_ids": [
+            "com.example.application->com.example.domain"
+          ],
+          "graph_id": "assessment-graph",
+          "graph_kind": "assessment_graph",
+          "graph_version": null,
+          "limitations": [],
+          "node_ids": [],
+          "path_edge_ids": [],
+          "path_node_ids": [],
+          "primary_subject_id": null,
+          "reference_kind": "edge",
+          "relationship_type": null,
+          "source_evidence_ids": [],
+          "source_locations": []
+        },
+        "kind": "graph",
+        "limitations": [
+          "snippet_omitted_unverified_redaction"
+        ],
+        "location": {
+          "column_end": null,
+          "column_start": null,
+          "line_end": null,
+          "line_start": null,
+          "location_kind": "file",
+          "path": "src/com/example/application/CycleB.java",
+          "precision": "path_only",
+          "symbolic_reference": null
+        },
+        "pack_id": "architecture",
+        "production_mode": "aggregated",
+        "rule_id": "architecture.dependency-cycle",
+        "rule_version": "1.0.0"
+      },
+      {
+        "evidence_id": "ev:c53e32bd3978459d298b7fe1",
+        "graph_ref": {
+          "cycle_id": null,
+          "edge_ids": [
+            "com.example.domain->com.example.application"
+          ],
+          "graph_id": "assessment-graph",
+          "graph_kind": "assessment_graph",
+          "graph_version": null,
+          "limitations": [],
+          "node_ids": [],
+          "path_edge_ids": [],
+          "path_node_ids": [],
+          "primary_subject_id": null,
+          "reference_kind": "edge",
+          "relationship_type": null,
+          "source_evidence_ids": [],
+          "source_locations": []
+        },
+        "kind": "graph",
+        "limitations": [
+          "snippet_omitted_unverified_redaction"
+        ],
+        "location": {
+          "column_end": null,
+          "column_start": null,
+          "line_end": null,
+          "line_start": null,
+          "location_kind": "file",
+          "path": "src/com/example/domain/CycleA.java",
+          "precision": "path_only",
+          "symbolic_reference": null
+        },
+        "pack_id": "architecture",
+        "production_mode": "aggregated",
+        "rule_id": "architecture.dependency-cycle",
+        "rule_version": "1.0.0"
+      }
+    ],
+    "executive_summary": {
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 1,
+      "file_count": 8,
+      "finding_count": 15,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 1,
+        "info": 8,
+        "low": 2,
+        "medium": 4
+      },
+      "recommendation_count": 5,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 1,
+        "low": 1,
+        "medium": 3
+      },
+      "summary_text": "Analyzed repository 'architecture-signals' with 8 scanned file(s). Detected 15 finding(s) (0 critical) and 5 recommendation(s) (1 critical/high priority). Automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 1,
+      "tests_detected": true
+    },
+    "findings": [
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "'com.example.controller' (presentation) depends directly on 'com.example.persistence' (persistence), bypassing expected application/domain intermediaries.",
+        "evidence": [
+          {
+            "evidence_type": "graph_edge",
+            "excerpt": "Boundary skip dependency",
+            "node_id": null,
+            "path": "src/com/example/controller/Ui.java",
+            "source_id": "com.example.controller->com.example.persistence"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "evidence_refs": [
+          {
+            "evidence_id": "ev:71c6e9b59ef90236a30b2047"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:architecture.layer-boundary-violation:e00c9fa90a84db2d",
+        "limitations": [],
+        "metadata": {
+          "assessment_dimensions": "architecture,maintainability,security_posture",
+          "business_impact": "unknown",
+          "confidence": "medium",
+          "executive_concern": "Boundary integrity and change isolation.",
+          "executive_engineering_consequence": "Skipped intermediaries couple UI/API directly to persistence.",
+          "executive_leadership_question": "Where do components bypass required architectural boundaries?",
+          "executive_modernization_relevance": "Boundary skips block safe service and module extraction.",
+          "executive_narrative_key": "architecture.layer_boundary_violation",
+          "executive_report_sections": "Material Risks;Architecture Assessment",
+          "pack_id": "architecture.core",
+          "pack_version": "1.0.0",
+          "provenance": "architecture.core",
+          "recommendation_effort_band": "medium",
+          "recommendation_expected_outcome": "Presentation/API no longer depend directly on persistence.",
+          "recommendation_rationale": "Boundary skips couple distant layers and enlarge blast radius.",
+          "recommendation_validation": "Confirm presentation→persistence edges are removed from the graph.",
+          "remediation": "Route access through the expected application/domain boundary instead of reaching persistence or infrastructure directly from presentation/API layers.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "boundary,com.example.controller,com.example.persistence,persistence,presentation",
+          "taxonomy_id": "architecture.boundaries"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": "ev:71c6e9b59ef90236a30b2047",
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "architecture.layer-boundary-violation",
+        "severity": "high",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Architectural layer boundary skipped"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "A directed dependency cycle was observed among 2 primary architectural units (com.example.application → com.example.domain → com.example.application) after nested-package collapse. Cycles increase change coordination risk.",
+        "evidence": [
+          {
+            "evidence_type": "graph_edge",
+            "excerpt": "Normalized cycle edge (2 primary units)",
+            "node_id": null,
+            "path": "src/com/example/application/CycleB.java",
+            "source_id": "com.example.application->com.example.domain"
+          },
+          {
+            "evidence_type": "graph_edge",
+            "excerpt": "Normalized cycle edge (2 primary units)",
+            "node_id": null,
+            "path": "src/com/example/domain/CycleA.java",
+            "source_id": "com.example.domain->com.example.application"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "evidence_refs": [
+          {
+            "evidence_id": "ev:6e25e10a9045f8ce66e81fa1"
+          },
+          {
+            "evidence_id": "ev:c53e32bd3978459d298b7fe1"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:architecture.dependency-cycle:c9564fb1ac8c9e89",
+        "limitations": [],
+        "metadata": {
+          "assessment_dimensions": "architecture,maintainability,modernization_readiness",
+          "business_impact": "unknown",
+          "confidence": "high",
+          "executive_concern": "Change risk and modernization complexity.",
+          "executive_engineering_consequence": "Changes in one component may require coordinated changes across the cycle.",
+          "executive_leadership_question": "Where do circular dependencies increase delivery risk?",
+          "executive_modernization_relevance": "Cycles should be addressed before modular extraction or service decomposition.",
+          "executive_narrative_key": "architecture.dependency_cycle",
+          "executive_report_sections": "Material Risks;Architecture Assessment;Modernization Readiness",
+          "pack_id": "architecture.core",
+          "pack_version": "1.0.0",
+          "provenance": "architecture.core",
+          "recommendation_effort_band": "medium",
+          "recommendation_expected_outcome": "Acyclic package dependencies within the affected scope.",
+          "recommendation_rationale": "Directed cycles force coordinated multi-component changes.",
+          "recommendation_validation": "Regenerate the package dependency graph and confirm the cycle identity is absent.",
+          "remediation": "Break the cycle using dependency inversion, a stable abstraction, responsibility realignment, or a shared neutral module. Regenerate the package dependency graph to validate removal.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "com.example.application,com.example.domain,cycle",
+          "taxonomy_id": "architecture.dependency-structure"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": "ev:6e25e10a9045f8ce66e81fa1",
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "architecture.dependency-cycle",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [
+          "ev:6e25e10a9045f8ce66e81fa1",
+          "ev:c53e32bd3978459d298b7fe1"
+        ],
+        "title": "Dependency cycle detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Primary unit 'com.example.domain' (domain) depends on 'com.example.application' (application), which violates the governing direction rule 'domain must not depend on application' under model heuristic_path_markers.",
+        "evidence": [
+          {
+            "evidence_type": "graph_edge",
+            "excerpt": "Governing direction: allowed set excludes domain>application",
+            "node_id": null,
+            "path": "src/com/example/domain/CycleA.java",
+            "source_id": "com.example.domain->com.example.application"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "evidence_refs": [
+          {
+            "evidence_id": "ev:d8deebf3253ac6ee9343ad13"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:architecture.invalid-dependency-direction:37213c32a7abdbb1",
+        "limitations": [],
+        "metadata": {
+          "assessment_dimensions": "architecture,maintainability",
+          "business_impact": "unknown",
+          "confidence": "medium",
+          "executive_concern": "Architectural layering discipline.",
+          "executive_engineering_consequence": "Inner layers depending on outer layers increase churn.",
+          "executive_leadership_question": "Are architectural dependency directions being respected?",
+          "executive_modernization_relevance": "Layering must be restored before platform extraction.",
+          "executive_narrative_key": "architecture.invalid_dependency_direction",
+          "executive_report_sections": "Architecture Assessment;Recommended Modernization Roadmap",
+          "pack_id": "architecture.core",
+          "pack_version": "1.0.0",
+          "provenance": "architecture.core",
+          "recommendation_effort_band": "medium",
+          "recommendation_expected_outcome": "Dependencies conform to the declared layer direction model.",
+          "recommendation_rationale": "Wrong-direction dependencies invert architectural control.",
+          "recommendation_validation": "Re-run layer direction analysis; prohibited edges should be gone.",
+          "remediation": "Redirect the dependency toward the allowed inward direction, or move shared types behind an approved boundary interface.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "application,com.example.application,com.example.domain,domain",
+          "taxonomy_id": "architecture.layering"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": "ev:d8deebf3253ac6ee9343ad13",
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "architecture.invalid-dependency-direction",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Invalid architectural dependency direction"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Primary unit 'com.example.controller' (presentation) depends on 'com.example.persistence' (persistence), which violates the governing direction rule 'presentation must not depend on persistence' under model heuristic_path_markers.",
+        "evidence": [
+          {
+            "evidence_type": "graph_edge",
+            "excerpt": "Governing direction: allowed set excludes presentation>persistence",
+            "node_id": null,
+            "path": "src/com/example/controller/Ui.java",
+            "source_id": "com.example.controller->com.example.persistence"
+          }
+        ],
+        "evidence_completeness": "complete",
+        "evidence_refs": [
+          {
+            "evidence_id": "ev:4335160f163cc24164faeaae"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:architecture.invalid-dependency-direction:9a582ccb90db0875",
+        "limitations": [],
+        "metadata": {
+          "assessment_dimensions": "architecture,maintainability",
+          "business_impact": "unknown",
+          "confidence": "medium",
+          "executive_concern": "Architectural layering discipline.",
+          "executive_engineering_consequence": "Inner layers depending on outer layers increase churn.",
+          "executive_leadership_question": "Are architectural dependency directions being respected?",
+          "executive_modernization_relevance": "Layering must be restored before platform extraction.",
+          "executive_narrative_key": "architecture.invalid_dependency_direction",
+          "executive_report_sections": "Architecture Assessment;Recommended Modernization Roadmap",
+          "pack_id": "architecture.core",
+          "pack_version": "1.0.0",
+          "provenance": "architecture.core",
+          "recommendation_effort_band": "medium",
+          "recommendation_expected_outcome": "Dependencies conform to the declared layer direction model.",
+          "recommendation_rationale": "Wrong-direction dependencies invert architectural control.",
+          "recommendation_validation": "Re-run layer direction analysis; prohibited edges should be gone.",
+          "remediation": "Redirect the dependency toward the allowed inward direction, or move shared types behind an approved boundary interface.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "com.example.controller,com.example.persistence,persistence,presentation",
+          "taxonomy_id": "architecture.layering"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": "ev:4335160f163cc24164faeaae",
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "architecture.invalid-dependency-direction",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Invalid architectural dependency direction"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "governance",
+        "customer_visibility": null,
+        "description": "No LICENSE file was found in the repository inventory.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "LICENSE basename not present in inventory paths",
+            "node_id": null,
+            "path": null,
+            "source_id": "architecture-signals"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-missing-license:155a0f5e12a915ac",
+        "limitations": [],
+        "metadata": {},
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-missing-license",
+        "severity": "medium",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Missing LICENSE"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "build",
+        "customer_visibility": null,
+        "description": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "no paths under .github/workflows/",
+            "node_id": null,
+            "path": null,
+            "source_id": "architecture-signals"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd",
+        "limitations": [],
+        "metadata": {},
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-missing-ci-workflow",
+        "severity": "low",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Missing CI workflow"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud_readiness",
+        "customer_visibility": null,
+        "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "436d4b2b-636c-5e80-b3d9-73c9a7f64ed1",
+        "limitations": [],
+        "metadata": {
+          "capabilities": []
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "CLOUD009",
+        "severity": "low",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "No cloud deployment assets detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected 1 API-related files",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 API-related files",
+            "file_path": "src/com/example/controller/Ui.java",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "c0000edf-9835-5409-b02e-04c2a2820198",
+        "limitations": [],
+        "metadata": {
+          "file_count": 1,
+          "sample_paths": [
+            "src/com/example/controller/Ui.java"
+          ]
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH002",
+        "severity": "informational",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "API layer detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected architectural layers: controllers, repositories, services",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected architectural layers: controllers, repositories, services",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "832db44d-bf7d-55d3-96a1-2e3bb3ce4f63",
+        "limitations": [],
+        "metadata": {
+          "complete_layered_architecture": true,
+          "controller_count": 1,
+          "layers": [
+            "controllers",
+            "repositories",
+            "services"
+          ],
+          "repository_count": 1,
+          "service_count": 1
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH001",
+        "severity": "informational",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "Layered application architecture detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected 1 persistence-related files",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 persistence-related files",
+            "file_path": "src/com/example/persistence/Repo.java",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "fa3d00b5-a031-525b-a021-8c9a7109dc19",
+        "limitations": [],
+        "metadata": {
+          "file_count": 1,
+          "sample_paths": [
+            "src/com/example/persistence/Repo.java"
+          ]
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH003",
+        "severity": "informational",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "Persistence layer detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Architectural components appear within one repository application structure",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Architectural components appear within one repository application structure",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+        "limitations": [],
+        "metadata": {
+          "component_count": 4
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH007",
+        "severity": "informational",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "Single-application architecture detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Detected 1 files under test-related directories",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 files under test-related directories",
+            "file_path": "src/test/java/com/example/domain/TestOnlyImport.java",
+            "line_number": null
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "6b6fc1ee-e788-56e0-a05b-0fa8d90b09a6",
+        "limitations": [],
+        "metadata": {
+          "sample_paths": [
+            "src/test/java/com/example/domain/TestOnlyImport.java"
+          ],
+          "test_file_count": 1
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH005",
+        "severity": "informational",
+        "source": "static_analysis",
+        "synthesized_from_evidence_ids": [],
+        "title": "Test structure detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "Java"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "No supported build system was detected in repository 'architecture-signals'.",
+        "evidence": [],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "a153eb95-827b-5da2-8013-9f6c223441e1",
+        "limitations": [],
+        "metadata": {
+          "build_files": [],
+          "build_systems": [],
+          "inferred_commands": [],
+          "java_source_versions": [],
+          "java_target_versions": [],
+          "lock_files": [],
+          "modules": [],
+          "multi_module": false,
+          "multiple_build_systems": false,
+          "packaging_types": [],
+          "plugins": [],
+          "wrapper_files": []
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "build.system.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
+        "title": "Build System"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "Java"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Collected structural metrics for repository 'architecture-signals'.",
+        "evidence": [],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "8895cee7-e369-5282-bd02-d5a7da8737be",
+        "limitations": [],
+        "metadata": {
+          "build_files": 0,
+          "configuration_files": 0,
+          "docker_files": 0,
+          "github_workflows": 0,
+          "kubernetes_manifests": 0,
+          "source_files": 7,
+          "test_files": 1,
+          "total_files": 8
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "repository.metrics.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "synthesized_from_evidence_ids": [],
+        "title": "Repository Metrics"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "modernization",
+        "customer_visibility": null,
+        "description": "The Assessment Graph binds repository observations to the Java language concept. No Maven Java language-level property was found.",
+        "evidence": [
+          {
+            "evidence_type": "knowledge_binding",
+            "excerpt": "matched_key=java",
+            "node_id": null,
+            "path": null,
+            "source_id": "kb:exact_canonical_key:repo:architecture-signals:file:src/com/example/application/CycleB.java=>ekg:language:java:java"
+          }
+        ],
+        "evidence_completeness": "legacy",
+        "evidence_refs": [],
+        "group_id": null,
+        "id": "finding:codestrata-rule-java-detected:780b4e9df79d259b",
+        "limitations": [],
+        "metadata": {
+          "is_java_8": null,
+          "java_major": null,
+          "java_version": null,
+          "matched_binding_count": 7
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "primary_evidence_id": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-java-detected",
+        "severity": "informational",
+        "source": "rule",
+        "synthesized_from_evidence_ids": [],
+        "title": "Java detected"
+      }
+    ],
+    "generated_at": "2026-07-31T22:54:24.373767Z",
+    "mode": "deterministic",
+    "organization_name": null,
+    "priority_actions": [
+      {
+        "action_id": "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8",
+        "action_type": "recommendation_backed",
+        "category": "governance",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "near_term",
+        "primary_recommendation_id": "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8",
+        "priority": "medium",
+        "priority_score": 86.0,
+        "rationale": "No LICENSE file was found in the repository inventory.",
+        "risk": "medium",
+        "summary": "Choose and commit a license file so consumers know usage terms.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8"
+        ],
+        "title": "Add an explicit LICENSE"
+      },
+      {
+        "action_id": "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a",
+        "action_type": "recommendation_backed",
+        "category": "build",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_recommendation_id": "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a",
+        "priority": "low",
+        "priority_score": 51.0,
+        "rationale": "No GitHub Actions workflow paths were found under .github/workflows/.",
+        "risk": "medium",
+        "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a"
+        ],
+        "title": "Add a CI workflow"
+      },
+      {
+        "action_id": "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d",
+        "action_type": "recommendation_backed",
+        "category": "modernization",
+        "effort": "unknown",
+        "evidence_completeness": "complete",
+        "limitations": [],
+        "presentation_bucket": "future",
+        "primary_recommendation_id": "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d",
+        "priority": "medium",
+        "priority_score": 36.0,
+        "rationale": "Java is present but no Maven language-level property was extracted, so build and runtime baselines are ambiguous.",
+        "risk": "medium",
+        "summary": "Set java.version (or compiler release/source) in the Maven POM.",
+        "supporting_finding_ids": [
+          "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+        ],
+        "supporting_recommendation_ids": [
+          "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d"
+        ],
+        "title": "Declare a Java language level"
+      }
+    ],
+    "report_title": "Engineering Assessment",
+    "repository": {
+      "default_branch": null,
+      "file_count": 8,
+      "name": "architecture-signals",
+      "reference": "validation/fixtures/architecture-signals",
+      "source_type": "local"
+    },
+    "repository_facts": {
+      "architecture": {
+        "has_api_layer": true,
+        "has_domain_layer": true,
+        "has_persistence_layer": true,
+        "has_service_layer": true,
+        "is_multi_application": false
+      },
+      "build": {
+        "build_files": [],
+        "build_systems": [],
+        "inferred_commands": [],
+        "java_source_versions": [],
+        "java_target_versions": [],
+        "lock_files": [],
+        "modules": [],
+        "multi_module": false,
+        "multiple_build_systems": false,
+        "packaging_types": [],
+        "plugins": [],
+        "wrapper_files": []
+      },
+      "cicd": {
+        "ci_platforms": [],
+        "has_build": false,
+        "has_ci": false,
+        "has_deployment": false,
+        "has_deployment_workflow": false,
+        "has_security_scanning": false,
+        "has_tests": false,
+        "job_count": 0,
+        "pipeline_count": 0,
+        "pipeline_files": [],
+        "pipelines": [],
+        "providers": [],
+        "uses_artifacts": false,
+        "uses_caching": false,
+        "uses_containers": false,
+        "uses_matrix_builds": false
+      },
+      "cloud": {
+        "cloud_capabilities": [],
+        "has_cloudformation": false,
+        "has_devcontainer": false,
+        "has_docker": false,
+        "has_docker_compose": false,
+        "has_helm": false,
+        "has_kubernetes": false,
+        "has_serverless": false,
+        "has_terraform": false
+      },
+      "dependencies": {
+        "cloud_sdks": [],
+        "database_drivers": [],
+        "dependencies": [],
+        "dependency_count": 0,
+        "development_dependency_count": 0,
+        "direct_dependency_count": 0,
+        "dynamic_version_dependencies": [],
+        "framework_dependencies": [],
+        "logging_libraries": [],
+        "manifests": [],
+        "outdated_dependencies": [],
+        "security_libraries": [],
+        "test_dependency_count": 0,
+        "testing_libraries": [],
+        "unmanaged_version_dependencies": []
+      },
+      "security": {
+        "dangerous_execution_count": 0,
+        "secret_finding_count": 0,
+        "sensitive_file_count": 0,
+        "weak_crypto_count": 0
+      },
+      "structure": {
+        "application_count": 1,
+        "architecture_layers": [
+          "api",
+          "service",
+          "persistence",
+          "domain",
+          "tests"
+        ],
+        "file_count": 8,
+        "has_tests": true,
+        "source_file_count": 7,
+        "test_file_count": 1
+      },
+      "technology": {
+        "build_tools": [],
+        "detected_technologies": [
+          "Java"
+        ],
+        "frameworks": [],
+        "programming_languages": [
+          "Java"
+        ],
+        "test_frameworks": []
+      }
+    },
+    "roadmap": {
+      "assumptions": [
+        "Roadmap initiatives are derived from Priority Actions; assessments are not re-run.",
+        "Recommendation and Finding references are derived from referenced Priority Actions.",
+        "Phase assignment follows Priority Action horizon and category rules."
+      ],
+      "confidence": "high",
+      "engine_version": "1.0.0",
+      "initiatives": [
+        {
+          "category": "governance",
+          "confidence": "high",
+          "depends_on_initiative_ids": [],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+          "initiative_id": "roadmap-initiative:stabilize:governance:sha256:f32c55ca3",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "stabilize",
+          "phase_label": "Stabilize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8",
+          "priority": "medium",
+          "risk": "medium",
+          "sequence": 0,
+          "summary": "Choose and commit a license file so consumers know usage terms.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8"
+          ],
+          "title": "Add an explicit LICENSE"
+        },
+        {
+          "category": "modernization",
+          "confidence": "high",
+          "depends_on_initiative_ids": [
+            "roadmap-initiative:stabilize:governance:sha256:f32c55ca3"
+          ],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+          "initiative_id": "roadmap-initiative:modernize:modernization:sha256:de25a49cd",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "modernize",
+          "phase_label": "Modernize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d",
+          "priority": "medium",
+          "risk": "medium",
+          "sequence": 1,
+          "summary": "Set java.version (or compiler release/source) in the Maven POM.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d"
+          ],
+          "title": "Declare a Java language level"
+        },
+        {
+          "category": "build",
+          "confidence": "high",
+          "depends_on_initiative_ids": [
+            "roadmap-initiative:stabilize:governance:sha256:f32c55ca3"
+          ],
+          "effort": "xs",
+          "evidence_completeness": "complete",
+          "evidence_references": [],
+          "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+          "initiative_id": "roadmap-initiative:modernize:build:sha256:953ccd454",
+          "initiative_type": "priority_action_backed",
+          "limitations": [],
+          "phase": "modernize",
+          "phase_label": "Modernize",
+          "primary_priority_action_id": "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a",
+          "priority": "low",
+          "risk": "medium",
+          "sequence": 2,
+          "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+          ],
+          "supporting_priority_action_ids": [
+            "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a"
+          ],
+          "title": "Add a CI workflow"
+        }
+      ],
+      "initiatives_displayed": 3,
+      "initiatives_total": 3,
+      "limitations": [
+        "Does not produce schedules, dates, cost estimates, or portfolio plans.",
+        "Does not mutate repositories or create external tracker tickets.",
+        "Does not invent Priority Actions, Recommendations, or Findings."
+      ],
+      "metadata": {
+        "engine_version": "1.0.0",
+        "initiative_count": "3",
+        "phase_count": "2",
+        "priority_action_count": "3",
+        "source": "priority_actions"
+      },
+      "phases": [
+        {
+          "initiative_ids": [
+            "roadmap-initiative:stabilize:governance:sha256:f32c55ca3"
+          ],
+          "initiatives": [
+            {
+              "category": "governance",
+              "confidence": "high",
+              "depends_on_initiative_ids": [],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Foundational build, test, documentation, and governance gaps are addressed.",
+              "initiative_id": "roadmap-initiative:stabilize:governance:sha256:f32c55ca3",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "stabilize",
+              "phase_label": "Stabilize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8",
+              "priority": "medium",
+              "risk": "medium",
+              "sequence": 0,
+              "summary": "Choose and commit a license file so consumers know usage terms.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-missing-license:155a0f5e12a915ac"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-missing-license:3b32ff125502d4c8"
+              ],
+              "title": "Add an explicit LICENSE"
+            }
+          ],
+          "objective": "Restore foundational engineering hygiene so later change is safe and observable.",
+          "phase": "stabilize",
+          "phase_id": "roadmap-phase:stabilize",
+          "sequence": 0,
+          "title": "Stabilize"
+        },
+        {
+          "initiative_ids": [
+            "roadmap-initiative:modernize:modernization:sha256:de25a49cd",
+            "roadmap-initiative:modernize:build:sha256:953ccd454"
+          ],
+          "initiatives": [
+            {
+              "category": "modernization",
+              "confidence": "high",
+              "depends_on_initiative_ids": [
+                "roadmap-initiative:stabilize:governance:sha256:f32c55ca3"
+              ],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+              "initiative_id": "roadmap-initiative:modernize:modernization:sha256:de25a49cd",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "modernize",
+              "phase_label": "Modernize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d",
+              "priority": "medium",
+              "risk": "medium",
+              "sequence": 1,
+              "summary": "Set java.version (or compiler release/source) in the Maven POM.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-java-detected:780b4e9df79d259b"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-java-language-level:0cb405ecbc8d0f5d"
+              ],
+              "title": "Declare a Java language level"
+            },
+            {
+              "category": "build",
+              "confidence": "high",
+              "depends_on_initiative_ids": [
+                "roadmap-initiative:stabilize:governance:sha256:f32c55ca3"
+              ],
+              "effort": "xs",
+              "evidence_completeness": "complete",
+              "evidence_references": [],
+              "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+              "initiative_id": "roadmap-initiative:modernize:build:sha256:953ccd454",
+              "initiative_type": "priority_action_backed",
+              "limitations": [],
+              "phase": "modernize",
+              "phase_label": "Modernize",
+              "primary_priority_action_id": "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a",
+              "priority": "low",
+              "risk": "medium",
+              "sequence": 2,
+              "summary": "Add CI (for example GitHub Actions) for build and test on every change.",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-missing-ci-workflow:ede7328871902ddd"
+              ],
+              "supporting_priority_action_ids": [
+                "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-missing-ci-workflow:36258ca44761b61a"
+              ],
+              "title": "Add a CI workflow"
+            }
+          ],
+          "objective": "Address structural, dependency, and platform modernization recommendations.",
+          "phase": "modernize",
+          "phase_id": "roadmap-phase:modernize",
+          "sequence": 2,
+          "title": "Modernize"
+        }
+      ],
+      "schema_name": "modernization-roadmap",
+      "section_id": "assessment.roadmap",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "summary": "3 initiative(s) across 2 phase(s) derived from 3 Priority Action(s)."
+    },
+    "security": {
+      "assessment_scope": "Repository-level Security hygiene assessment for architecture-signals",
+      "assessment_status": "succeeded",
+      "conclusions": [
+        {
+          "audience": "production_health",
+          "conclusion_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:7e4f1f8482455d732e9b",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "no_production_findings_in_supported_scope",
+          "recommendation_ids": [
+            "sec-recommendation:80984d1dd4b426af"
+          ],
+          "summary": "No production-role findings were emitted by the 8 enabled Security hygiene rules within the supported repository evidence scope.",
+          "theme_ids": [
+            "sec-theme:aba52cdcd90f"
+          ],
+          "title": "No production findings in supported scope"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:c8eaeca0a8b06694f3dc",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "security_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+          "theme_ids": [
+            "sec-theme:0ef0f17047eb"
+          ],
+          "title": "Security hygiene landscape identified"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "unsupported_security_analysis_scope",
+          "recommendation_ids": [
+            "sec-recommendation:2a0833e3117d3cbc",
+            "sec-recommendation:c8166c7a6e9af1b3",
+            "sec-recommendation:70c0763db31ed490"
+          ],
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_ids": [
+            "sec-theme:867cd4de36bc"
+          ],
+          "title": "Unsupported Security analysis scope"
+        }
+      ],
+      "conclusions_displayed": 3,
+      "conclusions_total": 3,
+      "coverage_summary": {
+        "artifacts_inspected": 0,
+        "candidate_artifacts_discovered": 0,
+        "configuration_facts_collected": 0,
+        "evidence_schema_name": "repository-sensitive-evidence",
+        "evidence_schema_version": "1.1.0",
+        "evidence_status": "succeeded",
+        "formats_represented": [],
+        "malformed_files": 0,
+        "note": "Coverage describes supported repository-sensitive evidence only. Candidate artifacts are not proof of secrets. Zero findings are scoped to supported evidence; runtime and Git history are not assessed.",
+        "rules_executed": 8,
+        "rules_registered": 8,
+        "skipped_files": 0,
+        "source_roles_represented": [],
+        "structured_files_parsed": 0,
+        "unsupported_binaries": 0
+      },
+      "diagnostics": [
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:1917af10e16a",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:1ac94649821b",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:7650b1acea40",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:7695ac2e7532",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:981cd201c413",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:b1631d0ee2e0",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:dea655b27b18",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        },
+        {
+          "diagnostic_code": "rule_diagnostic",
+          "diagnostic_id": "sec-diagnostic:fb590a87a51a",
+          "message": "Repository-sensitive evidence status is succeeded",
+          "origin": "rule",
+          "path": null
+        }
+      ],
+      "diagnostics_displayed": 8,
+      "diagnostics_total": 8,
+      "executive_summary": "The supported repository Security hygiene rules emitted no production-role findings within the available evidence scope. This result does not establish that the repository or deployed application is secure.",
+      "finding_summary": {
+        "additional_observations": [],
+        "additional_observations_displayed": 0,
+        "all_finding_count": 0,
+        "by_category": [],
+        "by_rule": [],
+        "by_severity": [],
+        "hotspot_count": 0,
+        "locations_represented": 0,
+        "none_detected_statement": "No production-role findings were emitted by the supported repository Security hygiene rules within the available evidence scope.",
+        "production_finding_count": 0,
+        "production_findings": [],
+        "production_findings_displayed": 0,
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      "generated_from_assessment_section_version": "1.3.0",
+      "hotspot_presentation_note": "Hotspots order repository locations by finding concentration for presentation only. They do not assert risk, vulnerability, or priority.",
+      "hotspots": [],
+      "hotspots_displayed": 0,
+      "hotspots_total": 0,
+      "limitations": [
+        {
+          "category": "security-evidence-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:13a498eeebd8",
+          "summary": "Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment."
+        },
+        {
+          "category": "foundation-only",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:1c64314414dd",
+          "summary": "Security Intelligence Phase 4.5.5 organizes repository-local hygiene Findings into inventories and deterministic synthesis. Zero findings does not mean the repository is secure."
+        },
+        {
+          "category": "no-git-history-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:1f15b2697bf3",
+          "summary": "No git-history security analysis is performed."
+        },
+        {
+          "category": "no-data-flow-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:5f805d1ca2ad",
+          "summary": "No taint or data-flow analysis is performed."
+        },
+        {
+          "category": "rules-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:93a53f56ad3e",
+          "summary": "Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules."
+        },
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:cfdf7999a500",
+          "summary": "Business impact remains unknown for hygiene findings."
+        },
+        {
+          "category": "no-runtime-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:ea39a330990f",
+          "summary": "No runtime security analysis or secret validity checks."
+        },
+        {
+          "category": "no-package-registry-query",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:edcdfedf3465",
+          "summary": "No package registry access is performed."
+        },
+        {
+          "category": "no-external-vulnerability-metadata",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:f40950317d0f",
+          "summary": "No external vulnerability metadata, CVE, or package registry queries."
+        },
+        {
+          "category": "no-sast",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:fead453a4f20",
+          "summary": "No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis."
+        }
+      ],
+      "limitations_displayed": 10,
+      "limitations_total": 10,
+      "metadata": {
+        "all_finding_count": "0",
+        "assessment_section_id": "assessment.security",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_sensitive",
+        "finding_display_limit": "20",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "theme_limit": "12"
+      },
+      "recommendation_groups": [
+        {
+          "group": "Coverage expansion",
+          "recommendations": [
+            {
+              "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+              "audience": "production_health",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:7e4f1f8482455d732e9b"
+              ],
+              "conditional": true,
+              "kind": "acknowledge_no_production_findings_in_supported_scope",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Zero production findings within supported scope are not a security certification.",
+              "recommendation_id": "sec-recommendation:80984d1dd4b426af",
+              "title": "Acknowledge no production findings in supported scope"
+            },
+            {
+              "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+              ],
+              "conditional": true,
+              "kind": "add_external_dependency_vulnerability_analysis",
+              "presentation_group": "Coverage expansion",
+              "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:2a0833e3117d3cbc",
+              "title": "Add external dependency vulnerability analysis"
+            },
+            {
+              "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+              ],
+              "conditional": true,
+              "kind": "add_git_history_secret_scanning",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Git history analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:c8166c7a6e9af1b3",
+              "title": "Add Git history secret scanning"
+            },
+            {
+              "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+              ],
+              "conditional": true,
+              "kind": "add_runtime_security_validation",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Runtime analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:70c0763db31ed490",
+              "title": "Add runtime security validation"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:7e4f1f8482455d732e9b"
+          ],
+          "conditional": true,
+          "kind": "acknowledge_no_production_findings_in_supported_scope",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Zero production findings within supported scope are not a security certification.",
+          "recommendation_id": "sec-recommendation:80984d1dd4b426af",
+          "title": "Acknowledge no production findings in supported scope"
+        },
+        {
+          "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+          ],
+          "conditional": true,
+          "kind": "add_external_dependency_vulnerability_analysis",
+          "presentation_group": "Coverage expansion",
+          "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:2a0833e3117d3cbc",
+          "title": "Add external dependency vulnerability analysis"
+        },
+        {
+          "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+          ],
+          "conditional": true,
+          "kind": "add_git_history_secret_scanning",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Git history analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:c8166c7a6e9af1b3",
+          "title": "Add Git history secret scanning"
+        },
+        {
+          "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+          ],
+          "conditional": true,
+          "kind": "add_runtime_security_validation",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Runtime analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:70c0763db31ed490",
+          "title": "Add runtime security validation"
+        }
+      ],
+      "recommendations_displayed": 4,
+      "recommendations_total": 4,
+      "repository_name": "architecture-signals",
+      "schema_name": "report.security",
+      "section_id": "report.security",
+      "section_version": "1.0.0",
+      "security_pack_id": "security.core",
+      "security_pack_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Security assessment completed using supported repository-sensitive evidence and hygiene rules.",
+      "synthesis_status": "empty",
+      "themes": [
+        {
+          "finding_count": 0,
+          "kind": "security_hygiene_landscape",
+          "rule_ids": [
+            "security.private-key-material",
+            "security.credential-literal",
+            "security.placeholder-credential",
+            "security.tls-verification-disabled",
+            "security.hostname-verification-disabled",
+            "security.authentication-disabled",
+            "security.permissive-cors-origin",
+            "security.debug-enabled"
+          ],
+          "scope": "repository",
+          "source_role": "production",
+          "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+          "theme_id": "sec-theme:0ef0f17047eb",
+          "title": "Security hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "kind": "evidence_coverage",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Repository-sensitive evidence collection status is succeeded; 0 candidate artifacts were discovered and 0 configuration facts were collected within supported formats.",
+          "theme_id": "sec-theme:d221d632b81d",
+          "title": "Evidence coverage"
+        },
+        {
+          "finding_count": 0,
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_id": "sec-theme:867cd4de36bc",
+          "title": "Unsupported analysis scope"
+        },
+        {
+          "finding_count": 0,
+          "kind": "no_production_findings",
+          "rule_ids": [],
+          "scope": "production",
+          "source_role": "production",
+          "summary": "No production-role findings were emitted by the supported repository security hygiene rules.",
+          "theme_id": "sec-theme:aba52cdcd90f",
+          "title": "No production findings"
+        }
+      ],
+      "themes_displayed": 4,
+      "themes_total": 4,
+      "title": "Security Intelligence",
+      "traceability": {
+        "edge_count": 21,
+        "sample_edges": [
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.security",
+            "target_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:7e4f1f8482455d732e9b"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:edcdfedf3465"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.security",
+            "target_id": "security.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:ea39a330990f"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:80984d1dd4b426af"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:2a0833e3117d3cbc"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:93a53f56ad3e"
+          },
+          {
+            "relation": "section_to_theme",
+            "source_id": "assessment.security",
+            "target_id": "sec-theme:aba52cdcd90f"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.security",
+            "target_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:4eaad6ec19d9a44a1b27"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:cfdf7999a500"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:5f805d1ca2ad"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:13a498eeebd8"
+          }
+        ],
+        "summary": "21 assessment traceability edges available; showing 12 bounded samples."
+      }
+    },
+    "static_analysis": {
+      "duration_ms": null,
+      "eligible_file_count": 0,
+      "files_analyzed": 0,
+      "finding_count": 0,
+      "grouped_finding_count": 0,
+      "groups": [],
+      "informational_count": 0,
+      "message": "PMD static analysis was disabled for this assessment.",
+      "observations": [],
+      "primary_count": 0,
+      "profile": null,
+      "provider": "PMD",
+      "provider_version": null,
+      "providers": [
+        {
+          "duration_ms": null,
+          "eligible_file_count": 0,
+          "files_analyzed": 0,
+          "finding_count": 0,
+          "grouped_finding_count": 0,
+          "informational_count": 0,
+          "message": "PMD static analysis was disabled for this assessment.",
+          "primary_count": 0,
+          "profile": null,
+          "provider": "PMD",
+          "provider_id": "pmd",
+          "provider_version": null,
+          "raw_observation_count": 0,
+          "rulesets": null,
+          "status": "disabled",
+          "supporting_count": 0,
+          "suppressed_from_html_count": 0,
+          "warnings": []
+        }
+      ],
+      "raw_observation_count": 0,
+      "rulesets": null,
+      "status": "disabled",
+      "supporting_count": 0,
+      "suppressed_from_html_count": 0
+    },
+    "summary": {
+      "ai_executed": false,
+      "ai_recommendation_count": 0,
+      "ci_detected": false,
+      "cloud_capabilities": [],
+      "critical_high_finding_count": 1,
+      "deterministic_recommendation_count": 5,
+      "evidence_count": 5,
+      "finding_count": 15,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 1,
+        "info": 8,
+        "low": 2,
+        "medium": 4
+      },
+      "phase_count": 0,
+      "priority_action_count": 3,
+      "recommendation_count": 5,
+      "recommendations_by_priority": {
+        "critical": 0,
+        "high": 1,
+        "low": 1,
+        "medium": 3
+      },
+      "roadmap_initiative_count": 3,
+      "static_analysis_status": "disabled",
+      "summary_text": "Analyzed repository 'architecture-signals' with 8 scanned file(s). Detected 15 finding(s) (0 critical) and 5 recommendation(s) (1 critical/high priority). Automated tests were detected. No CI pipeline was detected.",
+      "technology_count": 1,
+      "tests_detected": true
+    },
+    "technical_debt": {
+      "assessment_scope": "Repository-level static technical debt assessment for architecture-signals",
+      "conclusions": [
+        {
+          "audience": "production_health",
+          "conclusion_id": "td-conclusion:technical_debt.conclusion.no-production-findings:2b092383f81d96b270e6",
+          "confidence": "high",
+          "finding_count": 0,
+          "hotspot_count": 0,
+          "kind": "no_production_findings",
+          "policy_id": "technical_debt.conclusion.no-production-findings",
+          "recommendation_ids": [
+            "td-recommendation:46f86e41c9edc5f7"
+          ],
+          "source_role": "production",
+          "summary": "Under current Technical Debt complexity rules and thresholds, no production-source findings were emitted.",
+          "theme_ids": [],
+          "title": "No production complexity-threshold findings"
+        }
+      ],
+      "coverage_summary": [
+        {
+          "area_id": "complexity_coverage",
+          "display": "Complete for the analyzed source set.",
+          "label": "Complexity coverage",
+          "note": "files_excluded=0",
+          "ratio": 1.0,
+          "status": "measured"
+        },
+        {
+          "area_id": "debt_rule_coverage",
+          "display": "Unavailable",
+          "label": "Debt rule coverage",
+          "note": "Complexity SharedRules evaluated against collected evidence.",
+          "ratio": null,
+          "status": "measured"
+        },
+        {
+          "area_id": "dependency_support_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Dependency-support coverage",
+          "note": "Dependency support-window analysis is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "duplication_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Duplication coverage",
+          "note": "Duplication detection is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "enterprise_context_coverage",
+          "display": "Enterprise context was not supplied for this repository assessment.",
+          "label": "Enterprise-context coverage",
+          "note": "Enterprise context was not supplied for this assessment.",
+          "ratio": null,
+          "status": "not_applicable"
+        }
+      ],
+      "enterprise_context_used": false,
+      "executive_summary": "No production-source complexity findings were identified under the current technical debt rules and coverage. 1 production-facing conclusion was generated.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "hotspot_presentation_note": "Hotspots are shown in inventory order (highest severity, then finding count, then path/unit). This is presentation order, not a priority score.",
+      "key_metrics": [
+        {
+          "key": "production_findings",
+          "label": "Production findings",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "production_hotspots",
+          "label": "Production hotspots shown",
+          "note": "0 production hotspots in inventory (presentation order, not priority).",
+          "value": "0"
+        },
+        {
+          "key": "significant_themes",
+          "label": "Significant themes",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "conclusions",
+          "label": "Conclusions",
+          "note": null,
+          "value": "1"
+        },
+        {
+          "key": "complexity_coverage",
+          "label": "Complexity coverage",
+          "note": null,
+          "value": "100.0%"
+        },
+        {
+          "key": "test_findings",
+          "label": "Test findings (separate)",
+          "note": "Presented as test-maintainability observation only.",
+          "value": "0"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:28d3a81db99d",
+          "summary": "Business impact remains unknown for repository-only technical debt assessment without explicit enterprise context."
+        },
+        {
+          "category": "other",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:44a96efdac7c",
+          "summary": "JavaScript and TypeScript complexity metrics are unsupported in Phase 4.3; only Python and Java collectors are available."
+        },
+        {
+          "category": "effort-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:8cf2e946fb95",
+          "summary": "No engineering-hours, staffing, or schedule estimate is produced by this assessment section."
+        },
+        {
+          "category": "financial-cost-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:9baf8f9a8886",
+          "summary": "No financial cost, interest-rate, or dollar estimate is computed for technical debt."
+        },
+        {
+          "category": "workspace-content-excluded",
+          "importance": "informational",
+          "limitation_id": "td-limitation:c99ec05283e7",
+          "summary": "Paths under .codestrata/ and other shared ignore markers are excluded from complexity measurement."
+        },
+        {
+          "category": "other",
+          "importance": "informational",
+          "limitation_id": "td-limitation:d3545084789c",
+          "summary": "Cognitive complexity is not measured. Branch-point counts are structural keyword/operator counts, not certified cyclomatic products."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:db50f36548fa",
+          "summary": "Technical debt findings are based on static repository evidence. Runtime behavior and productivity loss are not observed."
+        }
+      ],
+      "metadata": {
+        "assessment_section_id": "assessment.technical_debt",
+        "configuration_fingerprint": "4cc1ba15f040b02a",
+        "evidence_fingerprint": "2277c1375db26db9",
+        "evidence_pipeline": "language.complexity",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "test_finding_count": "0"
+      },
+      "recommendations": [
+        {
+          "action": "No production complexity-threshold findings require remediation under the current rule pack and thresholds.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "td-conclusion:technical_debt.conclusion.no-production-findings:2b092383f81d96b270e6"
+          ],
+          "conditional": false,
+          "rationale": "The production-primary inventory contains zero matching findings.",
+          "recommendation_id": "td-recommendation:46f86e41c9edc5f7",
+          "title": "Acknowledge empty production complexity inventory"
+        }
+      ],
+      "repository_name": "architecture-signals",
+      "section_id": "report.technical_debt",
+      "section_version": "1.0.0",
+      "significant_themes": [],
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Technical debt assessment completed using static complexity evidence.",
+      "technical_debt_pack_id": "technical_debt.core",
+      "technical_debt_pack_version": "1.0.0",
+      "test_observation": {
+        "conclusion_ids": [],
+        "finding_count": 0,
+        "present": false,
+        "summary": "No test-source complexity findings were recorded for this assessment.",
+        "title": "No separate test-maintainability observation"
+      },
+      "title": "Technical Debt Assessment",
+      "top_production_hotspots": [],
+      "traceability_summary": {
+        "edge_count": 11,
+        "relation_types": [
+          "recommendation_to_conclusion",
+          "section_to_conclusion",
+          "section_to_limitation",
+          "section_to_pack",
+          "section_to_recommendation"
+        ],
+        "sample_edges": [
+          {
+            "relation": "recommendation_to_conclusion",
+            "source_id": "td-recommendation:46f86e41c9edc5f7",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:2b092383f81d96b270e6"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:8cf2e946fb95"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-recommendation:46f86e41c9edc5f7"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:d3545084789c"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.technical_debt",
+            "target_id": "technical_debt.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:28d3a81db99d"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:44a96efdac7c"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:c99ec05283e7"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:9baf8f9a8886"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:db50f36548fa"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:2b092383f81d96b270e6"
+          }
+        ],
+        "summary": "11 traceability relationships across 5 relation types."
+      }
+    },
+    "technologies": [
+      {
+        "category": "language",
+        "confidence": 1.0,
+        "name": "Java",
+        "source": "file_extension",
+        "version": null
+      }
+    ],
+    "testing": {
+      "assessment_scope": "Repository-level Test Hygiene assessment for architecture-signals",
+      "assessment_status": "succeeded",
+      "conclusions": [
+        {
+          "audience": "status",
+          "conclusion_id": "test-conclusion:testing.conclusion.no-hygiene-findings-in-supported-scope:2bb8764b17b4e56d6b52",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "no_hygiene_findings_in_supported_scope",
+          "recommendation_ids": [
+            "test-recommendation:caaa73fda5e9a033"
+          ],
+          "summary": "No Test Hygiene findings were emitted by the 4 enabled rules within the supported repository evidence scope.",
+          "theme_ids": [
+            "test-theme:14fc7a2528e8"
+          ],
+          "title": "No hygiene findings in supported scope"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "test-conclusion:testing.conclusion.rule-execution-summary:1411bef2014084cba495",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_summary",
+          "recommendation_ids": [],
+          "summary": "Rule execution coverage: 4 executed, 0 matched, 4 not matched; evidence status succeeded.",
+          "theme_ids": [
+            "test-theme:6fcde23f9f77"
+          ],
+          "title": "Test Hygiene rule execution summary"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:c7db0e34925417fc9d18",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "testing_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "4 Test Hygiene rules executed and produced no findings within the supported repository evidence scope.",
+          "theme_ids": [
+            "test-theme:7d43087ce51d"
+          ],
+          "title": "Testing hygiene landscape identified"
+        },
+        {
+          "audience": "status",
+          "conclusion_id": "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:aa46bd887f160be29bb7",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_test_analysis_scope",
+          "recommendation_ids": [
+            "test-recommendation:eef2335a9fa9352b"
+          ],
+          "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+          "theme_ids": [
+            "test-theme:b8a8a19ed930"
+          ],
+          "title": "Unsupported test analysis scope acknowledged"
+        }
+      ],
+      "conclusions_displayed": 4,
+      "conclusions_total": 4,
+      "coverage_summary": {
+        "areas": [
+          {
+            "area_id": "testing_capability_requested",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_evidence_availability",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_findings_evaluated",
+            "denominator": 0,
+            "maturity": "medium",
+            "numerator": 0,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_inventory_complete",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_rules_enabled",
+            "denominator": 4,
+            "maturity": "medium",
+            "numerator": 4,
+            "status": "measured"
+          }
+        ],
+        "evidence_pipeline": "repository_testing",
+        "evidence_status": "succeeded",
+        "note": "Coverage describes assessment capability areas only. Runtime coverage percentages and test execution results are not measured."
+      },
+      "diagnostics": [],
+      "diagnostics_displayed": 0,
+      "diagnostics_total": 0,
+      "execution_summary": {
+        "conclusion_count": 4,
+        "entries": [
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-001"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-002"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-003"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-005"
+          }
+        ],
+        "note": "Rule execution summarizes registered Test Hygiene rules only. Zero findings are a bounded inventory outcome and do not certify test sufficiency or readiness for release.",
+        "recommendation_count": 2,
+        "rules_executed": 4,
+        "rules_failed": 0,
+        "rules_matched": 0,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 4,
+        "rules_planned": 4,
+        "theme_count": 4,
+        "total_finding_count": 0
+      },
+      "executive_summary": "4 Test Hygiene rules executed with zero findings in the supported repository evidence scope. This summarizes hygiene signals only and does not establish release readiness.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "inventory_summary": {
+        "by_confidence": [],
+        "by_rule": [],
+        "by_severity": [],
+        "finding_count": 0,
+        "finding_ids": [],
+        "finding_ids_displayed": 0,
+        "none_detected_statement": "No Test Hygiene findings were emitted within the supported repository evidence scope. This does not certify readiness for release."
+      },
+      "limitations": [
+        {
+          "category": "coverage-not-measured",
+          "limitation_id": "test-limitation:319a3a113184",
+          "summary": "Runtime code coverage percentages are not measured; only repository-observable coverage configuration facts are used."
+        },
+        {
+          "category": "test-execution-not-performed",
+          "limitation_id": "test-limitation:32e615baa6f3",
+          "summary": "Test execution is not performed. Test pass/fail status is not evaluated."
+        },
+        {
+          "category": "no-test-quality-conclusion",
+          "limitation_id": "test-limitation:41974742ac6b",
+          "summary": "Test Hygiene findings are repository-local hygiene signals only. Zero findings does not mean the repository is well tested or release ready."
+        },
+        {
+          "category": "test-to-source-mapping-not-implemented",
+          "limitation_id": "test-limitation:527621289c81",
+          "summary": "Test-to-production-code relationships are not evaluated."
+        },
+        {
+          "category": "other",
+          "limitation_id": "test-limitation:7a8192efac8a",
+          "summary": "Test Hygiene rules consume AggregatedRepositoryTestingEvidence only and never re-read repository files."
+        },
+        {
+          "category": "mutation-testing-not-evaluated",
+          "limitation_id": "test-limitation:fcc3fbfaceec",
+          "summary": "Mutation testing is not evaluated."
+        }
+      ],
+      "limitations_displayed": 6,
+      "limitations_total": 6,
+      "metadata": {
+        "assessment_section_id": "assessment.testing",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_testing",
+        "finding_count": "0",
+        "finding_id_display_limit": "32",
+        "theme_limit": "12"
+      },
+      "overall_posture_summary": "4 Test Hygiene rules executed with zero findings in the supported repository evidence scope. This summarizes hygiene signals only and does not establish release readiness.",
+      "recommendation_groups": [
+        {
+          "group": "Scope acknowledgements",
+          "recommendations": [
+            {
+              "action": "Treat zero Test Hygiene findings as a bounded inventory outcome for the supported evidence and rule pack only.",
+              "audience": "status",
+              "conclusion_ids": [
+                "test-conclusion:testing.conclusion.no-hygiene-findings-in-supported-scope:2bb8764b17b4e56d6b52"
+              ],
+              "conditional": true,
+              "finding_ids": [],
+              "kind": "acknowledge_no_hygiene_findings_in_supported_scope",
+              "presentation_group": "Scope acknowledgements",
+              "rationale": "Neutral acknowledgment prevents overstating risk or quality from an empty finding set.",
+              "recommendation_id": "test-recommendation:caaa73fda5e9a033",
+              "rule_ids": [
+                "testing.test-001",
+                "testing.test-002",
+                "testing.test-003",
+                "testing.test-005"
+              ],
+              "title": "Acknowledge zero hygiene findings in supported scope"
+            },
+            {
+              "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+              "audience": "status",
+              "conclusion_ids": [
+                "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:aa46bd887f160be29bb7"
+              ],
+              "conditional": true,
+              "finding_ids": [],
+              "kind": "acknowledge_unsupported_test_analysis_scope",
+              "presentation_group": "Scope acknowledgements",
+              "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+              "recommendation_id": "test-recommendation:eef2335a9fa9352b",
+              "rule_ids": [],
+              "title": "Acknowledge unsupported test analysis scope"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Treat zero Test Hygiene findings as a bounded inventory outcome for the supported evidence and rule pack only.",
+          "audience": "status",
+          "conclusion_ids": [
+            "test-conclusion:testing.conclusion.no-hygiene-findings-in-supported-scope:2bb8764b17b4e56d6b52"
+          ],
+          "conditional": true,
+          "finding_ids": [],
+          "kind": "acknowledge_no_hygiene_findings_in_supported_scope",
+          "presentation_group": "Scope acknowledgements",
+          "rationale": "Neutral acknowledgment prevents overstating risk or quality from an empty finding set.",
+          "recommendation_id": "test-recommendation:caaa73fda5e9a033",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "title": "Acknowledge zero hygiene findings in supported scope"
+        },
+        {
+          "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+          "audience": "status",
+          "conclusion_ids": [
+            "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:aa46bd887f160be29bb7"
+          ],
+          "conditional": true,
+          "finding_ids": [],
+          "kind": "acknowledge_unsupported_test_analysis_scope",
+          "presentation_group": "Scope acknowledgements",
+          "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+          "recommendation_id": "test-recommendation:eef2335a9fa9352b",
+          "rule_ids": [],
+          "title": "Acknowledge unsupported test analysis scope"
+        }
+      ],
+      "recommendations_displayed": 2,
+      "recommendations_total": 2,
+      "repository_name": "architecture-signals",
+      "schema_name": "report.testing",
+      "section_id": "report.testing",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Test assessment completed using supported repository-testing evidence and hygiene rules.",
+      "synthesis_status": "empty",
+      "testing_pack_id": "testing.core",
+      "testing_pack_version": "1.0.0",
+      "themes": [
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "testing_hygiene_landscape",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "scope": "repository",
+          "summary": "4 Test Hygiene rules executed and produced no findings within the supported repository evidence scope.",
+          "theme_id": "test-theme:7d43087ce51d",
+          "title": "Testing hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_coverage",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "scope": "coverage",
+          "summary": "Rule execution coverage: 4 executed, 0 matched, 4 not matched; evidence status succeeded.",
+          "theme_id": "test-theme:6fcde23f9f77",
+          "title": "Rule execution coverage"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "no_hygiene_findings",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "scope": "status",
+          "summary": "No Test Hygiene findings were emitted by the 4 enabled rules within the supported repository evidence scope.",
+          "theme_id": "test-theme:14fc7a2528e8",
+          "title": "No hygiene findings in supported scope"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "status",
+          "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+          "theme_id": "test-theme:b8a8a19ed930",
+          "title": "Unsupported test analysis scope"
+        }
+      ],
+      "themes_displayed": 4,
+      "themes_total": 4,
+      "title": "Test Intelligence",
+      "traceability": {
+        "edge_count": 12,
+        "sample_edges": [
+          {
+            "edge_id": "test-trace:10af2d05c13155fe",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.testing",
+            "target_id": "test-limitation:41974742ac6b"
+          },
+          {
+            "edge_id": "test-trace:158e2e8d3d6b4c3a",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.testing",
+            "target_id": "test-limitation:319a3a113184"
+          },
+          {
+            "edge_id": "test-trace:22a9837cd8c26064",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_rules_enabled"
+          },
+          {
+            "edge_id": "test-trace:3f2e40e60a25c37d",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_capability_requested"
+          },
+          {
+            "edge_id": "test-trace:40198f7339d30618",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.no-hygiene-findings-in-supported-scope:2bb8764b17b4e56d6b52"
+          },
+          {
+            "edge_id": "test-trace:407cfd12aa06fe13",
+            "relation": "section_to_pack",
+            "source_id": "assessment.testing",
+            "target_id": "testing.core"
+          },
+          {
+            "edge_id": "test-trace:41a7a73ae1af6022",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.testing",
+            "target_id": "test-recommendation:caaa73fda5e9a033"
+          },
+          {
+            "edge_id": "test-trace:49a4bc072a94e568",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_findings_evaluated"
+          },
+          {
+            "edge_id": "test-trace:585d93fa9d2017ca",
+            "relation": "section_to_theme",
+            "source_id": "assessment.testing",
+            "target_id": "test-theme:b8a8a19ed930"
+          },
+          {
+            "edge_id": "test-trace:5de47567f7ec52d4",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_evidence_availability"
+          },
+          {
+            "edge_id": "test-trace:7368c2105071363d",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.rule-execution-summary:1411bef2014084cba495"
+          },
+          {
+            "edge_id": "test-trace:7f4b4bd78018abc1",
+            "relation": "section_to_theme",
+            "source_id": "assessment.testing",
+            "target_id": "test-theme:7d43087ce51d"
+          }
+        ],
+        "summary": "12 traceability edges link the Test assessment section to packs, findings, themes, conclusions, and limitations."
+      }
+    },
+    "timing": {
+      "ai_ms": null,
+      "analysis_ms": 1.04,
+      "cache_hits": 0,
+      "cache_misses": 7,
+      "evidence_ms": null,
+      "files_loaded": 7,
+      "files_skipped": 0,
+      "graph_ms": 19.33,
+      "knowledge_ms": null,
+      "peak_rss_mb": 95.06,
+      "report_ms": 14.64,
+      "rules_ms": 172.17,
+      "scan_ms": 1.28,
+      "static_analysis_ms": null,
+      "total_ms": 245.97
+    },
+    "warnings": []
+  },
+  "manifest": {
+    "brand_report_name": "Engineering Assessment",
+    "codestrata_version": "0.1.0",
+    "contract_version": "1.0.0",
+    "edition": "community",
+    "enabled_sections": [
+      "executive_summary",
+      "technologies",
+      "findings",
+      "recommendations",
+      "technical_debt",
+      "security",
+      "testing",
+      "roadmap"
+    ],
+    "generated_at": "2026-07-31T22:54:24.373767Z",
+    "generation_mode": "deterministic",
+    "html_report_version": "3.0",
+    "product_name": "CodeStrata",
+    "report_type": "engineering_assessment",
+    "report_version": "1.2",
+    "repository_id": "95cc1084-2a5a-421e-8a6e-4df0e340965a",
+    "scan_id": "b7b3d234-03f6-4af7-87a2-dd7b0de17d87",
+    "schema_version": "1.2",
+    "volatile_fields": [
+      "assessment.generated_at",
+      "assessment.timing",
+      "assessment.ai.latency_ms",
+      "assessment.static_analysis",
+      "manifest.generated_at"
+    ]
+  },
+  "report_version": "1.2",
+  "schema_version": "1.2"
+}

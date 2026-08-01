@@ -85,8 +85,9 @@ output/*
 .generated/
 .generated/validation/
 
-# Local-only validation workspace (configs, clones, reports — never commit)
-validation/
+# Local-only repo-root validation workspace (clones, knowledge, reports — never commit).
+# Anchored to repository root so engine/validation/ (harness) remains trackable.
+/validation/
 
 # ==========================================
 # Temporary Files

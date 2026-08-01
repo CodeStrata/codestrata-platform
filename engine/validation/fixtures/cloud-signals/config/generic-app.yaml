@@ -1,0 +1,7 @@
+# Generic YAML — must NOT become Kubernetes orchestration evidence.
+# No apiVersion/kind. Names are product-like, not k8s kind stems.
+application:
+  name: registration-service
+  region: us-east-1
+  bucket: example-assets
+  queue: work-items

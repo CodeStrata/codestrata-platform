@@ -1,0 +1,20 @@
+repository_id = "remote-php-bookstack"
+display_name = "BookStack (PHP)"
+source_type = "remote"
+remote_url = "https://github.com/BookStackApp/BookStack.git"
+pinned_ref = "4e406c41c4c8060a5795e74c66fb96362e54f400"
+expected_commit = "4e406c41c4c8060a5795e74c66fb96362e54f400"
+expected_results_path = "expectations/remote-php-bookstack.json"
+tags = [
+  "remote",
+  "php",
+  "medium",
+  "network",
+  "real-world",
+  "set-4-13",
+]
+languages = [
+  "php",
+]
+notes = """BookStack (PHP)"""
+enabled = true

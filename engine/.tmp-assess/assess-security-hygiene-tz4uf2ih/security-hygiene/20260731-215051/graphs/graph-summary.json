@@ -1,0 +1,21 @@
+{
+  "assessment_graph_id": "graph:assessment:a64c4d56ed5c5a4f3f0619e65dd0811e6533c3754ece4a1f37c4f65df85579ea",
+  "assessment_node_count": 2,
+  "assessment_relationship_count": 1,
+  "assessment_source_fingerprint": "sha256:a64c4d56ed5c5a4f3f0619e65dd0811e6533c3754ece4a1f37c4f65df85579ea",
+  "binding_count": 1,
+  "engineering_knowledge_persisted": true,
+  "engineering_knowledge_persistence_note": "Builtin catalog is small; full Engineering Knowledge Graph snapshot is persisted.",
+  "knowledge_graph_id": "graph:ekg:codestrata-core:1.0.0",
+  "knowledge_node_count": 38,
+  "knowledge_relationship_count": 31,
+  "knowledge_source_fingerprint": "catalog:codestrata-core:1.0.0",
+  "matched_concepts_by_knowledge_type": {
+    "language": 1
+  },
+  "repository_graph_id": "graph:repo:security-hygiene:cc13cc4cc6a5954e418174e73693fffb6489758f34e42c573f75512cc6868e6b",
+  "repository_node_count": 5,
+  "repository_relationship_count": 4,
+  "repository_source_fingerprint": "sha256:cc13cc4cc6a5954e418174e73693fffb6489758f34e42c573f75512cc6868e6b",
+  "unmatched_observation_count": 2
+}

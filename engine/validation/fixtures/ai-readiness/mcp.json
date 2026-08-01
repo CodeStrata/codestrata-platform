@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "codestrata-validation-stub": {
+      "command": "echo",
+      "args": ["codestrata-validation-mcp-stub-test-only"]
+    }
+  }
+}

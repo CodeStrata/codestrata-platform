@@ -1,0 +1,728 @@
+{
+  "architecture_pack_id": "architecture.core",
+  "architecture_pack_version": "1.0.0",
+  "business_impact": "unknown",
+  "conclusion_ids": [
+    "conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d",
+    "conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268",
+    "conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d"
+  ],
+  "conclusions": [
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/namedentity.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "business_impact": "unknown",
+      "category": "architecture.framework-independence",
+      "conclusion_id": "conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d",
+      "conclusion_version": "1.0.0",
+      "confidence": "medium",
+      "consolidated_recommendation_ids": [
+        "recgroup:d09f474212b88b4f"
+      ],
+      "coverage": {
+        "classification_coverage": "0.3333",
+        "extraction_coverage": "1.0000"
+      },
+      "executive_interpretation": "Framework-specific types appear within jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/namedentity.java. This may hinder future isolation of domain logic from infrastructure frameworks. Evidence is static and heuristic.",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "materiality": "contextual",
+      "metadata": {
+        "primary_rule_id": "architecture.framework-leakage"
+      },
+      "modernization_relevance": "wave_2_foundation_modernization",
+      "policy_id": "architecture.conclusion.framework-boundary-erosion",
+      "primary_finding_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f",
+      "provenance": "architecture_conclusions",
+      "related_finding_ids": [],
+      "report_sections": [
+        "architecture"
+      ],
+      "severity_summary": {
+        "highest_severity": "medium",
+        "primary_finding_severity": "medium",
+        "severity_counts": {
+          "medium": 1
+        },
+        "source_finding_count": 1
+      },
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      ],
+      "source_positive_evidence_ids": [],
+      "status": "established",
+      "summary": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/namedentity.java.",
+      "supporting_evidence_ids": [],
+      "taxonomy_ids": [
+        "framework-independence"
+      ],
+      "technical_interpretation": "Framework annotation or type usage was detected in a layer expected to remain framework-independent under current heuristics.",
+      "title": "Framework types appear in an independent boundary"
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/person.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "business_impact": "unknown",
+      "category": "architecture.framework-independence",
+      "conclusion_id": "conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268",
+      "conclusion_version": "1.0.0",
+      "confidence": "medium",
+      "consolidated_recommendation_ids": [
+        "recgroup:7f0e7eaef58ccb71"
+      ],
+      "coverage": {
+        "classification_coverage": "0.3333",
+        "extraction_coverage": "1.0000"
+      },
+      "executive_interpretation": "Framework-specific types appear within jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/person.java. This may hinder future isolation of domain logic from infrastructure frameworks. Evidence is static and heuristic.",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "materiality": "contextual",
+      "metadata": {
+        "primary_rule_id": "architecture.framework-leakage"
+      },
+      "modernization_relevance": "wave_2_foundation_modernization",
+      "policy_id": "architecture.conclusion.framework-boundary-erosion",
+      "primary_finding_id": "finding:architecture.framework-leakage:2e7d513b52a76df5",
+      "provenance": "architecture_conclusions",
+      "related_finding_ids": [],
+      "report_sections": [
+        "architecture"
+      ],
+      "severity_summary": {
+        "highest_severity": "medium",
+        "primary_finding_severity": "medium",
+        "severity_counts": {
+          "medium": 1
+        },
+        "source_finding_count": 1
+      },
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:2e7d513b52a76df5"
+      ],
+      "source_positive_evidence_ids": [],
+      "status": "established",
+      "summary": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/person.java.",
+      "supporting_evidence_ids": [],
+      "taxonomy_ids": [
+        "framework-independence"
+      ],
+      "technical_interpretation": "Framework annotation or type usage was detected in a layer expected to remain framework-independent under current heuristics.",
+      "title": "Framework types appear in an independent boundary"
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/baseentity.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "business_impact": "unknown",
+      "category": "architecture.framework-independence",
+      "conclusion_id": "conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d",
+      "conclusion_version": "1.0.0",
+      "confidence": "medium",
+      "consolidated_recommendation_ids": [
+        "recgroup:ace7cff029c9130a"
+      ],
+      "coverage": {
+        "classification_coverage": "0.3333",
+        "extraction_coverage": "1.0000"
+      },
+      "executive_interpretation": "Framework-specific types appear within jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/baseentity.java. This may hinder future isolation of domain logic from infrastructure frameworks. Evidence is static and heuristic.",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "materiality": "contextual",
+      "metadata": {
+        "primary_rule_id": "architecture.framework-leakage"
+      },
+      "modernization_relevance": "wave_2_foundation_modernization",
+      "policy_id": "architecture.conclusion.framework-boundary-erosion",
+      "primary_finding_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c",
+      "provenance": "architecture_conclusions",
+      "related_finding_ids": [],
+      "report_sections": [
+        "architecture"
+      ],
+      "severity_summary": {
+        "highest_severity": "medium",
+        "primary_finding_severity": "medium",
+        "severity_counts": {
+          "medium": 1
+        },
+        "source_finding_count": 1
+      },
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      ],
+      "source_positive_evidence_ids": [],
+      "status": "established",
+      "summary": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/baseentity.java.",
+      "supporting_evidence_ids": [],
+      "taxonomy_ids": [
+        "framework-independence"
+      ],
+      "technical_interpretation": "Framework annotation or type usage was detected in a layer expected to remain framework-independent under current heuristics.",
+      "title": "Framework types appear in an independent boundary"
+    }
+  ],
+  "configuration_fingerprint": "82d17347a0e1b7a9",
+  "coverage": {
+    "areas": [
+      {
+        "area_id": "extraction_coverage",
+        "denominator": null,
+        "limitations": [],
+        "maturity": "high",
+        "numerator": null,
+        "provenance": "architecture_view",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "classification_coverage",
+        "denominator": null,
+        "limitations": [
+          "Partial coverage; interpret conclusions as provisional where noted."
+        ],
+        "maturity": "medium",
+        "numerator": null,
+        "provenance": "architecture_view",
+        "ratio": 0.3333,
+        "status": "partial"
+      },
+      {
+        "area_id": "enterprise_context_coverage",
+        "denominator": null,
+        "limitations": [
+          "Enterprise context was not supplied."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "assessment_assembly",
+        "ratio": null,
+        "status": "not_applicable"
+      },
+      {
+        "area_id": "framework_coverage",
+        "denominator": null,
+        "limitations": [
+          "Framework coverage is not yet measured as a ratio."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "architecture_assessment",
+        "ratio": null,
+        "status": "unsupported"
+      },
+      {
+        "area_id": "build_metadata_coverage",
+        "denominator": null,
+        "limitations": [
+          "Build-metadata coverage is not measured here."
+        ],
+        "maturity": "unknown",
+        "numerator": null,
+        "provenance": "architecture_assessment",
+        "ratio": null,
+        "status": "unsupported"
+      }
+    ]
+  },
+  "diagnostics": [],
+  "enterprise_context_used": false,
+  "evidence_fingerprint": "architecture_assessment",
+  "evidence_pipeline": "language_evidence",
+  "execution_summary": {
+    "architecture_rules_planned": 7,
+    "conclusion_count": 3,
+    "conclusion_policies_executed": 7,
+    "provider_failures": 0,
+    "providers_executed": 0,
+    "providers_planned": 0,
+    "recommendation_group_count": 3,
+    "rules_executed": 7,
+    "rules_insufficient_evidence": 0,
+    "rules_matched": 1,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 6,
+    "suppressed_finding_count": 0,
+    "visible_finding_count": 3
+  },
+  "finding_ids": [
+    "finding:architecture.framework-leakage:2e7d513b52a76df5",
+    "finding:architecture.framework-leakage:5bb3e2050ce9380f",
+    "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+  ],
+  "finding_summaries": [
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/person.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "conclusion_ids": [
+        "conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268"
+      ],
+      "confidence": "high",
+      "evidence_count": 1,
+      "finding_id": "finding:architecture.framework-leakage:2e7d513b52a76df5",
+      "recommendation_ids": [],
+      "rule_id": "architecture.framework-leakage",
+      "severity": "medium",
+      "status": "visible",
+      "suppression_state": "unsuppressed",
+      "taxonomy_ids": [
+        "architecture.framework-leakage"
+      ],
+      "title": "Framework symbol in domain boundary"
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/namedentity.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "conclusion_ids": [
+        "conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d"
+      ],
+      "confidence": "high",
+      "evidence_count": 1,
+      "finding_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f",
+      "recommendation_ids": [],
+      "rule_id": "architecture.framework-leakage",
+      "severity": "medium",
+      "status": "visible",
+      "suppression_state": "unsuppressed",
+      "taxonomy_ids": [
+        "architecture.framework-leakage"
+      ],
+      "title": "Framework symbol in domain boundary"
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/baseentity.java"
+      ],
+      "assessment_dimensions": [
+        "architecture"
+      ],
+      "conclusion_ids": [
+        "conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d"
+      ],
+      "confidence": "high",
+      "evidence_count": 1,
+      "finding_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c",
+      "recommendation_ids": [],
+      "rule_id": "architecture.framework-leakage",
+      "severity": "medium",
+      "status": "visible",
+      "suppression_state": "unsuppressed",
+      "taxonomy_ids": [
+        "architecture.framework-leakage"
+      ],
+      "title": "Framework symbol in domain boundary"
+    }
+  ],
+  "graph_fingerprint": "00758d052a4a5a80056b25d4",
+  "limitations": [
+    {
+      "affected_capability": "layer_classification",
+      "category": "partial-classification",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:2057dd2919bc",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Layer or boundary classification coverage is incomplete for some units."
+    },
+    {
+      "affected_capability": "architecture_assessment",
+      "category": "static-analysis-only",
+      "importance": "material",
+      "limitation_id": "arch-limitation:2612d5d918d6",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": "Validate critical findings with targeted design review or dynamic checks.",
+      "summary": "Architecture assessment is based on static analysis of source dependencies and declared structure. Runtime behavior is not observed."
+    },
+    {
+      "affected_capability": "architecture_strengths",
+      "category": "positive-evidence-unavailable",
+      "importance": "informational",
+      "limitation_id": "arch-limitation:364e9e75002e",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Architecture strengths remain empty until explicit positive evidence providers and conclusions are enabled."
+    },
+    {
+      "affected_capability": "architecture_assessment",
+      "category": "runtime-behavior-not-observed",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:3a84a0ce6e70",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "No runtime traces, production telemetry, or load behavior were assessed."
+    },
+    {
+      "affected_capability": "business_impact",
+      "category": "enterprise-context-unavailable",
+      "importance": "contextual",
+      "limitation_id": "arch-limitation:3aa718b4f40a",
+      "provenance": "architecture_assessment",
+      "remediation_guidance": null,
+      "summary": "Business impact remains unknown because Engineering Knowledge Graph context was not supplied."
+    }
+  ],
+  "metadata": {
+    "schema": "1.0.0",
+    "strengths_policy": "empty_until_positive_evidence"
+  },
+  "recommendation_group_ids": [
+    "recgroup:7f0e7eaef58ccb71",
+    "recgroup:ace7cff029c9130a",
+    "recgroup:d09f474212b88b4f"
+  ],
+  "recommendation_groups": [
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/person.java"
+      ],
+      "confidence": "medium",
+      "effort_band": "medium",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "modernization_wave": "wave_2_foundation_modernization",
+      "prerequisites": [
+        "Confirm classification coverage is adequate for the affected units."
+      ],
+      "primary_action": "Move framework annotations and SDK types behind adapters; keep domain contracts free of persistence and web-framework symbols.",
+      "rationale": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/person.java.",
+      "recommendation_group_id": "recgroup:7f0e7eaef58ccb71",
+      "sequencing_guidance": "Prefer resolving direct boundary violations before broad fan-out cleanup when both exist in the same scope.",
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:2e7d513b52a76df5"
+      ],
+      "source_recommendation_ids": [
+        "finding-remediation:finding:architecture.framework-leakage:2e7d513b52a76df5"
+      ],
+      "title": "Respond to: Framework types appear in an independent boundary",
+      "validation_steps": [
+        "Regenerate the architecture dependency graph.",
+        "Confirm related findings are resolved or intentionally accepted.",
+        "Re-run architecture conclusions and compare conclusion IDs."
+      ]
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/baseentity.java"
+      ],
+      "confidence": "medium",
+      "effort_band": "medium",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "modernization_wave": "wave_2_foundation_modernization",
+      "prerequisites": [
+        "Confirm classification coverage is adequate for the affected units."
+      ],
+      "primary_action": "Move framework annotations and SDK types behind adapters; keep domain contracts free of persistence and web-framework symbols.",
+      "rationale": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/baseentity.java.",
+      "recommendation_group_id": "recgroup:ace7cff029c9130a",
+      "sequencing_guidance": "Prefer resolving direct boundary violations before broad fan-out cleanup when both exist in the same scope.",
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      ],
+      "source_recommendation_ids": [
+        "finding-remediation:finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      ],
+      "title": "Respond to: Framework types appear in an independent boundary",
+      "validation_steps": [
+        "Regenerate the architecture dependency graph.",
+        "Confirm related findings are resolved or intentionally accepted.",
+        "Re-run architecture conclusions and compare conclusion IDs."
+      ]
+    },
+    {
+      "affected_scope": [
+        "jakarta.persistence",
+        "jpa",
+        "org.springframework.samples.petclinic.model",
+        "src/main/java/org/springframework/samples/petclinic/model/namedentity.java"
+      ],
+      "confidence": "medium",
+      "effort_band": "medium",
+      "limitations": [
+        "Based on static dependency analysis only.",
+        "Does not establish production reliability.",
+        "Business impact remains unknown without explicit enterprise context."
+      ],
+      "modernization_wave": "wave_2_foundation_modernization",
+      "prerequisites": [
+        "Confirm classification coverage is adequate for the affected units."
+      ],
+      "primary_action": "Move framework annotations and SDK types behind adapters; keep domain contracts free of persistence and web-framework symbols.",
+      "rationale": "Framework-specific usage was observed in jakarta.persistence, jpa, org.springframework.samples.petclinic.model, src/main/java/org/springframework/samples/petclinic/model/namedentity.java.",
+      "recommendation_group_id": "recgroup:d09f474212b88b4f",
+      "sequencing_guidance": "Prefer resolving direct boundary violations before broad fan-out cleanup when both exist in the same scope.",
+      "source_finding_ids": [
+        "finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      ],
+      "source_recommendation_ids": [
+        "finding-remediation:finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      ],
+      "title": "Respond to: Framework types appear in an independent boundary",
+      "validation_steps": [
+        "Regenerate the architecture dependency graph.",
+        "Confirm related findings are resolved or intentionally accepted.",
+        "Re-run architecture conclusions and compare conclusion IDs."
+      ]
+    }
+  ],
+  "repository_id": "spring-petclinic",
+  "section_id": "assessment.architecture",
+  "section_version": "1.0.0",
+  "status": "succeeded",
+  "strengths": [],
+  "traceability": {
+    "edges": [
+      {
+        "edge_id": "trace:3f08d111f59b7fb4",
+        "relation": "conclusion_to_finding",
+        "source_id": "conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d",
+        "target_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      },
+      {
+        "edge_id": "trace:9c2f03a3a236ec19",
+        "relation": "conclusion_to_finding",
+        "source_id": "conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268",
+        "target_id": "finding:architecture.framework-leakage:2e7d513b52a76df5"
+      },
+      {
+        "edge_id": "trace:d91c28a6d4520c29",
+        "relation": "conclusion_to_finding",
+        "source_id": "conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d",
+        "target_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      },
+      {
+        "edge_id": "trace:958742515042e204",
+        "relation": "finding_to_evidence",
+        "source_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f",
+        "target_id": "jakarta.persistence"
+      },
+      {
+        "edge_id": "trace:daac1df8e92e1ce3",
+        "relation": "finding_to_evidence",
+        "source_id": "finding:architecture.framework-leakage:2e7d513b52a76df5",
+        "target_id": "jakarta.persistence"
+      },
+      {
+        "edge_id": "trace:fea010e61217eb9a",
+        "relation": "finding_to_evidence",
+        "source_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c",
+        "target_id": "jakarta.persistence"
+      },
+      {
+        "edge_id": "trace:28e67c3011ab24de",
+        "relation": "recommendation_group_to_finding",
+        "source_id": "recgroup:ace7cff029c9130a",
+        "target_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      },
+      {
+        "edge_id": "trace:37472ec4712e7249",
+        "relation": "recommendation_group_to_finding",
+        "source_id": "recgroup:d09f474212b88b4f",
+        "target_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      },
+      {
+        "edge_id": "trace:e10df9dbb05ec895",
+        "relation": "recommendation_group_to_finding",
+        "source_id": "recgroup:7f0e7eaef58ccb71",
+        "target_id": "finding:architecture.framework-leakage:2e7d513b52a76df5"
+      },
+      {
+        "edge_id": "trace:3a651a85e7250adf",
+        "relation": "recommendation_group_to_recommendation",
+        "source_id": "recgroup:7f0e7eaef58ccb71",
+        "target_id": "finding-remediation:finding:architecture.framework-leakage:2e7d513b52a76df5"
+      },
+      {
+        "edge_id": "trace:5764bd8c0fc87af3",
+        "relation": "recommendation_group_to_recommendation",
+        "source_id": "recgroup:d09f474212b88b4f",
+        "target_id": "finding-remediation:finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      },
+      {
+        "edge_id": "trace:a7d2417da3a782a3",
+        "relation": "recommendation_group_to_recommendation",
+        "source_id": "recgroup:ace7cff029c9130a",
+        "target_id": "finding-remediation:finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      },
+      {
+        "edge_id": "trace:35c8451bc27dea0c",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.architecture",
+        "target_id": "conclusion:architecture.conclusion.framework-boundary-erosion:f05eed516e6aa4a1bc4d"
+      },
+      {
+        "edge_id": "trace:564af897e1ba679a",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.architecture",
+        "target_id": "conclusion:architecture.conclusion.framework-boundary-erosion:132569fb827686a92c2d"
+      },
+      {
+        "edge_id": "trace:b26199f11802cded",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.architecture",
+        "target_id": "conclusion:architecture.conclusion.framework-boundary-erosion:46eb0c43a461b06fa268"
+      },
+      {
+        "edge_id": "trace:31c1bbad26e50435",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "extraction_coverage"
+      },
+      {
+        "edge_id": "trace:516b7b1c98dff425",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "framework_coverage"
+      },
+      {
+        "edge_id": "trace:7a43982e7fb355f8",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "enterprise_context_coverage"
+      },
+      {
+        "edge_id": "trace:bfba91e8ebe6644c",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "classification_coverage"
+      },
+      {
+        "edge_id": "trace:e333656d86fa7f1a",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.architecture",
+        "target_id": "build_metadata_coverage"
+      },
+      {
+        "edge_id": "trace:3f83235a8b2e53a8",
+        "relation": "section_to_finding",
+        "source_id": "assessment.architecture",
+        "target_id": "finding:architecture.framework-leakage:6bc8d09be1063a9c"
+      },
+      {
+        "edge_id": "trace:75942609bbfbdaac",
+        "relation": "section_to_finding",
+        "source_id": "assessment.architecture",
+        "target_id": "finding:architecture.framework-leakage:5bb3e2050ce9380f"
+      },
+      {
+        "edge_id": "trace:ee7372b39df6ce28",
+        "relation": "section_to_finding",
+        "source_id": "assessment.architecture",
+        "target_id": "finding:architecture.framework-leakage:2e7d513b52a76df5"
+      },
+      {
+        "edge_id": "trace:2dd3d7e051ab5ba0",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:364e9e75002e"
+      },
+      {
+        "edge_id": "trace:3597401d15ac6d0c",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:2612d5d918d6"
+      },
+      {
+        "edge_id": "trace:9d0fa42545b3fa75",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:2057dd2919bc"
+      },
+      {
+        "edge_id": "trace:a21f4c9dcd3b7610",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:3a84a0ce6e70"
+      },
+      {
+        "edge_id": "trace:f54a11d4513a41a9",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.architecture",
+        "target_id": "arch-limitation:3aa718b4f40a"
+      },
+      {
+        "edge_id": "trace:40c27db75c6472f2",
+        "relation": "section_to_pack",
+        "source_id": "assessment.architecture",
+        "target_id": "architecture.core"
+      },
+      {
+        "edge_id": "trace:6ac4f2530559faff",
+        "relation": "section_to_recommendation_group",
+        "source_id": "assessment.architecture",
+        "target_id": "recgroup:d09f474212b88b4f"
+      },
+      {
+        "edge_id": "trace:6e9ee69ba76d4eef",
+        "relation": "section_to_recommendation_group",
+        "source_id": "assessment.architecture",
+        "target_id": "recgroup:ace7cff029c9130a"
+      },
+      {
+        "edge_id": "trace:f8dbe0038f1bc60d",
+        "relation": "section_to_recommendation_group",
+        "source_id": "assessment.architecture",
+        "target_id": "recgroup:7f0e7eaef58ccb71"
+      }
+    ]
+  }
+}

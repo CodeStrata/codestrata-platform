@@ -1,0 +1,6 @@
+{
+  "repository_id": "remote-csharp-eshop",
+  "schema_version": "1.2",
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "https://github.com/dotnet/eShop.git@9b4f9434f46fdc5c1a6e9e936af2868340cdbc48"
+}

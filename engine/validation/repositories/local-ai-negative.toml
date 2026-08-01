@@ -1,0 +1,18 @@
+repository_id = "local-ai-negative"
+display_name = "Local AI negative control fixture"
+source_type = "local"
+local_path = "fixtures/ai-negative"
+expected_results_path = "expectations/local-ai-negative.json"
+tags = [
+  "local",
+  "fixture",
+  "ai-readiness",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "javascript",
+]
+notes = """Local AI negative control fixture"""
+enabled = true

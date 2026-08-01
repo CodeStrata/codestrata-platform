@@ -1,0 +1,1429 @@
+{
+  "all_finding_ids": [],
+  "all_finding_summaries": [],
+  "artifact_schema_id": "codestrata.security_assessment",
+  "assessment_id": "sec-assessment:7b6bcd30805fecc0",
+  "business_impact": "unknown",
+  "category_inventory": {
+    "buckets": []
+  },
+  "concentration_facts": [
+    {
+      "count": 0,
+      "exceeds_threshold": false,
+      "fact_id": "sec-concentration:7cd1e0b36db5",
+      "kind": "locations_with_multiple_findings",
+      "share": 0.0,
+      "source_role": "production",
+      "subject": "repository",
+      "supporting_finding_ids": [],
+      "supporting_hotspot_ids": [],
+      "supporting_rule_ids": [],
+      "threshold": null,
+      "total": 0
+    },
+    {
+      "count": 0,
+      "exceeds_threshold": false,
+      "fact_id": "sec-concentration:947579899e74",
+      "kind": "production_finding_ratio",
+      "share": 0.0,
+      "source_role": "production",
+      "subject": "production",
+      "supporting_finding_ids": [],
+      "supporting_hotspot_ids": [],
+      "supporting_rule_ids": [],
+      "threshold": null,
+      "total": 0
+    }
+  ],
+  "conclusion_ids": [
+    "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2",
+    "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d",
+    "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:eabc3de0c271f0db5e28",
+    "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+  ],
+  "conclusions": [
+    {
+      "assessment_dimensions": [
+        "security"
+      ],
+      "audience": "production_health",
+      "business_impact": "unknown",
+      "concentration_fact_ids": [],
+      "conclusion_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "no_production_findings_in_supported_scope",
+      "metadata": {},
+      "policy_id": "security.conclusion.no-production-findings-in-supported-scope",
+      "provenance": "security_synthesis",
+      "recommendation_ids": [
+        "sec-recommendation:899793a09fe4f490"
+      ],
+      "rule_ids": [
+        "security.authentication-disabled",
+        "security.credential-literal",
+        "security.debug-enabled",
+        "security.hostname-verification-disabled",
+        "security.permissive-cors-origin",
+        "security.placeholder-credential",
+        "security.private-key-material",
+        "security.tls-verification-disabled"
+      ],
+      "source_role": "production",
+      "summary": "No production-role findings were emitted by the 8 enabled Security hygiene rules within the supported repository evidence scope.",
+      "technical_interpretation": "This statement is limited to supported repository-sensitive evidence and hygiene rules; it does not mean the repository is secure or free of vulnerabilities.",
+      "theme_ids": [
+        "sec-theme:aba52cdcd90f"
+      ],
+      "title": "No production findings in supported scope"
+    },
+    {
+      "assessment_dimensions": [
+        "security"
+      ],
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "concentration_fact_ids": [],
+      "conclusion_id": "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "diagnostic_ids": [
+        "rs-diagnostic:4a9dac890633",
+        "rs-diagnostic:f0529165909c"
+      ],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "partial_evidence_coverage",
+      "metadata": {},
+      "policy_id": "security.conclusion.partial-evidence-coverage",
+      "provenance": "security_synthesis",
+      "recommendation_ids": [
+        "sec-recommendation:10907945fd96eb87",
+        "sec-recommendation:97c2611d0fc8fb8c"
+      ],
+      "rule_ids": [],
+      "source_role": "unknown",
+      "summary": "Repository-sensitive evidence collection was partial because 2 supported input files could not be fully parsed or inspected.",
+      "technical_interpretation": "Evidence diagnostics remain diagnostics and are not Security findings.",
+      "theme_ids": [
+        "sec-theme:0913bd6fff88"
+      ],
+      "title": "Partial evidence coverage"
+    },
+    {
+      "assessment_dimensions": [
+        "security"
+      ],
+      "audience": "repository",
+      "business_impact": "unknown",
+      "concentration_fact_ids": [],
+      "conclusion_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:eabc3de0c271f0db5e28",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "security_hygiene_landscape_identified",
+      "metadata": {},
+      "policy_id": "security.conclusion.security-hygiene-landscape-identified",
+      "provenance": "security_synthesis",
+      "recommendation_ids": [],
+      "rule_ids": [
+        "security.authentication-disabled",
+        "security.credential-literal",
+        "security.debug-enabled",
+        "security.hostname-verification-disabled",
+        "security.permissive-cors-origin",
+        "security.placeholder-credential",
+        "security.private-key-material",
+        "security.tls-verification-disabled"
+      ],
+      "source_role": "production",
+      "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+      "technical_interpretation": "This conclusion summarizes supported repository security hygiene rule execution and finding counts only.",
+      "theme_ids": [
+        "sec-theme:0ef0f17047eb"
+      ],
+      "title": "Security hygiene landscape identified"
+    },
+    {
+      "assessment_dimensions": [
+        "security"
+      ],
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "concentration_fact_ids": [],
+      "conclusion_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "unsupported_security_analysis_scope",
+      "metadata": {},
+      "policy_id": "security.conclusion.unsupported-security-analysis-scope",
+      "provenance": "security_synthesis",
+      "recommendation_ids": [
+        "sec-recommendation:22f9f3798a0d02e6",
+        "sec-recommendation:344be70b5f409d57",
+        "sec-recommendation:f62152e1b059ef99"
+      ],
+      "rule_ids": [],
+      "source_role": "unknown",
+      "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+      "technical_interpretation": "Zero findings within supported scope do not prove repository security.",
+      "theme_ids": [
+        "sec-theme:867cd4de36bc"
+      ],
+      "title": "Unsupported Security analysis scope"
+    }
+  ],
+  "confidence_inventory": {
+    "buckets": []
+  },
+  "configuration_fingerprint": "4cc1ba15f040b02a",
+  "coverage": {
+    "areas": [
+      {
+        "area_id": "security_capability_requested",
+        "denominator": 1,
+        "limitations": [
+          "hygiene_rules_and_inventory_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "security_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "security_evidence_availability",
+        "denominator": 1,
+        "limitations": [],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "security_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "security_findings_evaluated",
+        "denominator": 0,
+        "limitations": [
+          "production_primary_views"
+        ],
+        "maturity": "medium",
+        "numerator": 0,
+        "provenance": "security_assessment",
+        "ratio": null,
+        "status": "measured"
+      },
+      {
+        "area_id": "security_inventory_assembled",
+        "denominator": 1,
+        "limitations": [
+          "no_synthesis"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "security_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "security_rules_enabled",
+        "denominator": 8,
+        "limitations": [],
+        "maturity": "medium",
+        "numerator": 8,
+        "provenance": "security_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      }
+    ]
+  },
+  "diagnostics": [
+    "evidence_status:partially_succeeded"
+  ],
+  "diagnostics_summary": {
+    "assessment_diagnostics": [],
+    "evidence_diagnostics": [
+      {
+        "diagnostic_code": "malformed_yaml",
+        "diagnostic_id": "rs-diagnostic:4a9dac890633",
+        "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+        "origin": "evidence",
+        "path": "k8s/db.yml"
+      },
+      {
+        "diagnostic_code": "malformed_yaml",
+        "diagnostic_id": "rs-diagnostic:f0529165909c",
+        "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+        "origin": "evidence",
+        "path": "k8s/petclinic.yml"
+      }
+    ],
+    "rule_diagnostics": []
+  },
+  "enterprise_context_used": false,
+  "evidence_fingerprint": "56cbc88ddc214df8",
+  "evidence_pipeline": "repository_sensitive",
+  "evidence_summary": {
+    "artifacts_inspected": 2,
+    "candidate_artifacts_discovered": 0,
+    "collection_status": "partially_succeeded",
+    "configuration_facts_collected": 2,
+    "credential_sensitive_facts": 2,
+    "environment_reference_facts": 2,
+    "evidence_diagnostic_count": 2,
+    "evidence_fingerprint": "56cbc88ddc214df8",
+    "evidence_limitation_count": 10,
+    "evidence_schema_name": "repository-sensitive-evidence",
+    "evidence_schema_version": "1.1.0",
+    "formats_represented": [
+      "json",
+      "properties",
+      "yaml"
+    ],
+    "malformed_files": 2,
+    "metadata_only_artifacts": 0,
+    "note": "Evidence summary projects repository-sensitive coverage only; zero signatures or findings do not prove the repository is secure.",
+    "placeholder_facts": 2,
+    "private_key_signatures_observed": 0,
+    "public_certificate_signatures_observed": 0,
+    "skipped_files": 0,
+    "source_roles_represented": [
+      "production"
+    ],
+    "structured_files_parsed": 2,
+    "unsupported_binaries": 0
+  },
+  "evidence_type_inventory": {
+    "artifact_candidates": 0,
+    "authentication_configuration_facts": 0,
+    "certificates": 0,
+    "cors_configuration_facts": 0,
+    "credential_configuration_facts": 2,
+    "debug_configuration_facts": 0,
+    "environment_references": 2,
+    "metadata_only_keystores": 0,
+    "placeholders": 0,
+    "private_key_material": 0,
+    "transport_configuration_facts": 0
+  },
+  "execution_summary": {
+    "conclusion_count": 4,
+    "findings_by_rule": {},
+    "pack_enabled": true,
+    "pack_id": "security.core",
+    "pack_version": "1.0.0",
+    "recommendation_count": 6,
+    "rules_executed": 8,
+    "rules_failed": 0,
+    "rules_insufficient_evidence": 0,
+    "rules_matched": 0,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 8,
+    "security_rules_planned": 8,
+    "suppressed_finding_count": 0,
+    "theme_count": 5,
+    "total_finding_count": 0,
+    "visible_finding_count": 0
+  },
+  "finding_ids": [],
+  "finding_inventory": {
+    "primary_source_role": "production",
+    "production": {
+      "category_counts": {},
+      "finding_count": 0,
+      "finding_ids": [],
+      "rule_counts": {},
+      "severity_counts": {},
+      "source_role": "production"
+    },
+    "test": {
+      "category_counts": {},
+      "finding_count": 0,
+      "finding_ids": [],
+      "rule_counts": {},
+      "severity_counts": {},
+      "source_role": "test"
+    },
+    "total_finding_count": 0,
+    "unknown": {
+      "category_counts": {},
+      "finding_count": 0,
+      "finding_ids": [],
+      "rule_counts": {},
+      "severity_counts": {},
+      "source_role": "unknown"
+    }
+  },
+  "finding_summaries": [],
+  "graph_fingerprint": "",
+  "hotspot_inventory": {
+    "hotspots": [],
+    "note": "Hotspots order repository locations by finding concentration for presentation only. They do not assert risk, vulnerability, or severity beyond observed Finding facts."
+  },
+  "limitations": [
+    {
+      "affected_capability": "security_evidence",
+      "category": "security-evidence-not-implemented",
+      "importance": "critical",
+      "limitation_id": "sec-limitation:13a498eeebd8",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment."
+    },
+    {
+      "affected_capability": "security_assessment",
+      "category": "foundation-only",
+      "importance": "critical",
+      "limitation_id": "sec-limitation:1c64314414dd",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "Security Intelligence Phase 4.5.5 organizes repository-local hygiene Findings into inventories and deterministic synthesis. Zero findings does not mean the repository is secure."
+    },
+    {
+      "affected_capability": "git_history",
+      "category": "no-git-history-analysis",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:1f15b2697bf3",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No git-history security analysis is performed."
+    },
+    {
+      "affected_capability": "data_flow",
+      "category": "no-data-flow-analysis",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:5f805d1ca2ad",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No taint or data-flow analysis is performed."
+    },
+    {
+      "affected_capability": "security_rules",
+      "category": "rules-not-implemented",
+      "importance": "critical",
+      "limitation_id": "sec-limitation:93a53f56ad3e",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules."
+    },
+    {
+      "affected_capability": "business_impact",
+      "category": "business-impact-unknown",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:cfdf7999a500",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "Business impact remains unknown for hygiene findings."
+    },
+    {
+      "affected_capability": "runtime_analysis",
+      "category": "no-runtime-analysis",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:ea39a330990f",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No runtime security analysis or secret validity checks."
+    },
+    {
+      "affected_capability": "package_registry",
+      "category": "no-package-registry-query",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:edcdfedf3465",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No package registry access is performed."
+    },
+    {
+      "affected_capability": "vulnerability_metadata",
+      "category": "no-external-vulnerability-metadata",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:f40950317d0f",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No external vulnerability metadata, CVE, or package registry queries."
+    },
+    {
+      "affected_capability": "sast",
+      "category": "no-sast",
+      "importance": "contextual",
+      "limitation_id": "sec-limitation:fead453a4f20",
+      "provenance": "security_assessment",
+      "remediation_guidance": null,
+      "summary": "No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis."
+    }
+  ],
+  "metadata": {
+    "all_findings": "all_finding_ids_and_all_finding_summaries",
+    "assessment_milestone": "4.5.5",
+    "hotspot_ordering": "presentation_only:production_count,total_count,highest_severity,path",
+    "production_primary": "finding_ids_and_finding_summaries",
+    "synthesis_version": "1.0.0"
+  },
+  "recommendation_ids": [
+    "sec-recommendation:899793a09fe4f490",
+    "sec-recommendation:22f9f3798a0d02e6",
+    "sec-recommendation:344be70b5f409d57",
+    "sec-recommendation:f62152e1b059ef99",
+    "sec-recommendation:10907945fd96eb87",
+    "sec-recommendation:97c2611d0fc8fb8c"
+  ],
+  "recommendations": [
+    {
+      "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+      "audience": "production_health",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "acknowledge_no_production_findings_in_supported_scope",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "Zero production findings within supported scope are not a security certification.",
+      "recommendation_id": "sec-recommendation:899793a09fe4f490",
+      "theme_ids": [
+        "sec-theme:aba52cdcd90f"
+      ],
+      "title": "Acknowledge no production findings in supported scope"
+    },
+    {
+      "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "add_external_dependency_vulnerability_analysis",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+      "recommendation_id": "sec-recommendation:22f9f3798a0d02e6",
+      "theme_ids": [
+        "sec-theme:867cd4de36bc"
+      ],
+      "title": "Add external dependency vulnerability analysis"
+    },
+    {
+      "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "add_git_history_secret_scanning",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "Git history analysis is an accepted unsupported limitation.",
+      "recommendation_id": "sec-recommendation:344be70b5f409d57",
+      "theme_ids": [
+        "sec-theme:867cd4de36bc"
+      ],
+      "title": "Add Git history secret scanning"
+    },
+    {
+      "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "add_runtime_security_validation",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "Runtime analysis is an accepted unsupported limitation.",
+      "recommendation_id": "sec-recommendation:f62152e1b059ef99",
+      "theme_ids": [
+        "sec-theme:867cd4de36bc"
+      ],
+      "title": "Add runtime security validation"
+    },
+    {
+      "action": "Correct malformed supported configuration files so repository-sensitive evidence collection can complete.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [
+        "rs-diagnostic:4a9dac890633",
+        "rs-diagnostic:f0529165909c"
+      ],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "correct_malformed_configuration",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "Malformed inputs reduce evidence completeness; they are not treated as Security findings.",
+      "recommendation_id": "sec-recommendation:10907945fd96eb87",
+      "theme_ids": [
+        "sec-theme:0913bd6fff88"
+      ],
+      "title": "Correct malformed supported configuration"
+    },
+    {
+      "action": "Expand supported repository-sensitive evidence coverage for files that were skipped, unsupported, or only partially inspected.",
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d"
+      ],
+      "conditional": true,
+      "diagnostic_ids": [
+        "rs-diagnostic:4a9dac890633",
+        "rs-diagnostic:f0529165909c"
+      ],
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "expand_supported_evidence_coverage",
+      "metadata": {},
+      "provenance": "security_synthesis",
+      "rationale": "Coverage expansion improves inventory completeness without claiming a full security assessment.",
+      "recommendation_id": "sec-recommendation:97c2611d0fc8fb8c",
+      "theme_ids": [
+        "sec-theme:0913bd6fff88"
+      ],
+      "title": "Expand supported evidence coverage"
+    }
+  ],
+  "repository_id": "remote-java-spring-petclinic",
+  "rule_inventory": {
+    "entries": [
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.authentication-disabled",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.credential-literal",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.debug-enabled",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.hostname-verification-disabled",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.permissive-cors-origin",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.placeholder-credential",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.private-key-material",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "production_finding_count": 0,
+        "rule_id": "security.tls-verification-disabled",
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      }
+    ]
+  },
+  "schema_name": "security-assessment",
+  "section_id": "assessment.security",
+  "section_version": "1.3.0",
+  "security_pack_id": "security.core",
+  "security_pack_version": "1.0.0",
+  "severity_inventory": {
+    "buckets": []
+  },
+  "status": "partially_succeeded",
+  "synthesis": {
+    "concentration_facts": [
+      {
+        "count": 0,
+        "exceeds_threshold": false,
+        "fact_id": "sec-concentration:7cd1e0b36db5",
+        "kind": "locations_with_multiple_findings",
+        "share": 0.0,
+        "source_role": "production",
+        "subject": "repository",
+        "supporting_finding_ids": [],
+        "supporting_hotspot_ids": [],
+        "supporting_rule_ids": [],
+        "threshold": null,
+        "total": 0
+      },
+      {
+        "count": 0,
+        "exceeds_threshold": false,
+        "fact_id": "sec-concentration:947579899e74",
+        "kind": "production_finding_ratio",
+        "share": 0.0,
+        "source_role": "production",
+        "subject": "production",
+        "supporting_finding_ids": [],
+        "supporting_hotspot_ids": [],
+        "supporting_rule_ids": [],
+        "threshold": null,
+        "total": 0
+      }
+    ],
+    "conclusion_ids": [
+      "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2",
+      "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d",
+      "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:eabc3de0c271f0db5e28",
+      "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+    ],
+    "conclusions": [
+      {
+        "assessment_dimensions": [
+          "security"
+        ],
+        "audience": "production_health",
+        "business_impact": "unknown",
+        "concentration_fact_ids": [],
+        "conclusion_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "no_production_findings_in_supported_scope",
+        "metadata": {},
+        "policy_id": "security.conclusion.no-production-findings-in-supported-scope",
+        "provenance": "security_synthesis",
+        "recommendation_ids": [
+          "sec-recommendation:899793a09fe4f490"
+        ],
+        "rule_ids": [
+          "security.authentication-disabled",
+          "security.credential-literal",
+          "security.debug-enabled",
+          "security.hostname-verification-disabled",
+          "security.permissive-cors-origin",
+          "security.placeholder-credential",
+          "security.private-key-material",
+          "security.tls-verification-disabled"
+        ],
+        "source_role": "production",
+        "summary": "No production-role findings were emitted by the 8 enabled Security hygiene rules within the supported repository evidence scope.",
+        "technical_interpretation": "This statement is limited to supported repository-sensitive evidence and hygiene rules; it does not mean the repository is secure or free of vulnerabilities.",
+        "theme_ids": [
+          "sec-theme:aba52cdcd90f"
+        ],
+        "title": "No production findings in supported scope"
+      },
+      {
+        "assessment_dimensions": [
+          "security"
+        ],
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "concentration_fact_ids": [],
+        "conclusion_id": "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "diagnostic_ids": [
+          "rs-diagnostic:4a9dac890633",
+          "rs-diagnostic:f0529165909c"
+        ],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "partial_evidence_coverage",
+        "metadata": {},
+        "policy_id": "security.conclusion.partial-evidence-coverage",
+        "provenance": "security_synthesis",
+        "recommendation_ids": [
+          "sec-recommendation:10907945fd96eb87",
+          "sec-recommendation:97c2611d0fc8fb8c"
+        ],
+        "rule_ids": [],
+        "source_role": "unknown",
+        "summary": "Repository-sensitive evidence collection was partial because 2 supported input files could not be fully parsed or inspected.",
+        "technical_interpretation": "Evidence diagnostics remain diagnostics and are not Security findings.",
+        "theme_ids": [
+          "sec-theme:0913bd6fff88"
+        ],
+        "title": "Partial evidence coverage"
+      },
+      {
+        "assessment_dimensions": [
+          "security"
+        ],
+        "audience": "repository",
+        "business_impact": "unknown",
+        "concentration_fact_ids": [],
+        "conclusion_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:eabc3de0c271f0db5e28",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "security_hygiene_landscape_identified",
+        "metadata": {},
+        "policy_id": "security.conclusion.security-hygiene-landscape-identified",
+        "provenance": "security_synthesis",
+        "recommendation_ids": [],
+        "rule_ids": [
+          "security.authentication-disabled",
+          "security.credential-literal",
+          "security.debug-enabled",
+          "security.hostname-verification-disabled",
+          "security.permissive-cors-origin",
+          "security.placeholder-credential",
+          "security.private-key-material",
+          "security.tls-verification-disabled"
+        ],
+        "source_role": "production",
+        "summary": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+        "technical_interpretation": "This conclusion summarizes supported repository security hygiene rule execution and finding counts only.",
+        "theme_ids": [
+          "sec-theme:0ef0f17047eb"
+        ],
+        "title": "Security hygiene landscape identified"
+      },
+      {
+        "assessment_dimensions": [
+          "security"
+        ],
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "concentration_fact_ids": [],
+        "conclusion_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "unsupported_security_analysis_scope",
+        "metadata": {},
+        "policy_id": "security.conclusion.unsupported-security-analysis-scope",
+        "provenance": "security_synthesis",
+        "recommendation_ids": [
+          "sec-recommendation:22f9f3798a0d02e6",
+          "sec-recommendation:344be70b5f409d57",
+          "sec-recommendation:f62152e1b059ef99"
+        ],
+        "rule_ids": [],
+        "source_role": "unknown",
+        "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+        "technical_interpretation": "Zero findings within supported scope do not prove repository security.",
+        "theme_ids": [
+          "sec-theme:867cd4de36bc"
+        ],
+        "title": "Unsupported Security analysis scope"
+      }
+    ],
+    "diagnostics": [],
+    "recommendation_ids": [
+      "sec-recommendation:899793a09fe4f490",
+      "sec-recommendation:22f9f3798a0d02e6",
+      "sec-recommendation:344be70b5f409d57",
+      "sec-recommendation:f62152e1b059ef99",
+      "sec-recommendation:10907945fd96eb87",
+      "sec-recommendation:97c2611d0fc8fb8c"
+    ],
+    "recommendations": [
+      {
+        "action": "Retain the current repository hygiene controls and extend assessment coverage before drawing broader security conclusions.",
+        "audience": "production_health",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "acknowledge_no_production_findings_in_supported_scope",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "Zero production findings within supported scope are not a security certification.",
+        "recommendation_id": "sec-recommendation:899793a09fe4f490",
+        "theme_ids": [
+          "sec-theme:aba52cdcd90f"
+        ],
+        "title": "Acknowledge no production findings in supported scope"
+      },
+      {
+        "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "add_external_dependency_vulnerability_analysis",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+        "recommendation_id": "sec-recommendation:22f9f3798a0d02e6",
+        "theme_ids": [
+          "sec-theme:867cd4de36bc"
+        ],
+        "title": "Add external dependency vulnerability analysis"
+      },
+      {
+        "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "add_git_history_secret_scanning",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "Git history analysis is an accepted unsupported limitation.",
+        "recommendation_id": "sec-recommendation:344be70b5f409d57",
+        "theme_ids": [
+          "sec-theme:867cd4de36bc"
+        ],
+        "title": "Add Git history secret scanning"
+      },
+      {
+        "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "add_runtime_security_validation",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "Runtime analysis is an accepted unsupported limitation.",
+        "recommendation_id": "sec-recommendation:f62152e1b059ef99",
+        "theme_ids": [
+          "sec-theme:867cd4de36bc"
+        ],
+        "title": "Add runtime security validation"
+      },
+      {
+        "action": "Correct malformed supported configuration files so repository-sensitive evidence collection can complete.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [
+          "rs-diagnostic:4a9dac890633",
+          "rs-diagnostic:f0529165909c"
+        ],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "correct_malformed_configuration",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "Malformed inputs reduce evidence completeness; they are not treated as Security findings.",
+        "recommendation_id": "sec-recommendation:10907945fd96eb87",
+        "theme_ids": [
+          "sec-theme:0913bd6fff88"
+        ],
+        "title": "Correct malformed supported configuration"
+      },
+      {
+        "action": "Expand supported repository-sensitive evidence coverage for files that were skipped, unsupported, or only partially inspected.",
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d"
+        ],
+        "conditional": true,
+        "diagnostic_ids": [
+          "rs-diagnostic:4a9dac890633",
+          "rs-diagnostic:f0529165909c"
+        ],
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "expand_supported_evidence_coverage",
+        "metadata": {},
+        "provenance": "security_synthesis",
+        "rationale": "Coverage expansion improves inventory completeness without claiming a full security assessment.",
+        "recommendation_id": "sec-recommendation:97c2611d0fc8fb8c",
+        "theme_ids": [
+          "sec-theme:0913bd6fff88"
+        ],
+        "title": "Expand supported evidence coverage"
+      }
+    ],
+    "status": "empty",
+    "synthesis_version": "1.0.0",
+    "theme_ids": [
+      "sec-theme:0ef0f17047eb",
+      "sec-theme:d221d632b81d",
+      "sec-theme:0913bd6fff88",
+      "sec-theme:867cd4de36bc",
+      "sec-theme:aba52cdcd90f"
+    ],
+    "themes": [
+      {
+        "category_ids": [],
+        "counts": {
+          "all_findings": 0,
+          "categories_represented": 0,
+          "hotspot_count": 0,
+          "production_findings": 0,
+          "rules_executed": 8,
+          "source_roles_represented": 0
+        },
+        "description": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "security_hygiene_landscape",
+        "ordering_key": "00_landscape",
+        "rule_ids": [
+          "security.private-key-material",
+          "security.credential-literal",
+          "security.placeholder-credential",
+          "security.tls-verification-disabled",
+          "security.hostname-verification-disabled",
+          "security.authentication-disabled",
+          "security.permissive-cors-origin",
+          "security.debug-enabled"
+        ],
+        "scope": "repository",
+        "source_role": "production",
+        "theme_id": "sec-theme:0ef0f17047eb",
+        "title": "Security hygiene landscape"
+      },
+      {
+        "category_ids": [],
+        "counts": {
+          "candidate_artifacts": 0,
+          "configuration_facts": 2,
+          "evidence_diagnostics": 2
+        },
+        "description": "Repository-sensitive evidence collection status is partially_succeeded; 0 candidate artifacts were discovered and 2 configuration facts were collected within supported formats.",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "evidence_coverage",
+        "ordering_key": "01_evidence_coverage",
+        "rule_ids": [],
+        "scope": "coverage",
+        "source_role": "unknown",
+        "theme_id": "sec-theme:d221d632b81d",
+        "title": "Evidence coverage"
+      },
+      {
+        "category_ids": [],
+        "counts": {
+          "evidence_diagnostics": 2,
+          "malformed_files": 2,
+          "skipped_files": 0,
+          "unsupported_binaries": 0
+        },
+        "description": "Repository-sensitive evidence collection was partial because 2 supported input files could not be fully parsed or inspected.",
+        "diagnostic_ids": [
+          "rs-diagnostic:4a9dac890633",
+          "rs-diagnostic:f0529165909c"
+        ],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "partial_evidence_coverage",
+        "ordering_key": "40_partial",
+        "rule_ids": [],
+        "scope": "coverage",
+        "source_role": "unknown",
+        "theme_id": "sec-theme:0913bd6fff88",
+        "title": "Partial evidence coverage"
+      },
+      {
+        "category_ids": [],
+        "counts": {
+          "limitation_count": 10
+        },
+        "description": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "unsupported_analysis_scope",
+        "ordering_key": "50_unsupported",
+        "rule_ids": [],
+        "scope": "coverage",
+        "source_role": "unknown",
+        "theme_id": "sec-theme:867cd4de36bc",
+        "title": "Unsupported analysis scope"
+      },
+      {
+        "category_ids": [],
+        "counts": {
+          "all_findings": 0,
+          "production_findings": 0,
+          "rules_executed": 8
+        },
+        "description": "No production-role findings were emitted by the supported repository security hygiene rules.",
+        "diagnostic_ids": [],
+        "finding_ids": [],
+        "hotspot_ids": [],
+        "kind": "no_production_findings",
+        "ordering_key": "60_no_production",
+        "rule_ids": [],
+        "scope": "production",
+        "source_role": "production",
+        "theme_id": "sec-theme:aba52cdcd90f",
+        "title": "No production findings"
+      }
+    ]
+  },
+  "theme_ids": [
+    "sec-theme:0ef0f17047eb",
+    "sec-theme:d221d632b81d",
+    "sec-theme:0913bd6fff88",
+    "sec-theme:867cd4de36bc",
+    "sec-theme:aba52cdcd90f"
+  ],
+  "themes": [
+    {
+      "category_ids": [],
+      "counts": {
+        "all_findings": 0,
+        "categories_represented": 0,
+        "hotspot_count": 0,
+        "production_findings": 0,
+        "rules_executed": 8,
+        "source_roles_represented": 0
+      },
+      "description": "8 repository security hygiene rules executed and produced no findings within the supported evidence scope.",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "security_hygiene_landscape",
+      "ordering_key": "00_landscape",
+      "rule_ids": [
+        "security.private-key-material",
+        "security.credential-literal",
+        "security.placeholder-credential",
+        "security.tls-verification-disabled",
+        "security.hostname-verification-disabled",
+        "security.authentication-disabled",
+        "security.permissive-cors-origin",
+        "security.debug-enabled"
+      ],
+      "scope": "repository",
+      "source_role": "production",
+      "theme_id": "sec-theme:0ef0f17047eb",
+      "title": "Security hygiene landscape"
+    },
+    {
+      "category_ids": [],
+      "counts": {
+        "candidate_artifacts": 0,
+        "configuration_facts": 2,
+        "evidence_diagnostics": 2
+      },
+      "description": "Repository-sensitive evidence collection status is partially_succeeded; 0 candidate artifacts were discovered and 2 configuration facts were collected within supported formats.",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "evidence_coverage",
+      "ordering_key": "01_evidence_coverage",
+      "rule_ids": [],
+      "scope": "coverage",
+      "source_role": "unknown",
+      "theme_id": "sec-theme:d221d632b81d",
+      "title": "Evidence coverage"
+    },
+    {
+      "category_ids": [],
+      "counts": {
+        "evidence_diagnostics": 2,
+        "malformed_files": 2,
+        "skipped_files": 0,
+        "unsupported_binaries": 0
+      },
+      "description": "Repository-sensitive evidence collection was partial because 2 supported input files could not be fully parsed or inspected.",
+      "diagnostic_ids": [
+        "rs-diagnostic:4a9dac890633",
+        "rs-diagnostic:f0529165909c"
+      ],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "partial_evidence_coverage",
+      "ordering_key": "40_partial",
+      "rule_ids": [],
+      "scope": "coverage",
+      "source_role": "unknown",
+      "theme_id": "sec-theme:0913bd6fff88",
+      "title": "Partial evidence coverage"
+    },
+    {
+      "category_ids": [],
+      "counts": {
+        "limitation_count": 10
+      },
+      "description": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "unsupported_analysis_scope",
+      "ordering_key": "50_unsupported",
+      "rule_ids": [],
+      "scope": "coverage",
+      "source_role": "unknown",
+      "theme_id": "sec-theme:867cd4de36bc",
+      "title": "Unsupported analysis scope"
+    },
+    {
+      "category_ids": [],
+      "counts": {
+        "all_findings": 0,
+        "production_findings": 0,
+        "rules_executed": 8
+      },
+      "description": "No production-role findings were emitted by the supported repository security hygiene rules.",
+      "diagnostic_ids": [],
+      "finding_ids": [],
+      "hotspot_ids": [],
+      "kind": "no_production_findings",
+      "ordering_key": "60_no_production",
+      "rule_ids": [],
+      "scope": "production",
+      "source_role": "production",
+      "theme_id": "sec-theme:aba52cdcd90f",
+      "title": "No production findings"
+    }
+  ],
+  "traceability": {
+    "edges": [
+      {
+        "edge_id": "sec-trace:06c53db8b3cf583b",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.security",
+        "target_id": "sec-recommendation:344be70b5f409d57"
+      },
+      {
+        "edge_id": "sec-trace:119a3851f8c2135a",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:edcdfedf3465"
+      },
+      {
+        "edge_id": "sec-trace:176175be5279d563",
+        "relation": "section_to_pack",
+        "source_id": "assessment.security",
+        "target_id": "security.core"
+      },
+      {
+        "edge_id": "sec-trace:1a1c4ce0f0dff0b7",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:ea39a330990f"
+      },
+      {
+        "edge_id": "sec-trace:3ad9b388df2df07b",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.security",
+        "target_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:54c17e89d1decc7ad2bb"
+      },
+      {
+        "edge_id": "sec-trace:50a39b88b9784501",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:93a53f56ad3e"
+      },
+      {
+        "edge_id": "sec-trace:51c99a2bd0d34562",
+        "relation": "section_to_theme",
+        "source_id": "assessment.security",
+        "target_id": "sec-theme:aba52cdcd90f"
+      },
+      {
+        "edge_id": "sec-trace:77852c6e5771924a",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:cfdf7999a500"
+      },
+      {
+        "edge_id": "sec-trace:8311d6f24dc76a0e",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.security",
+        "target_id": "sec-conclusion:security.conclusion.partial-evidence-coverage:6133f84559ec8292034d"
+      },
+      {
+        "edge_id": "sec-trace:8839212c08063e5c",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:5f805d1ca2ad"
+      },
+      {
+        "edge_id": "sec-trace:94cba4269c4cc0f9",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:13a498eeebd8"
+      },
+      {
+        "edge_id": "sec-trace:984641f2c1e6d2b6",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.security",
+        "target_id": "sec-recommendation:899793a09fe4f490"
+      },
+      {
+        "edge_id": "sec-trace:9d090d955b960bae",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:f40950317d0f"
+      },
+      {
+        "edge_id": "sec-trace:af297d9d998e35e3",
+        "relation": "section_to_theme",
+        "source_id": "assessment.security",
+        "target_id": "sec-theme:d221d632b81d"
+      },
+      {
+        "edge_id": "sec-trace:b6394ce9e3660d85",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:1c64314414dd"
+      },
+      {
+        "edge_id": "sec-trace:be4e862bd7c40fef",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.security",
+        "target_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:eabc3de0c271f0db5e28"
+      },
+      {
+        "edge_id": "sec-trace:c9883e4a9dbaaa2d",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:fead453a4f20"
+      },
+      {
+        "edge_id": "sec-trace:da114d69bbdc298f",
+        "relation": "section_to_theme",
+        "source_id": "assessment.security",
+        "target_id": "sec-theme:867cd4de36bc"
+      },
+      {
+        "edge_id": "sec-trace:dbd3b82edf42573a",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.security",
+        "target_id": "sec-conclusion:security.conclusion.no-production-findings-in-supported-scope:4665d89ecf83dd87c7e2"
+      },
+      {
+        "edge_id": "sec-trace:df15d7d5406fa68a",
+        "relation": "section_to_theme",
+        "source_id": "assessment.security",
+        "target_id": "sec-theme:0ef0f17047eb"
+      },
+      {
+        "edge_id": "sec-trace:f0ca5aff839cc979",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.security",
+        "target_id": "sec-limitation:1f15b2697bf3"
+      },
+      {
+        "edge_id": "sec-trace:fd6fba821a4fae96",
+        "relation": "section_to_recommendation",
+        "source_id": "assessment.security",
+        "target_id": "sec-recommendation:22f9f3798a0d02e6"
+      },
+      {
+        "edge_id": "sec-trace:fee1da1222b72302",
+        "relation": "section_to_theme",
+        "source_id": "assessment.security",
+        "target_id": "sec-theme:0913bd6fff88"
+      }
+    ]
+  }
+}

@@ -11,6 +11,7 @@ from codestrata.application.rules.technical_debt.helpers import (
     evidence_callable,
     evidence_type,
     exceeds_threshold,
+    is_production_complexity_subject,
     make_metadata,
     match,
     severity_for_ratio,
@@ -77,6 +78,8 @@ class LargeCallableRule:
             )
         matches = []
         for item in evidence.callables:
+            if not is_production_complexity_subject(item.classification):
+                continue
             if not exceeds_threshold(item.physical_line_count, threshold=self._threshold):
                 continue
             value = int(item.physical_line_count.value or 0)
@@ -151,6 +154,8 @@ class ExcessiveBranchingRule:
             )
         matches = []
         for item in evidence.callables:
+            if not is_production_complexity_subject(item.classification):
+                continue
             if not exceeds_threshold(item.branch_point_count, threshold=self._threshold):
                 continue
             value = int(item.branch_point_count.value or 0)
@@ -225,6 +230,8 @@ class DeepNestingRule:
             )
         matches = []
         for item in evidence.callables:
+            if not is_production_complexity_subject(item.classification):
+                continue
             if not exceeds_threshold(item.max_nesting_depth, threshold=self._threshold):
                 continue
             value = int(item.max_nesting_depth.value or 0)
@@ -299,6 +306,8 @@ class ExcessiveParametersRule:
             )
         matches = []
         for item in evidence.callables:
+            if not is_production_complexity_subject(item.classification):
+                continue
             if not exceeds_threshold(item.parameter_count, threshold=self._threshold):
                 continue
             value = int(item.parameter_count.value or 0)
@@ -373,6 +382,8 @@ class OversizedTypeRule:
             )
         matches = []
         for item in evidence.types:
+            if not is_production_complexity_subject(item.classification):
+                continue
             if not exceeds_threshold(item.physical_line_count, threshold=self._threshold):
                 continue
             value = int(item.physical_line_count.value or 0)

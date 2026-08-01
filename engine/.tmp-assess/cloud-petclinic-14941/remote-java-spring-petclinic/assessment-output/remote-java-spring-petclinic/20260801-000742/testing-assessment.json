@@ -1,0 +1,838 @@
+{
+  "all_finding_ids": [
+    "finding:testing.test-001:94fa5f1b334deaa9"
+  ],
+  "artifact_schema_id": "codestrata.testing_assessment",
+  "assessment_id": "test-assessment:28fe98782bc8d8d9",
+  "capability": "testing",
+  "conclusion_ids": [
+    "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038",
+    "test-conclusion:testing.conclusion.rule-execution-summary:bb4a87158fadf1543533",
+    "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:13025ed37ed2162a7ece",
+    "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de"
+  ],
+  "conclusions": [
+    {
+      "assessment_dimensions": [
+        "testing"
+      ],
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_id": "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:testing.test-001:94fa5f1b334deaa9"
+      ],
+      "kind": "disabled_or_skipped_tests_observed",
+      "metadata": {},
+      "policy_id": "testing.conclusion.disabled-or-skipped-tests-observed",
+      "provenance": "testing_synthesis",
+      "recommendation_ids": [
+        "test-recommendation:91e2ae9ba8be3d6e"
+      ],
+      "rule_ids": [
+        "testing.test-001"
+      ],
+      "summary": "1 finding report disabled, skipped, or ignored test markers in repository evidence.",
+      "technical_interpretation": "Disabled markers are repository-local hygiene signals. Severity implications stay informational to medium and do not judge whether skips are justified.",
+      "theme_ids": [
+        "test-theme:3b79a497daf3"
+      ],
+      "title": "Disabled or skipped tests observed"
+    },
+    {
+      "assessment_dimensions": [
+        "testing"
+      ],
+      "audience": "coverage",
+      "business_impact": "unknown",
+      "conclusion_id": "test-conclusion:testing.conclusion.rule-execution-summary:bb4a87158fadf1543533",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [],
+      "kind": "rule_execution_summary",
+      "metadata": {},
+      "policy_id": "testing.conclusion.rule-execution-summary",
+      "provenance": "testing_synthesis",
+      "recommendation_ids": [],
+      "rule_ids": [
+        "testing.test-001",
+        "testing.test-002",
+        "testing.test-003",
+        "testing.test-005"
+      ],
+      "summary": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+      "technical_interpretation": "Applicable registered hygiene rules versus matched outcomes are inventory facts, not test-quality scores.",
+      "theme_ids": [
+        "test-theme:6fcde23f9f77"
+      ],
+      "title": "Test Hygiene rule execution summary"
+    },
+    {
+      "assessment_dimensions": [
+        "testing"
+      ],
+      "audience": "repository",
+      "business_impact": "unknown",
+      "conclusion_id": "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:13025ed37ed2162a7ece",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [
+        "finding:testing.test-001:94fa5f1b334deaa9"
+      ],
+      "kind": "testing_hygiene_landscape_identified",
+      "metadata": {},
+      "policy_id": "testing.conclusion.testing-hygiene-landscape-identified",
+      "provenance": "testing_synthesis",
+      "recommendation_ids": [],
+      "rule_ids": [
+        "testing.test-001",
+        "testing.test-002",
+        "testing.test-003",
+        "testing.test-005"
+      ],
+      "summary": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+      "technical_interpretation": "This conclusion summarizes supported Test Hygiene rule execution and finding counts only.",
+      "theme_ids": [
+        "test-theme:7d43087ce51d"
+      ],
+      "title": "Testing hygiene landscape identified"
+    },
+    {
+      "assessment_dimensions": [
+        "testing"
+      ],
+      "audience": "status",
+      "business_impact": "unknown",
+      "conclusion_id": "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de",
+      "conclusion_version": "1.0.0",
+      "confidence": "high",
+      "finding_ids": [],
+      "kind": "unsupported_test_analysis_scope",
+      "metadata": {
+        "limitation_count": "6"
+      },
+      "policy_id": "testing.conclusion.unsupported-test-analysis-scope",
+      "provenance": "testing_synthesis",
+      "recommendation_ids": [
+        "test-recommendation:5ec37c78658580e5"
+      ],
+      "rule_ids": [],
+      "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+      "technical_interpretation": "Synthesis uses repository-observable hygiene evidence only. Pass/fail execution and runtime coverage percentages are not evaluated in this phase.",
+      "theme_ids": [
+        "test-theme:b8a8a19ed930"
+      ],
+      "title": "Unsupported test analysis scope acknowledged"
+    }
+  ],
+  "confidence_inventory": {
+    "buckets": [
+      {
+        "count": 1,
+        "key": "high"
+      }
+    ]
+  },
+  "configuration_fingerprint": "180a8933919b7faa",
+  "coverage": {
+    "areas": [
+      {
+        "area_id": "testing_capability_requested",
+        "denominator": 1,
+        "limitations": [
+          "hygiene_rules_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "testing_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "testing_evidence_availability",
+        "denominator": 1,
+        "limitations": [],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "testing_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "testing_findings_evaluated",
+        "denominator": 1,
+        "limitations": [
+          "hygiene_findings_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "testing_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "testing_inventory_complete",
+        "denominator": 1,
+        "limitations": [
+          "inventory_only"
+        ],
+        "maturity": "medium",
+        "numerator": 1,
+        "provenance": "testing_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      },
+      {
+        "area_id": "testing_rules_enabled",
+        "denominator": 4,
+        "limitations": [],
+        "maturity": "medium",
+        "numerator": 4,
+        "provenance": "testing_assessment",
+        "ratio": 1.0,
+        "status": "measured"
+      }
+    ]
+  },
+  "diagnostics": [],
+  "enterprise_context_used": false,
+  "evidence_fingerprint": "71b4b097600723d2",
+  "evidence_pipeline": "repository_testing",
+  "execution_summary": {
+    "conclusion_count": 4,
+    "findings_by_rule": {
+      "testing.test-001": 1
+    },
+    "pack_enabled": true,
+    "pack_id": "testing.core",
+    "pack_version": "1.0.0",
+    "recommendation_count": 2,
+    "rules_executed": 4,
+    "rules_failed": 0,
+    "rules_matched": 1,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 3,
+    "testing_rules_planned": 4,
+    "theme_count": 4,
+    "total_finding_count": 1,
+    "visible_finding_count": 1
+  },
+  "finding_ids": [
+    "finding:testing.test-001:94fa5f1b334deaa9"
+  ],
+  "finding_inventory": {
+    "confidence_counts": {
+      "high": 1
+    },
+    "finding_count": 1,
+    "finding_ids": [
+      "finding:testing.test-001:94fa5f1b334deaa9"
+    ],
+    "rule_counts": {
+      "testing.test-001": 1
+    },
+    "severity_counts": {
+      "medium": 1
+    }
+  },
+  "findings": [
+    "finding:testing.test-001:94fa5f1b334deaa9"
+  ],
+  "graph_fingerprint": "",
+  "limitations": [
+    {
+      "affected_capability": "coverage",
+      "category": "coverage-not-measured",
+      "importance": "critical",
+      "limitation_id": "test-limitation:319a3a113184",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Runtime code coverage percentages are not measured; only repository-observable coverage configuration facts are used."
+    },
+    {
+      "affected_capability": "test_execution",
+      "category": "test-execution-not-performed",
+      "importance": "critical",
+      "limitation_id": "test-limitation:32e615baa6f3",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Test execution is not performed. Test pass/fail status is not evaluated."
+    },
+    {
+      "affected_capability": "test_quality",
+      "category": "no-test-quality-conclusion",
+      "importance": "critical",
+      "limitation_id": "test-limitation:41974742ac6b",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Test Hygiene findings are repository-local hygiene signals only. Zero findings does not mean the repository is well tested or release ready."
+    },
+    {
+      "affected_capability": "test_to_source_mapping",
+      "category": "test-to-source-mapping-not-implemented",
+      "importance": "contextual",
+      "limitation_id": "test-limitation:527621289c81",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Test-to-production-code relationships are not evaluated."
+    },
+    {
+      "affected_capability": "testing_rules",
+      "category": "other",
+      "importance": "critical",
+      "limitation_id": "test-limitation:7a8192efac8a",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Test Hygiene rules consume AggregatedRepositoryTestingEvidence only and never re-read repository files."
+    },
+    {
+      "affected_capability": "mutation_testing",
+      "category": "mutation-testing-not-evaluated",
+      "importance": "contextual",
+      "limitation_id": "test-limitation:fcc3fbfaceec",
+      "provenance": "testing_assessment",
+      "remediation_guidance": null,
+      "summary": "Mutation testing is not evaluated."
+    }
+  ],
+  "metadata": {
+    "assessment_milestone": "4.6.5",
+    "evidence_status": "succeeded",
+    "overall_posture_summary": "Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.",
+    "summary": "Test Hygiene pack produced 1 finding from repository-testing evidence.",
+    "synthesis_version": "1.0.0"
+  },
+  "recommendation_ids": [
+    "test-recommendation:5ec37c78658580e5",
+    "test-recommendation:91e2ae9ba8be3d6e"
+  ],
+  "recommendations": [
+    {
+      "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+      "audience": "status",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [],
+      "kind": "acknowledge_unsupported_test_analysis_scope",
+      "metadata": {},
+      "provenance": "testing_synthesis",
+      "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+      "recommendation_id": "test-recommendation:5ec37c78658580e5",
+      "rule_ids": [],
+      "theme_ids": [
+        "test-theme:b8a8a19ed930"
+      ],
+      "title": "Acknowledge unsupported test analysis scope"
+    },
+    {
+      "action": "Review disabled, skipped, or ignored markers referenced by the linked findings and confirm each remains intentional.",
+      "audience": "hygiene",
+      "business_impact": "unknown",
+      "conclusion_ids": [
+        "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038"
+      ],
+      "conditional": true,
+      "effort_band": "unknown",
+      "finding_ids": [
+        "finding:testing.test-001:94fa5f1b334deaa9"
+      ],
+      "kind": "review_disabled_or_skipped_tests",
+      "metadata": {},
+      "provenance": "testing_synthesis",
+      "rationale": "TEST-001 matched on repository-observable markers; review keeps hygiene signals actionable without claiming test failure.",
+      "recommendation_id": "test-recommendation:91e2ae9ba8be3d6e",
+      "rule_ids": [
+        "testing.test-001"
+      ],
+      "theme_ids": [
+        "test-theme:3b79a497daf3"
+      ],
+      "title": "Review disabled or skipped tests"
+    }
+  ],
+  "repository_id": "remote-java-spring-petclinic",
+  "rule_inventory": {
+    "entries": [
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "matched",
+        "executed": true,
+        "finding_count": 1,
+        "rule_id": "testing.test-001"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "testing.test-002"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "testing.test-003"
+      },
+      {
+        "diagnostic_count": 0,
+        "enabled": true,
+        "evaluation_status": "not_matched",
+        "executed": true,
+        "finding_count": 0,
+        "rule_id": "testing.test-005"
+      }
+    ],
+    "rules_executed": 4,
+    "rules_failed": 0,
+    "rules_matched": 1,
+    "rules_not_applicable": 0,
+    "rules_not_matched": 3,
+    "rules_planned": 4
+  },
+  "schema_name": "testing-assessment",
+  "section_id": "assessment.testing",
+  "section_version": "1.2.0",
+  "severity_inventory": {
+    "buckets": [
+      {
+        "count": 1,
+        "key": "medium"
+      }
+    ]
+  },
+  "status": "succeeded",
+  "synthesis": {
+    "conclusion_ids": [
+      "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038",
+      "test-conclusion:testing.conclusion.rule-execution-summary:bb4a87158fadf1543533",
+      "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:13025ed37ed2162a7ece",
+      "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de"
+    ],
+    "conclusions": [
+      {
+        "assessment_dimensions": [
+          "testing"
+        ],
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_id": "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:testing.test-001:94fa5f1b334deaa9"
+        ],
+        "kind": "disabled_or_skipped_tests_observed",
+        "metadata": {},
+        "policy_id": "testing.conclusion.disabled-or-skipped-tests-observed",
+        "provenance": "testing_synthesis",
+        "recommendation_ids": [
+          "test-recommendation:91e2ae9ba8be3d6e"
+        ],
+        "rule_ids": [
+          "testing.test-001"
+        ],
+        "summary": "1 finding report disabled, skipped, or ignored test markers in repository evidence.",
+        "technical_interpretation": "Disabled markers are repository-local hygiene signals. Severity implications stay informational to medium and do not judge whether skips are justified.",
+        "theme_ids": [
+          "test-theme:3b79a497daf3"
+        ],
+        "title": "Disabled or skipped tests observed"
+      },
+      {
+        "assessment_dimensions": [
+          "testing"
+        ],
+        "audience": "coverage",
+        "business_impact": "unknown",
+        "conclusion_id": "test-conclusion:testing.conclusion.rule-execution-summary:bb4a87158fadf1543533",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [],
+        "kind": "rule_execution_summary",
+        "metadata": {},
+        "policy_id": "testing.conclusion.rule-execution-summary",
+        "provenance": "testing_synthesis",
+        "recommendation_ids": [],
+        "rule_ids": [
+          "testing.test-001",
+          "testing.test-002",
+          "testing.test-003",
+          "testing.test-005"
+        ],
+        "summary": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+        "technical_interpretation": "Applicable registered hygiene rules versus matched outcomes are inventory facts, not test-quality scores.",
+        "theme_ids": [
+          "test-theme:6fcde23f9f77"
+        ],
+        "title": "Test Hygiene rule execution summary"
+      },
+      {
+        "assessment_dimensions": [
+          "testing"
+        ],
+        "audience": "repository",
+        "business_impact": "unknown",
+        "conclusion_id": "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:13025ed37ed2162a7ece",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [
+          "finding:testing.test-001:94fa5f1b334deaa9"
+        ],
+        "kind": "testing_hygiene_landscape_identified",
+        "metadata": {},
+        "policy_id": "testing.conclusion.testing-hygiene-landscape-identified",
+        "provenance": "testing_synthesis",
+        "recommendation_ids": [],
+        "rule_ids": [
+          "testing.test-001",
+          "testing.test-002",
+          "testing.test-003",
+          "testing.test-005"
+        ],
+        "summary": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+        "technical_interpretation": "This conclusion summarizes supported Test Hygiene rule execution and finding counts only.",
+        "theme_ids": [
+          "test-theme:7d43087ce51d"
+        ],
+        "title": "Testing hygiene landscape identified"
+      },
+      {
+        "assessment_dimensions": [
+          "testing"
+        ],
+        "audience": "status",
+        "business_impact": "unknown",
+        "conclusion_id": "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de",
+        "conclusion_version": "1.0.0",
+        "confidence": "high",
+        "finding_ids": [],
+        "kind": "unsupported_test_analysis_scope",
+        "metadata": {
+          "limitation_count": "6"
+        },
+        "policy_id": "testing.conclusion.unsupported-test-analysis-scope",
+        "provenance": "testing_synthesis",
+        "recommendation_ids": [
+          "test-recommendation:5ec37c78658580e5"
+        ],
+        "rule_ids": [],
+        "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+        "technical_interpretation": "Synthesis uses repository-observable hygiene evidence only. Pass/fail execution and runtime coverage percentages are not evaluated in this phase.",
+        "theme_ids": [
+          "test-theme:b8a8a19ed930"
+        ],
+        "title": "Unsupported test analysis scope acknowledged"
+      }
+    ],
+    "diagnostics": [],
+    "overall_posture_summary": "Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.",
+    "recommendation_ids": [
+      "test-recommendation:5ec37c78658580e5",
+      "test-recommendation:91e2ae9ba8be3d6e"
+    ],
+    "recommendations": [
+      {
+        "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+        "audience": "status",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:37ce32779751e15ce2de"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [],
+        "kind": "acknowledge_unsupported_test_analysis_scope",
+        "metadata": {},
+        "provenance": "testing_synthesis",
+        "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+        "recommendation_id": "test-recommendation:5ec37c78658580e5",
+        "rule_ids": [],
+        "theme_ids": [
+          "test-theme:b8a8a19ed930"
+        ],
+        "title": "Acknowledge unsupported test analysis scope"
+      },
+      {
+        "action": "Review disabled, skipped, or ignored markers referenced by the linked findings and confirm each remains intentional.",
+        "audience": "hygiene",
+        "business_impact": "unknown",
+        "conclusion_ids": [
+          "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038"
+        ],
+        "conditional": true,
+        "effort_band": "unknown",
+        "finding_ids": [
+          "finding:testing.test-001:94fa5f1b334deaa9"
+        ],
+        "kind": "review_disabled_or_skipped_tests",
+        "metadata": {},
+        "provenance": "testing_synthesis",
+        "rationale": "TEST-001 matched on repository-observable markers; review keeps hygiene signals actionable without claiming test failure.",
+        "recommendation_id": "test-recommendation:91e2ae9ba8be3d6e",
+        "rule_ids": [
+          "testing.test-001"
+        ],
+        "theme_ids": [
+          "test-theme:3b79a497daf3"
+        ],
+        "title": "Review disabled or skipped tests"
+      }
+    ],
+    "status": "succeeded",
+    "synthesis_version": "1.0.0",
+    "theme_ids": [
+      "test-theme:7d43087ce51d",
+      "test-theme:6fcde23f9f77",
+      "test-theme:3b79a497daf3",
+      "test-theme:b8a8a19ed930"
+    ],
+    "themes": [
+      {
+        "counts": {
+          "finding_count": 1,
+          "rules_executed": 4,
+          "rules_matched": 1
+        },
+        "description": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+        "finding_ids": [
+          "finding:testing.test-001:94fa5f1b334deaa9"
+        ],
+        "kind": "testing_hygiene_landscape",
+        "ordering_key": "00_landscape",
+        "rule_ids": [
+          "testing.test-001",
+          "testing.test-002",
+          "testing.test-003",
+          "testing.test-005"
+        ],
+        "scope": "repository",
+        "theme_id": "test-theme:7d43087ce51d",
+        "title": "Testing hygiene landscape"
+      },
+      {
+        "counts": {
+          "rules_executed": 4,
+          "rules_failed": 0,
+          "rules_matched": 1,
+          "rules_not_applicable": 0,
+          "rules_not_matched": 3,
+          "rules_planned": 4
+        },
+        "description": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+        "finding_ids": [],
+        "kind": "rule_execution_coverage",
+        "ordering_key": "01_rule_execution",
+        "rule_ids": [
+          "testing.test-001",
+          "testing.test-002",
+          "testing.test-003",
+          "testing.test-005"
+        ],
+        "scope": "coverage",
+        "theme_id": "test-theme:6fcde23f9f77",
+        "title": "Rule execution coverage"
+      },
+      {
+        "counts": {
+          "finding_count": 1
+        },
+        "description": "1 finding report disabled, skipped, or ignored test markers in repository evidence.",
+        "finding_ids": [
+          "finding:testing.test-001:94fa5f1b334deaa9"
+        ],
+        "kind": "disabled_or_skipped_tests",
+        "ordering_key": "10_disabled_skipped",
+        "rule_ids": [
+          "testing.test-001"
+        ],
+        "scope": "hygiene",
+        "theme_id": "test-theme:3b79a497daf3",
+        "title": "Disabled or skipped tests"
+      },
+      {
+        "counts": {
+          "limitation_count": 6
+        },
+        "description": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+        "finding_ids": [],
+        "kind": "unsupported_analysis_scope",
+        "ordering_key": "30_unsupported_scope",
+        "rule_ids": [],
+        "scope": "status",
+        "theme_id": "test-theme:b8a8a19ed930",
+        "title": "Unsupported test analysis scope"
+      }
+    ]
+  },
+  "testing_pack_id": "testing.core",
+  "testing_pack_version": "1.0.0",
+  "theme_ids": [
+    "test-theme:7d43087ce51d",
+    "test-theme:6fcde23f9f77",
+    "test-theme:3b79a497daf3",
+    "test-theme:b8a8a19ed930"
+  ],
+  "themes": [
+    {
+      "counts": {
+        "finding_count": 1,
+        "rules_executed": 4,
+        "rules_matched": 1
+      },
+      "description": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+      "finding_ids": [
+        "finding:testing.test-001:94fa5f1b334deaa9"
+      ],
+      "kind": "testing_hygiene_landscape",
+      "ordering_key": "00_landscape",
+      "rule_ids": [
+        "testing.test-001",
+        "testing.test-002",
+        "testing.test-003",
+        "testing.test-005"
+      ],
+      "scope": "repository",
+      "theme_id": "test-theme:7d43087ce51d",
+      "title": "Testing hygiene landscape"
+    },
+    {
+      "counts": {
+        "rules_executed": 4,
+        "rules_failed": 0,
+        "rules_matched": 1,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 3,
+        "rules_planned": 4
+      },
+      "description": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+      "finding_ids": [],
+      "kind": "rule_execution_coverage",
+      "ordering_key": "01_rule_execution",
+      "rule_ids": [
+        "testing.test-001",
+        "testing.test-002",
+        "testing.test-003",
+        "testing.test-005"
+      ],
+      "scope": "coverage",
+      "theme_id": "test-theme:6fcde23f9f77",
+      "title": "Rule execution coverage"
+    },
+    {
+      "counts": {
+        "finding_count": 1
+      },
+      "description": "1 finding report disabled, skipped, or ignored test markers in repository evidence.",
+      "finding_ids": [
+        "finding:testing.test-001:94fa5f1b334deaa9"
+      ],
+      "kind": "disabled_or_skipped_tests",
+      "ordering_key": "10_disabled_skipped",
+      "rule_ids": [
+        "testing.test-001"
+      ],
+      "scope": "hygiene",
+      "theme_id": "test-theme:3b79a497daf3",
+      "title": "Disabled or skipped tests"
+    },
+    {
+      "counts": {
+        "limitation_count": 6
+      },
+      "description": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+      "finding_ids": [],
+      "kind": "unsupported_analysis_scope",
+      "ordering_key": "30_unsupported_scope",
+      "rule_ids": [],
+      "scope": "status",
+      "theme_id": "test-theme:b8a8a19ed930",
+      "title": "Unsupported test analysis scope"
+    }
+  ],
+  "traceability": {
+    "edges": [
+      {
+        "edge_id": "test-trace:10af2d05c13155fe",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.testing",
+        "target_id": "test-limitation:41974742ac6b"
+      },
+      {
+        "edge_id": "test-trace:158e2e8d3d6b4c3a",
+        "relation": "section_to_limitation",
+        "source_id": "assessment.testing",
+        "target_id": "test-limitation:319a3a113184"
+      },
+      {
+        "edge_id": "test-trace:22a9837cd8c26064",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.testing",
+        "target_id": "testing_rules_enabled"
+      },
+      {
+        "edge_id": "test-trace:3f2e40e60a25c37d",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.testing",
+        "target_id": "testing_capability_requested"
+      },
+      {
+        "edge_id": "test-trace:407cfd12aa06fe13",
+        "relation": "section_to_pack",
+        "source_id": "assessment.testing",
+        "target_id": "testing.core"
+      },
+      {
+        "edge_id": "test-trace:40c87f8f87014ce8",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.testing",
+        "target_id": "test-conclusion:testing.conclusion.disabled-or-skipped-tests-observed:9eacfcf060ddc5568038"
+      },
+      {
+        "edge_id": "test-trace:438a66471a669941",
+        "relation": "section_to_conclusion",
+        "source_id": "assessment.testing",
+        "target_id": "test-conclusion:testing.conclusion.rule-execution-summary:bb4a87158fadf1543533"
+      },
+      {
+        "edge_id": "test-trace:49a4bc072a94e568",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.testing",
+        "target_id": "testing_findings_evaluated"
+      },
+      {
+        "edge_id": "test-trace:585d93fa9d2017ca",
+        "relation": "section_to_theme",
+        "source_id": "assessment.testing",
+        "target_id": "test-theme:b8a8a19ed930"
+      },
+      {
+        "edge_id": "test-trace:5de47567f7ec52d4",
+        "relation": "section_to_coverage",
+        "source_id": "assessment.testing",
+        "target_id": "testing_evidence_availability"
+      },
+      {
+        "edge_id": "test-trace:7f4b4bd78018abc1",
+        "relation": "section_to_theme",
+        "source_id": "assessment.testing",
+        "target_id": "test-theme:7d43087ce51d"
+      },
+      {
+        "edge_id": "test-trace:87a88956ea8fcd19",
+        "relation": "section_to_theme",
+        "source_id": "assessment.testing",
+        "target_id": "test-theme:3b79a497daf3"
+      }
+    ]
+  }
+}

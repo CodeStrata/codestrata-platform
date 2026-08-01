@@ -1,0 +1,76 @@
+{
+  "ai_executed": false,
+  "application_indicators": [
+    "deployment-workflow",
+    "devcontainer",
+    "docker-compose",
+    "has_tests",
+    "kubernetes",
+    "web_application"
+  ],
+  "dependency_ecosystems": [
+    "gradle",
+    "maven"
+  ],
+  "finding_rule_ids": [
+    "ARCH001",
+    "ARCH002",
+    "ARCH003",
+    "ARCH005",
+    "ARCH007",
+    "CLOUD002",
+    "CLOUD003",
+    "CLOUD008",
+    "CLOUD010",
+    "DEP003",
+    "architecture.framework-leakage",
+    "build.system.summary",
+    "cloud.cloud-010",
+    "cloud.cloud-011",
+    "cloud.cloud-040",
+    "cloud.cloud-060",
+    "cloud.cloud-061",
+    "codestrata-rule-java-detected",
+    "codestrata-rule-spring-boot-detected",
+    "repository.metrics.summary",
+    "technical_debt.excessive-branching",
+    "technical_debt.large-callable",
+    "testing.test-001"
+  ],
+  "findings_count": 23,
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "https://github.com/spring-projects/spring-petclinic.git@f182358d02e4a68e52bdbabf55ca7800288511e7",
+  "repository_composition_facts": [
+    "has_build_system=true",
+    "has_dependency_manifest=true",
+    "has_tests=True"
+  ],
+  "repository_id": "remote-java-spring-petclinic",
+  "schema_version": "1.2",
+  "technologies": [
+    "Gradle",
+    "JUnit",
+    "Java",
+    "Maven",
+    "Spring Boot"
+  ],
+  "technologies_by_category": {
+    "build_systems": [
+      "Gradle",
+      "Maven"
+    ],
+    "frameworks": [
+      "Spring Boot"
+    ],
+    "languages": [
+      "Java"
+    ],
+    "testing": [
+      "JUnit"
+    ]
+  },
+  "technology_versions": {
+    "Java": "17",
+    "Spring Boot": "4.1.0"
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "finding_count": 9,
+  "findings": [
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "security",
+      "customer_visibility": null,
+      "description": "Private key material detected in secrets/test-only.pem: -----BEGIN PRIVATE KEY----- Context: Production source (path-production).",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "-----BEGIN PRIVATE KEY-----",
+          "file_path": "secrets/test-only.pem",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "7af2bf7f-44aa-5718-9092-c568d030efa4",
+      "limitations": [],
+      "metadata": {
+        "classification": "production",
+        "path": "secrets/test-only.pem",
+        "secret_type": "private-key",
+        "security_context": "production",
+        "security_context_reasons": "path-production"
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "SEC002",
+      "severity": "critical",
+      "source": "static_analysis",
+      "synthesized_from_evidence_ids": [],
+      "title": "Private key material detected"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "security",
+      "customer_visibility": null,
+      "description": "Inspected artifact 'secrets/test-only.pem' (source) contains a supported private-key content signature. No key body is retained. Context: Production source (path-production).",
+      "evidence": [
+        {
+          "evidence_type": "file_location",
+          "excerpt": "content_classification=private_key_material; inspection_status=inspected; security_context=production",
+          "node_id": null,
+          "path": "secrets/test-only.pem",
+          "source_id": "ev:50749c3a57c8925f0de49172"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "evidence_refs": [
+        {
+          "evidence_id": "ev:50749c3a57c8925f0de49172"
+        }
+      ],
+      "group_id": null,
+      "id": "finding:security.private-key-material:f7bd8bce82a4ad47",
+      "limitations": [],
+      "metadata": {
+        "assessment_dimensions": "security",
+        "business_impact": "unknown",
+        "classification": "source",
+        "confidence": "high",
+        "content_classifications": "private_key_material",
+        "evidence_id": "ev:50749c3a57c8925f0de49172",
+        "inspection_status": "inspected",
+        "kind": "private_key",
+        "pack_id": "security.core",
+        "pack_version": "1.0.0",
+        "path": "secrets/test-only.pem",
+        "provenance": "security.core",
+        "recommendation_effort_band": "unknown",
+        "recommendation_expected_outcome": "Improve repository-local security hygiene using typed evidence facts",
+        "recommendation_rationale": "Remove private-key material from the repository. Prefer a secrets manager or environment injection, and rotate any exposed keys.",
+        "recommendation_validation": "static_evidence_only",
+        "remediation": "Remove private-key material from the repository. Prefer a secrets manager or environment injection, and rotate any exposed keys.",
+        "rule_version": "1.0.0",
+        "security_category": "security.private_key",
+        "security_context": "production",
+        "security_context_reasons": "path-production",
+        "shared_rule_platform": "true",
+        "subject_keys": "ev:50749c3a57c8925f0de49172,production,secrets/test-only.pem,security.private-key-material,source",
+        "taxonomy_id": "security.private_key"
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": "ev:50749c3a57c8925f0de49172",
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "security.private-key-material",
+      "severity": "high",
+      "source": "rule",
+      "synthesized_from_evidence_ids": [],
+      "title": "Private key material in repository"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "governance",
+      "customer_visibility": null,
+      "description": "No LICENSE file was found in the repository inventory.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "LICENSE basename not present in inventory paths",
+          "node_id": null,
+          "path": null,
+          "source_id": "security-hygiene"
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "finding:codestrata-rule-missing-license:b97ca97fba0746e4",
+      "limitations": [],
+      "metadata": {},
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "codestrata-rule-missing-license",
+      "severity": "medium",
+      "source": "rule",
+      "synthesized_from_evidence_ids": [],
+      "title": "Missing LICENSE"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "testing",
+      "customer_visibility": null,
+      "description": "No test files or conventional test directories were found while source files are present.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "source_files=1 test_files=0",
+          "node_id": null,
+          "path": null,
+          "source_id": "security-hygiene"
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "finding:codestrata-rule-missing-tests:eba74dfccb4a8533",
+      "limitations": [],
+      "metadata": {
+        "source_file_count": 1
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "codestrata-rule-missing-tests",
+      "severity": "medium",
+      "source": "rule",
+      "synthesized_from_evidence_ids": [],
+      "title": "Missing tests"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "architecture",
+      "customer_visibility": null,
+      "description": "No files were found under conventional test or specification directories",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "No files were found under conventional test or specification directories",
+          "file_path": ".",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "d356ee11-6e35-5aa8-b4f9-37c4717a1497",
+      "limitations": [],
+      "metadata": {
+        "test_file_count": 0
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "ARCH004",
+      "severity": "low",
+      "source": "static_analysis",
+      "synthesized_from_evidence_ids": [],
+      "title": "No conventional test structure detected"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "build",
+      "customer_visibility": null,
+      "description": "No GitHub Actions workflow paths were found under .github/workflows/.",
+      "evidence": [
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "no paths under .github/workflows/",
+          "node_id": null,
+          "path": null,
+          "source_id": "security-hygiene"
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "finding:codestrata-rule-missing-ci-workflow:92f9762eb3d939fc",
+      "limitations": [],
+      "metadata": {},
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "codestrata-rule-missing-ci-workflow",
+      "severity": "low",
+      "source": "rule",
+      "synthesized_from_evidence_ids": [],
+      "title": "Missing CI workflow"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [],
+      "category": "cloud_readiness",
+      "customer_visibility": null,
+      "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "No container, orchestration, infrastructure-as-code, or deployment workflow files were detected",
+          "file_path": ".",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "436d4b2b-636c-5e80-b3d9-73c9a7f64ed1",
+      "limitations": [],
+      "metadata": {
+        "capabilities": []
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "CLOUD009",
+      "severity": "low",
+      "source": "static_analysis",
+      "synthesized_from_evidence_ids": [],
+      "title": "No cloud deployment assets detected"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [
+        "Python"
+      ],
+      "category": "maintainability",
+      "customer_visibility": null,
+      "description": "No supported build system was detected in repository 'security-hygiene'.",
+      "evidence": [],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "8408f753-4f86-56e7-93d5-7880af66e341",
+      "limitations": [],
+      "metadata": {
+        "build_files": [],
+        "build_systems": [],
+        "inferred_commands": [],
+        "java_source_versions": [],
+        "java_target_versions": [],
+        "lock_files": [],
+        "modules": [],
+        "multi_module": false,
+        "multiple_build_systems": false,
+        "packaging_types": [],
+        "plugins": [],
+        "wrapper_files": []
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "build.system.summary",
+      "severity": "informational",
+      "source": "deterministic",
+      "synthesized_from_evidence_ids": [],
+      "title": "Build System"
+    },
+    {
+      "affected_file_count": null,
+      "affected_technologies": [
+        "Python"
+      ],
+      "category": "maintainability",
+      "customer_visibility": null,
+      "description": "Collected structural metrics for repository 'security-hygiene'.",
+      "evidence": [],
+      "evidence_completeness": "legacy",
+      "evidence_refs": [],
+      "group_id": null,
+      "id": "029173d0-d399-52fb-9abe-1d7e55957cdb",
+      "limitations": [],
+      "metadata": {
+        "build_files": 0,
+        "configuration_files": 1,
+        "docker_files": 0,
+        "github_workflows": 0,
+        "kubernetes_manifests": 0,
+        "source_files": 1,
+        "test_files": 0,
+        "total_files": 4
+      },
+      "modernization_relevance": null,
+      "occurrence_count": null,
+      "primary_evidence_id": null,
+      "provider_category": null,
+      "provider_name": null,
+      "provider_priority": null,
+      "rule_id": "repository.metrics.summary",
+      "severity": "informational",
+      "source": "deterministic",
+      "synthesized_from_evidence_ids": [],
+      "title": "Repository Metrics"
+    }
+  ],
+  "rules_evaluated": [
+    "codestrata-rule-large-repository",
+    "codestrata-rule-maven-wrapper-missing",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-missing-readme",
+    "codestrata-rule-missing-tests",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing",
+    "security.authentication-disabled",
+    "security.credential-literal",
+    "security.debug-enabled",
+    "security.hostname-verification-disabled",
+    "security.permissive-cors-origin",
+    "security.placeholder-credential",
+    "security.private-key-material",
+    "security.tls-verification-disabled",
+    "technical_debt.deep-nesting",
+    "technical_debt.excessive-branching",
+    "technical_debt.excessive-parameters",
+    "technical_debt.large-callable",
+    "technical_debt.oversized-type"
+  ],
+  "rules_skipped": [
+    "codestrata-rule-java-detected",
+    "codestrata-rule-maven-wrapper-missing",
+    "codestrata-rule-missing-node-engine",
+    "codestrata-rule-node-engine-detected",
+    "codestrata-rule-npm-lockfile-missing",
+    "codestrata-rule-spring-boot-detected",
+    "codestrata-rule-unsupported-spring-boot-version"
+  ]
+}

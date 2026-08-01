@@ -1,0 +1,20 @@
+repository_id = "local-dependency-signals"
+display_name = "Local dependency signals fixture"
+source_type = "local"
+local_path = "fixtures/dependency-signals"
+assessment_config = "configs/local-dependency-signals.toml"
+expected_results_path = "expectations/local-dependency-signals.json"
+tags = [
+  "local",
+  "fixture",
+  "dependency",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "java",
+  "python",
+]
+notes = """Local dependency signals fixture"""
+enabled = true

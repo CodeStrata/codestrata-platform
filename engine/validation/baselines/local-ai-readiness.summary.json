@@ -1,0 +1,53 @@
+{
+  "ai_executed": false,
+  "application_indicators": [
+    "ai_integration"
+  ],
+  "dependency_ecosystems": [
+    "pip",
+    "python"
+  ],
+  "finding_rule_ids": [
+    "ARCH004",
+    "CLOUD009",
+    "DEP003",
+    "ai_readiness.ai-002",
+    "ai_readiness.ai-030",
+    "ai_readiness.ai-040",
+    "ai_readiness.ai-051",
+    "ai_readiness.ai-060",
+    "build.system.summary",
+    "codestrata-rule-missing-ci-workflow",
+    "codestrata-rule-missing-license",
+    "codestrata-rule-missing-tests",
+    "repository.metrics.summary"
+  ],
+  "findings_count": 13,
+  "harness_verdict": "PASS",
+  "pinned_source_identity": "engine/validation/fixtures/ai-readiness",
+  "repository_composition_facts": [
+    "has_dependency_manifest=true",
+    "has_tests=False"
+  ],
+  "repository_id": "local-ai-readiness",
+  "schema_version": "1.2",
+  "technologies": [
+    "OpenAI",
+    "Python",
+    "pip"
+  ],
+  "technologies_by_category": {
+    "build_systems": [
+      "pip"
+    ],
+    "languages": [
+      "Python"
+    ],
+    "libraries": [
+      "OpenAI"
+    ]
+  },
+  "technology_versions": {
+    "OpenAI": ">=1.40.0"
+  }
+}

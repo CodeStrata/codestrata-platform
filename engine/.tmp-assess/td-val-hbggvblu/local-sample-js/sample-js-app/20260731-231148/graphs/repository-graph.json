@@ -1,0 +1,433 @@
+{
+  "metadata": {
+    "generation_mode": "full",
+    "generator_version": "1.0.0",
+    "graph_id": "graph:repo:sample-js-app:6bdb30c5cd2ced35b568d648ccd9861ab437821ad6b508dd7c8a2aa8756472be",
+    "graph_type": "repository",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "sha256:6bdb30c5cd2ced35b568d648ccd9861ab437821ad6b508dd7c8a2aa8756472be",
+    "status": "valid"
+  },
+  "nodes": [
+    {
+      "evidence": [],
+      "id": "repo:sample-js-app",
+      "node_type": "repository",
+      "properties": {
+        "branch": null,
+        "name": "sample-js-app",
+        "revision": "working-tree",
+        "source_location": null,
+        "source_type": "local"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "nodejs:_:nodejs@>=18",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:dependency:nodejs:_:nodejs",
+      "node_type": "dependency",
+      "properties": {
+        "direct": true,
+        "ecosystem": "nodejs",
+        "name": "nodejs",
+        "namespace": null,
+        "scope": "runtime",
+        "source_file": "package.json",
+        "version": ">=18"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "npm:_:express@^4.21.0",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:dependency:npm:_:express",
+      "node_type": "dependency",
+      "properties": {
+        "direct": true,
+        "ecosystem": "npm",
+        "name": "express",
+        "namespace": null,
+        "scope": "runtime",
+        "source_file": "package.json",
+        "version": "^4.21.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "npm:_:jest@^29.7.0",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:dependency:npm:_:jest",
+      "node_type": "dependency",
+      "properties": {
+        "direct": true,
+        "ecosystem": "npm",
+        "name": "jest",
+        "namespace": null,
+        "scope": "development",
+        "source_file": "package.json",
+        "version": "^29.7.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:file:README.md",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "629cc591ecab040f3b4166d38a07f49651dec3078881594ca4e6385f28beaaf2",
+        "executable": false,
+        "file_kind": "documentation",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "Markdown",
+        "media_type": "text/markdown",
+        "path": "README.md",
+        "size_bytes": 259
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:file:package.json",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "285529808ceb12a890472f2467820226b6d52fb0575f61fa0c8fa54c314e2b1f",
+        "executable": false,
+        "file_kind": "dependency_manifest",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "JSON",
+        "media_type": "application/json",
+        "path": "package.json",
+        "size_bytes": 383
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/index.js",
+          "source_id": "file:src/index.js",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "repo:sample-js-app:file:src/index.js",
+      "node_type": "file",
+      "properties": {
+        "content_hash": "4f6b496cdca39d27eb37026c4c474eaefa2b4bd8fab4b81975390ebe87d6fc7f",
+        "executable": false,
+        "file_kind": "source",
+        "generated": false,
+        "hash_algorithm": "sha256",
+        "language": "JavaScript",
+        "media_type": "text/javascript",
+        "path": "src/index.js",
+        "size_bytes": 813
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "relationships": [
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "README.md",
+          "source_id": "file:README.md",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:sample-js-app=>repo:sample-js-app:file:README.md",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:file:README.md"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:sample-js-app=>repo:sample-js-app:file:package.json",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:file:package.json"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "repository_file",
+          "excerpt": null,
+          "path": "src/index.js",
+          "source_id": "file:src/index.js",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:contains:repo:sample-js-app=>repo:sample-js-app:file:src/index.js",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-structure",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:repository-structure",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "contains",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:file:src/index.js"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "nodejs:_:nodejs@>=18",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:depends_on:repo:sample-js-app=>repo:sample-js-app:dependency:nodejs:_:nodejs",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "depends_on",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:dependency:nodejs:_:nodejs"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "npm:_:express@^4.21.0",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:depends_on:repo:sample-js-app=>repo:sample-js-app:dependency:npm:_:express",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "depends_on",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:dependency:npm:_:express"
+    },
+    {
+      "evidence": [
+        {
+          "content_hash": null,
+          "end_line": null,
+          "evidence_type": "dependency_manifest",
+          "excerpt": "npm:_:jest@^29.7.0",
+          "path": "package.json",
+          "source_id": "file:package.json",
+          "start_line": null,
+          "symbol_id": null
+        }
+      ],
+      "id": "rel:depends_on:repo:sample-js-app=>repo:sample-js-app:dependency:npm:_:jest",
+      "properties": {
+        "schema_version": "1.0.0"
+      },
+      "provenance": [
+        {
+          "confidence": null,
+          "extractor_id": "repository-graph:package-json-dependencies",
+          "extractor_version": "1.0.0",
+          "source_id": "inventory:package-json-dependencies",
+          "source_type": "deterministic_analyzer"
+        }
+      ],
+      "relationship_type": "depends_on",
+      "source_node_id": "repo:sample-js-app",
+      "target_node_id": "repo:sample-js-app:dependency:npm:_:jest"
+    }
+  ]
+}

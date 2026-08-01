@@ -111,6 +111,20 @@ def exceeds_threshold(metric: IntMetric, *, threshold: int) -> bool:
     return metric_available(metric) and int(metric.value or 0) > threshold
 
 
+def is_production_complexity_subject(classification: object) -> bool:
+    """Return True when complexity evidence is production source.
+
+    Test/fixture/generated/vendor/example/documentation subjects must not
+    inflate production-facing Technical Debt findings.
+    """
+
+    from codestrata.domain.evidence.language.capabilities import SourceClassification
+
+    if isinstance(classification, SourceClassification):
+        return classification is SourceClassification.SOURCE
+    return str(classification).strip().lower() in {"source", "production"}
+
+
 SEVERITY_HIGH_MULTIPLIER = 2
 
 

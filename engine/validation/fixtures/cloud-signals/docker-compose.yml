@@ -1,0 +1,7 @@
+# TEST-ONLY compose file for Cloud Readiness validation. Do not deploy.
+services:
+  api:
+    build: .
+    image: codestrata-validation-cloud-signals:test-only
+    ports:
+      - "8080:8080"

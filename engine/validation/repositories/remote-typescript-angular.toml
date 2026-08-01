@@ -1,0 +1,21 @@
+repository_id = "remote-typescript-angular"
+display_name = "Angular RealWorld example (TypeScript)"
+source_type = "remote"
+remote_url = "https://github.com/gothinkster/angular-realworld-example-app.git"
+pinned_ref = "dd99ed2cf39c805d719f943c5d7061a5683d98a8"
+expected_commit = "dd99ed2cf39c805d719f943c5d7061a5683d98a8"
+expected_results_path = "expectations/remote-typescript-angular.json"
+tags = [
+  "remote",
+  "typescript",
+  "angular",
+  "medium",
+  "network",
+  "real-world",
+  "set-4-13",
+]
+languages = [
+  "typescript",
+]
+notes = """Angular RealWorld example (TypeScript)"""
+enabled = true

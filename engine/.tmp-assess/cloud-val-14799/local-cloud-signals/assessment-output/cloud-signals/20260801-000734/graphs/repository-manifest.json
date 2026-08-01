@@ -1,0 +1,136 @@
+{
+  "files": [
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "acf41348401ec52a4fc8e1be4c7c22747b336f8799e60d75898898ff9cd69bee"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": ".github/workflows/build-only.yml",
+      "size_bytes": 288
+    },
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "5102477584f754a0b02d370fdb075fd09ba4244b08bca4a3f3d8943b7e95b191"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": ".github/workflows/deploy.yml",
+      "size_bytes": 517
+    },
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "9bf4b5257f665f0364ab2cdbe39cd59c18895dc3f0487ca8f1af987fb731f2d8"
+      },
+      "generated": false,
+      "language": "Dockerfile",
+      "media_type": null,
+      "path": "Dockerfile",
+      "size_bytes": 212
+    },
+    {
+      "executable": false,
+      "file_kind": "documentation",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "1e4810114bd8a25290420c28ebc4de71d55c97c8258c0f470b337e2a1fd115b4"
+      },
+      "generated": false,
+      "language": "Markdown",
+      "media_type": "text/markdown",
+      "path": "README.md",
+      "size_bytes": 1513
+    },
+    {
+      "executable": false,
+      "file_kind": "unknown",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "0718a195b0beaf0ac57c150b926f6d4f94b26303dd7f4df517a8d4a4360e33d5"
+      },
+      "generated": false,
+      "language": "Shell",
+      "media_type": null,
+      "path": "app/hello.sh",
+      "size_bytes": 95
+    },
+    {
+      "executable": false,
+      "file_kind": "configuration",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "3d4ebd0c485d9508bc7b62e23a5432b16d2a536762394541315d6fd3e88790a9"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": "config/generic-app.yaml",
+      "size_bytes": 243
+    },
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "f6fcab3235b3df19c20e7b63f23c8b0b52405845105015398740a07f7bc6e8a2"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": "docker-compose.yml",
+      "size_bytes": 190
+    },
+    {
+      "executable": false,
+      "file_kind": "infrastructure",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "4926ef1db958f0730b507510e17ef00a3ef1446d72dcd3a1422b5258f4fef317"
+      },
+      "generated": false,
+      "language": "YAML",
+      "media_type": "application/yaml",
+      "path": "k8s/deployment.yaml",
+      "size_bytes": 512
+    },
+    {
+      "executable": false,
+      "file_kind": "source",
+      "fingerprint": {
+        "algorithm": "sha256",
+        "digest": "2da87326a90f5acd4776f0ec22b7772de3c7f1239f270746999959529954c268"
+      },
+      "generated": false,
+      "language": "Python",
+      "media_type": "text/x-python",
+      "path": "src/handler.py",
+      "size_bytes": 310
+    }
+  ],
+  "identity": {
+    "display_name": "cloud-signals",
+    "repository_key": "cloud-signals",
+    "source_location": null,
+    "source_type": "local"
+  },
+  "manifest_version": "1.0",
+  "metadata": {},
+  "revision": {
+    "branch": null,
+    "captured_at": null,
+    "revision_id": "working-tree",
+    "revision_type": "working_tree",
+    "tag": null
+  }
+}

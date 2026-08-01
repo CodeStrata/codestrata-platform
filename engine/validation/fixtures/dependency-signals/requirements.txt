@@ -1,0 +1,4 @@
+# Controlled dependency-signals fixture. Do not pip install.
+flask>=3.0.0
+click==8.1.7
+unbounded-pkg

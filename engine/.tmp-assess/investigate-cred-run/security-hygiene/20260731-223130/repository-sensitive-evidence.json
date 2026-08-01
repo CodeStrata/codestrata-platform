@@ -1,0 +1,280 @@
+{
+  "artifact_schema_id": "codestrata.repository_sensitive_evidence",
+  "artifacts": [
+    {
+      "classification": "source",
+      "content_classifications": [
+        "private_key_material"
+      ],
+      "content_fingerprint": "f1d128f19d7df1ddc10acb27e7e014abf1b3bc761cde2b01a86c77d5f9f36b28",
+      "diagnostics": [],
+      "discovery_bases": [
+        "extension",
+        "content_signature"
+      ],
+      "evidence_id": "ev:50749c3a57c8925f0de49172",
+      "inspection_status": "inspected",
+      "kind": "private_key",
+      "metadata": {},
+      "path": "secrets/test-only.pem",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "content_signature",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.artifact.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_artifact_collector",
+        "source_path": "secrets/test-only.pem",
+        "transformation_chain": []
+      },
+      "size_bytes": 110
+    }
+  ],
+  "configuration_facts": [
+    {
+      "classification": "source",
+      "evidence_id": "ev:3de1deefa025404548f1984e",
+      "format": "yaml",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "secret",
+      "line_start": null,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "jobs_scan_steps[1]_env_api_token",
+      "parse_status": "succeeded",
+      "path": ".github/workflows/ci.yml",
+      "placeholder_kind": null,
+      "placeholder_status": "not_applicable",
+      "profile": "jobs",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": ".github/workflows/ci.yml",
+        "transformation_chain": []
+      },
+      "redacted_preview": "${{ secrets.API_TOKEN }}",
+      "section": "jobs",
+      "value_fingerprint": "cb8576314c1d94f86040b57dcc209ca650663290c3a9363d4a722579cfac5323",
+      "value_kind": "literal",
+      "value_length": 24
+    },
+    {
+      "classification": "source",
+      "evidence_id": "ev:4b6b25e0fe3fbb921ca026bc",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "credential",
+      "line_start": 3,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "api_password",
+      "parse_status": "succeeded",
+      "path": "config/app.properties",
+      "placeholder_kind": "changeme",
+      "placeholder_status": "placeholder_literal",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "config/app.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "[REDACTED]",
+      "section": null,
+      "value_fingerprint": "057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86",
+      "value_kind": "placeholder",
+      "value_length": 8
+    },
+    {
+      "classification": "source",
+      "evidence_id": "ev:9a3252e59004b0d9c1d45fe1",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "credential",
+      "line_start": 4,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "db_password",
+      "parse_status": "succeeded",
+      "path": "config/app.properties",
+      "placeholder_kind": null,
+      "placeholder_status": "not_applicable",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "config/app.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "[REDACTED]",
+      "section": null,
+      "value_fingerprint": "299a7a81e0d9eda0e5ad5c6d2fb3953ec7a7dfd549aa749e2206a6376cf8e937",
+      "value_kind": "literal",
+      "value_length": 37
+    },
+    {
+      "classification": "source",
+      "evidence_id": "ev:b2abb8917dd8cdb41f469f00",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "debug",
+      "line_start": 5,
+      "literal_boolean": true,
+      "metadata": {},
+      "normalized_key": "debug",
+      "parse_status": "succeeded",
+      "path": "config/app.properties",
+      "placeholder_kind": null,
+      "placeholder_status": "not_applicable",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "config/app.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "true",
+      "section": null,
+      "value_fingerprint": "b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+      "value_kind": "boolean",
+      "value_length": 4
+    },
+    {
+      "classification": "source",
+      "evidence_id": "ev:f1443e4151bcc1134be667b8",
+      "format": "properties",
+      "is_empty": false,
+      "is_wildcard_origin": false,
+      "key_family": "secret",
+      "line_start": 2,
+      "literal_boolean": null,
+      "metadata": {},
+      "normalized_key": "api_key",
+      "parse_status": "succeeded",
+      "path": "config/safe-env-ref.properties",
+      "placeholder_kind": "environment_variable",
+      "placeholder_status": "environment_interpolation",
+      "profile": null,
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_sensitive.enabled=True",
+        "extraction_method": "structured_parse",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_sensitive.configuration.literals",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_sensitive_configuration_collector",
+        "source_path": "config/safe-env-ref.properties",
+        "transformation_chain": []
+      },
+      "redacted_preview": "[REDACTED]",
+      "section": null,
+      "value_fingerprint": "01f0f4a940642eecd2577b83d89b5015bedba5358f1fd2856997da29328685ab",
+      "value_kind": "environment_reference",
+      "value_length": 10
+    }
+  ],
+  "coverage": {
+    "candidate_files_discovered": 1,
+    "configuration_facts_collected": 5,
+    "content_signatures_evaluated": 1,
+    "files_inspected": 4,
+    "formats_represented": [
+      "dotenv",
+      "properties",
+      "yaml"
+    ],
+    "malformed_files": 0,
+    "metadata_only_files": 0,
+    "note": "Coverage describes inspected repository-visible candidates only; it does not claim a complete security scan of the repository.",
+    "placeholder_facts": 2,
+    "production_artifacts": 1,
+    "skipped_files": 0,
+    "structured_files_parsed": 3,
+    "test_artifacts": 0,
+    "unknown_artifacts": 0,
+    "unsupported_binaries": 0
+  },
+  "diagnostics": [],
+  "evidence_fingerprint": "64d57e44f6387b40",
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "rs-limitation:1b144cfd65ec",
+      "summary": "Evidence reflects the current repository snapshot only."
+    },
+    {
+      "category": "no-git-history",
+      "limitation_id": "rs-limitation:ac28adfc1d58",
+      "summary": "Git history is not scanned for historical secrets or credential commits."
+    },
+    {
+      "category": "no-runtime-environment",
+      "limitation_id": "rs-limitation:34ac23e5c221",
+      "summary": "Runtime environment variables and deployed secrets are not inspected."
+    },
+    {
+      "category": "no-secret-validity-verification",
+      "limitation_id": "rs-limitation:91bbb0cbf5b6",
+      "summary": "Observed literals are not verified as active or valid secrets."
+    },
+    {
+      "category": "no-entropy-analysis",
+      "limitation_id": "rs-limitation:a761c80b56a8",
+      "summary": "Entropy-based secret detection is not performed."
+    },
+    {
+      "category": "no-external-credential-validation",
+      "limitation_id": "rs-limitation:fb221f7118c7",
+      "summary": "External credential validation and live service checks are not performed."
+    },
+    {
+      "category": "no-certificate-trust-validation",
+      "limitation_id": "rs-limitation:8f6e0c568ad5",
+      "summary": "Certificate trust chains and expiry are not validated."
+    },
+    {
+      "category": "no-keystore-decryption",
+      "limitation_id": "rs-limitation:842c06a941df",
+      "summary": "Keystore and PKCS#12 entries are not decrypted or enumerated."
+    },
+    {
+      "category": "no-arbitrary-source-scanning",
+      "limitation_id": "rs-limitation:e81e58f802a6",
+      "summary": "Arbitrary source-code credential regex scanning is not performed."
+    },
+    {
+      "category": "no-vulnerability-interpretation",
+      "limitation_id": "rs-limitation:ddc29fb28a45",
+      "summary": "No vulnerability, severity, compliance, or remediation interpretation is applied."
+    }
+  ],
+  "repository_id": "security-hygiene",
+  "schema_name": "repository-sensitive-evidence",
+  "schema_version": "1.1.0",
+  "status": "succeeded"
+}

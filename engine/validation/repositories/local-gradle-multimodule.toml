@@ -1,0 +1,19 @@
+repository_id = "local-gradle-multimodule"
+display_name = "Local Gradle multi-module Java fixture"
+source_type = "local"
+local_path = "fixtures/gradle-multimodule"
+expected_results_path = "expectations/local-gradle-multimodule.json"
+tags = [
+  "local",
+  "java",
+  "gradle",
+  "multimodule",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "java",
+]
+notes = """Local Gradle multi-module Java fixture"""
+enabled = true

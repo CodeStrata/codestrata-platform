@@ -1,0 +1,530 @@
+{
+  "artifact_schema_id": "codestrata.repository_cloud_evidence",
+  "bundle_id": "cloud-evidence:d19aa3bf97418b9c",
+  "container_facts": [
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "compose_services_block",
+      "discovery_bases": [
+        "exact_filename",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-container:815bc19198f03a8b5f7c80b2",
+      "kind": "docker_compose",
+      "line_hints": [
+        1
+      ],
+      "metadata": {},
+      "path": "docker-compose.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "docker-compose.yml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "dockerfile_from_instruction",
+      "discovery_bases": [
+        "exact_filename",
+        "content_marker"
+      ],
+      "evidence_id": "cloud-container:9cdd5787b6591b10c0c9a4b9",
+      "kind": "docker",
+      "line_hints": [
+        3
+      ],
+      "metadata": {},
+      "path": ".devcontainer/Dockerfile",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".devcontainer/Dockerfile",
+        "transformation_chain": []
+      }
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "devcontainer_config",
+      "discovery_bases": [
+        "exact_filename"
+      ],
+      "evidence_id": "cloud-container:d3a745cd71d364e6afd75481",
+      "kind": "devcontainer",
+      "line_hints": [],
+      "metadata": {},
+      "path": ".devcontainer/devcontainer.json",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".devcontainer/devcontainer.json",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "coverage": {
+    "candidate_files_discovered": 8,
+    "candidate_files_inspected": 8,
+    "container_facts": 3,
+    "deployment_facts": 3,
+    "families_represented": [
+      "container",
+      "deployment",
+      "orchestration"
+    ],
+    "iac_facts": 0,
+    "malformed_files": 0,
+    "managed_service_facts": 0,
+    "note": "Coverage describes inspected repository-observable cloud artifact candidates only; undiscovered cloud usage may still exist and zero evidence does not establish that cloud technologies are absent or that the repository is cloud ready.",
+    "orchestration_facts": 2,
+    "platform_facts": 0,
+    "repository_files_considered": 130,
+    "serverless_facts": 0,
+    "skipped_files": 0,
+    "structurally_confirmed_files": 6,
+    "technologies_represented": [
+      "devcontainer",
+      "docker",
+      "docker_compose",
+      "github_actions",
+      "kubernetes"
+    ],
+    "unsupported_candidate_files": 0
+  },
+  "deployment_facts": [
+    {
+      "confirmation_level": "structurally_inspected",
+      "detail": "deployment_workflow_candidate",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow"
+      ],
+      "evidence_id": "cloud-deploy:98f58e0918a7262025cb7dea",
+      "line_hints": [],
+      "metadata": {},
+      "path": ".github/workflows/gradle-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/gradle-build.yml",
+        "transformation_chain": []
+      },
+      "system": "github_actions"
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "cloud_deployment_step",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow",
+        "content_marker"
+      ],
+      "evidence_id": "cloud-deploy:dee814a1d11f13b412704468",
+      "line_hints": [
+        21,
+        25,
+        29,
+        30
+      ],
+      "metadata": {},
+      "path": ".github/workflows/deploy-and-test-cluster.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/deploy-and-test-cluster.yml",
+        "transformation_chain": []
+      },
+      "system": "github_actions"
+    },
+    {
+      "confirmation_level": "structurally_inspected",
+      "detail": "deployment_workflow_candidate",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow"
+      ],
+      "evidence_id": "cloud-deploy:ec3e895a8b2da9183e77afd0",
+      "line_hints": [],
+      "metadata": {},
+      "path": ".github/workflows/maven-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/maven-build.yml",
+        "transformation_chain": []
+      },
+      "system": "github_actions"
+    }
+  ],
+  "diagnostics": [],
+  "evidence_fingerprint": "82ade83b65b3e57c",
+  "file_candidates": [
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "exact_filename"
+      ],
+      "evidence_id": "cloud-file:181451673c20be26d38fa4c1",
+      "family": "container",
+      "metadata": {
+        "detail": "devcontainer_config"
+      },
+      "path": ".devcontainer/devcontainer.json",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".devcontainer/devcontainer.json",
+        "transformation_chain": []
+      },
+      "size_bytes": 623,
+      "technology_hints": [
+        "devcontainer"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_inspected",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow"
+      ],
+      "evidence_id": "cloud-file:19b77c54bb60960e63b5387c",
+      "family": "deployment",
+      "metadata": {
+        "detail": "deployment_workflow_candidate"
+      },
+      "path": ".github/workflows/gradle-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/gradle-build.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 838,
+      "technology_hints": [
+        "github_actions"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "exact_filename",
+        "content_marker"
+      ],
+      "evidence_id": "cloud-file:2374378c62f105905d6f50f2",
+      "family": "container",
+      "metadata": {
+        "detail": "dockerfile_from_instruction"
+      },
+      "path": ".devcontainer/Dockerfile",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".devcontainer/Dockerfile",
+        "transformation_chain": []
+      },
+      "size_bytes": 643,
+      "technology_hints": [
+        "docker"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-file:472e66507d9e5367b8ad123f",
+      "family": "orchestration",
+      "metadata": {
+        "detail": "kubernetes_manifest"
+      },
+      "path": "k8s/db.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "k8s/db.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 1458,
+      "technology_hints": [
+        "kubernetes"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-file:a5d9e0d2ea9fa5d3386a343f",
+      "family": "orchestration",
+      "metadata": {
+        "detail": "kubernetes_manifest"
+      },
+      "path": "k8s/petclinic.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "k8s/petclinic.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 1358,
+      "technology_hints": [
+        "kubernetes"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_inspected",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow"
+      ],
+      "evidence_id": "cloud-file:d5ba60ea440dfba394e71457",
+      "family": "deployment",
+      "metadata": {
+        "detail": "deployment_workflow_candidate"
+      },
+      "path": ".github/workflows/maven-build.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/maven-build.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 771,
+      "technology_hints": [
+        "github_actions"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "directory_convention",
+        "ci_workflow",
+        "content_marker"
+      ],
+      "evidence_id": "cloud-file:dc55d65c4dc370be5981583f",
+      "family": "deployment",
+      "metadata": {
+        "detail": "cloud_deployment_step"
+      },
+      "path": ".github/workflows/deploy-and-test-cluster.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": ".github/workflows/deploy-and-test-cluster.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 673,
+      "technology_hints": [
+        "github_actions"
+      ]
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "discovery_bases": [
+        "exact_filename",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-file:de795f78d79e4f32c99ddf36",
+      "family": "container",
+      "metadata": {
+        "detail": "compose_services_block"
+      },
+      "path": "docker-compose.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "docker-compose.yml",
+        "transformation_chain": []
+      },
+      "size_bytes": 488,
+      "technology_hints": [
+        "docker_compose"
+      ]
+    }
+  ],
+  "iac_facts": [],
+  "limitations": [
+    {
+      "category": "repository-snapshot-only",
+      "limitation_id": "cloud-limitation:af8ea08b4529",
+      "summary": "Repository snapshot only."
+    },
+    {
+      "category": "no-cloud-runtime",
+      "limitation_id": "cloud-limitation:45eb5da3ad99",
+      "summary": "Cloud provider APIs and live environments are not queried."
+    },
+    {
+      "category": "no-provider-api",
+      "limitation_id": "cloud-limitation:b6168e719d24",
+      "summary": "Cloud account configuration and permissions are not inspected."
+    },
+    {
+      "category": "no-deployment-execution",
+      "limitation_id": "cloud-limitation:89ab5d767236",
+      "summary": "CI/CD and GitOps workflows are not executed."
+    },
+    {
+      "category": "detection-bounded",
+      "limitation_id": "cloud-limitation:b1bc40bdcbdb",
+      "summary": "Technology detection is limited to supported filename conventions and bounded content markers."
+    },
+    {
+      "category": "no-readiness-score",
+      "limitation_id": "cloud-limitation:d661a39ceec7",
+      "summary": "No cloud readiness score or grade is produced."
+    },
+    {
+      "category": "no-cost-or-security-judgment",
+      "limitation_id": "cloud-limitation:8bed2e34b5ee",
+      "summary": "Cost, security posture, and architectural fitness are not judged."
+    },
+    {
+      "category": "generated-vendor-exclusions",
+      "limitation_id": "cloud-limitation:f65fe9e021c5",
+      "summary": "Generated, vendored, binary, unsupported, or oversized files may be excluded."
+    },
+    {
+      "category": "managed-service-content-bounded",
+      "limitation_id": "cloud-limitation:31b9b20bdace",
+      "summary": "Managed-service detection relies on IaC/config content markers and may miss SDK-only usage."
+    }
+  ],
+  "managed_service_facts": [],
+  "orchestration_facts": [
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "kubernetes_manifest",
+      "discovery_bases": [
+        "directory_convention",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-orch:7a1f47334cab6de3d5b261f7",
+      "kind": "kubernetes",
+      "line_hints": [
+        3,
+        16
+      ],
+      "metadata": {},
+      "path": "k8s/petclinic.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "k8s/petclinic.yml",
+        "transformation_chain": []
+      }
+    },
+    {
+      "confirmation_level": "structurally_confirmed",
+      "detail": "kubernetes_manifest",
+      "discovery_bases": [
+        "directory_convention",
+        "structured_content"
+      ],
+      "evidence_id": "cloud-orch:fd5874ca7b3f58326f6f0828",
+      "kind": "kubernetes",
+      "line_hints": [
+        3,
+        18,
+        29
+      ],
+      "metadata": {},
+      "path": "k8s/db.yml",
+      "provenance": {
+        "configuration_fingerprint": "evidence.repository_cloud.enabled=True",
+        "extraction_method": "path_convention",
+        "notes": [],
+        "origin": "source_parse",
+        "provider_id": "repository_cloud.discovery",
+        "provider_version": "1.0.0",
+        "source_analyzer": "repository_cloud_discovery",
+        "source_path": "k8s/db.yml",
+        "transformation_chain": []
+      }
+    }
+  ],
+  "platform_facts": [],
+  "repository_id": "remote-java-spring-petclinic",
+  "schema_name": "repository-cloud-evidence",
+  "schema_version": "1.0.0",
+  "serverless_facts": [],
+  "status": "succeeded"
+}

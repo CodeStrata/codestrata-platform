@@ -1,0 +1,162 @@
+{
+  "providers_evaluated": [
+    "codestrata-rec-missing-license"
+  ],
+  "providers_skipped": [
+    "codestrata-rec-java-language-level",
+    "codestrata-rec-large-repository",
+    "codestrata-rec-maven-wrapper-missing",
+    "codestrata-rec-missing-ci-workflow",
+    "codestrata-rec-missing-node-engine",
+    "codestrata-rec-missing-readme",
+    "codestrata-rec-missing-tests",
+    "codestrata-rec-npm-lockfile-missing",
+    "codestrata-rec-unsupported-spring-boot"
+  ],
+  "recommendation_count": 4,
+  "recommendations": [
+    {
+      "actions": [
+        "Select a license: Agree on an open-source or proprietary license with stakeholders.",
+        "Add LICENSE file: Commit LICENSE (or LICENSE.md) at the repository root."
+      ],
+      "category": "governance",
+      "dependencies": [],
+      "description": "Choose and commit a license file so consumers know usage terms.",
+      "effort": "unknown",
+      "evidence": [
+        {
+          "evidence_type": "finding",
+          "excerpt": "Missing LICENSE",
+          "path": null,
+          "source_id": "finding:codestrata-rule-missing-license:e93a2851c0076ed3"
+        },
+        {
+          "evidence_type": "repository_manifest",
+          "excerpt": "LICENSE basename not present in inventory paths",
+          "path": null,
+          "source_id": "cloud-signals"
+        }
+      ],
+      "evidence_completeness": "complete",
+      "id": "recommendation:codestrata-rec-missing-license:3ff0121c02757dc8",
+      "limitations": [],
+      "presentation_bucket": "near_term",
+      "primary_finding_id": "finding:codestrata-rule-missing-license:e93a2851c0076ed3",
+      "priority": "medium",
+      "priority_score": 86.0,
+      "rationale": "No LICENSE file was found in the repository inventory.",
+      "recommendation_type": "finding_backed",
+      "related_finding_ids": [
+        "finding:codestrata-rule-missing-license:e93a2851c0076ed3"
+      ],
+      "risk": "medium",
+      "rule_id": "provider:codestrata-rec-missing-license",
+      "supporting_finding_ids": [
+        "finding:codestrata-rule-missing-license:e93a2851c0076ed3"
+      ],
+      "title": "Add an explicit LICENSE"
+    },
+    {
+      "actions": [
+        "Introduce an automated test suite covering critical application behavior before broader modernization changes."
+      ],
+      "category": "testing",
+      "dependencies": [],
+      "description": "Introduce an automated test suite covering critical application behavior before broader modernization changes.",
+      "effort": "m",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "structure.has_tests=false; test_file_count=0",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "705ac575-e2c8-5f40-89b2-37f3978475a1",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "high",
+      "priority_score": 66.0,
+      "rationale": "Repository structure facts indicate no automated tests were detected (test_file_count=0). Modernization without regression coverage increases the likelihood of undetected behavior changes.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "high",
+      "rule_id": "REC.TESTING.001",
+      "supporting_finding_ids": [],
+      "title": "Establish automated tests before modernization"
+    },
+    {
+      "actions": [
+        "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it."
+      ],
+      "category": "architecture",
+      "dependencies": [],
+      "description": "Review current module boundaries and introduce clearer separation between interface, business logic, and persistence concerns where evidence supports it.",
+      "effort": "l",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "architecture.has_api_layer=false; architecture.has_service_layer=false; architecture.has_persistence_layer=false",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "4ab3ff2a-b70f-530d-89c7-352d0ef3c1d7",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "medium",
+      "priority_score": 34.0,
+      "rationale": "Architecture facts show no detected API, service, or persistence layering in an application repository. Weak separation of concerns can increase change risk during modernization.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "medium",
+      "rule_id": "REC.ARCHITECTURE.001",
+      "supporting_finding_ids": [],
+      "title": "Review separation of concerns across application layers"
+    },
+    {
+      "actions": [
+        "Evaluate whether reusable deployment packaging (such as Helm charts or an equivalent templating approach) would reduce duplication across environments. Helm is optional, not mandatory."
+      ],
+      "category": "cloud",
+      "dependencies": [],
+      "description": "Evaluate whether reusable deployment packaging (such as Helm charts or an equivalent templating approach) would reduce duplication across environments. Helm is optional, not mandatory.",
+      "effort": "m",
+      "evidence": [
+        {
+          "column_number": null,
+          "description": "cloud.has_kubernetes=true; cloud.has_helm=false",
+          "file_path": "repository-facts",
+          "line_number": null
+        }
+      ],
+      "evidence_completeness": "legacy",
+      "id": "fc4f8d7d-ff3b-52aa-aeec-ba9a0e0709b8",
+      "limitations": [],
+      "presentation_bucket": "future",
+      "primary_finding_id": null,
+      "priority": "low",
+      "priority_score": 21.0,
+      "rationale": "Kubernetes assets were detected without Helm packaging. Reusable packaging can improve consistency, but teams may already use an equivalent approach.",
+      "recommendation_type": "legacy",
+      "related_finding_ids": [],
+      "risk": "low",
+      "rule_id": "REC.CLOUD.003",
+      "supporting_finding_ids": [],
+      "title": "Evaluate reusable Kubernetes deployment packaging"
+    }
+  ],
+  "unmatched_finding_ids": [
+    "finding:cloud.cloud-010:b3360f5ea75fecfc",
+    "finding:cloud.cloud-011:2fdbb8fb97a58521",
+    "finding:cloud.cloud-040:dea4e53b3772f64f",
+    "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+    "finding:cloud.cloud-061:ace176ba71f765bd"
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,19 @@
+repository_id = "local-compose-managed"
+display_name = "Local compose managed-services fixture"
+source_type = "local"
+local_path = "fixtures/compose-managed"
+expected_results_path = "expectations/local-compose-managed.json"
+tags = [
+  "local",
+  "fixture",
+  "cloud",
+  "compose",
+  "controlled",
+  "fast",
+  "set-4-13",
+]
+languages = [
+  "yaml",
+]
+notes = """Local compose managed-services fixture"""
+enabled = true
