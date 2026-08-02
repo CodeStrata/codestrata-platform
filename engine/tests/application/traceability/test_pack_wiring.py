@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from codestrata.application.rules.finding_mapper import RuleFindingMapper
 from codestrata.domain.findings.enums import FindingSeverity
-from codestrata.domain.rules.enums import RuleCategory, RuleConfidence, RuleEvidenceKind
+from codestrata.domain.rules.enums import RuleCategory, MatchEvidenceConfidence, RuleEvidenceKind
 from codestrata.domain.rules.evidence import RuleEvidence
 from codestrata.domain.rules.identifiers import RuleId
 from codestrata.domain.rules.metadata import RuleVersion
@@ -19,7 +19,7 @@ def _map(rule_id: str, provenance: str, evidence: tuple[RuleEvidence, ...], cate
         rule_id=RuleId(rule_id),
         rule_version=RuleVersion.parse("1.0.0"),
         severity=RuleSeverity.HIGH,
-        confidence=RuleConfidence.HIGH,
+        confidence=MatchEvidenceConfidence.HIGH,
         title="Finding",
         summary="Summary",
         evidence=evidence,

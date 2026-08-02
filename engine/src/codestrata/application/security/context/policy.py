@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from codestrata.domain.rules.enums import RuleConfidence, RuleSeverity
+from codestrata.domain.rules.enums import MatchEvidenceConfidence, RuleSeverity
 from codestrata.domain.security.context import (
     CONTEXT_LABELS,
     NON_ACTIONABLE_CONTEXTS,
@@ -26,19 +26,19 @@ _CONTEXT_RULE_SEVERITY: dict[SecurityEvidenceContext, RuleSeverity] = {
     SecurityEvidenceContext.MOCK_CREDENTIAL: RuleSeverity.INFORMATIONAL,
 }
 
-_CONTEXT_RULE_CONFIDENCE: dict[SecurityEvidenceContext, RuleConfidence] = {
-    SecurityEvidenceContext.PRODUCTION: RuleConfidence.HIGH,
-    SecurityEvidenceContext.UNKNOWN: RuleConfidence.MEDIUM,
-    SecurityEvidenceContext.TEST: RuleConfidence.MEDIUM,
-    SecurityEvidenceContext.TEST_FIXTURE: RuleConfidence.MEDIUM,
-    SecurityEvidenceContext.DOCUMENTATION: RuleConfidence.LOW,
-    SecurityEvidenceContext.SAMPLE: RuleConfidence.LOW,
-    SecurityEvidenceContext.GENERATED: RuleConfidence.LOW,
-    SecurityEvidenceContext.DEPENDENCY_METADATA: RuleConfidence.LOW,
-    SecurityEvidenceContext.BUILD_ARTIFACT: RuleConfidence.LOW,
-    SecurityEvidenceContext.CONFIGURATION_SCHEMA: RuleConfidence.LOW,
-    SecurityEvidenceContext.CI_EXPRESSION: RuleConfidence.MEDIUM,
-    SecurityEvidenceContext.MOCK_CREDENTIAL: RuleConfidence.HIGH,
+_CONTEXT_RULE_CONFIDENCE: dict[SecurityEvidenceContext, MatchEvidenceConfidence] = {
+    SecurityEvidenceContext.PRODUCTION: MatchEvidenceConfidence.HIGH,
+    SecurityEvidenceContext.UNKNOWN: MatchEvidenceConfidence.MEDIUM,
+    SecurityEvidenceContext.TEST: MatchEvidenceConfidence.MEDIUM,
+    SecurityEvidenceContext.TEST_FIXTURE: MatchEvidenceConfidence.MEDIUM,
+    SecurityEvidenceContext.DOCUMENTATION: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.SAMPLE: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.GENERATED: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.DEPENDENCY_METADATA: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.BUILD_ARTIFACT: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.CONFIGURATION_SCHEMA: MatchEvidenceConfidence.LOW,
+    SecurityEvidenceContext.CI_EXPRESSION: MatchEvidenceConfidence.MEDIUM,
+    SecurityEvidenceContext.MOCK_CREDENTIAL: MatchEvidenceConfidence.HIGH,
 }
 
 _CONTEXT_PHASE1_SEVERITY: dict[SecurityEvidenceContext, Severity] = {
@@ -70,12 +70,12 @@ def adjust_rule_severity(
 
 
 def adjust_rule_confidence(
-    base: RuleConfidence,
+    base: MatchEvidenceConfidence,
     decision: SecurityContextDecision,
-) -> RuleConfidence:
+) -> MatchEvidenceConfidence:
     if decision.context is SecurityEvidenceContext.PRODUCTION:
         return base
-    mapped = _CONTEXT_RULE_CONFIDENCE.get(decision.context, RuleConfidence.MEDIUM)
+    mapped = _CONTEXT_RULE_CONFIDENCE.get(decision.context, MatchEvidenceConfidence.MEDIUM)
     return _min_rule_confidence(base, mapped)
 
 
@@ -107,10 +107,10 @@ _RULE_SEV_RANK = {
     RuleSeverity.CRITICAL: 4,
 }
 _RULE_CONF_RANK = {
-    RuleConfidence.LOW: 0,
-    RuleConfidence.MEDIUM: 1,
-    RuleConfidence.HIGH: 2,
-    RuleConfidence.CERTAIN: 3,
+    MatchEvidenceConfidence.LOW: 0,
+    MatchEvidenceConfidence.MEDIUM: 1,
+    MatchEvidenceConfidence.HIGH: 2,
+    MatchEvidenceConfidence.CERTAIN: 3,
 }
 _PHASE1_SEV_RANK = {
     Severity.INFO: 0,
@@ -125,7 +125,7 @@ def _min_rule_severity(left: RuleSeverity, right: RuleSeverity) -> RuleSeverity:
     return left if _RULE_SEV_RANK[left] <= _RULE_SEV_RANK[right] else right
 
 
-def _min_rule_confidence(left: RuleConfidence, right: RuleConfidence) -> RuleConfidence:
+def _min_rule_confidence(left: MatchEvidenceConfidence, right: MatchEvidenceConfidence) -> MatchEvidenceConfidence:
     return left if _RULE_CONF_RANK[left] <= _RULE_CONF_RANK[right] else right
 
 

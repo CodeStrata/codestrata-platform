@@ -120,6 +120,66 @@ class PackAggregateSummary(BaseModel):
     recall: float | None = None
     limitations: tuple[str, ...] = ()
     source_repository_ids: tuple[str, ...] = ()
+    # Additive Slice 5.7 — summary schema remains 1.0.
+    precision_metric: dict[str, Any] | None = None
+    precision_metric_id: str | None = None
+    precision_availability: str | None = None
+    precision_classification_status: str | None = None
+    sample: dict[str, Any] | None = None
+    precision_source: str | None = None
+    # Additive Slice 5.8 — summary schema remains 1.0.
+    recall_metric: dict[str, Any] | None = None
+    recall_metric_id: str | None = None
+    recall_availability: str | None = None
+    recall_classification_status: str | None = None
+    recall_sample: dict[str, Any] | None = None
+    recall_source: str | None = None
+    expected_positive_repository_count: int = 0
+
+
+class FalsePositiveSummaryAggregate(BaseModel):
+    """Cross-repository false-positive tracking summary (Slice 5.9)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    suspected: int = 0
+    confirmed: int = 0
+    ambiguous: int = 0
+    expectation_errors: int = 0
+    unsupported_capability: int = 0
+    rejected: int = 0
+    fixed: int = 0
+    open: int = 0
+    investigating: int = 0
+    total: int = 0
+    by_pack: dict[str, int] = Field(default_factory=dict)
+    by_rule: dict[str, int] = Field(default_factory=dict)
+    by_root_cause: dict[str, int] = Field(default_factory=dict)
+    affected_repository_ids: tuple[str, ...] = ()
+    records: tuple[dict[str, Any], ...] = ()
+
+
+class FalseNegativeSummaryAggregate(BaseModel):
+    """Cross-repository false-negative tracking summary (Slice 5.10)."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    suspected: int = 0
+    confirmed: int = 0
+    ambiguous: int = 0
+    expectation_errors: int = 0
+    unsupported_capability: int = 0
+    insufficient_evidence: int = 0
+    rejected: int = 0
+    fixed: int = 0
+    open: int = 0
+    investigating: int = 0
+    total: int = 0
+    by_pack: dict[str, int] = Field(default_factory=dict)
+    by_rule: dict[str, int] = Field(default_factory=dict)
+    by_root_cause: dict[str, int] = Field(default_factory=dict)
+    affected_repository_ids: tuple[str, ...] = ()
+    records: tuple[dict[str, Any], ...] = ()
 
 
 class MismatchSummaryEntry(BaseModel):
@@ -162,6 +222,9 @@ class ValidationSummaryArtifact(BaseModel):
     mismatches_by_area: dict[str, int] = Field(default_factory=dict)
     mismatches: tuple[MismatchSummaryEntry, ...] = ()
     pack_precision: tuple[PackAggregateSummary, ...] = ()
+    false_positive_tracking: FalsePositiveSummaryAggregate | None = None
+    # Additive Slice 5.10 — summary schema remains 1.0.
+    false_negative_tracking: FalseNegativeSummaryAggregate | None = None
     unavailable_metrics: tuple[str, ...] = ()
     coverage_gaps: tuple[CoverageGap, ...] = ()
     source_record_refs: tuple[SourceRecordRef, ...] = ()

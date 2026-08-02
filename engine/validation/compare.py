@@ -48,17 +48,116 @@ from validation.modernization import (
 
 
 def pack_precision_from_result(pack: str, result: object) -> PackPrecisionRecord:
-    """Build a pack precision snapshot from a pack ``*ValidationResult``."""
+    """Build a pack precision/recall snapshot from a pack ``*ValidationResult``.
+
+    Precision and recall floats are projected from canonical metrics (Slices 5.7–5.8).
+    """
+
+    from codestrata.domain.quality_metrics.common import (
+        QualityMetricSample,
+        QualityMetricScope,
+        QualityMetricSource,
+        source_from_matrix_label,
+    )
+    from codestrata.domain.quality_metrics.precision import build_precision_metric
+    from codestrata.domain.quality_metrics.recall import build_recall_metric
+
+    true_positives = int(getattr(result, "true_positives", 0) or 0)
+    false_positives = int(getattr(result, "false_positives", 0) or 0)
+    false_negatives = int(getattr(result, "false_negatives", 0) or 0)
+    ambiguous = int(getattr(result, "ambiguous", 0) or 0)
+    repository_id = str(getattr(result, "repository_id", "") or "unknown")
+    passed = getattr(result, "passed", None)
+
+    source_label = getattr(result, "validation_source", None)
+    if source_label is None:
+        from validation.matrix import VALIDATION_MATRIX
+
+        row = VALIDATION_MATRIX.get(repository_id) or {}
+        source_label = row.get("controlled_vs_real_world")
+    source = source_from_matrix_label(
+        str(source_label) if source_label is not None else None
+    )
+
+    precision_positive = (true_positives + false_positives) > 0
+    expected_positives = (true_positives + false_negatives) > 0
+    precision_sample = QualityMetricSample(
+        repository_count=1,
+        positive_repository_count=1 if precision_positive else 0,
+        expected_positive_repository_count=1 if expected_positives else 0,
+        controlled_fixture_count=1
+        if source is QualityMetricSource.CONTROLLED_FIXTURE
+        else 0,
+        real_world_repository_count=1
+        if source is QualityMetricSource.REAL_WORLD_REPOSITORY
+        else 0,
+        ambiguous_count=ambiguous,
+        false_positive_count=false_positives,
+        false_negative_count=false_negatives,
+    )
+    recall_sample = QualityMetricSample(
+        repository_count=1,
+        positive_repository_count=1 if expected_positives else 0,
+        expected_positive_repository_count=1 if expected_positives else 0,
+        controlled_fixture_count=precision_sample.controlled_fixture_count,
+        real_world_repository_count=precision_sample.real_world_repository_count,
+        ambiguous_count=ambiguous,
+        false_positive_count=false_positives,
+        false_negative_count=false_negatives,
+    )
+    precision_limitations: list[str] = []
+    recall_limitations: list[str] = []
+    if passed is None and true_positives == 0 and false_positives == 0:
+        precision_limitations.append(
+            "pack precision unavailable or not applicable for repository"
+        )
+    if passed is None and true_positives == 0 and false_negatives == 0:
+        recall_limitations.append(
+            "pack recall unavailable or not applicable for repository"
+        )
+    if not expected_positives:
+        recall_limitations.append(
+            "no authored expected positives; negative controls alone cannot establish recall"
+        )
+
+    precision_metric = build_precision_metric(
+        scope=QualityMetricScope.REPOSITORY,
+        scope_id=f"{repository_id}:{pack}",
+        true_positive_count=true_positives,
+        false_positive_count=false_positives,
+        source=source,
+        sample=precision_sample,
+        limitations=precision_limitations,
+    )
+    recall_metric = build_recall_metric(
+        scope=QualityMetricScope.REPOSITORY,
+        scope_id=f"{repository_id}:{pack}",
+        true_positive_count=true_positives,
+        false_negative_count=false_negatives,
+        source=source,
+        sample=recall_sample,
+        limitations=recall_limitations,
+    )
 
     return PackPrecisionRecord(
         pack=pack,
-        true_positives=int(getattr(result, "true_positives", 0) or 0),
-        false_positives=int(getattr(result, "false_positives", 0) or 0),
-        false_negatives=int(getattr(result, "false_negatives", 0) or 0),
-        ambiguous=int(getattr(result, "ambiguous", 0) or 0),
-        precision=getattr(result, "precision", None),
-        recall=getattr(result, "recall", None),
-        passed=getattr(result, "passed", None),
+        true_positives=true_positives,
+        false_positives=false_positives,
+        false_negatives=false_negatives,
+        ambiguous=ambiguous,
+        precision=precision_metric.as_compat_float(),
+        recall=recall_metric.as_compat_float(),
+        passed=passed,
+        precision_metric=precision_metric.canonical_dict(),
+        precision_metric_id=precision_metric.metric_id,
+        precision_availability=precision_metric.availability.value,
+        precision_classification_status=precision_metric.classification_status.value,
+        sample=precision_sample.model_dump(mode="json"),
+        recall_metric=recall_metric.canonical_dict(),
+        recall_metric_id=recall_metric.metric_id,
+        recall_availability=recall_metric.availability.value,
+        recall_classification_status=recall_metric.classification_status.value,
+        recall_sample=recall_sample.model_dump(mode="json"),
     )
 
 
@@ -102,6 +201,7 @@ def compare_actual_to_expected(
     expected: ExpectedResults,
     actual: ActualAssessmentResult,
     artifact_path: str | None = None,
+    run_id: str | None = None,
 ) -> ComparisonOutcome:
     """Compare normalized actual results to expectations.
 
@@ -109,10 +209,21 @@ def compare_actual_to_expected(
     pack precision/recall snapshots for permanent recording (Slice 4.11).
     """
 
+    from codestrata.domain.quality_metrics.false_negatives import (
+        merge_false_negative_records,
+    )
+    from codestrata.domain.quality_metrics.false_positives import merge_false_positive_records
+    from validation.false_negatives.candidates import (
+        candidates_from_pack_result as fn_candidates_from_pack_result,
+    )
+    from validation.false_positives.candidates import candidates_from_pack_result
+
     mismatches: list[ComparisonMismatch] = []
     evaluated = 0
     matched = 0
     pack_precision: list[PackPrecisionRecord] = []
+    pack_results: dict[str, object] = {}
+    effective_run_id = run_id or "pending"
     report_path = artifact_path or actual.artifact_paths.get("report.json")
 
     def _fail(area: str, expectation: str, got: str, diagnostic: str) -> None:
@@ -350,6 +461,7 @@ def compare_actual_to_expected(
         pack_precision.append(
             pack_precision_from_result("technology_inventory", inventory_result)
         )
+        pack_results["technology_inventory"] = inventory_result
         inv_mismatches, inv_evaluated, inv_matched = _inventory_to_mismatches(
             inventory_result,
             artifact_path=report_path,
@@ -367,6 +479,7 @@ def compare_actual_to_expected(
             artifact_texts=artifact_texts,
         )
         pack_precision.append(pack_precision_from_result("security", security_result))
+        pack_results["security"] = security_result
         sec_mismatches, sec_evaluated, sec_matched = _security_to_mismatches(
             security_result,
             artifact_path=report_path,
@@ -387,6 +500,7 @@ def compare_actual_to_expected(
         pack_precision.append(
             pack_precision_from_result("architecture", architecture_result)
         )
+        pack_results["architecture"] = architecture_result
         arch_mismatches, arch_evaluated, arch_matched = _architecture_to_mismatches(
             architecture_result,
             artifact_path=report_path,
@@ -404,6 +518,7 @@ def compare_actual_to_expected(
             artifact_texts=artifact_texts,
         )
         pack_precision.append(pack_precision_from_result("technical_debt", td_result))
+        pack_results["technical_debt"] = td_result
         td_mismatches, td_evaluated, td_matched = _technical_debt_to_mismatches(
             td_result,
             artifact_path=report_path,
@@ -423,6 +538,7 @@ def compare_actual_to_expected(
             limitation_texts=actual.limitations,
         )
         pack_precision.append(pack_precision_from_result("dependency", dep_result))
+        pack_results["dependency"] = dep_result
         dep_mismatches, dep_evaluated, dep_matched = _dependency_to_mismatches(
             dep_result,
             artifact_path=report_path,
@@ -443,6 +559,7 @@ def compare_actual_to_expected(
             limitation_texts=actual.limitations,
         )
         pack_precision.append(pack_precision_from_result("cloud", cloud_result))
+        pack_results["cloud"] = cloud_result
         cloud_mismatches, cloud_evaluated, cloud_matched = _cloud_to_mismatches(
             cloud_result,
             artifact_path=report_path,
@@ -463,6 +580,7 @@ def compare_actual_to_expected(
             limitation_texts=actual.limitations,
         )
         pack_precision.append(pack_precision_from_result("ai_readiness", ai_result))
+        pack_results["ai_readiness"] = ai_result
         ai_mismatches, ai_evaluated, ai_matched = _ai_readiness_to_mismatches(
             ai_result,
             artifact_path=report_path,
@@ -487,6 +605,7 @@ def compare_actual_to_expected(
         pack_precision.append(
             pack_precision_from_result("modernization", modernization_result)
         )
+        pack_results["modernization"] = modernization_result
         mod_mismatches, mod_evaluated, mod_matched = _modernization_to_mismatches(
             modernization_result,
             artifact_path=report_path,
@@ -495,11 +614,85 @@ def compare_actual_to_expected(
         evaluated += mod_evaluated
         matched += mod_matched
 
+    if expected.finding_correlations is not None:
+        from validation.finding_correlations.expectations import (
+            compare_correlation_expectations,
+        )
+
+        corr_diags = compare_correlation_expectations(
+            expectation=expected.finding_correlations,
+            actual_pair_keys=actual.finding_correlation_pairs,
+        )
+        evaluated += 1
+        if corr_diags:
+            for diagnostic in corr_diags:
+                _fail(
+                    "finding_correlations",
+                    "required/forbidden correlation pairs",
+                    f"actual_pairs={list(actual.finding_correlation_pairs)}",
+                    diagnostic,
+                )
+        else:
+            matched += 1
+
+    if expected.finding_severity is not None:
+        from validation.finding_severity.expectations import (
+            compare_finding_severity_expectations,
+        )
+
+        findings_payload = []
+        document = actual.report_document if isinstance(actual.report_document, dict) else {}
+        assessment = document.get("assessment") if isinstance(document.get("assessment"), dict) else {}
+        raw_findings = assessment.get("findings") or document.get("findings") or []
+        if isinstance(raw_findings, list):
+            findings_payload = [item for item in raw_findings if isinstance(item, dict)]
+        # Fallback: synthesize from rule ids when report body absent.
+        if not findings_payload and actual.finding_rule_ids:
+            findings_payload = [
+                {"rule_id": rule_id, "severity": "unknown"}
+                for rule_id in actual.finding_rule_ids
+            ]
+        sev_diags = compare_finding_severity_expectations(
+            expectation=expected.finding_severity,
+            findings=findings_payload,
+        )
+        evaluated += 1
+        if sev_diags:
+            for diagnostic in sev_diags:
+                _fail(
+                    "finding_severity",
+                    "forbidden severity by rule prefix",
+                    f"finding_count={len(findings_payload)}",
+                    diagnostic,
+                )
+        else:
+            matched += 1
+
+    fp_records = []
+    fn_records = []
+    for pack_name, pack_result in sorted(pack_results.items()):
+        fp_records.extend(
+            candidates_from_pack_result(pack_name, pack_result, run_id=effective_run_id)
+        )
+        fn_records.extend(
+            fn_candidates_from_pack_result(
+                pack_name, pack_result, run_id=effective_run_id
+            )
+        )
+    false_positives = tuple(
+        item.canonical_dict() for item in merge_false_positive_records(fp_records)
+    )
+    false_negatives = tuple(
+        item.canonical_dict() for item in merge_false_negative_records(fn_records)
+    )
+
     return ComparisonOutcome(
         mismatches=tuple(mismatches),
         expectations_evaluated=evaluated,
         expectations_matched=matched,
         pack_precision=tuple(pack_precision),
+        false_positives=false_positives,
+        false_negatives=false_negatives,
     )
 
 

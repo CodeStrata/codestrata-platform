@@ -499,7 +499,7 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
             confidence=section.confidence,
             confidence_label=section.confidence_label,
             confidence_note=(
-                "Weakest-signal confidence across contributing assessment heads."
+                "Weakest contributing Assessment-Head Confidence across assessed heads."
             ),
             limitations=section.limitations,
         )
@@ -562,8 +562,14 @@ def _head_provides_canonical_ccl(
     view: HtmlReportViewModel,
     section: AssessmentHeadSectionView,
 ) -> bool:
-    """True when the pack body already ends with the shared CCL block."""
+    """True when the pack body already ends with the shared CCL block.
 
+    When canonical AssessmentCoverage is present on the head, the head-level CCL
+    is the authority and pack-local CCL is stripped.
+    """
+
+    if getattr(section, "assessment_coverage", None):
+        return False
     try:
         head = AssessmentHead(section.head)
     except ValueError:
@@ -587,6 +593,19 @@ def _head_provides_canonical_ccl(
     return False
 
 
+def _strip_trailing_ccl(html: str) -> str:
+    """Remove a trailing Coverage/Confidence/Limitations block from pack HTML."""
+
+    marker = 'data-canonical="coverage-confidence-limitations"'
+    idx = html.rfind(marker)
+    if idx < 0:
+        return html
+    start = html.rfind("<div", 0, idx)
+    if start < 0:
+        return html
+    return html[:start].rstrip()
+
+
 def _render_assessment_head_coverage(section: AssessmentHeadSectionView) -> str:
     """Backward-compatible alias — status meta only (CCL is canonical at end)."""
 
@@ -606,6 +625,8 @@ def _render_head_pack_content(
 
     if head is AssessmentHead.TECHNOLOGY_INVENTORY:
         pack = _render_technology(view)
+        if section.assessment_coverage:
+            pack = _strip_trailing_ccl(pack)
         return f'<div class="assessment-head-pack">\n{pack}\n</div>'
 
     pack_body = ""
@@ -649,6 +670,8 @@ def _render_head_pack_content(
 
     if not pack_body:
         return ""
+    if section.assessment_coverage:
+        pack_body = _strip_trailing_ccl(pack_body)
     return f'<div class="assessment-head-pack">\n{pack_body}\n</div>'
 
 
@@ -795,6 +818,7 @@ def _render_assessment_head_section(
                 confidence=section.confidence,
                 confidence_label=section.confidence_label,
                 limitations=section.limitations,
+                assessment_coverage=section.assessment_coverage,
             )
         )
     return _subsection(
@@ -1397,9 +1421,12 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
             "</code></dd></div>\n"
             f"<div><dt>Category</dt><dd>{escape_html(item.category)}</dd></div>\n"
             f"<div><dt>Evidence</dt><dd>{escape_html(completeness)}</dd></div>\n"
+            f"{_severity_basis_meta_rows(item)}"
+            f"{_finding_confidence_meta_rows(item)}"
             f"<div><dt>Affected nodes</dt><dd>{nodes}</dd></div>\n"
             f"<div><dt>Related recommendation</dt><dd>{supported}</dd></div>\n"
             f"<div><dt>Priority Actions influenced</dt><dd>{influenced}</dd></div>\n"
+            f"{_related_findings_meta_rows(item)}"
             "</dl>\n"
             f"{limitations}"
         )
@@ -1432,6 +1459,91 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
         f"{evidence}\n"
         "</article>"
     )
+
+
+def _related_findings_meta_rows(item: FindingView) -> str:
+    if not item.correlated_finding_ids:
+        return ""
+    links = _title_links(
+        item.correlated_finding_ids,
+        item.correlated_finding_titles,
+        anchor_fn=finding_anchor,
+        empty="None",
+    )
+    labels = "; ".join(
+        escape_html(label)
+        for label in item.correlation_relationship_labels[:3]
+        if label
+    )
+    relationship = (
+        f"<div><dt>Relationship</dt><dd>{labels}</dd></div>\n" if labels else ""
+    )
+    return (
+        f"<div><dt>Related findings</dt><dd>{links}</dd></div>\n"
+        f"{relationship}"
+    )
+
+
+def _severity_basis_meta_rows(item: FindingView) -> str:
+    labels = tuple(item.severity_basis_labels[:4])
+    if not labels:
+        return ""
+    text = "; ".join(escape_html(label) for label in labels)
+    return f"<div><dt>Severity basis</dt><dd>{text}</dd></div>\n"
+
+
+def _finding_confidence_meta_rows(item: FindingView) -> str:
+    rows: list[str] = []
+    if item.finding_confidence_level:
+        rows.append(
+            "<div><dt>Finding confidence</dt><dd>"
+            f"{escape_html(item.finding_confidence_level.replace('_', ' ').title())}"
+            "</dd></div>\n"
+        )
+    if item.rule_confidence_level:
+        rows.append(
+            "<div><dt>Rule confidence</dt><dd>"
+            f"{escape_html(item.rule_confidence_level.replace('_', ' ').title())}"
+            "</dd></div>\n"
+        )
+    primary_evidence_level = None
+    for ref in item.evidence_refs:
+        if item.primary_evidence_id and ref.evidence_id == item.primary_evidence_id:
+            primary_evidence_level = ref.evidence_confidence_level
+            break
+    if primary_evidence_level is None and item.evidence_refs:
+        primary_evidence_level = item.evidence_refs[0].evidence_confidence_level
+    if primary_evidence_level:
+        rows.append(
+            "<div><dt>Evidence confidence</dt><dd>"
+            f"{escape_html(primary_evidence_level.replace('_', ' ').title())}"
+            "</dd></div>\n"
+        )
+    return "".join(rows)
+
+
+def _recommendation_confidence_meta_row(item: RecommendationView) -> str:
+    if not item.recommendation_confidence_level:
+        return ""
+    return (
+        "<div><dt>Recommendation confidence</dt><dd>"
+        f"{escape_html(item.recommendation_confidence_level.replace('_', ' ').title())}"
+        "</dd></div>\n"
+    )
+
+
+def _priority_basis_meta_rows(item: RecommendationView) -> str:
+    priority = (item.priority or "").replace("_", " ").title()
+    rows = (
+        f"<div><dt>Recommendation priority</dt><dd>{escape_html(priority)}</dd></div>\n"
+        if priority
+        else ""
+    )
+    labels = tuple(getattr(item, "priority_basis_labels", ()) or ())[:4]
+    if labels:
+        text = "; ".join(escape_html(label) for label in labels)
+        rows += f"<div><dt>Priority basis</dt><dd>{text}</dd></div>\n"
+    return rows
 
 
 def _roadmap_bucket(item: RecommendationView) -> str:
@@ -1617,6 +1729,8 @@ def _render_recommendation_card(
             f"<div><dt>Category</dt><dd>{escape_html(item.category)}</dd></div>\n"
             f"<div><dt>Evidence</dt>"
             f"<dd>{escape_html(completeness_label(item.evidence_completeness))}</dd></div>\n"
+            f"{_recommendation_confidence_meta_row(item)}"
+            f"{_priority_basis_meta_rows(item)}"
             f"<div><dt>Supported by</dt><dd>{related}</dd></div>\n"
             f"<div><dt>Primary finding</dt><dd>{primary}</dd></div>\n"
             "</dl>\n"
@@ -2000,14 +2114,17 @@ def _render_architecture(section: ArchitectureReportSection) -> str:
         "</article>"
         for item in section.recommendation_groups
     )
-    # Collapse supporting findings by title for customer readability.
+    # Dedupe supporting findings by Finding ID only (Slice 5.11 — never title-only).
     finding_rows: list[str] = []
     seen_findings: set[str] = set()
     for item in section.findings:
-        key = item.title.strip().lower()
-        if key in seen_findings:
-            continue
-        seen_findings.add(key)
+        finding_id = str(
+            getattr(item, "finding_id", None) or getattr(item, "id", "") or ""
+        ).strip().lower()
+        if finding_id:
+            if finding_id in seen_findings:
+                continue
+            seen_findings.add(finding_id)
         finding_rows.append(
             "<tr>"
             f"<td>{escape_html(item.title)}</td>"

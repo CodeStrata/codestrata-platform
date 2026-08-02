@@ -185,24 +185,41 @@ def compute_precision_recall(
 ) -> tuple[float | None, float | None, str | None]:
     """Return ``(precision, recall, unavailable_reason)``.
 
-    Zero denominators yield ``None`` metrics rather than artificial 0/100.
+    Both values derive from canonical PrecisionMetric / RecallMetric helpers
+    (Slices 5.7–5.8). Zero denominators yield ``None`` rather than artificial 0/100.
     """
 
-    precision: float | None
-    recall: float | None
+    from codestrata.domain.quality_metrics.precision import (
+        build_precision_metric,
+        precision_ratio_as_float,
+    )
+    from codestrata.domain.quality_metrics.recall import (
+        build_recall_metric,
+        recall_ratio_as_float,
+    )
+
+    precision_metric = build_precision_metric(
+        scope="other",
+        scope_id="compat-precision-recall",
+        true_positive_count=true_positives,
+        false_positive_count=false_positives,
+    )
+    recall_metric = build_recall_metric(
+        scope="other",
+        scope_id="compat-precision-recall",
+        true_positive_count=true_positives,
+        false_negative_count=false_negatives,
+    )
+    precision = precision_ratio_as_float(true_positives, false_positives)
+    recall = recall_ratio_as_float(true_positives, false_negatives)
+    assert precision == precision_metric.as_compat_float()
+    assert recall == recall_metric.as_compat_float()
+
     reasons: list[str] = []
-    denom_p = true_positives + false_positives
-    denom_r = true_positives + false_negatives
-    if denom_p == 0:
-        precision = None
+    if precision is None:
         reasons.append("precision unavailable: TP+FP=0")
-    else:
-        precision = true_positives / denom_p
-    if denom_r == 0:
-        recall = None
+    if recall is None:
         reasons.append("recall unavailable: TP+FN=0")
-    else:
-        recall = true_positives / denom_r
     return precision, recall, "; ".join(reasons) if reasons else None
 
 

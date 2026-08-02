@@ -24,7 +24,7 @@ from codestrata.application.rules.security.helpers import (
 )
 from codestrata.domain.rules.applicability import RuleApplicability
 from codestrata.domain.rules.context import RuleExecutionContext
-from codestrata.domain.rules.enums import RuleConfidence, RuleSeverity, RuleSkipReason
+from codestrata.domain.rules.enums import MatchEvidenceConfidence, RuleSeverity, RuleSkipReason
 from codestrata.domain.rules.metadata import RuleMetadata
 from codestrata.domain.rules.results import RuleMatch, SharedRuleEvaluationResult
 from codestrata.domain.security.ids import (
@@ -114,7 +114,7 @@ class PrivateKeyMaterialRule:
                 continue
             decision = classify_security_context(path=item.path)
             severity = adjust_rule_severity(RuleSeverity.HIGH, decision)
-            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
+            confidence = adjust_rule_confidence(MatchEvidenceConfidence.HIGH, decision)
             subject = (
                 RULE_PRIVATE_KEY_MATERIAL,
                 item.evidence_id,
@@ -199,7 +199,7 @@ class CredentialLiteralRule:
                 redacted_preview=item.redacted_preview,
             )
             severity = adjust_rule_severity(RuleSeverity.HIGH, decision)
-            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
+            confidence = adjust_rule_confidence(MatchEvidenceConfidence.HIGH, decision)
             subject = (
                 RULE_CREDENTIAL_LITERAL,
                 item.evidence_id,
@@ -286,7 +286,7 @@ class PlaceholderCredentialRule:
                 redacted_preview=item.redacted_preview,
             )
             severity = adjust_rule_severity(RuleSeverity.LOW, decision)
-            confidence = adjust_rule_confidence(RuleConfidence.HIGH, decision)
+            confidence = adjust_rule_confidence(MatchEvidenceConfidence.HIGH, decision)
             subject = (
                 RULE_PLACEHOLDER_CREDENTIAL,
                 item.evidence_id,
@@ -366,7 +366,7 @@ class TlsVerificationDisabledRule:
                         f"'{item.path}' is explicitly disabled."
                     ),
                     severity=RuleSeverity.HIGH,
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_configuration(
                             item=item,
@@ -421,7 +421,7 @@ class HostnameVerificationDisabledRule:
                         f"'{item.path}' is explicitly disabled."
                     ),
                     severity=RuleSeverity.HIGH,
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_configuration(
                             item=item,
@@ -477,7 +477,7 @@ class AuthenticationDisabledRule:
                         f"'{item.path}' is explicitly disabled."
                     ),
                     severity=RuleSeverity.HIGH,
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_configuration(
                             item=item,
@@ -532,7 +532,7 @@ class PermissiveCorsOriginRule:
                         f"'{item.path}' is set to an explicit wildcard."
                     ),
                     severity=RuleSeverity.MEDIUM,
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_configuration(
                             item=item,
@@ -591,7 +591,7 @@ class DebugEnabledRule:
                         f"({item.classification.value}) is explicitly enabled."
                     ),
                     severity=RuleSeverity.MEDIUM,
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_configuration(
                             item=item,

@@ -95,7 +95,11 @@ def classify_recommendation_head(
 
 
 def confidence_from_completeness(values: Sequence[str]) -> ConfidenceLabel:
-    """Derive a conservative confidence label from evidence_completeness values."""
+    """Legacy completeness-only label (compatibility).
+
+    Assessment-Head Confidence derivation uses Finding Confidence via
+    ``derive_assessment_head_confidence`` and must not rely on this helper.
+    """
 
     normalized = [
         str(item or "").strip().lower()
@@ -262,7 +266,6 @@ def build_assessment_head_sections(
         completeness_values = [f.evidence_completeness for f in head_findings] + [
             r.evidence_completeness for r in head_recs
         ]
-        confidence = confidence_from_completeness(completeness_values)
         limitations = list(
             aggregate_limitations(
                 *(f.limitations for f in head_findings),
@@ -271,6 +274,27 @@ def build_assessment_head_sections(
         )
         limitations.extend(_default_limitations(head, status=status, pack_present=present))
         limitations = list(aggregate_limitations(limitations))
+
+        from codestrata.application.assessment_heads.confidence import (
+            confidence_label_from_head_confidence,
+            derive_assessment_head_confidence,
+        )
+        from codestrata.domain.assessment_heads import assessment_head_confidence_to_json
+
+        head_confidence = derive_assessment_head_confidence(
+            head_id=head.value,
+            assessment_status=status,
+            finding_confidence_levels=tuple(
+                f.finding_confidence_level or "unavailable" for f in head_findings
+            ),
+            evidence_completeness_values=completeness_values,
+            limitations=limitations,
+            activated=present or status in {"assessed", "partially_assessed", "legacy_assessment"},
+            synthesized=head is AssessmentHead.MODERNIZATION_ASSESSMENT,
+        )
+        confidence, confidence_label = confidence_label_from_head_confidence(
+            head_confidence
+        )
 
         evidence_state = _evidence_state(
             status=status,
@@ -289,7 +313,10 @@ def build_assessment_head_sections(
                 "recommendations_count": len(head_recs),
                 "evidence_state": evidence_state,
                 "confidence": confidence,
-                "confidence_label": confidence_label_text(confidence),
+                "confidence_label": confidence_label,
+                "assessment_head_confidence": assessment_head_confidence_to_json(
+                    head_confidence
+                ),
                 "limitations": tuple(limitations),
                 "findings": head_findings,
                 "recommendations": head_recs,

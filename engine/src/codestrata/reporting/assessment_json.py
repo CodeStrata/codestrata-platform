@@ -131,6 +131,7 @@ def build_assessment_json_document(
             "repository_facts": _facts_payload(analysis),
             "evidence": evidence_payload,
             "findings": [customer_finding_json(item) for item in customer_findings],
+            "finding_correlations": _finding_correlations_payload(report_input),
             "deterministic_recommendations": [
                 customer_recommendation_json(item) for item in customer_recommendations
             ],
@@ -215,6 +216,41 @@ def build_assessment_json_document(
     except AssessmentTraceabilityError:
         raise
 
+    # Slice 5.4 — additive Assessment-Head Confidence map (schema 1.2 preserved).
+    from codestrata.application.assessment_heads import (
+        build_assessment_coverage_map,
+        build_assessment_head_confidence_map,
+    )
+
+    pack_sections = {
+        "architecture": assessment.get("architecture"),
+        "technical_debt": assessment.get("technical_debt"),
+        "dependency": assessment.get("dependency"),
+        "security": assessment.get("security"),
+        "testing": assessment.get("testing"),
+        "cloud": assessment.get("cloud"),
+        "ai_readiness": assessment.get("ai_readiness"),
+        "performance": assessment.get("performance"),
+        "roadmap": assessment.get("roadmap"),
+    }
+    activation_payload = (
+        assessment.get("activation")
+        if isinstance(assessment.get("activation"), dict)
+        else None
+    )
+    assessment["assessment_coverage"] = build_assessment_coverage_map(
+        pack_sections=pack_sections,
+        technologies_present=bool(assessment.get("technologies")),
+        activation=activation_payload,
+    )
+    assessment["assessment_head_confidence"] = build_assessment_head_confidence_map(
+        findings=assessment.get("findings") or (),
+        pack_sections=pack_sections,
+        technologies_present=bool(assessment.get("technologies")),
+        activation=activation_payload,
+        assessment_coverage_map=assessment["assessment_coverage"],
+    )
+
     repository_id = (
         report_input.knowledge_repository_id
         or f"repo:{analysis.repository.name.strip().lower() or 'repository'}"
@@ -232,6 +268,21 @@ def build_assessment_json_document(
         "manifest": manifest,
         "assessment": assessment,
     }
+
+
+def _finding_correlations_payload(report_input: ModernizationReportInput) -> list[dict[str, Any]]:
+    """Serialize additive finding_correlations (Slice 5.12)."""
+
+    stored = tuple(getattr(report_input, "finding_correlations", ()) or ())
+    if stored:
+        return [dict(item) for item in stored if isinstance(item, dict)]
+    evaluation = report_input.assessment_rule_evaluation
+    if evaluation is None or not evaluation.findings:
+        return []
+    from codestrata.application.findings.correlation import correlate_findings
+
+    result = correlate_findings(evaluation.findings)
+    return [item.canonical_dict() for item in result.correlations]
 
 
 def _attach_optional_section(assessment: dict[str, Any], key: str, section: Any) -> None:

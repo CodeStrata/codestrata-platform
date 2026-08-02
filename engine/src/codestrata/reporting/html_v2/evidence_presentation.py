@@ -73,6 +73,20 @@ def _render_one(ref: EvidenceRefView, *, primary: bool) -> str:
         rows.append(
             f"<p><em>Mode</em> {escape_html(ref.production_mode.replace('_', ' '))}</p>"
         )
+    if ref.evidence_confidence_level:
+        rows.append(
+            "<p><em>Evidence confidence</em> "
+            f"{escape_html(ref.evidence_confidence_level.replace('_', ' ').title())}</p>"
+        )
+        if ref.evidence_confidence_limitations:
+            lim = "".join(
+                f"<li>{escape_html(limitation_label(item))}</li>"
+                for item in ref.evidence_confidence_limitations
+            )
+            rows.append(
+                f'<div class="limitations"><em>Evidence confidence limitations</em>'
+                f"<ul>{lim}</ul></div>"
+            )
     if ref.limitations:
         lim = "".join(
             f"<li>{escape_html(limitation_label(item))}</li>" for item in ref.limitations
@@ -226,4 +240,32 @@ def evidence_ref_view_from_domain(ref: Any) -> EvidenceRefView:
             else None
         ),
         limitations=tuple(getattr(ref, "limitations", ()) or ()),
+        evidence_confidence_level=_evidence_confidence_level(ref),
+        evidence_confidence_limitations=_evidence_confidence_limitations(ref),
     )
+
+
+def _evidence_confidence_level(ref: Any) -> str | None:
+    confidence = getattr(ref, "evidence_confidence", None)
+    if confidence is None and isinstance(ref, dict):
+        confidence = ref.get("evidence_confidence")
+    if confidence is None:
+        return None
+    level = getattr(confidence, "level", None)
+    if level is None and isinstance(confidence, dict):
+        level = confidence.get("level")
+    if level is None:
+        return None
+    return str(getattr(level, "value", level))
+
+
+def _evidence_confidence_limitations(ref: Any) -> tuple[str, ...]:
+    confidence = getattr(ref, "evidence_confidence", None)
+    if confidence is None and isinstance(ref, dict):
+        confidence = ref.get("evidence_confidence")
+    if confidence is None:
+        return ()
+    limitations = getattr(confidence, "limitations", None)
+    if limitations is None and isinstance(confidence, dict):
+        limitations = confidence.get("limitations") or ()
+    return tuple(limitations or ())

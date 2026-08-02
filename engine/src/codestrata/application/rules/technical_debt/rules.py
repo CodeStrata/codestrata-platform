@@ -18,7 +18,7 @@ from codestrata.application.rules.technical_debt.helpers import (
 )
 from codestrata.domain.rules.applicability import RuleApplicability
 from codestrata.domain.rules.context import RuleExecutionContext
-from codestrata.domain.rules.enums import RuleConfidence, RuleSkipReason
+from codestrata.domain.rules.enums import MatchEvidenceConfidence, RuleSkipReason
 from codestrata.domain.rules.metadata import RuleMetadata
 from codestrata.domain.rules.results import SharedRuleEvaluationResult
 from codestrata.domain.technical_debt.ids import (
@@ -92,7 +92,7 @@ class LargeCallableRule:
                         f"{value}, which exceeds threshold {self._threshold}."
                     ),
                     severity=severity_for_ratio(value=value, threshold=self._threshold),
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_callable(
                             item=item,
@@ -168,7 +168,7 @@ class ExcessiveBranchingRule:
                         f"{value}, which exceeds threshold {self._threshold}."
                     ),
                     severity=severity_for_ratio(value=value, threshold=self._threshold),
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_callable(
                             item=item,
@@ -244,7 +244,7 @@ class DeepNestingRule:
                         f"{value}, which exceeds threshold {self._threshold}."
                     ),
                     severity=severity_for_ratio(value=value, threshold=self._threshold),
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_callable(
                             item=item,
@@ -320,7 +320,7 @@ class ExcessiveParametersRule:
                         f"{value}, which exceeds threshold {self._threshold}."
                     ),
                     severity=severity_for_ratio(value=value, threshold=self._threshold),
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_callable(
                             item=item,
@@ -396,7 +396,7 @@ class OversizedTypeRule:
                         f"{value}, which exceeds threshold {self._threshold}."
                     ),
                     severity=severity_for_ratio(value=value, threshold=self._threshold),
-                    confidence=RuleConfidence.HIGH,
+                    confidence=MatchEvidenceConfidence.HIGH,
                     evidence=(
                         evidence_type(
                             item=item,

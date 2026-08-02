@@ -85,16 +85,38 @@ def render_coverage_confidence_limitations(
     confidence_note: str | None = None,
     limitations: Sequence[str] = (),
     coverage_fallback: str | None = None,
+    assessment_coverage: Any | None = None,
 ) -> str:
     """Render the canonical Coverage → Confidence → Limitations trailing block.
 
     Always emits all three subsections in that order with identical headings and
-    structure. Empty states use the shared unavailable copy.
+    structure. Empty states use the shared unavailable copy. When canonical
+    AssessmentCoverage is provided, it becomes the Coverage authority and pack
+    detail rows are omitted to avoid duplicate coverage blocks.
     """
 
+    canonical_rows = ()
+    if assessment_coverage is not None:
+        from codestrata.application.assessment_heads.coverage import (
+            coverage_summary_rows,
+        )
+        from codestrata.domain.assessment_heads.assessment_coverage import (
+            AssessmentCoverage,
+        )
+
+        if isinstance(assessment_coverage, AssessmentCoverage):
+            canonical_rows = coverage_summary_rows(assessment_coverage)
+        elif isinstance(assessment_coverage, dict):
+            try:
+                model = AssessmentCoverage.model_validate(assessment_coverage)
+                canonical_rows = coverage_summary_rows(model)
+            except Exception:
+                canonical_rows = ()
+
+    rows = canonical_rows or coverage_rows
     parts: list[str] = [
         f'<div class="{CCL_BLOCK_CLASS}" data-canonical="coverage-confidence-limitations">\n'
-        f'{_render_coverage(coverage_rows, fallback=coverage_fallback)}\n'
+        f'{_render_coverage(rows, fallback=coverage_fallback)}\n'
         f"{_render_confidence(confidence, confidence_label, note=confidence_note)}\n"
         f"{_render_limitations(limitations)}\n"
         "</div>"

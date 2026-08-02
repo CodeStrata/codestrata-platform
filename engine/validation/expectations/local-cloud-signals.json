@@ -28,6 +28,16 @@
   "finding_count": {
     "minimum": 1
   },
+  "finding_severity": {
+    "forbidden_severity_prefixes": [
+      {
+        "prefix": "cloud.",
+        "severities": ["high", "critical"],
+        "rationale": "Repository cloud signals must not become High/Critical readiness risk (Slice 5.13)."
+      }
+    ],
+    "notes": "Cloud findings are static repository signals, not live-cloud posture."
+  },
   "technology_inventory": {
     "required_languages": [],
     "forbidden_languages": [
@@ -307,22 +317,26 @@
     "required_findings": [
       {
         "rule_id": "cloud.cloud-010",
+        "severity": "informational",
         "rationale": "Containerization from Dockerfile/compose"
       },
       {
         "rule_id": "cloud.cloud-011",
-        "rationale": "Kubernetes orchestration from k8s/deployment.yaml"
+        "rationale": "Kubernetes orchestration from k8s/deployment.yaml (informational or low by signal volume; High/Critical forbidden via finding_severity)"
       },
       {
         "rule_id": "cloud.cloud-040",
+        "severity": "informational",
         "rationale": "Confirmed deployment pipeline from deploy.yml"
       },
       {
         "rule_id": "cloud.cloud-060",
+        "severity": "informational",
         "rationale": "Three active families: container, orchestration, deployment"
       },
       {
         "rule_id": "cloud.cloud-061",
+        "severity": "low",
         "rationale": "Deployment assets without AWS/Azure/GCP platform markers"
       }
     ],

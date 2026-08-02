@@ -81,6 +81,15 @@ _COVERAGE_LABELS = {
     "legacy_or_inline": "Legacy or inline evidence",
 }
 
+_ASSESSMENT_COVERAGE_LABELS = {
+    "complete": "Complete coverage",
+    "partial": "Partial coverage",
+    "insufficient_evidence": "Insufficient evidence",
+    "unavailable": "Coverage unavailable",
+    "disabled": "Disabled",
+    "not_applicable": "Not applicable",
+}
+
 
 def build_engineering_intelligence(
     *,
@@ -227,7 +236,19 @@ def _head_summaries(assessment_heads: Sequence[Any]) -> tuple[EngineeringHeadSum
         if not head_id or not title or not anchor:
             continue
         evidence_state = str(getattr(item, "evidence_state", "") or "unavailable").strip()
-        coverage = _COVERAGE_LABELS.get(evidence_state, evidence_state or "unavailable")
+        coverage_payload = getattr(item, "assessment_coverage", None)
+        coverage_status = None
+        if isinstance(coverage_payload, dict):
+            coverage_status = str(coverage_payload.get("status") or "").strip().lower()
+        elif coverage_payload is not None:
+            coverage_status = str(getattr(coverage_payload, "status", "") or "").strip().lower()
+        if coverage_status:
+            coverage = _ASSESSMENT_COVERAGE_LABELS.get(
+                coverage_status,
+                coverage_status.replace("_", " ").title(),
+            )
+        else:
+            coverage = _COVERAGE_LABELS.get(evidence_state, evidence_state or "unavailable")
         pa_ids = tuple(getattr(item, "related_priority_action_ids", ()) or ())
         rows.append(
             EngineeringHeadSummary(
@@ -306,11 +327,36 @@ def _overview(
         for item in head_summaries
         if item.status in {"assessed", "partially_assessed", "legacy_assessment"}
     )
+    coverage_complete = sum(
+        1 for item in head_summaries if item.coverage == "Complete coverage"
+    )
+    coverage_partial = sum(
+        1 for item in head_summaries if item.coverage == "Partial coverage"
+    )
+    coverage_unavailable = sum(
+        1
+        for item in head_summaries
+        if item.coverage
+        in {"Coverage unavailable", "Insufficient evidence", "Not applicable"}
+    )
+    coverage_disabled = sum(
+        1 for item in head_summaries if item.coverage == "Disabled"
+    )
     facts: list[EngineeringOverviewFact] = [
         EngineeringOverviewFact(
             label="Assessment heads with results",
             value=f"{assessed} / {len(head_summaries)}",
             note="Counts reflect enabled assessment heads only",
+        ),
+        EngineeringOverviewFact(
+            label="Head coverage complete / partial / unavailable",
+            value=f"{coverage_complete} / {coverage_partial} / {coverage_unavailable}",
+            note="Canonical Assessment Coverage statuses; not an averaged percentage",
+        ),
+        EngineeringOverviewFact(
+            label="Disabled assessment heads",
+            value=str(coverage_disabled),
+            note="Disabled heads are excluded from assessed-scope coverage aggregates",
         ),
         EngineeringOverviewFact(
             label="Findings",

@@ -48,6 +48,9 @@ CLI contracts, architecture, MCP, security, and contributor guidance.
 | [analysis-intelligence/shared-rule-platform.md](analysis-intelligence/shared-rule-platform.md) | Shared Rule Platform |
 | [analysis-intelligence/rule-authoring.md](analysis-intelligence/rule-authoring.md) | Shared rule authoring |
 | [analysis-intelligence/security-context-classification.md](analysis-intelligence/security-context-classification.md) | Security context classification (precision) |
+| [analysis-intelligence/recommendation-prioritization-calibration.md](analysis-intelligence/recommendation-prioritization-calibration.md) | Recommendation prioritization calibration |
+| [analysis-intelligence/recommendation-confidence.md](analysis-intelligence/recommendation-confidence.md) | Recommendation Confidence |
+| [analysis-intelligence/finding-severity-calibration.md](analysis-intelligence/finding-severity-calibration.md) | Finding severity calibration |
 | [mcp/README.md](mcp/README.md) | MCP technical reference |
 | [apis.md](apis.md) | Integration surfaces |
 | [security/](security/) | Threat model and hardening |

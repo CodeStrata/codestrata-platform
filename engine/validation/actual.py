@@ -31,6 +31,7 @@ from validation.ai_readiness import (
     extract_ai_readiness_recommendations,
     extract_ai_readiness_signals,
 )
+from validation.finding_correlations.expectations import extract_correlation_pair_keys
 from validation.modernization import (
     build_modernization_finding_index,
     extract_modernization_priority_actions,
@@ -208,6 +209,15 @@ def actual_from_report(
     modernization_roadmap_initiatives = extract_modernization_roadmap_initiatives(
         document
     )
+    correlations_raw = (
+        assessment.get("finding_correlations")
+        or document.get("finding_correlations")
+        or []
+    )
+    finding_correlation_pairs = extract_correlation_pair_keys(
+        findings=list(findings) if isinstance(findings, list) else [],
+        correlations=list(correlations_raw) if isinstance(correlations_raw, list) else [],
+    )
 
     return ActualAssessmentResult(
         schema_version=str(schema_version) if schema_version is not None else None,
@@ -248,6 +258,7 @@ def actual_from_report(
         modernization_recommendations=modernization_recommendations,
         modernization_priority_actions=modernization_priority_actions,
         modernization_roadmap_initiatives=modernization_roadmap_initiatives,
+        finding_correlation_pairs=finding_correlation_pairs,
         artifact_paths=dict(artifact_paths or {}),
         assessment_duration_ms=assessment_duration_ms,
         ai_executed=effective_ai,

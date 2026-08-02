@@ -25,6 +25,8 @@ TRACEABILITY_ASSESSMENT_COLLECTIONS: tuple[str, ...] = (
     "deterministic_recommendations",
     "priority_actions",
     "roadmap",
+    "assessment_head_confidence",
+    "assessment_coverage",
 )
 
 FINDING_TRACEABILITY_FIELDS: tuple[str, ...] = (

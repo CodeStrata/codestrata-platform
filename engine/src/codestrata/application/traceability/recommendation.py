@@ -1,7 +1,7 @@
 """Recommendation → Finding traceability helpers (Epic 2 Slice 2.3).
 
 Keeps EvidenceRef out of recommendation identity. Primary finding selection
-uses severity → confidence → deterministic ordering → finding ID.
+uses calibrated severity → Finding Confidence → rule_id → finding ID.
 """
 
 from __future__ import annotations
@@ -10,9 +10,12 @@ from collections.abc import Mapping, Sequence
 
 from codestrata.domain.findings import Finding
 from codestrata.domain.findings.enums import FindingSeverity
+from codestrata.domain.findings.finding_confidence import (
+    FindingConfidenceLevel,
+    finding_confidence_level_rank,
+)
 from codestrata.domain.recommendations.enums import RecommendationType
 from codestrata.domain.recommendations.models import Recommendation
-from codestrata.domain.rules.enums import RuleConfidence
 from codestrata.domain.traceability import EvidenceCompleteness
 from codestrata.domain.traceability.validators import merge_unique_sorted, normalize_limitations
 
@@ -24,20 +27,17 @@ _SEVERITY_RANK = {
     FindingSeverity.CRITICAL: 4,
 }
 
-_CONFIDENCE_RANK = {
-    RuleConfidence.LOW: 0,
-    RuleConfidence.MEDIUM: 1,
-    RuleConfidence.HIGH: 2,
-    RuleConfidence.CERTAIN: 3,
-}
-
 
 def select_primary_finding_id(
     findings: Sequence[Finding],
     *,
     candidate_ids: Sequence[str] | None = None,
 ) -> str | None:
-    """Select primary finding: severity → confidence → rule_id → finding ID."""
+    """Select primary finding: calibrated severity → Finding Confidence → rule_id → ID.
+
+    Does not use Match Evidence Confidence as a Finding Confidence substitute.
+    Changing primary_finding_id does not change Recommendation ID.
+    """
 
     allowed = (
         {str(item) for item in candidate_ids}
@@ -56,14 +56,23 @@ def select_primary_finding_id(
         return None
 
     def sort_key(finding: Finding) -> tuple[object, ...]:
-        confidence_raw = str(finding.metadata.get("confidence", "medium")).lower()
-        try:
-            confidence = RuleConfidence(confidence_raw)
-        except ValueError:
-            confidence = RuleConfidence.MEDIUM
+        confidence = getattr(finding, "finding_confidence", None)
+        level = getattr(confidence, "level", None)
+        if not isinstance(level, FindingConfidenceLevel):
+            try:
+                level = FindingConfidenceLevel(str(level or "unavailable").strip().lower())
+            except ValueError:
+                level = FindingConfidenceLevel.UNAVAILABLE
+        completeness = str(
+            getattr(finding, "evidence_completeness", None)
+            or finding.metadata.get("evidence_completeness")
+            or ""
+        ).lower()
+        completeness_rank = 1 if completeness in {"complete", ""} else 0
         return (
             -_SEVERITY_RANK.get(finding.severity, 0),
-            -_CONFIDENCE_RANK.get(confidence, 1),
+            -finding_confidence_level_rank(level),
+            -completeness_rank,
             finding.rule_id,
             finding.id,
         )
@@ -139,6 +148,13 @@ def attach_recommendation_traceability(
 ) -> Recommendation:
     """Populate additive traceability fields without changing recommendation ID."""
 
+    from codestrata.application.recommendations.confidence import (
+        apply_recommendation_confidence,
+    )
+    from codestrata.application.recommendations.priority_calibration import (
+        apply_recommendation_priority,
+    )
+
     source_ids = recommendation.supporting_finding_ids or recommendation.related_finding_ids
     (
         supporting,
@@ -152,7 +168,7 @@ def attach_recommendation_traceability(
         recommendation_type=recommendation_type or recommendation.recommendation_type,
         limitations=(*recommendation.limitations, *limitations),
     )
-    return recommendation.model_copy(
+    updated = recommendation.model_copy(
         update={
             "related_finding_ids": supporting,
             "supporting_finding_ids": supporting,
@@ -162,6 +178,8 @@ def attach_recommendation_traceability(
             "limitations": limits,
         }
     )
+    with_confidence = apply_recommendation_confidence(updated, findings=findings)
+    return apply_recommendation_priority(with_confidence, findings=findings)
 
 
 def merge_recommendation_traceability(
@@ -173,7 +191,28 @@ def merge_recommendation_traceability(
     """Union finding traceability from two recommendations that share identity.
 
     Does not alter ``preferred.id``. Dual-writes related/supporting finding IDs.
+    Recomputes Recommendation Confidence and priority from the union (no first-wins).
+    Incompatible priority policies fail closed by keeping Recommendations separate.
     """
+
+    from codestrata.application.recommendations.confidence import (
+        apply_recommendation_confidence,
+    )
+    from codestrata.application.recommendations.priority_calibration import (
+        apply_recommendation_priority,
+    )
+    from codestrata.application.recommendations.priority_policies import (
+        resolve_priority_policy,
+    )
+
+    preferred_policy = resolve_priority_policy(preferred.provider_id)
+    other_policy = resolve_priority_policy(other.provider_id)
+    if preferred_policy.policy_id != other_policy.policy_id:
+        # Fail closed: incompatible policies must not merge silently.
+        raise ValueError(
+            "incompatible recommendation priority policies cannot merge: "
+            f"{preferred_policy.policy_id} vs {other_policy.policy_id}"
+        )
 
     combined_ids = merge_unique_sorted(
         preferred.supporting_finding_ids or preferred.related_finding_ids,
@@ -194,7 +233,7 @@ def merge_recommendation_traceability(
     # Prefer COMPLETE when either side already had complete coverage of the union.
     if preferred.evidence_completeness is EvidenceCompleteness.COMPLETE and other.evidence_completeness is EvidenceCompleteness.COMPLETE:
         completeness = EvidenceCompleteness.COMPLETE
-    return preferred.model_copy(
+    updated = preferred.model_copy(
         update={
             "related_finding_ids": supporting,
             "supporting_finding_ids": supporting,
@@ -202,8 +241,11 @@ def merge_recommendation_traceability(
             "recommendation_type": RecommendationType.MERGED,
             "evidence_completeness": completeness,
             "limitations": limits,
+            "priority_assessment": None,
         }
     )
+    with_confidence = apply_recommendation_confidence(updated, findings=findings)
+    return apply_recommendation_priority(with_confidence, findings=findings)
 
 
 def findings_lookup(findings: Sequence[Finding]) -> Mapping[str, Finding]:

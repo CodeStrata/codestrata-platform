@@ -108,9 +108,10 @@ def _confidence_rank(item: RecommendationLike) -> int:
         if raw in ranks:
             return ranks[raw]
     score = float(getattr(item, "priority_score", 0.0) or 0.0)
-    if score >= 140:
+    # Support both calibrated 0–100 scores and legacy composite scores.
+    if score >= 140 or (score <= 100 and score >= 90):
         return 3
-    if score >= 80:
+    if score >= 80 or (score <= 100 and score >= 70):
         return 2
     if score >= 40:
         return 1

@@ -33,6 +33,16 @@
   "finding_count": {
     "minimum": 1
   },
+  "finding_severity": {
+    "forbidden_severity_prefixes": [
+      {
+        "prefix": "ai_readiness.",
+        "severities": ["high", "critical"],
+        "rationale": "Static AI readiness signals must not become High/Critical AI risk (Slice 5.13)."
+      }
+    ],
+    "notes": "AI Readiness Findings are static repository observations only."
+  },
   "technology_inventory": {
     "required_languages": [
       "Python"
@@ -394,24 +404,29 @@
       {
         "rule_id": "ai_readiness.ai-002",
         "path": "openapi.yaml",
+        "severity": "informational",
         "rationale": "Structured OpenAPI spec"
       },
       {
         "rule_id": "ai_readiness.ai-030",
         "path": "src/openai_agent.py",
+        "severity": "informational",
         "rationale": "LLM SDK import"
       },
       {
         "rule_id": "ai_readiness.ai-040",
         "path": "mcp.json",
+        "severity": "informational",
         "rationale": "MCP server config"
       },
       {
         "rule_id": "ai_readiness.ai-051",
+        "severity": "low",
         "rationale": "AI assets without observability"
       },
       {
         "rule_id": "ai_readiness.ai-060",
+        "severity": "informational",
         "rationale": ">=3 active capability families"
       }
     ],

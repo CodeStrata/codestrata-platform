@@ -2451,6 +2451,39 @@ class AssessmentApplicationService:
                 f"Details: {sanitize_provider_text(str(error))}"
             )
 
+        # Epic 5 Slice 5.11 — consolidate duplicate Findings before recommendations
+        # so Recommendation IDs use canonical Finding IDs (no post-creation churn).
+        finding_correlation_payload: tuple[dict[str, object], ...] = ()
+        try:
+            from codestrata.application.findings.consolidation import (
+                consolidate_rule_evaluation,
+            )
+            from codestrata.application.findings.correlation import (
+                correlate_rule_evaluation,
+            )
+
+            rule_evaluation, _finding_consolidation = consolidate_rule_evaluation(
+                rule_evaluation
+            )
+            # Epic 5 Slice 5.12 — correlate distinct Findings after consolidation.
+            rule_evaluation, finding_correlation_result = correlate_rule_evaluation(
+                rule_evaluation
+            )
+            finding_correlation_payload = tuple(
+                item.canonical_dict()
+                for item in finding_correlation_result.correlations
+            )
+            findings_artifact = write_findings_artifact(
+                rule_evaluation,
+                report_paths.run_directory,
+            )
+        except Exception as error:  # noqa: BLE001 - consolidation must not abort assessment
+            warn(
+                "Finding consolidation/correlation skipped; continuing with "
+                "pre-consolidation findings. "
+                f"Details: {sanitize_provider_text(str(error))}"
+            )
+
         try:
             with benchmark_recorder.stage("recommendation_generation"):
                 recommendation_result = active_recommendation_engine.evaluate_pipeline_result(
@@ -3104,6 +3137,7 @@ class AssessmentApplicationService:
             ),
             assessment_rule_evaluation=rule_evaluation,
             assessment_recommendation_result=recommendation_result,
+            finding_correlations=finding_correlation_payload,
             ai_enrichment=enrichment_result if include_ai_enrichment else None,
             highlighted_versions=build_highlighted_versions(graph_pipeline_result.repository_graph),
             report_artifacts=default_report_artifacts(

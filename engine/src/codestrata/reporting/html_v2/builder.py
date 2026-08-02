@@ -402,6 +402,14 @@ def build_customer_report_document(
         )
         for row in head_rows
     )
+    assessment_heads = _apply_modernization_head_confidence(assessment_heads)
+    assessment_heads = _attach_assessment_coverage(
+        assessment_heads,
+        report_input=report_input,
+        technologies_present=bool(technologies) or technology_inventory.fact_count > 0,
+        assessed_packs=assessed_packs,
+        not_assessed_packs=not_assessed_packs,
+    )
     engineering_intelligence = build_engineering_intelligence(
         assessment_heads=assessment_heads,
         priority_actions=priority_actions,
@@ -558,9 +566,92 @@ def default_report_artifacts(
 
 
 def _build_findings(report_input: ModernizationReportInput) -> tuple[FindingView, ...]:
+    findings = resolve_customer_findings(report_input)
+    finding_titles = {item.id: item.title for item in findings}
+    correlation_labels = _correlation_relationship_labels(report_input)
     return tuple(
-        _customer_finding_view(item) for item in resolve_customer_findings(report_input)
+        _customer_finding_view(
+            item,
+            finding_titles=finding_titles,
+            correlation_labels=correlation_labels.get(item.id, {}),
+        )
+        for item in findings
     )
+
+
+_SEVERITY_BASIS_LABELS = {
+    "direct_secret_exposure": "Direct secret exposure signal",
+    "explicit_security_control_disabled": "Explicit configuration state",
+    "exploitable_configuration_pattern": "Configuration hygiene concern",
+    "architectural_boundary_violation": "Architectural boundary relationship",
+    "architectural_cycle": "Architectural dependency cycle",
+    "dependency_declaration_instability": "Dependency declaration semantics",
+    "deterministic_threshold_exceedance": "Configured threshold exceeded",
+    "threshold_magnitude": "Measurement magnitude above threshold",
+    "production_context": "Production-context repository evidence",
+    "test_or_fixture_context": "Test, fixture, or documentation context",
+    "runtime_impact_unverified": "Static runtime impact unverified",
+    "business_impact_unverified": "Business impact unverified",
+    "static_signal_only": "Static repository signal",
+    "readiness_inventory_signal": "Repository readiness inventory signal",
+    "context_cap": "Repository context severity cap",
+    "measurement_band": "Typed measurement severity band",
+    "explicit_rule_policy": "Explicit rule severity policy",
+    "rule_default": "Rule default severity",
+    "legacy_rule": "Legacy rule severity",
+}
+
+
+def _severity_basis_labels(item: CustomerFinding) -> tuple[str, ...]:
+    assessment = item.severity_assessment if isinstance(item.severity_assessment, dict) else {}
+    raw = assessment.get("basis") if assessment else None
+    if not raw:
+        meta = str(
+            (item.metadata or {}).get("severity_calibration_basis")
+            or (item.metadata or {}).get("severity_basis")
+            or ""
+        )
+        raw = [part for part in meta.split(",") if part.strip()]
+    labels: list[str] = []
+    for basis in raw or ():
+        key = str(getattr(basis, "value", basis)).strip().lower()
+        label = _SEVERITY_BASIS_LABELS.get(key)
+        if label and label not in labels:
+            labels.append(label)
+    return tuple(labels[:5])
+
+
+def _correlation_relationship_labels(
+    report_input: ModernizationReportInput,
+) -> dict[str, dict[str, str]]:
+    """Map finding_id -> {related_finding_id: customer-safe relationship label}."""
+
+    from codestrata.reporting.assessment_json import _finding_correlations_payload
+
+    labels: dict[str, dict[str, str]] = {}
+    type_labels = {
+        "configuration_cluster": "Same configuration subject",
+        "dependency_cluster": "Same dependency identity",
+        "architecture_cluster": "Same architecture subject",
+        "complexity_cluster": "Same measurement subject",
+        "shared_evidence": "Shared evidence",
+        "shared_subject": "Same repository subject",
+        "deployment_cluster": "Same deployment artifact",
+        "ai_integration_cluster": "Same AI integration boundary",
+        "cross_head_modernization": "Related modernization condition",
+    }
+    for item in _finding_correlations_payload(report_input):
+        if not isinstance(item, dict):
+            continue
+        ctype = str(item.get("correlation_type") or "")
+        label = type_labels.get(ctype, "Related repository condition")
+        members = [str(fid) for fid in (item.get("finding_ids") or []) if fid]
+        for fid in members:
+            bucket = labels.setdefault(fid, {})
+            for other in members:
+                if other != fid:
+                    bucket[other] = label
+    return labels
 
 
 def _build_recommendations(
@@ -579,7 +670,12 @@ def _build_recommendations(
     )
 
 
-def _customer_finding_view(item: CustomerFinding) -> FindingView:
+def _customer_finding_view(
+    item: CustomerFinding,
+    *,
+    finding_titles: dict[str, str] | None = None,
+    correlation_labels: dict[str, str] | None = None,
+) -> FindingView:
     evidence_refs = tuple(
         evidence_ref_view_from_domain(ref)
         for ref in item.evidence_refs
@@ -595,12 +691,25 @@ def _customer_finding_view(item: CustomerFinding) -> FindingView:
                 path = None
             ref = ref.model_copy(update={"path": path})
         sanitized_refs.append(ref)
+    titles = finding_titles or {}
+    labels = correlation_labels or {}
+    related_ids = tuple(item.correlated_finding_ids)
+    related_titles = tuple(titles.get(fid, fid) for fid in related_ids)
+    related_labels = tuple(
+        labels.get(fid, "Related repository condition") for fid in related_ids
+    )
     base_kwargs = {
         "evidence_refs": tuple(sanitized_refs),
         "primary_evidence_id": item.primary_evidence_id,
         "synthesized_from_evidence_ids": tuple(item.synthesized_from_evidence_ids),
         "evidence_completeness": item.evidence_completeness or "legacy",
         "limitations": tuple(item.limitations),
+        "finding_confidence_level": _finding_confidence_level(item),
+        "rule_confidence_level": _rule_confidence_level(item),
+        "correlated_finding_ids": related_ids,
+        "correlated_finding_titles": related_titles,
+        "correlation_relationship_labels": related_labels,
+        "severity_basis_labels": _severity_basis_labels(item),
     }
     if item.phase1 is not None:
         view = _phase1_finding_view(item.phase1)
@@ -647,13 +756,24 @@ def _customer_recommendation_view(
         primary = finding_ids[0] if finding_ids else None
     elif primary is None and finding_ids:
         primary = finding_ids[0]
+    confidence_limits: tuple[str, ...] = ()
+    confidence = getattr(item, "recommendation_confidence", None)
+    if confidence is not None:
+        raw_limits = getattr(confidence, "limitations", None)
+        if raw_limits is None and isinstance(confidence, dict):
+            raw_limits = confidence.get("limitations")
+        if raw_limits:
+            confidence_limits = tuple(str(note) for note in raw_limits if str(note).strip())
+    limitations = tuple(dict.fromkeys((*item.limitations, *confidence_limits)))
     trace_kwargs = {
         "related_finding_ids": finding_ids,
         "related_finding_titles": related_titles,
         "primary_finding_id": primary,
         "recommendation_type": item.recommendation_type or "legacy",
         "evidence_completeness": item.evidence_completeness or "legacy",
-        "limitations": tuple(item.limitations),
+        "limitations": limitations,
+        "recommendation_confidence_level": _recommendation_confidence_level(item),
+        "priority_basis_labels": _priority_basis_labels(item),
         "effort": item.effort,
         "risk": item.risk,
         "dependencies": tuple(item.dependencies),
@@ -792,6 +912,10 @@ def _phase3_finding_view(finding: Phase3Finding) -> FindingView:
                 node_id=str(item.node_id.root) if item.node_id is not None else None,
             )
             for item in finding.evidence
+        ),
+        finding_confidence_level=finding.finding_confidence.level.value,
+        rule_confidence_level=(
+            str(finding.metadata.get("rule_confidence_level") or "") or None
         ),
     )
 
@@ -970,10 +1094,14 @@ def _enrich_technology_inventory_head(
     section: AssessmentHeadSectionView,
     inventory,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.2 inventory status/confidence/limitations on the Technology head."""
+    """Overlay Slice 3.2 inventory status/limitations; confidence is canonical."""
 
     if section.head != AssessmentHead.TECHNOLOGY_INVENTORY.value:
         return section
+    from codestrata.application.assessment_heads.confidence import (
+        apply_canonical_head_confidence,
+    )
+
     status_map = {
         "inventory_generated": "assessed",
         "partial_inventory": "partially_assessed",
@@ -984,12 +1112,10 @@ def _enrich_technology_inventory_head(
     limitations = tuple(
         dict.fromkeys((*section.limitations, *inventory.limitations))
     )
-    return section.model_copy(
+    updated = section.model_copy(
         update={
             "status": status,
             "status_label": inventory.status_label,
-            "confidence": inventory.confidence,
-            "confidence_label": inventory.confidence_label,
             "limitations": limitations,
             "pack_content_available": True,
             "placeholder_message": (
@@ -999,44 +1125,46 @@ def _enrich_technology_inventory_head(
             ),
         }
     )
+    coverage = {
+        "assessed": "complete",
+        "partially_assessed": "partial",
+        "not_available": "unavailable",
+        "legacy_assessment": "legacy",
+    }.get(status, "unavailable")
+    return apply_canonical_head_confidence(
+        updated,
+        coverage_state=coverage,
+        inventory_confidence=getattr(inventory, "confidence", None),
+    )
 
 
-def _enrich_architecture_intelligence_head(
+_PACK_STATUS_MAP = {
+    "succeeded": "assessed",
+    "partially_succeeded": "partially_assessed",
+    "insufficient_evidence": "partially_assessed",
+    "disabled": "not_enabled",
+    "not_applicable": "not_available",
+    "failed": "not_available",
+    "not_requested": "not_available",
+}
+
+
+def _finalize_pack_head(
     section: AssessmentHeadSectionView,
     intelligence,
+    *,
+    placeholder: str | None,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.3 Architecture Intelligence status/confidence/limitations."""
-
-    if intelligence is None:
-        return section
-    if section.head != AssessmentHead.ARCHITECTURE_INTELLIGENCE.value:
-        return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
+    from codestrata.application.assessment_heads.confidence import (
+        apply_canonical_head_confidence,
     )
-    placeholder = None
-    if intelligence.status in {"disabled", "not_requested"}:
-        placeholder = "Architecture analysis was not enabled for this assessment."
-    elif intelligence.status in {"not_applicable", "failed"}:
-        placeholder = "Architecture assessment is not available for this repository."
-    elif intelligence.finding_count == 0 and intelligence.status == "insufficient_evidence":
-        placeholder = "Architecture coverage was partial; conclusions could not be established safely."
-    return section.model_copy(
+
+    status = _PACK_STATUS_MAP.get(intelligence.status, section.status)
+    limitations = tuple(dict.fromkeys((*section.limitations, *intelligence.limitations)))
+    updated = section.model_copy(
         update={
             "status": status,
             "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
             "limitations": limitations,
             "pack_content_available": True,
             "placeholder_message": placeholder,
@@ -1046,31 +1174,52 @@ def _enrich_architecture_intelligence_head(
             ),
         }
     )
+    coverage = {
+        "succeeded": "complete",
+        "partially_succeeded": "partial",
+        "insufficient_evidence": "insufficient",
+        "disabled": "unavailable",
+        "not_applicable": "unsupported",
+        "failed": "unavailable",
+        "not_requested": "unavailable",
+    }.get(str(intelligence.status), None)
+    return apply_canonical_head_confidence(
+        updated,
+        pack_assessment_status=str(intelligence.status),
+        coverage_state=coverage,
+    )
+
+
+def _enrich_architecture_intelligence_head(
+    section: AssessmentHeadSectionView,
+    intelligence,
+) -> AssessmentHeadSectionView:
+    """Overlay Slice 3.3 Architecture Intelligence status/limitations; confidence is canonical."""
+
+    if intelligence is None:
+        return section
+    if section.head != AssessmentHead.ARCHITECTURE_INTELLIGENCE.value:
+        return section
+    placeholder = None
+    if intelligence.status in {"disabled", "not_requested"}:
+        placeholder = "Architecture analysis was not enabled for this assessment."
+    elif intelligence.status in {"not_applicable", "failed"}:
+        placeholder = "Architecture assessment is not available for this repository."
+    elif intelligence.finding_count == 0 and intelligence.status == "insufficient_evidence":
+        placeholder = "Architecture coverage was partial; conclusions could not be established safely."
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_technical_debt_intelligence_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.4 Technical Debt Intelligence status/confidence/limitations."""
+    """Overlay Technical Debt status/limitations; confidence is canonical."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.TECHNICAL_DEBT_INTELLIGENCE.value:
         return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
-    )
     placeholder = None
     if intelligence.status in {"disabled", "not_requested"}:
         placeholder = "Technical debt analysis was not enabled for this assessment."
@@ -1081,46 +1230,19 @@ def _enrich_technical_debt_intelligence_head(
             "Technical debt coverage was partial; conclusions could not be "
             "established safely."
         )
-    return section.model_copy(
-        update={
-            "status": status,
-            "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
-            "limitations": limitations,
-            "pack_content_available": True,
-            "placeholder_message": placeholder,
-            "findings_count": max(section.findings_count, intelligence.finding_count),
-            "recommendations_count": max(
-                section.recommendations_count, intelligence.recommendation_count
-            ),
-        }
-    )
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_dependency_intelligence_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.5 Dependency Intelligence status/confidence/limitations."""
+    """Overlay Dependency status/limitations; confidence is canonical."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.DEPENDENCY_INTELLIGENCE.value:
         return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
-    )
     placeholder = None
     if intelligence.status in {"disabled", "not_requested"}:
         placeholder = "Dependency analysis was not enabled for this assessment."
@@ -1131,46 +1253,19 @@ def _enrich_dependency_intelligence_head(
             "Dependency coverage was partial; conclusions could not be "
             "established safely."
         )
-    return section.model_copy(
-        update={
-            "status": status,
-            "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
-            "limitations": limitations,
-            "pack_content_available": True,
-            "placeholder_message": placeholder,
-            "findings_count": max(section.findings_count, intelligence.finding_count),
-            "recommendations_count": max(
-                section.recommendations_count, intelligence.recommendation_count
-            ),
-        }
-    )
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_security_intelligence_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.6 Security Intelligence status/confidence/limitations."""
+    """Overlay Security status/limitations; confidence is canonical."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.SECURITY_INTELLIGENCE.value:
         return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
-    )
     placeholder = None
     if intelligence.status in {"disabled", "not_requested"}:
         placeholder = "Security analysis was not enabled for this assessment."
@@ -1181,46 +1276,19 @@ def _enrich_security_intelligence_head(
             "Security coverage was partial; conclusions could not be "
             "established safely."
         )
-    return section.model_copy(
-        update={
-            "status": status,
-            "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
-            "limitations": limitations,
-            "pack_content_available": True,
-            "placeholder_message": placeholder,
-            "findings_count": max(section.findings_count, intelligence.finding_count),
-            "recommendations_count": max(
-                section.recommendations_count, intelligence.recommendation_count
-            ),
-        }
-    )
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_cloud_readiness_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.7 Cloud Readiness Intelligence status/confidence/limitations."""
+    """Overlay Cloud Readiness status/limitations; confidence is canonical."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.CLOUD_READINESS.value:
         return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
-    )
     placeholder = None
     if intelligence.status in {"disabled", "not_requested"}:
         placeholder = "Cloud analysis was not enabled for this assessment."
@@ -1231,46 +1299,19 @@ def _enrich_cloud_readiness_head(
             "Cloud coverage was partial; conclusions could not be "
             "established safely."
         )
-    return section.model_copy(
-        update={
-            "status": status,
-            "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
-            "limitations": limitations,
-            "pack_content_available": True,
-            "placeholder_message": placeholder,
-            "findings_count": max(section.findings_count, intelligence.finding_count),
-            "recommendations_count": max(
-                section.recommendations_count, intelligence.recommendation_count
-            ),
-        }
-    )
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_ai_readiness_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.8 AI Readiness Intelligence status/confidence/limitations."""
+    """Overlay AI Readiness status/limitations; confidence is canonical."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.AI_READINESS.value:
         return section
-    status_map = {
-        "succeeded": "assessed",
-        "partially_succeeded": "partially_assessed",
-        "insufficient_evidence": "partially_assessed",
-        "disabled": "not_enabled",
-        "not_applicable": "not_available",
-        "failed": "not_available",
-        "not_requested": "not_available",
-    }
-    status = status_map.get(intelligence.status, section.status)
-    limitations = tuple(
-        dict.fromkeys((*section.limitations, *intelligence.limitations))
-    )
     placeholder = None
     if intelligence.status in {"disabled", "not_requested"}:
         placeholder = "AI readiness analysis was not enabled for this assessment."
@@ -1281,34 +1322,19 @@ def _enrich_ai_readiness_head(
             "AI readiness coverage was partial; conclusions could not be "
             "established safely."
         )
-    return section.model_copy(
-        update={
-            "status": status,
-            "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
-            "limitations": limitations,
-            "pack_content_available": True,
-            "placeholder_message": placeholder,
-            "findings_count": max(section.findings_count, intelligence.finding_count),
-            "recommendations_count": max(
-                section.recommendations_count, intelligence.recommendation_count
-            ),
-        }
-    )
+    return _finalize_pack_head(section, intelligence, placeholder=placeholder)
 
 
 def _enrich_modernization_assessment_head(
     section: AssessmentHeadSectionView,
     intelligence,
 ) -> AssessmentHeadSectionView:
-    """Overlay Slice 3.9 Modernization Assessment Intelligence status/limitations."""
+    """Overlay Modernization status/limitations; confidence recomputed later."""
 
     if intelligence is None:
         return section
     if section.head != AssessmentHead.MODERNIZATION_ASSESSMENT.value:
         return section
-    # Drop the Slice 3.1 placeholder limitation once synthesis is present.
     retained = tuple(
         note
         for note in section.limitations
@@ -1322,15 +1348,130 @@ def _enrich_modernization_assessment_head(
         update={
             "status": intelligence.status,
             "status_label": intelligence.status_label,
-            "confidence": intelligence.confidence,
-            "confidence_label": intelligence.confidence_label,
             "limitations": limitations,
             "pack_content_available": True,
             "placeholder_message": placeholder,
-            # Keep head-local entity counts only — synthesis supporting_* totals
-            # belong on the intelligence pack overview, not this head's counts.
         }
     )
+
+
+def _apply_modernization_head_confidence(
+    sections: tuple[AssessmentHeadSectionView, ...],
+) -> tuple[AssessmentHeadSectionView, ...]:
+    """Bound modernization confidence by contributing assessment heads."""
+
+    from codestrata.application.assessment_heads.confidence import (
+        apply_canonical_head_confidence,
+    )
+
+    contributing = tuple(
+        item.confidence
+        for item in sections
+        if item.head != AssessmentHead.MODERNIZATION_ASSESSMENT.value
+        and item.status not in {"not_enabled", "not_available"}
+    )
+    out: list[AssessmentHeadSectionView] = []
+    for section in sections:
+        if section.head != AssessmentHead.MODERNIZATION_ASSESSMENT.value:
+            out.append(section)
+            continue
+        out.append(
+            apply_canonical_head_confidence(
+                section,
+                coverage_state=(
+                    "partial"
+                    if section.status == "partially_assessed"
+                    else "unavailable"
+                    if section.status == "not_available"
+                    else "complete"
+                ),
+                contributing_head_levels=contributing,
+                assessment_coverage=section.assessment_coverage,
+            )
+        )
+    return tuple(out)
+
+
+def _attach_assessment_coverage(
+    sections: tuple[AssessmentHeadSectionView, ...],
+    *,
+    report_input,
+    technologies_present: bool,
+    assessed_packs,
+    not_assessed_packs,
+) -> tuple[AssessmentHeadSectionView, ...]:
+    """Attach canonical AssessmentCoverage and refresh head confidence from it."""
+
+    from codestrata.application.assessment_heads.confidence import (
+        apply_canonical_head_confidence,
+    )
+    from codestrata.application.assessment_heads.coverage import (
+        build_assessment_coverage_map,
+        derive_assessment_coverage,
+    )
+    from codestrata.domain.assessment_heads.assessment_coverage import (
+        AssessmentCoverage,
+    )
+
+    def _dump(section) -> dict | None:
+        if section is None:
+            return None
+        if hasattr(section, "model_dump"):
+            return section.model_dump(mode="json")
+        if isinstance(section, dict):
+            return section
+        return None
+
+    pack_sections = {
+        "architecture": _dump(report_input.architecture_report),
+        "technical_debt": _dump(report_input.technical_debt_report),
+        "dependency": _dump(report_input.dependency_report),
+        "security": _dump(report_input.security_report),
+        "testing": _dump(report_input.testing_report),
+        "cloud": _dump(report_input.cloud_report),
+        "ai_readiness": _dump(report_input.ai_readiness_report),
+        "performance": _dump(getattr(report_input, "performance_report", None)),
+        "roadmap": _dump(report_input.roadmap_report),
+    }
+    activation = {
+        "assessed_packs": tuple(assessed_packs or ()),
+        "not_assessed_packs": tuple(not_assessed_packs or ()),
+    }
+    coverage_map = build_assessment_coverage_map(
+        pack_sections=pack_sections,
+        technologies_present=technologies_present,
+        activation=activation,
+    )
+    out: list[AssessmentHeadSectionView] = []
+    for section in sections:
+        payload = coverage_map.get(section.head)
+        if payload is None:
+            coverage = derive_assessment_coverage(
+                head_id=section.head,
+                activated=section.status not in {"not_enabled", "not_available"},
+                pack_status=(
+                    "disabled"
+                    if section.status == "not_enabled"
+                    else "failed"
+                    if section.status == "not_available"
+                    else "succeeded"
+                    if section.status == "assessed"
+                    else "partially_succeeded"
+                    if section.status == "partially_assessed"
+                    else None
+                ),
+            )
+            payload = coverage.model_dump(mode="json") if isinstance(coverage, AssessmentCoverage) else None
+        updated = section.model_copy(update={"assessment_coverage": payload})
+        out.append(
+            apply_canonical_head_confidence(
+                updated,
+                assessment_coverage=payload,
+            )
+        )
+    # Re-bound modernization after contributor confidence refresh.
+    return _apply_modernization_head_confidence(tuple(out))
+
 
 
 def _count_sorted(
@@ -1497,6 +1638,81 @@ def _test_files_label(
     if has_tests is False:
         return "Not detected"
     return "Unknown"
+
+
+def _finding_confidence_level(item: CustomerFinding) -> str | None:
+    confidence = getattr(item, "finding_confidence", None)
+    if confidence is None:
+        return None
+    level = getattr(confidence, "level", None)
+    if level is None and isinstance(confidence, dict):
+        level = confidence.get("level")
+    if level is None:
+        return None
+    return str(getattr(level, "value", level))
+
+
+def _recommendation_confidence_level(item: CustomerRecommendation) -> str | None:
+    confidence = getattr(item, "recommendation_confidence", None)
+    if confidence is None:
+        return None
+    level = getattr(confidence, "level", None)
+    if level is None and isinstance(confidence, dict):
+        level = confidence.get("level")
+    if level is None:
+        return None
+    return str(getattr(level, "value", level))
+
+
+def _priority_basis_labels(item: CustomerRecommendation) -> tuple[str, ...]:
+    assessment = getattr(item, "priority_assessment", None)
+    if assessment is None:
+        return ()
+    basis = getattr(assessment, "basis", None)
+    summary = getattr(assessment, "component_summary", None)
+    if basis is None and isinstance(assessment, dict):
+        basis = assessment.get("basis")
+        summary = assessment.get("component_summary")
+    if not basis:
+        return ()
+    highest = None
+    if summary is not None:
+        highest = getattr(summary, "highest_finding_severity", None)
+        if highest is None and isinstance(summary, dict):
+            highest = summary.get("highest_finding_severity")
+    severity_label = "Supported Finding severity"
+    if highest:
+        severity_label = f"{str(highest).replace('_', ' ').title()}-severity supported Finding"
+
+    labels_by_key = {
+        "calibrated_finding_severity": severity_label,
+        "recommendation_confidence": "Recommendation confidence",
+        "direct_security_exposure": "Direct production configuration remediation",
+        "deterministic_scope": "Broad deterministic scope",
+        "correlated_supporting_findings": "Correlated supporting Findings",
+        "evidence_completeness": "Evidence completeness constraint",
+        "static_only_limitation": "Static runtime effect not validated",
+        "legacy_recommendation": "Legacy Recommendation",
+        "confidence_cap": "Confidence-bounded urgency",
+        "context_cap": "Non-production context",
+    }
+    labels: list[str] = []
+    for item_basis in basis:
+        key = str(getattr(item_basis, "value", item_basis)).strip().lower()
+        label = labels_by_key.get(key)
+        if label and label not in labels:
+            labels.append(label)
+    return tuple(labels[:4])
+
+
+def _rule_confidence_level(item: CustomerFinding) -> str | None:
+    raw = item.metadata.get("rule_confidence_level")
+    if raw:
+        return str(raw)
+    block = item.metadata.get("rule_confidence")
+    if isinstance(block, dict) and block.get("level"):
+        return str(block["level"])
+    return None
 
 
 def _safe_text(value: str) -> str:

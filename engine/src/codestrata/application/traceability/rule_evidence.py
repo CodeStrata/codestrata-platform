@@ -6,6 +6,10 @@ from codestrata.domain.evidence.language.identifiers import stable_evidence_id
 from codestrata.domain.rules.enums import RuleEvidenceKind
 from codestrata.domain.rules.evidence import RuleEvidence
 from codestrata.domain.rules.results import RuleMatch
+from codestrata.application.traceability.evidence_confidence import (
+    apply_parent_confidence_bounds,
+    derive_evidence_confidence_for_rule_evidence,
+)
 from codestrata.domain.traceability import (
     EvidenceKind,
     EvidenceLocation,
@@ -89,11 +93,25 @@ def evidence_ref_from_rule_evidence(
     provider_version = attrs.get("provider_version") or None
     analyzer_id = attrs.get("analyzer_id") or None
     analyzer_version = attrs.get("analyzer_version") or None
+    kind = _KIND_MAP.get(item.kind, EvidenceKind.OTHER)
+    evidence_confidence = derive_evidence_confidence_for_rule_evidence(
+        item,
+        kind=kind,
+        production_mode=production_mode,
+        location=location,
+        snippet=snippet,
+        has_measurement=measurement is not None,
+        has_graph=graph_ref is not None,
+        provider_id=provider_id,
+        provider_version=provider_version,
+        parent_evidence_ids=parent_ids,
+        envelope_limitations=tuple(limitations),
+    )
 
     try:
         return EvidenceRef(
             evidence_id=evidence_id,
-            kind=_KIND_MAP.get(item.kind, EvidenceKind.OTHER),
+            kind=kind,
             production_mode=production_mode,
             pack_id=pack_id or attrs.get("pack_id") or None,
             provider_id=provider_id,
@@ -111,6 +129,7 @@ def evidence_ref_from_rule_evidence(
             limitations=tuple(limitations),
             source_artifact=attrs.get("source_artifact") or None,
             confidence=attrs.get("confidence") or None,
+            evidence_confidence=evidence_confidence,
         )
     except (TraceabilityValidationError, ValueError):
         return None
@@ -159,7 +178,8 @@ def evidence_refs_from_rule_match(
             continue
         refs.append(mapped)
 
-    return tuple(refs), tuple(sorted(set(limitations))), source_count
+    bounded = apply_parent_confidence_bounds(tuple(refs))
+    return bounded, tuple(sorted(set(limitations))), source_count
 
 
 def _pack_id_from_match(match: RuleMatch) -> str | None:

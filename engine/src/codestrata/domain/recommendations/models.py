@@ -16,6 +16,10 @@ from codestrata.domain.recommendations.enums import (
     RecommendationType,
 )
 from codestrata.domain.recommendations.ids import build_recommendation_id
+from codestrata.domain.recommendations.priority import RecommendationPriorityAssessment
+from codestrata.domain.recommendations.recommendation_confidence import (
+    RecommendationConfidence,
+)
 from codestrata.domain.traceability import EvidenceCompleteness, TraceabilityValidationError
 from codestrata.domain.traceability.validators import normalize_limitations, sorted_unique_ids
 
@@ -91,6 +95,16 @@ class Recommendation(BaseModel):
     recommendation_type: RecommendationType = RecommendationType.LEGACY
     evidence_completeness: EvidenceCompleteness = EvidenceCompleteness.LEGACY
     limitations: tuple[str, ...] = ()
+    # Epic 5 Slice 5.5 — Recommendation Confidence (not priority; not severity).
+    recommendation_confidence: RecommendationConfidence = Field(
+        default_factory=lambda: RecommendationConfidence.unavailable(
+            limitations=(
+                "Legacy Recommendation payload omitted recommendation_confidence.",
+            ),
+        )
+    )
+    # Epic 5 Slice 5.14 — calibrated Recommendation priority (not severity).
+    priority_assessment: RecommendationPriorityAssessment | None = None
     affected_node_ids: tuple[NodeId, ...] = ()
     evidence: tuple[RecommendationEvidence, ...] = ()
     actions: tuple[RecommendationAction, ...] = ()
@@ -137,6 +151,17 @@ class Recommendation(BaseModel):
         if value is None:
             return None
         return optional_nonblank(str(value), label="primary_finding_id")
+
+    @field_validator("recommendation_confidence", mode="before")
+    @classmethod
+    def normalize_recommendation_confidence(cls, value: object) -> object:
+        if value is None:
+            return RecommendationConfidence.unavailable(
+                limitations=(
+                    "Legacy Recommendation payload omitted recommendation_confidence.",
+                ),
+            )
+        return value
 
     @field_validator("actions", mode="after")
     @classmethod
@@ -209,12 +234,15 @@ class Recommendation(BaseModel):
         recommendation_type: RecommendationType | None = None,
         evidence_completeness: EvidenceCompleteness | None = None,
         limitations: Sequence[str] = (),
+        recommendation_confidence: RecommendationConfidence | None = None,
     ) -> Recommendation:
         """Construct a recommendation with a deterministic identity.
 
         Traceability fields are additive. Recommendation ID continues to use
         ``provider_id`` + ``related_finding_ids`` + ``subject_keys`` only
-        (EvidenceRef / completeness / limitations are never identity inputs).
+        (EvidenceRef / completeness / limitations / confidence are never
+        identity inputs). Recommendation Confidence is derived after supporting
+        Findings resolve; defaults to Unavailable until then.
         """
 
         # Dual-write compatibility: supporting and related stay identical.
@@ -258,6 +286,12 @@ class Recommendation(BaseModel):
             recommendation_type=recommendation_type,
             evidence_completeness=evidence_completeness,
             limitations=tuple(limitations),
+            recommendation_confidence=recommendation_confidence
+            or RecommendationConfidence.unavailable(
+                limitations=(
+                    "Recommendation Confidence pending supporting Finding resolution.",
+                ),
+            ),
             affected_node_ids=tuple(affected_node_ids),
             evidence=tuple(evidence),
             actions=tuple(actions),

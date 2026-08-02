@@ -135,27 +135,32 @@
       {
         "rule_id": "dependency.unresolved-version",
         "path": "pom.xml",
-        "dependency_pattern": "missing-prop-lib"
+        "dependency_pattern": "missing-prop-lib",
+        "severity": "medium"
       },
       {
         "rule_id": "dependency.mutable-version",
         "path": "pom.xml",
-        "dependency_pattern": "snapshot-lib"
+        "dependency_pattern": "snapshot-lib",
+        "severity": "medium"
       },
       {
         "rule_id": "dependency.unbounded-requirement",
         "path": "requirements.txt",
-        "dependency_name": "unbounded-pkg"
+        "dependency_name": "unbounded-pkg",
+        "severity": "medium"
       },
       {
         "rule_id": "dependency.conflicting-exact-versions",
         "path": "pom.xml",
-        "dependency_pattern": "conflict-lib"
+        "dependency_pattern": "conflict-lib",
+        "severity": "high"
       },
       {
         "rule_id": "dependency.duplicate-declaration",
         "path": "pom.xml",
-        "dependency_pattern": "dup-lib"
+        "dependency_pattern": "dup-lib",
+        "severity": "low"
       }
     ],
     "forbidden_findings": [

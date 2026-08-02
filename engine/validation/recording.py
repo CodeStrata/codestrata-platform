@@ -68,6 +68,12 @@ class RepositoryValidationRecord(BaseModel):
     comparison: dict[str, Any] = Field(default_factory=dict)
     pack_precision: tuple[PackPrecisionRecord, ...] = ()
     mismatches: tuple[ComparisonMismatch, ...] = ()
+    # Additive Slice 5.9 — older records omit these and remain readable.
+    false_positives: tuple[dict[str, Any], ...] = ()
+    false_positive_summary: dict[str, int] = Field(default_factory=dict)
+    # Additive Slice 5.10
+    false_negatives: tuple[dict[str, Any], ...] = ()
+    false_negative_summary: dict[str, int] = Field(default_factory=dict)
     error_message: str | None = None
     skip_reason: str | None = None
     record_dir: str | None = None
@@ -204,8 +210,36 @@ def build_repository_validation_record(
     skip_reason: str | None = None,
     recorded_at: str | None = None,
     record_dir: str | None = None,
+    records_root: Path | None = None,
 ) -> RepositoryValidationRecord:
     """Assemble the canonical record payload (does not write)."""
+
+    from codestrata.domain.quality_metrics.false_negatives import (
+        FalseNegativeRecord,
+        summarize_false_negatives,
+    )
+    from codestrata.domain.quality_metrics.false_positives import (
+        FalsePositiveRecord,
+        summarize_false_positives,
+    )
+    from validation.false_negatives.adjudication import (
+        apply_adjudication as apply_fn_adjudication,
+    )
+    from validation.false_negatives.adjudication import (
+        load_adjudications as load_fn_adjudications,
+    )
+    from validation.false_negatives.tracking import (
+        apply_run_history as apply_fn_run_history,
+    )
+    from validation.false_negatives.tracking import (
+        load_historical_false_negatives,
+    )
+    from validation.false_positives.adjudication import apply_adjudication, load_adjudications
+    from validation.false_positives.tracking import (
+        apply_run_history,
+        load_historical_false_positives,
+    )
+    from validation.paths import RESULTS_DIR
 
     expected_payload = expected_for_recording(expected) if expected is not None else {}
     actual_payload = actual_for_recording(actual) if actual is not None else {}
@@ -223,6 +257,97 @@ def build_repository_validation_record(
     )
     pack_precision = outcome.pack_precision if outcome is not None else ()
     mismatches = outcome.mismatches if outcome is not None else ()
+    effective_root = records_root or RESULTS_DIR
+
+    def _normalize_run_ids(record: Any) -> Any:
+        return record.model_copy(
+            update={
+                "first_seen_run_id": run_id
+                if record.first_seen_run_id in {"pending", run_id}
+                else min(record.first_seen_run_id, run_id),
+                "last_seen_run_id": run_id,
+                "observation_run_ids": tuple(
+                    sorted(
+                        {
+                            rid
+                            for rid in (*record.observation_run_ids, run_id)
+                            if rid != "pending"
+                        }
+                    )
+                ),
+            }
+        )
+
+    current_fps: list[FalsePositiveRecord] = []
+    current_fns: list[FalseNegativeRecord] = []
+    if outcome is not None:
+        for item in outcome.false_positives:
+            current_fps.append(_normalize_run_ids(FalsePositiveRecord.model_validate(item)))
+        for item in outcome.false_negatives:
+            current_fns.append(_normalize_run_ids(FalseNegativeRecord.model_validate(item)))
+
+    fp_adjudications = load_adjudications()
+    fp_adjudicated = tuple(
+        apply_adjudication(
+            item,
+            fp_adjudications.get(item.false_positive_id),
+            resolved_run_id=run_id if verdict == ValidationVerdict.PASS else None,
+        )
+        for item in current_fps
+    )
+    fp_historical = load_historical_false_positives(
+        repository_id,
+        records_root=effective_root,
+        exclude_run_id=run_id,
+    )
+    fp_historical = tuple(
+        apply_adjudication(item, fp_adjudications.get(item.false_positive_id))
+        for item in fp_historical
+    )
+    fp_merged = apply_run_history(
+        fp_adjudicated,
+        fp_historical,
+        current_run_id=run_id,
+        verdict=verdict,
+    )
+    fp_summary = summarize_false_positives(fp_merged).model_dump(mode="json")
+    fp_payload = tuple(item.canonical_dict() for item in fp_merged)
+
+    fn_adjudications = load_fn_adjudications()
+    fn_adjudicated = tuple(
+        apply_fn_adjudication(
+            item,
+            fn_adjudications.get(item.false_negative_id),
+            resolved_run_id=run_id if verdict == ValidationVerdict.PASS else None,
+        )
+        for item in current_fns
+    )
+    fn_historical = load_historical_false_negatives(
+        repository_id,
+        records_root=effective_root,
+        exclude_run_id=run_id,
+    )
+    fn_historical = tuple(
+        apply_fn_adjudication(item, fn_adjudications.get(item.false_negative_id))
+        for item in fn_historical
+    )
+    fn_merged = apply_fn_run_history(
+        fn_adjudicated,
+        fn_historical,
+        current_run_id=run_id,
+        verdict=verdict,
+    )
+    fn_summary = summarize_false_negatives(fn_merged).model_dump(mode="json")
+    fn_payload = tuple(item.canonical_dict() for item in fn_merged)
+
+    comparison_payload = {
+        **comparison_payload,
+        "false_positives": list(fp_payload),
+        "false_positive_summary": fp_summary,
+        "false_negatives": list(fn_payload),
+        "false_negative_summary": fn_summary,
+    }
+
     return RepositoryValidationRecord(
         repository_id=repository_id,
         run_id=run_id,
@@ -245,6 +370,10 @@ def build_repository_validation_record(
         comparison=comparison_payload,
         pack_precision=pack_precision,
         mismatches=mismatches,
+        false_positives=fp_payload,
+        false_positive_summary=fp_summary,
+        false_negatives=fn_payload,
+        false_negative_summary=fn_summary,
         error_message=error_message,
         skip_reason=skip_reason,
         record_dir=record_dir,

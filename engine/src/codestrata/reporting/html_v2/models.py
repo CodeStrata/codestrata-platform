@@ -180,13 +180,21 @@ class EvidenceRefView(BaseModel):
     graph_cycle_id: str | None = None
     measurement_scope: str | None = None
     limitations: tuple[str, ...] = ()
+    evidence_confidence_level: str | None = None
+    evidence_confidence_limitations: tuple[str, ...] = ()
 
     @field_validator("evidence_id", mode="before")
     @classmethod
     def normalize_required(cls, value: object) -> str:
         return require_nonblank(str(value), label="evidence_id")
 
-    @field_validator("limitations", "graph_node_ids", "graph_edge_ids", mode="before")
+    @field_validator(
+        "limitations",
+        "graph_node_ids",
+        "graph_edge_ids",
+        "evidence_confidence_limitations",
+        mode="before",
+    )
     @classmethod
     def normalize_sequences(cls, value: object) -> tuple[Any, ...]:
         return as_tuple(value)
@@ -209,11 +217,19 @@ class FindingView(BaseModel):
     synthesized_from_evidence_ids: tuple[str, ...] = ()
     evidence_completeness: str = "legacy"
     limitations: tuple[str, ...] = ()
+    finding_confidence_level: str | None = None
+    rule_confidence_level: str | None = None
     # Reverse links resolved at build time (titles for customer labels).
     driven_recommendation_ids: tuple[str, ...] = ()
     driven_recommendation_titles: tuple[str, ...] = ()
     influenced_priority_action_ids: tuple[str, ...] = ()
     influenced_priority_action_titles: tuple[str, ...] = ()
+    # Epic 5 Slice 5.12 — correlated Findings (not duplicates).
+    correlated_finding_ids: tuple[str, ...] = ()
+    correlated_finding_titles: tuple[str, ...] = ()
+    correlation_relationship_labels: tuple[str, ...] = ()
+    # Epic 5 Slice 5.13 — customer-safe severity basis labels.
+    severity_basis_labels: tuple[str, ...] = ()
 
     @field_validator(
         "finding_id",
@@ -238,6 +254,10 @@ class FindingView(BaseModel):
         "driven_recommendation_titles",
         "influenced_priority_action_ids",
         "influenced_priority_action_titles",
+        "correlated_finding_ids",
+        "correlated_finding_titles",
+        "correlation_relationship_labels",
+        "severity_basis_labels",
         mode="before",
     )
     @classmethod
@@ -283,6 +303,8 @@ class RecommendationView(BaseModel):
     recommendation_type: str = "legacy"
     evidence_completeness: str = "legacy"
     limitations: tuple[str, ...] = ()
+    recommendation_confidence_level: str | None = None
+    priority_basis_labels: tuple[str, ...] = ()
     supporting_recommendation_ids: tuple[str, ...] = ()
     supporting_recommendation_titles: tuple[str, ...] = ()
     primary_recommendation_id: str | None = None
@@ -309,6 +331,7 @@ class RecommendationView(BaseModel):
         "evidence",
         "dependencies",
         "limitations",
+        "priority_basis_labels",
         "supporting_recommendation_ids",
         "supporting_recommendation_titles",
         mode="before",
@@ -508,6 +531,8 @@ class AssessmentHeadSectionView(BaseModel):
     evidence_state: str = "unavailable"
     confidence: str = "unavailable"
     confidence_label: str = "Confidence unavailable"
+    assessment_head_confidence: dict[str, Any] | None = None
+    assessment_coverage: dict[str, Any] | None = None
     limitations: tuple[str, ...] = ()
     findings: tuple[FindingView, ...] = ()
     recommendations: tuple[RecommendationView, ...] = ()

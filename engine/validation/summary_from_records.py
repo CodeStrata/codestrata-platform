@@ -30,6 +30,8 @@ from validation.summary_artifact import (
     SUMMARY_SCHEMA_VERSION,
     SUPPORTED_RECORD_SCHEMA_VERSION,
     ExpectationTotals,
+    FalseNegativeSummaryAggregate,
+    FalsePositiveSummaryAggregate,
     MismatchSummaryEntry,
     OverallVerdict,
     PackAggregateSummary,
@@ -126,6 +128,54 @@ def validate_repository_record(record: RepositoryValidationRecord) -> None:
             if abs(float(pack.recall) - expected_r) > 1e-9:
                 raise RecordValidationError(
                     f"{record.repository_id}: pack {pack.pack} recall inconsistent"
+                )
+        if pack.precision_metric is not None:
+            from codestrata.domain.quality_metrics.precision import PrecisionMetric
+
+            try:
+                metric = PrecisionMetric.model_validate(pack.precision_metric)
+            except Exception as exc:  # noqa: BLE001
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} invalid precision_metric"
+                ) from exc
+            if metric.true_positive_count != pack.true_positives:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "precision_metric TP mismatch"
+                )
+            if metric.false_positive_count != pack.false_positives:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "precision_metric FP mismatch"
+                )
+            if pack.precision_metric_id and pack.precision_metric_id != metric.metric_id:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "precision_metric_id mismatch"
+                )
+        if pack.recall_metric is not None:
+            from codestrata.domain.quality_metrics.recall import RecallMetric
+
+            try:
+                recall_metric = RecallMetric.model_validate(pack.recall_metric)
+            except Exception as exc:  # noqa: BLE001
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} invalid recall_metric"
+                ) from exc
+            if recall_metric.true_positive_count != pack.true_positives:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "recall_metric TP mismatch"
+                )
+            if recall_metric.false_negative_count != pack.false_negatives:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "recall_metric FN mismatch"
+                )
+            if pack.recall_metric_id and pack.recall_metric_id != recall_metric.metric_id:
+                raise RecordValidationError(
+                    f"{record.repository_id}: pack {pack.pack} "
+                    "recall_metric_id mismatch"
                 )
 
     if record.record_dir:
@@ -295,10 +345,126 @@ def _artifact_names(record: RepositoryValidationRecord) -> tuple[str, ...]:
     return ()
 
 
+def aggregate_false_positive_tracking(
+    records: tuple[RepositoryValidationRecord, ...],
+) -> FalsePositiveSummaryAggregate:
+    """Aggregate FP tracking across repository records without changing Precision."""
+
+    from codestrata.domain.quality_metrics.false_positives import (
+        FalsePositiveRecord,
+        merge_false_positive_records,
+        summarize_false_positives,
+    )
+
+    collected: list[FalsePositiveRecord] = []
+    for record in records:
+        for item in record.false_positives:
+            try:
+                collected.append(FalsePositiveRecord.model_validate(item))
+            except Exception:  # noqa: BLE001 — skip malformed historical rows
+                continue
+    merged = merge_false_positive_records(collected)
+    counts = summarize_false_positives(merged)
+    by_pack: dict[str, int] = {}
+    by_rule: dict[str, int] = {}
+    by_root: dict[str, int] = {}
+    repos: set[str] = set()
+    for item in merged:
+        pack = item.assessment_area.split(":", 1)[0]
+        by_pack[pack] = by_pack.get(pack, 0) + 1
+        if item.rule_id:
+            by_rule[item.rule_id] = by_rule.get(item.rule_id, 0) + 1
+        if item.root_cause is not None:
+            key = item.root_cause.value
+            by_root[key] = by_root.get(key, 0) + 1
+        repos.add(item.repository_id)
+    return FalsePositiveSummaryAggregate(
+        suspected=counts.suspected,
+        confirmed=counts.confirmed,
+        ambiguous=counts.ambiguous,
+        expectation_errors=counts.expectation_errors,
+        unsupported_capability=counts.unsupported_capability,
+        rejected=counts.rejected,
+        fixed=counts.fixed,
+        open=counts.open,
+        investigating=counts.investigating,
+        total=counts.total,
+        by_pack=dict(sorted(by_pack.items())),
+        by_rule=dict(sorted(by_rule.items())),
+        by_root_cause=dict(sorted(by_root.items())),
+        affected_repository_ids=tuple(sorted(repos)),
+        records=tuple(item.canonical_dict() for item in merged),
+    )
+
+
+def aggregate_false_negative_tracking(
+    records: tuple[RepositoryValidationRecord, ...],
+) -> FalseNegativeSummaryAggregate:
+    """Aggregate FN tracking across repository records without changing Recall."""
+
+    from codestrata.domain.quality_metrics.false_negatives import (
+        FalseNegativeRecord,
+        merge_false_negative_records,
+        summarize_false_negatives,
+    )
+
+    collected: list[FalseNegativeRecord] = []
+    for record in records:
+        for item in getattr(record, "false_negatives", ()) or ():
+            try:
+                collected.append(FalseNegativeRecord.model_validate(item))
+            except Exception:  # noqa: BLE001 — skip malformed historical rows
+                continue
+    merged = merge_false_negative_records(collected)
+    counts = summarize_false_negatives(merged)
+    by_pack: dict[str, int] = {}
+    by_rule: dict[str, int] = {}
+    by_root: dict[str, int] = {}
+    repos: set[str] = set()
+    for item in merged:
+        pack = item.assessment_area.split(":", 1)[0]
+        by_pack[pack] = by_pack.get(pack, 0) + 1
+        rule_key = item.expected_rule_id or item.expected_signal_id or item.expected_entity_id
+        if rule_key:
+            by_rule[rule_key] = by_rule.get(rule_key, 0) + 1
+        if item.root_cause is not None:
+            key = item.root_cause.value
+            by_root[key] = by_root.get(key, 0) + 1
+        repos.add(item.repository_id)
+    return FalseNegativeSummaryAggregate(
+        suspected=counts.suspected,
+        confirmed=counts.confirmed,
+        ambiguous=counts.ambiguous,
+        expectation_errors=counts.expectation_errors,
+        unsupported_capability=counts.unsupported_capability,
+        insufficient_evidence=counts.insufficient_evidence,
+        rejected=counts.rejected,
+        fixed=counts.fixed,
+        open=counts.open,
+        investigating=counts.investigating,
+        total=counts.total,
+        by_pack=dict(sorted(by_pack.items())),
+        by_rule=dict(sorted(by_rule.items())),
+        by_root_cause=dict(sorted(by_root.items())),
+        affected_repository_ids=tuple(sorted(repos)),
+        records=tuple(item.canonical_dict() for item in merged),
+    )
+
+
 def aggregate_pack_precision(
     records: tuple[RepositoryValidationRecord, ...],
 ) -> tuple[PackAggregateSummary, ...]:
-    """Aggregate pack precision using sum(TP/FP/FN), never averaging percentages."""
+    """Aggregate pack precision/recall using summed counts, never averaging percentages."""
+
+    from codestrata.domain.quality_metrics.common import (
+        QualityMetricSample,
+        QualityMetricScope,
+        QualityMetricSource,
+        resolve_quality_metric_source,
+        source_from_matrix_label,
+    )
+    from codestrata.domain.quality_metrics.precision import aggregate_precision_from_counts
+    from codestrata.domain.quality_metrics.recall import aggregate_recall_from_counts
 
     summaries: list[PackAggregateSummary] = []
     for pack in CANONICAL_PACKS:
@@ -306,9 +472,21 @@ def aggregate_pack_precision(
         evaluated = passed = failed = unavailable = 0
         source_ids: list[str] = []
         limitations: list[str] = []
+        sources: list[QualityMetricSource] = []
+        controlled = 0
+        real_world = 0
+        precision_positive_repos = 0
+        expected_positive_repos = 0
         for record in records:
             pack_map = {item.pack: item for item in record.pack_precision}
             item = pack_map.get(pack)
+            if record.verdict in {ValidationVerdict.SKIPPED, ValidationVerdict.ERROR}:
+                if item is None:
+                    limitations.append(
+                        f"{record.repository_id}: excluded from precision/recall "
+                        f"({record.verdict.value.lower()})"
+                    )
+                    continue
             if item is None:
                 continue
             evaluated += 1
@@ -317,6 +495,17 @@ def aggregate_pack_precision(
             fp += item.false_positives
             fn += item.false_negatives
             amb += item.ambiguous
+            if (item.true_positives + item.false_positives) > 0:
+                precision_positive_repos += 1
+            if (item.true_positives + item.false_negatives) > 0:
+                expected_positive_repos += 1
+            row = VALIDATION_MATRIX.get(record.repository_id) or {}
+            src = source_from_matrix_label(row.get("controlled_vs_real_world"))
+            sources.append(src)
+            if src is QualityMetricSource.CONTROLLED_FIXTURE:
+                controlled += 1
+            elif src is QualityMetricSource.REAL_WORLD_REPOSITORY:
+                real_world += 1
             if item.passed is True:
                 passed += 1
             elif item.passed is False:
@@ -331,13 +520,47 @@ def aggregate_pack_precision(
             if item.recall is None:
                 limitations.append(f"{record.repository_id}: recall unavailable")
 
-        precision, recall, reason = compute_precision_recall(
-            true_positives=tp,
-            false_positives=fp,
-            false_negatives=fn,
+        source = resolve_quality_metric_source(sources)
+        precision_sample = QualityMetricSample(
+            repository_count=evaluated,
+            positive_repository_count=precision_positive_repos,
+            expected_positive_repository_count=expected_positive_repos,
+            controlled_fixture_count=controlled,
+            real_world_repository_count=real_world,
+            ambiguous_count=amb,
+            false_positive_count=fp,
+            false_negative_count=fn,
         )
-        if reason:
-            limitations.append(reason)
+        recall_sample = QualityMetricSample(
+            repository_count=evaluated,
+            positive_repository_count=expected_positive_repos,
+            expected_positive_repository_count=expected_positive_repos,
+            controlled_fixture_count=controlled,
+            real_world_repository_count=real_world,
+            ambiguous_count=amb,
+            false_positive_count=fp,
+            false_negative_count=fn,
+        )
+        precision_metric = aggregate_precision_from_counts(
+            scope=QualityMetricScope.VALIDATION_SET,
+            scope_id=pack,
+            true_positive_count=tp,
+            false_positive_count=fp,
+            source=source,
+            sample=precision_sample,
+            limitations=limitations,
+        )
+        recall_metric = aggregate_recall_from_counts(
+            scope=QualityMetricScope.VALIDATION_SET,
+            scope_id=pack,
+            true_positive_count=tp,
+            false_negative_count=fn,
+            source=source,
+            sample=recall_sample,
+            limitations=limitations,
+        )
+        for note in (*precision_metric.limitations, *recall_metric.limitations):
+            limitations.append(note)
         summaries.append(
             PackAggregateSummary(
                 pack=pack,
@@ -349,10 +572,25 @@ def aggregate_pack_precision(
                 false_positives=fp,
                 false_negatives=fn,
                 ambiguous=amb,
-                precision=precision,
-                recall=recall,
+                precision=precision_metric.as_compat_float(),
+                recall=recall_metric.as_compat_float(),
                 limitations=tuple(sorted(set(limitations))),
                 source_repository_ids=tuple(sorted(set(source_ids))),
+                precision_metric=precision_metric.canonical_dict(),
+                precision_metric_id=precision_metric.metric_id,
+                precision_availability=precision_metric.availability.value,
+                precision_classification_status=(
+                    precision_metric.classification_status.value
+                ),
+                sample=precision_sample.model_dump(mode="json"),
+                precision_source=source.value,
+                recall_metric=recall_metric.canonical_dict(),
+                recall_metric_id=recall_metric.metric_id,
+                recall_availability=recall_metric.availability.value,
+                recall_classification_status=recall_metric.classification_status.value,
+                recall_sample=recall_sample.model_dump(mode="json"),
+                recall_source=source.value,
+                expected_positive_repository_count=expected_positive_repos,
             )
         )
     return tuple(summaries)
@@ -447,6 +685,8 @@ def build_summary_artifact(
     )
     pack_summaries = aggregate_pack_precision(records)
     coverage_gaps = derive_coverage_gaps(records=records, pack_summaries=pack_summaries)
+    fp_tracking = aggregate_false_positive_tracking(records)
+    fn_tracking = aggregate_false_negative_tracking(records)
 
     unavailable: list[str] = []
     for pack in pack_summaries:
@@ -462,6 +702,10 @@ def build_summary_artifact(
         "Summary is derived only from Slice 4.11 RepositoryValidationRecord artifacts.",
         "Coverage gaps are informational and are not automatic failures.",
         "Remote network SKIPPED verdicts are not treated as accuracy failures.",
+        "False-positive tracking is internal validation metadata; PrecisionMetric "
+        "continues to use pack classifier FP counts unchanged.",
+        "False-negative tracking is internal validation metadata; RecallMetric "
+        "continues to use pack classifier FN counts unchanged.",
     ]
     if scope == SummaryScope.LATEST_PER_REPOSITORY:
         limitations.append(
@@ -497,6 +741,8 @@ def build_summary_artifact(
         mismatches_by_area=dict(sorted(mismatches_by_area.items())),
         mismatches=mismatches_sorted,
         pack_precision=pack_summaries,
+        false_positive_tracking=fp_tracking,
+        false_negative_tracking=fn_tracking,
         unavailable_metrics=tuple(sorted(set(unavailable))),
         coverage_gaps=coverage_gaps,
         source_record_refs=tuple(
@@ -583,17 +829,105 @@ def render_summary_markdown(artifact: ValidationSummaryArtifact) -> str:
             "",
             "## Pack Accuracy",
             "",
-            "| Pack | Repos | TP | FP | FN | Amb | Precision | Recall |",
-            "|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Pack | TP | FP | FN | Precision | Recall | Validation scope |",
+            "|---|---:|---:|---:|---:|---:|---|",
         ]
     )
     for pack in artifact.pack_precision:
         lines.append(
-            f"| {pack.pack} | {pack.repositories_evaluated} | "
+            f"| {pack.pack} | "
             f"{pack.true_positives} | {pack.false_positives} | "
-            f"{pack.false_negatives} | {pack.ambiguous} | "
-            f"{_fmt_metric(pack.precision)} | {_fmt_metric(pack.recall)} |"
+            f"{pack.false_negatives} | "
+            f"{_fmt_precision_with_note(pack)} | {_fmt_recall_with_note(pack)} | "
+            f"{_fmt_validation_scope(pack)} |"
         )
+
+    lines.extend(
+        [
+            "",
+            "## False-Positive Tracking",
+            "",
+            "Internal validation lifecycle only. PrecisionMetric pack FP counts are unchanged.",
+            "",
+        ]
+    )
+    tracking = artifact.false_positive_tracking
+    if tracking is None or tracking.total == 0:
+        lines.append("No tracked false positives in selected records.")
+    else:
+        lines.extend(
+            [
+                (
+                    f"Suspected={tracking.suspected} Confirmed={tracking.confirmed} "
+                    f"Ambiguous={tracking.ambiguous} ExpectationErrors="
+                    f"{tracking.expectation_errors} Fixed={tracking.fixed} "
+                    f"Open={tracking.open}"
+                ),
+                "",
+                "| ID | Repository | Area | Rule/Entity | Classification | Status | Root Cause | First Seen | Last Seen |",
+                "|---|---|---|---|---|---|---|---|---|",
+            ]
+        )
+        for item in tracking.records:
+            lines.append(
+                f"| `{item.get('false_positive_id', '')}` | "
+                f"{item.get('repository_id', '')} | "
+                f"{item.get('assessment_area', '')} | "
+                f"{item.get('rule_id') or item.get('entity_id') or ''} | "
+                f"{item.get('classification', '')} | "
+                f"{item.get('status', '')} | "
+                f"{item.get('root_cause') or ''} | "
+                f"`{item.get('first_seen_run_id', '')}` | "
+                f"`{item.get('last_seen_run_id', '')}` |"
+            )
+
+    lines.extend(
+        [
+            "",
+            "## False-Negative Tracking",
+            "",
+            "Internal validation lifecycle only. RecallMetric pack FN counts are unchanged.",
+            "",
+        ]
+    )
+    fn_tracking = artifact.false_negative_tracking
+    if fn_tracking is None or fn_tracking.total == 0:
+        lines.append("No tracked false negatives in selected records.")
+    else:
+        lines.extend(
+            [
+                (
+                    f"Suspected={fn_tracking.suspected} Confirmed={fn_tracking.confirmed} "
+                    f"Ambiguous={fn_tracking.ambiguous} ExpectationErrors="
+                    f"{fn_tracking.expectation_errors} Unsupported="
+                    f"{fn_tracking.unsupported_capability} InsufficientEvidence="
+                    f"{fn_tracking.insufficient_evidence} Fixed={fn_tracking.fixed} "
+                    f"Open={fn_tracking.open}"
+                ),
+                "",
+                "| ID | Repository | Area | Expected Rule/Entity | Classification | Status | Root Cause | First Seen | Last Seen |",
+                "|---|---|---|---|---|---|---|---|---|",
+            ]
+        )
+        for item in fn_tracking.records:
+            expected_ref = (
+                item.get("expected_rule_id")
+                or item.get("expected_signal_id")
+                or item.get("expected_entity_id")
+                or item.get("expected_subject")
+                or ""
+            )
+            lines.append(
+                f"| `{item.get('false_negative_id', '')}` | "
+                f"{item.get('repository_id', '')} | "
+                f"{item.get('assessment_area', '')} | "
+                f"{expected_ref} | "
+                f"{item.get('classification', '')} | "
+                f"{item.get('status', '')} | "
+                f"{item.get('root_cause') or ''} | "
+                f"`{item.get('first_seen_run_id', '')}` | "
+                f"`{item.get('last_seen_run_id', '')}` |"
+            )
 
     lines.extend(["", "## Mismatches", ""])
     if not artifact.mismatches:
@@ -630,6 +964,76 @@ def _fmt_metric(value: float | None) -> str:
     if value is None:
         return "unavailable"
     return f"{value:.6f}".rstrip("0").rstrip(".")
+
+
+def _fmt_precision_with_note(pack: PackAggregateSummary) -> str:
+    """Render precision without claiming product-wide accuracy."""
+
+    from codestrata.domain.quality_metrics.precision import format_precision_display
+
+    if pack.precision is None:
+        return "unavailable"
+    display = format_precision_display(pack.precision)
+    return f"{display} within this validation scope"
+
+
+def _fmt_recall_with_note(pack: PackAggregateSummary) -> str:
+    """Render recall without claiming product-wide detection."""
+
+    from codestrata.domain.quality_metrics.recall import format_recall_display
+
+    if pack.recall is None:
+        return "unavailable"
+    display = format_recall_display(pack.recall)
+    return f"{display} within this authored validation scope"
+
+
+def _fmt_validation_scope(pack: PackAggregateSummary) -> str:
+    source = pack.recall_source or pack.precision_source or ""
+    sample = pack.recall_sample or pack.sample or {}
+    notes: list[str] = []
+    if source == "controlled_fixture":
+        notes.append("Controlled fixtures")
+    elif source == "real_world_repository":
+        notes.append("Real-world repositories")
+    elif source == "mixed_validation_set":
+        controlled = sample.get("controlled_fixture_count", 0)
+        real = sample.get("real_world_repository_count", 0)
+        notes.append(f"Controlled={controlled} + real-world={real}")
+    else:
+        notes.append("Expected/actual validation")
+    expected_repos = pack.expected_positive_repository_count
+    if expected_repos:
+        notes.append(f"expected-positive repos={expected_repos}")
+    else:
+        notes.append("no authored expected positives in aggregate")
+    if pack.precision is None and pack.recall is None:
+        notes.append("precision/recall unavailable")
+    elif pack.recall is None:
+        notes.append("recall unavailable")
+    elif pack.recall_classification_status == "provisional":
+        notes.append("provisional recall sample")
+    return "; ".join(notes)
+
+
+def _fmt_availability(pack: PackAggregateSummary) -> str:
+    availability = pack.precision_availability or (
+        "unavailable" if pack.precision is None else "available"
+    )
+    source = pack.precision_source or ""
+    sample = pack.sample or {}
+    notes: list[str] = [availability]
+    if source == "controlled_fixture":
+        notes.append("controlled fixtures")
+    elif source == "real_world_repository":
+        notes.append("real-world repositories")
+    elif source == "mixed_validation_set":
+        controlled = sample.get("controlled_fixture_count", 0)
+        real = sample.get("real_world_repository_count", 0)
+        notes.append(f"controlled={controlled} + real-world={real}")
+    if pack.precision_classification_status == "provisional":
+        notes.append("provisional sample")
+    return "; ".join(notes)
 
 
 def _md_escape(value: str) -> str:

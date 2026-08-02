@@ -55,12 +55,13 @@
       {
         "rule_id": "architecture.dependency-cycle",
         "expected_count": 1,
-        "rationale": "Intentional domain\u2194application cycle"
+        "rationale": "Intentional domain\u2194application cycle (severity medium/high by cycle size; Slice 5.13)"
       },
       {
         "rule_id": "architecture.layer-boundary-violation",
         "path_pattern": "controller/",
         "expected_count": 1,
+        "severity": "high",
         "rationale": "Presentation\u2192persistence skip"
       }
     ],

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from codestrata.application.rules.confidence_catalog import confidence_for_rule
 from codestrata.domain.evidence.repository_sensitive.enums import (
     ConfigurationKeyFamily,
     ContentClassification,
@@ -18,7 +19,7 @@ from codestrata.domain.evidence.repository_sensitive.models import (
 from codestrata.domain.rules.context import RuleExecutionContext
 from codestrata.domain.rules.enums import (
     RuleCategory,
-    RuleConfidence,
+    MatchEvidenceConfidence,
     RuleEvidenceKind,
     RuleIncrementalBehavior,
     RuleSeverity,
@@ -26,6 +27,7 @@ from codestrata.domain.rules.enums import (
 from codestrata.domain.rules.evidence import RuleEvidence
 from codestrata.domain.rules.identifiers import RuleId
 from codestrata.domain.rules.metadata import RuleMetadata, RuleVersion
+from codestrata.domain.rules.rule_confidence import RuleConfidence
 from codestrata.domain.rules.results import RuleMatch
 from codestrata.domain.security.ids import PACK_ID, PACK_VERSION, RULE_VERSION
 from codestrata.domain.security.taxonomy import SecurityCategory
@@ -107,6 +109,7 @@ def make_metadata(
         description=description,
         category=RuleCategory.SECURITY,
         default_severity=severity,
+        confidence=confidence_for_rule(rule_id),
         supported_languages=("java", "python", "javascript", "typescript", "php", "csharp"),
         tags=("security", PACK_ID, "hygiene", "dimension:security"),
         remediation_summary=remediation,
@@ -137,16 +140,18 @@ def match(
     title: str,
     summary: str,
     severity: RuleSeverity,
-    confidence: RuleConfidence,
+    confidence: MatchEvidenceConfidence,
     evidence: tuple[RuleEvidence, ...],
     subject_keys: tuple[str, ...],
     remediation: str | None = None,
+    rule_confidence: RuleConfidence | None = None,
 ) -> RuleMatch:
     return RuleMatch(
         rule_id=RuleId(rule_id),
         rule_version=RuleVersion.parse(RULE_VERSION),
         severity=severity,
         confidence=confidence,
+        rule_confidence=rule_confidence or confidence_for_rule(rule_id),
         title=title,
         summary=summary,
         evidence=evidence,
@@ -214,6 +219,7 @@ def evidence_configuration(
         ),
         "is_wildcard_origin": str(item.is_wildcard_origin).lower(),
         "security_category": security_category.value,
+        "parse_status": item.parse_status.value,
     }
     if security_context:
         attributes["security_context"] = security_context

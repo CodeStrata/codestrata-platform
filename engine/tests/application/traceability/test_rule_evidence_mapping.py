@@ -13,7 +13,7 @@ from codestrata.domain.findings import (
     FindingCategory,
     FindingSeverity,
 )
-from codestrata.domain.rules.enums import RuleConfidence, RuleEvidenceKind
+from codestrata.domain.rules.enums import MatchEvidenceConfidence, RuleEvidenceKind
 from codestrata.domain.rules.evidence import RuleEvidence
 from codestrata.domain.rules.identifiers import RuleId
 from codestrata.domain.rules.metadata import RuleVersion
@@ -35,7 +35,7 @@ def _match(evidence: tuple[RuleEvidence, ...], *, rule_id: str = "security.crede
         rule_id=RuleId(rule_id),
         rule_version=RuleVersion.parse("1.0.0"),
         severity=RuleSeverity.HIGH,
-        confidence=RuleConfidence.HIGH,
+        confidence=MatchEvidenceConfidence.HIGH,
         title="Title",
         summary="Summary",
         evidence=evidence,

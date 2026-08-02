@@ -60,6 +60,10 @@ class ModernizationRecommendationExpectation(BaseModel):
     intent: str | None = None  # free-text semantic intent for diagnostics
     supporting_rule_ids: tuple[str, ...] = ()
     expected_priority: str | None = None
+    allowed_priorities: tuple[str, ...] = ()
+    expected_score_min: int | None = Field(default=None, ge=0, le=100)
+    expected_score_max: int | None = Field(default=None, ge=0, le=100)
+    expected_policy_id: str | None = None
     expected_count: int | None = Field(default=None, ge=0)
     assessment_head: str | None = None  # security|dependency|architecture|...
     rationale: str = ""
@@ -227,6 +231,9 @@ class ModernizationRecommendationActual(BaseModel):
     evidence_completeness: str | None = None
     assessment_head: str | None = None
     summary: str | None = None
+    priority_score: int | None = None
+    policy_id: str | None = None
+    presentation_bucket: str | None = None
 
 
 class ModernizationPriorityActionActual(BaseModel):
@@ -408,6 +415,16 @@ def extract_modernization_recommendations(
             item=item,
         )
         summary = item.get("summary") or item.get("description")
+        assessment = (
+            item.get("priority_assessment")
+            if isinstance(item.get("priority_assessment"), dict)
+            else {}
+        )
+        score = assessment.get("score", item.get("priority_score"))
+        try:
+            priority_score = int(score) if score is not None else None
+        except (TypeError, ValueError):
+            priority_score = None
         rows.append(
             ModernizationRecommendationActual(
                 recommendation_id=str(rec_id) if rec_id else None,
@@ -430,6 +447,17 @@ def extract_modernization_recommendations(
                 ),
                 assessment_head=assessment_head,
                 summary=str(summary) if summary else None,
+                priority_score=priority_score,
+                policy_id=(
+                    str(assessment["policy_id"])
+                    if assessment.get("policy_id")
+                    else None
+                ),
+                presentation_bucket=(
+                    str(item["presentation_bucket"]).lower()
+                    if item.get("presentation_bucket")
+                    else None
+                ),
             )
         )
     return tuple(rows)
@@ -1379,6 +1407,8 @@ def _recommendation_matches(
         or expectation.title_pattern
         or expectation.supporting_rule_ids
         or expectation.expected_priority
+        or expectation.allowed_priorities
+        or expectation.expected_policy_id
         or expectation.assessment_head
     )
     if not has_criteria:
@@ -1388,10 +1418,26 @@ def _recommendation_matches(
     if expectation.title_pattern:
         if not re.search(expectation.title_pattern, actual.title, flags=re.IGNORECASE):
             return False
-    if expectation.expected_priority and _norm(actual.priority or "") != _norm(
-        expectation.expected_priority
+    if expectation.expected_priority and not _priority_equivalent(
+        actual.priority, expectation.expected_priority
     ):
         return False
+    if expectation.allowed_priorities:
+        if not any(
+            _priority_equivalent(actual.priority, allowed)
+            for allowed in expectation.allowed_priorities
+        ):
+            return False
+    if expectation.expected_policy_id and _norm(actual.policy_id or "") != _norm(
+        expectation.expected_policy_id
+    ):
+        return False
+    if expectation.expected_score_min is not None:
+        if actual.priority_score is None or actual.priority_score < expectation.expected_score_min:
+            return False
+    if expectation.expected_score_max is not None:
+        if actual.priority_score is None or actual.priority_score > expectation.expected_score_max:
+            return False
     if expectation.assessment_head:
         actual_head = actual.assessment_head or _normalize_assessment_head(actual.category)
         if _norm(actual_head or "") != _norm(
@@ -1423,8 +1469,8 @@ def _priority_action_matches(
     if expectation.title_pattern:
         if not re.search(expectation.title_pattern, actual.title, flags=re.IGNORECASE):
             return False
-    if expectation.expected_priority and _norm(actual.priority or "") != _norm(
-        expectation.expected_priority
+    if expectation.expected_priority and not _priority_equivalent(
+        actual.priority, expectation.expected_priority
     ):
         return False
     if expectation.expected_horizon and _norm(actual.presentation_bucket or "") != _norm(
@@ -1704,6 +1750,16 @@ def _is_disclaimer_negation(text: str, claim: str) -> bool:
 
 def _norm_phase(value: str) -> str:
     return str(value).strip().lower().replace("-", "_").replace(" ", "_")
+
+
+def _priority_equivalent(actual: str | None, expected: str | None) -> bool:
+    """Treat immediate/critical as the same customer-facing top priority band."""
+
+    left = _norm(actual or "")
+    right = _norm(expected or "")
+    if left == right:
+        return True
+    return {left, right} <= {"immediate", "critical"}
 
 
 def _norm(value: str) -> str:

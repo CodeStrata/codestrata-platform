@@ -13,6 +13,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from codestrata.domain.traceability.evidence_confidence import EvidenceConfidence
 from codestrata.domain.traceability.evidence_ref import EvidenceRef
 from codestrata.domain.traceability.graph_reference import GraphReference
 from codestrata.domain.traceability.location import EvidenceLocation
@@ -25,6 +26,7 @@ _SUPPORTED_MODELS: tuple[type[BaseModel], ...] = (
     RedactedSnippet,
     EvidenceMeasurement,
     GraphReference,
+    EvidenceConfidence,
     EvidenceRef,
 )
 

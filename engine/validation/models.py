@@ -9,6 +9,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from validation.finding_correlations.expectations import FindingCorrelationExpectation
+from validation.finding_severity.expectations import FindingSeverityExpectation
 from validation.inventory import TechnologyInventoryExpectation
 from validation.security import SecurityExpectation, SecurityFindingActual
 from validation.architecture import (
@@ -129,6 +131,10 @@ class ExpectedResults(BaseModel):
     cloud: CloudExpectation | None = None
     ai_readiness: AiReadinessExpectation | None = None
     modernization: ModernizationExpectation | None = None
+    # Additive Slice 5.12 — optional required/forbidden correlation pairs.
+    finding_correlations: FindingCorrelationExpectation | None = None
+    # Additive Slice 5.13 — optional severity constraints by rule-prefix.
+    finding_severity: FindingSeverityExpectation | None = None
 
     expected_finding_rule_ids: tuple[str, ...] = ()
     forbidden_finding_rule_ids: tuple[str, ...] = ()
@@ -320,6 +326,8 @@ class ActualAssessmentResult(BaseModel):
     modernization_recommendations: tuple[ModernizationRecommendationActual, ...] = ()
     modernization_priority_actions: tuple[ModernizationPriorityActionActual, ...] = ()
     modernization_roadmap_initiatives: tuple[ModernizationRoadmapInitiativeActual, ...] = ()
+    # Additive Slice 5.12 — stable rule-pair keys from finding_correlations.
+    finding_correlation_pairs: tuple[str, ...] = ()
     artifact_paths: dict[str, str] = Field(default_factory=dict)
     assessment_duration_ms: float | None = None
     ai_executed: bool = False
@@ -340,7 +348,11 @@ class ComparisonMismatch(BaseModel):
 
 
 class PackPrecisionRecord(BaseModel):
-    """Compact precision/recall snapshot for one pack validator (Slice 4.11)."""
+    """Compact precision/recall snapshot for one pack validator (Slice 4.11).
+
+    Slices 5.7–5.8 add optional canonical PrecisionMetric / RecallMetric
+    projection fields while retaining schema 1.0 compatibility (additive only).
+    """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
@@ -352,6 +364,18 @@ class PackPrecisionRecord(BaseModel):
     precision: float | None = None
     recall: float | None = None
     passed: bool | None = None
+    # Additive Slice 5.7 — older records omit these and remain readable.
+    precision_metric: dict[str, Any] | None = None
+    precision_metric_id: str | None = None
+    precision_availability: str | None = None
+    precision_classification_status: str | None = None
+    sample: dict[str, Any] | None = None
+    # Additive Slice 5.8
+    recall_metric: dict[str, Any] | None = None
+    recall_metric_id: str | None = None
+    recall_availability: str | None = None
+    recall_classification_status: str | None = None
+    recall_sample: dict[str, Any] | None = None
 
 
 class ComparisonOutcome(BaseModel):
@@ -363,6 +387,10 @@ class ComparisonOutcome(BaseModel):
     expectations_evaluated: int = 0
     expectations_matched: int = 0
     pack_precision: tuple[PackPrecisionRecord, ...] = ()
+    # Additive Slice 5.9 — serialized FalsePositiveRecord dicts (schema 1.0 compatible).
+    false_positives: tuple[dict[str, Any], ...] = ()
+    # Additive Slice 5.10 — serialized FalseNegativeRecord dicts.
+    false_negatives: tuple[dict[str, Any], ...] = ()
 
     def as_tuple(self) -> tuple[tuple[ComparisonMismatch, ...], int, int]:
         return self.mismatches, self.expectations_evaluated, self.expectations_matched

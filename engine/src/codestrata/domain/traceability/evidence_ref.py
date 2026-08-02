@@ -10,13 +10,14 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from codestrata.domain.graph.validation import optional_nonblank, require_nonblank
 from codestrata.domain.traceability.enums import (
     EvidenceKind,
     EvidenceProductionMode,
 )
+from codestrata.domain.traceability.evidence_confidence import EvidenceConfidence
 from codestrata.domain.traceability.graph_reference import GraphReference
 from codestrata.domain.traceability.location import EvidenceLocation
 from codestrata.domain.traceability.measurement import EvidenceMeasurement
@@ -76,6 +77,11 @@ class EvidenceRef(BaseModel):
     domain_type: str | None = None
     domain_ref: str | None = None
     confidence: str | None = None
+    evidence_confidence: EvidenceConfidence = Field(
+        default_factory=lambda: EvidenceConfidence.unavailable(
+            limitations=("Legacy EvidenceRef payload omitted evidence_confidence.",),
+        )
+    )
     limitations: tuple[str, ...] = ()
     source_artifact: str | None = None
 
@@ -114,6 +120,19 @@ class EvidenceRef(BaseModel):
     def normalize_limits(cls, value: object) -> tuple[str, ...]:
         return normalize_limitations(value)
 
+    @field_validator("evidence_confidence", mode="before")
+    @classmethod
+    def normalize_evidence_confidence(cls, value: object) -> object:
+        if value is None:
+            return EvidenceConfidence.unavailable(
+                limitations=("Legacy EvidenceRef payload omitted evidence_confidence.",),
+            )
+        if isinstance(value, EvidenceConfidence):
+            return value
+        if isinstance(value, dict):
+            return EvidenceConfidence.model_validate(value)
+        return value
+
     @model_validator(mode="after")
     def validate_envelope(self) -> EvidenceRef:
         assert_no_self_parent(self.evidence_id, self.parent_evidence_ids)
@@ -122,6 +141,11 @@ class EvidenceRef(BaseModel):
     def richness_score(self) -> tuple[int, ...]:
         """Deterministic richness key for dedupe preference (higher is richer)."""
 
+        from codestrata.domain.traceability.evidence_confidence import (
+            evidence_confidence_level_rank,
+        )
+
+        confidence_rank = evidence_confidence_level_rank(self.evidence_confidence.level)
         return (
             1 if self.location is not None else 0,
             1 if self.snippet is not None else 0,
@@ -130,6 +154,7 @@ class EvidenceRef(BaseModel):
             len(self.parent_evidence_ids),
             len(self.limitations),
             1 if self.confidence is not None else 0,
+            confidence_rank,
             1 if self.domain_ref is not None else 0,
             1 if self.source_artifact is not None else 0,
             # Prefer more specific production mode ranks for tie-break on richness
@@ -203,6 +228,13 @@ def _merge_evidence_refs(preferred: EvidenceRef, other: EvidenceRef) -> Evidence
             updates[nested] = preferred_value
     if preferred.confidence is None and other.confidence is not None:
         updates["confidence"] = other.confidence
+    preferred_confidence = preferred.evidence_confidence
+    other_confidence = other.evidence_confidence
+    if (
+        preferred_confidence.derivation_status.value == "unavailable"
+        and other_confidence.derivation_status.value != "unavailable"
+    ):
+        updates["evidence_confidence"] = other_confidence
     return preferred.model_copy(update=updates)
 
 

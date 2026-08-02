@@ -79,6 +79,7 @@ def run_repository_validation(
                 ai_executed=ai_executed,
                 error_message=error_message,
                 skip_reason=skip_reason,
+                records_root=effective_records_root,
             )
             written = write_repository_validation_record(
                 record,
@@ -194,6 +195,7 @@ def run_repository_validation(
             expected=expected,
             actual=actual,
             artifact_path=safe_artifact_path(report_path, base=artifact_dir),
+            run_id=run_id,
         )
         verdict = (
             ValidationVerdict.PASS if not outcome.mismatches else ValidationVerdict.FAIL

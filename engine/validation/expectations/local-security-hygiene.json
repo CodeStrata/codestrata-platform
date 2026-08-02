@@ -32,6 +32,18 @@
     "security.authentication-disabled",
     "security.permissive-cors-origin"
   ],
+  "finding_correlations": {
+    "forbidden_correlations": [
+      {
+        "rule_ids": [
+          "security.credential-literal",
+          "security.debug-enabled"
+        ],
+        "rationale": "Same-path unrelated subjects must not correlate (Slice 5.12 negative control)."
+      }
+    ],
+    "notes": "Required same-key credential/placeholder correlation is covered by unit tests; fixture key sharing is not guaranteed."
+  },
   "finding_count": {
     "minimum": 4
   },
@@ -478,9 +490,9 @@
     "required_recommendations": [
       {
         "title_pattern": "(?i)Rotate credentials",
-        "rationale": "Finding-backed credential rotation",
         "category": "security",
-        "expected_priority": "critical"
+        "allowed_priorities": ["critical", "immediate", "high"],
+        "rationale": "Finding-backed credential rotation; Limited Phase-1 Finding Confidence may cap below Immediate"
       },
       {
         "title_pattern": "(?i)LICENSE",
@@ -558,10 +570,10 @@
     "required_priority_actions": [
       {
         "title_pattern": "(?i)Rotate credentials",
-        "rationale": "Secure-phase credential rotation PA",
+        "rationale": "Secure-phase credential rotation PA; Limited Phase-1 Finding Confidence may yield High/near_term",
         "category": "security",
-        "expected_horizon": "immediate",
-        "expected_priority": "critical"
+        "expected_horizon": "near_term",
+        "expected_priority": "high"
       },
       {
         "title_pattern": "(?i)LICENSE",

@@ -21,6 +21,13 @@ from codestrata.domain.traceability.enums import (
     SnippetSourceKind,
     ThresholdOperator,
 )
+from codestrata.domain.traceability.evidence_confidence import (
+    EvidenceConfidence,
+    EvidenceConfidenceBasis,
+    EvidenceConfidenceDerivationStatus,
+    EvidenceConfidenceLevel,
+    evidence_confidence_to_json,
+)
 from codestrata.domain.traceability.evidence_ref import (
     EvidenceRef,
     dedupe_evidence_refs,
@@ -44,6 +51,10 @@ from codestrata.domain.traceability.validators import (
 
 __all__ = [
     "EvidenceCompleteness",
+    "EvidenceConfidence",
+    "EvidenceConfidenceBasis",
+    "EvidenceConfidenceDerivationStatus",
+    "EvidenceConfidenceLevel",
     "EvidenceKind",
     "EvidenceLocation",
     "EvidenceMeasurement",
@@ -65,6 +76,7 @@ __all__ = [
     "ThresholdOperator",
     "TraceabilityValidationError",
     "dedupe_evidence_refs",
+    "evidence_confidence_to_json",
     "evidence_ref_from_stable_dict",
     "evidence_ref_to_stable_dict",
     "from_stable_dict",

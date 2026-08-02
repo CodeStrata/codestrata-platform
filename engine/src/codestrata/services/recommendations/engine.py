@@ -37,6 +37,12 @@ class RecommendationEngine:
     def evaluate(self, context: RecommendationContext) -> RecommendationResult:
         """Evaluate providers without mutating graphs/findings or calling AI."""
 
+        from codestrata.application.recommendations.confidence import (
+            apply_recommendation_confidence,
+        )
+        from codestrata.application.recommendations.priority_calibration import (
+            apply_recommendation_priority,
+        )
         from codestrata.application.traceability.recommendation import (
             merge_recommendation_traceability,
         )
@@ -63,7 +69,16 @@ class RecommendationEngine:
                 for recommendation in produced:
                     existing = recommendations_by_id.get(recommendation.id)
                     if existing is None:
-                        recommendations_by_id[recommendation.id] = recommendation
+                        with_confidence = apply_recommendation_confidence(
+                            recommendation,
+                            findings=context.findings,
+                        )
+                        recommendations_by_id[recommendation.id] = (
+                            apply_recommendation_priority(
+                                with_confidence,
+                                findings=context.findings,
+                            )
+                        )
                         recommendation_order.append(recommendation.id)
                         continue
                     recommendations_by_id[recommendation.id] = merge_recommendation_traceability(
