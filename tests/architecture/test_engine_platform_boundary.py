@@ -153,6 +153,19 @@ def test_platform_package_depends_on_engine() -> None:
     assert (PLATFORM / "src" / "codestrata_platform" / "knowledge_graph").is_dir()
 
 
+def test_commercial_intelligence_reporting_lives_only_on_platform() -> None:
+    """Slice 6.1: Engineering Intelligence Report domain is Platform-only."""
+
+    pkg = PLATFORM / "src" / "codestrata_platform" / "intelligence_reporting"
+    assert pkg.is_dir()
+    assert (pkg / "domain" / "report.py").is_file()
+    assert not list((ENGINE_SRC / "codestrata").rglob("*intelligence_reporting*"))
+    report_py = (pkg / "domain" / "report.py").read_text(encoding="utf-8")
+    assert 'ENGINEERING_INTELLIGENCE_REPORT_SCHEMA_VERSION = "1.0"' in report_py
+    blob = (REPO_ROOT / "public-export-manifest.yaml").read_text(encoding="utf-8")
+    assert "platform/**" in blob
+
+
 def test_public_export_manifest_lists_community_mirrors() -> None:
     import yaml
 

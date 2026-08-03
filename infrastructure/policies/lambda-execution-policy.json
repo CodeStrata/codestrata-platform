@@ -1,0 +1,36 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudWatchLogStreamsAndEvents",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:*:*:log-group:/aws/lambda/codestrata-community-cloud-production-api:*"
+      ]
+    },
+    {
+      "Sid": "EcrPullImage",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability"
+      ],
+      "Resource": [
+        "arn:aws:ecr:*:*:repository/codestrata/community-cloud-api"
+      ]
+    },
+    {
+      "Sid": "EcrAuthorizationTokenDocumentedWildcard",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

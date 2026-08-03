@@ -1,0 +1,21 @@
+# Placeholder values only — never put real credentials, tokens, or account secrets here.
+# Copy to terraform.tfvars locally (gitignored) and replace placeholders.
+
+project_name = "codestrata"
+aws_region   = "us-east-1"
+
+# Immutable image reference after build+push (tag or digest).
+# Example shape only — not a live registry:
+lambda_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/codestrata/community-cloud-api:v0.2.0-REPLACE_ME"
+
+lambda_memory_size     = 512
+lambda_timeout_seconds = 30
+lambda_architecture    = "arm64"
+log_retention_days     = 30
+
+api_throttle_burst_limit = 50
+api_throttle_rate_limit  = 25
+
+tags = {
+  ExampleOnly = "true"
+}

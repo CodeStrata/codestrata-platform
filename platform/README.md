@@ -7,8 +7,10 @@ This file lives under `platform/` because the Platform package is private and
 never exported. It is the **ecosystem maintainer handbook** for the private
 monorepo `codestrata-platform`.
 
-> CodeStrata Engine produces structured Engineering Intelligence.  
-> CodeStrata Platform stores, connects, retrieves, and reasons over that intelligence.
+> CodeStrata Engine produces structured single-repository assessment intelligence.  
+> CodeStrata Platform owns commercial multi-repository Engineering Intelligence
+> Reports, the Community Cloud API, and stores, connects, retrieves, and reasons
+> over assessment intelligence.
 
 ---
 
@@ -58,7 +60,8 @@ Supporting docs:
 ```text
 codestrata-platform/
 ├── engine/                 # Community Engine (public → codestrata-engine)
-├── platform/               # Private RAG + Knowledge Graph (NOT exported)
+├── platform/               # Private RAG + Knowledge Graph + Community Cloud API
+├── infrastructure/         # Private OpenTofu AWS deployment (not exported)
 ├── examples/               # Real-world showcase manifests (→ codestrata-examples)
 ├── test-fixtures/          # Internal language samples + golden mini-reports
 ├── cursor-plugin/          # Placeholder (→ codestrata-cursor)
@@ -75,13 +78,28 @@ codestrata-platform/
 | Path | Responsibility |
 | ---- | -------------- |
 | `engine/` | MIT Community CLI, assessment, reports, Engine docs/tests |
-| `platform/` | Implemented RAG + persistent KG + extension entry points |
+| `platform/` | Implemented RAG + persistent KG + Community Cloud API + extension entry points |
+| `infrastructure/` | Private serverless deployment (OpenTofu); extractable to `codestrata-infrastructure` |
 | `examples/` | Showcase manifests, fetch/run scripts, attribution, curated results |
 | `test-fixtures/` | Deterministic language fixtures for tests and Engine smoke |
 | `cursor-plugin/` | Public placeholder only |
 | `vscode-plugin/` | Public placeholder only |
 | `scripts/` | Release verification, export, security, packaging smoke, showcase wrappers |
 | **This handbook** | Ecosystem operations (export, release, ownership) |
+
+Community Cloud deployment foundation (Slice 7.14): health is deployable through
+API Gateway → Lambda; ingestion remains fail-closed. See
+[`../infrastructure/README.md`](../infrastructure/README.md) and
+[`docs/community-cloud-api/README.md`](docs/community-cloud-api/README.md).
+
+The Slice 7.14 deployment proves that the Community Cloud API can be packaged
+and served through serverless infrastructure. It does not enable durable
+Community event ingestion because production credential verification, shared
+event identity, and event sinks are not yet configured.
+
+Community Data Lake resources are intentionally deferred. Future S3 buckets,
+lifecycle, partitioning, encryption, access, and ingestion notifications will be
+added through a separate `infrastructure/modules/data-lake` module.
 
 Package-local Platform install and smoke workflows:
 [docs/getting-started.md](docs/getting-started.md).

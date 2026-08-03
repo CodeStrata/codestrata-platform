@@ -1,0 +1,60 @@
+{
+  "catalog_id": "public-oss-demonstration-v1",
+  "catalog_version": "1.0",
+  "title": "Public OSS Engineering Intelligence Demonstration",
+  "report_scope": "public_oss_dataset",
+  "selection_policy": "explicit_validated_public_oss",
+  "disclaimer": "This demonstration uses a curated validation dataset of public open-source repositories. It is not a random sample and must not be presented as an industry benchmark.",
+  "repositories": [
+    {
+      "repository_id": "repo:spring-petclinic",
+      "assessment_id": "assessment:spring-petclinic:f182358d",
+      "assessment_run_id": "run:spring-petclinic:12e4e6b1",
+      "display_name": "spring-petclinic",
+      "source_reference": "https://github.com/spring-projects/spring-petclinic",
+      "pinned_revision": "f182358d02e4a68e52bdbabf55ca7800288511e7",
+      "report_path": "fixtures/spring-petclinic/report.json",
+      "language": "java"
+    },
+    {
+      "repository_id": "repo:full-stack-fastapi-template",
+      "assessment_id": "assessment:full-stack-fastapi-template:c9e70d65",
+      "assessment_run_id": "run:full-stack-fastapi-template:2065c63f",
+      "display_name": "full-stack-fastapi-template",
+      "source_reference": "https://github.com/fastapi/full-stack-fastapi-template",
+      "pinned_revision": "c9e70d65c74f7adda417fc8de0757207ff77514c",
+      "report_path": "fixtures/full-stack-fastapi-template/report.json",
+      "language": "python"
+    },
+    {
+      "repository_id": "repo:angular-realworld-example-app",
+      "assessment_id": "assessment:angular-realworld-example-app:dd99ed2c",
+      "assessment_run_id": "run:angular-realworld-example-app:d8ff4e5f",
+      "display_name": "angular-realworld-example-app",
+      "source_reference": "https://github.com/gothinkster/angular-realworld-example-app",
+      "pinned_revision": "dd99ed2cf39c805d719f943c5d7061a5683d98a8",
+      "report_path": "fixtures/angular-realworld-example-app/report.json",
+      "language": "typescript"
+    },
+    {
+      "repository_id": "repo:bookstack",
+      "assessment_id": "assessment:bookstack:4e406c41",
+      "assessment_run_id": "run:bookstack:96087feb",
+      "display_name": "BookStack",
+      "source_reference": "https://github.com/BookStackApp/BookStack",
+      "pinned_revision": "4e406c41c4c8060a5795e74c66fb96362e54f400",
+      "report_path": "fixtures/BookStack/report.json",
+      "language": "php"
+    },
+    {
+      "repository_id": "repo:eshop",
+      "assessment_id": "assessment:eshop:9b4f9434",
+      "assessment_run_id": "run:eshop:b5ad898d",
+      "display_name": "eShop",
+      "source_reference": "https://github.com/dotnet/eShop",
+      "pinned_revision": "9b4f9434f46fdc5c1a6e9e936af2868340cdbc48",
+      "report_path": "fixtures/eShop/report.json",
+      "language": "csharp"
+    }
+  ]
+}

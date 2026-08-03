@@ -29,6 +29,7 @@ release:
     - codestrata.toml
   forbidden_internal_paths:
     - platform/
+    - infrastructure/
     - governance/
     - knowledge/
     - .codestrata-test-knowledge/
@@ -71,6 +72,7 @@ defaults:
     - "**/pgdata*/**"
   forbid_path_substrings:
     - "platform/"
+    - "infrastructure/"
     - "governance/reports"
     - ".codestrata/"
     - ".codestrata-examples/"
@@ -111,11 +113,13 @@ defaults:
     # platform/ (including platform/api/openapi internal Swagger) is never exported.
     never_export_source_roots:
       - platform
+      - infrastructure
       - governance
       - knowledge
     never_export_path_globs:
       - "platform/**"
       - "platform/api/openapi/**"
+      - "infrastructure/**"
       - "governance/adr/**"
       - "governance/reports/**"
     notes: >
@@ -199,8 +203,8 @@ exports:
         - .github/PULL_REQUEST_TEMPLATE.md
       forbid_globs:
         - "platform/**"
+        - "infrastructure/**"
         - "governance/**"
-        - "docs/assessment-framework/**"
         - "docs/COMMUNITY_EDITION_CHECKLIST.md"
         - "docs/analysis-intelligence/architecture/**"
         - "docs/analysis-intelligence/architecture-assessment/**"
@@ -260,6 +264,7 @@ exports:
         - expected-results/laravel-realworld/summary.md
       forbid_globs:
         - "platform/**"
+        - "infrastructure/**"
         - "**/.env"
         - "**/.codestrata-examples/**"
         - "**/reports/showcases/**"
@@ -308,6 +313,7 @@ exports:
         - media/codestrata-icon.png
       forbid_globs:
         - "platform/**"
+        - "infrastructure/**"
         - "governance/**"
         - "**/*.py"
         - "PLACEHOLDER.md"
@@ -355,6 +361,7 @@ exports:
         - testdata/sample-assessment-run/report.json
       forbid_globs:
         - "platform/**"
+        - "infrastructure/**"
         - "governance/**"
         - "**/*.py"
         - "PLACEHOLDER.md"
@@ -421,6 +428,7 @@ exports:
         - reports/index.md
       forbid_globs:
         - "governance/**"
+        - "infrastructure/**"
         - "visual-baselines/**"
         - "**/*.py"
         - "node_modules/**"

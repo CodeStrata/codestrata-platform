@@ -1,0 +1,51 @@
+# Local OpenTofu / Terraform artifacts — never commit
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Variable files with real values
+*.auto.tfvars
+*.auto.tfvars.json
+terraform.tfvars
+tofu.tfvars
+secrets.tfvars
+*.secrets.tfvars
+
+# Credentials and keys
+*.pem
+*.key
+*.p12
+*.pfx
+.env
+.env.*
+!.env.example
+credentials
+credentials.json
+aws-credentials
+
+# Build / packaging outputs
+build/
+dist/
+*.zip
+*.tar
+*.tar.gz
+image-id.txt
+image-digest.txt
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/

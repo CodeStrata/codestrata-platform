@@ -1,0 +1,4433 @@
+{
+  "assessment": {
+    "activation": {
+      "mode": "default",
+      "packs": [
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "security",
+          "reason": "Security hygiene is enabled by default"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "build_file:package.json",
+            "build_system:npm",
+            "inventory:package.json",
+            "manifest:npm:package.json"
+          ],
+          "pack_id": "dependency",
+          "reason": "Dependency manifests detected"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "architecture:has_domain_layer",
+            "architecture:has_service_layer",
+            "source_file_count:50",
+            "structure_layer:domain",
+            "structure_layer:service"
+          ],
+          "pack_id": "architecture",
+          "reason": "Repository structure supports architecture intelligence"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "td_language:javascript",
+            "td_language:typescript"
+          ],
+          "pack_id": "technical_debt",
+          "reason": "Supported language present for technical debt rules"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "inventory_test:src/app/core/auth/services/jwt.service.spec.ts",
+            "structure:has_tests",
+            "test_file_count:6",
+            "test_framework:Vitest"
+          ],
+          "pack_id": "testing",
+          "reason": "Test assets detected"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [
+            "cloud_capability:deployment-workflow"
+          ],
+          "pack_id": "cloud",
+          "reason": "Cloud packaging signals detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "ai_readiness",
+          "reason": "No AI/ML frameworks detected"
+        },
+        {
+          "decision": "skipped",
+          "enabled": false,
+          "evidence": [],
+          "pack_id": "performance",
+          "reason": "Performance remains opt-in under default activation"
+        },
+        {
+          "decision": "enabled",
+          "enabled": true,
+          "evidence": [],
+          "pack_id": "roadmap",
+          "reason": "Roadmap presentation enabled to surface deterministic recommendations"
+        }
+      ]
+    },
+    "ai": {
+      "candidate_finding_count": null,
+      "estimated_input_tokens": null,
+      "evidence_coverage": null,
+      "executed": false,
+      "executive_summary": null,
+      "failure_code": null,
+      "failure_detail": null,
+      "failure_message": null,
+      "fallback_used": false,
+      "included_finding_count": null,
+      "input_tokens": null,
+      "internal_execution_artifact": null,
+      "key_risks": [],
+      "latency_ms": null,
+      "limitations": [],
+      "model_id": null,
+      "omitted_informational_count": null,
+      "output_tokens": null,
+      "overall_assessment": null,
+      "phases": [],
+      "provider": null,
+      "provider_invoked": false,
+      "recommendations": [],
+      "result_included": false,
+      "stages_completed": [],
+      "static_analysis_profile": null,
+      "status": "not_requested",
+      "stop_reason": null,
+      "total_tokens": null
+    },
+    "ai_enrichment": null,
+    "architecture": {
+      "architecture_pack_id": "architecture.core",
+      "architecture_pack_version": "1.0.0",
+      "assessment_scope": "Repository-level static architecture assessment for angular-realworld-example-app",
+      "conclusions": [
+        {
+          "affected_scope": [
+            "repository"
+          ],
+          "business_impact": "Unknown",
+          "category": "architecture.insufficient-evidence",
+          "conclusion_id": "conclusion:architecture.conclusion.insufficient-evidence:12772784113164b811c5",
+          "confidence": "low",
+          "limitations": [
+            "Based on static dependency analysis only.",
+            "Does not establish production reliability.",
+            "Business impact remains unknown without explicit enterprise context."
+          ],
+          "materiality": "informational",
+          "modernization_relevance": "wave_0_validate_stabilize",
+          "primary_finding_id": null,
+          "recommendation_group_ids": [
+            "recgroup:e14500dff571c9e0"
+          ],
+          "severity_summary": "Highest informational; 0 source findings",
+          "summary": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+          "supporting_finding_count": 0,
+          "title": "Architecture evidence is insufficient for strong conclusions"
+        }
+      ],
+      "coverage_summary": [
+        {
+          "area_id": "extraction_coverage",
+          "display": "Complete for the analyzed source set.",
+          "label": "Extraction coverage",
+          "note": null,
+          "ratio": 1.0,
+          "status": "measured"
+        },
+        {
+          "area_id": "classification_coverage",
+          "display": "Partial (0.0%).",
+          "label": "Classification coverage",
+          "note": "Low coverage reduces confidence in architecture meaning.",
+          "ratio": 0.0,
+          "status": "partial"
+        },
+        {
+          "area_id": "enterprise_context_coverage",
+          "display": "Enterprise context was not supplied for this repository assessment.",
+          "label": "Enterprise-context coverage",
+          "note": "Enterprise context was not supplied.",
+          "ratio": null,
+          "status": "not_applicable"
+        },
+        {
+          "area_id": "framework_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Framework coverage",
+          "note": "Framework coverage is not yet measured as a ratio.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "build_metadata_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Build-metadata coverage",
+          "note": "Build-metadata coverage is not measured here.",
+          "ratio": null,
+          "status": "unsupported"
+        }
+      ],
+      "enterprise_context_used": false,
+      "executive_summary": "The architecture assessment identified 0 visible findings across the analyzed repository. These were consolidated into 1 architecture conclusion: Architecture evidence is insufficient for strong conclusions. The assessment is based on static repository evidence. Extraction coverage was complete for the analyzed source set, while architectural classification coverage was partial (0.0%). Business impact was not assessed.",
+      "findings": [],
+      "generated_from_assessment_section_version": "1.0.0",
+      "include_strengths_heading": false,
+      "key_metrics": [
+        {
+          "key": "visible_findings",
+          "label": "Visible findings",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "conclusions",
+          "label": "Conclusions",
+          "note": null,
+          "value": "1"
+        },
+        {
+          "key": "recommendation_groups",
+          "label": "Recommendation groups",
+          "note": null,
+          "value": "1"
+        },
+        {
+          "key": "extraction_coverage",
+          "label": "Extraction coverage",
+          "note": null,
+          "value": "100.0%"
+        },
+        {
+          "key": "classification_coverage",
+          "label": "Classification coverage",
+          "note": "Partial classification reduces certainty of layer-direction claims.",
+          "value": "0.0%"
+        },
+        {
+          "key": "limitations",
+          "label": "Limitations",
+          "note": null,
+          "value": "5"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "partial-classification",
+          "importance": "contextual",
+          "limitation_id": "arch-limitation:2057dd2919bc",
+          "summary": "Layer or boundary classification coverage is incomplete for some units."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "material",
+          "limitation_id": "arch-limitation:2612d5d918d6",
+          "summary": "Architecture assessment is based on static analysis of source dependencies and declared structure. Runtime behavior is not observed."
+        },
+        {
+          "category": "positive-evidence-unavailable",
+          "importance": "informational",
+          "limitation_id": "arch-limitation:364e9e75002e",
+          "summary": "Architecture strengths remain empty until explicit positive evidence providers and conclusions are enabled."
+        },
+        {
+          "category": "runtime-behavior-not-observed",
+          "importance": "contextual",
+          "limitation_id": "arch-limitation:3a84a0ce6e70",
+          "summary": "No runtime traces, production telemetry, or load behavior were assessed."
+        },
+        {
+          "category": "enterprise-context-unavailable",
+          "importance": "contextual",
+          "limitation_id": "arch-limitation:3aa718b4f40a",
+          "summary": "Business impact remains unknown because Engineering Knowledge Graph context was not supplied."
+        }
+      ],
+      "metadata": {
+        "assessment_section_id": "assessment.architecture",
+        "configuration_fingerprint": "82d17347a0e1b7a9",
+        "evidence_pipeline": "language_evidence",
+        "graph_fingerprint": "79042afe5c7e285f5d470fc4"
+      },
+      "recommendation_groups": [
+        {
+          "limitations": [
+            "Based on static dependency analysis only.",
+            "Does not establish production reliability.",
+            "Business impact remains unknown without explicit enterprise context."
+          ],
+          "modernization_wave": "wave_0_validate_stabilize",
+          "objective": "Review the underlying architecture findings and regenerate the dependency graph after structural changes.",
+          "prerequisites": [
+            "Confirm classification coverage is adequate for the affected units."
+          ],
+          "rationale": "Architecture assessment was requested, but coverage is too limited to establish strong architectural conclusions.",
+          "recommendation_group_id": "recgroup:e14500dff571c9e0",
+          "recommended_actions": [
+            "Review the underlying architecture findings and regenerate the dependency graph after structural changes."
+          ],
+          "source_conclusion_ids": [],
+          "source_finding_ids": [],
+          "title": "Respond to: Architecture evidence is insufficient for strong conclusions",
+          "validation_steps": [
+            "Regenerate the architecture dependency graph.",
+            "Confirm related findings are resolved or intentionally accepted.",
+            "Re-run architecture conclusions and compare conclusion IDs."
+          ]
+        }
+      ],
+      "repository_name": "angular-realworld-example-app",
+      "section_id": "report.architecture",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Architecture assessment completed using static repository evidence.",
+      "strengths": [],
+      "title": "Architecture Assessment",
+      "traceability_summary": {
+        "edge_count": 13,
+        "relation_types": [
+          "section_to_conclusion",
+          "section_to_coverage",
+          "section_to_limitation",
+          "section_to_pack",
+          "section_to_recommendation_group"
+        ],
+        "sample_edges": [
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.architecture",
+            "target_id": "conclusion:architecture.conclusion.insufficient-evidence:12772784113164b811c5"
+          },
+          {
+            "relation": "section_to_coverage",
+            "source_id": "assessment.architecture",
+            "target_id": "extraction_coverage"
+          },
+          {
+            "relation": "section_to_coverage",
+            "source_id": "assessment.architecture",
+            "target_id": "framework_coverage"
+          },
+          {
+            "relation": "section_to_coverage",
+            "source_id": "assessment.architecture",
+            "target_id": "enterprise_context_coverage"
+          },
+          {
+            "relation": "section_to_coverage",
+            "source_id": "assessment.architecture",
+            "target_id": "classification_coverage"
+          },
+          {
+            "relation": "section_to_coverage",
+            "source_id": "assessment.architecture",
+            "target_id": "build_metadata_coverage"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.architecture",
+            "target_id": "arch-limitation:364e9e75002e"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.architecture",
+            "target_id": "arch-limitation:2612d5d918d6"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.architecture",
+            "target_id": "arch-limitation:2057dd2919bc"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.architecture",
+            "target_id": "arch-limitation:3a84a0ce6e70"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.architecture",
+            "target_id": "arch-limitation:3aa718b4f40a"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.architecture",
+            "target_id": "architecture.core"
+          }
+        ],
+        "summary": "13 traceability relationships across 5 relation types."
+      }
+    },
+    "cloud": {
+      "assessment_scope": "Repository-level Cloud Hygiene assessment for angular-realworld-example-app",
+      "assessment_status": "succeeded",
+      "cloud_pack_id": "cloud.core",
+      "cloud_pack_version": "1.0.0",
+      "conclusions": [
+        {
+          "audience": "hygiene",
+          "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:a24940f493293319a873",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:cloud.cloud-040:dea4e53b3772f64f"
+          ],
+          "kind": "cloud_deployment_automation_observed",
+          "recommendation_ids": [
+            "cloud-recommendation:3f7493c79be73b9e"
+          ],
+          "summary": "1 finding report cloud-related deployment pipeline artifacts.",
+          "theme_ids": [
+            "cloud-theme:34c6230e7d2e"
+          ],
+          "title": "Cloud deployment automation observed"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:491ae455cfec9b4eaf43",
+          "confidence": "high",
+          "finding_count": 2,
+          "finding_ids": [
+            "finding:cloud.cloud-040:dea4e53b3772f64f",
+            "finding:cloud.cloud-061:4bd946f64049caa3"
+          ],
+          "kind": "cloud_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "The supported Cloud Hygiene rules produced 2 findings across 2 matched rules.",
+          "theme_ids": [
+            "cloud-theme:0d6ed0d22bb8"
+          ],
+          "title": "Cloud hygiene landscape identified"
+        },
+        {
+          "audience": "hygiene",
+          "conclusion_id": "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:ef2ca4a5e087fa5ce99d",
+          "confidence": "medium",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:cloud.cloud-061:4bd946f64049caa3"
+          ],
+          "kind": "deployment_without_platform_observed",
+          "recommendation_ids": [
+            "cloud-recommendation:3e1ba174937e12ab"
+          ],
+          "summary": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+          "theme_ids": [
+            "cloud-theme:79fb125a8bd2"
+          ],
+          "title": "Deployment assets without platform evidence observed"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "cloud-conclusion:cloud.conclusion.rule-execution-summary:2147118c5613c2715e78",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_summary",
+          "recommendation_ids": [],
+          "summary": "Rule execution coverage: 11 executed, 2 matched, 9 not matched; evidence status repository_cloud.",
+          "theme_ids": [
+            "cloud-theme:6fcde23f9f77"
+          ],
+          "title": "Cloud Hygiene rule execution summary"
+        },
+        {
+          "audience": "status",
+          "conclusion_id": "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:2f5ba5c2d7d73e5b96ed",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_cloud_analysis_scope",
+          "recommendation_ids": [
+            "cloud-recommendation:b52081c8cbd2d60a"
+          ],
+          "summary": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+          "theme_ids": [
+            "cloud-theme:b8a8a19ed930"
+          ],
+          "title": "Unsupported cloud analysis scope acknowledged"
+        }
+      ],
+      "conclusions_displayed": 5,
+      "conclusions_total": 5,
+      "coverage_summary": {
+        "areas": [
+          {
+            "area_id": "cloud_capability_requested",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "cloud_evidence_availability",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "cloud_findings_evaluated",
+            "denominator": 2,
+            "maturity": "medium",
+            "numerator": 2,
+            "status": "measured"
+          },
+          {
+            "area_id": "cloud_inventory_complete",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "cloud_rules_enabled",
+            "denominator": 11,
+            "maturity": "medium",
+            "numerator": 11,
+            "status": "measured"
+          }
+        ],
+        "evidence_pipeline": "repository_cloud",
+        "evidence_status": "",
+        "note": "Coverage describes Cloud assessment capability areas only. Provider APIs, readiness scores, and portability verdicts are not measured."
+      },
+      "diagnostics": [],
+      "diagnostics_displayed": 0,
+      "diagnostics_total": 0,
+      "execution_summary": {
+        "conclusion_count": 5,
+        "entries": [
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-001"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-002"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-010"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-011"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-020"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-021"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-030"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "cloud.cloud-040"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-050"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "cloud.cloud-060"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "cloud.cloud-061"
+          }
+        ],
+        "note": "Rule execution summarizes registered Cloud Hygiene rules only. Zero findings are a bounded inventory outcome and do not establish cloud readiness.",
+        "recommendation_count": 3,
+        "rules_executed": 11,
+        "rules_failed": 0,
+        "rules_matched": 2,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 9,
+        "rules_planned": 11,
+        "theme_count": 5,
+        "total_finding_count": 2
+      },
+      "executive_summary": "Cloud Hygiene inventory shows 2 findings across 2 matched rules of 11 executed (1 technology family observed). Implications remain informational to low and do not establish cloud readiness.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "inventory_summary": {
+        "by_confidence": [
+          {
+            "count": 2,
+            "key": "medium"
+          }
+        ],
+        "by_rule": [
+          {
+            "count": 1,
+            "key": "cloud.cloud-040"
+          },
+          {
+            "count": 1,
+            "key": "cloud.cloud-061"
+          }
+        ],
+        "by_severity": [
+          {
+            "count": 1,
+            "key": "informational"
+          },
+          {
+            "count": 1,
+            "key": "low"
+          }
+        ],
+        "finding_count": 2,
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "finding:cloud.cloud-061:4bd946f64049caa3"
+        ],
+        "finding_ids_displayed": 2,
+        "none_detected_statement": null
+      },
+      "limitations": [
+        {
+          "category": "statelessness-not-evaluated",
+          "limitation_id": "cloud-limitation:02355b1dc810",
+          "summary": "Application statelessness is not evaluated."
+        },
+        {
+          "category": "other",
+          "limitation_id": "cloud-limitation:72795e326f59",
+          "summary": "Cloud Hygiene rules consume AggregatedRepositoryCloudEvidence only; inventory never re-reads repository files or calls cloud provider APIs."
+        },
+        {
+          "category": "no-cloud-readiness-conclusion",
+          "limitation_id": "cloud-limitation:bf01e5ad027b",
+          "summary": "Cloud Hygiene findings are repository-observable technology signals only. Zero findings does not mean the repository is cloud ready or portable."
+        },
+        {
+          "category": "config-externalization-not-evaluated",
+          "limitation_id": "cloud-limitation:e1b7e93c4bd1",
+          "summary": "Configuration externalization is not evaluated."
+        }
+      ],
+      "limitations_displayed": 4,
+      "limitations_total": 4,
+      "metadata": {
+        "assessment_section_id": "assessment.cloud",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_cloud",
+        "families_observed": "1",
+        "finding_count": "2",
+        "finding_id_display_limit": "32",
+        "theme_limit": "12"
+      },
+      "overall_posture_summary": "Cloud Hygiene inventory shows 2 findings across 2 matched rules of 11 executed (1 technology family observed). Implications remain informational to low and do not establish cloud readiness.",
+      "recommendation_groups": [
+        {
+          "group": "Deployment and coverage",
+          "recommendations": [
+            {
+              "action": "Review the linked deployment findings and confirm pipeline assets remain intentional.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:a24940f493293319a873"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:cloud.cloud-040:dea4e53b3772f64f"
+              ],
+              "kind": "review_deployment_pipeline_signals",
+              "presentation_group": "Deployment and coverage",
+              "rationale": "CLOUD-040 matched on deployment pipeline artifacts; review does not prescribe CI/CD redesign.",
+              "recommendation_id": "cloud-recommendation:3f7493c79be73b9e",
+              "rule_ids": [
+                "cloud.cloud-040"
+              ],
+              "title": "Review deployment pipeline signals"
+            },
+            {
+              "action": "Review the linked findings and confirm whether platform markers are intentionally absent for this repository.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:ef2ca4a5e087fa5ce99d"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:cloud.cloud-061:4bd946f64049caa3"
+              ],
+              "kind": "review_deployment_without_platform",
+              "presentation_group": "Deployment and coverage",
+              "rationale": "CLOUD-061 matched on deployment assets without platform markers; review stays observation-oriented.",
+              "recommendation_id": "cloud-recommendation:3e1ba174937e12ab",
+              "rule_ids": [
+                "cloud.cloud-061"
+              ],
+              "title": "Review deployment assets without platform markers"
+            }
+          ]
+        },
+        {
+          "group": "Scope acknowledgements",
+          "recommendations": [
+            {
+              "action": "Interpret Cloud synthesis as hygiene inventory only until additional cloud analysis capabilities exist.",
+              "audience": "status",
+              "conclusion_ids": [
+                "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:2f5ba5c2d7d73e5b96ed"
+              ],
+              "conditional": true,
+              "finding_ids": [],
+              "kind": "acknowledge_unsupported_cloud_analysis_scope",
+              "presentation_group": "Scope acknowledgements",
+              "rationale": "Documented limitations keep conclusions from overstating cloud readiness or portability.",
+              "recommendation_id": "cloud-recommendation:b52081c8cbd2d60a",
+              "rule_ids": [],
+              "title": "Acknowledge unsupported cloud analysis scope"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Interpret Cloud synthesis as hygiene inventory only until additional cloud analysis capabilities exist.",
+          "audience": "status",
+          "conclusion_ids": [
+            "cloud-conclusion:cloud.conclusion.unsupported-cloud-analysis-scope:2f5ba5c2d7d73e5b96ed"
+          ],
+          "conditional": true,
+          "finding_ids": [],
+          "kind": "acknowledge_unsupported_cloud_analysis_scope",
+          "presentation_group": "Scope acknowledgements",
+          "rationale": "Documented limitations keep conclusions from overstating cloud readiness or portability.",
+          "recommendation_id": "cloud-recommendation:b52081c8cbd2d60a",
+          "rule_ids": [],
+          "title": "Acknowledge unsupported cloud analysis scope"
+        },
+        {
+          "action": "Review the linked deployment findings and confirm pipeline assets remain intentional.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:a24940f493293319a873"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:cloud.cloud-040:dea4e53b3772f64f"
+          ],
+          "kind": "review_deployment_pipeline_signals",
+          "presentation_group": "Deployment and coverage",
+          "rationale": "CLOUD-040 matched on deployment pipeline artifacts; review does not prescribe CI/CD redesign.",
+          "recommendation_id": "cloud-recommendation:3f7493c79be73b9e",
+          "rule_ids": [
+            "cloud.cloud-040"
+          ],
+          "title": "Review deployment pipeline signals"
+        },
+        {
+          "action": "Review the linked findings and confirm whether platform markers are intentionally absent for this repository.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:ef2ca4a5e087fa5ce99d"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:cloud.cloud-061:4bd946f64049caa3"
+          ],
+          "kind": "review_deployment_without_platform",
+          "presentation_group": "Deployment and coverage",
+          "rationale": "CLOUD-061 matched on deployment assets without platform markers; review stays observation-oriented.",
+          "recommendation_id": "cloud-recommendation:3e1ba174937e12ab",
+          "rule_ids": [
+            "cloud.cloud-061"
+          ],
+          "title": "Review deployment assets without platform markers"
+        }
+      ],
+      "recommendations_displayed": 3,
+      "recommendations_total": 3,
+      "repository_name": "angular-realworld-example-app",
+      "schema_name": "report.cloud",
+      "section_id": "report.cloud",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Cloud assessment completed using supported repository-cloud evidence and hygiene rules.",
+      "synthesis_status": "succeeded",
+      "technology_family_summary": {
+        "entries": [
+          {
+            "family_id": "containers",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          },
+          {
+            "family_id": "deployment_pipelines",
+            "finding_count": 1,
+            "finding_ids": [
+              "finding:cloud.cloud-040:dea4e53b3772f64f"
+            ],
+            "observed": true,
+            "technologies": []
+          },
+          {
+            "family_id": "iac",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          },
+          {
+            "family_id": "managed_services",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          },
+          {
+            "family_id": "orchestration",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          },
+          {
+            "family_id": "platforms",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          },
+          {
+            "family_id": "serverless",
+            "finding_count": 0,
+            "finding_ids": [],
+            "observed": false,
+            "technologies": []
+          }
+        ],
+        "families_observed": 1,
+        "families_total": 7,
+        "note": "Technology families summarize Finding-derived cloud signal groups only. They do not establish cloud readiness or portability."
+      },
+      "themes": [
+        {
+          "finding_count": 2,
+          "finding_ids": [
+            "finding:cloud.cloud-040:dea4e53b3772f64f",
+            "finding:cloud.cloud-061:4bd946f64049caa3"
+          ],
+          "kind": "cloud_hygiene_landscape",
+          "rule_ids": [
+            "cloud.cloud-001",
+            "cloud.cloud-002",
+            "cloud.cloud-010",
+            "cloud.cloud-011",
+            "cloud.cloud-020",
+            "cloud.cloud-021",
+            "cloud.cloud-030",
+            "cloud.cloud-040",
+            "cloud.cloud-050",
+            "cloud.cloud-060",
+            "cloud.cloud-061"
+          ],
+          "scope": "repository",
+          "summary": "The supported Cloud Hygiene rules produced 2 findings across 2 matched rules.",
+          "theme_id": "cloud-theme:0d6ed0d22bb8",
+          "title": "Cloud hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_coverage",
+          "rule_ids": [
+            "cloud.cloud-001",
+            "cloud.cloud-002",
+            "cloud.cloud-010",
+            "cloud.cloud-011",
+            "cloud.cloud-020",
+            "cloud.cloud-021",
+            "cloud.cloud-030",
+            "cloud.cloud-040",
+            "cloud.cloud-050",
+            "cloud.cloud-060",
+            "cloud.cloud-061"
+          ],
+          "scope": "coverage",
+          "summary": "Rule execution coverage: 11 executed, 2 matched, 9 not matched; evidence status repository_cloud.",
+          "theme_id": "cloud-theme:6fcde23f9f77",
+          "title": "Rule execution coverage"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:cloud.cloud-040:dea4e53b3772f64f"
+          ],
+          "kind": "cloud_deployment_automation",
+          "rule_ids": [
+            "cloud.cloud-040"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report cloud-related deployment pipeline artifacts.",
+          "theme_id": "cloud-theme:34c6230e7d2e",
+          "title": "Cloud deployment automation"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:cloud.cloud-061:4bd946f64049caa3"
+          ],
+          "kind": "deployment_without_platform",
+          "rule_ids": [
+            "cloud.cloud-061"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report cloud deployment assets without AWS, Azure, or GCP platform markers.",
+          "theme_id": "cloud-theme:79fb125a8bd2",
+          "title": "Deployment assets without platform evidence"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "status",
+          "summary": "4 documented limitations bound this assessment: provider APIs, readiness scoring, and modernization advice remain out of scope.",
+          "theme_id": "cloud-theme:b8a8a19ed930",
+          "title": "Unsupported cloud analysis scope"
+        }
+      ],
+      "themes_displayed": 5,
+      "themes_total": 5,
+      "title": "Cloud Intelligence",
+      "traceability": {
+        "edge_count": 12,
+        "finding_ids": [
+          "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "finding:cloud.cloud-061:4bd946f64049caa3"
+        ],
+        "sample_edges": [
+          {
+            "edge_id": "cloud-trace:11cf670fae9ff2b7",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-recommendation:3f7493c79be73b9e"
+          },
+          {
+            "edge_id": "cloud-trace:14de60fef47e3203",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud_capability_requested"
+          },
+          {
+            "edge_id": "cloud-trace:1af37a882255ac92",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-conclusion:cloud.conclusion.cloud-deployment-automation-observed:a24940f493293319a873"
+          },
+          {
+            "edge_id": "cloud-trace:229d03cf54fcfe13",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-conclusion:cloud.conclusion.cloud-hygiene-landscape-identified:491ae455cfec9b4eaf43"
+          },
+          {
+            "edge_id": "cloud-trace:2833fe7ba0d548f1",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-limitation:72795e326f59"
+          },
+          {
+            "edge_id": "cloud-trace:315b68d3efeb403a",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-limitation:e1b7e93c4bd1"
+          },
+          {
+            "edge_id": "cloud-trace:4575584fe5d90ccf",
+            "relation": "section_to_theme",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-theme:b8a8a19ed930"
+          },
+          {
+            "edge_id": "cloud-trace:5c12f8c2ecd3fc2f",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-limitation:bf01e5ad027b"
+          },
+          {
+            "edge_id": "cloud-trace:6c88a4d97b64a244",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud_findings_evaluated"
+          },
+          {
+            "edge_id": "cloud-trace:7590e5c12c75bbfd",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud_evidence_availability"
+          },
+          {
+            "edge_id": "cloud-trace:92ad0d82cb77fee3",
+            "relation": "section_to_theme",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-theme:34c6230e7d2e"
+          },
+          {
+            "edge_id": "cloud-trace:9303002212a3df40",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.cloud",
+            "target_id": "cloud-conclusion:cloud.conclusion.deployment-without-platform-observed:ef2ca4a5e087fa5ce99d"
+          }
+        ],
+        "summary": "12 traceability edges link the Cloud assessment section to packs, findings, themes, conclusions, and limitations. Finding references use Finding IDs only."
+      }
+    },
+    "comparison": null,
+    "coverage": {
+      "ai_interpretation": "not_requested",
+      "deterministic_analysis": "completed",
+      "static_analysis": "disabled"
+    },
+    "dependency": {
+      "assessment_scope": "Repository-level declared-dependency assessment for angular-realworld-example-app",
+      "conclusion_groups": [
+        {
+          "audience": "status",
+          "conclusions": [
+            {
+              "audience": "status",
+              "conclusion_id": "dep-conclusion:dependency.conclusion.insufficient-evidence:3f4cc9b7c8af8006e636",
+              "confidence": "high",
+              "finding_count": 0,
+              "kind": "insufficient_evidence",
+              "recommendation_ids": [],
+              "summary": "Dependency synthesis cannot produce production-health conclusions because usable dependency inventory evidence is unavailable.",
+              "theme_ids": [],
+              "title": "Dependency inventory unavailable"
+            }
+          ],
+          "recommendations": []
+        }
+      ],
+      "conclusions": [
+        {
+          "audience": "status",
+          "conclusion_id": "dep-conclusion:dependency.conclusion.insufficient-evidence:3f4cc9b7c8af8006e636",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "insufficient_evidence",
+          "recommendation_ids": [],
+          "summary": "Dependency synthesis cannot produce production-health conclusions because usable dependency inventory evidence is unavailable.",
+          "theme_ids": [],
+          "title": "Dependency inventory unavailable"
+        }
+      ],
+      "coverage": {
+        "diagnostic_samples": [],
+        "diagnostic_total": 0,
+        "evidence_fingerprint": "e2885f2bbe3d7a8b",
+        "evidence_schema_version": "1.1.0",
+        "evidence_status": "not_applicable",
+        "manifests_discovered": 0,
+        "manifests_failed": 0,
+        "manifests_parsed": 0,
+        "manifests_partially_parsed": 0,
+        "manifests_supported": 0,
+        "note": "Diagnostics are coverage signals, not hygiene findings.",
+        "production_parse_failures": 0,
+        "proven_unresolved_count": 0,
+        "test_fixture_parse_failures": 0,
+        "unsupported_construct_count": 0,
+        "unsupported_resolution_count": 0
+      },
+      "dependency_pack_id": "dependency.core",
+      "dependency_pack_version": "1.0.0",
+      "diagnostics": [],
+      "diagnostics_total": 0,
+      "executive_summary": "Dependency assessment could not establish safe conclusions from the available repository evidence.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "hotspot_presentation_note": "Hotspots are shown in inventory presentation order (production before test/fixture before unknown; then highest severity, distinct rules, finding count, path). This is not a risk or priority ranking.",
+      "hygiene_findings": [],
+      "hygiene_findings_displayed": 0,
+      "hygiene_findings_total": 0,
+      "landscape": [
+        {
+          "count": 0,
+          "group": "totals",
+          "key": "declarations_collected",
+          "label": "Declarations collected"
+        },
+        {
+          "count": 0,
+          "group": "totals",
+          "key": "manifests_supported",
+          "label": "Supported manifests"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_active",
+          "label": "Production active dependencies"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_management",
+          "label": "Production dependency-management declarations"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_plugins",
+          "label": "Production build plugins"
+        },
+        {
+          "count": 0,
+          "group": "declaration_kind",
+          "key": "production_test_dev",
+          "label": "Production test/development declarations"
+        },
+        {
+          "count": 0,
+          "group": "source_role",
+          "key": "test_declarations",
+          "label": "Test/fixture declarations"
+        },
+        {
+          "count": 0,
+          "group": "source_role",
+          "key": "unknown_declarations",
+          "label": "Unknown-role declarations"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "cve-data-not-assessed",
+          "importance": "material",
+          "limitation_id": "dep-limitation:0aa84a2422a7",
+          "summary": "No CVE, advisory, or vulnerability database is consulted."
+        },
+        {
+          "category": "other",
+          "importance": "material",
+          "limitation_id": "dep-limitation:1a0256ecf8f5",
+          "summary": "npm / package.json ecosystems are out of scope for this milestone. No framework or DependencyRole classification is inferred."
+        },
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:28d3a81db99d",
+          "summary": "Business impact remains unknown without explicit enterprise context for dependency assessment."
+        },
+        {
+          "category": "version-freshness-not-assessed",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:6215686b0836",
+          "summary": "Declared vs latest version comparison is not performed."
+        },
+        {
+          "category": "external-registry-not-queried",
+          "importance": "material",
+          "limitation_id": "dep-limitation:68776a1e45c7",
+          "summary": "No package-registry or internet calls are made. Version freshness and remote metadata are not assessed."
+        },
+        {
+          "category": "manifest-parsing-not-owned",
+          "importance": "material",
+          "limitation_id": "dep-limitation:787e8e7b5923",
+          "summary": "Dependency Intelligence does not reparse Maven, Gradle, or Python manifests. Rules consume Dependency Evidence only."
+        },
+        {
+          "category": "license-not-assessed",
+          "importance": "contextual",
+          "limitation_id": "dep-limitation:be9e6f97fff5",
+          "summary": "License compliance analysis is not performed."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "material",
+          "limitation_id": "dep-limitation:f477af9db7cf",
+          "summary": "Inventory and hygiene cover declared-manifest facts only. Transitive dependencies are not resolved. Build tools are not executed. Gradle support is static-parse only."
+        }
+      ],
+      "manifest_hotspots": [],
+      "metadata": {
+        "assessment_section_id": "assessment.dependency",
+        "configuration_fingerprint": "section_enabled=True|include_findings=True|include_coverage=True|include_limitations=True|include_traceability=True|include_execution_summary=True|include_synthesis=True|pack_enabled=True",
+        "diagnostic_sample_limit": "20",
+        "evidence_fingerprint": "e2885f2bbe3d7a8b",
+        "evidence_pipeline": "dependency.manifest",
+        "finding_display_limit": "20",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "test_finding_count": "0"
+      },
+      "production_health": {
+        "affected_manifests": [],
+        "conclusions": [],
+        "finding_count": 0,
+        "findings": [],
+        "findings_displayed": 0,
+        "findings_total": 0,
+        "none_detected_statement": "No production dependency hygiene findings were detected by the enabled repository-local rules.",
+        "recommendations": []
+      },
+      "recommendation_groups": [],
+      "recommendations": [],
+      "repository_name": "angular-realworld-example-app",
+      "section_id": "report.dependency",
+      "section_version": "1.0.0",
+      "status": "insufficient_evidence",
+      "status_label": "Insufficient evidence",
+      "status_summary": "The repository was processed, but dependency conclusions could not be established safely from the available evidence.",
+      "test_observations": {
+        "affected_manifests": [],
+        "conclusions": [],
+        "finding_count": 0,
+        "findings": [],
+        "findings_displayed": 0,
+        "findings_total": 0,
+        "present": false,
+        "recommendations": [],
+        "summary": "No test/fixture dependency hygiene findings were recorded for this assessment.",
+        "title": "No separate test/fixture observations"
+      },
+      "title": "Dependency Assessment",
+      "traceability": {
+        "edge_count": 13,
+        "relation_types": [],
+        "sample_edges": [],
+        "summary": "Showing 0 of 13 traceability edges (recommendation→conclusion, conclusion→theme/finding/hotspot/manifest/diagnostic)."
+      }
+    },
+    "deterministic_recommendations": [
+      {
+        "actions": [
+          "Remove committed secrets from the repository, rotate exposed credentials, and move sensitive values to a secrets manager or secure configuration store."
+        ],
+        "category": "security",
+        "dependencies": [],
+        "description": "Remove committed secrets from the repository, rotate exposed credentials, and move sensitive values to a secrets manager or secure configuration store.",
+        "effort": "s",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "security.secret_finding_count=8",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "id": "c02e13bf-c517-57d8-86b3-ed5c2247c850",
+        "presentation_bucket": "immediate",
+        "priority": "critical",
+        "priority_score": 165.0,
+        "rationale": "Security facts report 8 secret-related finding(s). Exposed credentials can enable unauthorized access and must be remediated before other modernization work.",
+        "related_finding_ids": [
+          "75660995-9298-542b-9975-188c501af453"
+        ],
+        "risk": "high",
+        "rule_id": "REC.SECURITY.001",
+        "title": "Rotate credentials and remove committed secrets"
+      },
+      {
+        "actions": [
+          "Generate lockfile: Run the package manager install and commit the produced lockfile.",
+          "Use ci installs in pipelines: Prefer npm ci (or yarn/pnpm frozen lockfile installs) in CI."
+        ],
+        "category": "dependency",
+        "dependencies": [],
+        "description": "Add package-lock.json (or yarn/pnpm lock) for reproducible installs.",
+        "effort": "unknown",
+        "evidence": [
+          {
+            "evidence_type": "finding",
+            "excerpt": "NPM lockfile missing",
+            "path": null,
+            "source_id": "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+          },
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "package.json without lockfile",
+            "path": "package.json",
+            "source_id": "angular-realworld-example-app"
+          }
+        ],
+        "id": "recommendation:codestrata-rec-npm-lockfile-missing:e3f3882d6657cd5c",
+        "presentation_bucket": "near_term",
+        "priority": "medium",
+        "priority_score": 90.0,
+        "rationale": "package.json is present, but no npm/yarn/pnpm lockfile was found in the repository inventory.",
+        "related_finding_ids": [
+          "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+        ],
+        "risk": "medium",
+        "rule_id": "provider:codestrata-rec-npm-lockfile-missing",
+        "title": "Commit an npm lockfile"
+      },
+      {
+        "actions": [
+          "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes."
+        ],
+        "category": "cloud",
+        "dependencies": [],
+        "description": "Establish a minimal, repeatable deployment baseline (for example packaging, environment configuration, and a documented release path) so modernization changes can be validated outside local developer machines. This does not require adopting Kubernetes.",
+        "effort": "m",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "cloud.has_docker=false; cloud.has_kubernetes=false; cloud.has_terraform=false; cloud.has_cloudformation=false; cloud.has_serverless=false",
+            "file_path": "repository-facts",
+            "line_number": null
+          }
+        ],
+        "id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+        "presentation_bucket": "future",
+        "priority": "medium",
+        "priority_score": 36.0,
+        "rationale": "Cloud readiness facts show no Docker, Kubernetes, Terraform, CloudFormation, or serverless assets. Without a deployment baseline, modernization delivery remains difficult to reproduce and validate.",
+        "related_finding_ids": [],
+        "risk": "medium",
+        "rule_id": "REC.CLOUD.001",
+        "title": "Create a deployment baseline for modernization"
+      }
+    ],
+    "executive_summary": {
+      "ci_detected": true,
+      "cloud_capabilities": [
+        "deployment-workflow"
+      ],
+      "critical_high_finding_count": 2,
+      "file_count": 87,
+      "finding_count": 15,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 2,
+        "info": 7,
+        "low": 3,
+        "medium": 3
+      },
+      "recommendation_count": 3,
+      "recommendations_by_priority": {
+        "critical": 1,
+        "high": 0,
+        "low": 0,
+        "medium": 2
+      },
+      "summary_text": "Analyzed repository 'angular-realworld-example-app' with 87 scanned file(s). Detected 15 finding(s) (0 critical) and 3 recommendation(s) (1 critical/high priority). Automated tests were detected. CI was detected. Cloud capabilities detected: deployment-workflow.",
+      "technology_count": 6,
+      "tests_detected": true
+    },
+    "findings": [
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "security",
+        "customer_visibility": null,
+        "description": "Configuration key 'jobs_build_and_release_steps[6]_env_gh_token' in '.github/workflows/deploy.yml' (source) holds a non-empty literal credential/secret value (redacted=[REDACTED]).",
+        "evidence": [
+          {
+            "evidence_type": "configuration_key",
+            "excerpt": "key_family=secret; value_kind=literal",
+            "node_id": null,
+            "path": ".github/workflows/deploy.yml",
+            "source_id": "ev:1bfe93e3eba89a28fac1a0bc"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:security.credential-literal:9122d2255108f9c4",
+        "metadata": {
+          "assessment_dimensions": "security",
+          "business_impact": "unknown",
+          "classification": "source",
+          "confidence": "high",
+          "evidence_id": "ev:1bfe93e3eba89a28fac1a0bc",
+          "is_wildcard_origin": "false",
+          "key_family": "secret",
+          "normalized_key": "jobs_build_and_release_steps[6]_env_gh_token",
+          "pack_id": "security.core",
+          "pack_version": "1.0.0",
+          "path": ".github/workflows/deploy.yml",
+          "placeholder_status": "not_applicable",
+          "provenance": "security.core",
+          "recommendation_effort_band": "unknown",
+          "recommendation_expected_outcome": "Improve repository-local security hygiene using typed evidence facts",
+          "recommendation_rationale": "Replace committed credential literals with environment references or a secrets manager. Rotate any exposed credentials.",
+          "recommendation_validation": "static_evidence_only",
+          "redacted_preview": "[REDACTED]",
+          "remediation": "Replace committed credential literals with environment references or a secrets manager. Rotate any exposed credentials.",
+          "rule_version": "1.0.0",
+          "section": "jobs",
+          "security_category": "security.credential",
+          "shared_rule_platform": "true",
+          "subject_keys": ".github/workflows/deploy.yml,ev:1bfe93e3eba89a28fac1a0bc,jobs_build_and_release_steps[6]_env_gh_token,security.credential-literal,source",
+          "taxonomy_id": "security.credential",
+          "value_fingerprint": "9a757c36c69eb0bce9e266c5c57d9f6d1211a986b29704a97b2f268a30f30008",
+          "value_kind": "literal"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "security.credential-literal",
+        "severity": "high",
+        "source": "rule",
+        "title": "Credential literal in configuration"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "security",
+        "customer_visibility": null,
+        "description": "Possible hardcoded credential in src/app/core/auth/services/user.service.spec.ts: password=[REDACTED]",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "password=[REDACTED]",
+            "file_path": "src/app/core/auth/services/user.service.spec.ts",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "75660995-9298-542b-9975-188c501af453",
+        "metadata": {
+          "credential_name": "password",
+          "path": "src/app/core/auth/services/user.service.spec.ts"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "SEC004",
+        "severity": "high",
+        "source": "static_analysis",
+        "title": "Possible hardcoded credential"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "npm"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "npm dependency locking is not configured for: package.json.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "npm dependency locking is not configured for: package.json.",
+            "file_path": "package.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "723da815-2c86-5096-a270-63e916e12a30",
+        "metadata": {
+          "ecosystem": "npm",
+          "manifest_paths": [
+            "package.json"
+          ]
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP003",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency locking is not configured"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "npm"
+        ],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "rxjs in package.json uses version '^7.8.2'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "rxjs in package.json uses version '^7.8.2'.",
+            "file_path": "package.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "069642cd-0e59-5912-b67b-4858aa7ecea9",
+        "metadata": {
+          "dependency": "rxjs",
+          "ecosystem": "npm",
+          "manifest_path": "package.json",
+          "scope": "runtime",
+          "version": "^7.8.2"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "DEP002",
+        "severity": "medium",
+        "source": "deterministic",
+        "title": "Dependency uses a dynamic version"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "package.json is present, but no npm/yarn/pnpm lockfile was found in the repository inventory.",
+        "evidence": [
+          {
+            "evidence_type": "repository_manifest",
+            "excerpt": "package.json without lockfile",
+            "node_id": null,
+            "path": "package.json",
+            "source_id": "angular-realworld-example-app"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e",
+        "metadata": {},
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-npm-lockfile-missing",
+        "severity": "medium",
+        "source": "rule",
+        "title": "NPM lockfile missing"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "No files were found under conventional test or specification directories",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "No files were found under conventional test or specification directories",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "d356ee11-6e35-5aa8-b4f9-37c4717a1497",
+        "metadata": {
+          "test_file_count": 0
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH004",
+        "severity": "low",
+        "source": "static_analysis",
+        "title": "No conventional test structure detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud",
+        "customer_visibility": null,
+        "description": "Observed cloud deployment assets without AWS, Azure, or GCP platform markers. This does not claim cloud usage is absent.",
+        "evidence": [
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_asset; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/playwright.yml",
+            "source_id": "cloud-deploy:1419f26653062c7dd8234ddd"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_asset; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/deploy.yml",
+            "source_id": "cloud-deploy:49614f9b8bf0c75f849a4621"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_asset; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/security-tests.yml",
+            "source_id": "cloud-deploy:5398893d4dc11ab3f902b02e"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_asset; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/lint.yml",
+            "source_id": "cloud-deploy:951b07c0c9805cdef518bba8"
+          },
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "deployment_asset_kinds=1; families=deployment; platforms=0",
+            "node_id": null,
+            "path": null,
+            "source_id": "cloud.cloud-061:summary"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:cloud.cloud-061:4bd946f64049caa3",
+        "metadata": {
+          "assessment_dimensions": "cloud",
+          "business_impact": "unknown",
+          "cloud_category": "cloud.configuration",
+          "confidence": "medium",
+          "confirmation_level": "structurally_inspected",
+          "detail": "deployment_workflow_candidate",
+          "evidence_id": "cloud-deploy:1419f26653062c7dd8234ddd",
+          "observation_only": "true",
+          "pack_id": "cloud.core",
+          "pack_version": "1.0.0",
+          "path": ".github/workflows/playwright.yml",
+          "provenance": "cloud.core",
+          "remediation": "Observation only: review the repository-cloud evidence facts for cloud.cloud-061. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "1,cloud.cloud-061,deployment_without_platform",
+          "taxonomy_id": "cloud.configuration"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "cloud.cloud-061",
+        "severity": "low",
+        "source": "rule",
+        "title": "Cloud deployment assets without runtime platform evidence"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "testing",
+        "customer_visibility": null,
+        "description": "Declared test framework(s) without corresponding structural observation: playwright, vitest.",
+        "evidence": [
+          {
+            "evidence_type": "configuration_key",
+            "excerpt": "framework=playwright; basis=declared; no matching structural observation",
+            "node_id": null,
+            "path": "package.json",
+            "source_id": "test-framework:22a90ed8ac8f3d1167f29d87"
+          },
+          {
+            "evidence_type": "configuration_key",
+            "excerpt": "framework=vitest; basis=declared; no matching structural observation",
+            "node_id": null,
+            "path": "package.json",
+            "source_id": "test-framework:4eb36b1895d068b61876ee70"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:testing.test-003:36138433195ca7c3",
+        "metadata": {
+          "assessment_dimensions": "testing",
+          "basis": "declared",
+          "business_impact": "unknown",
+          "confidence": "medium",
+          "declared_version": "1.58.0",
+          "detail": "package.json:@playwright/test",
+          "evidence_id": "test-framework:22a90ed8ac8f3d1167f29d87",
+          "framework": "playwright",
+          "pack_id": "testing.core",
+          "pack_version": "1.0.0",
+          "path": "package.json",
+          "provenance": "testing.core",
+          "recommendation_effort_band": "unknown",
+          "recommendation_expected_outcome": "Improve repository-local test hygiene using typed evidence facts",
+          "recommendation_rationale": "Confirm whether declared test frameworks are still needed, or whether tests exist outside inspected boundaries.",
+          "recommendation_validation": "static_evidence_only",
+          "remediation": "Confirm whether declared test frameworks are still needed, or whether tests exist outside inspected boundaries.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "declared_without_observation,playwright,vitest,testing.test-003",
+          "taxonomy_id": "testing.framework",
+          "testing_category": "testing.framework"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "testing.test-003",
+        "severity": "low",
+        "source": "rule",
+        "title": "Declared test framework lacks structural observation"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "architecture",
+        "customer_visibility": null,
+        "description": "Architectural components appear within one repository application structure",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Architectural components appear within one repository application structure",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+        "metadata": {
+          "component_count": 2
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "ARCH007",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "Single-application architecture detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud",
+        "customer_visibility": null,
+        "description": "Observed cloud deployment pipeline artifacts (github_actions).",
+        "evidence": [
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_fact; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/playwright.yml",
+            "source_id": "cloud-deploy:1419f26653062c7dd8234ddd"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_fact; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/deploy.yml",
+            "source_id": "cloud-deploy:49614f9b8bf0c75f849a4621"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_fact; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/security-tests.yml",
+            "source_id": "cloud-deploy:5398893d4dc11ab3f902b02e"
+          },
+          {
+            "evidence_type": "file_location",
+            "excerpt": "deployment_fact; confirmation=structurally_inspected",
+            "node_id": null,
+            "path": ".github/workflows/lint.yml",
+            "source_id": "cloud-deploy:951b07c0c9805cdef518bba8"
+          },
+          {
+            "evidence_type": "repository_fact",
+            "excerpt": "deployment_systems=github_actions",
+            "node_id": null,
+            "path": null,
+            "source_id": "cloud.cloud-040:summary"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:cloud.cloud-040:dea4e53b3772f64f",
+        "metadata": {
+          "assessment_dimensions": "cloud",
+          "business_impact": "unknown",
+          "cloud_category": "cloud.deployment_automation",
+          "confidence": "medium",
+          "confirmation_level": "structurally_inspected",
+          "detail": "deployment_workflow_candidate",
+          "evidence_id": "cloud-deploy:1419f26653062c7dd8234ddd",
+          "observation_only": "true",
+          "pack_id": "cloud.core",
+          "pack_version": "1.0.0",
+          "path": ".github/workflows/playwright.yml",
+          "provenance": "cloud.core",
+          "remediation": "Observation only: review the repository-cloud evidence facts for cloud.cloud-040. This finding does not prescribe a remediation.",
+          "rule_version": "1.0.0",
+          "shared_rule_platform": "true",
+          "subject_keys": "cloud.cloud-040,deployment,github_actions",
+          "taxonomy_id": "cloud.deployment_automation"
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "cloud.cloud-040",
+        "severity": "informational",
+        "source": "rule",
+        "title": "Cloud deployment pipeline detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud_readiness",
+        "customer_visibility": null,
+        "description": "Detected 1 deployment-oriented workflow file(s)",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected 1 deployment-oriented workflow file(s)",
+            "file_path": ".github/workflows/deploy.yml",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "5bed71d7-5944-577c-830c-49c5117e9c2d",
+        "metadata": {
+          "file_count": 1,
+          "sample_paths": [
+            ".github/workflows/deploy.yml"
+          ]
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "CLOUD008",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "Automated deployment workflow detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "cloud_readiness",
+        "customer_visibility": null,
+        "description": "Detected cloud capabilities: deployment_workflows",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Detected cloud capabilities: deployment_workflows",
+            "file_path": ".",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "86469f6e-7ca1-59b1-bbc4-50bc85dec4fa",
+        "metadata": {
+          "capabilities": [
+            "deployment_workflows"
+          ],
+          "capability_count": 1
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "CLOUD010",
+        "severity": "informational",
+        "source": "static_analysis",
+        "title": "Cloud deployment readiness signals detected"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [],
+        "category": "dependency",
+        "customer_visibility": null,
+        "description": "package.json declares engines.node as >=20.11.1.",
+        "evidence": [
+          {
+            "evidence_type": "dependency_version",
+            "excerpt": "engines.node=>=20.11.1",
+            "node_id": null,
+            "path": "package.json",
+            "source_id": "dependency:nodejs:nodejs"
+          }
+        ],
+        "group_id": null,
+        "id": "finding:codestrata-rule-node-engine-detected:cf7bf66f602353c2",
+        "metadata": {
+          "node_engine": ">=20.11.1",
+          "node_major": 20
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "codestrata-rule-node-engine-detected",
+        "severity": "informational",
+        "source": "rule",
+        "title": "Node engine >=20.11.1 declared"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "npm",
+          "Angular",
+          "JavaScript",
+          "TypeScript",
+          "Node.js",
+          "Vitest"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Detected build systems: npm.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Repository artifact used to detect the build system.",
+            "file_path": "package.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "8f522a03-3371-546d-86e6-84de4cfa871a",
+        "metadata": {
+          "build_files": [
+            "package.json"
+          ],
+          "build_systems": [
+            "npm"
+          ],
+          "inferred_commands": [],
+          "java_source_versions": [],
+          "java_target_versions": [],
+          "lock_files": [],
+          "modules": [],
+          "multi_module": false,
+          "multiple_build_systems": false,
+          "packaging_types": [],
+          "plugins": [],
+          "wrapper_files": []
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "build.system.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "title": "Build System"
+      },
+      {
+        "affected_file_count": null,
+        "affected_technologies": [
+          "npm",
+          "Angular",
+          "JavaScript",
+          "TypeScript",
+          "Node.js",
+          "Vitest"
+        ],
+        "category": "maintainability",
+        "customer_visibility": null,
+        "description": "Collected structural metrics for repository 'angular-realworld-example-app'.",
+        "evidence": [
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": ".github/workflows/deploy.yml",
+            "line_number": null
+          },
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": ".github/workflows/lint.yml",
+            "line_number": null
+          },
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": ".github/workflows/playwright.yml",
+            "line_number": null
+          },
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": ".github/workflows/security-tests.yml",
+            "line_number": null
+          },
+          {
+            "column_number": null,
+            "description": "Repository artifact included in structural metrics.",
+            "file_path": "package.json",
+            "line_number": null
+          }
+        ],
+        "group_id": null,
+        "id": "00499757-19b0-5d92-b094-c9cd4debb184",
+        "metadata": {
+          "build_files": 1,
+          "configuration_files": 11,
+          "docker_files": 0,
+          "github_workflows": 4,
+          "kubernetes_manifests": 0,
+          "source_files": 50,
+          "test_files": 6,
+          "total_files": 87
+        },
+        "modernization_relevance": null,
+        "occurrence_count": null,
+        "provider_category": null,
+        "provider_name": null,
+        "provider_priority": null,
+        "rule_id": "repository.metrics.summary",
+        "severity": "informational",
+        "source": "deterministic",
+        "title": "Repository Metrics"
+      }
+    ],
+    "generated_at": "2026-07-29T06:37:27.309507Z",
+    "mode": "deterministic",
+    "organization_name": null,
+    "report_title": "Engineering Assessment",
+    "repository": {
+      "default_branch": null,
+      "file_count": 87,
+      "name": "angular-realworld-example-app",
+      "reference": "validation/repos/angular-realworld-example-app",
+      "source_type": "local"
+    },
+    "repository_facts": {
+      "architecture": {
+        "has_api_layer": false,
+        "has_domain_layer": true,
+        "has_persistence_layer": false,
+        "has_service_layer": true,
+        "is_multi_application": false
+      },
+      "build": {
+        "build_files": [
+          "package.json"
+        ],
+        "build_systems": [
+          "npm"
+        ],
+        "inferred_commands": [
+          "npm test",
+          "npm run build",
+          "npm start"
+        ],
+        "java_source_versions": [],
+        "java_target_versions": [],
+        "lock_files": [],
+        "modules": [],
+        "multi_module": false,
+        "multiple_build_systems": false,
+        "packaging_types": [],
+        "plugins": [],
+        "wrapper_files": []
+      },
+      "cicd": {
+        "ci_platforms": [
+          "github-actions"
+        ],
+        "has_build": false,
+        "has_ci": true,
+        "has_deployment": true,
+        "has_deployment_workflow": true,
+        "has_security_scanning": false,
+        "has_tests": false,
+        "job_count": 4,
+        "pipeline_count": 4,
+        "pipeline_files": [
+          ".github/workflows/deploy.yml",
+          ".github/workflows/lint.yml",
+          ".github/workflows/playwright.yml",
+          ".github/workflows/security-tests.yml"
+        ],
+        "pipelines": [
+          {
+            "build_commands": [],
+            "deployment_commands": [
+              "releases=$(gh release list --json tagName,createdAt --limit 100)",
+              "echo \"$releases\" | jq -r '",
+              "echo \"Deleting release: $tag\"",
+              "gh release delete \"$tag\" --cleanup-tag -y",
+              "softprops/action-gh-release@v1"
+            ],
+            "jobs": [
+              "build-and-release"
+            ],
+            "metadata": {
+              "actions": [
+                "actions/checkout@v4",
+                "oven-sh/setup-bun@v2",
+                "softprops/action-gh-release@v1"
+              ],
+              "commands": [
+                "bun install",
+                "bun run build",
+                "cd dist/angular-conduit/browser && zip -r ../../../build.zip .",
+                "releases=$(gh release list --json tagName,createdAt --limit 100)",
+                "cutoff=$(date -d '7 days ago' -Iseconds)",
+                "echo \"$releases\" | jq -r '",
+                "to_entries",
+                "| .[]",
+                "| select(.key >= 5)",
+                "| select(.value.createdAt < \"'\"$cutoff\"'\")",
+                "| .value.tagName",
+                "' | while read -r tag; do",
+                "echo \"Deleting release: $tag\"",
+                "gh release delete \"$tag\" --cleanup-tag -y",
+                "done"
+              ],
+              "database_commands": [],
+              "infrastructure_commands": [],
+              "job_count": 1,
+              "packaging_commands": []
+            },
+            "path": ".github/workflows/deploy.yml",
+            "pipeline_name": "Build and Release",
+            "provider": "github-actions",
+            "security_commands": [],
+            "test_commands": [],
+            "triggers": [
+              "push"
+            ],
+            "uses_artifacts": false,
+            "uses_caching": false,
+            "uses_containers": false,
+            "uses_matrix_builds": false
+          },
+          {
+            "build_commands": [],
+            "deployment_commands": [],
+            "jobs": [
+              "format"
+            ],
+            "metadata": {
+              "actions": [
+                "actions/checkout@v4",
+                "oven-sh/setup-bun@v2"
+              ],
+              "commands": [
+                "bun install",
+                "bun run format:check"
+              ],
+              "database_commands": [],
+              "infrastructure_commands": [],
+              "job_count": 1,
+              "packaging_commands": []
+            },
+            "path": ".github/workflows/lint.yml",
+            "pipeline_name": "Format Check",
+            "provider": "github-actions",
+            "security_commands": [],
+            "test_commands": [],
+            "triggers": [
+              "push",
+              "pull_request"
+            ],
+            "uses_artifacts": false,
+            "uses_caching": false,
+            "uses_containers": false,
+            "uses_matrix_builds": false
+          },
+          {
+            "build_commands": [],
+            "deployment_commands": [],
+            "jobs": [
+              "test"
+            ],
+            "metadata": {
+              "actions": [
+                "actions/checkout@v4",
+                "oven-sh/setup-bun@v2",
+                "actions/upload-artifact@v4"
+              ],
+              "commands": [
+                "bun install",
+                "bunx playwright install --with-deps chromium",
+                "bun run test:e2e"
+              ],
+              "database_commands": [],
+              "infrastructure_commands": [],
+              "job_count": 1,
+              "packaging_commands": []
+            },
+            "path": ".github/workflows/playwright.yml",
+            "pipeline_name": "Playwright Tests",
+            "provider": "github-actions",
+            "security_commands": [],
+            "test_commands": [],
+            "triggers": [
+              "push",
+              "pull_request"
+            ],
+            "uses_artifacts": true,
+            "uses_caching": false,
+            "uses_containers": false,
+            "uses_matrix_builds": false
+          },
+          {
+            "build_commands": [],
+            "deployment_commands": [],
+            "jobs": [
+              "security-tests"
+            ],
+            "metadata": {
+              "actions": [
+                "actions/checkout@v4",
+                "oven-sh/setup-bun@v2",
+                "actions/upload-artifact@v4"
+              ],
+              "commands": [
+                "bun install",
+                "bunx playwright install --with-deps chromium",
+                "bun run test:e2e:security"
+              ],
+              "database_commands": [],
+              "infrastructure_commands": [],
+              "job_count": 1,
+              "packaging_commands": []
+            },
+            "path": ".github/workflows/security-tests.yml",
+            "pipeline_name": "Security Tests",
+            "provider": "github-actions",
+            "security_commands": [],
+            "test_commands": [],
+            "triggers": [
+              "push",
+              "pull_request"
+            ],
+            "uses_artifacts": true,
+            "uses_caching": false,
+            "uses_containers": false,
+            "uses_matrix_builds": false
+          }
+        ],
+        "providers": [
+          "github-actions"
+        ],
+        "uses_artifacts": true,
+        "uses_caching": false,
+        "uses_containers": false,
+        "uses_matrix_builds": false
+      },
+      "cloud": {
+        "cloud_capabilities": [
+          "deployment-workflow"
+        ],
+        "has_cloudformation": false,
+        "has_devcontainer": false,
+        "has_docker": false,
+        "has_docker_compose": false,
+        "has_helm": false,
+        "has_kubernetes": false,
+        "has_serverless": false,
+        "has_terraform": false
+      },
+      "dependencies": {
+        "cloud_sdks": [],
+        "database_drivers": [],
+        "dependencies": [
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@analogjs/vite-plugin-angular",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^2.2.2",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/animations",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/build",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "21.2.10",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/cli",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "21.2.10",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/common",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/compiler",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/compiler-cli",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/core",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/forms",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/platform-browser",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/platform-browser-dynamic",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@angular/router",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.2.12",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "testing"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@playwright/test",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^1.58.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@rx-angular/cdk",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.0.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "framework"
+            ],
+            "dynamic_version": false,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@rx-angular/template",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "21.0.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@types/marked",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^6.0.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "testing"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "@vitest/ui",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^4.0.18",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "husky",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^9.1.7",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "jsdom",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^27.4.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "lint-staged",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^16.2.7",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "marked",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^17.0.1",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "testing"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "playwright",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^1.58.0",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "prettier",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^3.8.1",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "rxjs",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^7.8.2",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "tslib",
+            "scope": "runtime",
+            "unmanaged_version": false,
+            "version": "^2.8.1",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "typescript",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "~5.9.3",
+            "version_managed": false,
+            "version_source": "dependency"
+          },
+          {
+            "categories": [
+              "testing"
+            ],
+            "dynamic_version": true,
+            "ecosystem": "npm",
+            "manifest_path": "package.json",
+            "name": "vitest",
+            "scope": "development",
+            "unmanaged_version": false,
+            "version": "^4.0.18",
+            "version_managed": false,
+            "version_source": "dependency"
+          }
+        ],
+        "dependency_count": 27,
+        "development_dependency_count": 14,
+        "direct_dependency_count": 27,
+        "dynamic_version_dependencies": [
+          "@analogjs/vite-plugin-angular",
+          "@playwright/test",
+          "@types/marked",
+          "@vitest/ui",
+          "husky",
+          "jsdom",
+          "lint-staged",
+          "marked",
+          "playwright",
+          "prettier",
+          "rxjs",
+          "tslib",
+          "typescript",
+          "vitest"
+        ],
+        "framework_dependencies": [
+          "@analogjs/vite-plugin-angular",
+          "@angular/animations",
+          "@angular/build",
+          "@angular/cli",
+          "@angular/common",
+          "@angular/compiler",
+          "@angular/compiler-cli",
+          "@angular/core",
+          "@angular/forms",
+          "@angular/platform-browser",
+          "@angular/platform-browser-dynamic",
+          "@angular/router",
+          "@rx-angular/cdk",
+          "@rx-angular/template"
+        ],
+        "logging_libraries": [],
+        "manifests": [
+          {
+            "ecosystem": "npm",
+            "has_version_management": false,
+            "lockfile": false,
+            "manifest_type": "manifest",
+            "path": "package.json",
+            "version_management_source": null
+          }
+        ],
+        "outdated_dependencies": [],
+        "security_libraries": [],
+        "test_dependency_count": 0,
+        "testing_libraries": [
+          "@playwright/test",
+          "@vitest/ui",
+          "playwright",
+          "vitest"
+        ],
+        "unmanaged_version_dependencies": []
+      },
+      "security": {
+        "dangerous_execution_count": 0,
+        "secret_finding_count": 8,
+        "sensitive_file_count": 0,
+        "weak_crypto_count": 0
+      },
+      "structure": {
+        "application_count": 1,
+        "architecture_layers": [
+          "service",
+          "domain"
+        ],
+        "file_count": 87,
+        "has_tests": true,
+        "source_file_count": 50,
+        "test_file_count": 6
+      },
+      "technology": {
+        "build_tools": [
+          "npm"
+        ],
+        "detected_technologies": [
+          "npm",
+          "Angular",
+          "JavaScript",
+          "TypeScript",
+          "Node.js",
+          "Vitest"
+        ],
+        "frameworks": [
+          "Angular"
+        ],
+        "programming_languages": [
+          "JavaScript",
+          "TypeScript"
+        ],
+        "test_frameworks": [
+          "Vitest"
+        ]
+      }
+    },
+    "roadmap": {
+      "assumptions": [
+        "Roadmap initiatives are derived only from existing assessment findings and recommendations; assessments are not re-run.",
+        "Phase assignment is deterministic from recommendation category (stabilize / secure / modernize / optimize).",
+        "Priority, effort, and risk are mapped from recommendation and finding attributes using fixed rules (no AI estimation).",
+        "Cross-phase dependencies follow Stabilize → Secure → Modernize → Optimize."
+      ],
+      "confidence": "high",
+      "engine_version": "1.0.0",
+      "initiatives": [
+        {
+          "category": "dependency",
+          "confidence": "high",
+          "depends_on_initiative_ids": [],
+          "effort": "s",
+          "evidence_references": [
+            {
+              "evidence_type": "finding",
+              "excerpt": "NPM lockfile missing",
+              "path": null,
+              "source_id": "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+            },
+            {
+              "evidence_type": "repository_manifest",
+              "excerpt": "package.json without lockfile",
+              "path": "package.json",
+              "source_id": "angular-realworld-example-app"
+            }
+          ],
+          "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+          "initiative_id": "roadmap-initiative:modernize:dependency:sha256:7d236948f",
+          "phase": "modernize",
+          "phase_label": "Modernize",
+          "priority": "medium",
+          "risk": "medium",
+          "sequence": 0,
+          "summary": "Commit an npm lockfile",
+          "supporting_finding_ids": [
+            "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+          ],
+          "supporting_recommendation_ids": [
+            "recommendation:codestrata-rec-npm-lockfile-missing:e3f3882d6657cd5c"
+          ],
+          "title": "Modernize — Dependency"
+        }
+      ],
+      "initiatives_displayed": 1,
+      "initiatives_total": 1,
+      "limitations": [
+        "5 finding(s) are not referenced by any roadmap initiative recommendation.",
+        "Does not produce schedules, dates, cost estimates, or portfolio plans.",
+        "Does not mutate repositories or create external tracker tickets.",
+        "Does not invent findings or recommendations beyond the provided inputs."
+      ],
+      "metadata": {
+        "engine_version": "1.0.0",
+        "finding_count": "6",
+        "initiative_count": "1",
+        "phase_count": "1",
+        "recommendation_count": "1",
+        "uncovered_finding_count": "5"
+      },
+      "phases": [
+        {
+          "initiative_ids": [
+            "roadmap-initiative:modernize:dependency:sha256:7d236948f"
+          ],
+          "initiatives": [
+            {
+              "category": "dependency",
+              "confidence": "high",
+              "depends_on_initiative_ids": [],
+              "effort": "s",
+              "evidence_references": [
+                {
+                  "evidence_type": "finding",
+                  "excerpt": "NPM lockfile missing",
+                  "path": null,
+                  "source_id": "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+                },
+                {
+                  "evidence_type": "repository_manifest",
+                  "excerpt": "package.json without lockfile",
+                  "path": "package.json",
+                  "source_id": "angular-realworld-example-app"
+                }
+              ],
+              "expected_outcome": "Architecture, dependency, and modernization recommendations progress under control.",
+              "initiative_id": "roadmap-initiative:modernize:dependency:sha256:7d236948f",
+              "phase": "modernize",
+              "phase_label": "Modernize",
+              "priority": "medium",
+              "risk": "medium",
+              "sequence": 0,
+              "summary": "Commit an npm lockfile",
+              "supporting_finding_ids": [
+                "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e"
+              ],
+              "supporting_recommendation_ids": [
+                "recommendation:codestrata-rec-npm-lockfile-missing:e3f3882d6657cd5c"
+              ],
+              "title": "Modernize — Dependency"
+            }
+          ],
+          "objective": "Address structural, dependency, and platform modernization recommendations.",
+          "phase": "modernize",
+          "phase_id": "roadmap-phase:modernize",
+          "sequence": 2,
+          "title": "Modernize"
+        }
+      ],
+      "schema_name": "modernization-roadmap",
+      "section_id": "report.roadmap",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "summary": "1 initiative(s) across 1 phase(s) derived from 1 recommendation(s)."
+    },
+    "security": {
+      "assessment_scope": "Repository-level Security hygiene assessment for angular-realworld-example-app",
+      "assessment_status": "partially_succeeded",
+      "conclusions": [
+        {
+          "audience": "repository",
+          "conclusion_id": "sec-conclusion:security.conclusion.findings-concentrated:67d7154e3273b8b78e2d",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "findings_concentrated",
+          "recommendation_ids": [
+            "sec-recommendation:aa894b79d4e7ae53"
+          ],
+          "summary": "1 repository locations show Security finding concentration. Top locations: .github/workflows/deploy.yml.",
+          "theme_ids": [
+            "sec-theme:fa8e207e27ca"
+          ],
+          "title": "Findings concentrated"
+        },
+        {
+          "audience": "production_health",
+          "conclusion_id": "sec-conclusion:security.conclusion.literal-credentials-detected:f33b5b09f65ced977cb5",
+          "confidence": "high",
+          "finding_count": 1,
+          "kind": "literal_credentials_detected",
+          "recommendation_ids": [
+            "sec-recommendation:03f08a0ad8a1fdd6",
+            "sec-recommendation:1008ec05da7f459f"
+          ],
+          "summary": "1 non-placeholder credential-sensitive literals were identified in supported configuration formats.",
+          "theme_ids": [],
+          "title": "Literal credentials detected"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "sec-conclusion:security.conclusion.partial-evidence-coverage:47e9aa878e241d713c01",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "partial_evidence_coverage",
+          "recommendation_ids": [
+            "sec-recommendation:b84767ac03bd9f70",
+            "sec-recommendation:cc0f01aee658b078"
+          ],
+          "summary": "Repository-sensitive evidence collection was partial because 3 supported input files could not be fully parsed or inspected.",
+          "theme_ids": [
+            "sec-theme:0913bd6fff88"
+          ],
+          "title": "Partial evidence coverage"
+        },
+        {
+          "audience": "production_health",
+          "conclusion_id": "sec-conclusion:security.conclusion.production-security-findings-present:99bb5bed48b5856264ff",
+          "confidence": "high",
+          "finding_count": 1,
+          "kind": "production_security_findings_present",
+          "recommendation_ids": [],
+          "summary": "1 production-role Security hygiene findings were emitted within the supported evidence scope.",
+          "theme_ids": [],
+          "title": "Production Security findings present"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:8d13d537844620a8d7a4",
+          "confidence": "high",
+          "finding_count": 1,
+          "kind": "security_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "The supported repository security hygiene rules produced 1 production findings and 0 additional test, fixture, or unknown-role observations.",
+          "theme_ids": [
+            "sec-theme:0ef0f17047eb"
+          ],
+          "title": "Security hygiene landscape identified"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff",
+          "confidence": "high",
+          "finding_count": 0,
+          "kind": "unsupported_security_analysis_scope",
+          "recommendation_ids": [
+            "sec-recommendation:0c10fe5acc0b2bb3",
+            "sec-recommendation:089fed39de699863",
+            "sec-recommendation:bb3f4ca59907d25f"
+          ],
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_ids": [
+            "sec-theme:867cd4de36bc"
+          ],
+          "title": "Unsupported Security analysis scope"
+        }
+      ],
+      "conclusions_displayed": 6,
+      "conclusions_total": 6,
+      "coverage_summary": {
+        "artifacts_inspected": 1,
+        "candidate_artifacts_discovered": 0,
+        "configuration_facts_collected": 1,
+        "evidence_schema_name": "repository-sensitive-evidence",
+        "evidence_schema_version": "1.1.0",
+        "evidence_status": "partially_succeeded",
+        "formats_represented": [
+          "json",
+          "yaml"
+        ],
+        "malformed_files": 3,
+        "note": "Coverage describes supported repository-sensitive evidence only. Candidate artifacts are not proof of secrets. Zero findings are scoped to supported evidence; runtime and Git history are not assessed.",
+        "rules_executed": 8,
+        "rules_registered": 8,
+        "skipped_files": 0,
+        "source_roles_represented": [
+          "production"
+        ],
+        "structured_files_parsed": 1,
+        "unsupported_binaries": 0
+      },
+      "diagnostics": [
+        {
+          "diagnostic_code": "malformed_json",
+          "diagnostic_id": "rs-diagnostic:a29836ab95e1",
+          "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+          "origin": "evidence",
+          "path": "tsconfig.spec.json"
+        },
+        {
+          "diagnostic_code": "malformed_json",
+          "diagnostic_id": "rs-diagnostic:b1abc4640aa2",
+          "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+          "origin": "evidence",
+          "path": "tsconfig.app.json"
+        },
+        {
+          "diagnostic_code": "malformed_json",
+          "diagnostic_id": "rs-diagnostic:bad7a82714cb",
+          "message": "Structured configuration could not be fully parsed; no raw values are retained.",
+          "origin": "evidence",
+          "path": "tsconfig.json"
+        }
+      ],
+      "diagnostics_displayed": 3,
+      "diagnostics_total": 3,
+      "executive_summary": "The supported repository Security hygiene assessment identified 1 production-role finding across 1 repository location. Evidence collection was partial because 3 supported inputs could not be fully parsed or inspected.",
+      "finding_summary": {
+        "additional_observations": [],
+        "additional_observations_displayed": 0,
+        "all_finding_count": 1,
+        "by_category": [
+          {
+            "count": 1,
+            "key": "security.credential"
+          }
+        ],
+        "by_rule": [
+          {
+            "count": 1,
+            "key": "security.credential-literal"
+          }
+        ],
+        "by_severity": [
+          {
+            "count": 1,
+            "key": "high"
+          }
+        ],
+        "hotspot_count": 1,
+        "locations_represented": 1,
+        "none_detected_statement": null,
+        "production_finding_count": 1,
+        "production_findings": [
+          {
+            "category": "security.credential",
+            "confidence": "high",
+            "explanation": "Configuration key 'jobs_build_and_release_steps[6]_env_gh_token' in '.github/workflows/deploy.yml' (source) holds a non-empty literal credential/secret value (redacted=[REDACTED]).",
+            "finding_id": "finding:security.credential-literal:9122d2255108f9c4",
+            "path": ".github/workflows/deploy.yml",
+            "remediation": "Replace committed credential literals with environment references or a secrets manager. Rotate any exposed credentials.",
+            "rule_id": "security.credential-literal",
+            "severity": "high",
+            "source_role": "production",
+            "title": "Credential literal in configuration"
+          }
+        ],
+        "production_findings_displayed": 1,
+        "test_finding_count": 0,
+        "unknown_finding_count": 0
+      },
+      "generated_from_assessment_section_version": "1.3.0",
+      "hotspot_presentation_note": "Hotspots order repository locations by finding concentration for presentation only. They do not assert risk, vulnerability, or priority.",
+      "hotspots": [
+        {
+          "categories": [
+            "security.credential"
+          ],
+          "finding_ids": [
+            "finding:security.credential-literal:9122d2255108f9c4"
+          ],
+          "highest_severity": "high",
+          "hotspot_id": "sec-hotspot:34488bc38f2c",
+          "label": "Security finding hotspot",
+          "path": ".github/workflows/deploy.yml",
+          "presentation_order": 1,
+          "production_finding_count": 1,
+          "rule_ids": [
+            "security.credential-literal"
+          ],
+          "test_finding_count": 0,
+          "total_finding_count": 1,
+          "unknown_finding_count": 0
+        }
+      ],
+      "hotspots_displayed": 1,
+      "hotspots_total": 1,
+      "limitations": [
+        {
+          "category": "security-evidence-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:13a498eeebd8",
+          "summary": "Assessment inventory consumes platform repository-sensitive evidence snapshots only; no Git history or runtime environment."
+        },
+        {
+          "category": "foundation-only",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:1c64314414dd",
+          "summary": "Security Intelligence Phase 4.5.5 organizes repository-local hygiene Findings into inventories and deterministic synthesis. Zero findings does not mean the repository is secure."
+        },
+        {
+          "category": "no-git-history-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:1f15b2697bf3",
+          "summary": "No git-history security analysis is performed."
+        },
+        {
+          "category": "no-data-flow-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:5f805d1ca2ad",
+          "summary": "No taint or data-flow analysis is performed."
+        },
+        {
+          "category": "rules-not-implemented",
+          "importance": "critical",
+          "limitation_id": "sec-limitation:93a53f56ad3e",
+          "summary": "Security hygiene rules evaluate typed repository-sensitive evidence facts only; inventory does not re-run rules."
+        },
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:cfdf7999a500",
+          "summary": "Business impact remains unknown for hygiene findings."
+        },
+        {
+          "category": "no-runtime-analysis",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:ea39a330990f",
+          "summary": "No runtime security analysis or secret validity checks."
+        },
+        {
+          "category": "no-package-registry-query",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:edcdfedf3465",
+          "summary": "No package registry access is performed."
+        },
+        {
+          "category": "no-external-vulnerability-metadata",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:f40950317d0f",
+          "summary": "No external vulnerability metadata, CVE, or package registry queries."
+        },
+        {
+          "category": "no-sast",
+          "importance": "contextual",
+          "limitation_id": "sec-limitation:fead453a4f20",
+          "summary": "No SAST, DAST, entropy analysis, keystore decryption, or certificate trust/expiry analysis."
+        }
+      ],
+      "limitations_displayed": 10,
+      "limitations_total": 10,
+      "metadata": {
+        "all_finding_count": "1",
+        "assessment_section_id": "assessment.security",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_sensitive",
+        "finding_display_limit": "20",
+        "hotspot_limit": "20",
+        "production_finding_count": "1",
+        "theme_limit": "12"
+      },
+      "recommendation_groups": [
+        {
+          "group": "Repository credential hygiene",
+          "recommendations": [
+            {
+              "action": "Replace committed credential-sensitive literals with environment or secret-manager references.",
+              "audience": "production_health",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.literal-credentials-detected:f33b5b09f65ced977cb5"
+              ],
+              "conditional": true,
+              "kind": "replace_literal_credentials_with_external_secret_reference",
+              "presentation_group": "Repository credential hygiene",
+              "rationale": "Externalizing literals reduces repository exposure of credential-sensitive configuration values.",
+              "recommendation_id": "sec-recommendation:03f08a0ad8a1fdd6",
+              "title": "Replace literals with external secret references"
+            },
+            {
+              "action": "Review repository locations with multiple Security findings and remediate the supporting hygiene conditions.",
+              "audience": "repository",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.findings-concentrated:67d7154e3273b8b78e2d"
+              ],
+              "conditional": true,
+              "kind": "review_security_finding_hotspots",
+              "presentation_group": "Repository credential hygiene",
+              "rationale": "Hotspots summarize finding concentration without asserting risk ratings.",
+              "recommendation_id": "sec-recommendation:aa894b79d4e7ae53",
+              "title": "Review Security finding hotspots"
+            },
+            {
+              "action": "Replace committed credential-sensitive literals with environment or secret-manager references and rotate the corresponding credentials where they may have been used.",
+              "audience": "production_health",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.literal-credentials-detected:f33b5b09f65ced977cb5"
+              ],
+              "conditional": true,
+              "kind": "rotate_and_replace_literal_credentials",
+              "presentation_group": "Repository credential hygiene",
+              "rationale": "Credential-literal findings cite supported configuration facts without validating secret activity.",
+              "recommendation_id": "sec-recommendation:1008ec05da7f459f",
+              "title": "Rotate and replace literal credentials"
+            }
+          ]
+        },
+        {
+          "group": "Coverage expansion",
+          "recommendations": [
+            {
+              "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+              ],
+              "conditional": true,
+              "kind": "add_external_dependency_vulnerability_analysis",
+              "presentation_group": "Coverage expansion",
+              "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:0c10fe5acc0b2bb3",
+              "title": "Add external dependency vulnerability analysis"
+            },
+            {
+              "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+              ],
+              "conditional": true,
+              "kind": "add_git_history_secret_scanning",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Git history analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:089fed39de699863",
+              "title": "Add Git history secret scanning"
+            },
+            {
+              "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+              ],
+              "conditional": true,
+              "kind": "add_runtime_security_validation",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Runtime analysis is an accepted unsupported limitation.",
+              "recommendation_id": "sec-recommendation:bb3f4ca59907d25f",
+              "title": "Add runtime security validation"
+            },
+            {
+              "action": "Correct malformed supported configuration files so repository-sensitive evidence collection can complete.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.partial-evidence-coverage:47e9aa878e241d713c01"
+              ],
+              "conditional": true,
+              "kind": "correct_malformed_configuration",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Malformed inputs reduce evidence completeness; they are not treated as Security findings.",
+              "recommendation_id": "sec-recommendation:b84767ac03bd9f70",
+              "title": "Correct malformed supported configuration"
+            },
+            {
+              "action": "Expand supported repository-sensitive evidence coverage for files that were skipped, unsupported, or only partially inspected.",
+              "audience": "coverage",
+              "conclusion_ids": [
+                "sec-conclusion:security.conclusion.partial-evidence-coverage:47e9aa878e241d713c01"
+              ],
+              "conditional": true,
+              "kind": "expand_supported_evidence_coverage",
+              "presentation_group": "Coverage expansion",
+              "rationale": "Coverage expansion improves inventory completeness without claiming a full security assessment.",
+              "recommendation_id": "sec-recommendation:cc0f01aee658b078",
+              "title": "Expand supported evidence coverage"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Add external dependency vulnerability analysis outside this repository-sensitive hygiene assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+          ],
+          "conditional": true,
+          "kind": "add_external_dependency_vulnerability_analysis",
+          "presentation_group": "Coverage expansion",
+          "rationale": "External vulnerability metadata is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:0c10fe5acc0b2bb3",
+          "title": "Add external dependency vulnerability analysis"
+        },
+        {
+          "action": "Add Git history secret scanning outside this repository snapshot assessment.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+          ],
+          "conditional": true,
+          "kind": "add_git_history_secret_scanning",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Git history analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:089fed39de699863",
+          "title": "Add Git history secret scanning"
+        },
+        {
+          "action": "Add runtime security validation outside this repository snapshot assessment before drawing broader conclusions.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.unsupported-security-analysis-scope:464468db6d9576f75fff"
+          ],
+          "conditional": true,
+          "kind": "add_runtime_security_validation",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Runtime analysis is an accepted unsupported limitation.",
+          "recommendation_id": "sec-recommendation:bb3f4ca59907d25f",
+          "title": "Add runtime security validation"
+        },
+        {
+          "action": "Correct malformed supported configuration files so repository-sensitive evidence collection can complete.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.partial-evidence-coverage:47e9aa878e241d713c01"
+          ],
+          "conditional": true,
+          "kind": "correct_malformed_configuration",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Malformed inputs reduce evidence completeness; they are not treated as Security findings.",
+          "recommendation_id": "sec-recommendation:b84767ac03bd9f70",
+          "title": "Correct malformed supported configuration"
+        },
+        {
+          "action": "Expand supported repository-sensitive evidence coverage for files that were skipped, unsupported, or only partially inspected.",
+          "audience": "coverage",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.partial-evidence-coverage:47e9aa878e241d713c01"
+          ],
+          "conditional": true,
+          "kind": "expand_supported_evidence_coverage",
+          "presentation_group": "Coverage expansion",
+          "rationale": "Coverage expansion improves inventory completeness without claiming a full security assessment.",
+          "recommendation_id": "sec-recommendation:cc0f01aee658b078",
+          "title": "Expand supported evidence coverage"
+        },
+        {
+          "action": "Replace committed credential-sensitive literals with environment or secret-manager references.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.literal-credentials-detected:f33b5b09f65ced977cb5"
+          ],
+          "conditional": true,
+          "kind": "replace_literal_credentials_with_external_secret_reference",
+          "presentation_group": "Repository credential hygiene",
+          "rationale": "Externalizing literals reduces repository exposure of credential-sensitive configuration values.",
+          "recommendation_id": "sec-recommendation:03f08a0ad8a1fdd6",
+          "title": "Replace literals with external secret references"
+        },
+        {
+          "action": "Review repository locations with multiple Security findings and remediate the supporting hygiene conditions.",
+          "audience": "repository",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.findings-concentrated:67d7154e3273b8b78e2d"
+          ],
+          "conditional": true,
+          "kind": "review_security_finding_hotspots",
+          "presentation_group": "Repository credential hygiene",
+          "rationale": "Hotspots summarize finding concentration without asserting risk ratings.",
+          "recommendation_id": "sec-recommendation:aa894b79d4e7ae53",
+          "title": "Review Security finding hotspots"
+        },
+        {
+          "action": "Replace committed credential-sensitive literals with environment or secret-manager references and rotate the corresponding credentials where they may have been used.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "sec-conclusion:security.conclusion.literal-credentials-detected:f33b5b09f65ced977cb5"
+          ],
+          "conditional": true,
+          "kind": "rotate_and_replace_literal_credentials",
+          "presentation_group": "Repository credential hygiene",
+          "rationale": "Credential-literal findings cite supported configuration facts without validating secret activity.",
+          "recommendation_id": "sec-recommendation:1008ec05da7f459f",
+          "title": "Rotate and replace literal credentials"
+        }
+      ],
+      "recommendations_displayed": 8,
+      "recommendations_total": 8,
+      "repository_name": "angular-realworld-example-app",
+      "schema_name": "report.security",
+      "section_id": "report.security",
+      "section_version": "1.0.0",
+      "security_pack_id": "security.core",
+      "security_pack_version": "1.0.0",
+      "status": "partially_succeeded",
+      "status_label": "Partially succeeded",
+      "status_summary": "Security assessment produced usable results with partial evidence or rule evaluation limitations.",
+      "synthesis_status": "succeeded",
+      "themes": [
+        {
+          "finding_count": 1,
+          "kind": "security_hygiene_landscape",
+          "rule_ids": [
+            "security.credential-literal"
+          ],
+          "scope": "repository",
+          "source_role": "production",
+          "summary": "The supported repository security hygiene rules produced 1 production findings and 0 additional test, fixture, or unknown-role observations.",
+          "theme_id": "sec-theme:0ef0f17047eb",
+          "title": "Security hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "kind": "evidence_coverage",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Repository-sensitive evidence collection status is partially_succeeded; 0 candidate artifacts were discovered and 1 configuration facts were collected within supported formats.",
+          "theme_id": "sec-theme:d221d632b81d",
+          "title": "Evidence coverage"
+        },
+        {
+          "finding_count": 1,
+          "kind": "credential_and_secret_hygiene",
+          "rule_ids": [
+            "security.credential-literal"
+          ],
+          "scope": "production",
+          "source_role": "production",
+          "summary": "1 credential-literal and 0 placeholder-credential findings were emitted from supported configuration facts.",
+          "theme_id": "sec-theme:80415a334ec4",
+          "title": "Credential and secret hygiene"
+        },
+        {
+          "finding_count": 1,
+          "kind": "finding_concentration",
+          "rule_ids": [],
+          "scope": "repository",
+          "source_role": "production",
+          "summary": "1 repository locations show Security finding concentration. Top locations: .github/workflows/deploy.yml.",
+          "theme_id": "sec-theme:fa8e207e27ca",
+          "title": "Security finding concentration"
+        },
+        {
+          "finding_count": 0,
+          "kind": "partial_evidence_coverage",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Repository-sensitive evidence collection was partial because 3 supported input files could not be fully parsed or inspected.",
+          "theme_id": "sec-theme:0913bd6fff88",
+          "title": "Partial evidence coverage"
+        },
+        {
+          "finding_count": 0,
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "coverage",
+          "source_role": "unknown",
+          "summary": "Accepted Security assessment limitations include repository snapshot analysis only, without Git history, runtime validation, entropy analysis, certificate trust checks, keystore inspection, or external vulnerability metadata.",
+          "theme_id": "sec-theme:867cd4de36bc",
+          "title": "Unsupported analysis scope"
+        }
+      ],
+      "themes_displayed": 6,
+      "themes_total": 6,
+      "title": "Security Intelligence",
+      "traceability": {
+        "edge_count": 29,
+        "sample_edges": [
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:edcdfedf3465"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.security",
+            "target_id": "security.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:ea39a330990f"
+          },
+          {
+            "relation": "section_to_theme",
+            "source_id": "assessment.security",
+            "target_id": "sec-theme:80415a334ec4"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.security",
+            "target_id": "sec-recommendation:bb3f4ca59907d25f"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.security",
+            "target_id": "sec-conclusion:security.conclusion.security-hygiene-landscape-identified:8d13d537844620a8d7a4"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.security",
+            "target_id": "sec-conclusion:security.conclusion.production-security-findings-present:99bb5bed48b5856264ff"
+          },
+          {
+            "relation": "section_to_hotspot",
+            "source_id": "assessment.security",
+            "target_id": "sec-hotspot:34488bc38f2c"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:93a53f56ad3e"
+          },
+          {
+            "relation": "section_to_finding",
+            "source_id": "assessment.security",
+            "target_id": "finding:security.credential-literal:9122d2255108f9c4"
+          },
+          {
+            "relation": "finding_to_evidence",
+            "source_id": "finding:security.credential-literal:9122d2255108f9c4",
+            "target_id": "ev:1bfe93e3eba89a28fac1a0bc"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.security",
+            "target_id": "sec-limitation:cfdf7999a500"
+          }
+        ],
+        "summary": "29 assessment traceability edges available; showing 12 bounded samples."
+      }
+    },
+    "static_analysis": {
+      "duration_ms": null,
+      "eligible_file_count": 0,
+      "files_analyzed": 0,
+      "finding_count": 0,
+      "grouped_finding_count": 0,
+      "groups": [],
+      "informational_count": 0,
+      "message": "PMD static analysis was disabled for this assessment.",
+      "observations": [],
+      "primary_count": 0,
+      "profile": null,
+      "provider": "PMD",
+      "provider_version": null,
+      "providers": [
+        {
+          "duration_ms": null,
+          "eligible_file_count": 0,
+          "files_analyzed": 0,
+          "finding_count": 0,
+          "grouped_finding_count": 0,
+          "informational_count": 0,
+          "message": "PMD static analysis was disabled for this assessment.",
+          "primary_count": 0,
+          "profile": null,
+          "provider": "PMD",
+          "provider_id": "pmd",
+          "provider_version": null,
+          "raw_observation_count": 0,
+          "rulesets": null,
+          "status": "disabled",
+          "supporting_count": 0,
+          "suppressed_from_html_count": 0,
+          "warnings": []
+        }
+      ],
+      "raw_observation_count": 0,
+      "rulesets": null,
+      "status": "disabled",
+      "supporting_count": 0,
+      "suppressed_from_html_count": 0
+    },
+    "summary": {
+      "ai_executed": false,
+      "ai_recommendation_count": 0,
+      "ci_detected": true,
+      "cloud_capabilities": [
+        "deployment-workflow"
+      ],
+      "critical_high_finding_count": 2,
+      "deterministic_recommendation_count": 3,
+      "finding_count": 15,
+      "findings_by_severity": {
+        "critical": 0,
+        "high": 2,
+        "info": 7,
+        "low": 3,
+        "medium": 3
+      },
+      "phase_count": 0,
+      "recommendation_count": 3,
+      "recommendations_by_priority": {
+        "critical": 1,
+        "high": 0,
+        "low": 0,
+        "medium": 2
+      },
+      "static_analysis_status": "disabled",
+      "summary_text": "Analyzed repository 'angular-realworld-example-app' with 87 scanned file(s). Detected 15 finding(s) (0 critical) and 3 recommendation(s) (1 critical/high priority). Automated tests were detected. CI was detected. Cloud capabilities detected: deployment-workflow.",
+      "technology_count": 6,
+      "tests_detected": true
+    },
+    "technical_debt": {
+      "assessment_scope": "Repository-level static technical debt assessment for angular-realworld-example-app",
+      "conclusions": [
+        {
+          "audience": "production_health",
+          "conclusion_id": "td-conclusion:technical_debt.conclusion.no-production-findings:58ffa786deeb93e2fa3b",
+          "confidence": "high",
+          "finding_count": 0,
+          "hotspot_count": 0,
+          "kind": "no_production_findings",
+          "policy_id": "technical_debt.conclusion.no-production-findings",
+          "recommendation_ids": [
+            "td-recommendation:91cbef3998e0977a"
+          ],
+          "source_role": "production",
+          "summary": "Under current Technical Debt complexity rules and thresholds, no production-source findings were emitted.",
+          "theme_ids": [],
+          "title": "No production complexity-threshold findings"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "td-conclusion:technical_debt.conclusion.partial-coverage:f5ea643be8158bf51a6c",
+          "confidence": "high",
+          "finding_count": 0,
+          "hotspot_count": 0,
+          "kind": "partial_coverage",
+          "policy_id": "technical_debt.conclusion.partial-coverage",
+          "recommendation_ids": [],
+          "source_role": "unknown",
+          "summary": "Complexity evidence coverage is partial for this repository. Unsupported languages or parse failures may leave some units unmeasured.",
+          "theme_ids": [],
+          "title": "Complexity coverage is partial"
+        }
+      ],
+      "coverage_summary": [
+        {
+          "area_id": "complexity_coverage",
+          "display": "Unavailable",
+          "label": "Complexity coverage",
+          "note": "No eligible Python/Java source units were measured.",
+          "ratio": null,
+          "status": "partial"
+        },
+        {
+          "area_id": "debt_rule_coverage",
+          "display": "Unavailable",
+          "label": "Debt rule coverage",
+          "note": "Complexity SharedRules evaluated against collected evidence.",
+          "ratio": null,
+          "status": "measured"
+        },
+        {
+          "area_id": "dependency_support_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Dependency-support coverage",
+          "note": "Dependency support-window analysis is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "duplication_coverage",
+          "display": "Not measured by the current provider set.",
+          "label": "Duplication coverage",
+          "note": "Duplication detection is not implemented.",
+          "ratio": null,
+          "status": "unsupported"
+        },
+        {
+          "area_id": "enterprise_context_coverage",
+          "display": "Enterprise context was not supplied for this repository assessment.",
+          "label": "Enterprise-context coverage",
+          "note": "Enterprise context was not supplied for this assessment.",
+          "ratio": null,
+          "status": "not_applicable"
+        }
+      ],
+      "enterprise_context_used": false,
+      "executive_summary": "Technical debt assessment could not establish safe conclusions from the available repository evidence. Findings are not presented as confirmed debt concerns.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "hotspot_presentation_note": "Hotspots are shown in inventory order (highest severity, then finding count, then path/unit). This is presentation order, not a priority score.",
+      "key_metrics": [
+        {
+          "key": "production_findings",
+          "label": "Production findings",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "production_hotspots",
+          "label": "Production hotspots shown",
+          "note": "0 production hotspots in inventory (presentation order, not priority).",
+          "value": "0"
+        },
+        {
+          "key": "significant_themes",
+          "label": "Significant themes",
+          "note": null,
+          "value": "0"
+        },
+        {
+          "key": "conclusions",
+          "label": "Conclusions",
+          "note": null,
+          "value": "2"
+        },
+        {
+          "key": "complexity_coverage",
+          "label": "Complexity coverage",
+          "note": null,
+          "value": "Unavailable"
+        },
+        {
+          "key": "test_findings",
+          "label": "Test findings (separate)",
+          "note": "Presented as test-maintainability observation only.",
+          "value": "0"
+        }
+      ],
+      "limitations": [
+        {
+          "category": "business-impact-unknown",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:28d3a81db99d",
+          "summary": "Business impact remains unknown for repository-only technical debt assessment without explicit enterprise context."
+        },
+        {
+          "category": "other",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:44a96efdac7c",
+          "summary": "JavaScript and TypeScript complexity metrics are unsupported in Phase 4.3; only Python and Java collectors are available."
+        },
+        {
+          "category": "effort-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:8cf2e946fb95",
+          "summary": "No engineering-hours, staffing, or schedule estimate is produced by this assessment section."
+        },
+        {
+          "category": "financial-cost-not-assessed",
+          "importance": "material",
+          "limitation_id": "td-limitation:9baf8f9a8886",
+          "summary": "No financial cost, interest-rate, or dollar estimate is computed for technical debt."
+        },
+        {
+          "category": "workspace-content-excluded",
+          "importance": "informational",
+          "limitation_id": "td-limitation:c99ec05283e7",
+          "summary": "Paths under .codestrata/ and other shared ignore markers are excluded from complexity measurement."
+        },
+        {
+          "category": "other",
+          "importance": "informational",
+          "limitation_id": "td-limitation:d3545084789c",
+          "summary": "Cognitive complexity is not measured. Branch-point counts are structural keyword/operator counts, not certified cyclomatic products."
+        },
+        {
+          "category": "static-analysis-only",
+          "importance": "contextual",
+          "limitation_id": "td-limitation:db50f36548fa",
+          "summary": "Technical debt findings are based on static repository evidence. Runtime behavior and productivity loss are not observed."
+        }
+      ],
+      "metadata": {
+        "assessment_section_id": "assessment.technical_debt",
+        "configuration_fingerprint": "4cc1ba15f040b02a",
+        "evidence_fingerprint": "712e1a5c8ef7df36",
+        "evidence_pipeline": "language.complexity",
+        "hotspot_limit": "20",
+        "production_finding_count": "0",
+        "test_finding_count": "0"
+      },
+      "recommendations": [
+        {
+          "action": "No production complexity-threshold findings require remediation under the current rule pack and thresholds.",
+          "audience": "production_health",
+          "conclusion_ids": [
+            "td-conclusion:technical_debt.conclusion.no-production-findings:58ffa786deeb93e2fa3b"
+          ],
+          "conditional": false,
+          "rationale": "The production-primary inventory contains zero matching findings.",
+          "recommendation_id": "td-recommendation:91cbef3998e0977a",
+          "title": "Acknowledge empty production complexity inventory"
+        }
+      ],
+      "repository_name": "angular-realworld-example-app",
+      "section_id": "report.technical_debt",
+      "section_version": "1.0.0",
+      "significant_themes": [],
+      "status": "insufficient_evidence",
+      "status_label": "Insufficient evidence",
+      "status_summary": "The repository was processed, but technical debt conclusions could not be established safely from the available evidence.",
+      "technical_debt_pack_id": "technical_debt.core",
+      "technical_debt_pack_version": "1.0.0",
+      "test_observation": {
+        "conclusion_ids": [],
+        "finding_count": 0,
+        "present": false,
+        "summary": "No test-source complexity findings were recorded for this assessment.",
+        "title": "No separate test-maintainability observation"
+      },
+      "title": "Technical Debt Assessment",
+      "top_production_hotspots": [],
+      "traceability_summary": {
+        "edge_count": 12,
+        "relation_types": [
+          "recommendation_to_conclusion",
+          "section_to_conclusion",
+          "section_to_limitation",
+          "section_to_pack",
+          "section_to_recommendation"
+        ],
+        "sample_edges": [
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:8cf2e946fb95"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-conclusion:technical_debt.conclusion.partial-coverage:f5ea643be8158bf51a6c"
+          },
+          {
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:58ffa786deeb93e2fa3b"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:d3545084789c"
+          },
+          {
+            "relation": "section_to_pack",
+            "source_id": "assessment.technical_debt",
+            "target_id": "technical_debt.core"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:28d3a81db99d"
+          },
+          {
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-recommendation:91cbef3998e0977a"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:44a96efdac7c"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:c99ec05283e7"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:9baf8f9a8886"
+          },
+          {
+            "relation": "section_to_limitation",
+            "source_id": "assessment.technical_debt",
+            "target_id": "td-limitation:db50f36548fa"
+          },
+          {
+            "relation": "recommendation_to_conclusion",
+            "source_id": "td-recommendation:91cbef3998e0977a",
+            "target_id": "td-conclusion:technical_debt.conclusion.no-production-findings:58ffa786deeb93e2fa3b"
+          }
+        ],
+        "summary": "12 traceability relationships across 5 relation types."
+      }
+    },
+    "technologies": [
+      {
+        "category": "build_tool",
+        "confidence": 0.7,
+        "name": "npm",
+        "source": "package.json",
+        "version": null
+      },
+      {
+        "category": "framework",
+        "confidence": 1.0,
+        "name": "Angular",
+        "source": "package.json",
+        "version": "21.2.12"
+      },
+      {
+        "category": "language",
+        "confidence": 1.0,
+        "name": "JavaScript",
+        "source": "file_extension_or_package.json",
+        "version": null
+      },
+      {
+        "category": "language",
+        "confidence": 1.0,
+        "name": "TypeScript",
+        "source": "file_extension_or_tsconfig.json",
+        "version": null
+      },
+      {
+        "category": "runtime",
+        "confidence": 0.9,
+        "name": "Node.js",
+        "source": "package.json",
+        "version": null
+      },
+      {
+        "category": "testing",
+        "confidence": 1.0,
+        "name": "Vitest",
+        "source": "package.json",
+        "version": "^4.0.18"
+      }
+    ],
+    "testing": {
+      "assessment_scope": "Repository-level Test Hygiene assessment for angular-realworld-example-app",
+      "assessment_status": "succeeded",
+      "conclusions": [
+        {
+          "audience": "hygiene",
+          "conclusion_id": "test-conclusion:testing.conclusion.framework-declaration-gap-observed:e0aa003b67bc574643c9",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:testing.test-003:36138433195ca7c3"
+          ],
+          "kind": "framework_declaration_gap_observed",
+          "recommendation_ids": [
+            "test-recommendation:bb1e962b78a8d45e"
+          ],
+          "summary": "1 finding report declared test frameworks without matching structural observation.",
+          "theme_ids": [
+            "test-theme:d9ba46dcfb51"
+          ],
+          "title": "Framework declaration gap observed"
+        },
+        {
+          "audience": "coverage",
+          "conclusion_id": "test-conclusion:testing.conclusion.rule-execution-summary:3b21ec351dee78fd6a3f",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_summary",
+          "recommendation_ids": [],
+          "summary": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+          "theme_ids": [
+            "test-theme:6fcde23f9f77"
+          ],
+          "title": "Test Hygiene rule execution summary"
+        },
+        {
+          "audience": "repository",
+          "conclusion_id": "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:38fddc664e4a3e2adb7f",
+          "confidence": "high",
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:testing.test-003:36138433195ca7c3"
+          ],
+          "kind": "testing_hygiene_landscape_identified",
+          "recommendation_ids": [],
+          "summary": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+          "theme_ids": [
+            "test-theme:7d43087ce51d"
+          ],
+          "title": "Testing hygiene landscape identified"
+        },
+        {
+          "audience": "status",
+          "conclusion_id": "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:0e951e062be70fd72b4c",
+          "confidence": "high",
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_test_analysis_scope",
+          "recommendation_ids": [
+            "test-recommendation:5038971ff39456d5"
+          ],
+          "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+          "theme_ids": [
+            "test-theme:b8a8a19ed930"
+          ],
+          "title": "Unsupported test analysis scope acknowledged"
+        }
+      ],
+      "conclusions_displayed": 4,
+      "conclusions_total": 4,
+      "coverage_summary": {
+        "areas": [
+          {
+            "area_id": "testing_capability_requested",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_evidence_availability",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_findings_evaluated",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_inventory_complete",
+            "denominator": 1,
+            "maturity": "medium",
+            "numerator": 1,
+            "status": "measured"
+          },
+          {
+            "area_id": "testing_rules_enabled",
+            "denominator": 4,
+            "maturity": "medium",
+            "numerator": 4,
+            "status": "measured"
+          }
+        ],
+        "evidence_pipeline": "repository_testing",
+        "evidence_status": "succeeded",
+        "note": "Coverage describes assessment capability areas only. Runtime coverage percentages and test execution results are not measured."
+      },
+      "diagnostics": [],
+      "diagnostics_displayed": 0,
+      "diagnostics_total": 0,
+      "execution_summary": {
+        "conclusion_count": 4,
+        "entries": [
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-001"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-002"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "matched",
+            "executed": true,
+            "finding_count": 1,
+            "rule_id": "testing.test-003"
+          },
+          {
+            "enabled": true,
+            "evaluation_status": "not_matched",
+            "executed": true,
+            "finding_count": 0,
+            "rule_id": "testing.test-005"
+          }
+        ],
+        "note": "Rule execution summarizes registered Test Hygiene rules only. Zero findings are a bounded inventory outcome and do not certify test sufficiency or readiness for release.",
+        "recommendation_count": 2,
+        "rules_executed": 4,
+        "rules_failed": 0,
+        "rules_matched": 1,
+        "rules_not_applicable": 0,
+        "rules_not_matched": 3,
+        "rules_planned": 4,
+        "theme_count": 4,
+        "total_finding_count": 1
+      },
+      "executive_summary": "Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.",
+      "generated_from_assessment_section_version": "1.2.0",
+      "inventory_summary": {
+        "by_confidence": [
+          {
+            "count": 1,
+            "key": "medium"
+          }
+        ],
+        "by_rule": [
+          {
+            "count": 1,
+            "key": "testing.test-003"
+          }
+        ],
+        "by_severity": [
+          {
+            "count": 1,
+            "key": "low"
+          }
+        ],
+        "finding_count": 1,
+        "finding_ids": [
+          "finding:testing.test-003:36138433195ca7c3"
+        ],
+        "finding_ids_displayed": 1,
+        "none_detected_statement": null
+      },
+      "limitations": [
+        {
+          "category": "coverage-not-measured",
+          "limitation_id": "test-limitation:319a3a113184",
+          "summary": "Runtime code coverage percentages are not measured; only repository-observable coverage configuration facts are used."
+        },
+        {
+          "category": "test-execution-not-performed",
+          "limitation_id": "test-limitation:32e615baa6f3",
+          "summary": "Test execution is not performed. Test pass/fail status is not evaluated."
+        },
+        {
+          "category": "no-test-quality-conclusion",
+          "limitation_id": "test-limitation:41974742ac6b",
+          "summary": "Test Hygiene findings are repository-local hygiene signals only. Zero findings does not mean the repository is well tested or release ready."
+        },
+        {
+          "category": "test-to-source-mapping-not-implemented",
+          "limitation_id": "test-limitation:527621289c81",
+          "summary": "Test-to-production-code relationships are not evaluated."
+        },
+        {
+          "category": "other",
+          "limitation_id": "test-limitation:7a8192efac8a",
+          "summary": "Test Hygiene rules consume AggregatedRepositoryTestingEvidence only and never re-read repository files."
+        },
+        {
+          "category": "mutation-testing-not-evaluated",
+          "limitation_id": "test-limitation:fcc3fbfaceec",
+          "summary": "Mutation testing is not evaluated."
+        }
+      ],
+      "limitations_displayed": 6,
+      "limitations_total": 6,
+      "metadata": {
+        "assessment_section_id": "assessment.testing",
+        "diagnostic_limit": "20",
+        "evidence_pipeline": "repository_testing",
+        "finding_count": "1",
+        "finding_id_display_limit": "32",
+        "theme_limit": "12"
+      },
+      "overall_posture_summary": "Test Hygiene inventory shows 1 finding across 1 matched rule of 4 executed. Implications remain informational to medium and do not establish release readiness.",
+      "recommendation_groups": [
+        {
+          "group": "Test hygiene actions",
+          "recommendations": [
+            {
+              "action": "Reconcile declared test frameworks with observed test structure, or remove stale declarations.",
+              "audience": "hygiene",
+              "conclusion_ids": [
+                "test-conclusion:testing.conclusion.framework-declaration-gap-observed:e0aa003b67bc574643c9"
+              ],
+              "conditional": true,
+              "finding_ids": [
+                "finding:testing.test-003:36138433195ca7c3"
+              ],
+              "kind": "align_framework_declaration_and_observation",
+              "presentation_group": "Test hygiene actions",
+              "rationale": "TEST-003 matched on declaration/observation mismatch in repository-testing evidence.",
+              "recommendation_id": "test-recommendation:bb1e962b78a8d45e",
+              "rule_ids": [
+                "testing.test-003"
+              ],
+              "title": "Align framework declaration and observation"
+            }
+          ]
+        },
+        {
+          "group": "Scope acknowledgements",
+          "recommendations": [
+            {
+              "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+              "audience": "status",
+              "conclusion_ids": [
+                "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:0e951e062be70fd72b4c"
+              ],
+              "conditional": true,
+              "finding_ids": [],
+              "kind": "acknowledge_unsupported_test_analysis_scope",
+              "presentation_group": "Scope acknowledgements",
+              "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+              "recommendation_id": "test-recommendation:5038971ff39456d5",
+              "rule_ids": [],
+              "title": "Acknowledge unsupported test analysis scope"
+            }
+          ]
+        }
+      ],
+      "recommendations": [
+        {
+          "action": "Interpret Test synthesis as hygiene inventory only until execution and runtime coverage capabilities exist.",
+          "audience": "status",
+          "conclusion_ids": [
+            "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:0e951e062be70fd72b4c"
+          ],
+          "conditional": true,
+          "finding_ids": [],
+          "kind": "acknowledge_unsupported_test_analysis_scope",
+          "presentation_group": "Scope acknowledgements",
+          "rationale": "Documented limitations keep conclusions from overstating test quality or release readiness.",
+          "recommendation_id": "test-recommendation:5038971ff39456d5",
+          "rule_ids": [],
+          "title": "Acknowledge unsupported test analysis scope"
+        },
+        {
+          "action": "Reconcile declared test frameworks with observed test structure, or remove stale declarations.",
+          "audience": "hygiene",
+          "conclusion_ids": [
+            "test-conclusion:testing.conclusion.framework-declaration-gap-observed:e0aa003b67bc574643c9"
+          ],
+          "conditional": true,
+          "finding_ids": [
+            "finding:testing.test-003:36138433195ca7c3"
+          ],
+          "kind": "align_framework_declaration_and_observation",
+          "presentation_group": "Test hygiene actions",
+          "rationale": "TEST-003 matched on declaration/observation mismatch in repository-testing evidence.",
+          "recommendation_id": "test-recommendation:bb1e962b78a8d45e",
+          "rule_ids": [
+            "testing.test-003"
+          ],
+          "title": "Align framework declaration and observation"
+        }
+      ],
+      "recommendations_displayed": 2,
+      "recommendations_total": 2,
+      "repository_name": "angular-realworld-example-app",
+      "schema_name": "report.testing",
+      "section_id": "report.testing",
+      "section_version": "1.0.0",
+      "status": "succeeded",
+      "status_label": "Succeeded",
+      "status_summary": "Test assessment completed using supported repository-testing evidence and hygiene rules.",
+      "synthesis_status": "succeeded",
+      "testing_pack_id": "testing.core",
+      "testing_pack_version": "1.0.0",
+      "themes": [
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:testing.test-003:36138433195ca7c3"
+          ],
+          "kind": "testing_hygiene_landscape",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "scope": "repository",
+          "summary": "The supported Test Hygiene rules produced 1 finding across 1 matched rule.",
+          "theme_id": "test-theme:7d43087ce51d",
+          "title": "Testing hygiene landscape"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "rule_execution_coverage",
+          "rule_ids": [
+            "testing.test-001",
+            "testing.test-002",
+            "testing.test-003",
+            "testing.test-005"
+          ],
+          "scope": "coverage",
+          "summary": "Rule execution coverage: 4 executed, 1 matched, 3 not matched; evidence status succeeded.",
+          "theme_id": "test-theme:6fcde23f9f77",
+          "title": "Rule execution coverage"
+        },
+        {
+          "finding_count": 1,
+          "finding_ids": [
+            "finding:testing.test-003:36138433195ca7c3"
+          ],
+          "kind": "framework_declaration_consistency",
+          "rule_ids": [
+            "testing.test-003"
+          ],
+          "scope": "hygiene",
+          "summary": "1 finding report declared test frameworks without matching structural observation.",
+          "theme_id": "test-theme:d9ba46dcfb51",
+          "title": "Framework declaration consistency"
+        },
+        {
+          "finding_count": 0,
+          "finding_ids": [],
+          "kind": "unsupported_analysis_scope",
+          "rule_ids": [],
+          "scope": "status",
+          "summary": "6 documented limitations bound this assessment: test execution and runtime coverage measurement remain out of scope.",
+          "theme_id": "test-theme:b8a8a19ed930",
+          "title": "Unsupported test analysis scope"
+        }
+      ],
+      "themes_displayed": 4,
+      "themes_total": 4,
+      "title": "Test Intelligence",
+      "traceability": {
+        "edge_count": 12,
+        "sample_edges": [
+          {
+            "edge_id": "test-trace:0dde865d81c2639a",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.testing-hygiene-landscape-identified:38fddc664e4a3e2adb7f"
+          },
+          {
+            "edge_id": "test-trace:10af2d05c13155fe",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.testing",
+            "target_id": "test-limitation:41974742ac6b"
+          },
+          {
+            "edge_id": "test-trace:158e2e8d3d6b4c3a",
+            "relation": "section_to_limitation",
+            "source_id": "assessment.testing",
+            "target_id": "test-limitation:319a3a113184"
+          },
+          {
+            "edge_id": "test-trace:1962eaddaaf77bb7",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.framework-declaration-gap-observed:e0aa003b67bc574643c9"
+          },
+          {
+            "edge_id": "test-trace:22a9837cd8c26064",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_rules_enabled"
+          },
+          {
+            "edge_id": "test-trace:3c00a8cf83e9d849",
+            "relation": "section_to_recommendation",
+            "source_id": "assessment.testing",
+            "target_id": "test-recommendation:bb1e962b78a8d45e"
+          },
+          {
+            "edge_id": "test-trace:3f2e40e60a25c37d",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_capability_requested"
+          },
+          {
+            "edge_id": "test-trace:407cfd12aa06fe13",
+            "relation": "section_to_pack",
+            "source_id": "assessment.testing",
+            "target_id": "testing.core"
+          },
+          {
+            "edge_id": "test-trace:49a4bc072a94e568",
+            "relation": "section_to_coverage",
+            "source_id": "assessment.testing",
+            "target_id": "testing_findings_evaluated"
+          },
+          {
+            "edge_id": "test-trace:4f3dfb2979b61347",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.rule-execution-summary:3b21ec351dee78fd6a3f"
+          },
+          {
+            "edge_id": "test-trace:585d93fa9d2017ca",
+            "relation": "section_to_theme",
+            "source_id": "assessment.testing",
+            "target_id": "test-theme:b8a8a19ed930"
+          },
+          {
+            "edge_id": "test-trace:59ea24941c71e8b2",
+            "relation": "section_to_conclusion",
+            "source_id": "assessment.testing",
+            "target_id": "test-conclusion:testing.conclusion.unsupported-test-analysis-scope:0e951e062be70fd72b4c"
+          }
+        ],
+        "summary": "12 traceability edges link the Test assessment section to packs, findings, themes, conclusions, and limitations."
+      }
+    },
+    "timing": {
+      "ai_ms": null,
+      "analysis_ms": 29.06,
+      "cache_hits": 0,
+      "cache_misses": 50,
+      "evidence_ms": null,
+      "files_loaded": 50,
+      "files_skipped": 0,
+      "graph_ms": 34.18,
+      "knowledge_ms": null,
+      "peak_rss_mb": 135.91,
+      "report_ms": 16.48,
+      "rules_ms": 193.46,
+      "scan_ms": 4.32,
+      "static_analysis_ms": null,
+      "total_ms": 289.86
+    },
+    "warnings": []
+  },
+  "manifest": {
+    "brand_report_name": "Engineering Assessment",
+    "codestrata_version": "0.1.0",
+    "contract_version": "1.0.0",
+    "edition": "community",
+    "enabled_sections": [
+      "executive_summary",
+      "technologies",
+      "findings",
+      "recommendations",
+      "architecture",
+      "technical_debt",
+      "dependency",
+      "security",
+      "testing",
+      "cloud",
+      "roadmap"
+    ],
+    "generated_at": "2026-07-29T06:37:27.309507Z",
+    "generation_mode": "deterministic",
+    "html_report_version": "3.0",
+    "product_name": "CodeStrata",
+    "report_type": "engineering_assessment",
+    "report_version": "1.2",
+    "repository_id": "57467893-5288-45f1-8e94-0c86f079c48f",
+    "scan_id": "d8ff4e5f-0532-41a8-926e-2d5c85ca7506",
+    "schema_version": "1.2",
+    "volatile_fields": [
+      "assessment.generated_at",
+      "assessment.timing",
+      "assessment.ai.latency_ms",
+      "assessment.static_analysis",
+      "manifest.generated_at"
+    ]
+  },
+  "report_version": "1.2",
+  "schema_version": "1.2"
+}

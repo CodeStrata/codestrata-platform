@@ -31,16 +31,55 @@ codestrata-platform/          # private source of truth
 ├── docs/                     # Public documentation portal → codestrata-docs
 ├── cursor-plugin/            # Community Cursor extension → codestrata-cursor
 ├── vscode-plugin/            # Community VS Code extension → codestrata-vscode
-├── platform/                 # private Platform (RAG + Knowledge Graph)
+├── platform/                 # private Platform (RAG, KG, commercial EI, Community Cloud API)
+├── infrastructure/           # private OpenTofu AWS deployment (extractable → codestrata-infrastructure)
 ├── scripts/                  # verify_release, export, security, showcase wrappers
 ├── public-export-manifest.yaml
-└── tests/architecture/       # engine↔platform boundary tests
+└── tests/architecture/       # engine↔platform + commercial intelligence boundary tests
 ```
 
 Public mirrors are generated; see [platform/README.md](platform/README.md)
 (maintainer handbook — export / validate / publish).
 Engine runtime must not depend on `platform/`. Security posture:
 [engine/docs/security/threat-model.md](engine/docs/security/threat-model.md).
+
+### Commercial Engineering Intelligence boundary
+
+- **Engine / Community Edition:** single-repository assessment only
+  (`report.json`, schema 1.2). No portfolio / multi-repository commercial report.
+- **Platform:** owns `codestrata_platform.intelligence_reporting` (dataset
+  ingestion, aggregation, technology/capability/patterns/modernization, quality,
+  drill-downs, website-safe export, OSS demonstration under `platform/demo/`).
+- **Public export:** `public-export-manifest.yaml` excludes `platform/**`.
+- Details: [platform/docs/intelligence-reporting/commercial-boundary.md](platform/docs/intelligence-reporting/commercial-boundary.md).
+
+### Community Cloud API boundary
+
+- **Platform** owns the versioned Community Cloud HTTP API
+  (`codestrata_platform.community_cloud_api`, root `/api/v1`).
+- **Engine / Community Edition** remain unaware of this package; future clients
+  call over HTTP only (no Platform imports in Community).
+- **Infrastructure** (`infrastructure/`) owns private serverless deployment for
+  Community Cloud (API Gateway HTTP API → one Lambda → ASGI app). Application
+  logic stays in Platform; cloud resources stay in `infrastructure/`.
+- Slice 7.14 creates a **production infrastructure foundation**: health is
+  deployable; ingestion remains fail-closed without production credential
+  verification, shared event identity, and event sinks. Community Data Lake
+  resources are deferred to a future `infrastructure/modules/data-lake` module.
+- The Slice 7.14 deployment proves that the Community Cloud API can be packaged
+  and served through serverless infrastructure. It does not enable durable
+  Community event ingestion because production credential verification, shared
+  event identity, and event sinks are not yet configured.
+- Slice 7.15 (final Epic 7 slice) verifies the combined request pipeline with
+  in-memory adapters only; it adds no product capabilities and does not start
+  Epic 8.
+- Details: [platform/docs/community-cloud-api/README.md](platform/docs/community-cloud-api/README.md),
+  [verification-e2e.md](platform/docs/community-cloud-api/verification-e2e.md),
+  [infrastructure/README.md](infrastructure/README.md),
+  [request-validation.md](platform/docs/community-cloud-api/request-validation.md),
+  [payload-size-limits.md](platform/docs/community-cloud-api/payload-size-limits.md),
+  [structured-logging.md](platform/docs/community-cloud-api/structured-logging.md),
+  [retry-safe-event-identifiers.md](platform/docs/community-cloud-api/retry-safe-event-identifiers.md).
 
 Current product direction: [ROADMAP.md](ROADMAP.md).
 Completed releases: [CHANGELOG.md](CHANGELOG.md).

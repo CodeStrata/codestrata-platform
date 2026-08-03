@@ -1,0 +1,4266 @@
+{
+  "assessment_head_distributions": [
+    {
+      "activated_count": 1,
+      "assessment_head_id": "ai_readiness",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 4,
+      "finding_count": 3,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 1,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "informational",
+          3
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "architecture_intelligence",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 25,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "high",
+          1
+        ],
+        [
+          "informational",
+          18
+        ],
+        [
+          "low",
+          1
+        ],
+        [
+          "medium",
+          5
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 4,
+      "assessment_head_id": "cloud_readiness",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 1,
+      "finding_count": 26,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 4,
+      "priority_action_count": 0,
+      "recommendation_count": 4,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "informational",
+          21
+        ],
+        [
+          "low",
+          5
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "dependency_intelligence",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 14,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 5,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "informational",
+          1
+        ],
+        [
+          "low",
+          4
+        ],
+        [
+          "medium",
+          9
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 0,
+      "assessment_head_id": "engineering_intelligence",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 0,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 0,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_count": 5,
+      "severity_distribution": [],
+      "unavailable_count": 5
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "modernization_assessment",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 2,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "informational",
+          2
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "security_intelligence",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 10,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 4,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "high",
+          4
+        ],
+        [
+          "medium",
+          6
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "technical_debt_intelligence",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 26,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 5,
+      "repository_count": 5,
+      "severity_distribution": [
+        [
+          "informational",
+          11
+        ],
+        [
+          "low",
+          6
+        ],
+        [
+          "medium",
+          9
+        ]
+      ],
+      "unavailable_count": 0
+    },
+    {
+      "activated_count": 5,
+      "assessment_head_id": "technology_inventory",
+      "complete_coverage_count": 0,
+      "confidence_distribution": [
+        [
+          "unavailable",
+          5
+        ]
+      ],
+      "disabled_count": 0,
+      "finding_count": 0,
+      "insufficient_evidence_count": 0,
+      "partial_coverage_count": 5,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_count": 5,
+      "severity_distribution": [],
+      "unavailable_count": 0
+    }
+  ],
+  "capability_comparisons": [
+    {
+      "activation_status": "disabled",
+      "assessment_head_id": "ai_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "disabled",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "disabled",
+      "assessment_head_id": "ai_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "disabled",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "ai_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 3,
+      "highest_severity": "informational",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "disabled",
+      "assessment_head_id": "ai_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "disabled",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "disabled",
+      "assessment_head_id": "ai_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "disabled",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "architecture_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 2,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "architecture_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 8,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "architecture_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 6,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "architecture_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 3,
+      "highest_severity": "high",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "architecture_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 6,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "cloud_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 4,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "cloud_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 5,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "disabled",
+      "assessment_head_id": "cloud_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "disabled",
+      "finding_count": 1,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "cloud_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 7,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "cloud_readiness",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 9,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "dependency_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 4,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "dependency_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 2,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "dependency_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 3,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "dependency_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 4,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 2,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "dependency_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 1,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "unavailable",
+      "assessment_head_id": "engineering_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "unavailable",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "unavailable",
+      "assessment_head_id": "engineering_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "unavailable",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "unavailable",
+      "assessment_head_id": "engineering_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "unavailable",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "unavailable",
+      "assessment_head_id": "engineering_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "unavailable",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "unavailable",
+      "assessment_head_id": "engineering_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "unavailable",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "modernization_assessment",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "modernization_assessment",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "modernization_assessment",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "modernization_assessment",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "modernization_assessment",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 2,
+      "highest_severity": "informational",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "security_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 2,
+      "highest_severity": "high",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "security_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 4,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 2,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "security_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 1,
+      "highest_severity": "high",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "security_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 3,
+      "highest_severity": "high",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "security_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technical_debt_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 3,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technical_debt_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 9,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 2,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technical_debt_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 4,
+      "highest_severity": "low",
+      "priority_action_count": 0,
+      "recommendation_count": 2,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technical_debt_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 5,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 1,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technical_debt_intelligence",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 5,
+      "highest_severity": "medium",
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technology_inventory",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "angular-realworld-example-app"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technology_inventory",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "BookStack"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technology_inventory",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "eShop"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technology_inventory",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "full-stack-fastapi-template"
+    },
+    {
+      "activation_status": "activated",
+      "assessment_head_id": "technology_inventory",
+      "confidence_level": "unavailable",
+      "coverage_status": "partial",
+      "finding_count": 0,
+      "highest_severity": null,
+      "priority_action_count": 0,
+      "recommendation_count": 0,
+      "repository_alias": "spring-petclinic"
+    }
+  ],
+  "classification": "Public OSS report",
+  "confidence": {
+    "basis": [
+      "canonical_assessment_sources",
+      "comparable_repository_sample",
+      "complete_section_denominators",
+      "legacy_source_presence",
+      "mixed_assessment_coverage",
+      "mixed_source_confidence",
+      "non_temporal_dataset",
+      "public_source_revisions_pinned",
+      "schema_mixed",
+      "small_repository_sample"
+    ],
+    "comparable_repository_count": 0,
+    "dataset_coverage_status": "partial",
+    "disclaimer": "Confidence is not an accuracy percentage.",
+    "level": "unavailable",
+    "limitations": [
+      "limitation:03d0f0778b5ee67680ba6550",
+      "limitation:156a4ccda1b794197de3eff7",
+      "limitation:3c0512fbbc26480237bf5278",
+      "limitation:3cf0b94d805181a5caa70f23",
+      "limitation:4419f860fe765fbd8439490c",
+      "limitation:47d8809a9bda56d29d39130e",
+      "limitation:5ceae561ba0ac115e218ea61",
+      "limitation:5eacf9a90ed60294886d18fe",
+      "limitation:5fdcc4c8403fc72e063481c1",
+      "limitation:653b676e5b771d91fc62a4ed",
+      "limitation:70d6252e3cab97f6275a0704",
+      "limitation:8192bed4de9ff59eae93f78a",
+      "limitation:81b8636c144b586598d14745",
+      "limitation:85d9951fa5860a4b103613e8",
+      "limitation:897daa29c6f41d8b63ff5e95",
+      "limitation:92166808bee475dab7b1d168",
+      "limitation:937c4fb6ca0e4217a24f873a",
+      "limitation:a27bebe78f2b9e8d0d988645",
+      "limitation:aa75acd087b50b56afdf2be6",
+      "limitation:b58bdbf4b10c090422d57639",
+      "limitation:b6a627a5a9aca4e19d9e7bdd",
+      "limitation:b78628502234cb76c4aab784",
+      "limitation:bb542ab46e23585ad6dd3f94",
+      "limitation:c642f6b946e8c789104dc766",
+      "limitation:c932b8f0cc95aed31f6e1623",
+      "limitation:cc36e07d1b928119a281ce60",
+      "limitation:d9e6b44190cf77c7052e00e1",
+      "limitation:eaeb0e2b0fecc67e7b837729"
+    ],
+    "repository_sample_count": 5,
+    "weakest_material_source_confidence": "limited"
+  },
+  "dataset_summary": {
+    "drilldown_count": 5,
+    "limitation_count": 28,
+    "observation_count": 6,
+    "pattern_count": 34,
+    "report_scope": "public_oss_dataset",
+    "repository_count": 5
+  },
+  "empty_section_notes": [],
+  "export_limitations": [
+    "website_safe_export_is_sanitized_projection",
+    "public_exports_are_not_industry_benchmarks"
+  ],
+  "export_metadata": {
+    "classification": "Public OSS report",
+    "export_id": "eir-export:990bfa68300f695451d8e365",
+    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
+    "export_schema_version": "1.0",
+    "generated_at": null,
+    "html_template_version": "eir-static-html-v1",
+    "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+    "json_projection_version": "eir-website-json-v1",
+    "source_eir_schema_version": "1.0",
+    "source_report_id": "eir:97542882a05ceb5e5ea2a553"
+  },
+  "export_schema_version": "1.0",
+  "limitations": [
+    {
+      "affected_scope": [],
+      "category": "assessment_confidence",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Report confidence is capped by weakest-material-support policy.",
+      "statement": "[confidence:limited] Weakest materially contributing assessment-head confidence is limited."
+    },
+    {
+      "affected_scope": [],
+      "category": "assessment_coverage",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Do not treat partial coverage as complete absence of risk or findings.",
+      "statement": "[coverage:partial] Material assessment-head coverage is partial for one or more heads."
+    },
+    {
+      "affected_scope": [],
+      "category": "language_representation",
+      "interpretation_severity": "material",
+      "remediation_or_interpretation": "Treat language concentration as a property of the selected dataset.",
+      "statement": "[language:javascript] C#, Java, JavaScript, PHP, Python, TypeScript repositories account for 4 of 5 repositories in this selected dataset; findings may not generalize to other language ecosystems."
+    },
+    {
+      "affected_scope": [],
+      "category": "legacy_source",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Separate legacy-limited sources when drawing portfolio conclusions.",
+      "statement": "[legacy:5] 5 included repository assessment(s) are legacy-limited and must not be treated as canonical-complete."
+    },
+    {
+      "affected_scope": [],
+      "category": "non_temporal_dataset",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Interpret distributions and observations as point-in-time facts for the selected dataset only.",
+      "statement": "[non_temporal_snapshot] This report is a cross-sectional snapshot of the selected assessed dataset. It does not establish improvement, decline, progress, or regression over time."
+    },
+    {
+      "affected_scope": [],
+      "category": "sample_size",
+      "interpretation_severity": "material",
+      "remediation_or_interpretation": "Do not treat incomparable repositories as a single comparable cohort.",
+      "statement": "[comparable:small:0] Comparable repository count (0) is below the policy minimum for material cross-repository sections."
+    },
+    {
+      "affected_scope": [
+        "angular-realworld-example-app",
+        "eShop"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:c56c57b1a20ed7baeebfc1db] Recurring pattern 'pattern:c56c57b1a20ed7baeebfc1db' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "eShop"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:f710abad7d2dc794abf3f12f] Recurring pattern 'pattern:f710abad7d2dc794abf3f12f' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:a9e8ba9df8b7b562a76da35e] Recurring pattern 'pattern:a9e8ba9df8b7b562a76da35e' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:28cfdc59892fba43c0a0e279] Recurring pattern 'pattern:28cfdc59892fba43c0a0e279' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Qualify two-repository observations as minimal portfolio signals.",
+      "statement": "[observation_sample:obs:79545787cf21632c473069f0] Modernization observation 'obs:79545787cf21632c473069f0' is supported by exactly two repositories."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:d3f7652c6bf9e5580154c7d3] Recurring pattern 'pattern:d3f7652c6bf9e5580154c7d3' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:68325d7606ad0fd243be379c] Recurring pattern 'pattern:68325d7606ad0fd243be379c' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:e1e5c72a682d8611da1f0d7b] Recurring pattern 'pattern:e1e5c72a682d8611da1f0d7b' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:64365bb3a92cf9af636c8ad9] Recurring pattern 'pattern:64365bb3a92cf9af636c8ad9' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:9173938a61078bd0491a83cf] Recurring pattern 'pattern:9173938a61078bd0491a83cf' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:a78ba88551fafbc0431c63a8] Recurring pattern 'pattern:a78ba88551fafbc0431c63a8' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:1fbdf16aa3f0cbee71e821ea] Recurring pattern 'pattern:1fbdf16aa3f0cbee71e821ea' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "eShop"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Qualify two-repository observations as minimal portfolio signals.",
+      "statement": "[observation_sample:obs:3700290659ece4a6b85af1c5] Modernization observation 'obs:3700290659ece4a6b85af1c5' is supported by exactly two repositories."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:768ecb11b654504561e5cf39] Recurring pattern 'pattern:768ecb11b654504561e5cf39' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "category": "sample_size",
+      "interpretation_severity": "minor",
+      "remediation_or_interpretation": "Do not treat two-repository patterns as broad prevalence.",
+      "statement": "[pattern_sample:pattern:f7ae52b21bef1ef31db83ffe] Recurring pattern 'pattern:f7ae52b21bef1ef31db83ffe' is supported by exactly two repositories; interpret as a minimal recurring signal."
+    },
+    {
+      "affected_scope": [],
+      "category": "schema_compatibility",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Prefer per-head comparable subsets when interpreting distributions.",
+      "statement": "[schema:mixed] Included assessments use mixed assessment schema versions (1.2)."
+    },
+    {
+      "affected_scope": [],
+      "category": "section_support",
+      "interpretation_severity": "informational",
+      "remediation_or_interpretation": "Consult each observation.limitations entry for support constraints.",
+      "statement": "[observation_local:18] Modernization observations include material support-chain limitation disclosures; observation-local limitations remain authoritative."
+    },
+    {
+      "affected_scope": [],
+      "category": "section_support",
+      "interpretation_severity": "informational",
+      "remediation_or_interpretation": "Consult each pattern.limitations entry for support constraints.",
+      "statement": "[pattern_local:68] Recurring patterns include material local limitation disclosures; pattern-local limitations remain authoritative."
+    },
+    {
+      "affected_scope": [],
+      "category": "section_support",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Interpret technology counts with the listed section limitations.",
+      "statement": "[tech_local:1] Technology Distribution includes 1 material local limitation disclosure(s) (technology_inventory_unavailable_for_5_repositories). Section-local detail remains authoritative."
+    },
+    {
+      "affected_scope": [],
+      "category": "section_support",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Preserve head-local limitations when reading distributions.",
+      "statement": "[capability_local:19:9] Capability Comparison includes 19 material local limitation disclosure(s) across heads: ai_readiness, architecture_intelligence, cloud_readiness, dependency_intelligence, engineering_intelligence, modernization_assessment, security_intelligence, technical_debt_intelligence, technology_inventory. Head-local detail remains authoritative."
+    },
+    {
+      "affected_scope": [],
+      "category": "selection_bias",
+      "interpretation_severity": "material",
+      "remediation_or_interpretation": "Limit conclusions to the selected dataset; do not treat counts as industry benchmarks.",
+      "statement": "[selection:public_oss_dataset] Repository selection for this dataset was curated or validation-driven. The dataset is not a random sample and is not representative of all software repositories. Observed distributions must not be generalized as industry prevalence."
+    },
+    {
+      "affected_scope": [],
+      "category": "source_visibility",
+      "interpretation_severity": "moderate",
+      "remediation_or_interpretation": "Interpret source-type concentration as a dataset property.",
+      "statement": "[source_type:public_oss] Source type 'public_oss' accounts for 5 of 5 included repositories in this selected dataset."
+    }
+  ],
+  "methodology": {
+    "aggregation_policy_id": "intelligence-aggregation:v1",
+    "assessment_schema_versions": [
+      "1.2"
+    ],
+    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
+    "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+    "limitations": [
+      "website_export_is_sanitized_projection",
+      "canonical_assessment_reports_remain_source_of_truth"
+    ],
+    "notes": [
+      "Report confidence is not an accuracy percentage or repository score.",
+      "Report confidence uses weakest-material-support with explicit caps.",
+      "Results must not be generalized beyond the selected dataset.",
+      "Static analysis of selected assessed repositories only.",
+      "This report is a cross-sectional snapshot, not a temporal trend.",
+      "Results must not be generalized beyond the selected dataset."
+    ]
+  },
+  "modernization_observations": [
+    {
+      "category": "dependency_governance",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "includes_legacy_limited_support",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:14c37a68fa4afd6622c83c0f",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Dependency governance actions were produced for 3 of 5 repositories with comparable dependency intelligence assessment.",
+      "title": "Dependency governance"
+    },
+    {
+      "category": "testing_enablement",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "action_identity_uses_category_without_provider",
+        "includes_legacy_limited_support",
+        "incomplete_finding_evidence_chain",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "small_sample_two_repositories",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:3700290659ece4a6b85af1c5",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "BookStack",
+        "eShop"
+      ],
+      "repository_count": 2,
+      "statement": "Testing enablement actions were produced for 2 of 5 repositories with comparable technical debt intelligence assessment.",
+      "title": "Testing enablement"
+    },
+    {
+      "category": "maintainability",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "includes_legacy_limited_support",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:76c321f2014a067ba084c765",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Complexity reduction actions were produced for 3 of 5 repositories with comparable technical debt intelligence assessment.",
+      "title": "Complexity reduction"
+    },
+    {
+      "category": "dependency_governance",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "includes_legacy_limited_support",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "small_sample_two_repositories",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:79545787cf21632c473069f0",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "Dependency governance actions were produced for 2 of 5 repositories with comparable dependency intelligence assessment.",
+      "title": "Dependency governance"
+    },
+    {
+      "category": "cloud_enablement",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "action_identity_uses_category_without_provider",
+        "includes_legacy_limited_support",
+        "incomplete_finding_evidence_chain",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:99f806d4838b24c1034dbc5d",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "Cloud enablement actions were produced for 3 of 4 repositories with comparable cloud readiness assessment.",
+      "title": "Cloud enablement"
+    },
+    {
+      "category": "security_remediation",
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Modernization observations summarize repeated deterministic repository-level actions within the selected assessed dataset. They are not portfolio Recommendations, delivery commitments, ROI claims, or transformation plans.",
+        "action_identity_uses_category_without_provider",
+        "includes_legacy_limited_support",
+        "legacy_or_incomplete_assessment",
+        "observation_confidence:limited",
+        "observation_identity_includes_repository_and_action_membership_per_slice_6_1",
+        "observations_do_not_create_portfolio_recommendations",
+        "supporting_evidence_unavailable_or_incomplete",
+        "technology_prevalence_alone_does_not_create_observations"
+      ],
+      "observation_id": "obs:b8e82339fe57dd49cf47e1f9",
+      "observation_label": "Observation, not a portfolio recommendation.",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Security remediation actions were produced for 3 of 5 repositories with comparable security intelligence assessment.",
+      "title": "Security remediation"
+    }
+  ],
+  "orientation": [
+    "Repository count: 5",
+    "Report confidence: unavailable",
+    "Recurring patterns: 34",
+    "Modernization observations: 6",
+    "Classification: Public OSS report"
+  ],
+  "recurring_patterns": [
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:0243010adb8e69a721e8a5b4",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`CLOUD008` was reported in 3 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: CLOUD008"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:0cc661e5574ff59a8a47c87b",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`DEP003` was reported in 3 of 5 repositories where dependency intelligence assessment was comparable.",
+      "title": "Recurring condition: DEP003"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:1175a16842afeb7afc40e517",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 4,
+      "statement": "`cloud.cloud-061` was reported in 4 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: cloud.cloud-061"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:1542a3576b7faa885d64f6f7",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`cloud.cloud-010` was reported in 3 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: cloud.cloud-010"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:16fb3e93e6e4a34e0e985fba",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "`codestrata-rule-missing-node-engine` was reported in 3 of 5 repositories where dependency intelligence assessment was comparable.",
+      "title": "Recurring condition: codestrata-rule-missing-node-engine"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:1c52d8735d80b0cb047a01c9",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "eShop",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 5,
+      "statement": "`repository.metrics.summary` was reported in 5 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: repository.metrics.summary"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:1fbdf16aa3f0cbee71e821ea",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`codestrata-rule-npm-lockfile-missing` was reported in 2 of 5 repositories where dependency intelligence assessment was comparable.",
+      "title": "Recurring condition: codestrata-rule-npm-lockfile-missing"
+    },
+    {
+      "assessment_head_ids": [
+        "security_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:28cfdc59892fba43c0a0e279",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`SEC006` was reported in 2 of 5 repositories where security intelligence assessment was comparable.",
+      "title": "Recurring condition: SEC006"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:2ea1269542ca14568c1a5beb",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "`codestrata-rule-large-repository` was reported in 3 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: codestrata-rule-large-repository"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:344fc92ed938abc552e2825d",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`CLOUD002` was reported in 3 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: CLOUD002"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:39752292edbbdf51045e4200",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`ARCH003` was reported in 3 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: ARCH003"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:3c4443f5ca4db904c66ad08f",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`ARCH001` was reported in 3 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: ARCH001"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:4892c7e2d795110d82b7f4ca",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 4,
+      "statement": "`ARCH002` was reported in 4 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: ARCH002"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:625854b58296bad96c0ef011",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "eShop",
+        "spring-petclinic"
+      ],
+      "repository_count": 4,
+      "statement": "`ARCH007` was reported in 4 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: ARCH007"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:64365bb3a92cf9af636c8ad9",
+      "repository_aliases": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "repository_count": 2,
+      "statement": "`architecture.framework-leakage` was reported in 2 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: architecture.framework-leakage"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:68325d7606ad0fd243be379c",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "Equivalent deterministic recommendation intent was produced in 2 of 5 repositories with comparable dependency intelligence assessment.",
+      "title": "Recurring recommendation intent (dependency_intelligence|provider:codestrata-rec-npm-lockfile-missing|category:dependency)"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:768ecb11b654504561e5cf39",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`technical_debt.oversized-type` was reported in 2 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: technical_debt.oversized-type"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recommendation_identity_uses_category_without_provider",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:7e248cf29c20cd33b75a920d",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "Equivalent deterministic recommendation intent was produced in 3 of 4 repositories with comparable cloud readiness assessment.",
+      "title": "Recurring recommendation intent (cloud_readiness|provider:none|category:cloud)"
+    },
+    {
+      "assessment_head_ids": [
+        "security_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recommendation_identity_uses_category_without_provider",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:91501996e823084f7ed2d15a",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Equivalent deterministic recommendation intent was produced in 3 of 5 repositories with comparable security intelligence assessment.",
+      "title": "Recurring recommendation intent (security_intelligence|provider:none|category:security)"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:9173938a61078bd0491a83cf",
+      "repository_aliases": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "repository_count": 2,
+      "statement": "`testing.test-001` was reported in 2 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: testing.test-001"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:9198aa7f1ccea6a1e10f08cd",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 3,
+      "statement": "`cloud.cloud-040` was reported in 3 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: cloud.cloud-040"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:95a88cd8604c913f604e6bcf",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "eShop",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 5,
+      "statement": "`build.system.summary` was reported in 5 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: build.system.summary"
+    },
+    {
+      "assessment_head_ids": [
+        "security_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:a78ba88551fafbc0431c63a8",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`security.debug-enabled` was reported in 2 of 5 repositories where security intelligence assessment was comparable.",
+      "title": "Recurring condition: security.debug-enabled"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:a9e8ba9df8b7b562a76da35e",
+      "repository_aliases": [
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`testing.test-002` was reported in 2 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: testing.test-002"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:b375b4ad73e6b09fefc73612",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 4,
+      "statement": "`CLOUD010` was reported in 4 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: CLOUD010"
+    },
+    {
+      "assessment_head_ids": [
+        "security_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:c56c57b1a20ed7baeebfc1db",
+      "repository_aliases": [
+        "angular-realworld-example-app",
+        "eShop"
+      ],
+      "repository_count": 2,
+      "statement": "`security.credential-literal` was reported in 2 of 5 repositories where security intelligence assessment was comparable.",
+      "title": "Recurring condition: security.credential-literal"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:cc28a9811e204ebfe819c8ca",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Equivalent deterministic recommendation intent was produced in 3 of 5 repositories with comparable dependency intelligence assessment.",
+      "title": "Recurring recommendation intent (dependency_intelligence|provider:codestrata-rec-missing-node-engine|category:dependency)"
+    },
+    {
+      "assessment_head_ids": [
+        "cloud_readiness"
+      ],
+      "confidence": "limited",
+      "denominator": 4,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:d3f7652c6bf9e5580154c7d3",
+      "repository_aliases": [
+        "BookStack",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 2,
+      "statement": "`CLOUD001` was reported in 2 of 4 repositories where cloud readiness assessment was comparable.",
+      "title": "Recurring condition: CLOUD001"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:d5b05b97be024c45ecc92485",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 3,
+      "statement": "Equivalent deterministic recommendation intent was produced in 3 of 5 repositories with comparable technical debt intelligence assessment.",
+      "title": "Recurring recommendation intent (technical_debt_intelligence|provider:codestrata-rec-large-repository|category:maintainability)"
+    },
+    {
+      "assessment_head_ids": [
+        "dependency_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:d5e393320f55da09c6fb1352",
+      "repository_aliases": [
+        "BookStack",
+        "angular-realworld-example-app",
+        "eShop",
+        "full-stack-fastapi-template"
+      ],
+      "repository_count": 4,
+      "statement": "`DEP002` was reported in 4 of 5 repositories where dependency intelligence assessment was comparable.",
+      "title": "Recurring condition: DEP002"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:e1e5c72a682d8611da1f0d7b",
+      "repository_aliases": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "repository_count": 2,
+      "statement": "`technical_debt.large-callable` was reported in 2 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: technical_debt.large-callable"
+    },
+    {
+      "assessment_head_ids": [
+        "architecture_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:e587cb645d8c05de69d48c02",
+      "repository_aliases": [
+        "BookStack",
+        "eShop",
+        "full-stack-fastapi-template",
+        "spring-petclinic"
+      ],
+      "repository_count": 4,
+      "statement": "`ARCH005` was reported in 4 of 5 repositories where architecture intelligence assessment was comparable.",
+      "title": "Recurring condition: ARCH005"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recommendation_identity_uses_category_without_provider",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:f710abad7d2dc794abf3f12f",
+      "repository_aliases": [
+        "BookStack",
+        "eShop"
+      ],
+      "repository_count": 2,
+      "statement": "Equivalent deterministic recommendation intent was produced in 2 of 5 repositories with comparable technical debt intelligence assessment.",
+      "title": "Recurring recommendation intent (technical_debt_intelligence|provider:none|category:testing)"
+    },
+    {
+      "assessment_head_ids": [
+        "technical_debt_intelligence"
+      ],
+      "confidence": "limited",
+      "denominator": 5,
+      "limitations": [
+        "Recurring patterns describe repeated deterministic conditions within the selected assessed dataset. They do not establish industry prevalence, organizational maturity, business impact, or a required portfolio action.",
+        "includes_legacy_limited_occurrences",
+        "legacy_or_incomplete_assessment",
+        "minimum_recurrence_sample",
+        "ordinary_technology_prevalence_belongs_in_technology_distribution",
+        "pattern_confidence:limited",
+        "pattern_identity_includes_repository_membership_per_slice_6_1",
+        "priority_action_patterns_deferred_without_stable_intent",
+        "recurrence_does_not_establish_causality_or_severity"
+      ],
+      "pattern_id": "pattern:f7ae52b21bef1ef31db83ffe",
+      "repository_aliases": [
+        "BookStack",
+        "spring-petclinic"
+      ],
+      "repository_count": 2,
+      "statement": "`technical_debt.excessive-branching` was reported in 2 of 5 repositories where technical debt intelligence assessment was comparable.",
+      "title": "Recurring condition: technical_debt.excessive-branching"
+    }
+  ],
+  "report_id": "eir:97542882a05ceb5e5ea2a553",
+  "report_schema_version": "1.0",
+  "repository_drilldowns": [
+    {
+      "canonical_assessment_availability": "Detailed assessment available to authorized users.",
+      "confidence": "limited",
+      "drilldown_id": "drilldown:18dc3893bcb310f3bdd834e8",
+      "finding_refs": [
+        {
+          "entity_id": "00499757-19b0-5d92-b094-c9cd4debb184",
+          "entity_kind": "finding",
+          "label": "informational:repository.metrics.summary"
+        },
+        {
+          "entity_id": "069642cd-0e59-5912-b67b-4858aa7ecea9",
+          "entity_kind": "finding",
+          "label": "medium:dep002"
+        },
+        {
+          "entity_id": "5bed71d7-5944-577c-830c-49c5117e9c2d",
+          "entity_kind": "finding",
+          "label": "informational:cloud008"
+        },
+        {
+          "entity_id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+          "entity_kind": "finding",
+          "label": "informational:arch007"
+        },
+        {
+          "entity_id": "723da815-2c86-5096-a270-63e916e12a30",
+          "entity_kind": "finding",
+          "label": "medium:dep003"
+        },
+        {
+          "entity_id": "75660995-9298-542b-9975-188c501af453",
+          "entity_kind": "finding",
+          "label": "high:sec004"
+        },
+        {
+          "entity_id": "86469f6e-7ca1-59b1-bbc4-50bc85dec4fa",
+          "entity_kind": "finding",
+          "label": "informational:cloud010"
+        },
+        {
+          "entity_id": "8f522a03-3371-546d-86e6-84de4cfa871a",
+          "entity_kind": "finding",
+          "label": "informational:build.system.summary"
+        },
+        {
+          "entity_id": "d356ee11-6e35-5aa8-b4f9-37c4717a1497",
+          "entity_kind": "finding",
+          "label": "low:arch004"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-040"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-061:4bd946f64049caa3",
+          "entity_kind": "finding",
+          "label": "low:cloud.cloud-061"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-node-engine-detected:cf7bf66f602353c2",
+          "entity_kind": "finding",
+          "label": "informational:codestrata-rule-node-engine-detected"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-npm-lockfile-missing:cfbf1a70b511e89e",
+          "entity_kind": "finding",
+          "label": "medium:codestrata-rule-npm-lockfile-missing"
+        },
+        {
+          "entity_id": "finding:security.credential-literal:9122d2255108f9c4",
+          "entity_kind": "finding",
+          "label": "high:security.credential-literal"
+        },
+        {
+          "entity_id": "finding:testing.test-003:36138433195ca7c3",
+          "entity_kind": "finding",
+          "label": "low:testing.test-003"
+        }
+      ],
+      "head_snapshots": [
+        {
+          "activation_status": "disabled",
+          "assessment_head_id": "ai_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "disabled",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "architecture_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 2,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "cloud_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 4,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "dependency_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 4,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "unavailable",
+          "assessment_head_id": "engineering_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "unavailable",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "modernization_assessment",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "security_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 2,
+          "highest_severity": "high",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technical_debt_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 3,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technology_inventory",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "angular-realworld-example-app"
+        }
+      ],
+      "limitations": [
+        "canonical_assessment_report_required_for_full_evidence_details",
+        "confidence_unavailable:architecture_intelligence",
+        "confidence_unavailable:cloud_readiness",
+        "confidence_unavailable:dependency_intelligence",
+        "confidence_unavailable:modernization_assessment",
+        "confidence_unavailable:security_intelligence",
+        "confidence_unavailable:technical_debt_intelligence",
+        "confidence_unavailable:technology_inventory",
+        "coverage_disabled:ai_readiness",
+        "coverage_partial:architecture_intelligence",
+        "coverage_partial:cloud_readiness",
+        "coverage_partial:dependency_intelligence",
+        "coverage_partial:modernization_assessment",
+        "coverage_partial:security_intelligence",
+        "coverage_partial:technical_debt_intelligence",
+        "coverage_partial:technology_inventory",
+        "coverage_unavailable:engineering_intelligence",
+        "cross_sectional_snapshot_only",
+        "curated_validation_dataset",
+        "highest_severity_unavailable_for_unevaluated_head",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "legacy_limited_head:ai_readiness",
+        "legacy_limited_head:architecture_intelligence",
+        "legacy_limited_head:cloud_readiness",
+        "legacy_limited_head:dependency_intelligence",
+        "legacy_limited_head:engineering_intelligence",
+        "legacy_limited_head:modernization_assessment",
+        "legacy_limited_head:security_intelligence",
+        "legacy_limited_head:technical_debt_intelligence",
+        "legacy_limited_head:technology_inventory",
+        "legacy_or_incomplete_assessment",
+        "legacy_or_incomplete_source_assessment",
+        "non_representative_oss_selection",
+        "recommendation_legacy_or_limited_present",
+        "report_limitation:assessment_confidence",
+        "report_limitation:assessment_coverage",
+        "report_limitation:legacy_source",
+        "report_limitation:non_temporal_dataset",
+        "report_limitation:selection_bias",
+        "repository_drilldown_is_navigation_not_a_scorecard",
+        "roadmap_legacy_items_present",
+        "traceability_status:incomplete"
+      ],
+      "modernization_observation_ids": [
+        "obs:79545787cf21632c473069f0",
+        "obs:99f806d4838b24c1034dbc5d",
+        "obs:b8e82339fe57dd49cf47e1f9"
+      ],
+      "priority_action_ids": [],
+      "recommendation_refs": [
+        {
+          "entity_id": "c02e13bf-c517-57d8-86b3-ed5c2247c850",
+          "entity_kind": "recommendation",
+          "label": "critical:security"
+        },
+        {
+          "entity_id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+          "entity_kind": "recommendation",
+          "label": "medium:cloud"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-npm-lockfile-missing:e3f3882d6657cd5c",
+          "entity_kind": "recommendation",
+          "label": "medium:dependency"
+        }
+      ],
+      "recurring_pattern_ids": [
+        "pattern:0243010adb8e69a721e8a5b4",
+        "pattern:0cc661e5574ff59a8a47c87b",
+        "pattern:1175a16842afeb7afc40e517",
+        "pattern:1c52d8735d80b0cb047a01c9",
+        "pattern:1fbdf16aa3f0cbee71e821ea",
+        "pattern:625854b58296bad96c0ef011",
+        "pattern:68325d7606ad0fd243be379c",
+        "pattern:7e248cf29c20cd33b75a920d",
+        "pattern:91501996e823084f7ed2d15a",
+        "pattern:9198aa7f1ccea6a1e10f08cd",
+        "pattern:95a88cd8604c913f604e6bcf",
+        "pattern:b375b4ad73e6b09fefc73612",
+        "pattern:c56c57b1a20ed7baeebfc1db",
+        "pattern:d5e393320f55da09c6fb1352"
+      ],
+      "repository_alias": "angular-realworld-example-app",
+      "roadmap_ids": [
+        "roadmap-initiative:modernize:dependency:sha256:7d236948f"
+      ],
+      "source_type": "public_oss",
+      "technology_summary": [
+        "build_tool:npm@unavailable",
+        "framework:Angular@21.2.12",
+        "language:JavaScript@unavailable",
+        "language:TypeScript@unavailable",
+        "runtime:Node.js@unavailable",
+        "testing:Vitest@^4.0.18"
+      ],
+      "truncation_note": null
+    },
+    {
+      "canonical_assessment_availability": "Detailed assessment available to authorized users.",
+      "confidence": "limited",
+      "drilldown_id": "drilldown:0e8ac32134b7ad34655c0c26",
+      "finding_refs": [
+        {
+          "entity_id": "0315bb7f-0027-5fc3-a897-2b93473f5445",
+          "entity_kind": "finding",
+          "label": "medium:sec006"
+        },
+        {
+          "entity_id": "03d1aeea-852c-58f7-bf5f-496e7c7b3dd7",
+          "entity_kind": "finding",
+          "label": "medium:dep002"
+        },
+        {
+          "entity_id": "0d572f34-3cbe-5a19-8543-272206cd33d0",
+          "entity_kind": "finding",
+          "label": "medium:sec005"
+        },
+        {
+          "entity_id": "2d53da88-a176-56cd-81ad-7ff0b66f38fb",
+          "entity_kind": "finding",
+          "label": "medium:sec005"
+        },
+        {
+          "entity_id": "551afefc-f28a-5be5-89ca-54f8ab2202ec",
+          "entity_kind": "finding",
+          "label": "informational:arch002"
+        },
+        {
+          "entity_id": "832db44d-bf7d-55d3-96a1-2e3bb3ce4f63",
+          "entity_kind": "finding",
+          "label": "informational:arch001"
+        },
+        {
+          "entity_id": "980ea635-23c9-5daf-8f93-16fe7b150f6e",
+          "entity_kind": "finding",
+          "label": "informational:arch003"
+        },
+        {
+          "entity_id": "finding:architecture.dependency-cycle:0f79925cf58d7819",
+          "entity_kind": "finding",
+          "label": "medium:architecture.dependency-cycle"
+        },
+        {
+          "entity_id": "finding:architecture.excessive-cross-module-coupling:095d419fea1150a2",
+          "entity_kind": "finding",
+          "label": "medium:architecture.excessive-cross-module-coup"
+        },
+        {
+          "entity_id": "finding:architecture.framework-leakage:0ac6ea6931f18501",
+          "entity_kind": "finding",
+          "label": "medium:architecture.framework-leakage"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-061:3343d36aefb6f5c8",
+          "entity_kind": "finding",
+          "label": "low:cloud.cloud-061"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-large-repository:0fe4955cb2e86479",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-large-repository"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-missing-ci-workflow:a92f630d112b241d",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-missing-ci-workflow"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-missing-node-engine:600f45ec9fca556b",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-missing-node-engine"
+        },
+        {
+          "entity_id": "finding:security.debug-enabled:287d6a70d34ca862",
+          "entity_kind": "finding",
+          "label": "medium:security.debug-enabled"
+        },
+        {
+          "entity_id": "finding:technical_debt.deep-nesting:21eefaaa749215a1",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.deep-nesting"
+        },
+        {
+          "entity_id": "finding:technical_debt.excessive-branching:0cf9bb7faa77bd95",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.excessive-branching"
+        },
+        {
+          "entity_id": "finding:technical_debt.excessive-parameters:0f6468fa8e439e4e",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.excessive-parameters"
+        },
+        {
+          "entity_id": "finding:technical_debt.large-callable:0b79db0cf8cff239",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.large-callable"
+        },
+        {
+          "entity_id": "finding:technical_debt.oversized-type:0e0d03e1bce4eb6a",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.oversized-type"
+        }
+      ],
+      "head_snapshots": [
+        {
+          "activation_status": "disabled",
+          "assessment_head_id": "ai_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "disabled",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "architecture_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 8,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "cloud_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 5,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "dependency_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 2,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "unavailable",
+          "assessment_head_id": "engineering_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "unavailable",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "modernization_assessment",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "security_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 4,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 2,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technical_debt_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 9,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 2,
+          "repository_alias": "BookStack"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technology_inventory",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "BookStack"
+        }
+      ],
+      "limitations": [
+        "canonical_assessment_report_required_for_complete_entity_list",
+        "canonical_assessment_report_required_for_full_evidence_details",
+        "confidence_unavailable:architecture_intelligence",
+        "confidence_unavailable:cloud_readiness",
+        "confidence_unavailable:dependency_intelligence",
+        "confidence_unavailable:modernization_assessment",
+        "confidence_unavailable:security_intelligence",
+        "confidence_unavailable:technical_debt_intelligence",
+        "confidence_unavailable:technology_inventory",
+        "coverage_disabled:ai_readiness",
+        "coverage_partial:architecture_intelligence",
+        "coverage_partial:cloud_readiness",
+        "coverage_partial:dependency_intelligence",
+        "coverage_partial:modernization_assessment",
+        "coverage_partial:security_intelligence",
+        "coverage_partial:technical_debt_intelligence",
+        "coverage_partial:technology_inventory",
+        "coverage_unavailable:engineering_intelligence",
+        "cross_sectional_snapshot_only",
+        "curated_validation_dataset",
+        "finding_refs_truncated:20/29",
+        "highest_severity_unavailable_for_unevaluated_head",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "legacy_limited_head:ai_readiness",
+        "legacy_limited_head:architecture_intelligence",
+        "legacy_limited_head:cloud_readiness",
+        "legacy_limited_head:dependency_intelligence",
+        "legacy_limited_head:engineering_intelligence",
+        "legacy_limited_head:modernization_assessment",
+        "legacy_limited_head:security_intelligence",
+        "legacy_limited_head:technical_debt_intelligence",
+        "legacy_limited_head:technology_inventory",
+        "legacy_or_incomplete_assessment",
+        "legacy_or_incomplete_source_assessment",
+        "non_representative_oss_selection",
+        "recommendation_legacy_or_limited_present",
+        "report_limitation:assessment_confidence",
+        "report_limitation:assessment_coverage",
+        "report_limitation:legacy_source",
+        "report_limitation:non_temporal_dataset",
+        "report_limitation:selection_bias",
+        "repository_drilldown_is_navigation_not_a_scorecard",
+        "roadmap_legacy_items_present",
+        "traceability_status:incomplete"
+      ],
+      "modernization_observation_ids": [
+        "obs:14c37a68fa4afd6622c83c0f",
+        "obs:3700290659ece4a6b85af1c5",
+        "obs:76c321f2014a067ba084c765",
+        "obs:99f806d4838b24c1034dbc5d",
+        "obs:b8e82339fe57dd49cf47e1f9"
+      ],
+      "priority_action_ids": [],
+      "recommendation_refs": [
+        {
+          "entity_id": "676318e6-b121-5bd6-8461-55eec28f03e4",
+          "entity_kind": "recommendation",
+          "label": "medium:testing"
+        },
+        {
+          "entity_id": "6b85c7a7-e33e-59d8-9263-a6ecafb420e9",
+          "entity_kind": "recommendation",
+          "label": "high:security"
+        },
+        {
+          "entity_id": "92b39c6e-8af1-5c2a-b695-2eb219d3f046",
+          "entity_kind": "recommendation",
+          "label": "medium:cloud"
+        },
+        {
+          "entity_id": "962ca366-e4e4-5da6-b7fd-00baa7e490a0",
+          "entity_kind": "recommendation",
+          "label": "high:security"
+        },
+        {
+          "entity_id": "bba327aa-2f64-5a9f-ac1d-fba479c5b580",
+          "entity_kind": "recommendation",
+          "label": "high:ci_cd"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-large-repository:d9769381a313d799",
+          "entity_kind": "recommendation",
+          "label": "low:maintainability"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-missing-ci-workflow:488979abf7da8192",
+          "entity_kind": "recommendation",
+          "label": "low:build"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-missing-node-engine:72390228b07c476e",
+          "entity_kind": "recommendation",
+          "label": "low:dependency"
+        }
+      ],
+      "recurring_pattern_ids": [
+        "pattern:1175a16842afeb7afc40e517",
+        "pattern:1542a3576b7faa885d64f6f7",
+        "pattern:16fb3e93e6e4a34e0e985fba",
+        "pattern:1c52d8735d80b0cb047a01c9",
+        "pattern:28cfdc59892fba43c0a0e279",
+        "pattern:2ea1269542ca14568c1a5beb",
+        "pattern:344fc92ed938abc552e2825d",
+        "pattern:39752292edbbdf51045e4200",
+        "pattern:3c4443f5ca4db904c66ad08f",
+        "pattern:4892c7e2d795110d82b7f4ca",
+        "pattern:625854b58296bad96c0ef011",
+        "pattern:64365bb3a92cf9af636c8ad9",
+        "pattern:768ecb11b654504561e5cf39",
+        "pattern:7e248cf29c20cd33b75a920d",
+        "pattern:91501996e823084f7ed2d15a",
+        "pattern:9173938a61078bd0491a83cf",
+        "pattern:95a88cd8604c913f604e6bcf",
+        "pattern:a78ba88551fafbc0431c63a8",
+        "pattern:b375b4ad73e6b09fefc73612",
+        "pattern:cc28a9811e204ebfe819c8ca",
+        "pattern:d3f7652c6bf9e5580154c7d3",
+        "pattern:d5b05b97be024c45ecc92485",
+        "pattern:d5e393320f55da09c6fb1352",
+        "pattern:e1e5c72a682d8611da1f0d7b",
+        "pattern:e587cb645d8c05de69d48c02",
+        "pattern:f710abad7d2dc794abf3f12f",
+        "pattern:f7ae52b21bef1ef31db83ffe"
+      ],
+      "repository_alias": "BookStack",
+      "roadmap_ids": [
+        "roadmap-initiative:modernize:dependency:sha256:2653d63d3",
+        "roadmap-initiative:modernize:maintainability:sha256:0b9bcc808",
+        "roadmap-initiative:stabilize:build:sha256:d4bda7f78"
+      ],
+      "source_type": "public_oss",
+      "technology_summary": [
+        "build_tool:Composer@unavailable",
+        "build_tool:npm@unavailable",
+        "framework:Laravel@^v12.26.4",
+        "language:JavaScript@unavailable",
+        "language:PHP@unavailable",
+        "language:TypeScript@unavailable",
+        "runtime:Node.js@unavailable",
+        "testing:Jest@^30.3.0",
+        "testing:PHPUnit@^11.5"
+      ],
+      "truncation_note": "Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result."
+    },
+    {
+      "canonical_assessment_availability": "Detailed assessment available to authorized users.",
+      "confidence": "limited",
+      "drilldown_id": "drilldown:136845cca78739435c70806c",
+      "finding_refs": [
+        {
+          "entity_id": "03c3d87d-a05f-5dc9-ad08-cf13cf8a5192",
+          "entity_kind": "finding",
+          "label": "medium:dep002"
+        },
+        {
+          "entity_id": "06b03271-0bb1-5f2d-a3d8-7709e153eb5f",
+          "entity_kind": "finding",
+          "label": "medium:dep001"
+        },
+        {
+          "entity_id": "436d4b2b-636c-5e80-b3d9-73c9a7f64ed1",
+          "entity_kind": "finding",
+          "label": "low:cloud009"
+        },
+        {
+          "entity_id": "6d50bf59-e279-5836-a22f-5abadf541ce4",
+          "entity_kind": "finding",
+          "label": "informational:arch002"
+        },
+        {
+          "entity_id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+          "entity_kind": "finding",
+          "label": "informational:arch007"
+        },
+        {
+          "entity_id": "7363f704-2582-5a47-8081-4aad47b82fab",
+          "entity_kind": "finding",
+          "label": "informational:arch003"
+        },
+        {
+          "entity_id": "79309561-2be6-5dd2-b031-41390f2d83b5",
+          "entity_kind": "finding",
+          "label": "informational:repository.metrics.summary"
+        },
+        {
+          "entity_id": "832db44d-bf7d-55d3-96a1-2e3bb3ce4f63",
+          "entity_kind": "finding",
+          "label": "informational:arch001"
+        },
+        {
+          "entity_id": "ad9ed675-a2e7-5867-8496-6abcfa57ca78",
+          "entity_kind": "finding",
+          "label": "informational:arch005"
+        },
+        {
+          "entity_id": "e2c5cd8c-e82a-5d3c-a825-82efd494d546",
+          "entity_kind": "finding",
+          "label": "informational:build.system.summary"
+        },
+        {
+          "entity_id": "finding:ai_readiness.ai-001:20db85542c05bdc0",
+          "entity_kind": "finding",
+          "label": "informational:ai_readiness.ai-001"
+        },
+        {
+          "entity_id": "finding:ai_readiness.ai-020:b12a89a128f126df",
+          "entity_kind": "finding",
+          "label": "informational:ai_readiness.ai-020"
+        },
+        {
+          "entity_id": "finding:ai_readiness.ai-060:197e0632fba811b3",
+          "entity_kind": "finding",
+          "label": "informational:ai_readiness.ai-060"
+        },
+        {
+          "entity_id": "finding:architecture.invalid-dependency-direction:5864f59fd9f6a3b3",
+          "entity_kind": "finding",
+          "label": "medium:architecture.invalid-dependency-directio"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-large-repository:2f601b5191b8e6d1",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-large-repository"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-missing-node-engine:fcedc81ed40de008",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-missing-node-engine"
+        },
+        {
+          "entity_id": "finding:security.credential-literal:5add6f4b0524278e",
+          "entity_kind": "finding",
+          "label": "high:security.credential-literal"
+        },
+        {
+          "entity_id": "finding:testing.test-002:717cb66b83bf321e",
+          "entity_kind": "finding",
+          "label": "low:testing.test-002"
+        }
+      ],
+      "head_snapshots": [
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "ai_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 3,
+          "highest_severity": "informational",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "architecture_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 6,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "disabled",
+          "assessment_head_id": "cloud_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "disabled",
+          "finding_count": 1,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "dependency_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 3,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "unavailable",
+          "assessment_head_id": "engineering_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "unavailable",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "modernization_assessment",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "security_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 1,
+          "highest_severity": "high",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technical_debt_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 4,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 2,
+          "repository_alias": "eShop"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technology_inventory",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "eShop"
+        }
+      ],
+      "limitations": [
+        "canonical_assessment_report_required_for_full_evidence_details",
+        "confidence_unavailable:ai_readiness",
+        "confidence_unavailable:architecture_intelligence",
+        "confidence_unavailable:dependency_intelligence",
+        "confidence_unavailable:modernization_assessment",
+        "confidence_unavailable:security_intelligence",
+        "confidence_unavailable:technical_debt_intelligence",
+        "confidence_unavailable:technology_inventory",
+        "coverage_disabled:cloud_readiness",
+        "coverage_partial:ai_readiness",
+        "coverage_partial:architecture_intelligence",
+        "coverage_partial:dependency_intelligence",
+        "coverage_partial:modernization_assessment",
+        "coverage_partial:security_intelligence",
+        "coverage_partial:technical_debt_intelligence",
+        "coverage_partial:technology_inventory",
+        "coverage_unavailable:engineering_intelligence",
+        "cross_sectional_snapshot_only",
+        "curated_validation_dataset",
+        "highest_severity_unavailable_for_unevaluated_head",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "legacy_limited_head:ai_readiness",
+        "legacy_limited_head:architecture_intelligence",
+        "legacy_limited_head:cloud_readiness",
+        "legacy_limited_head:dependency_intelligence",
+        "legacy_limited_head:engineering_intelligence",
+        "legacy_limited_head:modernization_assessment",
+        "legacy_limited_head:security_intelligence",
+        "legacy_limited_head:technical_debt_intelligence",
+        "legacy_limited_head:technology_inventory",
+        "legacy_or_incomplete_assessment",
+        "legacy_or_incomplete_source_assessment",
+        "non_representative_oss_selection",
+        "recommendation_legacy_or_limited_present",
+        "report_limitation:assessment_confidence",
+        "report_limitation:assessment_coverage",
+        "report_limitation:legacy_source",
+        "report_limitation:non_temporal_dataset",
+        "report_limitation:selection_bias",
+        "repository_drilldown_is_navigation_not_a_scorecard",
+        "roadmap_legacy_items_present",
+        "technology_path_like_name_omitted",
+        "traceability_status:incomplete"
+      ],
+      "modernization_observation_ids": [
+        "obs:14c37a68fa4afd6622c83c0f",
+        "obs:3700290659ece4a6b85af1c5",
+        "obs:76c321f2014a067ba084c765"
+      ],
+      "priority_action_ids": [],
+      "recommendation_refs": [
+        {
+          "entity_id": "024d207c-5fff-5bfd-b260-0be81d48eb70",
+          "entity_kind": "recommendation",
+          "label": "medium:ci_cd"
+        },
+        {
+          "entity_id": "6f7e20d6-0d5d-5408-87e2-a38b8b11c76a",
+          "entity_kind": "recommendation",
+          "label": "medium:testing"
+        },
+        {
+          "entity_id": "eebc0657-2bf1-5f9c-8a82-0aa2df8a2e54",
+          "entity_kind": "recommendation",
+          "label": "medium:cloud"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-large-repository:c97b98ef2d5a7140",
+          "entity_kind": "recommendation",
+          "label": "low:maintainability"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-missing-node-engine:77d32c533b560d94",
+          "entity_kind": "recommendation",
+          "label": "low:dependency"
+        }
+      ],
+      "recurring_pattern_ids": [
+        "pattern:16fb3e93e6e4a34e0e985fba",
+        "pattern:1c52d8735d80b0cb047a01c9",
+        "pattern:2ea1269542ca14568c1a5beb",
+        "pattern:39752292edbbdf51045e4200",
+        "pattern:3c4443f5ca4db904c66ad08f",
+        "pattern:4892c7e2d795110d82b7f4ca",
+        "pattern:625854b58296bad96c0ef011",
+        "pattern:95a88cd8604c913f604e6bcf",
+        "pattern:a9e8ba9df8b7b562a76da35e",
+        "pattern:c56c57b1a20ed7baeebfc1db",
+        "pattern:cc28a9811e204ebfe819c8ca",
+        "pattern:d5b05b97be024c45ecc92485",
+        "pattern:d5e393320f55da09c6fb1352",
+        "pattern:e587cb645d8c05de69d48c02",
+        "pattern:f710abad7d2dc794abf3f12f"
+      ],
+      "repository_alias": "eShop",
+      "roadmap_ids": [
+        "roadmap-initiative:modernize:dependency:sha256:800118ebb",
+        "roadmap-initiative:modernize:maintainability:sha256:ba38ec4ed"
+      ],
+      "source_type": "public_oss",
+      "technology_summary": [
+        "build_tool:NuGet@unavailable",
+        "build_tool:npm@unavailable",
+        "framework:.NET@unavailable",
+        "framework:ASP.NET Core@unavailable",
+        "framework:Blazor@unavailable",
+        "framework:Entity Framework Core@unavailable",
+        "language:C#@unavailable",
+        "language:JavaScript@unavailable",
+        "language:TypeScript@unavailable",
+        "runtime:Node.js@unavailable",
+        "testing:xUnit@unavailable"
+      ],
+      "truncation_note": null
+    },
+    {
+      "canonical_assessment_availability": "Detailed assessment available to authorized users.",
+      "confidence": "limited",
+      "drilldown_id": "drilldown:b19c4ff81e5455e22cf667e6",
+      "finding_refs": [
+        {
+          "entity_id": "0a95bc5d-3e7d-5056-aa7c-6245e5e6c330",
+          "entity_kind": "finding",
+          "label": "medium:sec006"
+        },
+        {
+          "entity_id": "0b0b65ce-57e7-5585-a5fb-4fdb3f985ab7",
+          "entity_kind": "finding",
+          "label": "medium:dep002"
+        },
+        {
+          "entity_id": "3deb61a9-78ea-500f-a67d-bfaf0ba5df8b",
+          "entity_kind": "finding",
+          "label": "medium:dep003"
+        },
+        {
+          "entity_id": "a6e8a011-29a7-5b1f-98ce-4f70789df21b",
+          "entity_kind": "finding",
+          "label": "informational:arch005"
+        },
+        {
+          "entity_id": "ac751427-9145-58d2-90d6-ae4f1bbee5a6",
+          "entity_kind": "finding",
+          "label": "informational:cloud002"
+        },
+        {
+          "entity_id": "b808b3d0-24c1-52c3-84bd-0e9af37e5ec7",
+          "entity_kind": "finding",
+          "label": "informational:cloud008"
+        },
+        {
+          "entity_id": "b9d02563-b4fc-5387-9142-68f4d4b11cc6",
+          "entity_kind": "finding",
+          "label": "informational:cloud001"
+        },
+        {
+          "entity_id": "d514b486-4b88-57e7-b41e-3fa08084e598",
+          "entity_kind": "finding",
+          "label": "informational:arch002"
+        },
+        {
+          "entity_id": "d704295c-7024-5df5-afc1-894a41feb53a",
+          "entity_kind": "finding",
+          "label": "high:sec001"
+        },
+        {
+          "entity_id": "dab047d5-7c56-5f2f-95e2-798f9097f0ca",
+          "entity_kind": "finding",
+          "label": "informational:cloud010"
+        },
+        {
+          "entity_id": "finding:architecture.component-concentration:8458045f29bb506c",
+          "entity_kind": "finding",
+          "label": "high:architecture.component-concentration"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-010:b3360f5ea75fecfc",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-010"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-040"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-061:4cbbfdebd12a9103",
+          "entity_kind": "finding",
+          "label": "low:cloud.cloud-061"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-large-repository:c2e5bcc57a6f97d6",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-large-repository"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-missing-node-engine:282e030671923e69",
+          "entity_kind": "finding",
+          "label": "low:codestrata-rule-missing-node-engine"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-npm-lockfile-missing:c5fccc35e80cc5f3",
+          "entity_kind": "finding",
+          "label": "medium:codestrata-rule-npm-lockfile-missing"
+        },
+        {
+          "entity_id": "finding:security.debug-enabled:bb833d98d31b4e78",
+          "entity_kind": "finding",
+          "label": "medium:security.debug-enabled"
+        },
+        {
+          "entity_id": "finding:technical_debt.oversized-type:01351848b47de477",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.oversized-type"
+        },
+        {
+          "entity_id": "finding:testing.test-002:5fde05175648f6b1",
+          "entity_kind": "finding",
+          "label": "low:testing.test-002"
+        }
+      ],
+      "head_snapshots": [
+        {
+          "activation_status": "disabled",
+          "assessment_head_id": "ai_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "disabled",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "architecture_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 3,
+          "highest_severity": "high",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "cloud_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 7,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "dependency_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 4,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 2,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "unavailable",
+          "assessment_head_id": "engineering_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "unavailable",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "modernization_assessment",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "security_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 3,
+          "highest_severity": "high",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technical_debt_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 5,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "full-stack-fastapi-template"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technology_inventory",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "full-stack-fastapi-template"
+        }
+      ],
+      "limitations": [
+        "canonical_assessment_report_required_for_complete_entity_list",
+        "canonical_assessment_report_required_for_full_evidence_details",
+        "confidence_unavailable:architecture_intelligence",
+        "confidence_unavailable:cloud_readiness",
+        "confidence_unavailable:dependency_intelligence",
+        "confidence_unavailable:modernization_assessment",
+        "confidence_unavailable:security_intelligence",
+        "confidence_unavailable:technical_debt_intelligence",
+        "confidence_unavailable:technology_inventory",
+        "coverage_disabled:ai_readiness",
+        "coverage_partial:architecture_intelligence",
+        "coverage_partial:cloud_readiness",
+        "coverage_partial:dependency_intelligence",
+        "coverage_partial:modernization_assessment",
+        "coverage_partial:security_intelligence",
+        "coverage_partial:technical_debt_intelligence",
+        "coverage_partial:technology_inventory",
+        "coverage_unavailable:engineering_intelligence",
+        "cross_sectional_snapshot_only",
+        "curated_validation_dataset",
+        "finding_refs_truncated:20/22",
+        "highest_severity_unavailable_for_unevaluated_head",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "legacy_limited_head:ai_readiness",
+        "legacy_limited_head:architecture_intelligence",
+        "legacy_limited_head:cloud_readiness",
+        "legacy_limited_head:dependency_intelligence",
+        "legacy_limited_head:engineering_intelligence",
+        "legacy_limited_head:modernization_assessment",
+        "legacy_limited_head:security_intelligence",
+        "legacy_limited_head:technical_debt_intelligence",
+        "legacy_limited_head:technology_inventory",
+        "legacy_or_incomplete_assessment",
+        "legacy_or_incomplete_source_assessment",
+        "non_representative_oss_selection",
+        "recommendation_legacy_or_limited_present",
+        "report_limitation:assessment_confidence",
+        "report_limitation:assessment_coverage",
+        "report_limitation:legacy_source",
+        "report_limitation:non_temporal_dataset",
+        "report_limitation:selection_bias",
+        "repository_drilldown_is_navigation_not_a_scorecard",
+        "roadmap_legacy_items_present",
+        "traceability_status:incomplete"
+      ],
+      "modernization_observation_ids": [
+        "obs:14c37a68fa4afd6622c83c0f",
+        "obs:76c321f2014a067ba084c765",
+        "obs:79545787cf21632c473069f0",
+        "obs:b8e82339fe57dd49cf47e1f9"
+      ],
+      "priority_action_ids": [],
+      "recommendation_refs": [
+        {
+          "entity_id": "ae934d47-63ba-5614-a5e0-64601aa16d84",
+          "entity_kind": "recommendation",
+          "label": "high:security"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-large-repository:e138417cbf268a60",
+          "entity_kind": "recommendation",
+          "label": "low:maintainability"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-missing-node-engine:051d7fa01c426056",
+          "entity_kind": "recommendation",
+          "label": "low:dependency"
+        },
+        {
+          "entity_id": "recommendation:codestrata-rec-npm-lockfile-missing:6db8a69fcbd6716d",
+          "entity_kind": "recommendation",
+          "label": "medium:dependency"
+        }
+      ],
+      "recurring_pattern_ids": [
+        "pattern:0243010adb8e69a721e8a5b4",
+        "pattern:0cc661e5574ff59a8a47c87b",
+        "pattern:1175a16842afeb7afc40e517",
+        "pattern:1542a3576b7faa885d64f6f7",
+        "pattern:16fb3e93e6e4a34e0e985fba",
+        "pattern:1c52d8735d80b0cb047a01c9",
+        "pattern:1fbdf16aa3f0cbee71e821ea",
+        "pattern:28cfdc59892fba43c0a0e279",
+        "pattern:2ea1269542ca14568c1a5beb",
+        "pattern:344fc92ed938abc552e2825d",
+        "pattern:4892c7e2d795110d82b7f4ca",
+        "pattern:68325d7606ad0fd243be379c",
+        "pattern:768ecb11b654504561e5cf39",
+        "pattern:91501996e823084f7ed2d15a",
+        "pattern:9198aa7f1ccea6a1e10f08cd",
+        "pattern:95a88cd8604c913f604e6bcf",
+        "pattern:a78ba88551fafbc0431c63a8",
+        "pattern:a9e8ba9df8b7b562a76da35e",
+        "pattern:b375b4ad73e6b09fefc73612",
+        "pattern:cc28a9811e204ebfe819c8ca",
+        "pattern:d3f7652c6bf9e5580154c7d3",
+        "pattern:d5b05b97be024c45ecc92485",
+        "pattern:d5e393320f55da09c6fb1352",
+        "pattern:e587cb645d8c05de69d48c02"
+      ],
+      "repository_alias": "full-stack-fastapi-template",
+      "roadmap_ids": [
+        "roadmap-initiative:modernize:dependency:sha256:0eb516e74",
+        "roadmap-initiative:modernize:maintainability:sha256:837dcefc3"
+      ],
+      "source_type": "public_oss",
+      "technology_summary": [
+        "build_tool:npm@unavailable",
+        "build_tool:uv@unavailable",
+        "framework:FastAPI@>=0.139.0,<1.0.0",
+        "language:JavaScript@unavailable",
+        "language:Python@unavailable",
+        "language:TypeScript@unavailable",
+        "runtime:Node.js@unavailable"
+      ],
+      "truncation_note": "Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result."
+    },
+    {
+      "canonical_assessment_availability": "Detailed assessment available to authorized users.",
+      "confidence": "limited",
+      "drilldown_id": "drilldown:76d069038c81833ac8cc49c0",
+      "finding_refs": [
+        {
+          "entity_id": "2d4a6fdb-ff31-5a14-b5ce-39ea4bad3819",
+          "entity_kind": "finding",
+          "label": "informational:arch002"
+        },
+        {
+          "entity_id": "50c16218-51f7-5358-bd23-26a69c4f9eee",
+          "entity_kind": "finding",
+          "label": "informational:cloud003"
+        },
+        {
+          "entity_id": "5f196240-f777-5bc2-baef-056ef287a5ca",
+          "entity_kind": "finding",
+          "label": "informational:cloud002"
+        },
+        {
+          "entity_id": "70a71619-37ad-58f6-9f2f-cebfa943796a",
+          "entity_kind": "finding",
+          "label": "informational:arch007"
+        },
+        {
+          "entity_id": "9b006163-bf37-51d5-b962-c08552b6d9a2",
+          "entity_kind": "finding",
+          "label": "informational:arch003"
+        },
+        {
+          "entity_id": "aadc8c94-9d99-5a4b-a7c1-d104ac83568f",
+          "entity_kind": "finding",
+          "label": "informational:arch005"
+        },
+        {
+          "entity_id": "baa3cdff-07f9-57cf-8e7f-f592e428350c",
+          "entity_kind": "finding",
+          "label": "informational:cloud010"
+        },
+        {
+          "entity_id": "cfe664e1-38f1-54e1-9061-46fc05db9622",
+          "entity_kind": "finding",
+          "label": "informational:cloud008"
+        },
+        {
+          "entity_id": "e039f3ef-ccd7-5a94-a113-c0612f11d70c",
+          "entity_kind": "finding",
+          "label": "low:dep003"
+        },
+        {
+          "entity_id": "ec53dcfb-d3e4-51f9-a6d4-3d967e079a0f",
+          "entity_kind": "finding",
+          "label": "informational:arch001"
+        },
+        {
+          "entity_id": "finding:architecture.framework-leakage:2e7d513b52a76df5",
+          "entity_kind": "finding",
+          "label": "medium:architecture.framework-leakage"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-010:6903fdc3d8e7ec3a",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-010"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-011:2fdbb8fb97a58521",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-011"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-040:dea4e53b3772f64f",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-040"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-060:78a220cb4fa1e7ba",
+          "entity_kind": "finding",
+          "label": "informational:cloud.cloud-060"
+        },
+        {
+          "entity_id": "finding:cloud.cloud-061:9aa8b184f6df3f86",
+          "entity_kind": "finding",
+          "label": "low:cloud.cloud-061"
+        },
+        {
+          "entity_id": "finding:codestrata-rule-java-detected:5749ad5603067069",
+          "entity_kind": "finding",
+          "label": "informational:codestrata-rule-java-detected"
+        },
+        {
+          "entity_id": "finding:technical_debt.excessive-branching:fca3fe7058044448",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.excessive-branching"
+        },
+        {
+          "entity_id": "finding:technical_debt.large-callable:dae19c3d10a14034",
+          "entity_kind": "finding",
+          "label": "medium:technical_debt.large-callable"
+        },
+        {
+          "entity_id": "finding:testing.test-001:94fa5f1b334deaa9",
+          "entity_kind": "finding",
+          "label": "medium:testing.test-001"
+        }
+      ],
+      "head_snapshots": [
+        {
+          "activation_status": "disabled",
+          "assessment_head_id": "ai_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "disabled",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "architecture_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 6,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "cloud_readiness",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 9,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 1,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "dependency_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 1,
+          "highest_severity": "low",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "unavailable",
+          "assessment_head_id": "engineering_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "unavailable",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "modernization_assessment",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 2,
+          "highest_severity": "informational",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "security_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technical_debt_intelligence",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 5,
+          "highest_severity": "medium",
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        },
+        {
+          "activation_status": "activated",
+          "assessment_head_id": "technology_inventory",
+          "confidence_level": "unavailable",
+          "coverage_status": "partial",
+          "finding_count": 0,
+          "highest_severity": null,
+          "priority_action_count": 0,
+          "recommendation_count": 0,
+          "repository_alias": "spring-petclinic"
+        }
+      ],
+      "limitations": [
+        "canonical_assessment_report_required_for_complete_entity_list",
+        "canonical_assessment_report_required_for_full_evidence_details",
+        "confidence_unavailable:architecture_intelligence",
+        "confidence_unavailable:cloud_readiness",
+        "confidence_unavailable:dependency_intelligence",
+        "confidence_unavailable:modernization_assessment",
+        "confidence_unavailable:security_intelligence",
+        "confidence_unavailable:technical_debt_intelligence",
+        "confidence_unavailable:technology_inventory",
+        "coverage_disabled:ai_readiness",
+        "coverage_partial:architecture_intelligence",
+        "coverage_partial:cloud_readiness",
+        "coverage_partial:dependency_intelligence",
+        "coverage_partial:modernization_assessment",
+        "coverage_partial:security_intelligence",
+        "coverage_partial:technical_debt_intelligence",
+        "coverage_partial:technology_inventory",
+        "coverage_unavailable:engineering_intelligence",
+        "cross_sectional_snapshot_only",
+        "curated_validation_dataset",
+        "finding_refs_truncated:20/23",
+        "highest_severity_unavailable_for_unevaluated_head",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "legacy_limited_head:ai_readiness",
+        "legacy_limited_head:architecture_intelligence",
+        "legacy_limited_head:cloud_readiness",
+        "legacy_limited_head:dependency_intelligence",
+        "legacy_limited_head:engineering_intelligence",
+        "legacy_limited_head:modernization_assessment",
+        "legacy_limited_head:security_intelligence",
+        "legacy_limited_head:technical_debt_intelligence",
+        "legacy_limited_head:technology_inventory",
+        "legacy_or_incomplete_assessment",
+        "legacy_or_incomplete_source_assessment",
+        "non_representative_oss_selection",
+        "recommendation_legacy_or_limited_present",
+        "report_limitation:assessment_confidence",
+        "report_limitation:assessment_coverage",
+        "report_limitation:legacy_source",
+        "report_limitation:non_temporal_dataset",
+        "report_limitation:selection_bias",
+        "repository_drilldown_is_navigation_not_a_scorecard",
+        "roadmap_legacy_items_present",
+        "traceability_status:incomplete"
+      ],
+      "modernization_observation_ids": [
+        "obs:99f806d4838b24c1034dbc5d"
+      ],
+      "priority_action_ids": [],
+      "recommendation_refs": [
+        {
+          "entity_id": "fc4f8d7d-ff3b-52aa-aeec-ba9a0e0709b8",
+          "entity_kind": "recommendation",
+          "label": "low:cloud"
+        }
+      ],
+      "recurring_pattern_ids": [
+        "pattern:0243010adb8e69a721e8a5b4",
+        "pattern:0cc661e5574ff59a8a47c87b",
+        "pattern:1175a16842afeb7afc40e517",
+        "pattern:1542a3576b7faa885d64f6f7",
+        "pattern:1c52d8735d80b0cb047a01c9",
+        "pattern:344fc92ed938abc552e2825d",
+        "pattern:39752292edbbdf51045e4200",
+        "pattern:3c4443f5ca4db904c66ad08f",
+        "pattern:4892c7e2d795110d82b7f4ca",
+        "pattern:625854b58296bad96c0ef011",
+        "pattern:64365bb3a92cf9af636c8ad9",
+        "pattern:7e248cf29c20cd33b75a920d",
+        "pattern:9173938a61078bd0491a83cf",
+        "pattern:9198aa7f1ccea6a1e10f08cd",
+        "pattern:95a88cd8604c913f604e6bcf",
+        "pattern:b375b4ad73e6b09fefc73612",
+        "pattern:e1e5c72a682d8611da1f0d7b",
+        "pattern:e587cb645d8c05de69d48c02",
+        "pattern:f7ae52b21bef1ef31db83ffe"
+      ],
+      "repository_alias": "spring-petclinic",
+      "roadmap_ids": [
+        "roadmap-initiative:modernize:cloud:sha256:949f689f0"
+      ],
+      "source_type": "public_oss",
+      "technology_summary": [
+        "build_tool:Gradle@unavailable",
+        "build_tool:Maven@unavailable",
+        "framework:Spring Boot@unavailable",
+        "language:Java@unavailable",
+        "testing:JUnit@unavailable"
+      ],
+      "truncation_note": "Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result."
+    }
+  ],
+  "repository_population": [
+    [
+      "BookStack",
+      "public_oss"
+    ],
+    [
+      "angular-realworld-example-app",
+      "public_oss"
+    ],
+    [
+      "eShop",
+      "public_oss"
+    ],
+    [
+      "full-stack-fastapi-template",
+      "public_oss"
+    ],
+    [
+      "spring-petclinic",
+      "public_oss"
+    ]
+  ],
+  "scope": "public_oss",
+  "technology_distribution": [
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_4_repositories"
+      ],
+      "ratio": "0.8000",
+      "repository_count": 4,
+      "technology": "JavaScript",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "runtime",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_4_repositories"
+      ],
+      "ratio": "0.8000",
+      "repository_count": 4,
+      "technology": "Node.js",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_4_repositories"
+      ],
+      "ratio": "0.8000",
+      "repository_count": 4,
+      "technology": "npm",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_4_repositories"
+      ],
+      "ratio": "0.8000",
+      "repository_count": 4,
+      "technology": "TypeScript",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": ".NET",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": ".NET SDK / MSBuild",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Angular",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "ASP.NET Core",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Blazor",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "C#",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Composer",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Entity Framework Core",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "FastAPI",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Gradle",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Java",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "testing",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Jest",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "testing",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "JUnit",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Laravel",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Maven",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "NuGet",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "PHP",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "testing",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "PHPUnit",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "language",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Python",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "framework",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Spring Boot",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "build_tool",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Uv",
+      "version_states": [
+        "unavailable"
+      ]
+    },
+    {
+      "category": "testing",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "Vitest",
+      "version_states": [
+        "known"
+      ]
+    },
+    {
+      "category": "testing",
+      "denominator": 5,
+      "limitations": [
+        "curated_validation_dataset",
+        "included_with_legacy_limitations",
+        "legacy_limited",
+        "non_representative_oss_selection",
+        "observation_confidence:unavailable",
+        "traceability_status:incomplete",
+        "version_unavailable_for_1_repositories"
+      ],
+      "ratio": "0.2000",
+      "repository_count": 1,
+      "technology": "xUnit",
+      "version_states": [
+        "unavailable"
+      ]
+    }
+  ],
+  "title": "Public OSS Engineering Intelligence Demonstration"
+}

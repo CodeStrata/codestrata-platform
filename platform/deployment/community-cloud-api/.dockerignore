@@ -1,0 +1,63 @@
+# Build context is the monorepo root. Keep the image free of secrets, tests,
+# docs, demos, and non-runtime trees.
+
+.git
+**/.git
+**/.gitignore
+**/.DS_Store
+
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.venv
+**/venv
+**/node_modules
+**/dist
+**/build
+**/*.egg-info
+
+# Non-runtime trees
+docs
+governance
+knowledge
+examples
+test-fixtures
+reports
+validation
+cursor-plugin
+vscode-plugin
+website
+scripts
+tests
+infrastructure
+.export-staging
+.codestrata
+.codestrata-examples
+.codestrata-test-knowledge
+
+# Platform non-runtime
+platform/tests
+platform/docs
+platform/demo
+platform/**/__pycache__
+
+# Engine non-runtime
+engine/tests
+engine/docs
+engine/examples
+engine/**/__pycache__
+
+# Secrets / env
+.env
+.env.*
+**/*.pem
+**/*.key
+**/credentials*
+**/*.tfstate*
+**/*.tfplan
+
+# Editor
+.idea
+.vscode
