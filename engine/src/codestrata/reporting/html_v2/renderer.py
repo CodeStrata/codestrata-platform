@@ -55,7 +55,11 @@ from codestrata.reporting.html_v2.coverage_confidence_limitations import (
     render_coverage_confidence_limitations,
     simple_coverage_row,
 )
-from codestrata.reporting.html_v2.evidence_presentation import render_evidence_ref_panel
+from codestrata.reporting.html_v2.evidence_presentation import (
+    begin_evidence_anchor_scope,
+    end_evidence_anchor_scope,
+    render_evidence_ref_panel,
+)
 from codestrata.reporting.html_v2.labels import completeness_label, limitation_label
 from codestrata.reporting.html_v2.models import (
     AiEnrichmentView,
@@ -103,126 +107,135 @@ class HtmlReportRenderer:
     """
 
     def render(self, view: HtmlReportViewModel) -> str:
-        parts = [
-            "<!DOCTYPE html>",
-            '<html lang="en">',
-            "<head>",
-            '<meta charset="utf-8">',
-            f'<meta http-equiv="Content-Security-Policy" content="{CONTENT_SECURITY_POLICY}">',
-            '<meta name="viewport" content="width=device-width, initial-scale=1">',
-            '<meta name="color-scheme" content="light">',
-            (
-                f'<meta name="generator" content="{escape_html(BRAND_NAME)} '
-                f'{escape_html(BRAND_REPORT_NAME)}">'
-            ),
-            f"<title>{escape_html(BRAND_NAME)} {escape_html(BRAND_REPORT_NAME)} — "
-            f"{escape_html(view.summary.repository_name)}</title>",
-            f"<style>{_CSS}</style>",
-            "</head>",
-            "<body>",
-            '<a class="skip-link" href="#contents">Skip to contents</a>',
-            '<div class="page">',
-            _render_hero(view),
-            _render_toc(view),
-            _render_leadership_verdict(view),
-            _section(
-                "Executive Summary",
-                _render_executive_summary_section(view),
-                section_id="executive-summary",
-                eyebrow="01",
-                note="Leadership narrative for the assessed repository.",
-            ),
-            _section(
-                assessment_head_title(AssessmentHead.ENGINEERING_INTELLIGENCE),
-                _render_engineering_intelligence_summary(view),
-                section_id=assessment_head_anchor(AssessmentHead.ENGINEERING_INTELLIGENCE),
-                eyebrow="02",
-                note=(
-                    "One-page synthesis of enabled assessment heads. "
-                    "Does not introduce new conclusions."
+        """Render HtmlReportViewModel to a complete HTML document.
+
+        Contains no analysis or enrichment business logic.
+        """
+
+        evidence_scope = begin_evidence_anchor_scope()
+        try:
+            parts = [
+                "<!DOCTYPE html>",
+                '<html lang="en">',
+                "<head>",
+                '<meta charset="utf-8">',
+                f'<meta http-equiv="Content-Security-Policy" content="{CONTENT_SECURITY_POLICY}">',
+                '<meta name="viewport" content="width=device-width, initial-scale=1">',
+                '<meta name="color-scheme" content="light">',
+                (
+                    f'<meta name="generator" content="{escape_html(BRAND_NAME)} '
+                    f'{escape_html(BRAND_REPORT_NAME)}">'
                 ),
-            ),
-            _section(
-                "Key Takeaways",
-                _render_key_takeaways(view),
-                section_id="key-takeaways",
-                eyebrow="03",
-                note="Concise leadership bullets for scanning and handoff.",
-            ),
-            _section(
-                "Priority Actions",
-                _render_roadmap(
-                    view.priority_actions if view.priority_actions else view.recommendations,
-                    total_actions=view.priority_actions_total or len(view.priority_actions),
-                    as_priority_actions=True,
-                ),
-                section_id="priority-actions",
-                eyebrow="04",
-                note=(
-                    "Priority-ordered actions linked to findings. "
-                    "Order matches the Roadmap section below."
-                ),
-            ),
-            _section(
-                "Engineering Risks",
-                _render_engineering_risks(view),
-                section_id="engineering-risks",
-                eyebrow="05",
-                note="Meaningful risks grouped by theme.",
-            ),
-            _render_assessment_results(view),
-        ]
-        if view.roadmap_report is not None:
-            parts.append(
+                f"<title>{escape_html(BRAND_NAME)} {escape_html(BRAND_REPORT_NAME)} — "
+                f"{escape_html(view.summary.repository_name)}</title>",
+                f"<style>{_CSS}</style>",
+                "</head>",
+                "<body>",
+                '<a class="skip-link" href="#contents">Skip to contents</a>',
+                '<div class="page">',
+                _render_hero(view),
+                _render_toc(view),
+                _render_leadership_verdict(view),
                 _section(
-                    "Roadmap",
-                    _render_phased_roadmap(view),
-                    section_id="phased-modernization-plan",
-                    eyebrow="07",
-                    note=(
-                        "Engine assess sequencing of Priority Actions "
-                        "(Stabilize → Secure → Modernize → Optimize). "
-                        "This is not CodeStrata Platform Strategic Roadmap."
-                    ),
-                )
-            )
-        if view.ai_enrichment is not None:
-            parts.append(
-                _section(
-                    "Optional AI Enhancements",
-                    _render_ai(view.ai_enrichment),
-                    section_id="modernization-advisor",
-                    eyebrow="08",
-                    note=(
-                        "Optional AI interpretation when enabled. "
-                        "AI enhances—does not replace—deterministic Engineering Intelligence. "
-                        "Not merged into findings or recommendations."
-                    ),
-                    css_class="section section-ai",
-                )
-            )
-        parts.append(
-            _section(
-                "Technical Appendix",
-                _render_technical_details(view),
-                section_id="technical-appendix",
-                eyebrow="09",
-                note=(
-                    "Engineering reference: unclassified results, evidence, graphs, "
-                    "artifacts, metadata, and rule IDs."
+                    "Executive Summary",
+                    _render_executive_summary_section(view),
+                    section_id="executive-summary",
+                    eyebrow="01",
+                    note="Leadership narrative for the assessed repository.",
                 ),
-            )
-        )
-        parts.extend(
-            [
-                _render_footer(view),
-                "</div>",
-                "</body>",
-                "</html>",
-                "",
+                _section(
+                    assessment_head_title(AssessmentHead.ENGINEERING_INTELLIGENCE),
+                    _render_engineering_intelligence_summary(view),
+                    section_id=assessment_head_anchor(AssessmentHead.ENGINEERING_INTELLIGENCE),
+                    eyebrow="02",
+                    note=(
+                        "One-page synthesis of enabled assessment heads. "
+                        "Does not introduce new conclusions."
+                    ),
+                ),
+                _section(
+                    "Key Takeaways",
+                    _render_key_takeaways(view),
+                    section_id="key-takeaways",
+                    eyebrow="03",
+                    note="Concise leadership bullets for scanning and handoff.",
+                ),
+                _section(
+                    "Priority Actions",
+                    _render_roadmap(
+                        view.priority_actions if view.priority_actions else view.recommendations,
+                        total_actions=view.priority_actions_total or len(view.priority_actions),
+                        as_priority_actions=True,
+                    ),
+                    section_id="priority-actions",
+                    eyebrow="04",
+                    note=(
+                        "Priority-ordered actions linked to findings. "
+                        "Order matches the Roadmap section below."
+                    ),
+                ),
+                _section(
+                    "Engineering Risks",
+                    _render_engineering_risks(view),
+                    section_id="engineering-risks",
+                    eyebrow="05",
+                    note="Meaningful risks grouped by theme.",
+                ),
+                _render_assessment_results(view),
             ]
-        )
-        return _ensure_responsive_tables("\n".join(parts))
+            if view.roadmap_report is not None:
+                parts.append(
+                    _section(
+                        "Roadmap",
+                        _render_phased_roadmap(view),
+                        section_id="phased-modernization-plan",
+                        eyebrow="07",
+                        note=(
+                            "Engine assess sequencing of Priority Actions "
+                            "(Stabilize → Secure → Modernize → Optimize). "
+                            "This is not CodeStrata Platform Strategic Roadmap."
+                        ),
+                    )
+                )
+            if view.ai_enrichment is not None:
+                parts.append(
+                    _section(
+                        "Optional AI Enhancements",
+                        _render_ai(view.ai_enrichment),
+                        section_id="modernization-advisor",
+                        eyebrow="08",
+                        note=(
+                            "Optional AI interpretation when enabled. "
+                            "AI enhances—does not replace—deterministic Engineering Intelligence. "
+                            "Not merged into findings or recommendations."
+                        ),
+                        css_class="section section-ai",
+                    )
+                )
+            parts.append(
+                _section(
+                    "Technical Appendix",
+                    _render_technical_details(view),
+                    section_id="technical-appendix",
+                    eyebrow="09",
+                    note=(
+                        "Engineering reference: unclassified results, evidence, graphs, "
+                        "artifacts, metadata, and rule IDs."
+                    ),
+                )
+            )
+            parts.extend(
+                [
+                    _render_footer(view),
+                    "</div>",
+                    "</body>",
+                    "</html>",
+                    "",
+                ]
+            )
+            return _ensure_responsive_tables("\n".join(parts))
+        finally:
+            end_evidence_anchor_scope(evidence_scope)
 
 
 def _ensure_responsive_tables(html: str) -> str:

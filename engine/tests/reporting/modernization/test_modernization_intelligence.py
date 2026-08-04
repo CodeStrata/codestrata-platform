@@ -488,7 +488,7 @@ def test_html_modernization_assessment_section(tmp_path: Path) -> None:
     assert document.ai_enrichment is None or "Modernization Advisor" in html
 
     # Canonical PA / roadmap anchors remain; no duplicate detail anchors from synthesis.
-    ids = re.findall(r'\bid="([^"]+)"', html)
+    ids = re.findall(r'(?<![\w-])id="([^"]+)"', html)
     pa_ids = [i for i in ids if i.startswith("priority-action-")]
     init_ids = [i for i in ids if i.startswith("roadmap-initiative-")]
     assert len(pa_ids) == len(set(pa_ids))

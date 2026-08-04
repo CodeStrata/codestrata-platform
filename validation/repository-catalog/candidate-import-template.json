@@ -1,0 +1,88 @@
+{
+  "candidate_slots": [],
+  "forbidden_languages_for_diversity_only": [
+    "C",
+    "C++",
+    "Go",
+    "Kotlin",
+    "Objective-C",
+    "Ruby",
+    "Rust",
+    "Scala",
+    "Swift"
+  ],
+  "owner_supplied_outside_catalog_not_auto_imported": [
+    {
+      "catalog_id_if_present": null,
+      "github_repository": "fastapi/full-stack-fastapi-template",
+      "github_url": "https://github.com/fastapi/full-stack-fastapi-template",
+      "language_group": "Python",
+      "note": "Not in catalog.json; candidate for owner-approved import only.",
+      "pinned_commit": "c9e70d65c74f7adda417fc8de0757207ff77514c",
+      "project_name": "full-stack-fastapi-template",
+      "source_path": "validation/python-fastapi.toml"
+    },
+    {
+      "catalog_id_if_present": null,
+      "github_repository": "gothinkster/angular-realworld-example-app",
+      "github_url": "https://github.com/gothinkster/angular-realworld-example-app",
+      "language_group": "JS/TS",
+      "note": "Not in catalog.json; candidate for owner-approved import only.",
+      "pinned_commit": "dd99ed2cf39c805d719f943c5d7061a5683d98a8",
+      "project_name": "angular-realworld-example-app",
+      "source_path": "validation/typescript-angular.toml"
+    },
+    {
+      "catalog_id_if_present": null,
+      "github_repository": "microsoft/vscode",
+      "github_url": "https://github.com/microsoft/vscode",
+      "language_group": "JS/TS",
+      "note": "Large survival target; not in catalog.json; owner-approved import only.",
+      "pinned_commit": "618f68c2ab3cb8ef7dd6d43c341cd25e3fe211bf",
+      "project_name": "vscode",
+      "source_path": "validation/typescript-vscode.toml"
+    },
+    {
+      "catalog_id_if_present": null,
+      "github_repository": "yukicountry/realworld-laravel-layered-architecture",
+      "github_url": "https://github.com/yukicountry/realworld-laravel-layered-architecture",
+      "language_group": "PHP",
+      "note": "Examples attribution only; no pin recorded; not imported.",
+      "pinned_commit": null,
+      "project_name": "realworld-laravel-layered-architecture",
+      "source_path": "examples/real-world/THIRD_PARTY.md"
+    }
+  ],
+  "purpose": "Import template for release-owner / Vinay supplied repositories. Do not invent candidates. Fill only approved GitHub identities, then qualify full commit SHAs before enabling release_validation.",
+  "qualified_revision_contract": {
+    "source_tag": "<optional human-readable release tag>",
+    "type": "commit",
+    "value": "<full lowercase 40-character SHA>"
+  },
+  "required_fields": [
+    "id",
+    "project_name",
+    "github_repository",
+    "github_url",
+    "visibility",
+    "license",
+    "language_group",
+    "dependency_ecosystem",
+    "framework_or_shape",
+    "candidate_category",
+    "expected_runtime_tier",
+    "enabled_for",
+    "qualified_revision",
+    "source_attribution"
+  ],
+  "schema_name": "repository-catalog-candidate-import",
+  "schema_version": "1.0.0",
+  "slots_required": 0,
+  "supported_language_groups": [
+    "C#/.NET",
+    "JS/TS",
+    "Java",
+    "PHP",
+    "Python"
+  ]
+}

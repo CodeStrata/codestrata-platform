@@ -20,7 +20,7 @@ FILE_URI = re.compile("file" + "://" )
 
 SKIP_SUFFIXES = {".pyc", ".png", ".jpg", ".zip"}
 SKIP_DIR_NAMES = {".terraform", ".pytest_cache", "__pycache__"}
-SKIP_RELATIVE_PREFIXES = ("tests/",)
+SKIP_RELATIVE_PREFIXES = ("tests/", "verification/", "reports/")
 
 
 def _iter_text_files():

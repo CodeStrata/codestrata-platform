@@ -81,8 +81,34 @@ URL shape is never used to infer visibility.
 
 `WebsiteExportEligibility` is a **precheck only** — no HTML/JSON website export.
 
+## Safety validation
+
+Ingestion rejects absolute paths, `file://` URIs, and secret-shaped customer
+fields (`title`, `summary`, `description`, `rationale`, `display_name`,
+`repository_url`, `source_reference`).
+
+The Platform privacy gate is **fail-closed**. It does **not**:
+
+- trust text because it originated from Engine
+- allow repository-name or Known Issues bypasses
+- accept PEM begin fences or credential assignment values
+
+Engine must emit customer-safe descriptive text (see Engine
+`customer_safe_text` / redaction). Recognized redacted placeholders such as
+`[REDACTED]` / `<redacted>` are allowed as assignment RHS; raw credentials and
+PEM markers are not.
+
+Descriptive prose about credential findings (for example “hardcoded credential
+detected”, “value redacted”) is not itself a secret and must pass when no
+secret *value* is embedded.
+
+Cross-schema compatibility (assessment 1.2 ↔ EI ingestion ↔ EIR 1.0 ↔ website
+export 1.0) is verified by System Verification **SV.14**
+(`platform/verification/cross_schema_compatibility/`).
+
 ## Platform-only boundary
 
 - Engine remains single-repository and does not ingest commercial datasets
 - Community CLI has no intelligence-dataset commands
 - Public export excludes `platform/**`
+

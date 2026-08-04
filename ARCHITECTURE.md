@@ -50,6 +50,10 @@ Engine runtime must not depend on `platform/`. Security posture:
 - **Platform:** owns `codestrata_platform.intelligence_reporting` (dataset
   ingestion, aggregation, technology/capability/patterns/modernization, quality,
   drill-downs, website-safe export, OSS demonstration under `platform/demo/`).
+- **System Verification SV.6:** pipeline verification under
+  `platform/verification/engineering_intelligence/` (not shipped in the Platform
+  runtime package). Uses the permanent catalog
+  `validation/repository-catalog/catalog.json` and canonical Engine assessments.
 - **Public export:** `public-export-manifest.yaml` excludes `platform/**`.
 - Details: [platform/docs/intelligence-reporting/commercial-boundary.md](platform/docs/intelligence-reporting/commercial-boundary.md).
 
@@ -73,13 +77,40 @@ Engine runtime must not depend on `platform/`. Security posture:
 - Slice 7.15 (final Epic 7 slice) verifies the combined request pipeline with
   in-memory adapters only; it adds no product capabilities and does not start
   Epic 8.
+- **System Verification SV.7:** full six-route Community Cloud API verification
+  under `platform/verification/community_cloud_api/` (not shipped in the Platform
+  runtime package). Report:
+  `platform/reports/verification/community-cloud-api-verification.json`.
+- **System Verification SV.8:** website-safe Engineering Intelligence export
+  verification under `platform/verification/website_export/` (not shipped in the
+  Platform runtime package). Reuses the verified SV.6 five-repository EIR.
+  Report: `platform/reports/verification/website-export-verification.json`.
+- **System Verification SV.9:** Platform deployment foundation verification under
+  `infrastructure/verification/` (private; extractable with infrastructure).
+  Verifies OpenTofu module/production root, API Gateway HTTP API, one Lambda +
+  ECR packaging, IAM/logging, and in-process fail-closed production foundation.
+  Report:
+  `infrastructure/reports/verification/platform-deployment-foundation-verification.json`.
+  Does not run `tofu apply`, push images, call AWS, or start SV.10.
+- **System Verification SV.14:** cross-schema compatibility verification under
+  `platform/verification/cross_schema_compatibility/` (assessment 1.2, product
+  contracts 1.0, verification reports 1.0.0). Verification-only; does not start
+  SV.15.
+- **System Verification SV.15:** deterministic output verification under
+  `platform/verification/deterministic_outputs/` (order/path/hash-seed
+  independence; approved volatile fields documented).
+- **System Verification SV.16:** release artifact verification under
+  `verification/release_artifacts/` (wheel/sdist, clean install, public/private
+  boundaries, OpenTofu fmt/validate gate, checksums). Does not tag v0.2.0 or
+  start SV.17.
 - Details: [platform/docs/community-cloud-api/README.md](platform/docs/community-cloud-api/README.md),
   [verification-e2e.md](platform/docs/community-cloud-api/verification-e2e.md),
   [infrastructure/README.md](infrastructure/README.md),
   [request-validation.md](platform/docs/community-cloud-api/request-validation.md),
   [payload-size-limits.md](platform/docs/community-cloud-api/payload-size-limits.md),
   [structured-logging.md](platform/docs/community-cloud-api/structured-logging.md),
-  [retry-safe-event-identifiers.md](platform/docs/community-cloud-api/retry-safe-event-identifiers.md).
+  [retry-safe-event-identifiers.md](platform/docs/community-cloud-api/retry-safe-event-identifiers.md),
+  [website-export.md](platform/docs/intelligence-reporting/website-export.md).
 
 Current product direction: [ROADMAP.md](ROADMAP.md).
 Completed releases: [CHANGELOG.md](CHANGELOG.md).

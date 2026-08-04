@@ -18,6 +18,13 @@ from codestrata.models import (
     Technology,
 )
 from codestrata.models.normalized_facts import SecurityFacts
+from codestrata.security.customer_safe_text import PRIVATE_KEY_FINDING_EVIDENCE
+
+
+def _private_key_customer_evidence() -> str:
+    """Customer-safe evidence text for SEC002 (never embed PEM headers)."""
+
+    return PRIVATE_KEY_FINDING_EVIDENCE
 
 
 class SecurityAnalyzer:
@@ -328,13 +335,15 @@ class SecurityAnalyzer:
 
         for marker in self._PRIVATE_KEY_MARKERS:
             if marker in content:
+                # Never embed PEM header text in customer-facing description/
+                # evidence. Use categorical wording; raw material stays redacted.
                 return [
                     self._finding(
                         rule_id="SEC002",
                         title="Private key material detected",
                         severity=Severity.CRITICAL,
                         relative_path=relative_path,
-                        evidence=marker,
+                        evidence=_private_key_customer_evidence(),
                         metadata={
                             "secret_type": "private-key",
                         },

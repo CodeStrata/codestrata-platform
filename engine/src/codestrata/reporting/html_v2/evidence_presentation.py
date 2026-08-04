@@ -7,12 +7,30 @@ Does not perform new HTML-layer redaction or invent evidence.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from contextvars import ContextVar
 from typing import Any
 
 from codestrata.reporters.html_rendering import escape_and_wrap, escape_html
 from codestrata.reporting.html_v2.anchors import evidence_anchor
 from codestrata.reporting.html_v2.labels import completeness_label, limitation_label
 from codestrata.reporting.html_v2.models import EvidenceRefView
+
+# Document-scoped set of evidence anchors already emitted with an HTML id.
+# Prevents duplicate id="" when the same Evidence supports multiple Findings.
+_claimed_evidence_anchors: ContextVar[set[str] | None] = ContextVar(
+    "codestrata_html_claimed_evidence_anchors",
+    default=None,
+)
+
+
+def begin_evidence_anchor_scope() -> object:
+    """Start a document-scoped evidence-anchor claim set; returns a reset token."""
+
+    return _claimed_evidence_anchors.set(set())
+
+
+def end_evidence_anchor_scope(token: object) -> None:
+    _claimed_evidence_anchors.reset(token)  # type: ignore[arg-type]
 
 
 def render_evidence_ref_panel(
@@ -26,10 +44,18 @@ def render_evidence_ref_panel(
     items = tuple(refs)
     if not items:
         return ""
+    claimed = _claimed_evidence_anchors.get()
     cards = []
     for ref in items:
         is_primary = primary_evidence_id is not None and ref.evidence_id == primary_evidence_id
-        cards.append(_render_one(ref, primary=is_primary))
+        anchor = evidence_anchor(ref.evidence_id)
+        emit_anchor = True
+        if claimed is not None:
+            if anchor in claimed:
+                emit_anchor = False
+            else:
+                claimed.add(anchor)
+        cards.append(_render_one(ref, primary=is_primary, emit_anchor=emit_anchor))
     return (
         f'<div class="evidence-panel">\n'
         f"<h4>{escape_html(heading)}</h4>\n"
@@ -38,7 +64,7 @@ def render_evidence_ref_panel(
     )
 
 
-def _render_one(ref: EvidenceRefView, *, primary: bool) -> str:
+def _render_one(ref: EvidenceRefView, *, primary: bool, emit_anchor: bool = True) -> str:
     anchor = evidence_anchor(ref.evidence_id)
     rows: list[str] = []
     if primary:
@@ -93,8 +119,10 @@ def _render_one(ref: EvidenceRefView, *, primary: bool) -> str:
         )
         rows.append(f'<div class="limitations"><em>Evidence limitations</em><ul>{lim}</ul></div>')
     body = "\n".join(rows) or '<p class="muted">No additional evidence details.</p>'
+    id_attr = f' id="{escape_html(anchor)}"' if emit_anchor else ""
+    data_attr = f' data-evidence-id="{escape_html(anchor)}"'
     return (
-        f'<article class="evidence-card" id="{escape_html(anchor)}">\n'
+        f'<article class="evidence-card"{id_attr}{data_attr}>\n'
         f"{body}\n"
         "</article>"
     )

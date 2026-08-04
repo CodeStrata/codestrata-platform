@@ -95,6 +95,31 @@ def test_evidence_panel_omits_absolute_and_empty() -> None:
     assert 'id="evidence-' in panel
 
 
+def test_shared_evidence_emits_html_id_only_once() -> None:
+    """Same Evidence supporting multiple Findings must not duplicate id=."""
+
+    import re
+
+    from codestrata.reporting.html_v2.evidence_presentation import (
+        begin_evidence_anchor_scope,
+        end_evidence_anchor_scope,
+    )
+
+    shared = EvidenceRefView(evidence_id="ev:shared-1", path="src/App.py", line_start=1)
+    token = begin_evidence_anchor_scope()
+    try:
+        first = render_evidence_ref_panel((shared,))
+        second = render_evidence_ref_panel((shared,))
+    finally:
+        end_evidence_anchor_scope(token)
+    id_re = re.compile(r'\sid="evidence-ev:shared-1"')
+    data_re = re.compile(r'\sdata-evidence-id="evidence-ev:shared-1"')
+    assert id_re.search(first)
+    assert data_re.search(first)
+    assert not id_re.search(second)
+    assert data_re.search(second)
+
+
 def _analysis(tmp_path: Path) -> AnalysisResult:
     return AnalysisResult(
         repository=Repository(
@@ -174,7 +199,7 @@ def _report_with_chain(tmp_path: Path) -> ModernizationReportInput:
 
 
 def _ids_in_html(html: str) -> set[str]:
-    return set(re.findall(r'\bid="([^"]+)"', html))
+    return set(re.findall(r'(?<![\w-])id="([^"]+)"', html))
 
 
 def test_full_chain_internal_links_resolve(tmp_path: Path) -> None:
@@ -238,7 +263,7 @@ def test_legacy_finding_has_no_empty_evidence_panel(tmp_path: Path) -> None:
 def test_no_duplicate_finding_or_pa_anchors(tmp_path: Path) -> None:
     document = build_customer_report_document(_report_with_chain(tmp_path))
     html = HtmlReportRenderer().render(document)
-    ids = re.findall(r'\bid="([^"]+)"', html)
+    ids = re.findall(r'(?<![\w-])id="([^"]+)"', html)
     finding_ids = [i for i in ids if i.startswith("finding-")]
     pa_ids = [i for i in ids if i.startswith("priority-action-")]
     assert len(finding_ids) == len(set(finding_ids))

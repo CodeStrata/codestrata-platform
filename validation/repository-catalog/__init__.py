@@ -1,0 +1,1 @@
+"""Repository catalog package marker."""

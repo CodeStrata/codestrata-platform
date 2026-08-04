@@ -78,8 +78,8 @@ codestrata-platform/
 | Path | Responsibility |
 | ---- | -------------- |
 | `engine/` | MIT Community CLI, assessment, reports, Engine docs/tests |
-| `platform/` | Implemented RAG + persistent KG + Community Cloud API + extension entry points |
-| `infrastructure/` | Private serverless deployment (OpenTofu); extractable to `codestrata-infrastructure` |
+| `platform/` | Implemented RAG + persistent KG + Community Cloud API + extension entry points + SV.6–SV.8 / SV.12 verification (`platform/verification/`) |
+| `infrastructure/` | Private serverless deployment (OpenTofu) + SV.9 verification (`infrastructure/verification/`); extractable to `codestrata-infrastructure` |
 | `examples/` | Showcase manifests, fetch/run scripts, attribution, curated results |
 | `test-fixtures/` | Deterministic language fixtures for tests and Engine smoke |
 | `cursor-plugin/` | Public placeholder only |

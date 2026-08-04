@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-04
+
+### Added
+
+* System Verification SV.1–SV.16 release-artifact evidence for the curated
+  22-repository public OSS release-validation dataset
+* Platform Engineering Intelligence, website-safe export, Community Cloud API
+  foundation, and infrastructure packaging verification (no AWS apply)
+
+### Changed
+
+* Engine Community package version set to 0.2.0 for the release cut
+* Platform runtime dependency constraint updated to `codestrata>=0.2.0`
+
 ### Added
 
 * Phase 6.2 GitHub Repository Acquisition: assess clones GitHub URLs into a

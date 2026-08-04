@@ -144,6 +144,7 @@ exports:
       - "docs/**"
       - "schemas/**"
       - "examples/**"
+      - "verification/**"
       - "pyproject.toml"
       - "MANIFEST.in"
       - "LICENSE"
@@ -199,6 +200,7 @@ exports:
         - docs/report-contract.md
         - docs/extension-architecture.md
         - docs/telemetry.md
+        - verification/cli_installation/README.md
         - schemas/telemetry/codestrata.io/v1.0/TelemetryEvent.json
         - .github/PULL_REQUEST_TEMPLATE.md
       forbid_globs:

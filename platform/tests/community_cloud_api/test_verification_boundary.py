@@ -105,9 +105,11 @@ def test_infrastructure_remains_separate_private_boundary() -> None:
     assert INFRA.is_dir()
     assert (INFRA / "modules" / "community-cloud-api").is_dir()
     assert (INFRA / "production").is_dir()
-    # No application source under infrastructure except tests.
+    # No application product source under infrastructure except tests + SV.9 verification.
     for path in INFRA.rglob("*.py"):
-        assert "tests" in path.parts
+        if path == INFRA / "__init__.py":
+            continue
+        assert "tests" in path.parts or "verification" in path.parts, path
     # No OpenTofu resources that invent product sinks/data lake in this epic.
     blob = "\n".join(
         p.read_text(encoding="utf-8")

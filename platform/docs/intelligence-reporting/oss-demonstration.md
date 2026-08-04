@@ -15,6 +15,9 @@ using the five validated public OSS assessment fixtures.
 - Not hosting, CDN, CMS, authentication, or HTTP APIs
 - Not a 24-repository ingest of local controlled fixtures
 - Not industry benchmarking
+- Not SV.12 release-verification: the 22 curated catalog EIR + editorial review
+  lives under `platform/verification/engineering_intelligence_quality/` and
+  writes to `platform/reports/verification/sv12/` (never overwrites this demo)
 
 ## Pipeline
 

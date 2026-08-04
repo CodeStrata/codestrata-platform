@@ -15,7 +15,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codestrata-platform-workspace"
-version = "0.1.0"
+version = "0.2.0"
 description = "Private monorepo workspace for CodeStrata (not published)."
 requires-python = ">=3.12"
 readme = "README.md"
@@ -24,7 +24,7 @@ dependencies = []
 
 [tool.pytest.ini_options]
 testpaths = ["engine/tests", "platform/tests", "tests"]
-pythonpath = ["engine/src", "platform/src", "platform/tests", "."]
+pythonpath = ["engine/src", "platform/src", "platform", "platform/tests", "."]
 norecursedirs = [".git", ".venv", ".codestrata", "fixtures", "__pycache__", "*.egg-info"]
 addopts = [
     "-ra",

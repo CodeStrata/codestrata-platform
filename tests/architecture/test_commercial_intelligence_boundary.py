@@ -131,6 +131,9 @@ def test_no_duplicate_commercial_packages_outside_platform_ir() -> None:
         # Allow platform tests package mirrors under platform/tests/.../intelligence_reporting
         if "platform" in path.parts and "tests" in path.parts:
             continue
+        # Allow System Verification packages under platform/verification/ (SV.6–SV.8).
+        if "platform" in path.parts and "verification" in path.parts:
+            continue
         offenders.append(str(path.relative_to(REPO_ROOT)))
     assert offenders == [], "Duplicate commercial packages:\n" + "\n".join(offenders)
 

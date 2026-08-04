@@ -12,7 +12,7 @@ version = "0.1.0"
 description = "CodeStrata Platform: Engineering Knowledge Graph, Repository Retrieval/Answering, Portfolio Intelligence, and Executive Intelligence."
 requires-python = ">=3.12"
 dependencies = [
-    "codestrata>=0.1.0",
+    "codestrata>=0.2.0",
     "pydantic>=2.10,<3.0",
     "PyYAML>=6.0,<7.0",
     "typer>=0.15,<1.0",

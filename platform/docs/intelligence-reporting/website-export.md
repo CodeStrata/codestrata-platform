@@ -93,3 +93,25 @@ Print CSS keeps authoritative content available. Accessibility: one `h1`,
 
 Slice 6.11 uses this exporter to publish the public OSS demonstration artifacts
 under `platform/demo/`. Hosting, branding, and SaaS delivery remain out of scope.
+
+## System Verification SV.8
+
+End-to-end website-export verification lives outside the runtime package:
+
+`platform/verification/website_export/`
+
+It reuses the verified SV.6 five-repository public OSS
+`EngineeringIntelligenceReport` (permanent catalog assessments) and checks
+allowlisted projection, deterministic JSON/HTML/manifest artifacts, CSP,
+accessibility, repository identity safety, writer path safety, and privacy.
+
+```bash
+PYTHONPATH=platform:platform/src:engine:engine/src \
+  python -m verification.website_export
+```
+
+Report: `platform/reports/verification/website-export-verification.json`
+(`website-export-verification` / `1.0.0`).
+
+SV.8 does not publish artifacts, start infrastructure deployment (SV.9), run the
+30-repository campaign, or begin editorial review (SV.12).

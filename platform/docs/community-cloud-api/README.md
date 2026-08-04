@@ -67,6 +67,14 @@ Public export excludes `platform/` (see `public-export-manifest.yaml`).
 
 Independent of assessment schema 1.2 and EIR schema 1.0.
 
+Endpoint request schemas (telemetry, CLI, extension, AI usage, assessment
+metadata) remain **separate** contracts even when each is versioned `1.0`.
+Policy versions (rate limit, authentication) and credential format versions are
+not payload schema versions. Cross-schema compatibility with assessment/EIR is
+verified by SV.14 without merging endpoint schemas. Deterministic event
+identity, fingerprints, safe references, and injected-clock rate-limit behavior
+are verified by SV.15 (`platform/verification/deterministic_outputs/`).
+
 ## Architecture
 
 ```text
@@ -155,6 +163,42 @@ Health remains public. Default verifier is unavailable (fail-closed).
 
 See [verification-e2e.md](./verification-e2e.md). Slice 7.15 (final Epic 7 slice)
 verifies the combined pipeline; it does not add product capabilities.
+
+### System Verification SV.7
+
+End-to-end Community Cloud API verification lives outside the runtime package:
+
+`platform/verification/community_cloud_api/`
+
+```bash
+PYTHONPATH=platform:platform/src:engine:engine/src \
+  python -m verification.community_cloud_api
+```
+
+Report: `platform/reports/verification/community-cloud-api-verification.json`
+(`community-cloud-api-verification` / `1.0.0`).
+
+SV.7 uses in-memory adapters only. It does not deploy to AWS, run OpenTofu,
+build Docker images, start website-export verification (SV.8), or add Data Lake
+resources.
+
+### System Verification SV.9
+
+Infrastructure deployment-foundation verification lives under:
+
+`infrastructure/verification/`
+
+```bash
+PYTHONPATH=platform:platform/src:engine:engine/src:. \
+  python -m infrastructure.verification
+```
+
+Report:
+`infrastructure/reports/verification/platform-deployment-foundation-verification.json`.
+
+SV.9 verifies production-only OpenTofu structure, packaging, and in-process
+fail-closed foundation behavior. It does not apply infrastructure, push images,
+or start SV.10.
 
 ## Non-goals (Epic 7 complete through 7.15)
 

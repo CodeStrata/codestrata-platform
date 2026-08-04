@@ -422,9 +422,9 @@ def _align_roadmap_references(assessment: dict[str, Any]) -> None:
 def assessment_json_to_text(document: dict[str, Any], *, indent: int | None = 2) -> str:
     """Serialize an assessment JSON document with stable formatting."""
 
-    from codestrata.security.redaction import redact_report_payload
+    from codestrata.security.customer_safe_text import ensure_customer_safe_report_document
 
-    sanitized = redact_report_payload(document)
+    sanitized = ensure_customer_safe_report_document(document)
     text = json.dumps(
         sanitized,
         indent=indent,

@@ -40,6 +40,9 @@ dist/
 image-id.txt
 image-digest.txt
 
+# Verification reports (generated)
+reports/
+
 # OS / editor
 .DS_Store
 .idea/

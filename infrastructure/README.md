@@ -125,3 +125,23 @@ committed. See `docs/state-management.md`.
 - README standalone prerequisites documented
 
 Do not split the repository in this slice.
+
+## System Verification SV.9
+
+Deployment-foundation verification lives under:
+
+`infrastructure/verification/`
+
+```bash
+PYTHONPATH=platform:platform/src:engine:engine/src:. \
+  python -m infrastructure.verification
+```
+
+Report:
+`infrastructure/reports/verification/platform-deployment-foundation-verification.json`
+(`platform-deployment-foundation-verification` / `1.0.0`).
+
+SV.9 does **not** run `tofu apply`, `terraform apply`, Docker push, or remote AWS
+calls. When OpenTofu is unavailable, CLI validate is reported as
+`not_executed_tool_unavailable` while static and runtime-adapter checks still
+run. Terraform 0.11 is not used as a substitute. SV.10 is not started.

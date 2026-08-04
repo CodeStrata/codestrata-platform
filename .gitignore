@@ -87,7 +87,14 @@ output/*
 
 # Local-only repo-root validation workspace (clones, knowledge, reports — never commit).
 # Anchored to repository root so engine/validation/ (harness) remains trackable.
-/validation/
+# Exception: permanent repository catalog contract (SV.4 / SV.4A source of truth).
+# Use /* (not /) so directory contents can be re-included selectively.
+/validation/*
+!/validation/repository-catalog/
+!/validation/repository-catalog/**
+/validation/repository-catalog/qualification-report.json
+/validation/repository-catalog/repository-catalog-readiness.json
+/validation/repository-catalog/__pycache__/
 
 # ==========================================
 # Temporary Files

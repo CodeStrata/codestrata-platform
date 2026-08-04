@@ -20,12 +20,12 @@ locals {
 
   common_tags = merge(
     {
-      Project         = var.project_name
-      Environment     = var.environment_name
-      Component       = "community-cloud-api"
-      DeploymentMode  = var.deployment_mode
-      ManagedBy       = "opentofu"
-      Ownership       = "platform-private"
+      Project        = var.project_name
+      Environment    = var.environment_name
+      Component      = "community-cloud-api"
+      DeploymentMode = var.deployment_mode
+      ManagedBy      = "opentofu"
+      Ownership      = "platform-private"
     },
     var.tags
   )

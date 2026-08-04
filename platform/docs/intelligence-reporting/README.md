@@ -154,6 +154,85 @@ Epic 6 closes with architectural verification: Engine/Community remain
 single-repository only; Platform owns all commercial Engineering Intelligence;
 public export excludes `platform/`. See [commercial-boundary.md](./commercial-boundary.md).
 
+## System Verification SV.6 (pipeline)
+
+End-to-end pipeline verification lives outside the runtime package:
+
+`platform/verification/engineering_intelligence/`
+
+It resolves repositories only from the permanent catalog
+(`validation/repository-catalog/catalog.json`), reuses SV.4 assessment helpers
+for pinned public OSS inputs, and verifies dataset → aggregation → EIR section
+population, provenance, determinism, and safety.
+
+Commands and limitations:
+[`../../verification/engineering_intelligence/README.md`](../../verification/engineering_intelligence/README.md).
+
+SV.6 does **not** start website export (SV.8), Community Cloud (SV.7), the
+30-repository run, or commercial editorial review (SV.12).
+
+## System Verification SV.8 (website-safe export)
+
+Website-safe export verification lives outside the runtime package:
+
+`platform/verification/website_export/`
+
+It reuses the verified SV.6 five-repository EIR and verifies allowlisted
+projection → deterministic JSON/HTML/manifest → writer safety, CSP,
+accessibility, and privacy.
+
+Commands:
+[`../../verification/website_export/README.md`](../../verification/website_export/README.md).
+
+SV.8 does **not** publish artifacts, start infrastructure deployment (SV.9),
+or run a broader repository campaign beyond its verified five-repository export.
+
+## System Verification SV.12 (quality / editorial review)
+
+Commercial usefulness and credibility review for one **22-repository**
+Engineering Intelligence Report built from preserved SV.10 assessments:
+
+`platform/verification/engineering_intelligence_quality/`
+
+It reuses SV.6 pipeline builders and SV.8 website-safe export, writes
+gitignored artifacts under `platform/reports/verification/sv12/`, and does
+**not** overwrite `platform/demo/`.
+
+Commands:
+[`../../verification/engineering_intelligence_quality/README.md`](../../verification/engineering_intelligence_quality/README.md).
+
+SV.12 does **not** redesign the report or tune aggregators. Population must be
+**22/22**; SV.13 repaired the unsafe_metadata ingestion defect that previously
+excluded three assessments. Results are dataset-scoped and are not an industry
+benchmark or product-wide accuracy claim.
+
+## System Verification SV.13 (unsafe_metadata defect)
+
+`platform/verification/system_defect_fixes/` repairs Engine customer-safe
+serialization / SV.11 Platform safety alignment so all 22 curated assessments
+ingest into Engineering Intelligence without weakening privacy validation.
+
+See [`../../verification/system_defect_fixes/README.md`](../../verification/system_defect_fixes/README.md).
+
+## System Verification SV.14 (cross-schema compatibility)
+
+`platform/verification/cross_schema_compatibility/` verifies that assessment 1.2,
+validation record/summary 1.0, EIR 1.0, website-safe export 1.0, Community Cloud
+API 1.0, and System Verification reports 1.0.0 remain mutually compatible for
+the 22-repository v0.2.0 release artifacts. Verification-only; no speculative
+schema bumps.
+
+See [`../../verification/cross_schema_compatibility/README.md`](../../verification/cross_schema_compatibility/README.md).
+
+## System Verification SV.15 (deterministic outputs)
+
+`platform/verification/deterministic_outputs/` verifies order-, path-, and
+hash-seed-independent canonical outputs for Engine assessments, EI/EIR, website
+export, Community Cloud identity, and verification reports. Approved volatile
+fields are documented; broad normalization is forbidden.
+
+See [`../../verification/deterministic_outputs/README.md`](../../verification/deterministic_outputs/README.md).
+
 ## Schema version
 
 Commercial report schema: **1.0** (`ENGINEERING_INTELLIGENCE_REPORT_SCHEMA_VERSION`).

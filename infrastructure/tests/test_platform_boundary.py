@@ -15,11 +15,21 @@ def test_infrastructure_is_private_export_forbidden() -> None:
 
 
 def test_no_application_source_copied_into_infrastructure() -> None:
+    allowed_roots = {
+        INFRA / "tests",
+        INFRA / "verification",
+    }
     for path in INFRA.rglob("*.py"):
-        if path.parent == INFRA / "tests":
+        # Root package marker for `python -m infrastructure.verification`.
+        if path == INFRA / "__init__.py":
             continue
-        # Only tests may contain Python under infrastructure/
-        assert path.parent == INFRA / "tests" or "tests" in path.parts
+        if any(
+            path == root or root in path.parents or path.parent == root
+            for root in allowed_roots
+        ):
+            continue
+        # Only tests + SV.9 verification may contain Python under infrastructure/
+        raise AssertionError(f"unexpected application python: {path.relative_to(INFRA)}")
 
 
 def test_scripts_resolve_repo_root_safely() -> None:

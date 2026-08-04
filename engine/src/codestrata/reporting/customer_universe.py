@@ -577,6 +577,8 @@ def write_customer_finding_artifacts(
 
 
 def customer_finding_json(item: CustomerFinding) -> dict[str, Any]:
+    from codestrata.security.customer_safe_text import sanitize_customer_text
+
     evidence_items = [_sanitize_evidence_row(row) for row in item.evidence]
     deduped_evidence: list[dict[str, Any]] = []
     seen_evidence: set[tuple[Any, ...]] = set()
@@ -594,8 +596,8 @@ def customer_finding_json(item: CustomerFinding) -> dict[str, Any]:
     payload = {
         "id": item.id,
         "rule_id": item.rule_id,
-        "title": item.title,
-        "description": item.description,
+        "title": sanitize_customer_text(item.title),
+        "description": sanitize_customer_text(item.description),
         "category": item.category,
         "severity": normalize_severity(item.severity),
         "source": item.source,
@@ -653,6 +655,8 @@ def customer_finding_json(item: CustomerFinding) -> dict[str, Any]:
 
 
 def customer_recommendation_json(item: CustomerRecommendation) -> dict[str, Any]:
+    from codestrata.security.customer_safe_text import sanitize_customer_text
+
     supporting = list(item.supporting_finding_ids or item.related_finding_ids)
     related = list(item.related_finding_ids or item.supporting_finding_ids)
     # Compatibility dual-write in customer JSON.
@@ -663,9 +667,9 @@ def customer_recommendation_json(item: CustomerRecommendation) -> dict[str, Any]
     payload = {
         "id": item.id,
         "rule_id": item.rule_id,
-        "title": item.title,
-        "description": item.description,
-        "rationale": item.rationale,
+        "title": sanitize_customer_text(item.title),
+        "description": sanitize_customer_text(item.description),
+        "rationale": sanitize_customer_text(item.rationale),
         "priority": normalize_priority(item.priority),
         "category": item.category,
         "effort": normalize_effort(item.effort),
@@ -722,11 +726,16 @@ def customer_recommendation_json(item: CustomerRecommendation) -> dict[str, Any]
 
 
 def _sanitize_evidence_row(row: dict[str, Any]) -> dict[str, Any]:
+    from codestrata.security.customer_safe_text import sanitize_customer_text
+
     sanitized = dict(row)
     if "file_path" in sanitized and sanitized["file_path"] is not None:
         sanitized["file_path"] = sanitize_display_path(str(sanitized["file_path"]))
     if "path" in sanitized and sanitized["path"] is not None:
         sanitized["path"] = sanitize_display_path(str(sanitized["path"]))
+    for key in ("description", "excerpt", "detected_value", "redacted_preview", "preview"):
+        if key in sanitized and isinstance(sanitized[key], str):
+            sanitized[key] = sanitize_customer_text(sanitized[key])
     return sanitized
 
 

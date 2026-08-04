@@ -276,7 +276,8 @@ def test_modernization_head_counts_not_inflated(tmp_path: Path) -> None:
 def test_no_duplicate_html_ids_and_hrefs_resolve(tmp_path: Path) -> None:
     document = build_html_report_view_model(_mixed_report(tmp_path))
     html = HtmlReportRenderer().render(document)
-    ids = re.findall(r'\bid="([^"]+)"', html)
+    # Exclude attribute suffixes such as data-evidence-id="...".
+    ids = re.findall(r'(?<![\w-])id="([^"]+)"', html)
     counts = Counter(ids)
     duplicates = sorted(item for item, count in counts.items() if count > 1)
     assert duplicates == [], f"Duplicate HTML ids: {duplicates[:20]}"

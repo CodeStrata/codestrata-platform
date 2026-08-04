@@ -32,6 +32,13 @@ Versioned schema file:
 2. Removing/renaming required fields or changing types is a **new schema version**.
 3. Consumers must ignore unknown properties.
 4. Use `manifest.volatile_fields` when comparing runs.
+5. Customer-facing text must satisfy the Engine customer-safe projection
+   (`codestrata.security.customer_safe_text`) so Platform EI
+   `validate_report_document` accepts the same artifacts (see SV.13/SV.14).
+6. Cross-schema compatibility for v0.2.0 is verified by
+   `platform/verification/cross_schema_compatibility/` (SV.14). Assessment 1.2,
+   validation/EIR/export/API product `1.0`, and verification report `1.0.0` are
+   distinct version namespaces.
 
 ## Determinism rules
 
