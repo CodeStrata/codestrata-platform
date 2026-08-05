@@ -10,9 +10,10 @@ and served through serverless infrastructure. It does not enable durable
 Community event ingestion because production credential verification, shared
 event identity, and event sinks are not yet configured.
 
-Community Data Lake resources are intentionally deferred. Future S3 buckets,
-lifecycle, partitioning, encryption, access, and ingestion notifications will be
-added through a separate `infrastructure/modules/data-lake` module.
+Slice 8.1 adds `infrastructure/modules/community-data-lake/`: a private S3
+foundation with `raw/` and `quarantine/` prefixes. It is composed in production
+but remains **unwired** (`enable_ingestion_wire = false`). Ingestion
+notifications, Lambda writer attachment, and analytics are deferred.
 
 ## Request path
 
@@ -38,6 +39,8 @@ forwards to the application. Health is reachable only at `/api/v1/health`
 | Dockerfile | `platform/deployment/community-cloud-api/` |
 | API Gateway, Lambda, IAM, ECR, logs, throttling | `infrastructure/modules/community-cloud-api` |
 | Production composition | `infrastructure/production` |
+| Community Data Lake bucket / writer IAM doc | `infrastructure/modules/community-data-lake` |
+| Data Lake domain contracts | `platform/.../community_cloud_api/data_lake` |
 
 ## Environments
 
@@ -55,11 +58,14 @@ separation.
 | Event sinks / identity | Unavailable |
 | Ingestion durability | Disabled (`CODESTRATA_INGESTION_ENABLED=false`) |
 
-## Explicitly out of scope
+## Explicitly out of scope (still deferred)
 
-- Community Data Lake / S3 ingestion buckets
+- Data Lake ingestion wiring / Lambda writer attachment / analytics
 - Durable sinks, queues, workers, dashboards
 - Cognito / Lambda authorizers / API keys / WAF / custom domains
 - Secrets Manager credential lifecycle
 - Distributed rate-limit store
 - Commercial Platform API deployment
+
+Slice 8.1 **does** provide the unwired Data Lake bucket foundation — see
+`docs/community-data-lake.md`.

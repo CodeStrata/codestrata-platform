@@ -227,6 +227,7 @@ def run_opentofu_cli_validation(tools: ToolStatus) -> tuple[str, list[CheckResul
     ok = fmt.returncode == 0
     for label, path in (
         ("module", root / "modules" / "community-cloud-api"),
+        ("data_lake_module", root / "modules" / "community-data-lake"),
         ("production", root / "production"),
     ):
         _clear_stale_provider_locks(str(path))

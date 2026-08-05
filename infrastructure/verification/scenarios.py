@@ -12,9 +12,14 @@ def check_scenarios() -> list[CheckResult]:
         p.read_text(encoding="utf-8")
         for p in sorted((root / "modules" / "community-cloud-api").glob("*.tf"))
     )
+    data_lake_dir = root / "modules" / "community-data-lake"
+    data_lake_blob = (
+        "\n".join(p.read_text(encoding="utf-8") for p in sorted(data_lake_dir.glob("*.tf")))
+        if data_lake_dir.is_dir()
+        else ""
+    )
     # Controlled in-memory fixtures for negative presence assertions.
     fake_dev = "infrastructure/dev/main.tf"
-    fake_lake = 'resource "aws_s3_bucket" "raw_events" {}'
     fake_second_lambda = 'resource "aws_lambda_function" "telemetry" {}'
     fake_rest = 'resource "aws_api_gateway_rest_api" "legacy" {}'
     fake_public_ecr = "aws_ecrpublic_repository"
@@ -34,10 +39,15 @@ def check_scenarios() -> list[CheckResult]:
             scenario="C",
         ),
         CheckResult(
-            name="scenario:data_lake_absent",
-            ok=not (root / "modules" / "data-lake").exists()
-            and fake_lake not in module_blob,
-            detail="no lake resources",
+            name="scenario:data_lake_foundation_unwired",
+            ok=data_lake_dir.is_dir()
+            and 'resource "aws_s3_bucket"' in data_lake_blob
+            and "var.enable_ingestion_wire == false" in data_lake_blob
+            and 'resource "aws_iam_role"' not in data_lake_blob
+            and 'resource "aws_s3_bucket"' not in module_blob
+            and "community-data-lake" not in module_blob
+            and "community_data_lake" not in module_blob,
+            detail="foundation module present, unwired, not in community-cloud-api",
             category="scenarios",
             scenario="D",
         ),

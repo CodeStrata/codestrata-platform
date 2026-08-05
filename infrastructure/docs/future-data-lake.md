@@ -1,39 +1,70 @@
-# Future Community Data Lake (deferred)
+# Community Data Lake
 
-Slice 7.14 does **not** create data-lake resources.
+## Slice 8.1: foundation landed, still unwired
 
-Community Data Lake resources are intentionally deferred. Future S3 buckets,
-lifecycle, partitioning, encryption, access, and ingestion notifications will be
-added through a separate `infrastructure/modules/data-lake` module.
-
-## Planned location (not created yet)
+Slice 8.1 landed the Community Data Lake **storage foundation** at:
 
 ```text
-infrastructure/modules/data-lake/
+infrastructure/modules/community-data-lake/
 ```
 
-Future environment roots (`dev/`, `staging/`, `production/`) may compose that
-module independently of `community-cloud-api`.
+Primary docs:
 
-## Potential future concerns (undecided)
+- `infrastructure/docs/community-data-lake.md`
+- `infrastructure/modules/community-data-lake/README.md`
+- `platform/docs/community-cloud-api/data-lake.md`
 
-- Raw / accepted / quarantine zones
-- Partitioning strategy
-- Object identity and deduplication
-- Encryption and KMS
-- Lifecycle and retention
-- Schema registry
-- Access control
-- Ingestion notifications
-- Replay and deletion
-- Privacy review
+This module creates a single private, encrypted (SSE-S3), versioned S3
+bucket with prefix isolation (`raw/` accepted, `quarantine/` quarantine).
+
+Platform owns the domain contracts (policy, envelope, identity, partitions,
+ports) under `codestrata_platform.community_cloud_api.data_lake`.
+
+The foundation is **unwired**: `enable_ingestion_wire` is `false` and
+validated to stay `false`. No Lambda, EventBridge rule, S3 event
+notification, or other compute reads from or writes to the bucket. The
+`community-cloud-api` module does not reference this bucket anywhere in its
+IAM policies. Durable Community event ingestion through this bucket, and
+any analytics/query layer on top of it, remain deferred to a future slice.
+
+## Legacy planned path (superseded, never created)
+
+An earlier plan referenced `infrastructure/modules/data-lake` as the future
+location. That path was never created and is superseded by
+`infrastructure/modules/community-data-lake/` above.
+
+## Slice 8.2: immutable raw-JSON storage contract landed, still unwired
+
+Slice 8.2 (Platform-side; **no OpenTofu change**) implements a
+production-capable `CommunityDataLakeS3Store` adapter with canonical
+byte-exact JSON serialization, conditional (`IfNoneMatch: "*"`) `PutObject`,
+and fail-closed conflict classification. See
+`platform/docs/community-cloud-api/immutable-raw-storage.md`. It remains
+**unwired**: no endpoint, `app.py`, or Lambda calls it, and no exactly-once
+delivery guarantee is claimed. `HeadObject` (used once per precondition
+resolution) is already covered by the existing `s3:GetObject` writer IAM
+grant — no IAM change was needed.
+
+## Deferred to later Epic 8 slices
+
+- Endpoint → sink → S3 wiring (Slice 8.3+)
+- Durable event identity store coordination
+- Quarantine persistence implemented in Platform (Slice 8.9); still unwired
+  from endpoints. Infra Put/Get + 90-day lifecycle already sufficient — no
+  HCL change required for 8.9.
+- SSE-KMS migration
+- Final (non-review-required) retention policy sign-off
+- Analytics / query layer (Athena, Glue) — not started
+- Dashboards / Community Insights consumers
+- Replay and deletion workflows
 
 ## Must not reuse
 
 - OpenTofu/Terraform state bucket
 - Lambda deployment artifact bucket
-- ECR repository
+- `community-cloud-api` ECR repository
 
-as the Community Data Lake.
+as the Community Data Lake, and vice versa.
 
-Do not decide these prematurely in Slice 7.14.
+Do not wire ingestion, attach the writer policy to any role, or start the
+analytics layer without a separate, explicitly-reviewed slice.

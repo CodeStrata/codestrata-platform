@@ -67,6 +67,14 @@ class LogEventType(str, Enum):
     AUTHENTICATION_FAILED = "authentication_failed"
     AUTHENTICATION_UNAVAILABLE = "authentication_unavailable"
     AUTHORIZATION_DENIED = "authorization_denied"
+    # Additive under community-logging-policy:1.0 (Slice 8.2). Not emitted
+    # from any endpoint in this slice — reserved for a future wiring slice.
+    DATA_LAKE_STORE_ATTEMPTED = "data_lake_store_attempted"
+    DATA_LAKE_STORED = "data_lake_stored"
+    DATA_LAKE_ALREADY_EXISTS = "data_lake_already_exists"
+    DATA_LAKE_CONFLICT = "data_lake_conflict"
+    DATA_LAKE_UNAVAILABLE = "data_lake_unavailable"
+    DATA_LAKE_REJECTED = "data_lake_rejected"
 
 
 _EVENT_LEVELS: dict[LogEventType, LogLevel] = {
@@ -108,6 +116,12 @@ _EVENT_LEVELS: dict[LogEventType, LogLevel] = {
     LogEventType.AUTHENTICATION_FAILED: LogLevel.WARNING,
     LogEventType.AUTHENTICATION_UNAVAILABLE: LogLevel.WARNING,
     LogEventType.AUTHORIZATION_DENIED: LogLevel.WARNING,
+    LogEventType.DATA_LAKE_STORE_ATTEMPTED: LogLevel.INFO,
+    LogEventType.DATA_LAKE_STORED: LogLevel.INFO,
+    LogEventType.DATA_LAKE_ALREADY_EXISTS: LogLevel.INFO,
+    LogEventType.DATA_LAKE_CONFLICT: LogLevel.WARNING,
+    LogEventType.DATA_LAKE_UNAVAILABLE: LogLevel.WARNING,
+    LogEventType.DATA_LAKE_REJECTED: LogLevel.WARNING,
 }
 
 
@@ -167,6 +181,13 @@ class StructuredLogEvent:
     authentication_reason: str | None = None
     verifier_status: str | None = None
     safe_client_reference: str | None = None
+    # Community Data Lake storage safe fields (Slice 8.2). Not emitted from
+    # any endpoint in this slice — reserved for a future wiring slice.
+    storage_status: str | None = None
+    data_lake_policy_version: str | None = None
+    data_lake_envelope_schema_version: str | None = None
+    event_stream: str | None = None
+    safe_object_reference: str | None = None
 
     def to_stable_dict(self) -> dict[str, Any]:
         payload: dict[str, Any] = {
@@ -200,12 +221,18 @@ class StructuredLogEvent:
             payload["client_host"] = self.client_host
         if self.client_type is not None:
             payload["client_type"] = self.client_type
+        if self.data_lake_envelope_schema_version is not None:
+            payload["data_lake_envelope_schema_version"] = self.data_lake_envelope_schema_version
+        if self.data_lake_policy_version is not None:
+            payload["data_lake_policy_version"] = self.data_lake_policy_version
         if self.duration_ms is not None:
             payload["duration_ms"] = int(self.duration_ms)
         if self.error_code is not None:
             payload["error_code"] = self.error_code
         if self.event_seq is not None:
             payload["event_seq"] = int(self.event_seq)
+        if self.event_stream is not None:
+            payload["event_stream"] = self.event_stream
         if self.extension_policy_version is not None:
             payload["extension_policy_version"] = self.extension_policy_version
         if self.extension_schema_version is not None:
@@ -238,12 +265,16 @@ class StructuredLogEvent:
             payload["safe_client_reference"] = self.safe_client_reference
         if self.safe_event_reference is not None:
             payload["safe_event_reference"] = self.safe_event_reference
+        if self.safe_object_reference is not None:
+            payload["safe_object_reference"] = self.safe_object_reference
         if self.safe_scope_reference is not None:
             payload["safe_scope_reference"] = self.safe_scope_reference
         if self.source_event_type is not None:
             payload["source_event_type"] = self.source_event_type
         if self.status_code is not None:
             payload["status_code"] = int(self.status_code)
+        if self.storage_status is not None:
+            payload["storage_status"] = self.storage_status
         if self.telemetry_policy_version is not None:
             payload["telemetry_policy_version"] = self.telemetry_policy_version
         if self.telemetry_schema_version is not None:

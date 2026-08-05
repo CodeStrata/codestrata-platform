@@ -31,3 +31,11 @@ output "cloudwatch_log_group" {
 output "deployment_mode" {
   value = module.community_cloud_api.deployment_mode
 }
+
+output "data_lake_bucket_name" {
+  value = module.community_data_lake.bucket_name
+}
+
+output "data_lake_writer_policy_arn" {
+  value = module.community_data_lake.writer_policy_arn
+}

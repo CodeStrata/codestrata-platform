@@ -47,10 +47,13 @@ def check_extraction() -> list[CheckResult]:
             category="extraction",
         ),
         CheckResult(
-            name="extraction:data_lake_documented_not_implemented",
-            ok="modules/data-lake" in future
-            and not (root / "modules" / "data-lake").exists(),
-            detail="future only",
+            name="extraction:data_lake_foundation_documented_unwired",
+            ok=(root / "modules" / "community-data-lake").is_dir()
+            and not (root / "modules" / "data-lake").exists()
+            and "modules/community-data-lake" in future
+            and "unwired" in future.lower()
+            and "analytics" in future.lower(),
+            detail="foundation documented, unwired, analytics deferred",
             category="extraction",
             scenario="D",
         ),

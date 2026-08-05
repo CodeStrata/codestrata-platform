@@ -15,6 +15,7 @@ from infrastructure.verification.models import CheckResult
 def check_production_root() -> list[CheckResult]:
     root = infra_root() / "production"
     main = (root / "main.tf").read_text(encoding="utf-8")
+    data_lake = (root / "community-data-lake.tf").read_text(encoding="utf-8")
     return [
         CheckResult(
             name="production:environment_name",
@@ -24,9 +25,12 @@ def check_production_root() -> list[CheckResult]:
             category="production",
         ),
         CheckResult(
-            name="production:one_module",
-            ok=main.count("module ") == 1 and "community_cloud_api" in main,
-            detail="community_cloud_api",
+            name="production:api_and_data_lake_modules",
+            ok=main.count("module ") == 1
+            and "community_cloud_api" in main
+            and data_lake.count("module ") == 1
+            and "community_data_lake" in data_lake,
+            detail="community_cloud_api (main.tf) + community_data_lake (community-data-lake.tf)",
             category="production",
         ),
         CheckResult(
@@ -53,6 +57,13 @@ def check_production_root() -> list[CheckResult]:
             or "enable_ingestion = false" in main,
             detail="enable_ingestion=false",
             category="production",
+        ),
+        CheckResult(
+            name="production:data_lake_ingestion_wire_disabled",
+            ok="enable_ingestion_wire = false" in data_lake,
+            detail="enable_ingestion_wire=false",
+            category="production",
+            scenario="D",
         ),
         CheckResult(
             name="production:backend_example_only",

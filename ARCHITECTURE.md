@@ -68,8 +68,120 @@ Engine runtime must not depend on `platform/`. Security posture:
   logic stays in Platform; cloud resources stay in `infrastructure/`.
 - Slice 7.14 creates a **production infrastructure foundation**: health is
   deployable; ingestion remains fail-closed without production credential
-  verification, shared event identity, and event sinks. Community Data Lake
-  resources are deferred to a future `infrastructure/modules/data-lake` module.
+  verification, shared event identity, and event sinks.
+- Slice 8.1 adds the **Community Data Lake foundation** (still fail-closed /
+  unwired): Platform domain
+  `codestrata_platform.community_cloud_api.data_lake` plus private OpenTofu
+  module `infrastructure/modules/community-data-lake/` (single private bucket,
+  `raw/` + `quarantine/` prefixes). Bucket existence does not enable durable
+  ingestion; writer IAM is not attached to Lambda.
+- Slice 8.2 adds the **immutable raw-JSON storage contract** (still unwired):
+  canonical byte-exact JSON serialization, a resolved
+  `ImmutableRawStorageObject` model, fail-closed existing-object conflict
+  classification, and a production-capable (but unconnected)
+  `CommunityDataLakeS3Store` adapter under
+  `codestrata_platform.community_cloud_api.data_lake.infrastructure` — the
+  only module in this package tree allowed to import `boto3`. No endpoint,
+  `app.py`, or `deployment/wiring.py` calls it, and no exactly-once delivery
+  is claimed. See
+  [platform/docs/community-cloud-api/immutable-raw-storage.md](platform/docs/community-cloud-api/immutable-raw-storage.md).
+- Slice 8.3 evolves the envelope's canonical serialized shape (still unwired)
+  from Slice 8.1's flat fields to a nested `acceptance` / `client` /
+  `identity` / `source_contract` contract — still envelope schema `1.0`, a
+  pre-persistence foundation refinement made before any durable write, not a
+  runtime migration — and adds a typed per-stream registry
+  (`envelope_registry.py`, `source_contracts.py`, `streams/`) plus
+  high-level builders (`envelope_builders.py`) for constructing an envelope
+  from an already-validated endpoint request model. No endpoint, `app.py`,
+  or `deployment/wiring.py` calls any of it, no durable event-identity
+  store was added, and no version anywhere was bumped. See
+  [platform/docs/community-cloud-api/data-lake-event-envelope.md](platform/docs/community-cloud-api/data-lake-event-envelope.md).
+- Slice 8.4 gives the `assessment_metadata` stream its own versioned
+  partition policy (`StreamPartitionPolicy`, `1.0`) and a stream-specific
+  storage-object projector, plus generic (stream-agnostic) partitioning
+  machinery a later slice will reuse for the remaining four streams. The
+  accepted path stays the generic Hive path only (`stream=` /
+  `schema_version=` / `year=` / `month=` / `day=`) — no extra dimension was
+  added, to avoid cardinality blow-up and identity fingerprinting. No
+  endpoint, `app.py`, or `deployment/wiring.py` calls any of it, and no
+  version bumped except the new partition policy. See
+  [platform/docs/community-cloud-api/assessment-metadata-data-lake.md](platform/docs/community-cloud-api/assessment-metadata-data-lake.md).
+- Slice 8.5 reuses that exact same generic partitioning machinery for a
+  second stream, `telemetry`: its own versioned partition policy
+  (`community-telemetry-partition-policy`, `1.0`) and
+  `project_telemetry_storage_object()`. The accepted path again stays the
+  generic Hive path only; the only new S3 metadata key is
+  `codestrata-client-type` (`event_type` stays private-payload-only, never
+  a path dimension or metadata key, since it is an analytics vocabulary
+  expected to evolve). No endpoint, `app.py`, or `deployment/wiring.py`
+  calls any of it. See
+  [platform/docs/community-cloud-api/telemetry-data-lake.md](platform/docs/community-cloud-api/telemetry-data-lake.md).
+- Slice 8.6 reuses that same generic partitioning machinery for a third
+  stream, `cli_event`: its own versioned partition policy
+  (`community-cli-event-partition-policy`, `1.0`) and
+  `project_cli_event_storage_object()`. The accepted path again stays the
+  generic Hive path only, and this time **no** new S3 metadata key is
+  added at all (`operation`/`lifecycle`/`result` stay private-payload-only;
+  `client_type` is redundant since the CLI client is always
+  `codestrata_cli`). No endpoint, `app.py`, `deployment/wiring.py`, the CLI
+  emitter, or the telemetry runtime calls any of it. See
+  [platform/docs/community-cloud-api/cli-event-data-lake.md](platform/docs/community-cloud-api/cli-event-data-lake.md).
+- Slice 8.7 reuses that same generic partitioning machinery for a fourth
+  stream, `extension_event`: its own versioned partition policy
+  (`community-extension-event-partition-policy`, `1.0`) and
+  `project_extension_event_storage_object()`. The accepted path again stays
+  the generic Hive path only; Option B reuses `codestrata-client-type` for
+  `vscode_extension`/`cursor_extension` (never `editor` or `operation` in
+  path or metadata). No endpoint, `app.py`, `deployment/wiring.py`, or
+  extension emitter calls any of it, and extension collection is not claimed
+  operational via the data lake. See
+  [platform/docs/community-cloud-api/extension-event-data-lake.md](platform/docs/community-cloud-api/extension-event-data-lake.md).
+- Slice 8.8 reuses that same generic partitioning machinery for a fifth
+  stream, `ai_usage`: its own versioned partition policy
+  (`community-ai-usage-partition-policy`, `1.0`) and
+  `project_ai_usage_storage_object()`. The accepted path again stays the
+  generic Hive path only; Option B reuses `codestrata-client-type` for
+  `codestrata_cli`/`vscode_extension`/`cursor_extension` (never
+  `capability`, `provider_family`, or `model_family` in path or metadata).
+  Adds three AI catalog version fields on policy and diagnostics. No
+  endpoint, `app.py`, `deployment/wiring.py`, Engine AI provider, or client
+  emitter calls any of it, and AI usage collection is not claimed
+  operational via the data lake. Slice 8.9 (malformed-event quarantine)
+  implements persistence under `quarantine/` without endpoint wiring; see
+  [platform/docs/community-cloud-api/data-lake-quarantine.md](platform/docs/community-cloud-api/data-lake-quarantine.md).
+  Slice 8.10 formalizes data retention and lifecycle policies
+  (`community-data-lake-retention-policy:1.0`) aligned with OpenTofu
+  lifecycle defaults — still unwired; does not claim production data is
+  stored or deleted. See
+  [platform/docs/community-cloud-api/data-lake-retention.md](platform/docs/community-cloud-api/data-lake-retention.md).
+  Slice 8.11 formalizes encryption at rest
+  (`community-data-lake-encryption-policy:1.0`, SSE-S3 / AES256 only; KMS
+  deferred) — still unwired; does not claim production data is stored. See
+  [platform/docs/community-cloud-api/data-lake-encryption.md](platform/docs/community-cloud-api/data-lake-encryption.md).
+  Slice 8.12 formalizes restricted IAM access control
+  (`community-data-lake-access-policy:1.0`, least-privilege writer policy
+  document with stable SIDs, prefix-scoped Put/Get, delete Deny on both
+  prefixes, `DenyInsecureTransport`, no ListBucket, no KMS IAM) — writer
+  policy remains unattached. See
+  [platform/docs/community-cloud-api/data-lake-access-control.md](platform/docs/community-cloud-api/data-lake-access-control.md).
+  Slice 8.13 formalizes storage abstraction
+  (`community-data-lake-storage-policy:1.0`, typed projected-object port,
+  explicit factory with production-default unavailable adapter, in-memory
+  test-only, S3 capable but unwired). **Slice 8.14** adds integration
+  verification under `platform/verification/community_data_lake/` (five
+  streams, quarantine, adapter matrix, privacy, infrastructure contract,
+  production fail-closed). Report:
+  `platform/reports/verification/community-data-lake-verification.json`.
+  **Slice 8.15** (Epic 8 completion verification) confirms boundary,
+  version registry, package inventory, and production fail-closed posture under
+  `platform/verification/community_data_lake_completion/`. Report:
+  `platform/reports/verification/community-data-lake-completion-verification.json`.
+  **Epic 8 is complete.** Production ingestion remains **not operational**
+  (`enable_ingestion_wire = false`; endpoints unwired). **Epic 9 not started**.
+  See
+  [platform/docs/community-cloud-api/data-lake-storage-abstraction.md](platform/docs/community-cloud-api/data-lake-storage-abstraction.md).
+  See
+  [platform/docs/community-cloud-api/ai-usage-data-lake.md](platform/docs/community-cloud-api/ai-usage-data-lake.md).
 - The Slice 7.14 deployment proves that the Community Cloud API can be packaged
   and served through serverless infrastructure. It does not enable durable
   Community event ingestion because production credential verification, shared

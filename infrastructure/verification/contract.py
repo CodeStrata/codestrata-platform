@@ -11,6 +11,7 @@ PLATFORM_DEPLOYMENT_FOUNDATION_VERIFICATION_ID = (
 PLATFORM_DEPLOYMENT_FOUNDATION_VERIFICATION_VERSION = "1.0.0"
 
 MODULE_NAME = "community-cloud-api"
+DATA_LAKE_MODULE_NAME = "community-data-lake"
 ENVIRONMENT_NAME = "production"
 DEPLOYMENT_MODE = "production_foundation"
 AUTHENTICATION_MODE = "enabled_verifier_unavailable"
@@ -34,6 +35,20 @@ REQUIRED_MODULE_FILES: tuple[str, ...] = (
     "throttling.tf",
     "configuration.tf",
     "validation.tf",
+)
+
+REQUIRED_DATA_LAKE_MODULE_FILES: tuple[str, ...] = (
+    "main.tf",
+    "variables.tf",
+    "outputs.tf",
+    "versions.tf",
+    "locals.tf",
+    "storage.tf",
+    "encryption.tf",
+    "lifecycle.tf",
+    "iam.tf",
+    "validation.tf",
+    "README.md",
 )
 
 REQUIRED_VARIABLES: tuple[str, ...] = (
@@ -140,7 +155,9 @@ class DeploymentVerificationContract:
         "SV.9 verifies the Slice 7.14 production deployment foundation.",
         "Does not run tofu apply, terraform apply, Docker build/push, or AWS deploy.",
         "OpenTofu CLI validation is reported honestly when tofu is unavailable.",
-        "Does not start SV.10, Data Lake resources, or the 30-repository run.",
+        "Does not start SV.10 or the 30-repository run.",
+        "Community Data Lake foundation (Slice 8.1) exists but is unwired: "
+        "no ingestion, no analytics layer.",
     )
 
 

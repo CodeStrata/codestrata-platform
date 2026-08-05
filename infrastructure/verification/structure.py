@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from infrastructure.verification.contract import REQUIRED_MODULE_FILES, infra_root
+from infrastructure.verification.contract import (
+    REQUIRED_DATA_LAKE_MODULE_FILES,
+    REQUIRED_MODULE_FILES,
+    infra_root,
+)
 from infrastructure.verification.models import CheckResult
 
 
@@ -46,17 +50,28 @@ def check_structure() -> list[CheckResult]:
             scenario="C",
         ),
         CheckResult(
-            name="structure:no_data_lake_module",
-            ok=not (root / "modules" / "data-lake").exists(),
-            detail="no modules/data-lake",
+            name="structure:community_data_lake_module_present",
+            ok=(root / "modules" / "community-data-lake").is_dir(),
+            detail="modules/community-data-lake",
             category="structure",
             scenario="D",
         ),
         CheckResult(
-            name="structure:single_module",
+            name="structure:legacy_data_lake_module_absent",
+            ok=not (root / "modules" / "data-lake").exists(),
+            detail="no legacy modules/data-lake",
+            category="structure",
+            scenario="D",
+        ),
+        CheckResult(
+            name="structure:known_modules_only",
             ok=list((root / "modules").iterdir())
-            and all(p.name == "community-cloud-api" for p in (root / "modules").iterdir() if p.is_dir()),
-            detail="community-cloud-api only",
+            and all(
+                p.name in {"community-cloud-api", "community-data-lake"}
+                for p in (root / "modules").iterdir()
+                if p.is_dir()
+            ),
+            detail="community-cloud-api, community-data-lake",
             category="structure",
         ),
         CheckResult(
@@ -68,6 +83,15 @@ def check_structure() -> list[CheckResult]:
             detail=f"count={len(REQUIRED_MODULE_FILES)}",
             category="structure",
             scenario="A",
+        ),
+        CheckResult(
+            name="structure:data_lake_module_files",
+            ok=all(
+                (root / "modules" / "community-data-lake" / name).is_file()
+                for name in REQUIRED_DATA_LAKE_MODULE_FILES
+            ),
+            detail=f"count={len(REQUIRED_DATA_LAKE_MODULE_FILES)}",
+            category="structure",
         ),
         CheckResult(
             name="structure:production_only_env",

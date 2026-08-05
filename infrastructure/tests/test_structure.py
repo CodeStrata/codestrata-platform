@@ -32,7 +32,8 @@ def test_no_dev_or_staging_roots() -> None:
     assert not (INFRA / "staging").exists()
 
 
-def test_no_data_lake_module_yet() -> None:
+def test_community_data_lake_module_exists() -> None:
+    assert (INFRA / "modules" / "community-data-lake").is_dir()
     assert not (INFRA / "modules" / "data-lake").exists()
 
 
@@ -66,6 +67,24 @@ def test_module_files_present() -> None:
         assert (module / name).is_file(), name
 
 
+def test_data_lake_module_files_present() -> None:
+    module = INFRA / "modules" / "community-data-lake"
+    for name in (
+        "main.tf",
+        "variables.tf",
+        "outputs.tf",
+        "versions.tf",
+        "locals.tf",
+        "storage.tf",
+        "encryption.tf",
+        "lifecycle.tf",
+        "iam.tf",
+        "validation.tf",
+        "README.md",
+    ):
+        assert (module / name).is_file(), name
+
+
 def test_production_root_files() -> None:
     prod = INFRA / "production"
     for name in (
@@ -76,6 +95,7 @@ def test_production_root_files() -> None:
         "versions.tf",
         "backend.tf.example",
         "terraform.tfvars.example",
+        "community-data-lake.tf",
     ):
         assert (prod / name).is_file(), name
     assert not (prod / "backend.tf").exists()

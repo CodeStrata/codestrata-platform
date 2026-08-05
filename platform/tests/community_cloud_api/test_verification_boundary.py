@@ -152,18 +152,22 @@ def test_schema_and_policy_versions_unchanged() -> None:
 
 
 def test_no_new_production_packages_for_epic8() -> None:
+    # Slice 8.1 intentionally adds `data_lake` as a persistence-neutral,
+    # unwired domain package (policy/envelope/identifier/store-port
+    # definitions only — no boto3, no app/endpoint wiring). It is therefore
+    # no longer part of this "nothing new yet" guard.
     for name in (
         "persistence",
         "queues",
         "workers",
         "analytics",
-        "data_lake",
         "emitters",
         "auth",
     ):
         assert not (PKG / name).exists()
     assert (PKG / "deployment").is_dir()
     assert (PKG / "authentication").is_dir()
+    assert (PKG / "data_lake").is_dir()
 
 
 def test_body_helpers_cover_all_ingestion_kinds() -> None:
