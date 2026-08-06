@@ -200,6 +200,32 @@ exports:
         - docs/report-contract.md
         - docs/extension-architecture.md
         - docs/telemetry.md
+        - docs/telemetry-non-interactive.md
+        - docs/telemetry-cli-consent-flags.md
+        - docs/telemetry-status.md
+        - docs/telemetry-event-catalog.md
+        - docs/telemetry-event-catalog.json
+        - docs/telemetry-preview.md
+        - docs/telemetry-pre-transport-privacy.md
+        - docs/telemetry-transport.md
+        - docs/telemetry-assessment-isolation.md
+        - docs/telemetry-anonymous-analytics.md
+        - docs/telemetry-installation-identity.md
+        - docs/telemetry-runtime-analytics.md
+        - docs/telemetry-assessment-analytics.md
+        - docs/telemetry-repository-aggregate-analytics.md
+        - docs/telemetry-ai-analytics.md
+        - docs/ai-provider-contracts.md
+        - docs/ai-provider-configuration.md
+        - docs/ai-provider-execution.md
+        - docs/ai-provider-capabilities.md
+        - docs/ai-provider-openai.md
+        - docs/ai-provider-bedrock.md
+        - docs/ai-provider-platform.md
+        - docs/ai-provider-openrouter.md
+        - docs/ai-provider-openrouter-configuration.md
+        - docs/ai-provider-openrouter-doctor.md
+        - docs/ai-provider-security-boundaries.md
         - verification/cli_installation/README.md
         - schemas/telemetry/codestrata.io/v1.0/TelemetryEvent.json
         - .github/PULL_REQUEST_TEMPLATE.md

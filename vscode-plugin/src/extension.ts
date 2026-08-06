@@ -47,12 +47,50 @@ import { StatusBarController } from "./ui/statusBar";
 import { FindingsTreeProvider } from "./views/findingsTree";
 import { RecommendationsTreeProvider } from "./views/recommendationsTree";
 import { extractEvidenceLine, resolveWorkspaceRelativePath } from "./workspace/paths";
+import {
+  createIsolationSession,
+  defaultUnavailableTransport,
+  runCommandWithTelemetryIsolation,
+  runTelemetryConsentPrompt,
+  type TelemetryPromptUi,
+} from "./telemetry";
 
 export type ResolvedEngine = EngineCandidate & { versionOutput?: string };
 
 let lastArtifacts: ParsedAssessmentArtifacts | undefined;
 let assessmentInFlight = false;
 let activeAbort: AbortController | undefined;
+
+function isTelemetryInteractive(): boolean {
+  const forced = process.env.CODESTRATA_VSCODE_TELEMETRY_NON_INTERACTIVE;
+  if (forced === "1" || forced === "true") {
+    return false;
+  }
+  const ci = process.env.CI;
+  if (ci === "1" || ci === "true") {
+    return false;
+  }
+  return true;
+}
+
+function createTelemetryPromptUi(): TelemetryPromptUi {
+  return {
+    async showConsentPrompt(message, allow, deny) {
+      const choice = await vscode.window.showInformationMessage(
+        message,
+        allow,
+        deny
+      );
+      if (choice === allow) {
+        return "Allow";
+      }
+      if (choice === deny) {
+        return "Deny";
+      }
+      return undefined;
+    },
+  };
+}
 
 export function activate(context: vscode.ExtensionContext): void {
   const statusBar = new StatusBarController();
@@ -272,7 +310,10 @@ export function activate(context: vscode.ExtensionContext): void {
     applyArtifacts(workspaceFolder, artifacts);
   };
 
-  const runAssessment = async (withAi: boolean): Promise<void> => {
+  const runAssessment = async (
+    withAi: boolean,
+    commandId: "codestrata.assess" | "codestrata.assessWithAi"
+  ): Promise<void> => {
     if (assessmentInFlight) {
       void vscode.window.showWarningMessage(
         "A CodeStrata Engineering Assessment is already running."
@@ -308,6 +349,23 @@ export function activate(context: vscode.ExtensionContext): void {
       }
     }
 
+    const extensionVersion =
+      typeof context.extension?.packageJSON?.version === "string"
+        ? context.extension.packageJSON.version
+        : "0.2.0";
+
+    const promptResult = await runTelemetryConsentPrompt({
+      commandId,
+      interactive: isTelemetryInteractive(),
+      ui: createTelemetryPromptUi(),
+    });
+    const telemetrySession = createIsolationSession({
+      consent: promptResult.consent,
+      transport: defaultUnavailableTransport(),
+      promptShown: promptResult.prompted,
+      extensionVersion,
+    });
+
     const args = buildAssessArgs({
       workspaceFolder,
       withAi,
@@ -321,88 +379,98 @@ export function activate(context: vscode.ExtensionContext): void {
     const signal = activeAbort.signal;
 
     try {
-      const result = await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: withAi
-            ? "CodeStrata Engineering Assessment (optional AI)…"
-            : "CodeStrata Engineering Assessment…",
-          cancellable: true,
+      await runCommandWithTelemetryIsolation({
+        session: telemetrySession,
+        aiUsed: withAi,
+        primary: async () => {
+          const result = await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: withAi
+                ? "CodeStrata Engineering Assessment (optional AI)…"
+                : "CodeStrata Engineering Assessment…",
+              cancellable: true,
+            },
+            async (_progress, token) => {
+              token.onCancellationRequested(() => {
+                appendOutputLine("Cancellation requested — stopping Engine process…");
+                activeAbort?.abort();
+              });
+              return runCodestrataCli({
+                executable: engine.executable,
+                args,
+                cwd: workspaceFolder,
+                signal,
+                onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
+                onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
+              });
+            }
+          );
+
+          if (result.cancelled || signal.aborted) {
+            statusBar.setIdle();
+            void vscode.window.showInformationMessage(
+              "CodeStrata Engineering Assessment cancelled."
+            );
+            appendOutputLine("Assessment cancelled by user (not treated as failure).");
+            return "cancelled" as const;
+          }
+
+          if (result.exitCode !== 0) {
+            statusBar.setError(`Assessment failed (exit ${result.exitCode})`);
+            void vscode.window.showErrorMessage(
+              `CodeStrata assessment failed (exit ${result.exitCode}). See CodeStrata output.`
+            );
+            showOutput(false);
+            return "failure" as const;
+          }
+
+          const summary = parseJsonSummary(result.stdout);
+          let runDirectory = summary?.run_directory
+            ? path.isAbsolute(summary.run_directory)
+              ? summary.run_directory
+              : path.join(workspaceFolder, summary.run_directory)
+            : undefined;
+          if (!runDirectory || !fs.existsSync(runDirectory)) {
+            runDirectory = findLatestRunDirectory(
+              workspaceFolder,
+              settings.outputDirectory
+            );
+          }
+          if (!runDirectory) {
+            statusBar.setError("Assessment finished but no report directory found");
+            void vscode.window.showWarningMessage(
+              "Assessment finished but no report directory was found. Try Refresh Findings or rerun."
+            );
+            return "failure" as const;
+          }
+
+          const artifacts = loadArtifactsFromRunDirectory(runDirectory);
+          applyArtifacts(workspaceFolder, artifacts);
+
+          const aiNote =
+            withAi && summary?.ai_status
+              ? ` AI status: ${summary.ai_status}.`
+              : withAi
+                ? " AI is optional; check output if enhancements were skipped."
+                : " Deterministic mode (--no-ai).";
+
+          const open = await vscode.window.showInformationMessage(
+            `Engineering Assessment complete: ${artifacts.findings.length} findings, ` +
+              `${artifacts.recommendations.length} recommendations.` +
+              aiNote,
+            "Open HTML Report",
+            "Show Findings"
+          );
+          if (open === "Open HTML Report") {
+            await openHtmlReportSafe(artifacts.htmlReportPath);
+          }
+          if (open === "Show Findings") {
+            await vscode.commands.executeCommand("codestrata.findings.focus");
+          }
+          return "success" as const;
         },
-        async (_progress, token) => {
-          token.onCancellationRequested(() => {
-            appendOutputLine("Cancellation requested — stopping Engine process…");
-            activeAbort?.abort();
-          });
-          return runCodestrataCli({
-            executable: engine.executable,
-            args,
-            cwd: workspaceFolder,
-            signal,
-            onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
-            onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
-          });
-        }
-      );
-
-      if (result.cancelled || signal.aborted) {
-        statusBar.setIdle();
-        void vscode.window.showInformationMessage(
-          "CodeStrata Engineering Assessment cancelled."
-        );
-        appendOutputLine("Assessment cancelled by user (not treated as failure).");
-        return;
-      }
-
-      if (result.exitCode !== 0) {
-        statusBar.setError(`Assessment failed (exit ${result.exitCode})`);
-        void vscode.window.showErrorMessage(
-          `CodeStrata assessment failed (exit ${result.exitCode}). See CodeStrata output.`
-        );
-        showOutput(false);
-        return;
-      }
-
-      const summary = parseJsonSummary(result.stdout);
-      let runDirectory = summary?.run_directory
-        ? path.isAbsolute(summary.run_directory)
-          ? summary.run_directory
-          : path.join(workspaceFolder, summary.run_directory)
-        : undefined;
-      if (!runDirectory || !fs.existsSync(runDirectory)) {
-        runDirectory = findLatestRunDirectory(workspaceFolder, settings.outputDirectory);
-      }
-      if (!runDirectory) {
-        statusBar.setError("Assessment finished but no report directory found");
-        void vscode.window.showWarningMessage(
-          "Assessment finished but no report directory was found. Try Refresh Findings or rerun."
-        );
-        return;
-      }
-
-      const artifacts = loadArtifactsFromRunDirectory(runDirectory);
-      applyArtifacts(workspaceFolder, artifacts);
-
-      const aiNote =
-        withAi && summary?.ai_status
-          ? ` AI status: ${summary.ai_status}.`
-          : withAi
-            ? " AI is optional; check output if enhancements were skipped."
-            : " Deterministic mode (--no-ai).";
-
-      const open = await vscode.window.showInformationMessage(
-        `Engineering Assessment complete: ${artifacts.findings.length} findings, ` +
-          `${artifacts.recommendations.length} recommendations.` +
-          aiNote,
-        "Open HTML Report",
-        "Show Findings"
-      );
-      if (open === "Open HTML Report") {
-        await openHtmlReportSafe(artifacts.htmlReportPath);
-      }
-      if (open === "Show Findings") {
-        await vscode.commands.executeCommand("codestrata.findings.focus");
-      }
+      });
     } catch (error) {
       statusBar.setError(String(error));
       const message =
@@ -424,7 +492,7 @@ export function activate(context: vscode.ExtensionContext): void {
       selectWorkspaceFolder({ allowFallbackCwd: true, quiet: true }),
     resolveEngine,
     runFirstAssessment: async () => {
-      await runAssessment(false);
+      await runAssessment(false, "codestrata.assess");
     },
     configureExecutable,
   };
@@ -432,10 +500,10 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("codestrata.assess", async () => {
       const settings = loadSettings();
-      await runAssessment(!settings.defaultNoAi);
+      await runAssessment(!settings.defaultNoAi, "codestrata.assess");
     }),
     vscode.commands.registerCommand("codestrata.assessWithAi", async () => {
-      await runAssessment(true);
+      await runAssessment(true, "codestrata.assessWithAi");
     }),
     vscode.commands.registerCommand("codestrata.installEngine", async () => {
       const workspaceFolder =

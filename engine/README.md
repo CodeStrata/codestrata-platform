@@ -221,6 +221,40 @@ This package ships `test-fixtures/sample-js-app` for offline smoke tests.
 | [docs/README.md](docs/README.md) | Docs index |
 | [docs/community-edition.md](docs/community-edition.md) | Community scope |
 | [docs/cli-reference.md](docs/cli-reference.md) | CLI reference |
+| [docs/telemetry-runtime.md](docs/telemetry-runtime.md) | Telemetry runtime (disabled by default; no transmission) |
+| [docs/telemetry-disabled-default.md](docs/telemetry-disabled-default.md) | Slice 9.2 disabled-default enforcement |
+| [docs/telemetry-session-consent.md](docs/telemetry-session-consent.md) | Slice 9.3 per-session consent (process-local) |
+| [docs/telemetry-interactive-consent.md](docs/telemetry-interactive-consent.md) | Slice 9.4 interactive consent prompt |
+| [docs/telemetry-non-interactive.md](docs/telemetry-non-interactive.md) | Slice 9.5 non-interactive prompt suppression |
+| [docs/telemetry-cli-consent-flags.md](docs/telemetry-cli-consent-flags.md) | Slice 9.6 assess `--telemetry-allow` / `--telemetry-deny` |
+| [docs/telemetry-status.md](docs/telemetry-status.md) | Slice 9.7 privacy-first telemetry status |
+| [docs/telemetry-transport.md](docs/telemetry-transport.md) | Slice 9.11 fail-silent HTTP transport (explicit) |
+| [docs/telemetry-assessment-isolation.md](docs/telemetry-assessment-isolation.md) | Slice 9.12 assessment isolation |
+| [../verification/privacy_first_telemetry/README.md](../verification/privacy_first_telemetry/README.md) | Slice 9.14 cross-client privacy verification |
+| [../verification/privacy_first_telemetry_completion/README.md](../verification/privacy_first_telemetry_completion/README.md) | Slice 9.15 Epic 9 completion (v0.2.0) |
+| [docs/telemetry-anonymous-analytics.md](docs/telemetry-anonymous-analytics.md) | Slice 10.1 anonymous analytics contract (no collection) |
+| [docs/telemetry-installation-identity.md](docs/telemetry-installation-identity.md) | Slice 10.2 anonymous installation identity (local only) |
+| [docs/telemetry-runtime-analytics.md](docs/telemetry-runtime-analytics.md) | Slice 10.3 runtime analytics (local construction only) |
+| [docs/telemetry-assessment-analytics.md](docs/telemetry-assessment-analytics.md) | Slice 10.4 assessment analytics (construction API only) |
+| [docs/telemetry-repository-aggregate-analytics.md](docs/telemetry-repository-aggregate-analytics.md) | Slice 10.5 repository aggregate analytics (construction API only) |
+| [docs/telemetry-ai-analytics.md](docs/telemetry-ai-analytics.md) | Slice 10.6 AI analytics (construction API only) |
+| [../vscode-plugin/docs/analytics.md](../vscode-plugin/docs/analytics.md) | Slice 10.7 VS Code analytics (local / unavailable sink) |
+| [../verification/anonymous_analytics_privacy/README.md](../verification/anonymous_analytics_privacy/README.md) | Slice 10.8 anonymous analytics privacy verification |
+| [../verification/anonymous_analytics_completion/README.md](../verification/anonymous_analytics_completion/README.md) | Slice 10.9 Epic 10 completion verification (contracts-only; not operational) |
+| [docs/ai-enrichment.md](docs/ai-enrichment.md) | AI providers / Modernization Advisor enrichment |
+| [verification/ai_provider_baseline/README.md](verification/ai_provider_baseline/README.md) | Slice 11.1 existing AI provider compatibility baseline (characterization only) |
+| [docs/ai-provider-contracts.md](docs/ai-provider-contracts.md) | Slice 11.2 Common AI Provider Contracts (new, unwired) |
+| [docs/ai-provider-configuration.md](docs/ai-provider-configuration.md) | Slice 11.3 Standardized Provider and Model Configuration (new, unwired) |
+| [docs/ai-provider-execution.md](docs/ai-provider-execution.md) | Slice 11.4 Standardized Execution, Errors, Timeouts, and Retries (new, unwired) |
+| [docs/ai-provider-capabilities.md](docs/ai-provider-capabilities.md) | Slice 11.5 Provider Usage Metadata and Capability Discovery (new, unwired) |
+| [docs/ai-provider-openai.md](docs/ai-provider-openai.md) | Slice 11.6 OpenAI Provider Migration (wired) |
+| [docs/ai-provider-bedrock.md](docs/ai-provider-bedrock.md) | Slice 11.7 AWS Bedrock Provider Migration (wired; default provider) |
+| [docs/ai-provider-platform.md](docs/ai-provider-platform.md) | Slice 11.8 Cross-Provider Contract Verification (Decision B) |
+| [docs/ai-provider-openrouter.md](docs/ai-provider-openrouter.md) | Slice 11.9 OpenRouter adapter |
+| [docs/ai-provider-openrouter-configuration.md](docs/ai-provider-openrouter-configuration.md) | Slice 11.10 OpenRouter configuration/authentication (explicit) |
+| [docs/ai-provider-openrouter-doctor.md](docs/ai-provider-openrouter-doctor.md) | Slice 11.11 OpenRouter doctor local readiness + mocked integration |
+| [docs/ai-provider-security-boundaries.md](docs/ai-provider-security-boundaries.md) | Slice 11.12 provider privacy, failure-isolation, and architecture boundaries |
+| [verification/ai_provider_platform_completion/README.md](verification/ai_provider_platform_completion/README.md) | Slice 11.13 Epic 11 completion verification (Epic 11 complete; Epic 12 not started) |
 | [docs/architecture-guide.md](docs/architecture-guide.md) | Architecture map |
 | [docs/mcp/setup.md](docs/mcp/setup.md) | MCP setup |
 | [docs/troubleshooting.md](docs/troubleshooting.md) | Troubleshooting |

@@ -71,7 +71,7 @@ See [`../verification/cli_initialization/README.md`](../verification/cli_initial
 ## Repository assessment verification (SV.4)
 
 Verify a clean non-editable CLI can initialize and assess a repository
-(deterministic `--no-ai`, telemetry off, structural artifact checks):
+(deterministic `--no-ai`, telemetry off / no transmission, structural artifact checks):
 
 ```bash
 cd engine
@@ -83,6 +83,16 @@ Canonical customer command:
 ```bash
 codestrata assess --repo . --output reports --no-ai
 ```
+
+Optional process-local telemetry consent (not saved; no transmission in this
+release):
+
+```bash
+codestrata assess --repo . --output reports --no-ai --telemetry-deny
+codestrata assess --repo . --output reports --no-ai --telemetry-allow
+```
+
+See [telemetry-cli-consent-flags.md](telemetry-cli-consent-flags.md).
 
 Catalog-backed remote runs require a `qualified_revision` (full commit SHA) in
 `validation/repository-catalog/catalog.json`. Validate pins with:

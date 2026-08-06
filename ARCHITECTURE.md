@@ -177,11 +177,180 @@ Engine runtime must not depend on `platform/`. Security posture:
   `platform/verification/community_data_lake_completion/`. Report:
   `platform/reports/verification/community-data-lake-completion-verification.json`.
   **Epic 8 is complete.** Production ingestion remains **not operational**
-  (`enable_ingestion_wire = false`; endpoints unwired). **Epic 9 not started**.
+  (`enable_ingestion_wire = false`; endpoints unwired). **Epic 9 is complete**
+  for v0.2.0: Engine runtime (9.1–9.12), VS Code runtime (9.13), cross-client
+  verification (9.14), and completion verification (9.15) under
+  [`verification/privacy_first_telemetry_completion/`](verification/privacy_first_telemetry_completion/README.md).
+  Production telemetry transmission remains **unavailable by default** (not
+  collecting). Cursor telemetry is not integrated. **Epic 10** anonymous
+  analytics: Slice **10.1** contract
+  (`community-anonymous-analytics-policy:1.0` /
+  `community-anonymous-analytics-schema:1.0`) and Slice **10.2** local anonymous
+  installation identity
+  (`community-anonymous-installation-identity-policy:1.0` /
+  `community-anonymous-installation-identity-schema:1.0`) and Slice **10.3**
+  local runtime analytics
+  (`community-runtime-analytics-policy:1.0` /
+  `community-runtime-analytics-schema:1.0`) and Slice **10.4** assessment
+  analytics construction APIs
+  (`community-assessment-analytics-policy:1.0` /
+  `community-assessment-analytics-schema:1.0`), Slice **10.5** repository
+  aggregate analytics construction APIs
+  (`community-repository-aggregate-analytics-policy:1.0` /
+  `community-repository-aggregate-analytics-schema:1.0`), and Slice **10.6** AI
+  analytics construction APIs
+  (`community-ai-analytics-policy:1.0` /
+  `community-ai-analytics-schema:1.0`) under
+  `codestrata.telemetry.analytics` — no analytics transmission; analytics
+  payloads are not persisted; assessment, repository aggregate, and AI analytics
+  are not wired into assess or AI execution.
+  See
+  [engine/docs/telemetry-anonymous-analytics.md](engine/docs/telemetry-anonymous-analytics.md),
+  [engine/docs/telemetry-installation-identity.md](engine/docs/telemetry-installation-identity.md),
+  [engine/docs/telemetry-runtime-analytics.md](engine/docs/telemetry-runtime-analytics.md),
+  [engine/docs/telemetry-assessment-analytics.md](engine/docs/telemetry-assessment-analytics.md),
+  [engine/docs/telemetry-repository-aggregate-analytics.md](engine/docs/telemetry-repository-aggregate-analytics.md),
+  and
+  [engine/docs/telemetry-ai-analytics.md](engine/docs/telemetry-ai-analytics.md). Slice **10.7** adds VS Code anonymous analytics (`community-vscode-anonymous-analytics-policy:1.0` / `community-vscode-anonymous-analytics-schema:1.0`) — local construction, identity-free, unavailable sink; see [vscode-plugin/docs/analytics.md](vscode-plugin/docs/analytics.md). Slice **10.8** adds anonymous analytics privacy verification (`anonymous-analytics-privacy-verification` @ `1.0.0`) under [verification/anonymous_analytics_privacy/](verification/anonymous_analytics_privacy/). **Epic 10 is complete** for v0.2.0: Slice **10.9** adds Epic 10 completion verification (`anonymous-analytics-completion-verification` @ `1.0.0`) under [verification/anonymous_analytics_completion/](verification/anonymous_analytics_completion/README.md), which live re-runs Slice 10.8 rather than trusting a stale report. Analytics remain contracts-only; production analytics collection is **not operational**.
   See
   [platform/docs/community-cloud-api/data-lake-storage-abstraction.md](platform/docs/community-cloud-api/data-lake-storage-abstraction.md).
   See
   [platform/docs/community-cloud-api/ai-usage-data-lake.md](platform/docs/community-cloud-api/ai-usage-data-lake.md).
+- **Epic 11, Slice 11.1** adds a characterization-only AI provider
+  compatibility baseline (`ai-provider-compatibility-baseline` @ `1.0.0`)
+  under
+  [engine/verification/ai_provider_baseline/](engine/verification/ai_provider_baseline/README.md).
+  It freezes and inventories the *existing* Bedrock/OpenAI assess provider
+  architecture (`AIModelProvider` ABC, `AssessAIProviderRegistry`, default
+  models/timeouts, error mapping, fail-soft, `codestrata ai doctor`) and
+  records compatibility requirements and known limitations (for example,
+  `[ai.bedrock]`/`[ai.openai]` `timeout_seconds`/`max_retries` settings exist
+  but are not wired into the assess provider factory) for future Slice
+  11.2+ work. It introduces no new provider interface, provider platform, or
+  registry redesign, migrates no providers, and does not add OpenRouter.
+  Slice 11.2 (below) owns the unwired common contracts that follow this baseline.
+- **Epic 11, Slice 11.2** adds Common AI Provider Contracts
+  (`community-ai-provider-contract:1.0`) as a new, **unwired** sibling
+  package: [engine/src/codestrata/ai/provider_contracts/](engine/docs/ai-provider-contracts.md).
+  It defines provider-neutral, SDK-free domain types (typed requests/results,
+  bounded errors, usage metadata, a minimal synchronous `AIProvider`
+  protocol, and an explicit deterministic registry) that remain compatible
+  with every Slice 11.1 requirement (CR-1..CR-6), enforced by
+  [engine/verification/ai_provider_contracts/](engine/verification/ai_provider_contracts/README.md)
+  (`ai-provider-contract-verification` @ `1.0.0`). It migrates no providers,
+  wires nothing into the assessment product path, adds no default provider
+  or model, and does not add OpenRouter.
+- **Epic 11, Slice 11.3** adds Standardized Provider and Model Configuration
+  (`community-ai-provider-configuration:1.0`) to the same **unwired** sibling
+  package: [engine/src/codestrata/ai/provider_contracts/](engine/docs/ai-provider-configuration.md).
+  It defines a privacy-preserving representation of provider/model
+  configuration (`AIProviderConfiguration`, `ProviderCredentialRequirement`,
+  `LegacyConfigurationInput`, and pure provider/model resolution functions
+  that mirror `resolve_assess_model_id`'s exact CLI>env>file>default
+  precedence without reading `os.environ`), remaining compatible with every
+  Slice 11.1 requirement (CR-1..CR-6), enforced by
+  [engine/verification/ai_provider_configuration/](engine/verification/ai_provider_configuration/README.md)
+  (`ai-provider-configuration-verification` @ `1.0.0`). It migrates no
+  providers, wires nothing into the assessment product path, changes no
+  default, precedence, or config key, and does not add OpenRouter.
+- **Epic 11, Slice 11.4** adds Standardized Execution, Errors, Timeouts, and
+  Retries (`community-ai-provider-execution:1.0`) to the same **unwired**
+  sibling package:
+  [engine/src/codestrata/ai/provider_contracts/](engine/docs/ai-provider-execution.md).
+  It defines bounded `TimeoutPolicy`/`AIProviderRetryPolicy`/`BackoffPolicy`
+  value objects, a pure `decide_retry()` retry-decision function, safe
+  `ProviderErrorClassification`, and an `AIProviderExecutor` that runs one
+  `AIProviderRequest` against one `AIProvider` with injected clock/sleeper
+  (`DEFAULT_RETRY_POLICY` has `maximum_attempts=1`, matching CR-1's existing
+  "exactly one invoke" behavior exactly), remaining compatible with every
+  Slice 11.1 requirement (CR-1..CR-6), enforced by
+  [engine/verification/ai_provider_execution/](engine/verification/ai_provider_execution/README.md)
+  (`ai-provider-execution-verification` @ `1.0.0`). It migrates no
+  providers, wires the executor into nothing in the assessment product
+  path, enforces no real wall-clock timeout itself, and does not add
+  OpenRouter.
+- **Epic 11, Slice 11.5** adds Provider Usage Metadata and Capability
+  Discovery (`community-ai-provider-capability:1.0` /
+  `community-ai-provider-usage:1.0`) to the same **unwired** sibling
+  package:
+  [engine/src/codestrata/ai/provider_contracts/](engine/docs/ai-provider-capabilities.md).
+  It defines a static, declared-only `ProviderCapabilityProfile` per known
+  Engine provider (bedrock: no native structured JSON, prompt-only;
+  openai: native JSON mode; neither streams; both mark timeout/retry
+  policy support as `not_wired_to_runtime`; both report usage/token
+  accounting) and extends `ProviderUsageMetadata` (Slice 11.2) with an
+  optional `completion_status` field aligned to `ProviderExecutionStatus`,
+  remaining compatible with every Slice 11.1 requirement (CR-1..CR-6) and
+  with Slices 11.2/11.3/11.4, enforced by
+  [engine/verification/ai_provider_capabilities/](engine/verification/ai_provider_capabilities/README.md)
+  (`ai-provider-capability-verification` @ `1.0.0`). It migrates no
+  providers, wires nothing into the assessment product path, changes no
+  runtime provider behavior, and does not add OpenRouter.
+- **Epic 11, Slice 11.6** migrates the **OpenAI** provider onto the Slice
+  11.2–11.5 contracts, the first wired use of that package:
+  [engine/src/codestrata/ai/provider_adapters/openai/](engine/docs/ai-provider-openai.md).
+  A 12-module adapter implements the `AIProvider` protocol behind a single
+  credential boundary (`client.py` is the only module importing the `openai`
+  SDK or reading `os.environ`) and runs under `AIProviderExecutor` pinned to
+  `DEFAULT_RETRY_POLICY` (`maximum_attempts=1`, preserving CR-1) and
+  `DEFAULT_TIMEOUT_POLICY` (60s, declarative). `OpenAIAIModelProvider`
+  remains the public assess-path class and becomes a thin compatibility
+  wrapper that translates non-success outcomes back into the same legacy
+  exceptions, so `AiEnrichmentService` fail-soft, report schema 1.2, and CLI
+  exit behavior are unchanged. Enforced by
+  [engine/verification/openai_provider_migration/](engine/verification/openai_provider_migration/README.md)
+  (`openai-provider-migration-verification` @ `1.0.0`).
+- **Epic 11, Slice 11.7** migrates the **AWS Bedrock** provider onto the same
+  contracts:
+  [engine/src/codestrata/ai/provider_adapters/bedrock/](engine/docs/ai-provider-bedrock.md).
+  Bedrock remains the default provider (`amazon.nova-lite-v1:0`). Converse
+  request semantics, AWS credential/profile/region precedence, and botocore
+  `retries={"max_attempts": 1}` are preserved. `BedrockAIModelProvider` is a
+  thin compatibility wrapper over `BedrockProvider` + `AIProviderExecutor`
+  (also `maximum_attempts=1`). Enforced by
+  [engine/verification/bedrock_provider_migration/](engine/verification/bedrock_provider_migration/README.md)
+  (`bedrock-provider-migration-verification` @ `1.0.0`). Both OpenAI and
+  Bedrock now run on the provider platform behind the same
+  `AssessAIProviderRegistry`.
+- **Epic 11, Slice 11.8** is cross-provider contract verification
+  ([engine/docs/ai-provider-platform.md](engine/docs/ai-provider-platform.md);
+  [engine/verification/ai_provider_cross_provider/](engine/verification/ai_provider_cross_provider/README.md),
+  schema `ai-provider-cross-provider-verification` @ `1.0.0`). It proves both
+  providers satisfy shared Slice 11.2–11.5 contracts while recording intentional
+  differences (Chat Completions vs Converse; API key vs AWS chain; JSON mode vs
+  prompt instruction). **Registry decision B:** compatibility registry retained
+  — `AssessAIProviderRegistry` remains assess-authoritative; contracts
+  `AIProviderRegistry` stays unwired.
+- **Epic 11, Slice 11.9** implements the OpenRouter adapter
+  ([engine/docs/ai-provider-openrouter.md](engine/docs/ai-provider-openrouter.md);
+  [engine/verification/openrouter_provider/](engine/verification/openrouter_provider/README.md),
+  schema `openrouter-provider-verification` @ `1.0.0`). `ProviderId.OPENROUTER`
+  is additive under contract 1.0.
+- **Epic 11, Slice 11.10** adds operational OpenRouter configuration and
+  authentication
+  ([engine/docs/ai-provider-openrouter-configuration.md](engine/docs/ai-provider-openrouter-configuration.md);
+  [engine/verification/openrouter_configuration/](engine/verification/openrouter_configuration/README.md),
+  schema `openrouter-configuration-verification` @ `1.0.0`). OpenRouter is
+  assess-registered as an **explicit, non-default** provider (`[ai.openrouter]`,
+  `OPENROUTER_API_KEY` / `CODESTRATA_OPENROUTER_MODEL_ID`). Bedrock remains
+  default; OpenAI/Bedrock behavior unchanged. Doctor local readiness is Slice 11.11.
+- **Epic 11, Slice 11.11** adds OpenRouter doctor local readiness and mocked
+  end-to-end integration verification
+  ([engine/docs/ai-provider-openrouter-doctor.md](engine/docs/ai-provider-openrouter-doctor.md);
+  [engine/verification/openrouter_doctor_integration/](engine/verification/openrouter_doctor_integration/README.md),
+  schema `openrouter-doctor-integration-verification` @ `1.0.0`). Doctor never
+  calls OpenRouter, never validates keys/models remotely, and never constructs
+  a network client.
+- **Epic 11, Slice 11.12** is authoritative privacy, failure-isolation, and
+  architecture-boundary verification across bedrock/openai/openrouter
+  ([engine/docs/ai-provider-security-boundaries.md](engine/docs/ai-provider-security-boundaries.md);
+  [engine/verification/ai_provider_privacy_boundaries/](engine/verification/ai_provider_privacy_boundaries/README.md),
+  schema `ai-provider-privacy-boundary-verification` @ `1.0.0`). No live
+  provider calls or real credentials. Decision B and Bedrock default preserved.
+  Slice 11.13 completion verification is complete
+  ([engine/verification/ai_provider_platform_completion/](engine/verification/ai_provider_platform_completion/README.md),
+  schema `ai-provider-platform-completion-verification` @ `1.0.0`). Epic 11 is complete
+  for v0.2.0 release-readiness; Epic 12 is not started.
 - The Slice 7.14 deployment proves that the Community Cloud API can be packaged
   and served through serverless infrastructure. It does not enable durable
   Community event ingestion because production credential verification, shared

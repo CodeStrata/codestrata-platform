@@ -262,7 +262,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "lint": "tsc -p ./ --noEmit",
-    "test": "npm run compile && node --test ./out/test/extensionCore.test.js",
+    "test": "npm run compile && node --test ./out/test/extensionCore.test.js ./out/test/telemetryRuntime.test.js ./out/test/analyticsRuntime.test.js",
     "test:host": "npm run compile && node ./out/test/runHostTests.js",
     "package": "npm run compile && npx --yes @vscode/vsce package --no-dependencies",
     "package:dry": "npm run compile && npx --yes @vscode/vsce ls --no-dependencies",

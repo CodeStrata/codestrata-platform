@@ -42,9 +42,13 @@ versions, then coordinate disclosure with you.
 * Community Edition **never executes** analyzed repository code and does not
   import target modules.
 * External AI providers and Enterprise KG are **disabled by default**.
+* AI provider credentials, prompts, responses, and exact model IDs must remain
+  on the private execution path; see
+  [AI provider security boundaries](docs/ai-provider-security-boundaries.md).
 
 ## Related documentation
 
 * [Threat model](docs/security/threat-model.md) (includes hardening checklist)
 * [Security architecture](docs/security/architecture.md)
+* [AI provider security boundaries](docs/ai-provider-security-boundaries.md)
 * [MCP security](docs/mcp/security.md)

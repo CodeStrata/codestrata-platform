@@ -14,8 +14,27 @@ CodeStrata VS Code Extension (Community Edition) is designed for local Engineeri
 - Does **not** send source code to CodeStrata Platform
 - Does **not** retain source code beyond temporary editor navigation
 - Does **not** store AI provider credentials in extension settings
-- Does **not** enable telemetry by default (none shipped in this Community release)
+- Does **not** enable telemetry by default
+- Does **not** persist telemetry consent or generate installation IDs
 - Does **not** connect to Platform APIs
+
+## Telemetry (privacy-first, Slice 9.13+)
+
+Anonymous product telemetry is **disabled by default**. Eligible commands
+(`codestrata.assess`, `codestrata.assessWithAi`) may prompt once for
+**command-local** consent (default Deny; not saved). Transport is unavailable
+in this Community release (no HTTP, no queue, no endpoint settings). Cross-client
+principle parity with the Engine CLI is verified in Slice 9.14
+(`verification/privacy_first_telemetry/`). Epic 9 completion is verified in
+Slice 9.15 (`verification/privacy_first_telemetry_completion/`). Production
+collection is **not operational**.
+
+See [docs/telemetry.md](docs/telemetry.md) and [docs/analytics.md](docs/analytics.md).
+Epic 10 privacy verification:
+[`../../verification/anonymous_analytics_privacy/`](../../verification/anonymous_analytics_privacy/).
+Epic 10 completion (Slice 10.9):
+[`../../verification/anonymous_analytics_completion/`](../../verification/anonymous_analytics_completion/).
+Anonymous analytics remain contracts-only; production collection is **not operational**.
 
 ## Engine relationship
 

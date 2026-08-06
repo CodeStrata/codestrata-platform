@@ -20,7 +20,8 @@ This extension is a **thin client**. It does not duplicate Engineering Intellige
 import Engine Python modules, or use CodeStrata Platform APIs.
 
 **Docs:** [https://docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode)  
-**Support:** [SUPPORT.md](SUPPORT.md) · **Privacy:** [PRIVACY.md](PRIVACY.md) · **Security:** [SECURITY.md](SECURITY.md)
+**Support:** [SUPPORT.md](SUPPORT.md) · **Privacy:** [PRIVACY.md](PRIVACY.md) · **Security:** [SECURITY.md](SECURITY.md)  
+**Telemetry:** [docs/telemetry.md](docs/telemetry.md) (disabled by default; no HTTP) · **Analytics:** [docs/analytics.md](docs/analytics.md) (local construction only)
 
 ![Findings explorer](media/screenshot-findings.png)
 
@@ -111,9 +112,13 @@ Or set `codestrata.engine.executable` to an absolute path.
 
 ## Privacy & security
 
-See [PRIVACY.md](PRIVACY.md) and [SECURITY.md](SECURITY.md). No Platform connection;
-no default telemetry; Workspace Trust respected. Assessment artifacts stay local
-unless you publish them yourself.
+See [PRIVACY.md](PRIVACY.md), [SECURITY.md](SECURITY.md),
+[docs/telemetry.md](docs/telemetry.md), and [docs/analytics.md](docs/analytics.md).
+No Platform connection; telemetry/analytics are disabled by default with
+unavailable transport (no HTTP); Workspace Trust respected. Assessment artifacts
+stay local unless you publish them yourself. Epic 10 anonymous analytics is
+contracts-only and not operational (completion:
+[`../verification/anonymous_analytics_completion/`](../verification/anonymous_analytics_completion/)).
 
 ## Community vs Platform
 

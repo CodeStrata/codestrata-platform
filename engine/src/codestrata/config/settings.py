@@ -300,6 +300,44 @@ class OpenAISettings(BaseModel):
         return value
 
 
+class OpenRouterSettings(BaseModel):
+    """OpenRouter API settings for ``codestrata assess --with-ai`` (Epic 11, Slice 11.10).
+
+    OpenRouter is optional and never the default. ``model`` has no product
+    default — an explicit CLI, environment, or ``[ai.openrouter].model`` value
+    is required before invocation. Secrets are never stored here: only the
+    environment-variable *name* for the API key.
+    """
+
+    model: str = ""
+    api_key_env: str = "OPENROUTER_API_KEY"
+    base_url: str = ""
+    site_url: str = ""
+    app_name: str = ""
+    timeout_seconds: int = 60
+    max_retries: int = 3
+
+    @field_validator("api_key_env", mode="before")
+    @classmethod
+    def normalize_api_key_env(cls, value: object) -> str:
+        compact = str(value or "").strip()
+        if not compact:
+            raise ValueError("must be a nonempty string")
+        return compact
+
+    @field_validator("model", "base_url", "site_url", "app_name", mode="before")
+    @classmethod
+    def normalize_optional_strings(cls, value: object) -> str:
+        return str(value or "").strip()
+
+    @field_validator("timeout_seconds", "max_retries")
+    @classmethod
+    def validate_positive(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("must be a positive integer")
+        return value
+
+
 DEFAULT_BEDROCK_MODEL_ID = "amazon.nova-lite-v1:0"
 DEFAULT_BEDROCK_PROVIDER = "bedrock"
 
@@ -309,7 +347,8 @@ class AiSettings(BaseModel):
 
     ``embedding_provider`` and ``answer_provider`` are independently
     configurable (Phase 5.8). ``provider`` selects the Modernization Advisor
-    model backend for ``codestrata assess --with-ai`` (Bedrock or OpenAI).
+    model backend for ``codestrata assess --with-ai`` (Bedrock, OpenAI, or
+    OpenRouter). Bedrock remains the default.
     """
 
     provider: str = "bedrock"
@@ -317,6 +356,7 @@ class AiSettings(BaseModel):
     answer_provider: str = "deterministic_extractive"
     bedrock: BedrockSettings = Field(default_factory=BedrockSettings)
     openai: OpenAISettings = Field(default_factory=OpenAISettings)
+    openrouter: OpenRouterSettings = Field(default_factory=OpenRouterSettings)
 
     @field_validator("provider", "embedding_provider", "answer_provider")
     @classmethod
@@ -329,7 +369,7 @@ class AiSettings(BaseModel):
     @field_validator("provider")
     @classmethod
     def validate_assess_provider(cls, value: str) -> str:
-        # Built-ins: bedrock, openai. Additional names resolve via
+        # Built-ins: bedrock, openai, openrouter. Additional names resolve via
         # AssessAIProviderRegistry at assess time (Phase 6.5).
         if not value:
             raise ValueError("ai.provider must be a nonempty string")

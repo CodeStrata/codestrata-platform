@@ -82,8 +82,8 @@ def register_assess_command(app: typer.Typer) -> None:
                 "--with-ai/--no-ai",
                 help=(
                     "Enable optional AI enrichment (Modernization Advisor) using your "
-                    "configured provider (Bedrock or OpenAI). Default is --no-ai "
-                    "(deterministic only; no cloud credentials required). "
+                    "configured provider (Bedrock, OpenAI, or OpenRouter). Default is "
+                    "--no-ai (deterministic only; no cloud credentials required). "
                     "Example: codestrata assess --repo . --output reports --with-ai. "
                     "Check setup with: codestrata ai / codestrata ai doctor. "
                     "Docs: https://docs.codestrata.ai/ai-providers/"
@@ -99,7 +99,9 @@ def register_assess_command(app: typer.Typer) -> None:
                     "order: this flag; then provider-specific env/config "
                     "(CODESTRATA_BEDROCK_MODEL_ID / ai.bedrock.model_id for "
                     "Bedrock, CODESTRATA_OPENAI_MODEL_ID / ai.openai.answer_model "
-                    "for OpenAI); then provider default."
+                    "for OpenAI, CODESTRATA_OPENROUTER_MODEL_ID / "
+                    "ai.openrouter.model for OpenRouter — required, no product "
+                    "default); then provider default where applicable."
                 ),
             ),
         ] = None,
@@ -225,6 +227,25 @@ def register_assess_command(app: typer.Typer) -> None:
                 help="Emit a machine-readable JSON completion summary to stdout (CI-friendly).",
             ),
         ] = False,
+        telemetry_allow: Annotated[
+            bool,
+            typer.Option(
+                "--telemetry-allow",
+                help=(
+                    "Allow privacy-safe telemetry attempts for this command only. "
+                    "The decision is not saved."
+                ),
+            ),
+        ] = False,
+        telemetry_deny: Annotated[
+            bool,
+            typer.Option(
+                "--telemetry-deny",
+                help=(
+                    "Deny telemetry for this command only. The decision is not saved."
+                ),
+            ),
+        ] = False,
     ) -> None:
         """Assess a repository and write HTML + JSON Engineering Assessment reports.
 
@@ -242,11 +263,27 @@ def register_assess_command(app: typer.Typer) -> None:
             format_actionable_error,
             maybe_notify_update,
         )
-        from codestrata.telemetry.prompt import maybe_prompt_telemetry_opt_in
-        from codestrata.telemetry.service import get_telemetry_service
+        from codestrata.telemetry.cli_consent import CliTelemetryConsentConflict
+        from codestrata.telemetry.cli_consent_policy import (
+            TELEMETRY_FLAG_CONFLICT_MESSAGE,
+        )
+        from codestrata.telemetry.service import ensure_interactive_product_telemetry
 
-        maybe_prompt_telemetry_opt_in(quiet=quiet, json_output=json_summary)
-        telemetry = get_telemetry_service()
+        try:
+            telemetry = ensure_interactive_product_telemetry(
+                command="assess",
+                quiet=quiet,
+                json_output=json_summary,
+                telemetry_allow=telemetry_allow,
+                telemetry_deny=telemetry_deny,
+            )
+        except CliTelemetryConsentConflict:
+            typer.secho(
+                TELEMETRY_FLAG_CONFLICT_MESSAGE,
+                fg=typer.colors.RED,
+                err=True,
+            )
+            raise typer.Exit(code=2) from None
 
         if model_id and model_id.strip() and not with_ai:
             typer.secho(
@@ -280,13 +317,12 @@ def register_assess_command(app: typer.Typer) -> None:
             if (cwd / "codestrata.toml").is_file() or (cwd / ".git").exists():
                 repo_root = cwd
 
-        telemetry.record_assessment_started(
-            ai_enabled=with_ai,
-            repo_root=repo_root,
+        from codestrata.telemetry.assessment_isolation import (
+            run_assessment_with_telemetry_isolation,
         )
 
-        try:
-            result = run_assessment(
+        def _run_primary():
+            return run_assessment(
                 repo=repo,
                 output_directory=output,
                 mode=mode,
@@ -307,14 +343,15 @@ def register_assess_command(app: typer.Typer) -> None:
                 quiet=quiet,
                 json_summary=json_summary,
             )
-        except AssessmentCommandError as error:
-            telemetry.record_assessment_completed(
+
+        try:
+            result, _isolation = run_assessment_with_telemetry_isolation(
+                _run_primary,
+                telemetry=telemetry,
                 ai_enabled=with_ai,
-                ai_executed=False,
-                success=False,
-                duration_ms=None,
                 repo_root=repo_root,
             )
+        except AssessmentCommandError as error:
             message = str(error)
             if "Fix:" not in message and "Learn more:" not in message:
                 message = format_actionable_error(
@@ -326,13 +363,6 @@ def register_assess_command(app: typer.Typer) -> None:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=error.exit_code) from error
         except Exception as error:  # noqa: BLE001 - CLI boundary
-            telemetry.record_assessment_completed(
-                ai_enabled=with_ai,
-                ai_executed=False,
-                success=False,
-                duration_ms=None,
-                repo_root=repo_root,
-            )
             typer.secho(
                 format_actionable_error(
                     what=sanitize_provider_text(str(error)),
@@ -346,11 +376,4 @@ def register_assess_command(app: typer.Typer) -> None:
                 typer.secho(traceback.format_exc(), fg=typer.colors.RED, err=True)
             raise typer.Exit(code=1) from error
 
-        telemetry.record_assessment_completed(
-            ai_enabled=with_ai,
-            ai_executed=bool(result.ai_executed),
-            success=True,
-            duration_ms=result.duration_ms,
-            repo_root=repo_root,
-        )
         maybe_notify_update(quiet=quiet, json_output=json_summary)
