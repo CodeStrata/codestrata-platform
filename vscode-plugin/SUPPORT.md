@@ -6,7 +6,7 @@
 ## How to get help
 
 1. Command Palette → **CodeStrata: Open CodeStrata Output**
-2. **CodeStrata: Check CodeStrata Environment**
+2. **CodeStrata: CodeStrata Doctor**
 3. Engine Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md
 4. Engine troubleshooting: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md
 5. Extension issues: https://github.com/CodeStrata/codestrata-vscode/issues

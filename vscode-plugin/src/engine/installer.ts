@@ -174,111 +174,40 @@ export function runProcess(
   });
 }
 
-export async function installEngine(options?: {
+export async function installEngine(_options?: {
   preferredMethodId?: InstallMethodId;
   onStdout?: (chunk: string) => void;
   onStderr?: (chunk: string) => void;
 }): Promise<InstallResult> {
-  const methods = selectInstallMethods();
-  if (methods.length === 0) {
-    return {
-      ok: false,
-      stdout: "",
-      stderr: "",
-      exitCode: 1,
-      reason:
-        "No supported installer found (uv, pipx, or Python pip). Install Python 3.12+ first.",
-      troubleshooting: [
-        "Install Python 3.12+ from https://www.python.org/downloads/",
-        "Or install uv (https://docs.astral.sh/uv/) / pipx, then retry.",
-        "Manual: python -m pip install 'codestrata[mcp]'",
-        "Docs: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md",
-      ],
-    };
-  }
-
-  const ordered = options?.preferredMethodId
-    ? [
-        ...methods.filter((m) => m.id === options.preferredMethodId),
-        ...methods.filter((m) => m.id !== options.preferredMethodId),
-      ]
-    : methods;
-
-  let last: InstallResult | undefined;
-  for (const method of ordered) {
-    try {
-      const result = await runProcess(method.executable, method.args, {
-        onStdout: options?.onStdout,
-        onStderr: options?.onStderr,
-        timeoutMs: 10 * 60 * 1000,
-      });
-      if (result.exitCode === 0) {
-        const resolved =
-          locateInstalledExecutable(method) ||
-          (process.platform === "win32" ? "codestrata.exe" : "codestrata");
-        return {
-          ok: true,
-          method,
-          stdout: result.stdout,
-          stderr: result.stderr,
-          exitCode: 0,
-          resolvedExecutable: resolved,
-        };
-      }
-      last = {
-        ok: false,
-        method,
-        stdout: result.stdout,
-        stderr: result.stderr,
-        exitCode: result.exitCode,
-        reason: `${method.label} failed with exit ${result.exitCode}.`,
-        troubleshooting: defaultTroubleshooting(),
-      };
-    } catch (error) {
-      last = {
-        ok: false,
-        method,
-        stdout: "",
-        stderr: String(error),
-        exitCode: 1,
-        reason: `${method.label} could not start: ${String(error)}`,
-        troubleshooting: defaultTroubleshooting(),
-      };
-    }
-  }
-
-  return (
-    last ?? {
-      ok: false,
-      stdout: "",
-      stderr: "",
-      exitCode: 1,
-      reason: "Engine installation failed.",
-      troubleshooting: defaultTroubleshooting(),
-    }
-  );
-}
-
-function locateInstalledExecutable(method: InstallMethod): string | undefined {
-  const exeName = process.platform === "win32" ? "codestrata.exe" : "codestrata";
-  for (const hint of method.locateHints) {
-    if (fs.existsSync(hint)) {
-      return hint;
-    }
-  }
-  // PATH name — discovery will probe later.
-  return exeName.replace(/\.exe$/i, "") === "codestrata" ? "codestrata" : exeName;
+  // Slice 13.3 Approach A — automatic package-manager installation is forbidden.
+  // Use cliInstallation guidance via codestrata.installEngine instead.
+  void _options;
+  return {
+    ok: false,
+    stdout: "",
+    stderr: "",
+    exitCode: 1,
+    reason:
+      "Automatic installation is forbidden. Use CodeStrata: Install Engine for guidance-only steps (copy command, open terminal, or open documentation).",
+    troubleshooting: [
+      "Open Command Palette → CodeStrata: Install Engine",
+      "Copy a trusted install command and run it yourself in a terminal",
+      "Docs: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md",
+      "Then run CodeStrata: Check Environment or refresh CLI detection",
+    ],
+  };
 }
 
 function defaultTroubleshooting(): string[] {
   return [
-    "Ensure Python 3.12+ is installed and on PATH.",
-    "Retry with CodeStrata: Install CodeStrata Engine.",
+    "Use CodeStrata: Install Engine for guidance-only installation steps.",
     "Manual install: python -m pip install 'codestrata[mcp]'",
-    "Then set codestrata.engine.executable to the absolute path if needed.",
+    "Then set codestrata.engine.executable if the CLI is not on PATH.",
     "Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md",
   ];
 }
+
+export { defaultTroubleshooting };
 
 export const ENGINE_DOCS_TROUBLESHOOTING =
   "https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md";

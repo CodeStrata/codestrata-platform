@@ -4,6 +4,12 @@
 **Event schema:** `community-vscode-telemetry-event-schema:1.0`  
 **Client:** `vscode_extension` (independently versioned from Engine `codestrata_cli`)
 
+Community workflow orchestration (Slice 13.1) calls consent at one explicit
+point for eligible assessment commands — after CLI discovery succeeds
+(Slice 13.2; see [cli-discovery.md](cli-discovery.md) and
+[community-workflow.md](community-workflow.md)). Discovery failures do not
+prompt telemetry.
+
 ## Purpose
 
 Command-scoped, privacy-first telemetry runtime for the CodeStrata VS Code
@@ -132,6 +138,10 @@ not transmitted or persisted. Slice 10.8 owns full privacy verification.
 Slice 10.9 completes Epic 10 verification
 ([`../../verification/anonymous_analytics_completion/`](../../verification/anonymous_analytics_completion/))
 — analytics remain contracts-only and not operational in production.
+
+## Epic 13 integration
+
+See [telemetry-consent-integration.md](./telemetry-consent-integration.md) (Slice 13.9): readiness before consent; command-local Deny-default; transport unavailable.
 
 ## Related
 

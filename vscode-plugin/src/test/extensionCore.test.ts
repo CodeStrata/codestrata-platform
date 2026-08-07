@@ -139,7 +139,7 @@ describe("engine discovery", () => {
       assert.ok(candidates.some((item) => item.source === "workspace-venv"));
       assert.ok(candidates.some((item) => item.source === "active-python"));
       assert.ok(candidates.some((item) => item.source === "path"));
-      assert.match(formatCandidateLabel(candidates[0]), /\(/);
+      assert.equal(formatCandidateLabel(candidates[0]), "configured");
     } finally {
       if (previous === undefined) {
         delete process.env.VIRTUAL_ENV;
@@ -163,10 +163,12 @@ describe("engine discovery", () => {
 
 describe("engine compatibility and install planning", () => {
   it("parses codestrata version output", () => {
-    const info = parseEngineVersionOutput("CodeStrata 0.1.0\nCLI: 0.1.0\n");
-    assert.equal(info.version, "0.1.0");
+    const info = parseEngineVersionOutput("CodeStrata 0.2.0\nCLI: 0.2.0\n");
+    assert.equal(info.version, "0.2.0");
     assert.equal(info.compatible, true);
-    assert.equal(isCompatibleEngineVersion("0.1.0"), true);
+    assert.equal(isCompatibleEngineVersion("0.2.0"), true);
+    assert.equal(isCompatibleEngineVersion("0.1.0"), false);
+    assert.equal(isCompatibleEngineVersion("1.0.0"), false);
     assert.equal(isCompatibleEngineVersion("2.0.0"), false);
   });
 

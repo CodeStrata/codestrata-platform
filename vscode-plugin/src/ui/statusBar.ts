@@ -12,7 +12,7 @@ export class StatusBarController implements vscode.Disposable {
 
   setIdle(): void {
     this.item.text = "$(pulse) CodeStrata";
-    this.item.tooltip = "CodeStrata Engine — Run Engineering Assessment";
+    this.item.tooltip = "CodeStrata Engine — Run Assessment";
     this.item.accessibilityInformation = {
       label: "CodeStrata idle. Activate to run Engineering Assessment.",
       role: "button",

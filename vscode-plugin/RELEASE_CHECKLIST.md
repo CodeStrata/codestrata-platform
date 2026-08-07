@@ -27,8 +27,8 @@
 ## Compatibility
 
 - [ ] VS Code `^1.85.0`
-- [ ] Engine `>=0.1.0 <2.0.0`
-- [ ] Report schema `1.2` (major `1.x`)
+- [ ] Engine CLI `0.2.x` (release builds; no prerelease)
+- [ ] Assessment schema `1.2`
 
 ## Marketplace assets
 
@@ -52,5 +52,13 @@
 - [ ] README marketplace rendering checked
 - [ ] Human approval recorded before `vsce publish` / `ovsx publish`
 - [ ] Post-publish install verified → VERIFIED_INSTALLABLE
+
+## Epic / verification gates
+
+- [x] Epic 13 VS Code Extension complete for v0.2.0 epic scope (`sv13-15`)
+- [ ] Marketplace published (separate gate)
+- [ ] Release tag created (separate gate)
+- [ ] Production deploy (separate gate)
+- [ ] Epic 14 started (not part of Epic 13)
 
 See [MARKETPLACE.md](MARKETPLACE.md) and `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`.

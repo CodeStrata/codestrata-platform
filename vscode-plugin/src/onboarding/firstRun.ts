@@ -1,9 +1,14 @@
 /**
- * First-run Community onboarding for CodeStrata VS Code Extension.
+ * First-run Community onboarding for CodeStrata – Engineering Intelligence.
+ *
+ * Slice 13.2: activation must not probe until Get Started.
+ * Slice 13.3: installation is guidance-only (no automatic package-manager run).
  */
 
 import * as vscode from "vscode";
 
+import { presentInstallationGuidance } from "../cliInstallation/vscodeHost";
+import type { CliDiscoveryStatus } from "../cliDiscovery/results";
 import { DEFAULT_SETTINGS } from "../config/settings";
 import {
   buildDoctorArgs,
@@ -23,11 +28,6 @@ import {
   redactSecrets,
   type EngineCandidate,
 } from "../engine/discovery";
-import {
-  ENGINE_DOCS_TROUBLESHOOTING,
-  installEngine,
-  selectInstallMethods,
-} from "../engine/installer";
 import { appendOutput, appendOutputLine, showOutput } from "../ui/output";
 import { offerOptionalAiSetup, openEngineDocs } from "./aiSetup";
 
@@ -40,13 +40,35 @@ export interface OnboardingDeps {
   resolveEngine: (
     workspaceFolder: string,
     options?: { silentMissing?: boolean }
-  ) => Promise<(EngineCandidate & { versionOutput?: string }) | undefined>;
+  ) => Promise<
+    | (EngineCandidate & {
+        versionOutput?: string;
+        discoveryStatus?: CliDiscoveryStatus;
+      })
+    | undefined
+  >;
   runFirstAssessment: () => Promise<void>;
   configureExecutable: (executable: string) => Promise<void>;
 }
 
+/**
+ * Activation-safe entry (Slice 13.2): do not probe/spawn the CLI until the user
+ * explicitly chooses Get Started. Discovery remains lazy and local-only.
+ */
 export async function maybeRunFirstRun(deps: OnboardingDeps): Promise<void> {
   if (deps.context.globalState.get(STATE_FIRST_RUN_DONE) === true) {
+    return;
+  }
+  if (deps.context.globalState.get(STATE_WELCOME_DISMISSED) === true) {
+    return;
+  }
+  const choice = await vscode.window.showInformationMessage(
+    "Welcome to CodeStrata\n\nEngineering Intelligence for Modern Software Organizations.\n\nGet started to detect a local CodeStrata Engine CLI.",
+    "Get Started",
+    "Later"
+  );
+  if (choice !== "Get Started") {
+    await deps.context.globalState.update(STATE_WELCOME_DISMISSED, true);
     return;
   }
   await runWelcomeFlow(deps, { markCompleteOnSuccess: true });
@@ -74,12 +96,12 @@ export async function runWelcomeFlow(
       const action = await vscode.window.showWarningMessage(
         versionInfo.reason ??
           `CodeStrata Engine ${versionInfo.version ?? "unknown"} may be incompatible (need ${MIN_ENGINE_VERSION}+).`,
-        "Install / Update Engine",
+        "Installation Guidance…",
         "Continue Anyway",
         "Learn More"
       );
-      if (action === "Install / Update Engine") {
-        await guidedInstallEngine(deps, workspaceFolder);
+      if (action === "Installation Guidance…") {
+        await guidedInstallEngine(deps, workspaceFolder, "incompatible");
         return;
       }
       if (action === "Learn More") {
@@ -88,7 +110,7 @@ export async function runWelcomeFlow(
       }
     } else {
       appendOutputLine(
-        `Engine ready: ${formatCandidateLabel(existing)} (${versionInfo.version})`
+        `Engine ready: ${existing.source} (${versionInfo.version ?? "ok"})`
       );
       await runDoctorQuiet(existing.executable, workspaceFolder);
       const next = await vscode.window.showInformationMessage(
@@ -110,9 +132,9 @@ export async function runWelcomeFlow(
   }
 
   const choice = await vscode.window.showInformationMessage(
-    "Welcome to CodeStrata\n\nEngineering Intelligence for Modern Software Organizations.\n\nTo begin, CodeStrata Engine needs to be installed.",
+    "Welcome to CodeStrata\n\nEngineering Intelligence for Modern Software Organizations.\n\nCodeStrata Engine CLI was not detected. Installation is guidance-only — the extension will not install packages automatically.",
     { modal: true },
-    "Install Engine",
+    "Installation Guidance…",
     "Learn More",
     "Later"
   );
@@ -121,13 +143,13 @@ export async function runWelcomeFlow(
     await openEngineDocs();
     return;
   }
-  if (choice !== "Install Engine") {
+  if (choice !== "Installation Guidance…") {
     await deps.context.globalState.update(STATE_WELCOME_DISMISSED, true);
     return;
   }
 
-  const installed = await guidedInstallEngine(deps, workspaceFolder);
-  if (!installed) {
+  const ready = await guidedInstallEngine(deps, workspaceFolder, "not_found");
+  if (!ready) {
     return;
   }
 
@@ -136,7 +158,7 @@ export async function runWelcomeFlow(
   }
 
   const after = await vscode.window.showInformationMessage(
-    "CodeStrata Engine installed successfully.",
+    "If you installed CodeStrata Engine, you can run an assessment now.",
     "Run First Engineering Assessment",
     "Enable AI Enhancements…",
     "Done"
@@ -148,117 +170,39 @@ export async function runWelcomeFlow(
   }
 }
 
+/**
+ * Compatibility entry for codestrata.installEngine / welcome.
+ * Slice 13.3: guidance-only — never runs package managers or mutates PATH.
+ */
 export async function guidedInstallEngine(
   deps: OnboardingDeps,
-  workspaceFolder: string
+  workspaceFolder: string,
+  discoveryStatus: CliDiscoveryStatus | "not_attempted" = "not_attempted"
 ): Promise<boolean> {
-  const methods = selectInstallMethods();
-  if (methods.length === 0) {
-    const action = await vscode.window.showErrorMessage(
-      "Cannot install CodeStrata Engine automatically: Python 3.12+, uv, or pipx was not found.",
-      "Open Quick Start",
-      "Configure Executable",
-      "Retry"
-    );
-    if (action === "Open Quick Start") {
-      await openEngineDocs();
-    } else if (action === "Configure Executable") {
-      await vscode.commands.executeCommand(
-        "workbench.action.openSettings",
-        "codestrata.engine.executable"
-      );
-    } else if (action === "Retry") {
-      return guidedInstallEngine(deps, workspaceFolder);
-    }
-    return false;
-  }
-
-  const preferred = await vscode.window.showQuickPick(
-    methods.map((method) => ({
-      label: method.label,
-      description: method.id,
-      method,
-    })),
-    {
-      title: "Install CodeStrata Engine",
-      placeHolder: "Choose an installation method (official: pip / uv / pipx)",
-      ignoreFocusOut: true,
-    }
-  );
-  if (!preferred) {
-    return false;
-  }
-
   showOutput(true);
-  appendOutputLine(
-    `Installing CodeStrata Engine via ${preferred.method.executable} ${preferred.method.args.join(" ")}…`
-  );
-
-  const result = await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      title: "Installing CodeStrata Engine…",
-      cancellable: false,
+  const result = await presentInstallationGuidance({
+    discoveryStatus,
+    host: {
+      appendOutputLine,
+      refreshDiscovery: async () => {
+        const again = await deps.resolveEngine(workspaceFolder, {
+          silentMissing: true,
+        });
+        if (again?.discoveryStatus) {
+          return again.discoveryStatus;
+        }
+        return again ? "compatible" : "not_found";
+      },
     },
-    async () =>
-      installEngine({
-        preferredMethodId: preferred.method.id,
-        onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
-        onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
-      })
-  );
+  });
 
-  if (!result.ok) {
-    appendOutputLine(`Install failed: ${result.reason ?? "unknown"}`);
-    for (const tip of result.troubleshooting ?? []) {
-      appendOutputLine(`  • ${tip}`);
-    }
-    const action = await vscode.window.showErrorMessage(
-      result.reason ?? "CodeStrata Engine installation failed.",
-      "Retry",
-      "Open Troubleshooting",
-      "Configure Executable",
-      "Show Output"
-    );
-    if (action === "Retry") {
-      return guidedInstallEngine(deps, workspaceFolder);
-    }
-    if (action === "Open Troubleshooting") {
-      await vscode.env.openExternal(vscode.Uri.parse(ENGINE_DOCS_TROUBLESHOOTING));
-    } else if (action === "Configure Executable") {
-      await vscode.commands.executeCommand(
-        "workbench.action.openSettings",
-        "codestrata.engine.executable"
-      );
-    } else if (action === "Show Output") {
-      showOutput(false);
-    }
-    return false;
+  if (result.status === "not_required" || result.status === "rediscovery_succeeded") {
+    return true;
   }
 
-  if (result.resolvedExecutable && result.resolvedExecutable !== "codestrata") {
-    await deps.configureExecutable(result.resolvedExecutable);
-    appendOutputLine(`Configured codestrata.engine.executable = ${result.resolvedExecutable}`);
-  }
-
-  const engine = await deps.resolveEngine(workspaceFolder, { silentMissing: true });
-  if (!engine) {
-    void vscode.window.showWarningMessage(
-      "Install finished but codestrata version could not be verified. Configure the executable path.",
-      "Configure Executable"
-    );
-    return false;
-  }
-
-  const versionInfo = parseEngineVersionOutput(engine.versionOutput ?? "");
-  appendOutputLine(
-    `Verified: ${formatCandidateLabel(engine)} — ${versionInfo.version ?? "ok"}`
-  );
-  await runDoctorQuiet(engine.executable, workspaceFolder);
-  void vscode.window.showInformationMessage(
-    `CodeStrata Engine ${versionInfo.version ?? ""} ready (${formatCandidateLabel(engine)}).`
-  );
-  return true;
+  // After guidance, do not auto-resume product commands.
+  const again = await deps.resolveEngine(workspaceFolder, { silentMissing: true });
+  return Boolean(again);
 }
 
 async function runDoctorQuiet(executable: string, cwd: string): Promise<void> {

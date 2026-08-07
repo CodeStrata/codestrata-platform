@@ -17,7 +17,10 @@ recommendations, diagnostics, and HTML report access.
 1. Install **CodeStrata** from the VS Code Marketplace (or Install from VSIX).
 2. Open a repository folder.
 3. On first run, the extension detects **CodeStrata Engine** or offers guided install.
-4. Run your first Engineering Assessment.
+4. Optionally run **Initialize Repository** (Engine writes
+   `codestrata.toml`; already-initialized is preserved; invalid/partial config
+   fails closed). See the extension repository docs for initialization boundaries.
+5. Run your first Engineering Assessment.
 
 Manual Engine install if needed:
 

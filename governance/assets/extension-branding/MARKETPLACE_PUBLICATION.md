@@ -1,4 +1,4 @@
-# Marketplace publication — CodeStrata VS Code Extension
+# Marketplace publication — CodeStrata – Engineering Intelligence
 
 **Status:** Preparation complete · **Do not publish** until release gates pass and a
 human explicitly requests publish with stored credentials.
@@ -11,7 +11,7 @@ The former Cursor extension product and its packaging surfaces were removed
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata VS Code Extension |
+| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Intelligence |
 
 Publisher namespace: **`codestrata`** (create/claim before first publish; do not
 rename after release without explicit approval).
@@ -129,7 +129,7 @@ required for broad open-editor reach alongside Visual Studio Marketplace.
 
 1. Marketplace / Open VSX pages resolve
 2. Fresh VS Code install from marketplace
-3. First command: **Run Engineering Assessment**
+3. First command: **Run Assessment**
 4. Engine install path works
 5. Classify as **VERIFIED_INSTALLABLE**
 

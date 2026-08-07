@@ -75,6 +75,7 @@ export function buildAssessArgs(options: AssessOptions): string[] {
 }
 
 export function buildInitArgs(settings: CodestrataSettings): string[] {
+  // Slice 13.4: never pass --force. Engine owns writes; overwrite is forbidden.
   const args = ["init"];
   if (settings.configPath) {
     args.push("--config", settings.configPath);

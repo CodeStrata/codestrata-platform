@@ -10,19 +10,60 @@ import {
   buildAssessArgs,
   buildDoctorArgs,
   buildInitArgs,
-  buildVersionArgs,
   ENGINE_DOCS_QUICK_START,
   ENGINE_INSTALL_HINT,
   parseJsonSummary,
 } from "./engine/cliContract";
 import { runCodestrataCli } from "./engine/cliRunner";
-import { parseEngineVersionOutput } from "./engine/compatibility";
 import {
-  formatCandidateLabel,
-  listEngineCandidates,
   redactSecrets,
   type EngineCandidate,
 } from "./engine/discovery";
+import {
+  createNodeProbeRunner,
+  discoverCodeStrataCli,
+  discoveryOutputMessage,
+  workflowErrorForDiscoveryStatus,
+  type CliDiscoveryStatus,
+} from "./cliDiscovery";
+import {
+  assertInitArgsForbidForce,
+  detectRepositoryInitState,
+  planRepositoryInitialization,
+  resultAfterEngineInit,
+  resultForPlanWithoutCli,
+  userMessageForInitResult,
+  createRepoInitResult,
+} from "./repositoryInitialization";
+import {
+  assertSingleAssessInvocationArgs,
+  mapInitStateToWorkflowFlag,
+  planAssessmentReadiness,
+  resultAfterEngineAssessment,
+  resultForCliUnavailable,
+  resultForReadinessFailure,
+  userMessageForAssessmentReadiness,
+  type AssessmentConsentCategory,
+  type AssessmentOperation,
+} from "./assessmentExecution";
+import {
+  AssessmentProgressLifecycle,
+  progressStatusFromPrimary,
+  progressTitle,
+} from "./assessmentProgress";
+import {
+  locateHtmlReport,
+  openValidatedHtmlReport,
+  resultForUserDeclined,
+  userMessageForReportResult,
+  type OpenHtmlAdapter,
+} from "./reportOpening";
+import {
+  presentFailureRecovery,
+  resolveRecoveryGuidance,
+} from "./failureRecovery";
+import { createVsCodeRecoveryHost } from "./failureRecovery/vscodeHost";
+import { presentInstallationGuidance } from "./cliInstallation/vscodeHost";
 import {
   guidedInstallEngine,
   maybeRunFirstRun,
@@ -54,8 +95,43 @@ import {
   runTelemetryConsentPrompt,
   type TelemetryPromptUi,
 } from "./telemetry";
+import {
+  assertConsentMayProceed,
+  assertFreshConsentDecision,
+  createIntegrationDiagnostics,
+  createTelemetryIntegrationPolicy,
+  integrationDiagnosticsToStableDict,
+  integrationOperationLabel,
+  isTelemetryEligibleCommand,
+} from "./telemetryConsentIntegration";
+import {
+  evaluateCliCompatibility,
+  doctorCompatibilityLabel,
+  userMessageForCompatibility,
+} from "./cliCompatibility";
+import {
+  CommunityWorkflowSession,
+  classifyWorkspaceKind,
+  mapConsentToDecisionCategory,
+} from "./communityWorkflow";
 
-export type ResolvedEngine = EngineCandidate & { versionOutput?: string };
+export type ResolvedEngine = EngineCandidate & {
+  versionOutput?: string;
+  discoveryStatus?: CliDiscoveryStatus;
+  compatibilityVerdict?: string;
+};
+
+function mapDiscoverySourceToLegacy(
+  source: string
+): EngineCandidate["source"] {
+  if (source === "explicit_configuration") {
+    return "configured";
+  }
+  if (source === "process_path") {
+    return "path";
+  }
+  return "workspace-venv";
+}
 
 let lastArtifacts: ParsedAssessmentArtifacts | undefined;
 let assessmentInFlight = false;
@@ -141,9 +217,12 @@ export function activate(context: vscode.ExtensionContext): void {
         return process.cwd();
       }
       if (!options?.quiet) {
-        void vscode.window.showErrorMessage(
-          "CodeStrata requires an open workspace folder (local repository)."
-        );
+        void presentFailureRecovery({
+          failureCategory: "workspace_unavailable",
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+          messageOverride:
+            "CodeStrata requires an open workspace folder (local repository).",
+        });
       }
       return undefined;
     }
@@ -192,50 +271,40 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const resolveEngine = async (
     workspaceFolder: string,
-    options?: { silentMissing?: boolean }
+    options?: { silentMissing?: boolean; session?: CommunityWorkflowSession }
   ): Promise<ResolvedEngine | undefined> => {
     const settings = loadSettings();
     const folders =
       vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ?? [
         workspaceFolder,
       ];
-    const candidates = listEngineCandidates(settings.executable, folders);
     appendOutputLine("Resolving CodeStrata Engine executable…");
-    for (const candidate of candidates) {
-      appendOutputLine(`  candidate: ${formatCandidateLabel(candidate)}`);
-    }
 
-    for (const candidate of candidates) {
-      try {
-        const probe = await runCodestrataCli({
-          executable: candidate.executable,
-          args: buildVersionArgs(),
-          cwd: workspaceFolder,
-        });
-        if (probe.exitCode === 0) {
-          const versionInfo = parseEngineVersionOutput(probe.stdout);
-          appendOutputLine(
-            `Using Engine: ${formatCandidateLabel(candidate)} — ${redactSecrets(
-              probe.stdout.trim().split(/\r?\n/)[0] || "version ok"
-            )}`
-          );
-          if (versionInfo.version) {
-            appendOutputLine(
-              `Version compatibility: ${
-                versionInfo.compatible ? "OK" : "WARN"
-              } (${versionInfo.version})`
-            );
-          }
-          return { ...candidate, versionOutput: probe.stdout };
-        }
-      } catch (error) {
-        const err = error as NodeJS.ErrnoException;
-        if (err.code !== "ENOENT") {
-          appendOutputLine(
-            `  probe failed for ${candidate.executable}: ${redactSecrets(String(error))}`
-          );
-        }
-      }
+    const baseRunner = createNodeProbeRunner();
+    const outcome = await discoverCodeStrataCli({
+      configuredExecutable: settings.executable,
+      workspaceFolders: folders,
+      cwd: workspaceFolder,
+      runner: async (request) => {
+        options?.session?.recordDiscoveryProbe();
+        return baseRunner(request);
+      },
+    });
+
+    options?.session?.setDiscoveryStatus(outcome.public.status);
+    appendOutputLine(discoveryOutputMessage(outcome.public));
+
+    if (outcome.public.status === "compatible" && outcome.resolved) {
+      const decision = evaluateCliCompatibility({
+        cliVersion: outcome.resolved.version,
+      });
+      return {
+        executable: outcome.resolved.command,
+        source: mapDiscoverySourceToLegacy(outcome.resolved.source),
+        versionOutput: `CodeStrata ${outcome.resolved.version}`,
+        discoveryStatus: outcome.public.status,
+        compatibilityVerdict: decision.verdict,
+      };
     }
 
     if (options?.silentMissing) {
@@ -244,14 +313,45 @@ export function activate(context: vscode.ExtensionContext): void {
     }
 
     const action = await vscode.window.showErrorMessage(
-      "CodeStrata Engine CLI was not found. This Community extension requires CodeStrata Engine.",
-      "Install Engine",
+      outcome.public.status === "invalid_configuration" ||
+        outcome.public.status === "not_executable"
+        ? "Configured CodeStrata Engine CLI could not be used."
+        : outcome.public.status === "incompatible"
+          ? userMessageForCompatibility(
+              evaluateCliCompatibility({
+                cliVersion:
+                  outcome.public.version_major !== undefined &&
+                  outcome.public.version_minor !== undefined &&
+                  outcome.public.version_patch !== undefined
+                    ? {
+                        major: outcome.public.version_major,
+                        minor: outcome.public.version_minor,
+                        patch: outcome.public.version_patch,
+                      }
+                    : undefined,
+              })
+            )
+          : outcome.public.status === "identity_mismatch"
+            ? "The configured executable is not a CodeStrata CLI."
+            : "CodeStrata Engine CLI was not found. This Community extension requires CodeStrata Engine.",
+      "Installation Guidance…",
       "Open Installation Docs",
       "Configure Executable",
       "Show Output"
     );
-    if (action === "Install Engine") {
-      await vscode.commands.executeCommand("codestrata.installEngine");
+    if (action === "Installation Guidance…") {
+      await presentInstallationGuidance({
+        discoveryStatus: outcome.public.status,
+        host: {
+          appendOutputLine,
+          refreshDiscovery: async () => {
+            const again = await resolveEngine(workspaceFolder, {
+              silentMissing: true,
+            });
+            return again?.discoveryStatus ?? (again ? "compatible" : "not_found");
+          },
+        },
+      });
     } else if (action === "Open Installation Docs") {
       await vscode.env.openExternal(vscode.Uri.parse(ENGINE_DOCS_QUICK_START));
     } else if (action === "Configure Executable") {
@@ -301,7 +401,7 @@ export function activate(context: vscode.ExtensionContext): void {
       clearResults();
       if (!quietEmpty) {
         void vscode.window.showInformationMessage(
-          "No Engineering Assessment reports found. Run CodeStrata: Run Engineering Assessment."
+          "No Engineering Assessment reports found. Run CodeStrata: Run Assessment."
         );
       }
       return;
@@ -314,175 +414,495 @@ export function activate(context: vscode.ExtensionContext): void {
     withAi: boolean,
     commandId: "codestrata.assess" | "codestrata.assessWithAi"
   ): Promise<void> => {
+    // Slice 13.5: command ID selects AI mode — not settings alone.
+    const operation: AssessmentOperation =
+      commandId === "codestrata.assessWithAi"
+        ? "run_assessment_with_ai"
+        : "run_assessment";
+    const aiRequested = commandId === "codestrata.assessWithAi" ? true : withAi;
+    const folderCount = vscode.workspace.workspaceFolders?.length ?? 0;
+    const session = new CommunityWorkflowSession({
+      operation,
+      aiRequested,
+      cancellationSupported: true,
+      workspaceAvailable: folderCount > 0,
+      workspaceKind: classifyWorkspaceKind({ folderCount }),
+      repositoryInitialized: "unknown",
+    });
+
     if (assessmentInFlight) {
       void vscode.window.showWarningMessage(
         "A CodeStrata Engineering Assessment is already running."
       );
+      session.transitionTo("validating_workspace");
+      session.complete({
+        status: "unavailable",
+        resultCategory: "internal_workflow_error",
+        primaryExit: "unavailable",
+      });
       return;
     }
-    const workspaceFolder = await selectWorkspaceFolder();
-    if (!workspaceFolder) {
-      return;
-    }
-    if (!(await ensureTrusted(workspaceFolder))) {
-      return;
-    }
-    if (!fs.existsSync(workspaceFolder)) {
-      void vscode.window.showErrorMessage("Workspace folder does not exist.");
-      return;
-    }
-
-    const engine = await resolveEngine(workspaceFolder);
-    if (!engine) {
-      return;
-    }
-
-    const settings = loadSettings();
-    if (withAi) {
-      const proceed = await vscode.window.showInformationMessage(
-        aiOptionalGuidance(settings.aiProviderHint),
-        "Continue with optional AI",
-        "Cancel"
-      );
-      if (proceed !== "Continue with optional AI") {
-        return;
-      }
-    }
-
-    const extensionVersion =
-      typeof context.extension?.packageJSON?.version === "string"
-        ? context.extension.packageJSON.version
-        : "0.2.0";
-
-    const promptResult = await runTelemetryConsentPrompt({
-      commandId,
-      interactive: isTelemetryInteractive(),
-      ui: createTelemetryPromptUi(),
-    });
-    const telemetrySession = createIsolationSession({
-      consent: promptResult.consent,
-      transport: defaultUnavailableTransport(),
-      promptShown: promptResult.prompted,
-      extensionVersion,
-    });
-
-    const args = buildAssessArgs({
-      workspaceFolder,
-      withAi,
-      settings,
-    });
-    showOutput(true);
-    appendOutputLine(`$ ${engine.executable} ${args.map(quoteIfNeeded).join(" ")}`);
-    statusBar.setRunning();
-    assessmentInFlight = true;
-    activeAbort = new AbortController();
-    const signal = activeAbort.signal;
 
     try {
-      await runCommandWithTelemetryIsolation({
-        session: telemetrySession,
-        aiUsed: withAi,
-        primary: async () => {
-          const result = await vscode.window.withProgress(
-            {
-              location: vscode.ProgressLocation.Notification,
-              title: withAi
-                ? "CodeStrata Engineering Assessment (optional AI)…"
-                : "CodeStrata Engineering Assessment…",
-              cancellable: true,
+      session.transitionTo("validating_workspace");
+      const workspaceFolder = await selectWorkspaceFolder();
+      if (!workspaceFolder) {
+        session.complete({
+          status: "unavailable",
+          resultCategory: "workspace_unavailable",
+          primaryExit: "unavailable",
+        });
+        return;
+      }
+      if (!(await ensureTrusted(workspaceFolder))) {
+        session.complete({
+          status: "unavailable",
+          resultCategory: "workspace_unsupported",
+          primaryExit: "unavailable",
+        });
+        return;
+      }
+      if (!fs.existsSync(workspaceFolder)) {
+        const { result: recovery } = await presentFailureRecovery({
+          failureCategory: "workspace_unavailable",
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+        });
+        session.complete({
+          status: "failure",
+          resultCategory: "workspace_unavailable",
+          primaryExit: "failure",
+          recoveryCategory: recovery.workflow_recovery_flag,
+        });
+        return;
+      }
+
+      // Slice 13.5 readiness: initialized repository before discovery/consent.
+      const settings = loadSettings();
+      const detected = detectRepositoryInitState({
+        workspaceRoot: workspaceFolder,
+        configuredConfigPath: settings.configPath,
+      });
+      const readiness = planAssessmentReadiness(detected.state);
+      // Refresh session context flag without reconstructing (bounded mapping).
+      void mapInitStateToWorkflowFlag(detected.state);
+
+      if (readiness.action !== "continue_to_cli_discovery") {
+        const bounded = resultForReadinessFailure(
+          operation,
+          aiRequested,
+          readiness
+        );
+        const category =
+          bounded.status === "repository_not_initialized"
+            ? "repository_not_initialized"
+            : bounded.status === "partial_repository_configuration"
+              ? "partial_existing_configuration"
+              : "initialization_failed";
+        const { result: recovery } = await presentFailureRecovery({
+          failureCategory: category,
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+          messageOverride: userMessageForAssessmentReadiness(bounded),
+        });
+        session.complete({
+          status: "unavailable",
+          resultCategory:
+            bounded.status === "repository_not_initialized"
+              ? "repository_not_initialized"
+              : "initialization_failed",
+          primaryExit: "unavailable",
+          recoveryCategory: recovery.workflow_recovery_flag,
+        });
+        return;
+      }
+
+      // Compatible CLI before consent (Slice 13.2 / 13.3).
+      const engine = await resolveEngine(workspaceFolder, { session });
+      if (!engine) {
+        const bounded = resultForCliUnavailable(operation, aiRequested);
+        appendOutputLine(userMessageForAssessmentReadiness(bounded));
+        const guidance = resolveRecoveryGuidance("cli_unavailable");
+        session.complete({
+          status: "unavailable",
+          resultCategory: workflowErrorForDiscoveryStatus(
+            session.getDiscoveryStatus()
+          ),
+          primaryExit: "unavailable",
+          recoveryCategory: guidance.workflow_recovery_flag,
+        });
+        // Slice 13.3 owns install guidance UX; do not auto-resume assessment.
+        await presentInstallationGuidance({
+          discoveryStatus:
+            (session.getDiscoveryStatus() as CliDiscoveryStatus) || "not_found",
+          host: {
+            appendOutputLine,
+            refreshDiscovery: async () => {
+              const again = await resolveEngine(workspaceFolder, {
+                silentMissing: true,
+              });
+              return again?.discoveryStatus ?? (again ? "compatible" : "not_found");
             },
-            async (_progress, token) => {
-              token.onCancellationRequested(() => {
-                appendOutputLine("Cancellation requested — stopping Engine process…");
-                activeAbort?.abort();
-              });
-              return runCodestrataCli({
-                executable: engine.executable,
-                args,
-                cwd: workspaceFolder,
-                signal,
-                onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
-                onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
-              });
-            }
-          );
+          },
+        });
+        return;
+      }
 
-          if (result.cancelled || signal.aborted) {
-            statusBar.setIdle();
-            void vscode.window.showInformationMessage(
-              "CodeStrata Engineering Assessment cancelled."
-            );
-            appendOutputLine("Assessment cancelled by user (not treated as failure).");
-            return "cancelled" as const;
-          }
+      if (aiRequested) {
+        const proceed = await vscode.window.showInformationMessage(
+          aiOptionalGuidance(settings.aiProviderHint),
+          "Continue with optional AI",
+          "Cancel"
+        );
+        if (proceed !== "Continue with optional AI") {
+          session.complete({
+            status: "cancelled",
+            resultCategory: "assessment_cancelled",
+            primaryExit: "cancelled",
+          });
+          return;
+        }
+      }
 
-          if (result.exitCode !== 0) {
-            statusBar.setError(`Assessment failed (exit ${result.exitCode})`);
-            void vscode.window.showErrorMessage(
-              `CodeStrata assessment failed (exit ${result.exitCode}). See CodeStrata output.`
-            );
-            showOutput(false);
-            return "failure" as const;
-          }
+      const extensionVersion =
+        typeof context.extension?.packageJSON?.version === "string"
+          ? context.extension.packageJSON.version
+          : "0.2.0";
 
-          const summary = parseJsonSummary(result.stdout);
-          let runDirectory = summary?.run_directory
-            ? path.isAbsolute(summary.run_directory)
-              ? summary.run_directory
-              : path.join(workspaceFolder, summary.run_directory)
-            : undefined;
-          if (!runDirectory || !fs.existsSync(runDirectory)) {
-            runDirectory = findLatestRunDirectory(
-              workspaceFolder,
-              settings.outputDirectory
-            );
-          }
-          if (!runDirectory) {
-            statusBar.setError("Assessment finished but no report directory found");
-            void vscode.window.showWarningMessage(
-              "Assessment finished but no report directory was found. Try Refresh Findings or rerun."
-            );
-            return "failure" as const;
-          }
-
-          const artifacts = loadArtifactsFromRunDirectory(runDirectory);
-          applyArtifacts(workspaceFolder, artifacts);
-
-          const aiNote =
-            withAi && summary?.ai_status
-              ? ` AI status: ${summary.ai_status}.`
-              : withAi
-                ? " AI is optional; check output if enhancements were skipped."
-                : " Deterministic mode (--no-ai).";
-
-          const open = await vscode.window.showInformationMessage(
-            `Engineering Assessment complete: ${artifacts.findings.length} findings, ` +
-              `${artifacts.recommendations.length} recommendations.` +
-              aiNote,
-            "Open HTML Report",
-            "Show Findings"
-          );
-          if (open === "Open HTML Report") {
-            await openHtmlReportSafe(artifacts.htmlReportPath);
-          }
-          if (open === "Show Findings") {
-            await vscode.commands.executeCommand("codestrata.findings.focus");
-          }
-          return "success" as const;
+      // Slice 13.9: consent only after workspace + init + compatible CLI (+ AI confirm).
+      assertConsentMayProceed({
+        commandId,
+        readiness: {
+          workspace_ready: true,
+          repository_initialized: true,
+          cli_compatible: true,
+          ai_confirmation_satisfied: true,
         },
       });
+      session.transitionTo("awaiting_consent");
+      const promptResult = await runTelemetryConsentPrompt({
+        commandId,
+        interactive: isTelemetryInteractive(),
+        ui: createTelemetryPromptUi(),
+      });
+      assertFreshConsentDecision({
+        priorConsentReused: promptResult.consent.priorConsentReused,
+        persisted: promptResult.consent.persisted,
+      });
+      const integrationPolicy = createTelemetryIntegrationPolicy();
+      void integrationDiagnosticsToStableDict(
+        createIntegrationDiagnostics({
+          operation: integrationOperationLabel(commandId),
+          eligible: isTelemetryEligibleCommand(commandId),
+          ordering: {
+            readiness_passed: true,
+            consent_allowed: true,
+            blocked_stage: "none",
+            reason: "ready",
+          },
+          consentPromptAttempted: promptResult.prompted,
+          consentPromptCount: promptResult.attempts,
+          consentDecisionCategory: promptResult.consent.decision,
+          telemetryRuntimeCreated: true,
+          telemetryTransportCategory: "unavailable",
+          analyticsConstructed:
+            promptResult.consent.decision === "allowed_for_session",
+          analyticsSinkCategory:
+            promptResult.consent.decision === "allowed_for_session"
+              ? "unavailable"
+              : "none",
+          limitations: integrationPolicy.limitations,
+        })
+      );
+      session.setTelemetryDecision(
+        mapConsentToDecisionCategory({
+          decision: promptResult.consent.decision,
+          prompted: promptResult.prompted,
+          interactive: isTelemetryInteractive(),
+        })
+      );
+      const consentCategory: AssessmentConsentCategory =
+        promptResult.consent.decision === "allowed_for_session"
+          ? "allowed_for_session"
+          : !isTelemetryInteractive()
+            ? "suppressed_non_interactive"
+            : "denied";
+      const telemetrySession = createIsolationSession({
+        consent: promptResult.consent,
+        transport: defaultUnavailableTransport(),
+        promptShown: promptResult.prompted,
+        extensionVersion,
+      });
+
+      const args = buildAssessArgs({
+        workspaceFolder,
+        withAi: aiRequested,
+        settings,
+      });
+      assertSingleAssessInvocationArgs(args);
+      showOutput(true);
+      appendOutputLine(`$ ${engine.executable} ${args.map(quoteIfNeeded).join(" ")}`);
+      statusBar.setRunning();
+      assessmentInFlight = true;
+      activeAbort = new AbortController();
+      const signal = activeAbort.signal;
+
+      // Slice 13.6: one progress lifecycle starts only after readiness + consent.
+      const progressLifecycle = new AssessmentProgressLifecycle({
+        operation,
+        aiRequested,
+      });
+
+      session.transitionTo("running_assessment");
+      session.markProgressStarted();
+
+      try {
+        await runCommandWithTelemetryIsolation({
+          session: telemetrySession,
+          aiUsed: aiRequested,
+          primary: async () => {
+            session.recordCliInvocation();
+            const result = await vscode.window.withProgress(
+              {
+                location: vscode.ProgressLocation.Notification,
+                title: progressTitle(aiRequested),
+                cancellable: true,
+              },
+              async (progress, token) => {
+                progressLifecycle.start({
+                  report: (value) => {
+                    // Message-only — no increment/percentage (Decision A).
+                    progress.report({ message: value.message });
+                  },
+                });
+                token.onCancellationRequested(() => {
+                  if (progressLifecycle.requestCancellation()) {
+                    appendOutputLine(
+                      "Cancellation requested — stopping Engine process…"
+                    );
+                    activeAbort?.abort();
+                  }
+                });
+                const cliResult = await runCodestrataCli({
+                  executable: engine.executable,
+                  args,
+                  cwd: workspaceFolder,
+                  signal,
+                  onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
+                  onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
+                });
+                // Phase updates while Notification is still open (indeterminate).
+                if (
+                  !cliResult.cancelled &&
+                  !signal.aborted &&
+                  !progressLifecycle.wasCancellationRequested() &&
+                  cliResult.exitCode === 0
+                ) {
+                  progressLifecycle.enterPhase("finalizing");
+                  progressLifecycle.enterPhase("locating_report");
+                }
+                return cliResult;
+              }
+            );
+
+            if (result.cancelled || signal.aborted || progressLifecycle.wasCancellationRequested()) {
+              statusBar.setIdle();
+              const { result: recovery } = await presentFailureRecovery({
+                failureCategory: "assessment_cancelled",
+                host: createVsCodeRecoveryHost({ appendOutputLine }),
+                messageOverride:
+                  "CodeStrata Engineering Assessment cancelled.",
+              });
+              void resultAfterEngineAssessment({
+                operation,
+                aiRequested,
+                consent: consentCategory,
+                cli: {
+                  exitCode: result.exitCode,
+                  cancelled: true,
+                  reportAvailable: false,
+                },
+              });
+              progressLifecycle.close(progressStatusFromPrimary("cancelled"));
+              session.markProgressClosed();
+              session.complete({
+                status: "cancelled",
+                resultCategory: "assessment_cancelled",
+                primaryExit: "cancelled",
+                recoveryCategory: recovery.workflow_recovery_flag,
+              });
+              return "cancelled" as const;
+            }
+
+            if (result.exitCode !== 0) {
+              statusBar.setError(`Assessment failed (exit ${result.exitCode})`);
+              const { result: recovery } = await presentFailureRecovery({
+                failureCategory: "assessment_failed",
+                host: createVsCodeRecoveryHost({ appendOutputLine }),
+                messageOverride:
+                  "CodeStrata assessment failed. See CodeStrata output.",
+              });
+              showOutput(false);
+              void resultAfterEngineAssessment({
+                operation,
+                aiRequested,
+                consent: consentCategory,
+                cli: {
+                  exitCode: result.exitCode,
+                  cancelled: false,
+                  reportAvailable: false,
+                },
+              });
+              progressLifecycle.close(progressStatusFromPrimary("failure"));
+              session.markProgressClosed();
+              session.complete({
+                status: "failure",
+                resultCategory: "assessment_failed",
+                primaryExit: "failure",
+                recoveryCategory: recovery.workflow_recovery_flag,
+              });
+              return "failure" as const;
+            }
+
+            session.transitionTo("locating_report");
+            const summary = parseJsonSummary(result.stdout);
+            let runDirectory = summary?.run_directory
+              ? path.isAbsolute(summary.run_directory)
+                ? summary.run_directory
+                : path.join(workspaceFolder, summary.run_directory)
+              : undefined;
+            if (!runDirectory || !fs.existsSync(runDirectory)) {
+              runDirectory = findLatestRunDirectory(
+                workspaceFolder,
+                settings.outputDirectory
+              );
+            }
+
+            // Report existence is a postcondition — CLI success remains primary.
+            if (!runDirectory) {
+              statusBar.setIdle();
+              session.setReportAvailable(false);
+              const bounded = resultAfterEngineAssessment({
+                operation,
+                aiRequested,
+                consent: consentCategory,
+                cli: {
+                  exitCode: 0,
+                  cancelled: false,
+                  reportAvailable: false,
+                },
+              });
+              const { result: recovery } = await presentFailureRecovery({
+                failureCategory: "report_not_found",
+                host: createVsCodeRecoveryHost({ appendOutputLine }),
+              });
+              progressLifecycle.close(progressStatusFromPrimary("success"));
+              session.markProgressClosed();
+              session.complete({
+                status: "success",
+                resultCategory: "report_not_found",
+                primaryExit: "success",
+                recoveryCategory: recovery.workflow_recovery_flag,
+              });
+              void bounded;
+              return "success" as const;
+            }
+
+            session.setReportAvailable(true);
+            const artifacts = loadArtifactsFromRunDirectory(runDirectory);
+            applyArtifacts(workspaceFolder, artifacts);
+            void resultAfterEngineAssessment({
+              operation,
+              aiRequested,
+              consent: consentCategory,
+              cli: {
+                exitCode: 0,
+                cancelled: false,
+                reportAvailable: true,
+              },
+            });
+
+            const aiNote =
+              aiRequested && summary?.ai_status
+                ? ` AI status: ${summary.ai_status}.`
+                : aiRequested
+                  ? " AI is optional; check output if enhancements were skipped."
+                  : " Deterministic mode (--no-ai).";
+
+            progressLifecycle.close(progressStatusFromPrimary("success"));
+            session.markProgressClosed();
+
+            // Slice 13.7: Approach B — prompt; do not auto-open.
+            // Open failure must not rewrite assessment success.
+            const open = await vscode.window.showInformationMessage(
+              `Engineering Assessment complete: ${artifacts.findings.length} findings, ` +
+                `${artifacts.recommendations.length} recommendations.` +
+                aiNote,
+              "Open HTML Report",
+              "Show Findings"
+            );
+            if (open === "Open HTML Report") {
+              session.transitionTo("opening_report");
+              const opened = await openHtmlReportSafe(
+                workspaceFolder,
+                settings.outputDirectory,
+                artifacts.htmlReportPath
+              );
+              session.setReportOpened(opened);
+              session.complete({
+                status: "success",
+                resultCategory: "ok",
+                primaryExit: "success",
+                reportOpenFailed: !opened,
+              });
+            } else {
+              void resultForUserDeclined();
+              session.complete({
+                status: "success",
+                resultCategory: "ok",
+                primaryExit: "success",
+              });
+            }
+            if (open === "Show Findings") {
+              await vscode.commands.executeCommand("codestrata.findings.focus");
+            }
+            return "success" as const;
+          },
+        });
+      } catch (error) {
+        progressLifecycle.close(progressStatusFromPrimary("failure"));
+        session.markProgressClosed();
+        statusBar.setError("Assessment invocation failed");
+        const category =
+          error instanceof Error && (error as NodeJS.ErrnoException).code === "ENOENT"
+            ? "cli_unavailable"
+            : "cli_invocation_failed";
+        const { result: recovery } = await presentFailureRecovery({
+          failureCategory: category,
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+        });
+        showOutput(false);
+        session.complete({
+          status: "failure",
+          resultCategory: "cli_invocation_failed",
+          primaryExit: "failure",
+          recoveryCategory: recovery.workflow_recovery_flag,
+        });
+      } finally {
+        if (!progressLifecycle.isClosed()) {
+          progressLifecycle.close(progressStatusFromPrimary("unavailable"));
+        }
+        if (!session.diagnostics().progress_closed) {
+          session.markProgressClosed();
+        }
+        assessmentInFlight = false;
+        activeAbort = undefined;
+        void session.diagnosticsStable();
+        void progressLifecycle.diagnostics();
+      }
     } catch (error) {
-      statusBar.setError(String(error));
-      const message =
-        error instanceof Error && (error as NodeJS.ErrnoException).code === "ENOENT"
-          ? `CodeStrata Engine CLI not found (${engine.executable}). ${ENGINE_INSTALL_HINT}`
-          : `CodeStrata assessment failed: ${redactSecrets(String(error))}`;
-      void vscode.window.showErrorMessage(message);
-      appendOutputLine(message);
-      showOutput(false);
-    } finally {
-      assessmentInFlight = false;
-      activeAbort = undefined;
+      if (error instanceof Error && error.name === "WorkflowTransitionError") {
+        appendOutputLine(`Workflow transition error: ${error.message}`);
+      }
+      throw error;
     }
   };
 
@@ -499,8 +919,8 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("codestrata.assess", async () => {
-      const settings = loadSettings();
-      await runAssessment(!settings.defaultNoAi, "codestrata.assess");
+      // Slice 13.5: command selects standard assessment (--no-ai), not settings.
+      await runAssessment(false, "codestrata.assess");
     }),
     vscode.commands.registerCommand("codestrata.assessWithAi", async () => {
       await runAssessment(true, "codestrata.assessWithAi");
@@ -509,7 +929,8 @@ export function activate(context: vscode.ExtensionContext): void {
       const workspaceFolder =
         (await selectWorkspaceFolder({ allowFallbackCwd: true, quiet: true })) ??
         process.cwd();
-      await guidedInstallEngine(onboardingDeps, workspaceFolder);
+      // Preserve command ID; implementation is Slice 13.3 guidance-only.
+      await guidedInstallEngine(onboardingDeps, workspaceFolder, "not_attempted");
     }),
     vscode.commands.registerCommand("codestrata.showWelcome", async () => {
       await runWelcomeFlow(onboardingDeps, { markCompleteOnSuccess: true });
@@ -529,6 +950,20 @@ export function activate(context: vscode.ExtensionContext): void {
         return;
       }
       const settings = loadSettings();
+      const versionText =
+        engine.versionOutput?.replace(/^CodeStrata\s+/, "") ?? "";
+      const compatibility = evaluateCliCompatibility({
+        cliVersion: versionText || undefined,
+      });
+      // Reuse discovery compatibility — do not probe again for matrix decision.
+      appendOutputLine(
+        `CodeStrata environment check (${engine.source}). Compatibility: ${doctorCompatibilityLabel(
+          compatibility.verdict
+        )}.`
+      );
+      void vscode.window.showInformationMessage(
+        `CodeStrata CLI: ${doctorCompatibilityLabel(compatibility.verdict)}`
+      );
       const doctor = await runCodestrataCli({
         executable: engine.executable,
         args: buildDoctorArgs(settings),
@@ -538,31 +973,76 @@ export function activate(context: vscode.ExtensionContext): void {
       });
       void vscode.window.showInformationMessage(
         doctor.exitCode === 0
-          ? `CodeStrata environment OK (${formatCandidateLabel(engine)}). See output.`
+          ? `CodeStrata environment OK (${doctorCompatibilityLabel(
+              compatibility.verdict
+            )}). See output.`
           : `CodeStrata doctor exited ${doctor.exitCode}. See output.`
       );
     }),
     vscode.commands.registerCommand("codestrata.openHtmlReport", async () => {
+      // Slice 13.7: open existing local HTML only — never rerun assessment/init/CLI.
+      const folderCount = vscode.workspace.workspaceFolders?.length ?? 0;
+      const session = new CommunityWorkflowSession({
+        operation: "open_report",
+        aiRequested: false,
+        cancellationSupported: false,
+        workspaceAvailable: folderCount > 0,
+        workspaceKind: classifyWorkspaceKind({ folderCount }),
+      });
+      session.transitionTo("validating_workspace");
       const workspaceFolder = await selectWorkspaceFolder();
       if (!workspaceFolder) {
+        session.complete({
+          status: "unavailable",
+          resultCategory: "workspace_unavailable",
+          primaryExit: "unavailable",
+        });
         return;
       }
       const settings = loadSettings();
-      const runDir =
-        lastArtifacts?.htmlReportPath && fs.existsSync(lastArtifacts.htmlReportPath)
-          ? lastArtifacts.runDirectory
-          : findLatestRunDirectory(workspaceFolder, settings.outputDirectory);
-      if (!runDir) {
-        void vscode.window.showWarningMessage(
-          "No HTML Engineering Assessment report found. Run an assessment first."
-        );
+      const located = locateHtmlReport({
+        workspaceRoot: workspaceFolder,
+        outputDirectory: settings.outputDirectory,
+        sessionHtmlPath: lastArtifacts?.htmlReportPath,
+      });
+      if (located.status !== "available" || !located.htmlPath) {
+        const category =
+          located.status === "unsafe_path"
+            ? "report_path_unsafe"
+            : "report_not_found";
+        const { result: recovery } = await presentFailureRecovery({
+          failureCategory: category,
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+        });
+        session.setReportAvailable(false);
+        session.complete({
+          status: "failure",
+          resultCategory: "report_not_found",
+          primaryExit: "failure",
+          recoveryCategory: recovery.workflow_recovery_flag,
+        });
         return;
       }
-      const artifacts =
-        lastArtifacts?.runDirectory === runDir
-          ? lastArtifacts
-          : loadArtifactsFromRunDirectory(runDir);
-      await openHtmlReportSafe(artifacts.htmlReportPath);
+      session.setReportAvailable(true);
+      if (
+        located.runDirectory &&
+        lastArtifacts?.runDirectory !== located.runDirectory
+      ) {
+        lastArtifacts = loadArtifactsFromRunDirectory(located.runDirectory);
+      }
+      session.transitionTo("opening_report");
+      const opened = await openHtmlReportSafe(
+        workspaceFolder,
+        settings.outputDirectory,
+        located.htmlPath
+      );
+      session.setReportOpened(opened);
+      session.complete({
+        status: opened ? "success" : "failure",
+        resultCategory: opened ? "ok" : "report_open_failed",
+        primaryExit: opened ? "success" : "failure",
+        reportOpenFailed: !opened,
+      });
     }),
     vscode.commands.registerCommand("codestrata.refreshFindings", async () => {
       await refreshFromDisk();
@@ -588,28 +1068,154 @@ export function activate(context: vscode.ExtensionContext): void {
       await vscode.env.openExternal(vscode.Uri.parse(ENGINE_DOCS_QUICK_START));
     }),
     vscode.commands.registerCommand("codestrata.init", async () => {
+      const folderCount = vscode.workspace.workspaceFolders?.length ?? 0;
+      const session = new CommunityWorkflowSession({
+        operation: "initialize_repository",
+        aiRequested: false,
+        cancellationSupported: false,
+        workspaceAvailable: folderCount > 0,
+        workspaceKind: classifyWorkspaceKind({ folderCount }),
+        repositoryInitialized: "unknown",
+      });
+      session.transitionTo("validating_workspace");
       const workspaceFolder = await selectWorkspaceFolder();
       if (!workspaceFolder || !(await ensureTrusted(workspaceFolder))) {
+        const category = workspaceFolder
+          ? "workspace_unsupported"
+          : "workspace_unavailable";
+        const { result: recovery } = await presentFailureRecovery({
+          failureCategory: category,
+          host: createVsCodeRecoveryHost({ appendOutputLine }),
+          messageOverride: userMessageForInitResult(
+            createRepoInitResult({
+              status: "workspace_unavailable",
+              prior_state: "unknown",
+              final_state: "unknown",
+              engine_invocation_count: 0,
+              config_created: false,
+              existing_configuration_preserved: true,
+              post_init_verified: false,
+              recovery_category: "select_workspace",
+            })
+          ),
+        });
+        session.complete({
+          status: "unavailable",
+          resultCategory: category,
+          primaryExit: "unavailable",
+          recoveryCategory: recovery.workflow_recovery_flag,
+        });
         return;
       }
-      const engine = await resolveEngine(workspaceFolder);
+
+      // Compatible CLI required before init (Slice 13.2 / 13.3).
+      const engine = await resolveEngine(workspaceFolder, { session });
       if (!engine) {
+        session.complete({
+          status: "unavailable",
+          resultCategory: workflowErrorForDiscoveryStatus(
+            session.getDiscoveryStatus()
+          ),
+          primaryExit: "unavailable",
+        });
+        await presentInstallationGuidance({
+          discoveryStatus:
+            (session.getDiscoveryStatus() as CliDiscoveryStatus) || "not_found",
+          host: {
+            appendOutputLine,
+            refreshDiscovery: async () => {
+              const again = await resolveEngine(workspaceFolder, {
+                silentMissing: true,
+              });
+              return again?.discoveryStatus ?? (again ? "compatible" : "not_found");
+            },
+          },
+        });
+        // Do not auto-resume init after guidance.
         return;
       }
+
       const settings = loadSettings();
+      const detected = detectRepositoryInitState({
+        workspaceRoot: workspaceFolder,
+        configuredConfigPath: settings.configPath,
+      });
+      const plan = planRepositoryInitialization(detected.state);
+
+      if (plan.action !== "invoke_engine_init") {
+        const bounded = resultForPlanWithoutCli(plan);
+        const message = userMessageForInitResult(bounded);
+        appendOutputLine(message);
+        if (bounded.status === "already_initialized") {
+          void vscode.window.showInformationMessage(message);
+        } else {
+          void vscode.window.showErrorMessage(message);
+        }
+        session.complete({
+          status:
+            bounded.status === "already_initialized" ? "success" : "failure",
+          resultCategory:
+            bounded.status === "already_initialized"
+              ? "ok"
+              : "initialization_failed",
+          primaryExit:
+            bounded.status === "already_initialized" ? "success" : "failure",
+        });
+        return;
+      }
+
+      const args = buildInitArgs(settings);
+      assertInitArgsForbidForce(args);
       showOutput(true);
+      appendOutputLine("Initializing CodeStrata repository configuration (Engine CLI)…");
+      session.transitionTo("initializing");
+      session.recordCliInvocation();
       const result = await runCodestrataCli({
         executable: engine.executable,
-        args: buildInitArgs(settings),
+        args,
         cwd: workspaceFolder,
         onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
         onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
       });
-      void vscode.window.showInformationMessage(
-        result.exitCode === 0
-          ? "CodeStrata configuration initialized."
-          : `CodeStrata init exited ${result.exitCode}. See output.`
-      );
+
+      const after = detectRepositoryInitState({
+        workspaceRoot: workspaceFolder,
+        configuredConfigPath: settings.configPath,
+      });
+      const bounded = resultAfterEngineInit({
+        priorState: plan.prior_state,
+        cli: { exitCode: result.exitCode, cancelled: result.cancelled },
+        finalState: after.state,
+      });
+      const message = userMessageForInitResult(bounded);
+      appendOutputLine(message);
+      if (bounded.status === "initialized") {
+        void vscode.window.showInformationMessage(message);
+      } else if (bounded.status === "cancelled") {
+        void vscode.window.showWarningMessage(message);
+      } else {
+        void vscode.window.showErrorMessage(message);
+      }
+      session.complete({
+        status:
+          bounded.status === "initialized"
+            ? "success"
+            : bounded.status === "cancelled"
+              ? "cancelled"
+              : "failure",
+        resultCategory:
+          bounded.status === "initialized"
+            ? "ok"
+            : bounded.status === "cancelled"
+              ? "assessment_cancelled"
+              : "initialization_failed",
+        primaryExit:
+          bounded.status === "initialized"
+            ? "success"
+            : bounded.status === "cancelled"
+              ? "cancelled"
+              : "failure",
+      });
     }),
     vscode.commands.registerCommand("codestrata.doctor", async () => {
       await vscode.commands.executeCommand("codestrata.checkEnvironment");
@@ -699,7 +1305,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   appendOutputLine(
-    `CodeStrata VS Code Extension activated (Community). Supported report schema: ${SUPPORTED_SCHEMA_DOC}.`
+    `CodeStrata – Engineering Intelligence activated (Community). Supported report schema: ${SUPPORTED_SCHEMA_DOC}.`
   );
   void refreshFromDisk(true);
   void maybeRunFirstRun(onboardingDeps);
@@ -712,15 +1318,32 @@ export function deactivate(): void {
   lastArtifacts = undefined;
 }
 
-async function openHtmlReportSafe(htmlPath: string | undefined): Promise<void> {
-  if (!htmlPath || !fs.existsSync(htmlPath)) {
-    void vscode.window.showWarningMessage(
-      "Engineering Assessment report.html not found. Run an assessment or refresh findings."
-    );
-    return;
+async function openHtmlReportSafe(
+  workspaceRoot: string,
+  outputDirectory: string,
+  htmlPath: string | undefined
+): Promise<boolean> {
+  const adapter: OpenHtmlAdapter = {
+    async openLocalFile(absolutePath) {
+      const uri = vscode.Uri.file(absolutePath);
+      return vscode.env.openExternal(uri);
+    },
+  };
+  const result = await openValidatedHtmlReport({
+    workspaceRoot,
+    outputDirectory,
+    htmlPath,
+    open: adapter,
+    reportExpected: true,
+  });
+  if (!result.open_succeeded) {
+    void presentFailureRecovery({
+      failureCategory: "report_open_failed",
+      host: createVsCodeRecoveryHost({ appendOutputLine }),
+      messageOverride: userMessageForReportResult(result),
+    });
   }
-  const uri = vscode.Uri.file(htmlPath);
-  await vscode.env.openExternal(uri);
+  return result.open_succeeded;
 }
 
 function quoteIfNeeded(token: string): string {

@@ -1,7 +1,7 @@
 {
   "name": "codestrata-vscode",
-  "displayName": "CodeStrata VS Code Extension",
-  "description": "Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, diagnostics, and HTML reports. Requires CodeStrata Engine.",
+  "displayName": "CodeStrata – Engineering Intelligence",
+  "description": "Engineering decisions grounded in code. Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, and HTML reports. Requires a compatible CodeStrata Engine CLI. Optional AI enrichment is Engine-owned.",
   "version": "0.2.0",
   "publisher": "codestrata",
   "license": "MIT",
@@ -27,19 +27,18 @@
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Linters",
     "Other",
-    "Testing"
+    "Linters"
   ],
   "keywords": [
     "codestrata",
-    "codestrata engine",
-    "engineering assessment",
     "engineering intelligence",
+    "engineering assessment",
     "modernization",
-    "findings",
-    "recommendations",
+    "architecture",
     "technical debt",
+    "code assessment",
+    "software modernization",
     "community edition",
     "vscode"
   ],
@@ -51,12 +50,12 @@
     "commands": [
       {
         "command": "codestrata.assess",
-        "title": "Run Engineering Assessment",
+        "title": "Run Assessment",
         "category": "CodeStrata"
       },
       {
         "command": "codestrata.assessWithAi",
-        "title": "Run Engineering Assessment with AI",
+        "title": "Run Assessment with AI",
         "category": "CodeStrata"
       },
       {
@@ -71,17 +70,17 @@
       },
       {
         "command": "codestrata.checkEnvironment",
-        "title": "Check CodeStrata Environment",
+        "title": "CodeStrata Doctor",
         "category": "CodeStrata"
       },
       {
         "command": "codestrata.init",
-        "title": "Initialize CodeStrata Configuration",
+        "title": "Initialize Repository",
         "category": "CodeStrata"
       },
       {
         "command": "codestrata.openHtmlReport",
-        "title": "Open Engineering Assessment Report",
+        "title": "Open HTML Report",
         "category": "CodeStrata"
       },
       {
@@ -118,7 +117,7 @@
       },
       {
         "command": "codestrata.doctor",
-        "title": "Doctor (alias)",
+        "title": "Doctor (alias for CodeStrata Doctor)",
         "category": "CodeStrata"
       },
       {
@@ -201,7 +200,7 @@
           "type": "string",
           "default": "codestrata",
           "scope": "window",
-          "markdownDescription": "CodeStrata Engine CLI executable. Prefer an absolute path when not on `PATH`. Discovery order: this setting → workspace `.venv` → active Python (`VIRTUAL_ENV` / `CONDA_PREFIX`) → `PATH`. Verified with `codestrata version`."
+          "markdownDescription": "CodeStrata Engine CLI executable. Prefer an absolute path when not on `PATH`. Default `codestrata` uses PATH. An explicit (non-default) value fails closed without PATH fallback. Otherwise discovery order is workspace `.venv` → active Python (`VIRTUAL_ENV` / `CONDA_PREFIX`) → `PATH`. Verified with side-effect-free `codestrata version` (Slice 13.2)."
         },
         "codestrata.assessment.outputDirectory": {
           "type": "string",
@@ -219,7 +218,7 @@
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "description": "When true, Run Engineering Assessment uses deterministic mode (--no-ai). AI remains an explicit opt-in command."
+          "description": "When true, Run Assessment uses deterministic mode (--no-ai). AI remains an explicit opt-in command."
         },
         "codestrata.assessment.extraArgs": {
           "type": "array",
@@ -262,11 +261,11 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "lint": "tsc -p ./ --noEmit",
-    "test": "npm run compile && node --test ./out/test/extensionCore.test.js ./out/test/telemetryRuntime.test.js ./out/test/analyticsRuntime.test.js",
+    "test": "npm run compile && node --test ./out/test/extensionCore.test.js ./out/test/telemetryRuntime.test.js ./out/test/analyticsRuntime.test.js ./out/test/communityWorkflow.test.js ./out/test/cliDiscovery.test.js ./out/test/cliInstallation.test.js ./out/test/repositoryInitialization.test.js ./out/test/assessmentExecution.test.js ./out/test/assessmentProgress.test.js ./out/test/reportOpening.test.js ./out/test/failureRecovery.test.js ./out/test/telemetryConsentIntegration.test.js ./out/test/sourceLocality.test.js ./out/test/cliCompatibility.test.js ./out/test/marketplaceBranding.test.js ./out/test/marketplaceDocs.test.js ./out/test/cleanInstall.test.js",
     "test:host": "npm run compile && node ./out/test/runHostTests.js",
-    "package": "npm run compile && npx --yes @vscode/vsce package --no-dependencies",
-    "package:dry": "npm run compile && npx --yes @vscode/vsce ls --no-dependencies",
-    "publish:vsce:dry": "npm run package && npx --yes @vscode/vsce publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
+    "package": "npm run compile && npx --yes @vscode/vsce@2.32.0 package --no-dependencies",
+    "package:dry": "npm run compile && npx --yes @vscode/vsce@2.32.0 ls --no-dependencies",
+    "publish:vsce:dry": "npm run package && npx --yes @vscode/vsce@2.32.0 publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
     "publish:ovsx:dry": "npm run package && npx --yes ovsx publish ./codestrata-vscode-${npm_package_version}.vsix --no-wait --help"
   },
   "devDependencies": {

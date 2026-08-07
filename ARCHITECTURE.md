@@ -371,7 +371,42 @@ Engine runtime must not depend on `platform/`. Security posture:
   (`product-cleanup-repository-split-completion-verification:1.0.0`).
   Infrastructure remains authoritative under `infrastructure/` until owner
   cutover; no real remote Infrastructure repository is assumed. **Epic 13**
-  (VS Code Extension completion) is not started.
+  (VS Code Extension) Slice **13.1** finalizes the Community workflow contract
+  (`community-vscode-workflow-policy:1.0`;
+  [vscode-plugin/docs/community-workflow.md](vscode-plugin/docs/community-workflow.md);
+  verification `vscode-community-workflow-verification:1.0.0`). Slice **13.2**
+  adds local-only CLI discovery
+  (`community-vscode-cli-discovery-policy:1.0`;
+  [vscode-plugin/docs/cli-discovery.md](vscode-plugin/docs/cli-discovery.md);
+  verification `vscode-cli-discovery-verification:1.0.0`). Slice **13.3**
+  provides guidance-only CLI installation
+  (`community-vscode-cli-installation-policy:1.0`;
+  [vscode-plugin/docs/cli-installation.md](vscode-plugin/docs/cli-installation.md);
+  verification `vscode-cli-installation-verification:1.0.0`). Slice **13.4**
+  finalizes user-triggered repository initialization
+  (`community-vscode-repository-initialization-policy:1.0`;
+  [vscode-plugin/docs/repository-initialization.md](vscode-plugin/docs/repository-initialization.md);
+  verification `vscode-repository-initialization-verification:1.0.0`). Slice **13.5**
+  finalizes assessment execution
+  (`community-vscode-assessment-execution-policy:1.0`;
+  [vscode-plugin/docs/assessment-execution.md](vscode-plugin/docs/assessment-execution.md);
+  verification `vscode-assessment-execution-verification:1.0.0`). Slice **13.6**
+  finalizes assessment progress
+  (`community-vscode-assessment-progress-policy:1.0`;
+  [vscode-plugin/docs/assessment-progress.md](vscode-plugin/docs/assessment-progress.md);
+  verification `vscode-assessment-progress-verification:1.0.0`). Slice **13.7**
+  finalizes local HTML report opening
+  (`community-vscode-report-opening-policy:1.0`;
+  [vscode-plugin/docs/html-report-opening.md](vscode-plugin/docs/html-report-opening.md);
+  verification `vscode-html-report-opening-verification:1.0.0`). Slice **13.8**
+  surfaces privacy-safe failure recovery
+  (`community-vscode-recovery-policy:1.0`;
+  [vscode-plugin/docs/failure-recovery.md](vscode-plugin/docs/failure-recovery.md);
+  verification `vscode-failure-recovery-verification:1.0.0`). Slice **13.9** integrates telemetry consent with the Community runtime
+  (`community-vscode-telemetry-integration-policy:1.0`;
+  [vscode-plugin/docs/telemetry-consent-integration.md](vscode-plugin/docs/telemetry-consent-integration.md);
+  verification `vscode-telemetry-consent-integration-verification:1.0.0`).
+  Slice **13.10** confirms source locality (`community-vscode-source-locality-policy:1.0`; [vscode-plugin/docs/source-locality.md](vscode-plugin/docs/source-locality.md); verification `vscode-source-locality-verification:1.0.0`). Slice **13.11** defines the permanent CLI–extension compatibility matrix (`community-vscode-cli-compatibility-policy:1.0`; [vscode-plugin/docs/cli-compatibility.md](vscode-plugin/docs/cli-compatibility.md); verification `vscode-cli-compatibility-verification:1.0.0`). Slice **13.12** finalizes Marketplace branding (`community-vscode-marketplace-branding-policy:1.0`; [vscode-plugin/docs/marketplace-branding.md](vscode-plugin/docs/marketplace-branding.md); verification `vscode-marketplace-branding-verification:1.0.0`). Slice **13.13** finalizes Marketplace documentation (`community-vscode-marketplace-documentation-policy:1.0`; [vscode-plugin/docs/marketplace-documentation.md](vscode-plugin/docs/marketplace-documentation.md); verification `vscode-marketplace-documentation-verification:1.0.0`). Slice **13.14** validates clean install/update (`community-vscode-clean-install-policy:1.0`; [vscode-plugin/docs/clean-install-update.md](vscode-plugin/docs/clean-install-update.md); verification `vscode-clean-install-verification:1.0.0`). Slice **13.15** is Epic 13 completion verification (`vscode-epic13-completion-verification:1.0.0`). **Epic 13 – VS Code Extension is complete for the CodeStrata v0.2.0 epic scope.** The Community VS Code workflow, CLI discovery/guidance/initialization, assessment, progress, local report opening, recovery, telemetry consent, source-locality, compatibility, Marketplace branding/documentation, and clean-install validation have been completed and verified. Marketplace publication, release tagging, and production deployment remain separate release gates. Epic 14 (Unified CodeStrata Product Experience) is not started.
 - The Slice 7.14 deployment proves that the Community Cloud API can be packaged
   and served through serverless infrastructure. It does not enable durable
   Community event ingestion because production credential verification, shared

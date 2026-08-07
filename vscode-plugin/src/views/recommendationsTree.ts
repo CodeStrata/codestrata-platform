@@ -69,7 +69,7 @@ export class RecommendationsTreeProvider
       const empty = new RecommendationItem({
         id: "empty",
         title: "No recommendations loaded",
-        description: "Run CodeStrata: Run Engineering Assessment",
+        description: "Run CodeStrata: Run Assessment",
       });
       empty.iconPath = new vscode.ThemeIcon("info");
       empty.contextValue = "codestrataRecommendationEmpty";

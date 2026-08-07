@@ -5,6 +5,12 @@
 **Status:** Local construction only — **not transmitted**, **not persisted**,
 unavailable sink default
 
+Slice 13.1 workflow orchestration constructs analytics only after allowed
+command-local consent within the shared assess path — after CLI discovery
+succeeds (Slice 13.2; see [cli-discovery.md](cli-discovery.md) and
+[community-workflow.md](community-workflow.md)). Discovery does not emit
+analytics events.
+
 ## Purpose
 
 Construct privacy-safe VS Code extension usage analytics for eligible assess
@@ -197,3 +203,13 @@ Analytics remain contracts-only and not operational in production.
 - [../README.md](../README.md)
 - Engine analytics contract: `engine/docs/telemetry-anonymous-analytics.md`
 - Engine AI analytics: `engine/docs/telemetry-ai-analytics.md`
+
+
+## Epic 13 integration
+
+Analytics remains gated by command-local Allow. See [telemetry-consent-integration.md](./telemetry-consent-integration.md).
+
+
+## Source locality
+
+See [source-locality.md](./source-locality.md) (Slice 13.10).

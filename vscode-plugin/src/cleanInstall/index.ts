@@ -1,0 +1,16 @@
+/** Slice 13.14 clean-install public exports. */
+
+export {
+  CLEAN_INSTALL_POLICY_ID,
+  CLEAN_INSTALL_POLICY_VERSION,
+  CLEAN_INSTALL_EXTENSION_VERSION,
+  CLEAN_INSTALL_SUPPORTED_CLI_FAMILY,
+  DEFAULT_CLEAN_INSTALL_LIMITATIONS,
+  STABLE_SETTING_KEYS,
+  STABLE_COMMAND_IDS,
+  ALLOWED_ONBOARDING_STATE_KEYS,
+  FORBIDDEN_PERSISTED_STATE_KEYS,
+  createCleanInstallPolicy,
+  cleanInstallPolicyToStableDict,
+  type CleanInstallPolicy,
+} from "./policy";

@@ -1,5 +1,8 @@
 /**
- * Resolve CodeStrata Engine CLI without silently picking an unexpected binary.
+ * Legacy Engine candidate helpers.
+ *
+ * Slice 13.2 authoritative discovery lives in `src/cliDiscovery/`.
+ * This module remains for onboarding labels and limited compatibility callers.
  */
 
 import * as fs from "node:fs";
@@ -21,6 +24,10 @@ const PATH_SEP = process.platform === "win32" ? ";" : ":";
 const VENV_BIN = process.platform === "win32" ? "Scripts" : "bin";
 const EXE_NAME = process.platform === "win32" ? "codestrata.exe" : "codestrata";
 
+/**
+ * @deprecated Prefer `listDiscoveryCandidates` from `cliDiscovery`.
+ * Retained for compatibility with existing onboarding helpers.
+ */
 export function listEngineCandidates(
   configured: string,
   workspaceFolders: string[]
@@ -41,7 +48,6 @@ export function listEngineCandidates(
   if (configuredTrim && configuredTrim !== "codestrata" && path.isAbsolute(configuredTrim)) {
     push(configuredTrim, "configured");
   } else if (configuredTrim && configuredTrim !== "codestrata") {
-    // Relative configured path — resolve later against first workspace if needed.
     push(configuredTrim, "configured");
   }
 
@@ -52,7 +58,6 @@ export function listEngineCandidates(
     }
   }
 
-  // Active Python environment (VIRTUAL_ENV / CONDA_PREFIX) when Engine is installed there.
   for (const envRoot of [process.env.VIRTUAL_ENV, process.env.CONDA_PREFIX]) {
     if (!envRoot) {
       continue;
@@ -63,21 +68,28 @@ export function listEngineCandidates(
     }
   }
 
-  // PATH lookup (name only — actual existence verified by version probe).
-  push(configuredTrim && !path.isAbsolute(configuredTrim) ? configuredTrim : "codestrata", "path");
+  push(
+    configuredTrim && !path.isAbsolute(configuredTrim)
+      ? configuredTrim
+      : "codestrata",
+    "path"
+  );
 
   return candidates;
 }
 
 export function isExecutablePresent(executable: string): boolean {
-  if (path.isAbsolute(executable) || executable.includes("/") || executable.includes("\\")) {
+  if (
+    path.isAbsolute(executable) ||
+    executable.includes("/") ||
+    executable.includes("\\")
+  ) {
     try {
       return fs.existsSync(executable);
     } catch {
       return false;
     }
   }
-  // PATH name — cannot know without probing; treat as candidate.
   return true;
 }
 
@@ -89,8 +101,9 @@ export function redactSecrets(text: string): string {
     .replace(/(OPENAI_API_KEY\s*[=:]\s*)\S+/gi, "$1***");
 }
 
+/** Prefer source-only labels in user-facing text; path form is for debug helpers. */
 export function formatCandidateLabel(candidate: EngineCandidate): string {
-  return `${candidate.executable} (${candidate.source})`;
+  return `${candidate.source}`;
 }
 
 export function pathEntries(): string[] {

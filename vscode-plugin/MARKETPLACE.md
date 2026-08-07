@@ -1,31 +1,35 @@
-# Marketplace publication — CodeStrata VS Code Extension
+# Marketplace publication guide — CodeStrata – Engineering Intelligence
 
-**Status:** Preparation complete · **Do not publish** until release gates pass and a
-human explicitly requests publish with stored credentials.
+**Role:** Publishing and packaging checklist only.  
+**Authoritative Marketplace listing copy:** [`README.md`](README.md)
 
-Active Community editor extension (Slice 12.2): **VS Code only**.
+Do **not** maintain a second divergent product listing here. Branding visuals
+are covered by [`docs/marketplace-branding.md`](docs/marketplace-branding.md).
+Listing narrative is covered by
+[`docs/marketplace-documentation.md`](docs/marketplace-documentation.md).
+
+**Status:** Packaging and documentation ready for a human-approved publish.
+Do not publish until release gates pass and credentials are provided explicitly.
+
+Active Community editor extension: **VS Code only**.
 
 ## Extension identifier (stable)
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata VS Code Extension |
+| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Intelligence |
 
 Publisher namespace: **`codestrata`** (create/claim before first publish; do not
 rename after release without explicit approval).
 
-As of 2026-07-28, no published `codestrata.*` CodeStrata extensions were found on
-the Visual Studio Marketplace (name collisions with unrelated “Codex*” products
-are different publishers).
-
-## Classification (this phase)
+## Classification
 
 | Extension | Status |
 | --------- | ------ |
-| codestrata-vscode | **MARKETPLACE_READY** (packaged + gates documented; not published) |
+| codestrata-vscode | **MARKETPLACE_READY** (packaged + docs complete; not published) |
 
-The extension is not **PUBLISHED** or **VERIFIED_INSTALLABLE** from a marketplace
-until live install is confirmed after publish.
+Not **PUBLISHED** or **VERIFIED_INSTALLABLE** until live Marketplace install is
+confirmed (clean install/update validation is a separate release step).
 
 ## Branding assets
 
@@ -34,6 +38,7 @@ Canonical sources: `governance/assets/extension-branding/`
 - Icon PNG sizes 16–512 + SVG tile
 - Marketplace banner 1280×640
 - Packaged icon: `media/codestrata-icon.png` (128×128)
+- Screenshots: gallery order documented in branding docs and `README.md`
 
 ## Secrets (never in git)
 
@@ -63,8 +68,9 @@ export OVSX_TOKEN='…'        # local shell only
 
 1. `cd vscode-plugin && npm test && npm run package`
 2. Upload `codestrata-vscode-0.2.0.vsix` in Marketplace manage → New extension
-3. Attach screenshots from `media/screenshot-*.png`
-4. Review README rendering → Make Public
+3. Confirm README renders (listing source is `README.md`)
+4. Attach screenshots from `media/screenshot-*.png` if the upload UI requires them
+5. Review → Make Public only after human approval
 
 ### Automated publish
 
@@ -76,7 +82,7 @@ npx --yes @vscode/vsce publish --packagePath ./codestrata-vscode-0.2.0.vsix -p "
 # Prefer: vsce login codestrata   then   vsce publish
 ```
 
-Dry-run (no upload when unsupported by CLI version — still validates package):
+Dry-run (validates package; does not upload when unsupported):
 
 ```bash
 npx --yes @vscode/vsce ls --no-dependencies
@@ -93,13 +99,12 @@ npx --yes @vscode/vsce package --no-dependencies
 npx ovsx publish codestrata-vscode-0.2.0.vsix -p "$OVSX_TOKEN"
 ```
 
-Open VSX improves VSCodium and other open-editor discovery. Treat Open VSX as
-required for broad open-editor reach alongside Visual Studio Marketplace.
+Clean install/update validation: [docs/clean-install-update.md](docs/clean-install-update.md).
 
 ## Release gates (must all pass)
 
 - [ ] `npm test` (vscode-plugin)
-- [ ] `npm run package` produces VSIX containing icon
+- [ ] `npm run package` produces VSIX containing icon + README
 - [ ] Icon 128 PNG present; screenshots synthetic / no secrets
 - [ ] README / CHANGELOG / SECURITY / PRIVACY / SUPPORT / LICENSE present
 - [ ] displayName + description accurate; no Platform-only claims
@@ -110,12 +115,15 @@ required for broad open-editor reach alongside Visual Studio Marketplace.
 ## Post-publish verification
 
 1. Marketplace / Open VSX pages resolve
-2. Fresh VS Code install from marketplace
-3. First command: **Run Engineering Assessment**
+2. Fresh VS Code install from marketplace (clean install validation)
+3. First command: **Run Assessment**
 4. Engine install path works
 5. Classify as **VERIFIED_INSTALLABLE**
 
 ## Related
 
+- [`README.md`](README.md) — Marketplace listing
+- [`docs/marketplace-documentation.md`](docs/marketplace-documentation.md)
+- [`docs/marketplace-branding.md`](docs/marketplace-branding.md)
 - `vscode-plugin/RELEASE_CHECKLIST.md`
 - `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`
