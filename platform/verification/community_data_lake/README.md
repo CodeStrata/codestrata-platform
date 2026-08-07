@@ -51,6 +51,7 @@ retention / encryption / access / storage **1.0**, all five partition policies
 | SV.7 | Community Cloud API E2E |
 | **SV.9** | Community Data Lake integration (this package) |
 | **Slice 8.15** | Epic 8 completion verification (`community_data_lake_completion/`) |
+| **Slice 12.4** | Active vs historical Community client boundary (`verification/community_client_boundary_cleanup/`) |
 
 ## Limitations
 
@@ -58,3 +59,6 @@ retention / encryption / access / storage **1.0**, all five partition policies
 - Production ingestion wiring deliberately disabled
 - No atomic identity/storage coordination or exactly-once claim
 - Lifecycle time not simulated in adapter tests
+- Slice 12.4 retires active `cursor_extension` emission/ingestion; historical
+  schema 1.0 deserialize and stored metadata inspection remain (Approach A;
+  no object rewrite / S3 migration)

@@ -380,8 +380,6 @@ restate normative principles or domain concepts as competing sources of truth.
 ### User Documentation
 
 - `README.md`
-- `cursor-plugin/PLACEHOLDER.md`
-- `cursor-plugin/README.md`
 - `engine/README.md`
 - `engine/SUPPORT.md`
 - `engine/docs/cli-reference.md`

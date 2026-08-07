@@ -5,7 +5,7 @@
 This policy covers the **CodeStrata Documentation** portal (`codestrata-docs`)
 static site and its build tooling.
 
-Related Community projects (Engine, VS Code, Cursor) publish their own
+Related Community projects (Engine, VS Code) publish their own
 `SECURITY.md` files in their repositories.
 
 ## Reporting a vulnerability

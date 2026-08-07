@@ -73,7 +73,7 @@ Success endpoint bodies are unchanged and do not include client identity.
 ## Client-type matching
 
 Authenticated `client_type` must match payload `client.name` when present
-(CLI / VS Code / Cursor). Mismatch → 403 without principal details.
+(CLI / VS Code active; `cursor_extension` retired historical vocabulary only — Slice 12.4). Mismatch → 403 without principal details.
 
 ## Non-goals
 

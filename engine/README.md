@@ -47,7 +47,7 @@ Roadmap). Details:
 | **codestrata-engine** (this repo) | Assessment CLI, reports, Engine docs | Yes |
 | **codestrata-examples** | Pinned real-world showcase manifests + fetch scripts | Yes |
 | **CodeStrata Platform** | Knowledge Graph, Retrieval, Answering, Portfolio / Executive Intelligence | Commercial product |
-| **VS Code / Cursor extensions** | Editor integrations | Community packages |
+| **VS Code extension** | Editor integration | Community package (`vscode-plugin/`) |
 
 Product statement: *The Engine produces structured engineering intelligence.
 The Platform stores, connects, retrieves, and reasons over that intelligence.*

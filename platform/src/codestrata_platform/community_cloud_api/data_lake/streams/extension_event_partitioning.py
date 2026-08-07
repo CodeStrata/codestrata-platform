@@ -7,7 +7,7 @@ Binds the generic Slice 8.4–8.6 partition-policy and diagnostics machinery
 :mod:`~codestrata_platform.community_cloud_api.data_lake.stream_storage`) to
 the fourth concrete stream: ``extension_event``. Nothing in this module (or
 anything it imports) is called by ``app.py``, ``deployment/wiring.py``, the
-VS Code or Cursor extension emitters, the telemetry runtime, or any endpoint
+VS Code extension emitters, the telemetry runtime, or any endpoint
 service — see
 ``platform/tests/community_cloud_api/data_lake/test_extension_event_partition_boundary.py``.
 
@@ -37,11 +37,11 @@ Rationale:
   Slice 8.5 applied to telemetry's ``event_type`` and Slice 8.6 applied to
   CLI operations.
 - **``client_type`` / ``editor`` as path dimensions are unnecessary.** The
-  pair is one-to-one today (``vscode_extension``↔``vscode``,
-  ``cursor_extension``↔``cursor``). Cardinality is only two values, but the
-  value is already carried in S3 metadata (see below) and in the private
-  payload, so a fourth copy in the path buys nothing and would fragment
-  prefixes without a reader in this repository today.
+  active pair is one-to-one today (``vscode_extension``↔``vscode``). The
+  retired historical pair (``cursor_extension``↔``cursor``) remains
+  readable for previously accepted records (Slice 12.4) but is rejected by
+  active projection. The value is already carried in S3 metadata (see
+  below) and in the private payload.
 - **``lifecycle`` / ``result`` / ``failure_category`` / context fields are
   private-payload analytics fields**, not stable transport-classification
   concepts.
@@ -50,8 +50,9 @@ Rationale:
 
 Exactly one stream-specific S3 metadata key is added:
 ``codestrata-client-type`` — the envelope's ``client.client_type`` value
-(one of :data:`~codestrata_platform.community_cloud_api.extension_events.enums.ALLOWED_EXTENSION_CLIENTS`:
-``vscode_extension`` or ``cursor_extension``), attached only by
+(active allowlist :data:`~codestrata_platform.community_cloud_api.extension_events.enums.ALLOWED_EXTENSION_CLIENTS`:
+``vscode_extension`` only; historical ``cursor_extension`` metadata remains
+valid for inspection of existing objects — Slice 12.4), attached only by
 :func:`project_extension_event_storage_object`.
 
 This reuses the existing
@@ -62,10 +63,11 @@ key introduced for telemetry in Slice 8.5 — **no** synonym such as
 Rationale for Option B (one bounded client-type metadata field) over
 Option A (generic metadata only, as CLI chose in Slice 8.6):
 
-- **Two first-party clients.** Unlike ``cli_event`` (always
-  ``codestrata_cli``), this stream legitimately separates VS Code versus
-  Cursor objects — a coarse operational filter that mirrors telemetry.
-- **Editor is not duplicated.** Because the client↔editor pair is
+- **Active first-party client.** Unlike ``cli_event`` (always
+  ``codestrata_cli``), this stream's active emitter is VS Code only
+  (``vscode_extension``). Retired ``cursor_extension`` is historical-only
+  (Slice 12.4).
+- **Editor is not duplicated.** Because the active client↔editor pair is
   authoritative and one-to-one, attaching both would be redundant. Editor
   remains private-payload-only; client type alone is the metadata signal.
 - **Operation / lifecycle / context stay out of metadata.** Catalog

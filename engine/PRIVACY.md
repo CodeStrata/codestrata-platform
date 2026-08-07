@@ -33,7 +33,11 @@
 > explicit fail-silent HTTP transport exists but is not activated by default
 > (`docs/telemetry-transport.md`). Assessment results remain authoritative when
 > telemetry fails (`docs/telemetry-assessment-isolation.md`). VS Code has a
-> command-local runtime with unavailable transport only; Cursor is unchanged.
+> command-local runtime with unavailable transport only. The former Cursor
+> extension is not an active telemetry emitter (product removed in Epic 12).
+> Slice 12.4 retires `cursor_extension` from active Community client
+> vocabularies; historical records may still deserialize under
+> `community-retired-client-policy:1.0`.
 > Production collection is **not operational**. Cross-client and completion
 > verification: `verification/privacy_first_telemetry/`,
 > `verification/privacy_first_telemetry_completion/`.

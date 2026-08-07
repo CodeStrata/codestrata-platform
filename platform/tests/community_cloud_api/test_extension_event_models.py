@@ -31,12 +31,13 @@ def test_required_fields_and_canonical_operation() -> None:
     ]
 
 
-def test_alias_canonicalized_and_cursor_client() -> None:
+def test_alias_canonicalized_and_historical_cursor_deserializes() -> None:
     body = valid_extension_event_body()
     body["event"] = {**body["event"], "operation": "codestrata.openHtmlReport"}  # type: ignore[dict-item]
     model = ExtensionEventRequest.model_validate(body)
     assert model.event.operation == "open_report"
 
+    # Schema 1.0 still deserializes historical cursor_extension (Approach A).
     cursor = valid_extension_event_body()
     cursor["client"] = {
         "name": "cursor_extension",
@@ -45,7 +46,16 @@ def test_alias_canonicalized_and_cursor_client() -> None:
         "editor_version": "0.45.0",
         "platform": "darwin",
     }
-    ExtensionEventRequest.model_validate(cursor)
+    historical = ExtensionEventRequest.model_validate(cursor)
+    assert historical.client.name == "cursor_extension"
+
+    # Current ingestion policy rejects retired clients.
+    from codestrata_platform.community_cloud_api.extension_events.validation import (
+        validate_extension_event_semantics,
+    )
+
+    errors = validate_extension_event_semantics(historical)
+    assert any(err.field == "client.name" for err in errors)
 
 
 def test_cli_and_mismatched_editor_rejected() -> None:

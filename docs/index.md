@@ -27,8 +27,6 @@ features:
     details: Read findings, recommendations, and evidence in the Strata-style Engineering Assessment report.
   - title: VS Code
     details: Thin Engine client — findings, recommendations, diagnostics, and report access in the editor.
-  - title: Cursor
-    details: Ground Chat and Agent with assessment artifacts and .cursor/rules/codestrata-engineering.mdc.
   - title: CLI · API · MCP
     details: Community CLI journey commands, public contracts, and optional MCP — Platform stays separate.
 ---
@@ -43,7 +41,7 @@ Assess a repository
         ↓
 Review findings and recommendations
         ↓
-Use VS Code or Cursor integration</pre>
+Use VS Code integration</pre>
 
 <p class="cs-eyebrow" style="margin-top:2.5rem">02 // START HERE</p>
 
@@ -52,7 +50,6 @@ Use VS Code or Cursor integration</pre>
   <a href="/getting-started/first-assessment">First Assessment <span>→</span></a>
   <a href="/reports/">Understand Reports <span>→</span></a>
   <a href="/extensions/vscode">VS Code <span>→</span></a>
-  <a href="/extensions/cursor">Cursor <span>→</span></a>
   <a href="/reference/cli">CLI <span>→</span></a>
   <a href="/reference/api">API and MCP <span>→</span></a>
   <a href="/troubleshooting/">Troubleshooting <span>→</span></a>

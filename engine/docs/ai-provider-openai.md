@@ -34,7 +34,7 @@ This is **not**:
   enforced by the OpenAI client's own `timeout=` argument; the executor's
   `TimeoutPolicy` only declares it.
 * A change to telemetry, analytics, Community Cloud, the Data Lake, the VS Code
-  or Cursor extensions, or infrastructure.
+  extension, or infrastructure.
 
 ## Both providers migrated
 

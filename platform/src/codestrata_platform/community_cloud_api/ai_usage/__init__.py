@@ -11,8 +11,11 @@ from codestrata_platform.community_cloud_api.ai_usage.catalog import (
     AiProviderFamilyCatalog,
 )
 from codestrata_platform.community_cloud_api.ai_usage.enums import (
+    ACTIVE_AI_USAGE_CLIENTS,
     ALLOWED_AI_USAGE_CLIENTS,
     AI_USAGE_SOURCE_TYPE,
+    HISTORICAL_AI_USAGE_CLIENTS,
+    SCHEMA_AI_USAGE_CLIENTS,
     AiUsageIngestionStatus,
 )
 from codestrata_platform.community_cloud_api.ai_usage.models import (
@@ -43,6 +46,7 @@ from codestrata_platform.community_cloud_api.ai_usage.routes import (
 from codestrata_platform.community_cloud_api.ai_usage.service import IngestAiUsage
 
 __all__ = [
+    "ACTIVE_AI_USAGE_CLIENTS",
     "ALLOWED_AI_USAGE_CLIENTS",
     "AI_CAPABILITY_CATALOG_URN",
     "AI_MODEL_FAMILY_CATALOG_URN",
@@ -53,6 +57,8 @@ __all__ = [
     "COMMUNITY_AI_USAGE_POLICY_URN",
     "COMMUNITY_AI_USAGE_POLICY_VERSION",
     "COMMUNITY_AI_USAGE_SCHEMA_VERSION",
+    "HISTORICAL_AI_USAGE_CLIENTS",
+    "SCHEMA_AI_USAGE_CLIENTS",
     "AiCapabilityCatalog",
     "AiModelFamilyCatalog",
     "AiProviderFamilyCatalog",

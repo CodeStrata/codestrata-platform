@@ -18,7 +18,6 @@ reason across repositories.
 - API and MCP where publicly supported by Engine
 - Examples
 - VS Code Extension
-- Cursor Extension
 - Developer-configured AI providers
 
 Community assets:
@@ -26,7 +25,6 @@ Community assets:
 - CodeStrata Engine
 - CodeStrata Examples
 - CodeStrata VS Code Extension
-- CodeStrata Cursor Extension
 - CodeStrata Documentation
 
 ## Platform includes

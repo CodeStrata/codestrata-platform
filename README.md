@@ -8,7 +8,7 @@ product surface.
 > The Platform stores, connects, retrieves, and reasons over that intelligence.
 
 Official product names: CodeStrata · CodeStrata Engine · CodeStrata Platform ·
-CodeStrata VS Code Extension · CodeStrata Cursor Extension.  
+CodeStrata VS Code Extension.  
 AI is a capability, not part of the product name.  
 Visual branding: [`governance/assets/DESIGN-SYSTEM.md`](governance/assets/DESIGN-SYSTEM.md).
 
@@ -60,7 +60,7 @@ codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 | Portfolio Intelligence | Not included | Implemented |
 | Executive Intelligence / Strategic Roadmap | Not included | Implemented |
 | Hosted multi-tenancy / SSO / billing | Not included | Not fully productized |
-| CodeStrata Cursor / VS Code Extension | `cursor-plugin/` · `vscode-plugin/` | — |
+| CodeStrata VS Code Extension | `vscode-plugin/` | — |
 
 **Dependency rule:** Platform → Engine only. Engine must never import Platform.
 
@@ -96,7 +96,6 @@ export and publish intentionally. Handbook: [platform/README.md](platform/README
 | `engine/` | `CodeStrata/codestrata-engine` | **public** |
 | `examples/` | `CodeStrata/codestrata-examples` | **public** |
 | `docs/` | `CodeStrata/codestrata-docs` | **private** |
-| `cursor-plugin/` | `CodeStrata/codestrata-cursor` | **private** |
 | `vscode-plugin/` | `CodeStrata/codestrata-vscode` | **private** |
 
 ```bash

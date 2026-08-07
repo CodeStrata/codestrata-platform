@@ -29,10 +29,9 @@ codestrata-platform/          # private source of truth
 ├── examples/                 # real-world showcases → public codestrata-examples
 ├── test-fixtures/            # internal language samples (not in examples export)
 ├── docs/                     # Public documentation portal → codestrata-docs
-├── cursor-plugin/            # Community Cursor extension → codestrata-cursor
 ├── vscode-plugin/            # Community VS Code extension → codestrata-vscode
 ├── platform/                 # private Platform (RAG, KG, commercial EI, Community Cloud API)
-├── infrastructure/           # private OpenTofu AWS deployment (extractable → codestrata-infrastructure)
+├── infrastructure/           # private OpenTofu AWS deployment (extractable → codestrata-infrastructure; Slice 12.5 contract + Slice 12.6 exporter)
 ├── scripts/                  # verify_release, export, security, showcase wrappers
 ├── public-export-manifest.yaml
 └── tests/architecture/       # engine↔platform + commercial intelligence boundary tests
@@ -65,7 +64,12 @@ Engine runtime must not depend on `platform/`. Security posture:
   call over HTTP only (no Platform imports in Community).
 - **Infrastructure** (`infrastructure/`) owns private serverless deployment for
   Community Cloud (API Gateway HTTP API → one Lambda → ASGI app). Application
-  logic stays in Platform; cloud resources stay in `infrastructure/`.
+  logic stays in Platform; cloud resources stay in `infrastructure/`. Slice 12.5
+  defines the private `codestrata-infrastructure` extraction contract
+  ([infrastructure/docs/repository-contract.md](infrastructure/docs/repository-contract.md)).
+  Slice 12.6 provides `scripts/export_infrastructure_repository.py` (one-way
+  deterministic export; no Git/AWS/OpenTofu exec). Slice 12.7 verifies dual
+  export, exported tests, and OpenTofu fmt/init/validate on isolated copies.
 - Slice 7.14 creates a **production infrastructure foundation**: health is
   deployable; ingestion remains fail-closed without production credential
   verification, shared event identity, and event sinks.
@@ -182,7 +186,13 @@ Engine runtime must not depend on `platform/`. Security posture:
   verification (9.14), and completion verification (9.15) under
   [`verification/privacy_first_telemetry_completion/`](verification/privacy_first_telemetry_completion/README.md).
   Production telemetry transmission remains **unavailable by default** (not
-  collecting). Cursor telemetry is not integrated. **Epic 10** anonymous
+  collecting). The former Cursor extension is **not** an active telemetry
+  emitter (product removed in Epic 12). Slice **12.4** retires
+  `cursor_extension` from active Community client vocabularies while retaining
+  it for historical schema 1.0 deserialization only
+  (`community-retired-client-policy:1.0`; verification under
+  [`verification/community_client_boundary_cleanup/`](verification/community_client_boundary_cleanup/README.md)).
+  **Epic 10** anonymous
   analytics: Slice **10.1** contract
   (`community-anonymous-analytics-policy:1.0` /
   `community-anonymous-analytics-schema:1.0`) and Slice **10.2** local anonymous
@@ -350,7 +360,18 @@ Engine runtime must not depend on `platform/`. Security posture:
   Slice 11.13 completion verification is complete
   ([engine/verification/ai_provider_platform_completion/](engine/verification/ai_provider_platform_completion/README.md),
   schema `ai-provider-platform-completion-verification` @ `1.0.0`). Epic 11 is complete
-  for v0.2.0 release-readiness; Epic 12 is not started.
+  for v0.2.0 release-readiness. **Epic 12** (product cleanup / repository split)
+  is **complete** (slices 12.1–12.10): Cursor product/release/docs surfaces removed;
+  retired `cursor_extension` historical compatibility retained (Approach A);
+  Community and Infrastructure export targets routed via
+  `scripts/export_repository.py`; CI boundaries in
+  `.github/workflows/ci.yml` and `verification/ci_release_boundaries/`;
+  completion gate
+  `verification/product_cleanup_repository_split_completion/`
+  (`product-cleanup-repository-split-completion-verification:1.0.0`).
+  Infrastructure remains authoritative under `infrastructure/` until owner
+  cutover; no real remote Infrastructure repository is assumed. **Epic 13**
+  (VS Code Extension completion) is not started.
 - The Slice 7.14 deployment proves that the Community Cloud API can be packaged
   and served through serverless infrastructure. It does not enable durable
   Community event ingestion because production credential verification, shared

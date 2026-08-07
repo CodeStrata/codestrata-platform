@@ -95,7 +95,7 @@ def test_manifest_owner_repository_and_visibility() -> None:
     assert export_visibility(by_name["codestrata-engine"]) == "public"
     assert export_visibility(by_name["codestrata-examples"]) == "public"
     assert export_visibility(by_name["codestrata-vscode"]) == "private"
-    assert export_visibility(by_name["codestrata-cursor"]) == "private"
+    assert "codestrata-cursor" not in by_name
     assert export_visibility(by_name["codestrata-docs"]) == "private"
     for item in manifest["exports"]:
         assert item.get("owner") == "CodeStrata"

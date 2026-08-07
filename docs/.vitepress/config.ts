@@ -84,7 +84,6 @@ export default defineConfig({
         text: "Extensions",
         items: [
           { text: "VS Code Extension", link: "/extensions/vscode" },
-          { text: "Cursor Extension", link: "/extensions/cursor" },
         ],
       },
       { text: "AI Providers", link: "/ai-providers/" },
@@ -163,7 +162,6 @@ export default defineConfig({
           items: [
             { text: "Overview", link: "/extensions/" },
             { text: "VS Code", link: "/extensions/vscode" },
-            { text: "Cursor", link: "/extensions/cursor" },
           ],
         },
       ],

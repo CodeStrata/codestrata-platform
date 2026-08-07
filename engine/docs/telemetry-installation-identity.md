@@ -101,7 +101,7 @@ Engine module surfaces under `codestrata.telemetry.analytics`:
 - Does **not** modify Epic 9 telemetry consent, catalog, preview, or transport
 - Does **not** modify telemetry runtime product behavior
 - Does **not** change Community Cloud or Data Lake
-- Does **not** modify VS Code or Cursor
+- Does **not** modify VS Code
 - Does **not** change assessment execution
 - Does **not** put `installation_id` into analytics events (`installation_id_allowed=false`)
 - Does **not** start Slice 10.3

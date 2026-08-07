@@ -8,8 +8,12 @@ from codestrata_platform.community_cloud_api.extension_events.catalog import (
     default_operation_catalog,
 )
 from codestrata_platform.community_cloud_api.extension_events.enums import (
+    ACTIVE_EXTENSION_CLIENTS,
     ALLOWED_EXTENSION_CLIENTS,
+    CURSOR_EXTENSION_CLIENT,
     EXTENSION_EVENT_SOURCE_TYPE,
+    HISTORICAL_EXTENSION_CLIENTS,
+    SCHEMA_EXTENSION_CLIENTS,
     ExtensionEventIngestionStatus,
 )
 from codestrata_platform.community_cloud_api.extension_events.models import (
@@ -44,14 +48,18 @@ from codestrata_platform.community_cloud_api.extension_events.service import (
 )
 
 __all__ = [
+    "ACTIVE_EXTENSION_CLIENTS",
     "ALLOWED_EXTENSION_CLIENTS",
     "COMMUNITY_EXTENSION_EVENT_POLICY_URN",
     "COMMUNITY_EXTENSION_EVENT_POLICY_VERSION",
     "COMMUNITY_EXTENSION_EVENT_SCHEMA_VERSION",
+    "CURSOR_EXTENSION_CLIENT",
     "EXTENSION_EVENT_SOURCE_TYPE",
     "EXTENSION_EVENTS_PATH",
     "EXTENSION_EVENTS_ROUTE_NAME",
     "EXTENSION_OPERATION_CATALOG_URN",
+    "HISTORICAL_EXTENSION_CLIENTS",
+    "SCHEMA_EXTENSION_CLIENTS",
     "CommunityExtensionEventPolicy",
     "ExtensionClient",
     "ExtensionEvent",

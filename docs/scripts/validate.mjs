@@ -37,7 +37,6 @@ const requiredFiles = [
   "robots.txt",
   "getting-started/index.html",
   "extensions/vscode.html",
-  "extensions/cursor.html",
   "community/vs-platform.html",
   "platform/index.html",
 ];

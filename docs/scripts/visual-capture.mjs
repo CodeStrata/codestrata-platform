@@ -20,7 +20,6 @@ const shots = [
   { name: "getting-started-1280", path: "/getting-started/", width: 1280, height: 800, theme: "dark" },
   { name: "reports-1280", path: "/reports/", width: 1280, height: 800, theme: "dark" },
   { name: "vscode-1280", path: "/extensions/vscode", width: 1280, height: 800, theme: "dark" },
-  { name: "cursor-1280", path: "/extensions/cursor", width: 1280, height: 800, theme: "dark" },
   { name: "cli-1280", path: "/reference/cli", width: 1280, height: 800, theme: "dark" },
 ];
 

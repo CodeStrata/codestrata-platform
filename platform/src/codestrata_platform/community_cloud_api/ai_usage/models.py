@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pydantic import Field, StrictBool, StrictStr, field_validator, model_validator
 
 from codestrata_platform.community_cloud_api.ai_usage.enums import (
-    ALLOWED_AI_USAGE_CLIENTS,
+    SCHEMA_AI_USAGE_CLIENTS,
     TOKEN_BUCKET_RANK,
     AiDataScope,
     AiDurationBucket,
@@ -45,8 +45,10 @@ class AiUsageClient(CommunityApiRequestModel):
     @field_validator("name")
     @classmethod
     def _client(cls, value: str) -> str:
+        # Schema 1.0 retains historical cursor_extension for deserialize only.
+        # Current ingestion rejects retired clients via policy.allowed_clients.
         text = value.strip()
-        if text not in ALLOWED_AI_USAGE_CLIENTS:
+        if text not in SCHEMA_AI_USAGE_CLIENTS:
             raise ValueError("invalid_enum")
         return text
 

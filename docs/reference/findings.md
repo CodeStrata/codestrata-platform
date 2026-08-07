@@ -12,5 +12,4 @@ Consumers:
 
 - HTML report
 - VS Code findings / diagnostics
-- Cursor generated rule context
 - Automation reading JSON artifacts

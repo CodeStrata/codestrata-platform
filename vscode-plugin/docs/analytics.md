@@ -168,8 +168,11 @@ No Engine Python imports at runtime.
 
 ## Cursor / Platform / Data Lake
 
-- Cursor unchanged and excluded
-- Community Cloud / Data Lake unchanged
+- Former Cursor extension product removed (Epic 12); not an active analytics emitter
+- Slice 12.4: `cursor_extension` is a retired historical client value only
+  (`community-retired-client-policy:1.0`) — not accepted for current ingestion
+  or active storage projection
+- Community Cloud / Data Lake production ingestion remains fail-closed / unwired
 - No Platform DTO / event_id / HTTP mapping
 
 ## Package surface

@@ -21,6 +21,8 @@ def _read_python_version(pyproject: Path) -> str | None:
 
 
 def _read_node_version(package_json: Path) -> str | None:
+    if not package_json.is_file():
+        return None
     data = json.loads(package_json.read_text(encoding="utf-8"))
     value = data.get("version")
     return str(value) if value is not None else None
@@ -43,7 +45,6 @@ def check_version_consistency(root: Path = ROOT) -> dict[str, Any]:
         "engine_pyproject": _read_python_version(root / "engine" / "pyproject.toml"),
         "engine_cli": _cli_version(root),
         "vscode_extension": _read_node_version(root / "vscode-plugin" / "package.json"),
-        "cursor_extension": _read_node_version(root / "cursor-plugin" / "package.json"),
         "docs_site": _read_node_version(root / "docs" / "package.json")
         if (root / "docs" / "package.json").is_file()
         else None,
@@ -53,10 +54,8 @@ def check_version_consistency(root: Path = ROOT) -> dict[str, Any]:
     cli = versions.get("engine_cli")
     if engine and cli and engine != cli:
         issues.append(f"Engine package version {engine} != CLI/module version {cli}")
-    # Extensions may intentionally differ from Engine; only flag missing.
-    for key in ("vscode_extension", "cursor_extension"):
-        if not versions.get(key):
-            issues.append(f"missing version for {key}")
+    if not versions.get("vscode_extension"):
+        issues.append("missing version for vscode_extension")
     if not engine:
         issues.append("missing engine pyproject version")
     return {
@@ -66,5 +65,8 @@ def check_version_consistency(root: Path = ROOT) -> dict[str, Any]:
         "notes": [
             "Extension versions may differ from Engine package version.",
             "Schema versions are independent of product release versions.",
+            "Active Community editor extension is VS Code only (Slice 12.2).",
+            "Infrastructure is independently versioned and is not required to "
+            "match Engine tag/version (Slice 12.9).",
         ],
     }

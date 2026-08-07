@@ -9,7 +9,6 @@ Community release notes are published with each public repository:
 
 - CodeStrata Engine
 - CodeStrata VS Code Extension
-- CodeStrata Cursor Extension
 - CodeStrata Documentation (this portal)
 
 This page is a portal entry. Version-specific changelogs live in the respective

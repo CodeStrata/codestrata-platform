@@ -36,6 +36,7 @@ PRODUCT_CODESTRATA = "CodeStrata"
 PRODUCT_ENGINE = "CodeStrata Engine"
 PRODUCT_PLATFORM = "CodeStrata Platform"
 PRODUCT_VSCODE_EXTENSION = "CodeStrata VS Code Extension"
+# Retired product display name — historical docs/reports only (Slice 12.4).
 PRODUCT_CURSOR_EXTENSION = "CodeStrata Cursor Extension"
 
 CANONICAL_TERMS: tuple[str, ...] = (

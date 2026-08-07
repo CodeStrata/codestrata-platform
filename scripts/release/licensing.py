@@ -75,8 +75,8 @@ def check_licensing(
             f"Engine package license {license_meta!r} does not match approved {APPROVED_LICENSE}"
         )
 
-    # Extension package.json license fields
-    for rel in ("vscode-plugin/package.json", "cursor-plugin/package.json"):
+    # Extension package.json license fields (VS Code only after Slice 12.2)
+    for rel in ("vscode-plugin/package.json",):
         path = root / rel
         if not path.is_file():
             continue

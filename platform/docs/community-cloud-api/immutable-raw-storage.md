@@ -115,7 +115,7 @@ metadata keys:
 | `codestrata-stream` | Event stream (e.g. `telemetry`) |
 | `codestrata-object-id` | Opaque hex fragment only — **no** `lake-object:` prefix |
 | `codestrata-assessment-schema` *(optional, Slice 8.4)* | Engine assessment report contract version (e.g. `1.2`) — only ever attached by the `assessment_metadata` stream's projector, never the endpoint/envelope schema version |
-| `codestrata-client-type` *(optional, Slice 8.5 / 8.7 / 8.8)* | Client-type classification — attached by the `telemetry` projector (`codestrata_cli` / `vscode_extension` / `other_extension`), by the `extension_event` projector (`vscode_extension` / `cursor_extension`), and by the `ai_usage` projector (`codestrata_cli` / `vscode_extension` / `cursor_extension`); never `event_type`, `editor`, `operation`, `capability`, `provider_family`, or `model_family` |
+| `codestrata-client-type` *(optional, Slice 8.5 / 8.7 / 8.8)* | Client-type classification — attached by the `telemetry` projector (`codestrata_cli` / `vscode_extension` / `other_extension`), by the `extension_event` projector (`vscode_extension` active; `cursor_extension` historical-only), and by the `ai_usage` projector (`codestrata_cli` / `vscode_extension` active; `cursor_extension` historical-only); never `event_type`, `editor`, `operation`, `capability`, `provider_family`, or `model_family` |
 
 The `cli_event` stream (Slice 8.6) adds **no** new metadata key at all — its
 partition policy's `s3_metadata_allowlist` is exactly the five base keys
@@ -127,12 +127,12 @@ metadata information — and `operation`/`lifecycle`/`result` stay
 private-payload-only).
 
 The `extension_event` stream (Slice 8.7) reuses `codestrata-client-type`
-(Option B) for `vscode_extension` / `cursor_extension` — never `editor` or
+(Option B) for `vscode_extension` (active) / historical `cursor_extension` — never `editor` or
 `operation` in metadata. See
 [extension-event-data-lake.md](./extension-event-data-lake.md).
 
 The `ai_usage` stream (Slice 8.8) reuses `codestrata-client-type`
-(Option B) for `codestrata_cli` / `vscode_extension` / `cursor_extension` —
+(Option B) for `codestrata_cli` / `vscode_extension` (active) / historical `cursor_extension` —
 never `capability`, `provider_family`, or `model_family` in metadata. See
 [ai-usage-data-lake.md](./ai-usage-data-lake.md).
 

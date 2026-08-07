@@ -1,26 +1,26 @@
 ---
 title: IDE Extensions
-description: CodeStrata VS Code and Cursor extensions as thin clients of CodeStrata Engine.
+description: CodeStrata VS Code extension as a thin client of CodeStrata Engine.
 ---
 
 # IDE Extensions
 
-CodeStrata IDE extensions are **thin clients** of CodeStrata Engine.
+The supported Community IDE extension is the **CodeStrata VS Code Extension** —
+a **thin client** of CodeStrata Engine.
 
 ```text
-IDE Extension
+VS Code Extension
      ↓
 CodeStrata Engine CLI
      ↓
 Public assessment artifacts
      ↓
-Findings · Recommendations · Reports · (Cursor rule)
+Findings · Recommendations · Reports
 ```
 
 | Extension | Page |
 | --------- | ---- |
 | VS Code | [VS Code Extension](./vscode) |
-| Cursor | [Cursor Extension](./cursor) |
 
-Neither extension duplicates Engineering Intelligence or calls Platform APIs for
-Community assessment.
+The extension does not duplicate Engineering Intelligence or call Platform APIs
+for Community assessment.

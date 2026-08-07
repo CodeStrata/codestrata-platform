@@ -63,7 +63,7 @@ Slice 8.7 reuses that same generic machinery for a fourth stream,
 `project_extension_event_storage_object()`. The accepted path again stays
 the generic Hive path only; Option B reuses telemetry's
 `codestrata-client-type` metadata key for
-`vscode_extension`/`cursor_extension` (never `editor` or `operation` in
+`vscode_extension` (active); historical `cursor_extension` read-only (never `editor` or `operation` in
 path or metadata). Diagnostics set both `client_type` and
 `operation_catalog_version`. See
 [extension-event-data-lake.md](./extension-event-data-lake.md) for the
@@ -76,7 +76,7 @@ Slice 8.8 reuses that same generic machinery for a fifth stream,
 (`community-ai-usage-partition-policy:1.0`) and
 `project_ai_usage_storage_object()`. The accepted path again stays the
 generic Hive path only; Option B reuses `codestrata-client-type` for
-`codestrata_cli` / `vscode_extension` / `cursor_extension` (never
+`codestrata_cli` / `vscode_extension` (active); historical `cursor_extension` read-only (never
 `capability`, `provider_family`, or `model_family` in path or metadata).
 This slice is the first to set the three AI catalog version fields on
 policy and diagnostics (`capability` / `provider` / `model`; not

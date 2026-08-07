@@ -1,14 +1,15 @@
-# Marketplace publication — CodeStrata extensions
+# Marketplace publication — CodeStrata VS Code Extension
 
 **Status:** Preparation complete · **Do not publish** until release gates pass and a
 human explicitly requests publish with stored credentials.
 
-## Extension identifiers (stable)
+Active Community editor extension (Slice 12.2): **VS Code only**.
+
+## Extension identifier (stable)
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
 | VS Code | `codestrata.codestrata-vscode` | CodeStrata VS Code Extension |
-| Cursor | `codestrata.codestrata-cursor` | CodeStrata Cursor Extension |
 
 Publisher namespace: **`codestrata`** (create/claim before first publish; do not
 rename after release without explicit approval).
@@ -22,9 +23,8 @@ are different publishers).
 | Extension | Status |
 | --------- | ------ |
 | codestrata-vscode | **MARKETPLACE_READY** (packaged + gates documented; not published) |
-| codestrata-cursor | **MARKETPLACE_READY** (packaged + gates documented; not published) |
 
-Neither extension is **PUBLISHED** or **VERIFIED_INSTALLABLE** from a marketplace
+The extension is not **PUBLISHED** or **VERIFIED_INSTALLABLE** from a marketplace
 until live install is confirmed after publish.
 
 ## Branding assets
@@ -33,7 +33,7 @@ Canonical sources: `governance/assets/extension-branding/`
 
 - Icon PNG sizes 16–512 + SVG tile
 - Marketplace banner 1280×640
-- Packaged icon: each plugin `media/codestrata-icon.png` (128×128)
+- Packaged icon: `media/codestrata-icon.png` (128×128)
 
 ## Secrets (never in git)
 
@@ -91,23 +91,14 @@ npx --yes @vscode/vsce package --no-dependencies
 
 ```bash
 npx ovsx publish codestrata-vscode-0.2.0.vsix -p "$OVSX_TOKEN"
-npx ovsx publish codestrata-cursor-0.2.0.vsix -p "$OVSX_TOKEN"
 ```
 
-Open VSX improves Cursor / VSCodium discovery. Cursor may also surface VS
-Marketplace listings depending on product configuration — treat Open VSX as
-required for broad open-editor reach.
-
-## Cursor visibility
-
-1. Publish Cursor extension VSIX to **Open VSX** (primary)
-2. Optionally also publish to VS Marketplace under the same publisher
-3. Document install: Extensions → search **CodeStrata Cursor Extension**
-4. Verify in Cursor: install → Engine discovery → assessment → rule generation
+Open VSX improves VSCodium and other open-editor discovery. Treat Open VSX as
+required for broad open-editor reach alongside Visual Studio Marketplace.
 
 ## Release gates (must all pass)
 
-- [ ] `npm test` (both plugins)
+- [ ] `npm test` (vscode-plugin)
 - [ ] `npm run package` produces VSIX containing icon
 - [ ] Icon 128 PNG present; screenshots synthetic / no secrets
 - [ ] README / CHANGELOG / SECURITY / PRIVACY / SUPPORT / LICENSE present
@@ -119,13 +110,12 @@ required for broad open-editor reach.
 ## Post-publish verification
 
 1. Marketplace / Open VSX pages resolve
-2. Fresh VS Code / Cursor install from marketplace
-3. First command: **Run Engineering Assessment** / **Engineering Assessment**
+2. Fresh VS Code install from marketplace
+3. First command: **Run Engineering Assessment**
 4. Engine install path works
 5. Classify as **VERIFIED_INSTALLABLE**
 
 ## Related
 
 - `vscode-plugin/RELEASE_CHECKLIST.md`
-- `cursor-plugin/RELEASE_CHECKLIST.md`
 - `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`

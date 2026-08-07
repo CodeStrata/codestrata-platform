@@ -17,7 +17,6 @@ from verification.release_artifacts.contract import (
     default_contract,
     monorepo_root_from_here,
 )
-from verification.release_artifacts.cursor_extension import check_cursor_extension
 from verification.release_artifacts.demo_artifacts import check_demo_artifacts
 from verification.release_artifacts.determinism import check_determinism
 from verification.release_artifacts.docker_packaging import check_docker_packaging
@@ -154,11 +153,6 @@ def run_release_artifacts(
     checks.extend(vs_checks)
     defects.extend(vs_defects)
     warnings.extend(vs_warnings)
-
-    cu_checks, cu_defects, cu_warnings = check_cursor_extension(root)
-    checks.extend(cu_checks)
-    defects.extend(cu_defects)
-    warnings.extend(cu_warnings)
 
     dk_checks, dk_warnings = check_docker_packaging(root)
     checks.extend(dk_checks)

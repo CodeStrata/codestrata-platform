@@ -8,7 +8,7 @@
 ## Engine and extensions
 
 - CodeStrata Engine CLI and assessment behavior → Engine repository
-- VS Code / Cursor clients → respective extension repositories
+- VS Code client → VS Code extension repository
 
 ## Platform
 

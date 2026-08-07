@@ -27,3 +27,16 @@ Related playbooks:
 
 - [`../playbooks/INTERNAL_RELEASE_CHECKLIST.md`](../playbooks/INTERNAL_RELEASE_CHECKLIST.md) (internal train)
 - [`../playbooks/RC_CHECKLIST.md`](../playbooks/RC_CHECKLIST.md)
+
+## Epic 12 CI / release boundaries (Slices 12.9–12.10)
+
+- Active editor extension: **VS Code only** (Cursor retired)
+- Community vs Infrastructure: separate export targets; Infrastructure is
+  `private_infrastructure_only` and independently versioned — not a Community
+  release artifact
+- Workflow: [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
+- Verifier (12.9): `python -m verification.ci_release_boundaries`
+- Completion (12.10): `python -m verification.product_cleanup_repository_split_completion`
+  → `reports/verification/sv12-10/product-cleanup-repository-split-completion-verification.json`
+- Ordinary CI does not publish, deploy, tag, plan, apply, or destroy
+- Epic 12 complete for v0.2.0 epic scope; Epic 13 not started

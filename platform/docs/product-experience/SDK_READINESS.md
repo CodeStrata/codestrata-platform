@@ -12,7 +12,7 @@
 Platform OpenAPI `/api/v1` and Engine CLI / MCP / `report.json` contracts are
 **stable enough** for:
 
-- CodeStrata VS Code / Cursor extensions (when implemented)
+- CodeStrata VS Code extension (Community)
 - MCP clients
 - CLI automation
 - Customer integrations

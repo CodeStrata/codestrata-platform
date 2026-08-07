@@ -9,7 +9,8 @@ monorepo (`codestrata-platform`) is the single source of truth. Extraction must
 be safe for both **first-time repository creation** and **repeatable updates**.
 
 Public destinations: `codestrata-engine`, `codestrata-examples`.
-Private destinations: `codestrata-cursor`, `codestrata-vscode`, `codestrata-docs`.
+Private destinations: `codestrata-vscode`, `codestrata-docs`.
+(Cursor private mirror `codestrata-cursor` retired in Slice 12.2.)
 
 ## Modes
 
@@ -72,7 +73,6 @@ secret scan on staging and fails on blocking findings.
 
 - Engine: [`engine/`](../../engine/) + [`docs/EXTRACTION.md`](../../docs/EXTRACTION.md)
 - VS Code: [`vscode-plugin/EXTRACTION.md`](../../vscode-plugin/EXTRACTION.md)
-- Cursor: [`cursor-plugin/EXTRACTION.md`](../../cursor-plugin/EXTRACTION.md)
 
 ## Safety guarantees
 
@@ -94,7 +94,6 @@ must precede the first publish.
 | `CodeStrata/codestrata-engine` | public |
 | `CodeStrata/codestrata-examples` | public |
 | `CodeStrata/codestrata-vscode` | private |
-| `CodeStrata/codestrata-cursor` | private |
 | `CodeStrata/codestrata-docs` | private |
 
 ```bash

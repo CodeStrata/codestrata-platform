@@ -4,7 +4,10 @@ Private infrastructure verification for the Slice 7.14 Community Cloud
 production-foundation deployment.
 
 This package is **not** part of Engine or Platform runtime wheels. It lives with
-`infrastructure/` so it can extract later with `codestrata-infrastructure`.
+`infrastructure/` so it can extract later with `codestrata-infrastructure`
+(Slice 12.5 contract: `../docs/repository-contract.md`; Slice 12.6 exporter:
+`scripts/export_infrastructure_repository.py`; Slice 12.7 export verification:
+`verification/infrastructure_repository_export/`).
 
 ## Purpose
 

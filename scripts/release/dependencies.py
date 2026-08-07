@@ -78,7 +78,6 @@ def build_dependency_inventory(root: Path = ROOT) -> dict[str, Any]:
         )
     for name, rel in (
         ("codestrata-vscode", "vscode-plugin/package.json"),
-        ("codestrata-cursor", "cursor-plugin/package.json"),
         ("codestrata-docs", "docs/package.json"),
     ):
         path = root / rel

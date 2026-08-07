@@ -41,7 +41,6 @@ mirrors. Land every change here, then export and publish intentionally.
 | ------------- | ----------------- |
 | `engine/` | `codestrata-engine` |
 | `examples/` | `codestrata-examples` |
-| `cursor-plugin/` | `codestrata-cursor` |
 | `vscode-plugin/` | `codestrata-vscode` |
 
 Mapping, includes, excludes, and validation commands:
@@ -64,8 +63,7 @@ codestrata-platform/
 ├── infrastructure/         # Private OpenTofu AWS deployment (not exported)
 ├── examples/               # Real-world showcase manifests (→ codestrata-examples)
 ├── test-fixtures/          # Internal language samples + golden mini-reports
-├── cursor-plugin/          # Placeholder (→ codestrata-cursor)
-├── vscode-plugin/          # Placeholder (→ codestrata-vscode)
+├── vscode-plugin/          # Community VS Code extension (→ codestrata-vscode)
 ├── scripts/                # verify_release, export, security, showcase wrappers
 ├── tests/architecture/     # Engine ↔ Platform boundary tests
 ├── public-export-manifest.yaml
@@ -79,11 +77,10 @@ codestrata-platform/
 | ---- | -------------- |
 | `engine/` | MIT Community CLI, assessment, reports, Engine docs/tests |
 | `platform/` | Implemented RAG + persistent KG + Community Cloud API + extension entry points + SV.6–SV.8 / SV.12 verification (`platform/verification/`) |
-| `infrastructure/` | Private serverless deployment (OpenTofu) + SV.9 verification (`infrastructure/verification/`); extractable to `codestrata-infrastructure` |
+| `infrastructure/` | Private serverless deployment (OpenTofu) + SV.9 verification (`infrastructure/verification/`); extractable to `codestrata-infrastructure` via `scripts/export_repository.py --target infrastructure` (Epic 12 complete; owner cutover deferred) |
 | `examples/` | Showcase manifests, fetch/run scripts, attribution, curated results |
 | `test-fixtures/` | Deterministic language fixtures for tests and Engine smoke |
-| `cursor-plugin/` | Public placeholder only |
-| `vscode-plugin/` | Public placeholder only |
+| `vscode-plugin/` | Community VS Code extension (private mirror) |
 | `scripts/` | Release verification, export, security, packaging smoke, showcase wrappers |
 | **This handbook** | Ecosystem operations (export, release, ownership) |
 
@@ -139,7 +136,6 @@ python scripts/export-public-repos.py
 # Export one mirror
 python scripts/export-public-repos.py --repo codestrata-engine
 python scripts/export-public-repos.py --repo codestrata-examples
-python scripts/export-public-repos.py --repo codestrata-cursor
 python scripts/export-public-repos.py --repo codestrata-vscode
 ```
 
@@ -147,7 +143,6 @@ python scripts/export-public-repos.py --repo codestrata-vscode
 | ------ | ------ | ---------- | ------------ | ------------ |
 | `codestrata-engine` | `engine/` (+ smoke fixture) | public | CE package, docs, `test-fixtures/sample-js-app` | `platform/`, secrets, reports |
 | `codestrata-examples` | `examples/` | public | real-world manifests/scripts, attribution, curated expected-results | `sample-*-app`, sample-reports, fetched trees |
-| `codestrata-cursor` | `cursor-plugin/` | private | Extension package + docs | `node_modules`, `*.vsix`, `out/` |
 | `codestrata-vscode` | `vscode-plugin/` | private | Extension package + docs | `node_modules`, `*.vsix`, `out/` |
 | `codestrata-docs` | `docs/` | private | VitePress site source | `node_modules`, `.vitepress/dist` |
 
@@ -248,7 +243,7 @@ Maintainers follow this sequence. Do not skip validation.
 8. **Publish** destination mirrors from staging in a **separate intentional step**
    (not part of the export scripts):
    1. Create missing GitHub repositories **manually** with the correct visibility
-      (public: engine/examples; private: vscode/cursor/docs)
+      (public: engine/examples; private: vscode/docs)
    2. Validate exports
    3. Dry-run: `python scripts/publish-repository-mirrors.py --repo <name>`
    4. Push only with: `python scripts/publish-repository-mirrors.py --repo <name> --push --confirm`

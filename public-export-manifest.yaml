@@ -10,7 +10,8 @@
 #   destination_repository: legacy alias of repository (kept for compatibility)
 #
 # Public (Community): codestrata-engine, codestrata-examples
-# Private mirrors: codestrata-cursor, codestrata-vscode, codestrata-docs
+# Private mirrors: codestrata-vscode, codestrata-docs
+# (codestrata-cursor export retired in Slice 12.2 — product source removed in 12.1)
 #
 # Phase 14.2+: this file is the authoritative Community release boundary.
 # Do not rely only on .gitignore for release inclusion.
@@ -300,60 +301,6 @@ exports:
         - "sample-*/**"
         - "**/sample-reports/**"
         - "fixtures/**"
-  - name: codestrata-cursor
-    description: CodeStrata Cursor Extension (Community Engine client; private mirror)
-    source_root: cursor-plugin
-    owner: CodeStrata
-    repository: codestrata-cursor
-    destination_repository: codestrata-cursor
-    visibility: private
-    destination_layout: flat
-    include:
-      - "**"
-    exclude:
-      - ".DS_Store"
-      - "**/.DS_Store"
-      - "node_modules/**"
-      - "**/node_modules/**"
-      - "out/**"
-      - "*.vsix"
-      - ".vscode-test/**"
-      - "**/.vscode-test/**"
-      - ".tmp-test-*/**"
-      - "PLACEHOLDER.md"
-      - ".vscode/**"
-    validation:
-      require_files:
-        - README.md
-        - CHANGELOG.md
-        - LICENSE
-        - SECURITY.md
-        - SUPPORT.md
-        - PRIVACY.md
-        - CONTRIBUTING.md
-        - CODE_OF_CONDUCT.md
-        - EXTRACTION.md
-        - RELEASE_CHECKLIST.md
-        - package.json
-        - package-lock.json
-        - src/extension.ts
-        - tsconfig.json
-        - media/codestrata-icon.png
-      forbid_globs:
-        - "platform/**"
-        - "infrastructure/**"
-        - "governance/**"
-        - "**/*.py"
-        - "PLACEHOLDER.md"
-        - "*.vsix"
-        - "out/**"
-        - ".vscode-test/**"
-        - ".vscode/**"
-      commands:
-        - "npm install"
-        - "npm test"
-        - "npm run package:dry"
-
   - name: codestrata-vscode
     description: CodeStrata VS Code Extension (Community Engine client; private mirror)
     source_root: vscode-plugin

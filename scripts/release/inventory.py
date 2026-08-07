@@ -28,13 +28,17 @@ SURFACE_CLASSIFICATIONS: dict[str, dict[str, str]] = {
         "classification": "public_release",
         "notes": "Public showcase manifests and expected results",
     },
-    "cursor-plugin/": {
-        "classification": "private_release",
-        "notes": "Private Cursor extension mirror (codestrata-cursor)",
-    },
     "vscode-plugin/": {
         "classification": "private_release",
         "notes": "Private VS Code extension mirror (codestrata-vscode)",
+    },
+    "infrastructure/": {
+        "classification": "private_infrastructure_only",
+        "notes": (
+            "Authoritative OpenTofu/infra source in monorepo until owner cutover; "
+            "independently versioned; exported via --target infrastructure; "
+            "NOT a Community public release artifact; not tagged by Engine release"
+        ),
     },
     "platform/": {
         "classification": "commercial_platform_only",
@@ -170,6 +174,7 @@ def build_surface_inventory(root: Path = ROOT) -> dict[str, Any]:
         "classifications_legend": [
             "public_release",
             "private_release",
+            "private_infrastructure_only",
             "internal_only",
             "generated",
             "test_only",
@@ -178,6 +183,17 @@ def build_surface_inventory(root: Path = ROOT) -> dict[str, Any]:
             "customer_specific",
             "commercial_platform_only",
         ],
+        "infrastructure_release_boundary": {
+            "independently_versioned": True,
+            "community_release_artifact": False,
+            "published_by_main_release_workflow": False,
+            "tagged_automatically_with_engine": False,
+            "authoritative_until_cutover": "infrastructure/",
+            "export_command": (
+                "python scripts/export_repository.py "
+                "--target infrastructure --destination <dir>"
+            ),
+        },
     }
 
 

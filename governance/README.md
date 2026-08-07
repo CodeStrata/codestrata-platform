@@ -27,7 +27,6 @@ It separates:
 | **CodeStrata Engine** | Community Engine (`engine/`) |
 | **CodeStrata Platform** | Commercial Platform (`platform/`) — use product name **CodeStrata Platform** in customer copy |
 | **CodeStrata VS Code Extension** | Editor extension (`vscode-plugin/`) |
-| **CodeStrata Cursor Extension** | Editor extension (`cursor-plugin/`) |
 
 AI is a **capability**, not part of the product name.
 

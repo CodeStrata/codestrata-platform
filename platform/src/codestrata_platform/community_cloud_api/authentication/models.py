@@ -23,10 +23,14 @@ ACCEPTED_SCHEME_BEARER = "Bearer"
 
 CLIENT_TYPE_CLI = "codestrata_cli"
 CLIENT_TYPE_VSCODE = "vscode_extension"
+# Retired historical client value (Slice 12.4). Not issuable for active auth.
 CLIENT_TYPE_CURSOR = "cursor_extension"
-ALLOWED_CLIENT_TYPES = frozenset(
-    {CLIENT_TYPE_CLI, CLIENT_TYPE_VSCODE, CLIENT_TYPE_CURSOR}
-)
+
+ACTIVE_CLIENT_TYPES = frozenset({CLIENT_TYPE_CLI, CLIENT_TYPE_VSCODE})
+HISTORICAL_CLIENT_TYPES = frozenset({CLIENT_TYPE_CURSOR})
+SCHEMA_COMPATIBLE_CLIENT_TYPES = ACTIVE_CLIENT_TYPES | HISTORICAL_CLIENT_TYPES
+# Active credential issuance and current principal validation.
+ALLOWED_CLIENT_TYPES = ACTIVE_CLIENT_TYPES
 
 ROUTE_GROUP_INGESTION = "ingestion"
 ROUTE_GROUP_HEALTH_PUBLIC = "health_public"

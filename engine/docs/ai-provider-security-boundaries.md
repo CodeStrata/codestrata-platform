@@ -50,7 +50,7 @@ construction. CLI has no secret flags (`--api-key`, `--openrouter-api-key`,
 ## Isolation from other products
 
 Provider adapters and common contracts must not import Platform, Data Lake,
-telemetry, or analytics runtimes. VS Code and Cursor plugins do not carry
+telemetry, or analytics runtimes. The VS Code extension does not carry
 OpenRouter extension configuration. Anonymous AI analytics keeps coarse
 `provider_family` / `model_family` catalogs; OpenRouter is intentionally absent
 from approved AI provider families.

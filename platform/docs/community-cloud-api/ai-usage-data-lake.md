@@ -75,7 +75,7 @@ scope, or output usage. Rationale:
 
 | Candidate | Disposition | Rationale |
 | --- | --- | --- |
-| `client.name` (→ `client_type`) | **S3 metadata** (`codestrata-client-type`) | Three first-party clients (`codestrata_cli` / `vscode_extension` / `cursor_extension`) — a coarse operational filter that mirrors telemetry and extension events |
+| `client.name` (→ `client_type`) | **S3 metadata** (`codestrata-client-type`) | Active clients (`codestrata_cli` / `vscode_extension`); historical `cursor_extension` metadata remains valid for inspection of existing objects (Slice 12.4) |
 | `usage.capability` | Private payload only | Analytics vocabulary tied to the versioned, evolving capability catalog |
 | `usage.provider_family` / `usage.model_family` | Private payload only | Analytics vocabulary tied to evolving provider/model catalogs |
 | `usage.outcome` / buckets / tool-RAG-graph | Private payload only | Analytics/outcome fields belonging to future aggregate processing |
@@ -85,7 +85,9 @@ scope, or output usage. Rationale:
 
 Rationale for Option B over Option A (generic metadata only, as CLI chose
 in Slice 8.6): unlike `cli_event` (always `codestrata_cli`), this stream
-legitimately separates CLI / VS Code / Cursor objects.
+separates active CLI / VS Code client-type objects. Retired historical
+`cursor_extension` metadata on existing objects remains valid for inspection
+(Slice 12.4 Approach A); active projection does not emit Cursor metadata.
 
 `project_ai_usage_storage_object` therefore calls
 `merge_extra_s3_metadata` exactly once for `codestrata-client-type`, and

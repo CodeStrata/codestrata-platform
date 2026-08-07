@@ -9,7 +9,6 @@ from codestrata_platform.community_cloud_api.authentication import (
 
 from verification.community_cloud_api.contract import (
     TEST_CLI_TOKEN,
-    TEST_CURSOR_TOKEN,
     TEST_VSCODE_TOKEN,
 )
 
@@ -40,13 +39,7 @@ def build_test_verifier(
         rate_limit_scope_id="rlscope-vscode-shared",
         credential_id="cred-test-vscode",
     )
-    verifier.register(
-        TEST_CURSOR_TOKEN,
-        client_id="client-test-cursor",
-        client_type="cursor_extension",
-        rate_limit_scope_id="rlscope-cursor-shared",
-        credential_id="cred-test-cursor",
-    )
+    # Retired cursor_extension credentials are not issuable (Slice 12.4).
     return verifier
 
 

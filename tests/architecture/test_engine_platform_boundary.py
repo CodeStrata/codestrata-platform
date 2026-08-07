@@ -176,16 +176,15 @@ def test_public_export_manifest_lists_community_mirrors() -> None:
     assert names == {
         "codestrata-engine",
         "codestrata-examples",
-        "codestrata-cursor",
         "codestrata-vscode",
         "codestrata-docs",
     }
     by_name = {item["name"]: item for item in manifest["exports"]}
     assert by_name["codestrata-engine"]["visibility"] == "public"
     assert by_name["codestrata-examples"]["visibility"] == "public"
-    assert by_name["codestrata-cursor"]["visibility"] == "private"
     assert by_name["codestrata-vscode"]["visibility"] == "private"
     assert by_name["codestrata-docs"]["visibility"] == "private"
+    assert "codestrata-cursor" not in by_name
     for item in manifest["exports"]:
         assert item.get("owner") == "CodeStrata"
         assert "repository" in item
@@ -194,24 +193,24 @@ def test_public_export_manifest_lists_community_mirrors() -> None:
         assert "public_repository" not in item
     blob = (REPO_ROOT / "public-export-manifest.yaml").read_text(encoding="utf-8")
     assert "university" not in blob.lower() or "forbid" in blob.lower()
+    assert "  - name: codestrata-cursor" not in blob
 
 
-@pytest.mark.parametrize(
-    ("plugin", "package_name"),
-    [
-        ("cursor-plugin", "codestrata-cursor"),
-        ("vscode-plugin", "codestrata-vscode"),
-    ],
-)
-def test_community_plugins_are_thin_engine_clients(plugin: str, package_name: str) -> None:
-    """Plugins are real Community clients (not empty placeholders)."""
+def test_cursor_plugin_product_source_absent() -> None:
+    """Slice 12.1: Cursor extension product directory is removed (no tombstone)."""
 
-    root = REPO_ROOT / plugin
+    assert not (REPO_ROOT / "cursor-plugin").exists()
+
+
+def test_community_vscode_plugin_is_thin_engine_client() -> None:
+    """VS Code remains the Community editor thin Engine client."""
+
+    root = REPO_ROOT / "vscode-plugin"
     assert (root / "README.md").is_file()
     assert (root / "package.json").is_file()
     assert (root / "src").is_dir()
     package = (root / "package.json").read_text(encoding="utf-8")
-    assert f'"name": "{package_name}"' in package
+    assert '"name": "codestrata-vscode"' in package
     assert "codestrata" in package.lower()
     # Historical note file may remain; must not be the only product surface.
     assert not {

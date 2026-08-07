@@ -126,17 +126,59 @@ def test_project_supports_vscode_extension_client_type() -> None:
     assert result.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "vscode_extension"
 
 
-def test_project_supports_cursor_extension_client_type() -> None:
+def test_active_projection_rejects_retired_cursor_extension_client_type() -> None:
+    from codestrata_platform.community_cloud_api.data_lake.envelope_builders import (
+        build_data_lake_envelope,
+    )
+    from codestrata_platform.community_cloud_api.data_lake.envelope_validation import (
+        EnvelopeBuildError,
+    )
+    from codestrata_platform.community_cloud_api.data_lake.accepted_clock import (
+        FixedAcceptanceClock,
+    )
+    from codestrata_platform.community_cloud_api.historical_client_compatibility import (
+        deserialize_historical_ai_usage_payload,
+        historical_client_type_metadata_is_valid,
+    )
+    from datetime import datetime, timezone
+
+    from ..ai_usage_helpers import valid_ai_usage_body
+
+    body = valid_ai_usage_body()
+    body["client"] = {
+        "name": "cursor_extension",
+        "version": "0.2.0",
+        "platform": "darwin",
+    }
+    request = deserialize_historical_ai_usage_payload(body)
+    assert request.client.name == "cursor_extension"
+    assert historical_client_type_metadata_is_valid("cursor_extension")
+
+    clock = FixedAcceptanceClock(datetime(2026, 8, 4, 0, 0, 0, tzinfo=timezone.utc))
+    try:
+        build_data_lake_envelope(
+            event_stream="ai_usage",
+            request=request,
+            event_key="event:ai-retired-cursor",
+            safe_event_reference="evt-airetiredcursor",
+            clock=clock,
+        )
+        raised = False
+    except EnvelopeBuildError:
+        raised = True
+    assert raised
+
+    # Active VS Code projection still succeeds.
     envelope = ai_usage_envelope(
         client={
-            "name": "cursor_extension",
+            "name": "vscode_extension",
             "version": "0.2.0",
             "platform": "darwin",
         }
     )
     result = project_ai_usage_storage_object(envelope)
-    assert result.diagnostics.client_type == "cursor_extension"
-    assert result.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "cursor_extension"
+    assert result.diagnostics.client_type == "vscode_extension"
+    assert result.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "vscode_extension"
 
 
 def test_project_supports_capability_alias_modernization_advisor() -> None:

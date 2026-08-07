@@ -43,7 +43,6 @@ def read_versions(monorepo: Path) -> dict[str, str | None]:
         "platform": _read_pyproject_version(monorepo / "platform" / "pyproject.toml"),
         "workspace": _read_pyproject_version(monorepo / "pyproject.toml"),
         "vscode": _read_package_json_version(monorepo / "vscode-plugin" / "package.json"),
-        "cursor": _read_package_json_version(monorepo / "cursor-plugin" / "package.json"),
     }
 
 
@@ -131,7 +130,7 @@ def check_versions(
         )
     )
 
-    for label in ("workspace", "vscode", "cursor"):
+    for label in ("workspace", "vscode"):
         value = versions.get(label)
         checks.append(
             CheckResult(
@@ -143,7 +142,6 @@ def check_versions(
         )
 
     vscode = versions.get("vscode")
-    cursor = versions.get("cursor")
     if vscode and vscode != INTENDED_RELEASE_VERSION:
         defects.append(
             Defect(
@@ -151,16 +149,6 @@ def check_versions(
                 component="vscode-plugin/package.json",
                 expected=INTENDED_RELEASE_VERSION,
                 actual=vscode,
-                release_impact="blocking",
-            )
-        )
-    if cursor and cursor != INTENDED_RELEASE_VERSION:
-        defects.append(
-            Defect(
-                classification="version_mismatch",
-                component="cursor-plugin/package.json",
-                expected=INTENDED_RELEASE_VERSION,
-                actual=cursor,
                 release_impact="blocking",
             )
         )

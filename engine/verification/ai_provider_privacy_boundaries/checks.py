@@ -1380,16 +1380,25 @@ def run_vscode_boundary_checks(engine_root: Path) -> tuple[list[CheckResult], di
 
 
 def run_cursor_boundary_checks(engine_root: Path) -> tuple[list[CheckResult], dict[str, Any]]:
+    """Slice 12.1+: Cursor product source must be absent (no OpenRouter surface)."""
+
     repo_root = engine_root.parent
     cursor = repo_root / "cursor-plugin"
     package_json = cursor / "package.json"
+    absent = not cursor.exists()
     checks = [
         CheckResult(
-            name="cursor_plugin_package_json_exists",
+            name="cursor_plugin_directory_absent",
             category="cursor_boundary",
-            ok=package_json.is_file(),
-            detail=f"exists={package_json.is_file()}",
-        )
+            ok=absent,
+            detail=f"absent={absent}",
+        ),
+        CheckResult(
+            name="cursor_plugin_package_json_absent",
+            category="cursor_boundary",
+            ok=not package_json.is_file(),
+            detail=f"package_json_present={package_json.is_file()}",
+        ),
     ]
     hits: list[str] = []
     src = cursor / "src"
@@ -1407,7 +1416,7 @@ def run_cursor_boundary_checks(engine_root: Path) -> tuple[list[CheckResult], di
             name="cursor_src_has_no_openrouter_config",
             category="cursor_boundary",
             ok=not hits,
-            detail=f"hits={hits}",
+            detail=f"hits={hits};src_present={src.is_dir()}",
         )
     )
     return checks, {}

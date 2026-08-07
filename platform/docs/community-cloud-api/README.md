@@ -85,7 +85,7 @@ stream: its own versioned partition policy
 (`community-extension-event-partition-policy:1.0`) and
 `project_extension_event_storage_object()`. The accepted path again stays
 the **generic Hive path only**; Option B reuses `codestrata-client-type`
-for `vscode_extension`/`cursor_extension` (never `editor` or `operation`
+for `vscode_extension` (active); historical `cursor_extension` read-only (never `editor` or `operation`
 in path or metadata). Still no endpoint → storage wiring, and extension
 collection is not claimed operational via the data lake. See
 [extension-event-data-lake.md](./extension-event-data-lake.md).
@@ -95,7 +95,7 @@ stream: its own versioned partition policy
 (`community-ai-usage-partition-policy:1.0`) and
 `project_ai_usage_storage_object()`. The accepted path again stays the
 **generic Hive path only**; Option B reuses `codestrata-client-type` for
-`codestrata_cli` / `vscode_extension` / `cursor_extension` (never
+`codestrata_cli` / `vscode_extension` (active); historical `cursor_extension` read-only (never
 `capability` / `provider_family` / `model_family` in path or metadata).
 Adds the three AI catalog version fields on policy and diagnostics. Still
 no endpoint → storage wiring, and AI usage collection is not claimed
@@ -140,7 +140,7 @@ Epic 8 with boundary/completion verification (reuses SV.9; production ingestion
 | --- | --- |
 | **Engine / Community Edition** | Local single-repository assessment CLI and MCP |
 | **Platform** | Hosts Community Cloud API and all commercial cloud services |
-| **Infrastructure** (private) | OpenTofu AWS resources; extractable to `codestrata-infrastructure` |
+| **Infrastructure** (private) | OpenTofu AWS resources; extractable to `codestrata-infrastructure` (Slice 12.5 contract defined; export in 12.6) |
 
 Engine must remain unaware of this package. Community clients will call the HTTP API
 later; they must not import `codestrata_platform`.

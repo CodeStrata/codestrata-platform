@@ -85,8 +85,16 @@ class ExtensionEventSinkStatus(str, Enum):
 
 EXTENSION_EVENT_SOURCE_TYPE = "extension_event_submitted"
 VSCODE_EXTENSION_CLIENT = "vscode_extension"
+# Retired historical client value (Slice 12.4). Retained for schema 1.0
+# deserialization of previously accepted records only — not an active emitter.
 CURSOR_EXTENSION_CLIENT = "cursor_extension"
-ALLOWED_EXTENSION_CLIENTS: tuple[str, ...] = (
-    VSCODE_EXTENSION_CLIENT,
-    CURSOR_EXTENSION_CLIENT,
+
+ACTIVE_EXTENSION_CLIENTS: tuple[str, ...] = (VSCODE_EXTENSION_CLIENT,)
+HISTORICAL_EXTENSION_CLIENTS: tuple[str, ...] = (CURSOR_EXTENSION_CLIENT,)
+# Schema 1.0 deserializable set (Approach A — no silent schema meaning change).
+SCHEMA_EXTENSION_CLIENTS: tuple[str, ...] = (
+    *ACTIVE_EXTENSION_CLIENTS,
+    *HISTORICAL_EXTENSION_CLIENTS,
 )
+# Active emission / current ingestion / active projection allowlist.
+ALLOWED_EXTENSION_CLIENTS: tuple[str, ...] = ACTIVE_EXTENSION_CLIENTS

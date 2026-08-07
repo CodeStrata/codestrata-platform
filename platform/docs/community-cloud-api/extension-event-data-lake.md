@@ -19,7 +19,7 @@ this slice builds on.
 
 - **Does not wire any endpoint to S3.** `app.py`, `deployment/wiring.py`,
   `deployment/settings.py`, the extension event endpoint's own
-  `routes.py`/`service.py`/`ports.py`, the VS Code / Cursor extension
+  `routes.py`/`service.py`/`ports.py`, the VS Code extension
   emitters, and the telemetry runtime are all unchanged — see
   `platform/tests/community_cloud_api/data_lake/test_extension_event_partition_boundary.py`.
 - **Does not start Slice 8.8.** Partition policy ownership for `ai_usage`
@@ -29,7 +29,7 @@ this slice builds on.
   event endpoint schema both stay `1.0`. The extension operation catalog
   also stays `1.0`. Only the **new** partition policy is versioned, at
   `1.0`.
-- **Does not change emitters.** No VS Code, Cursor, CLI, or Engine change
+- **Does not change emitters.** No VS Code, CLI, or Engine change
   accompanies this slice.
 - **Does not claim extension collection is operational.** The endpoint and
   sinks remain fail-closed / in-memory in production; this slice only adds
@@ -82,7 +82,7 @@ report state, or assessment heads. Rationale:
 
 | Candidate | Disposition | Rationale |
 | --- | --- | --- |
-| `client.name` (→ `client_type`) | **S3 metadata** (`codestrata-client-type`) | Two first-party clients (`vscode_extension` / `cursor_extension`) — a coarse operational filter that mirrors telemetry |
+| `client.name` (→ `client_type`) | **S3 metadata** (`codestrata-client-type`) | Two first-party clients (`vscode_extension` active; `cursor_extension` historical-only) — a coarse operational filter that mirrors telemetry |
 | `client.editor` | Private payload only | One-to-one with client type today; attaching both would be redundant |
 | `event.operation` | Private payload only | Analytics vocabulary tied to the versioned, evolving operation catalog |
 | `event.lifecycle` / `event.result` / `event.failure_category` | Private payload only | Analytics/outcome fields belonging to future aggregate processing |
@@ -92,7 +92,8 @@ report state, or assessment heads. Rationale:
 
 Rationale for Option B over Option A (generic metadata only, as CLI chose
 in Slice 8.6): unlike `cli_event` (always `codestrata_cli`), this stream
-legitimately separates VS Code versus Cursor objects.
+legitimately separates VS Code versus historical Cursor client-type objects
+(active projection is VS Code only — Slice 12.4).
 
 `project_extension_event_storage_object` therefore calls
 `merge_extra_s3_metadata` exactly once for `codestrata-client-type`, and
@@ -211,7 +212,7 @@ Both stores already expose it:
 - S3 metadata carries the five base keys **plus**
   `codestrata-client-type` — never `editor`, `operation`, `lifecycle`,
   `event_id`, or `installation_id`. The client-type *value*
-  (`vscode_extension` / `cursor_extension`) is intentionally present.
+  (`vscode_extension` active; `cursor_extension` historical-only) is intentionally present.
 - `PartitionProjectionDiagnostics` carries both `client_type` and
   `operation_catalog_version`, and structurally excludes `event_id`,
   `installation_id`, the object key, bucket, digest, payload, `operation`,
@@ -261,13 +262,14 @@ New Slice 8.7 test modules:
   (`STORED` / `ALREADY_EXISTS` / `CONFLICT`), including
   `put_immutable_event()` alone dropping client-type metadata.
 - `test_extension_event_partition_determinism.py` — repeated projection is
-  byte-identical; alias vs canonical identical; VS Code vs Cursor differ;
+  byte-identical; alias vs canonical identical; active VS Code projection
+  succeeds; retired Cursor active projection rejected (Slice 12.4);
   date dimensions track the fixed acceptance clock.
 - `test_extension_event_partition_compatibility.py` — every version stays
   pinned; the four partition policies remain distinct; CLI still excludes
   client-type from its allowlist while extension includes it.
 - `test_extension_event_partition_boundary.py` — no production wiring /
-  endpoint / Engine / VS Code / Cursor plugin references any Slice 8.7
+  endpoint / Engine / VS Code plugin references any Slice 8.7
   symbol; extra path dimensions and path traversal rejected; S3 store still
   has `put_immutable_storage_object` and no delete/list.
 

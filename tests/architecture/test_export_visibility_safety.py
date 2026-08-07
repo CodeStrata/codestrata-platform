@@ -80,12 +80,6 @@ EXPECTED_MAPPING = {
         "visibility": "public",
         "classification": "public_release",
     },
-    "codestrata-cursor": {
-        "source_root": "cursor-plugin",
-        "destination_repository": "codestrata-cursor",
-        "visibility": "private",
-        "classification": "private_release",
-    },
     "codestrata-vscode": {
         "source_root": "vscode-plugin",
         "destination_repository": "codestrata-vscode",
@@ -119,7 +113,7 @@ def test_inventory_classifies_surfaces_and_exports(inventory) -> None:
     assert payload["surfaces"]["engine/"]["classification"] == "public_release"
     assert payload["surfaces"]["examples/"]["classification"] == "public_release"
     assert payload["surfaces"]["docs/"]["classification"] == "private_release"
-    assert payload["surfaces"]["cursor-plugin/"]["classification"] == "private_release"
+    assert "cursor-plugin/" not in payload["surfaces"]
     assert payload["surfaces"]["vscode-plugin/"]["classification"] == "private_release"
     assert "private_release" in payload["classifications_legend"]
     by_name = {item["name"]: item for item in payload["exports"]}

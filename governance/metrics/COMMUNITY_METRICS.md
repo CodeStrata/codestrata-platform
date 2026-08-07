@@ -6,7 +6,7 @@
 ## GitHub readiness checklist (per public Community repo)
 
 Validate on each mirror (`codestrata-engine`, `codestrata-docs`,
-`codestrata-examples`, `codestrata-vscode`, `codestrata-cursor`):
+`codestrata-examples`, `codestrata-vscode`):
 
 - [ ] README.md
 - [ ] LICENSE

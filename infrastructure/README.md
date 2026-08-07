@@ -6,6 +6,30 @@ This folder is designed for later extraction into a separate private repository
 (`codestrata-infrastructure`). Application runtime code remains under
 `platform/`.
 
+**Slice 12.5** defines the authoritative extraction contract:
+[`docs/repository-contract.md`](docs/repository-contract.md).
+
+**Slice 12.6** implements the deterministic exporter (no Git/AWS/OpenTofu exec).
+Authoritative target router (Slice 12.8+):
+
+```bash
+python scripts/export_repository.py \
+  --target infrastructure \
+  --destination ../codestrata-infrastructure \
+  --dry-run
+```
+
+Compatibility wrapper:
+
+```bash
+python scripts/export_infrastructure_repository.py \
+  --destination ../codestrata-infrastructure \
+  --dry-run
+```
+
+Verification: Slices 12.5–12.10 under `verification/` (Epic 12 complete).
+The main monorepo remains authoritative pre-cutover. Epic 13 is not started.
+
 ## Purpose
 
 Slice 7.14 creates a **production infrastructure foundation** that packages and

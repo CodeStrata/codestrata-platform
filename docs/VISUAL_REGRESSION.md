@@ -17,7 +17,6 @@ Lightweight, unpaid visual validation for the documentation portal.
 - `/getting-started/` — dark
 - `/reports/` — dark
 - `/extensions/vscode` — dark
-- `/extensions/cursor` — dark
 - `/reference/cli` — dark
 - `/` — light (theme toggle)
 - `/` — mobile (390)

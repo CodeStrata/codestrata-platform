@@ -11,7 +11,6 @@ description: After your first assessment — reports, AI, and IDE extensions.
 | Learn assessment model | [Engineering Assessments](/assessments/) |
 | Optional AI | `codestrata ai` → [AI Providers](/ai-providers/) |
 | VS Code workflow | [VS Code Extension](/extensions/vscode) |
-| Cursor Chat / Agent | [Cursor Extension](/extensions/cursor) |
 | CLI reference | [CLI](/reference/cli) |
 | Community vs Platform | [Community vs Platform](/community/vs-platform) |
 | Stuck? | [Troubleshooting](/troubleshooting/) |

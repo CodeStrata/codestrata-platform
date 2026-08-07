@@ -33,7 +33,7 @@ tests, and representative golden-path runs performed in this phase.
 | [API_MCP_AUDIT.md](API_MCP_AUDIT.md) | REST + MCP (9.1 baseline) |
 | [API_MCP_EXPERIENCE.md](API_MCP_EXPERIENCE.md) | Phase 9.5 integrator experience |
 | [SDK_READINESS.md](SDK_READINESS.md) | Phase 9.7 public SDK readiness (signed) |
-| [EXTENSION_READINESS.md](EXTENSION_READINESS.md) | VS Code / Cursor API needs |
+| [EXTENSION_READINESS.md](EXTENSION_READINESS.md) | VS Code extension readiness (Cursor removed — historical) |
 | [INTEGRATION_EXAMPLES.md](INTEGRATION_EXAMPLES.md) | REST / MCP / CLI / report examples |
 | Engine documentation portal | [engine/docs/README.md](../../../engine/docs/README.md) (Phase 9.6) |
 | Public contract policy | [PUBLIC_CONTRACT_COMPATIBILITY.md](../../../governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md) |

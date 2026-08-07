@@ -7,7 +7,7 @@ from typing import Any, Literal
 from pydantic import Field, StrictBool, StrictStr, field_validator, model_validator
 
 from codestrata_platform.community_cloud_api.extension_events.enums import (
-    ALLOWED_EXTENSION_CLIENTS,
+    SCHEMA_EXTENSION_CLIENTS,
     ExtensionDurationBucket,
     ExtensionEditor,
     ExtensionFailureCategory,
@@ -44,8 +44,10 @@ class ExtensionClient(CommunityApiRequestModel):
     @field_validator("name")
     @classmethod
     def _extension_only(cls, value: str) -> str:
+        # Schema 1.0 retains historical cursor_extension for deserialize only.
+        # Current ingestion rejects retired clients via policy.allowed_clients.
         text = value.strip()
-        if text not in ALLOWED_EXTENSION_CLIENTS:
+        if text not in SCHEMA_EXTENSION_CLIENTS:
             raise ValueError("invalid_enum")
         return text
 

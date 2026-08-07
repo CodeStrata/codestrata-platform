@@ -25,8 +25,8 @@
 | `engine/` | public_release | Community Engine CLI/package |
 | `docs/` | private_release | Private codestrata-docs mirror |
 | `examples/` | public_release | Showcase manifests / expected results |
-| `cursor-plugin/` | private_release | Private codestrata-cursor mirror |
 | `vscode-plugin/` | private_release | Private codestrata-vscode mirror |
+| `infrastructure/` | private_infrastructure_only | Independently versioned; export via `--target infrastructure`; not a Community release artifact |
 | `platform/` | commercial_platform_only | Never export |
 | `governance/` | internal_only | Never export as product tree |
 | `knowledge/` | internal_only | Never export |
@@ -47,8 +47,11 @@
 | codestrata-engine | `engine/` | codestrata-engine | public | PyPI sdist/wheel |
 | codestrata-examples | `examples/` | codestrata-examples | public | Source archive |
 | codestrata-docs | `docs/` | codestrata-docs | private | Docs site / archive |
-| codestrata-cursor | `cursor-plugin/` | codestrata-cursor | private | VSIX / Marketplace |
 | codestrata-vscode | `vscode-plugin/` | codestrata-vscode | private | VSIX / Marketplace |
+
+**Not Community release artifacts:** Platform runtime; Infrastructure repository
+export (`--target infrastructure`, independently versioned; Slice 12.9). Cursor
+extension retired (Slices 12.1–12.2).
 
 ## Explicit exclusions (non-exhaustive)
 

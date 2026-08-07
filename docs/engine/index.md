@@ -19,7 +19,7 @@ produces Engineering Assessments, and does not require CodeStrata Platform.
 ## What it is not
 
 - Not CodeStrata Platform
-- Not an IDE (use the VS Code or Cursor extensions as thin clients)
+- Not an IDE (use the VS Code extension as a thin client)
 - Not “CodeStrata AI” — AI is an optional capability
 
 ## Docs in this portal

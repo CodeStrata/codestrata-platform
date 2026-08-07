@@ -153,7 +153,11 @@ class CommunityAiUsagePolicy:
         sorted([*(item.value for item in AssessmentHead), "unavailable"])
     )
     allowed_invocation_sources: tuple[str, ...] = tuple(
-        sorted(item.value for item in AiInvocationSource)
+        sorted(
+            item.value
+            for item in AiInvocationSource
+            if item != AiInvocationSource.CURSOR_EXTENSION
+        )
     )
     allowed_data_scopes: tuple[str, ...] = tuple(
         sorted(item.value for item in AiDataScope)
@@ -178,6 +182,7 @@ class CommunityAiUsagePolicy:
         "token_bucket_consistency_is_coarse",
         "community_capability_modernization_advisor_only",
         "providers_limited_to_implemented_integrations",
+        "cursor_extension_retired_historical_only",
     )
 
     def __post_init__(self) -> None:

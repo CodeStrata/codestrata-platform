@@ -62,7 +62,7 @@ Detailed phase logs were retired from this file; see [CHANGELOG.md](CHANGELOG.md
 * Broader language / build ecosystem expansion
 * Hosted multi-tenancy, SSO, billing
 * Diff-aware PR review / check annotations
-* Cursor / VS Code plugin implementation
+* VS Code plugin implementation (Community); former Cursor extension removed in Epic 12
 
 ---
 

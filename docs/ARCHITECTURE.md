@@ -18,7 +18,7 @@ is prepared for extraction as **`codestrata-docs`**.
 | Syntax highlighting | Shiki (bundled) |
 | Dark / light | Built-in theme toggle |
 | Deployment | Static files only; no backend |
-| Contributor familiarity | Node tooling aligned with VS Code / Cursor extensions |
+| Contributor familiarity | Node tooling aligned with VS Code extension packaging |
 | Maintenance | Low; established Vite ecosystem |
 
 ### Alternatives considered
@@ -71,7 +71,6 @@ docs/
 | `docs/` | Public CodeStrata documentation portal |
 | `engine/docs/` | Engine-specific developer / technical documentation |
 | `vscode-plugin/` | Extension repository documentation |
-| `cursor-plugin/` | Extension repository documentation |
 | `governance/` | Internal architecture, standards, playbooks (not a runtime dependency) |
 
 The public portal may **adapt** or **link** to public GitHub mirrors. It must not

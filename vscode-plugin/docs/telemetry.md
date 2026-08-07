@@ -98,10 +98,14 @@ Platform extension-event mapping is deferred.
 Never logs payloads, consent decisions with secrets, paths, workspace URIs,
 endpoints, or credentials.
 
-## Cursor
+## Cursor extension (removed)
 
-Unchanged. Cross-client verification (Slice 9.14) confirms Cursor has no
-telemetry runtime. Cursor remains out of scope.
+The former CodeStrata Cursor Extension product is **not** an active telemetry
+emitter (removed in Epic 12). Cross-client verification (Slice 9.14) confirmed
+it had no privacy-first telemetry runtime. Slice 12.4 retires
+`cursor_extension` from active Community client vocabularies; historical
+schema 1.0 records may still deserialize
+(`community-retired-client-policy:1.0`).
 
 ## Cross-client verification
 
@@ -112,8 +116,8 @@ independently versioned — this package does not merge runtimes.
 
 Epic 9 completion (Slice 9.15):
 [`../../verification/privacy_first_telemetry_completion/README.md`](../../verification/privacy_first_telemetry_completion/README.md).
-Production collection is **not operational**. Cursor remains without a
-privacy-first telemetry runtime. Epic 10 Slice 10.1 defines an Engine-side
+Production collection is **not operational**. The former Cursor extension is
+not an active telemetry emitter. Epic 10 Slice 10.1 defines an Engine-side
 anonymous analytics **contract only** (no collection yet). Slice 10.2 adds
 local anonymous installation identity (unused operationally; no transmission).
 Slice 10.3 adds Engine-side local runtime analytics construction (no

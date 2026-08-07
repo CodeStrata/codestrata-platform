@@ -76,29 +76,52 @@ def test_operation_alias_and_canonical_operation_produce_the_same_envelope_bytes
     assert canonical.storage_object.content_sha256 == aliased.storage_object.content_sha256
 
 
-def test_vscode_and_cursor_clients_produce_different_content() -> None:
+def test_vscode_active_projection_succeeds_and_cursor_is_retired() -> None:
+    from codestrata_platform.community_cloud_api.data_lake.envelope_builders import (
+        build_data_lake_envelope,
+    )
+    from codestrata_platform.community_cloud_api.data_lake.envelope_validation import (
+        EnvelopeBuildError,
+    )
+    from codestrata_platform.community_cloud_api.historical_client_compatibility import (
+        deserialize_historical_extension_event_payload,
+    )
+
+    from ..extension_event_helpers import valid_extension_event_body
+    from ._extension_event_partitioning_test_helpers import DEFAULT_EXTENSION_EVENT_CLOCK
+
     vscode = project_extension_event_storage_object(
         extension_event_envelope(
             event_key="event:ext-client-vscode",
             event_id="ext-evt-client-0001",
         )
     )
-    cursor = project_extension_event_storage_object(
-        extension_event_envelope(
-            event_key="event:ext-client-cursor",
-            event_id="ext-evt-client-0001",
-            client={
-                "name": "cursor_extension",
-                "version": "0.2.0",
-                "editor": "cursor",
-                "editor_version": "1.85.0",
-                "platform": "darwin",
-            },
-        )
-    )
-    assert vscode.storage_object.canonical_json_bytes != cursor.storage_object.canonical_json_bytes
     assert vscode.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "vscode_extension"
-    assert cursor.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "cursor_extension"
+
+    body = valid_extension_event_body()
+    body["event_id"] = "ext-evt-client-0001"
+    body["client"] = {
+        "name": "cursor_extension",
+        "version": "0.2.0",
+        "editor": "cursor",
+        "editor_version": "1.85.0",
+        "platform": "darwin",
+    }
+    request = deserialize_historical_extension_event_payload(body)
+    try:
+        build_data_lake_envelope(
+            event_stream="extension_event",
+            request=request,
+            event_key="event:ext-client-cursor",
+            safe_event_reference="evt-extclientcursor",
+            clock=DEFAULT_EXTENSION_EVENT_CLOCK,
+        )
+        raised = False
+    except EnvelopeBuildError:
+        raised = True
+    assert raised
+    # Historical deserialize still works; active construction does not.
+    assert request.client.name == "cursor_extension"
 
 
 def test_safe_object_reference_is_deterministically_derived_from_object_id() -> None:

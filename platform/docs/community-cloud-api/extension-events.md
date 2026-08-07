@@ -63,9 +63,13 @@ schema 1.0.
 
 ### Client
 
-Supported clients in schema 1.0:
+Active clients for current ingestion (Slice 12.4):
 
 - `vscode_extension` with `editor=vscode`
+
+Retired historical client value (schema 1.0 deserialize only; not accepted by
+current ingestion policy or active storage projection):
+
 - `cursor_extension` with `editor=cursor`
 
 `other_extension` is deferred until a real third-party client exists.
@@ -103,8 +107,10 @@ selection, search, settings, or command IDs.
 
 ## Operation catalog (`extension-operation-catalog:1.0`)
 
-Canonical operations from the public VS Code and Cursor extension command
-surfaces (identity-free):
+Canonical operations from the public VS Code extension command surfaces
+(identity-free). Historical Cursor command aliases may remain in Platform
+catalogs for read compatibility of previously accepted records; Cursor is not
+an active emitter (Slice 12.4):
 
 `activate`, `assess`, `assess_with_ai`, `ask_suggested`, `check_environment`,
 `clear_results`, `copy_conversation_prompt`, `filter_findings`, `init_config`,
@@ -157,5 +163,6 @@ Unauthenticated in this slice. Not production-complete until later Epic 7 slices
 No database, Redis, queue, stream, object storage, data lake, worker, or
 analytics warehouse. Ports and in-memory tests only.
 
-This slice creates only the server endpoint and contract. VS Code and Cursor
-extensions are **not** wired to emit events.
+This slice creates only the server endpoint and contract. The VS Code
+extension is **not** wired to emit events. The former Cursor extension
+product is removed (Epic 12).

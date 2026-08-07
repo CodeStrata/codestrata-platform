@@ -115,9 +115,7 @@ class CommunityExtensionEventPolicy:
     schema_version: str = COMMUNITY_EXTENSION_EVENT_SCHEMA_VERSION
     operation_catalog_version: str = EXTENSION_OPERATION_CATALOG_VERSION
     allowed_clients: tuple[str, ...] = ALLOWED_EXTENSION_CLIENTS
-    allowed_editors: tuple[str, ...] = tuple(
-        sorted(item.value for item in ExtensionEditor)
-    )
+    allowed_editors: tuple[str, ...] = (ExtensionEditor.VSCODE.value,)
     allowed_operations: tuple[str, ...] = ()
     operation_alias_mapping: dict[str, str] | None = None
     allowed_lifecycles: tuple[str, ...] = tuple(
@@ -160,6 +158,7 @@ class CommunityExtensionEventPolicy:
         "no_document_workspace_or_source_identity",
         "ai_requested_boolean_only",
         "other_extension_deferred",
+        "cursor_extension_retired_historical_only",
     )
 
     def __post_init__(self) -> None:

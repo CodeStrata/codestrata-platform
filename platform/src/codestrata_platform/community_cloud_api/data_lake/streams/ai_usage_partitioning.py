@@ -38,7 +38,8 @@ scope, or output usage. Rationale:
 Exactly one stream-specific S3 metadata key is added:
 ``codestrata-client-type`` — the envelope's ``client.client_type`` value
 (one of :data:`~codestrata_platform.community_cloud_api.ai_usage.enums.ALLOWED_AI_USAGE_CLIENTS`:
-``codestrata_cli``, ``vscode_extension``, or ``cursor_extension``),
+``codestrata_cli`` or ``vscode_extension``; historical ``cursor_extension``
+metadata remains valid for inspection of existing objects — Slice 12.4),
 attached only by :func:`project_ai_usage_storage_object`.
 
 This reuses the existing key introduced for telemetry in Slice 8.5 —
@@ -47,8 +48,9 @@ outcome field is ever promoted to metadata.
 
 Rationale for Option B over Option A (generic metadata only):
 
-- **Three first-party clients.** Coarse operational separation of CLI /
-  VS Code / Cursor objects mirrors telemetry and extension events.
+- **Active first-party clients.** Coarse operational separation of CLI /
+  VS Code objects. Retired ``cursor_extension`` is historical-only
+  (Slice 12.4).
 - **AI product semantics stay private.** Capability, provider family,
   model family, and outcome remain encrypted payload only.
 

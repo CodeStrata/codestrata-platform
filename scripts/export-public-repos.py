@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 """Export public mirror repositories from codestrata-platform (staging only).
 
+Compatibility / Community-specific CLI (Slice 12.8).
+
+Authoritative unified command:
+
+  python scripts/export_repository.py --target community --destination <staging-root> [--dry-run]
+
+This script remains for Community-specific flags (--manifest, --repo, --clean,
+--staging) and delegates the core export to ``run_public_export``.
+
 Does not create, push, or publish GitHub repositories.
 """
 
@@ -288,6 +297,86 @@ def _print_delta(name: str, delta: FileDelta, *, dry_run: bool) -> None:
             print(f"    … {len(remaining) - 20} more")
 
 
+def run_public_export(
+    *,
+    staging: Path,
+    dry_run: bool = False,
+    manifest_path: Path | None = None,
+    repos: list[str] | None = None,
+    clean: bool = False,
+) -> int:
+    """Programmatic Community public-export entry (staging root = destination).
+
+    Returns process-style exit code (0 success, 1 partial failure, 2 bad args).
+    Dry-run performs planning only and does not create or mutate staging.
+    """
+
+    manifest = _load_manifest(manifest_path or DEFAULT_MANIFEST)
+    default_exclude = list((manifest.get("defaults") or {}).get("exclude_globs") or [])
+
+    exports = list(manifest["exports"])
+    if repos:
+        wanted = set(repos)
+        exports = [item for item in exports if wanted & _destination_names(item)]
+        matched: set[str] = set()
+        for item in exports:
+            matched |= _destination_names(item)
+        missing = wanted - matched
+        if missing:
+            print(f"Unknown export(s): {sorted(missing)}", file=sys.stderr)
+            return 2
+
+    if clean and staging.exists() and not dry_run:
+        shutil.rmtree(staging)
+
+    if not dry_run:
+        staging.mkdir(parents=True, exist_ok=True)
+
+    scripts_dir = str(ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+
+    failures = 0
+    for export in exports:
+        dest_preview = staging / str(export["name"])
+        previous_exists = (
+            not dry_run
+            and dest_preview.is_dir()
+            and any(dest_preview.iterdir())
+        )
+        try:
+            delta = export_one(
+                root=ROOT,
+                export=export,
+                staging_root=staging,
+                default_exclude=default_exclude,
+                dry_run=dry_run,
+            )
+        except Exception as error:  # noqa: BLE001 - CLI boundary
+            print(f"[ERROR] {export.get('name')}: {error}", file=sys.stderr)
+            failures += 1
+            continue
+        _print_delta(str(export["name"]), delta, dry_run=dry_run)
+        if not dry_run:
+            dest = staging / export["name"]
+            print(f"  staging: {dest}")
+            try:
+                from release.extraction import write_export_snapshot
+
+                mode = "update" if previous_exists else "first_time"
+                write_export_snapshot(
+                    staging_repo=dest,
+                    export_name=str(export["name"]),
+                    manifest_version=manifest.get("version"),
+                    mode=mode,
+                    source_commit=_git_head(ROOT),
+                )
+            except Exception as snapshot_error:  # noqa: BLE001
+                print(f"  warning: export snapshot not written: {snapshot_error}")
+
+    return 1 if failures else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -320,66 +409,21 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    print(
+        "note: Community-specific CLI; authoritative unified command is "
+        "scripts/export_repository.py --target community --destination <staging>",
+        file=sys.stderr,
+    )
+
     manifest = _load_manifest(args.manifest)
     staging = args.staging or (ROOT / str(manifest.get("staging_directory", ".export-staging")))
-    default_exclude = list((manifest.get("defaults") or {}).get("exclude_globs") or [])
-
-    exports = list(manifest["exports"])
-    if args.repos:
-        wanted = set(args.repos)
-        exports = [item for item in exports if wanted & _destination_names(item)]
-        matched = set()
-        for item in exports:
-            matched |= _destination_names(item)
-        missing = wanted - matched
-        if missing:
-            print(f"Unknown export(s): {sorted(missing)}", file=sys.stderr)
-            return 2
-
-    if args.clean and staging.exists() and not args.dry_run:
-        shutil.rmtree(staging)
-
-    staging.mkdir(parents=True, exist_ok=True)
-    # Ensure scripts/ is importable for extraction snapshot helpers.
-    scripts_dir = str(ROOT / "scripts")
-    if scripts_dir not in sys.path:
-        sys.path.insert(0, scripts_dir)
-
-    failures = 0
-    for export in exports:
-        dest_preview = staging / str(export["name"])
-        previous_exists = dest_preview.is_dir() and any(dest_preview.iterdir())
-        try:
-            delta = export_one(
-                root=ROOT,
-                export=export,
-                staging_root=staging,
-                default_exclude=default_exclude,
-                dry_run=args.dry_run,
-            )
-        except Exception as error:  # noqa: BLE001 - CLI boundary
-            print(f"[ERROR] {export.get('name')}: {error}", file=sys.stderr)
-            failures += 1
-            continue
-        _print_delta(str(export["name"]), delta, dry_run=args.dry_run)
-        if not args.dry_run:
-            dest = staging / export["name"]
-            print(f"  staging: {dest}")
-            try:
-                from release.extraction import write_export_snapshot
-
-                mode = "update" if previous_exists else "first_time"
-                write_export_snapshot(
-                    staging_repo=dest,
-                    export_name=str(export["name"]),
-                    manifest_version=manifest.get("version"),
-                    mode=mode,
-                    source_commit=_git_head(ROOT),
-                )
-            except Exception as snapshot_error:  # noqa: BLE001
-                print(f"  warning: export snapshot not written: {snapshot_error}")
-
-    return 1 if failures else 0
+    return run_public_export(
+        staging=staging,
+        dry_run=args.dry_run,
+        manifest_path=args.manifest,
+        repos=args.repos,
+        clean=args.clean,
+    )
 
 
 if __name__ == "__main__":

@@ -21,7 +21,10 @@ from codestrata_platform.community_cloud_api.data_lake.streams.extension_event_p
 
 from ._cli_event_partitioning_test_helpers import cli_event_envelope
 from ._envelope_test_helpers import make_envelope
-from ._extension_event_partitioning_test_helpers import extension_event_envelope
+from ._extension_event_partitioning_test_helpers import (
+    DEFAULT_EXTENSION_EVENT_CLOCK,
+    extension_event_envelope,
+)
 
 DEFAULT_POLICY = default_extension_event_partition_policy()
 
@@ -98,19 +101,61 @@ def test_project_uses_default_policies_when_none_supplied() -> None:
     assert result.diagnostics.partition_policy_version == DEFAULT_POLICY.policy_version
 
 
-def test_project_supports_cursor_extension_client_type() -> None:
-    envelope = extension_event_envelope(
-        client={
-            "name": "cursor_extension",
-            "version": "0.2.0",
-            "editor": "cursor",
-            "editor_version": "1.85.0",
-            "platform": "darwin",
-        }
+def test_active_projection_rejects_retired_cursor_extension_client_type() -> None:
+    from codestrata_platform.community_cloud_api.data_lake.envelope_builders import (
+        build_data_lake_envelope,
     )
-    result = project_extension_event_storage_object(envelope)
-    assert result.diagnostics.client_type == "cursor_extension"
-    assert result.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "cursor_extension"
+    from codestrata_platform.community_cloud_api.data_lake.envelope_validation import (
+        EnvelopeBuildError,
+    )
+    from codestrata_platform.community_cloud_api.data_lake.streams.extension_event_partitioning import (
+        PartitionProjectionError,
+        project_extension_event_storage_object,
+    )
+    from codestrata_platform.community_cloud_api.extension_events.models import (
+        ExtensionEventRequest,
+    )
+    from codestrata_platform.community_cloud_api.historical_client_compatibility import (
+        deserialize_historical_extension_event_payload,
+        historical_client_type_metadata_is_valid,
+    )
+
+    from ..extension_event_helpers import valid_extension_event_body
+
+    body = valid_extension_event_body()
+    body["client"] = {
+        "name": "cursor_extension",
+        "version": "0.2.0",
+        "editor": "cursor",
+        "editor_version": "1.85.0",
+        "platform": "darwin",
+    }
+    # Schema deserialize still works for historical records.
+    request = deserialize_historical_extension_event_payload(body)
+    assert isinstance(request, ExtensionEventRequest)
+    assert historical_client_type_metadata_is_valid("cursor_extension")
+
+    # Active envelope construction rejects retired clients.
+    try:
+        build_data_lake_envelope(
+            event_stream="extension_event",
+            request=request,
+            event_key="event:ext-retired-cursor",
+            safe_event_reference="evt-retiredcursor01",
+            clock=DEFAULT_EXTENSION_EVENT_CLOCK,
+        )
+        raised = False
+    except EnvelopeBuildError:
+        raised = True
+    assert raised
+
+    # VS Code active projection still succeeds.
+    result = project_extension_event_storage_object(extension_event_envelope())
+    assert result.diagnostics.client_type == "vscode_extension"
+    assert result.storage_object.to_s3_metadata()[CLIENT_TYPE_METADATA_KEY] == "vscode_extension"
+
+    # Guard: PartitionProjectionError remains the active-path rejection type.
+    assert issubclass(PartitionProjectionError, Exception)
 
 
 def test_project_supports_operation_alias_normalizing_to_canonical() -> None:

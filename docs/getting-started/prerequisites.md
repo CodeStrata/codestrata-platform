@@ -10,7 +10,7 @@ description: What you need before installing CodeStrata Engine.
 | Python **3.12+** | Required for CodeStrata Engine |
 | Git | Required only when assessing a remote GitHub URL |
 | Terminal access | Install and run the `codestrata` CLI |
-| Optional IDE | VS Code or Cursor for extension workflows |
+| Optional IDE | VS Code for the Community extension workflow |
 
 You do **not** need:
 

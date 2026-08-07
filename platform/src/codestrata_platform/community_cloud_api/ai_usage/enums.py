@@ -101,11 +101,22 @@ class AiUsageSinkStatus(str, Enum):
 
 
 AI_USAGE_SOURCE_TYPE = "ai_usage_submitted"
-ALLOWED_AI_USAGE_CLIENTS: tuple[str, ...] = (
-    "codestrata_cli",
-    "vscode_extension",
-    "cursor_extension",
+AI_USAGE_CLIENT_CLI = "codestrata_cli"
+AI_USAGE_CLIENT_VSCODE = "vscode_extension"
+# Retired historical client value (Slice 12.4). Schema 1.0 deserialize only.
+AI_USAGE_CLIENT_CURSOR = "cursor_extension"
+
+ACTIVE_AI_USAGE_CLIENTS: tuple[str, ...] = (
+    AI_USAGE_CLIENT_CLI,
+    AI_USAGE_CLIENT_VSCODE,
 )
+HISTORICAL_AI_USAGE_CLIENTS: tuple[str, ...] = (AI_USAGE_CLIENT_CURSOR,)
+SCHEMA_AI_USAGE_CLIENTS: tuple[str, ...] = (
+    *ACTIVE_AI_USAGE_CLIENTS,
+    *HISTORICAL_AI_USAGE_CLIENTS,
+)
+# Active emission / current ingestion / active projection allowlist.
+ALLOWED_AI_USAGE_CLIENTS: tuple[str, ...] = ACTIVE_AI_USAGE_CLIENTS
 
 # Ordered ranks for coarse token-bucket consistency (none < ranges < over).
 TOKEN_BUCKET_RANK: dict[str, int] = {

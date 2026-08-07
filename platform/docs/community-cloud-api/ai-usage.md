@@ -85,7 +85,7 @@ Optional: `installation_id`.
 
 ### Client
 
-`codestrata_cli` | `vscode_extension` | `cursor_extension` with bounded
+`codestrata_cli` | `vscode_extension` (active); `cursor_extension` retired historical-only (Slice 12.4) with bounded
 version/platform.
 
 ### Usage

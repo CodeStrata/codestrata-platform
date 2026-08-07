@@ -70,11 +70,10 @@ codestrata assess --repo . --output reports --with-ai
 
 Details: [AI Providers](/ai-providers/) (Bedrock and OpenAI setup, troubleshooting).
 
-## IDE extensions
+## IDE extension
 
-After your first CLI assessment, install an IDE client:
+After your first CLI assessment, install the Community IDE client:
 
 - [VS Code Extension](/extensions/vscode)
-- [Cursor Extension](/extensions/cursor)
 
 Continue: [Next Steps](./next-steps).

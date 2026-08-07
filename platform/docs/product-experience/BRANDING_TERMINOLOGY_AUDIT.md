@@ -14,8 +14,8 @@
 | **CodeStrata** | Product |
 | **CodeStrata Platform** | Commercial Platform |
 | **CodeStrata Engine** | Community Engine |
-| **CodeStrata VS Code Extension** | Future / placeholder |
-| **CodeStrata Cursor Extension** | Future / placeholder |
+| **CodeStrata VS Code Extension** | Community editor extension |
+| **CodeStrata Cursor Extension** | Removed from Community (Epic 12); historical name only |
 
 AI is a **capability**, not part of the product name.
 
