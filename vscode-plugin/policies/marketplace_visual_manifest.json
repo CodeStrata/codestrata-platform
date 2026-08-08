@@ -1,0 +1,82 @@
+{
+  "design_system_version": "1.0",
+  "extension_version": "0.2.0",
+  "fixture_identity": "CodeStrata Demo",
+  "gallery_banner": {
+    "art": "media/marketplace-banner.png",
+    "art_height": 640,
+    "art_width": 1280,
+    "color": "#f4f6f3",
+    "color_token": "canvas",
+    "theme": "light"
+  },
+  "icon": {
+    "classification": "marketplace_specific_derivative",
+    "height": 128,
+    "path": "media/codestrata-icon.png",
+    "universal_authority": false,
+    "width": 128
+  },
+  "limitations": [
+    "extension_host_screenshot_automation_may_be_unavailable",
+    "marketplace_not_remotely_previewed_or_published",
+    "pixel_perfect_screenshot_determinism_depends_on_rendering_host",
+    "universal_logo_authority_deferred_to_14_10",
+    "worktree_uncommitted"
+  ],
+  "retired_active_assets": [
+    "media/screenshot-findings.png",
+    "media/screenshot-findings-light.png",
+    "media/screenshot-activity.png",
+    "media/screenshot-recommendations.png"
+  ],
+  "schema": "codestrata-marketplace-visual-manifest",
+  "schema_version": "1.0.0",
+  "screenshots": [
+    {
+      "alt": "CodeStrata VS Code extension showing findings for a synthetic Demo repository",
+      "caption": "Run an assessment from VS Code",
+      "height": 720,
+      "order": 1,
+      "path": "media/screenshot-assessment.png",
+      "role": "assessment_workflow",
+      "width": 1280
+    },
+    {
+      "alt": "CodeStrata Assessment HTML report with executive summary and evidence-backed findings",
+      "caption": "Review evidence-backed findings",
+      "height": 720,
+      "order": 2,
+      "path": "media/screenshot-report.png",
+      "role": "assessment_html_report",
+      "width": 1280
+    },
+    {
+      "alt": "CodeStrata assessment progress notification with Assessment complete and Open Report",
+      "caption": "Track assessment progress",
+      "height": 720,
+      "order": 3,
+      "path": "media/screenshot-progress.png",
+      "role": "assessment_progress",
+      "width": 1280
+    },
+    {
+      "alt": "CodeStrata Initialize Repository guidance for a synthetic Demo workspace",
+      "caption": "Initialize a repository",
+      "height": 720,
+      "order": 4,
+      "path": "media/screenshot-initialization.png",
+      "role": "repository_initialization",
+      "width": 1280
+    },
+    {
+      "alt": "CodeStrata optional AI-assisted assessment progress in VS Code",
+      "caption": "Run an optional AI-assisted assessment",
+      "height": 720,
+      "order": 5,
+      "path": "media/screenshot-ai-assessment.png",
+      "role": "optional_ai_assessment",
+      "width": 1280
+    }
+  ]
+}

@@ -1,0 +1,322 @@
+{
+  "schema": "codestrata-visualization-contract",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "policy": "codestrata-visualization-policy:1.0",
+  "token_authority": "design-system/tokens/catalog.json",
+  "domain_truth_authoritative": true,
+  "semantic_risk_roles": {
+    "critical": {
+      "token": "risk_colors.critical",
+      "marker": "filled_square",
+      "label_required": true
+    },
+    "high": {
+      "token": "risk_colors.high",
+      "marker": "filled_square_soft",
+      "label_required": true
+    },
+    "medium": {
+      "token": "risk_colors.medium",
+      "marker": "hollow_square",
+      "label_required": true
+    },
+    "low": {
+      "token": "risk_colors.low",
+      "marker": "filled_circle",
+      "label_required": true
+    },
+    "info": {
+      "token": "risk_colors.info",
+      "marker": "hollow_circle",
+      "label_required": true
+    }
+  },
+  "semantic_status_roles": {
+    "success": {
+      "token": "status_colors.success",
+      "use": "completed_or_assessed_success"
+    },
+    "warning": {
+      "token": "status_colors.warning",
+      "use": "partial_or_degraded"
+    },
+    "failure": {
+      "token": "status_colors.danger",
+      "use": "error_or_failed"
+    },
+    "informational": {
+      "token": "status_colors.info",
+      "use": "neutral_information"
+    },
+    "unavailable": {
+      "token": "status_colors.neutral",
+      "use": "expected_unavailable_or_disabled"
+    },
+    "unknown": {
+      "token": "status_colors.neutral",
+      "use": "unknown_state"
+    },
+    "partial": {
+      "token": "status_colors.warning",
+      "use": "partial_assessment"
+    },
+    "not_assessed": {
+      "token": "status_colors.neutral",
+      "use": "intentionally_or_scope_not_assessed"
+    }
+  },
+  "semantic_confidence_roles": {
+    "high": {
+      "token": "status_colors.info",
+      "note": "informational_not_risk"
+    },
+    "moderate": {
+      "token": "status_colors.info",
+      "note": "informational_not_risk"
+    },
+    "limited": {
+      "token": "status_colors.neutral",
+      "note": "informational_not_risk"
+    },
+    "unavailable": {
+      "token": "status_colors.neutral",
+      "note": "informational_not_risk"
+    }
+  },
+  "domain_mappings": {
+    "assessment_finding_severity": {
+      "critical": "critical",
+      "high": "high",
+      "medium": "medium",
+      "low": "low",
+      "informational": "info",
+      "info": "info"
+    },
+    "assessment_head_status": {
+      "assessed": "success",
+      "partially_assessed": "partial",
+      "not_available": "unavailable",
+      "not_enabled": "unavailable",
+      "legacy_assessment": "informational",
+      "not_assessed": "not_assessed"
+    },
+    "assessment_confidence": {
+      "high": "high",
+      "moderate": "moderate",
+      "limited": "limited",
+      "unavailable": "unavailable"
+    },
+    "eir_confidence": {
+      "high": "high",
+      "moderate": "moderate",
+      "limited": "limited",
+      "unavailable": "unavailable"
+    },
+    "eir_finding_severity_display": {
+      "critical": "critical",
+      "high": "high",
+      "medium": "medium",
+      "low": "low",
+      "informational": "info",
+      "info": "info"
+    },
+    "recommendation_priority": {
+      "immediate": "critical",
+      "critical": "critical",
+      "high": "high",
+      "medium": "medium",
+      "low": "low"
+    }
+  },
+  "score_inventory": [
+    {
+      "id": "assessment_finding_counts",
+      "source": "assessment_html_dashboard_metrics",
+      "range": "non_negative_integer",
+      "directionality": "count_not_health",
+      "higher_is_better": false,
+      "thresholds": false,
+      "categorical_status": false,
+      "customer_facing": true,
+      "numeric_display": true,
+      "notes": "Counts of findings by severity; not a composite health score"
+    },
+    {
+      "id": "assessment_highest_finding_severity",
+      "source": "assessment_html_summary",
+      "range": "severity_enum_or_none_detected",
+      "directionality": "categorical_risk",
+      "higher_is_better": false,
+      "thresholds": false,
+      "categorical_status": true,
+      "customer_facing": true,
+      "numeric_display": false,
+      "notes": "None Detected is absence of findings, not Healthy"
+    },
+    {
+      "id": "recommendation_priority_score",
+      "source": "assessment_recommendation_view",
+      "range": "float_weight",
+      "directionality": "priority_weight",
+      "higher_is_better": false,
+      "thresholds": false,
+      "categorical_status": true,
+      "customer_facing": true,
+      "numeric_display": "optional_internal",
+      "notes": "Priority category is customer-facing; raw float is weight not health"
+    },
+    {
+      "id": "eir_summary_counts",
+      "source": "eir_static_html_kpis",
+      "range": "non_negative_integer",
+      "directionality": "count_not_health",
+      "higher_is_better": false,
+      "thresholds": false,
+      "categorical_status": false,
+      "customer_facing": true,
+      "numeric_display": true,
+      "notes": "Dataset summary counts; not a universal CodeStrata score"
+    },
+    {
+      "id": "eir_confidence_level",
+      "source": "eir_report_confidence",
+      "range": "confidence_enum",
+      "directionality": "evidence_strength",
+      "higher_is_better": "stronger_evidence_not_health",
+      "thresholds": false,
+      "categorical_status": true,
+      "customer_facing": true,
+      "numeric_display": false,
+      "notes": "Confidence is not repository health"
+    }
+  ],
+  "score_components": {
+    "numeric_score": {
+      "allowed_when": "domain_exposes_numeric_metric",
+      "ui": "number_plus_label"
+    },
+    "categorical_score": {
+      "allowed_when": "domain_exposes_category",
+      "ui": "label_plus_status_tone"
+    },
+    "score_with_status": {
+      "allowed_when": "numeric_and_status_both_exist",
+      "ui": "number_label_status"
+    },
+    "metric_value": {
+      "allowed_when": "counts_and_kpis",
+      "ui": "metric_card"
+    },
+    "confidence_indicator": {
+      "allowed_when": "confidence_enum_present",
+      "ui": "neutral_informational_badge",
+      "forbidden": "risk_palette_for_confidence"
+    }
+  },
+  "forbidden_scores": [
+    "universal_codestrata_score",
+    "invented_health_score",
+    "zero_findings_as_healthy"
+  ],
+  "palettes": {
+    "risk": {
+      "source": "risk_colors",
+      "use": "actual_risk_and_severity_only"
+    },
+    "status": {
+      "source": "status_colors",
+      "use": "lifecycle_and_operational_status"
+    },
+    "categorical_neutral": {
+      "source": "chart_colors.series_1_to_5",
+      "use": "distributions_without_good_bad_meaning",
+      "forbidden": "risk_red_amber_green_for_neutral_categories"
+    },
+    "sequential": {
+      "source": "teal_to_muted_scale",
+      "use": "intensity_or_volume_without_inherent_risk"
+    },
+    "diverging": {
+      "defined": false,
+      "reason": "no_current_domain_metric_requires_diverging_scale"
+    }
+  },
+  "chart_grammar": {
+    "implementation": "definition_and_css_primitives_only",
+    "preferred_renderers": ["css", "server_svg"],
+    "forbidden": ["cdn", "client_javascript", "network_fonts_in_svg"],
+    "required_parts": [
+      "title",
+      "labels",
+      "legend_or_direct_labels",
+      "empty_state",
+      "unavailable_state",
+      "print_style",
+      "dark_style",
+      "textual_equivalent"
+    ],
+    "tooltip_rule": "critical_values_must_not_be_hover_only",
+    "current_inventory": {
+      "assessment_html": "no_svg_charts_severity_count_cards_only",
+      "eir_html": "no_svg_charts_kpi_counts_only",
+      "decision": "do_not_invent_charts_without_existing_justified_visualization"
+    }
+  },
+  "empty_states": {
+    "zero_findings": {
+      "role": "informational",
+      "forbidden_labels": ["Healthy", "Passed", "Safe", "Secure"],
+      "allowed_example": "No findings were produced for this assessment."
+    },
+    "none_detected": {
+      "role": "informational",
+      "meaning": "absence_of_findings_not_health_certification"
+    },
+    "not_assessed": {
+      "role": "not_assessed",
+      "distinct_from": ["success", "zero_findings", "unavailable", "failure"]
+    },
+    "partial": {
+      "role": "partial",
+      "distinct_from": ["success"]
+    },
+    "unavailable": {
+      "role": "unavailable",
+      "distinct_from": ["failure"]
+    }
+  },
+  "accessibility_baseline": {
+    "color_only_meaning_allowed": false,
+    "label_required": true,
+    "marker_or_text_required": true,
+    "textual_equivalent_for_charts": true,
+    "final_certification": "14.11"
+  },
+  "consumers": {
+    "assessment_report": {
+      "bridge": "html_v2_css_semantic_classes",
+      "severity_classes": ".badge.severity-*",
+      "status_classes": ".status-badge-*",
+      "confidence_classes": ".confidence-badge"
+    },
+    "eir": {
+      "bridge": "static_html_css_semantic_classes",
+      "severity_classes": ".status-severity-*",
+      "status_classes": ".badge-status / .status-badge",
+      "confidence_classes": ".confidence-badge"
+    },
+    "documentation": {
+      "scope": "assessment_interpretation_only",
+      "commercial_eir_metrics": false
+    },
+    "marketplace": {
+      "scope": "assessment_screenshot_truthfulness",
+      "commercial_eir": false
+    },
+    "vscode": {
+      "scope": "wording_consistency_only",
+      "health_dashboard": false
+    }
+  }
+}

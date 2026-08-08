@@ -1,0 +1,26 @@
+{
+  "policy_id": "community-documentation-redesign-policy",
+  "policy_version": "1.0",
+  "slice": "14.2",
+  "design_system_policy": "codestrata-design-system-policy:1.0",
+  "visual_language_policy": "codestrata-visual-language-policy:1.0",
+  "consumes_design_system_tokens": true,
+  "token_duplication_allowed": false,
+  "community_only_active_nav": true,
+  "platform_in_active_nav": false,
+  "data_lake_in_active_nav": false,
+  "commercial_mvp_docs_in_active_nav": false,
+  "assessment_html_redesign_allowed": false,
+  "engineering_intelligence_report_redesign_allowed": false,
+  "vscode_redesign_allowed": false,
+  "marketplace_redesign_allowed": false,
+  "start_slice_14_3": false,
+  "light_theme_default": true,
+  "dark_theme_supported": true,
+  "limitations": [
+    "visual_baselines_may_need_refresh",
+    "full_axe_ci_optional",
+    "slice_14_3_not_started",
+    "worktree_uncommitted"
+  ]
+}

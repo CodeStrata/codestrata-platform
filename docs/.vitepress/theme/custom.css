@@ -1,44 +1,44 @@
 @import "./tokens.css";
 @import "./components.css";
 
-/* Docs-specific layout helpers on top of website-aligned tokens */
+/* Community documentation shell — Slice 14.2 */
 
 .cs-home-below {
-  max-width: var(--maxw);
+  max-width: var(--cs-wrap);
   margin: 0 auto;
-  padding: 0 1.5rem 4rem;
+  padding: 0 2rem 4rem;
 }
 
 .cs-home-below h2 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  font-size: clamp(1.45rem, 2.4vw, 1.85rem);
-  color: var(--fg);
+  font-family: var(--cs-font-display);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  color: var(--cs-ink);
   margin: 2.5rem 0 1rem;
+  line-height: 1.12;
 }
 
 .cs-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.13em;
+  font-family: var(--cs-font-body);
+  font-size: var(--cs-text-sm);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--fg-dim);
-  font-weight: 500;
+  color: var(--cs-muted);
+  font-weight: 600;
   margin-bottom: 0.75rem;
 }
 
 .cs-journey {
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
+  font-family: var(--cs-font-mono);
+  font-size: var(--cs-text-sm);
   line-height: 1.7;
   white-space: pre;
   overflow-x: auto;
-  padding: 0.8rem 1.1rem;
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  color: #d7dde5;
+  padding: 0.9rem 1.1rem;
+  background: var(--cs-night);
+  border: 1px solid var(--cs-night-line);
+  border-radius: var(--cs-radius);
+  color: var(--cs-night-ink);
   max-width: 42rem;
 }
 
@@ -54,32 +54,63 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.9rem 1.1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  color: var(--fg) !important;
+  padding: 1rem 1.1rem;
+  background: var(--cs-paper-soft);
+  border: 1px solid var(--cs-line);
+  border-radius: var(--cs-radius);
+  color: var(--cs-ink) !important;
   font-weight: 600;
   font-size: 0.92rem;
   text-decoration: none !important;
-  transition: border-color 0.18s ease, transform 0.16s ease;
+  box-shadow: none;
+  transition: border-color var(--cs-t-fast) var(--cs-ease);
 }
 
 .cs-cta-grid a:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-2));
-  transform: translateY(-2px);
+  border-color: var(--cs-teal);
 }
 
 .cs-cta-grid a span {
-  color: var(--accent);
-  font-family: var(--font-mono);
+  color: var(--cs-teal-dark);
+  font-family: var(--cs-font-mono);
   font-size: 0.85rem;
 }
 
 .VPHome {
-  background:
-    radial-gradient(ellipse 70% 50% at 70% 0%, var(--hero-glow), transparent 65%),
-    var(--bg);
+  background: var(--cs-canvas);
+}
+
+.VPHomeHero {
+  padding-top: 2.5rem !important;
+}
+
+.VPHomeHero .name {
+  font-size: clamp(2rem, 4.5vw, 2.75rem) !important;
+  max-width: 18ch;
+}
+
+.VPHomeHero .tagline {
+  max-width: 42rem;
+  font-size: var(--cs-text-lg) !important;
+  line-height: 1.55 !important;
+  color: var(--cs-muted) !important;
+}
+
+.VPHomeFeatures .VPFeature {
+  background: var(--cs-paper-soft) !important;
+  border: 1px solid var(--cs-line) !important;
+  border-radius: var(--cs-radius) !important;
+  box-shadow: none !important;
+}
+
+.VPHomeFeatures .VPFeature .title {
+  font-family: var(--cs-font-display);
+  font-weight: 500;
+}
+
+.dark .VPHomeFeatures .VPFeature {
+  background: var(--cs-night-soft) !important;
+  border-color: var(--cs-night-line) !important;
 }
 
 .dark .VPNavBarTitle .logo-light,
@@ -87,104 +118,207 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   display: none;
 }
 
-
 .VPNavBarTitle .logo {
   height: 26px !important;
   width: auto !important;
   margin-right: 0 !important;
 }
 
-/* Docs home control — distinct from logo (website); sits in nav content row */
+.VPNavBar {
+  border-bottom: 1px solid rgba(184, 195, 189, 0.72) !important;
+  backdrop-filter: blur(12px);
+}
+
+.dark .VPNavBar {
+  border-bottom-color: var(--cs-night-line) !important;
+}
+
 .VPNavBar .content-body {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-}
-
-.cs-nav-docs-home {
-  display: inline-flex;
-  align-items: center;
-  order: -1;
-  margin-right: 0.35rem;
-  padding-right: 0.55rem;
-  border-right: 1px solid var(--border);
-  height: 1.5rem;
-  flex-shrink: 0;
+  gap: 0.5rem;
 }
 
 .cs-docs-home {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.45rem;
-  border-radius: 8px;
-  color: var(--fg-muted) !important;
+  justify-content: center;
+  /* Compact nav control: keep a tappable box on touch viewports. */
+  min-height: 34px;
+  min-width: 34px;
+  margin-right: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--cs-line-strong);
+  border-radius: var(--cs-radius-button);
+  color: var(--cs-ink) !important;
+  font-size: var(--cs-text-sm);
+  font-weight: 650;
   text-decoration: none !important;
-  font-size: 0.82rem;
-  font-weight: 560;
-  line-height: 1;
-  transition: color 0.15s ease, background 0.15s ease;
+  background: var(--cs-paper);
 }
 
 .cs-docs-home:hover {
-  color: var(--fg) !important;
-  background: var(--surface);
+  border-color: var(--cs-teal);
+  color: var(--cs-accent) !important;
 }
 
-.cs-docs-home__icon {
-  display: block;
-  flex-shrink: 0;
-}
-
-.cs-docs-home__label {
-  font-family: var(--font-body);
-  letter-spacing: 0.01em;
-}
-
-@media (max-width: 640px) {
-  .cs-docs-home__label {
-    display: none;
+@media (max-width: 720px) {
+  .cs-docs-home {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
-/* Home hero: title only (brand is in the logo) */
-.VPHero .name {
-  max-width: min(22rem, 100%);
-  text-wrap: balance;
+.VPSidebar {
+  border-right: 1px solid var(--cs-line);
 }
 
-.VPHero .text:empty {
-  display: none !important;
+.dark .VPSidebar {
+  border-right-color: var(--cs-night-line);
 }
 
-/* Keep custom footer fully visible (not clipped by VP layout) */
-.Layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.VPSidebarItem.is-active > .item .link {
+  color: var(--cs-teal-dark) !important;
 }
 
+.dark .VPSidebarItem.is-active > .item .link {
+  color: var(--cs-teal) !important;
+}
+
+.VPDocAsideOutline .outline-link.active {
+  color: var(--cs-teal-dark) !important;
+}
+
+/* Footer */
 .cs-footer {
-  flex-shrink: 0;
-  width: 100%;
-  position: relative;
-  z-index: 1;
+  margin-top: 3rem;
+  border-top: 1px solid var(--cs-line);
+  background: var(--cs-paper-soft);
+  color: var(--cs-muted);
+  font-size: var(--cs-text-sm);
+}
+
+.dark .cs-footer {
+  background: var(--cs-night-soft);
+  border-top-color: var(--cs-night-line);
+  color: var(--cs-night-muted);
+}
+
+.cs-footer__inner {
+  max-width: var(--cs-wrap);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 1.5rem;
+}
+
+.cs-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: 1.75rem;
+}
+
+.cs-footer__brand {
+  color: var(--cs-ink-soft);
+  line-height: 1.55;
+}
+
+.dark .cs-footer__brand {
+  color: var(--cs-night-ink);
 }
 
 .cs-footer__brand-link {
-  color: inherit;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: var(--cs-ink) !important;
+  text-decoration: none !important;
+  font-family: var(--cs-font-display);
+  font-size: 1.1rem;
+}
+
+.dark .cs-footer__brand-link {
+  color: var(--cs-night-ink) !important;
+}
+
+.cs-footer h4 {
+  margin: 0 0 0.75rem;
+  font-size: var(--cs-text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cs-muted-strong);
+}
+
+.cs-footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs-footer li {
+  margin: 0.4rem 0;
+}
+
+.cs-footer a {
+  color: inherit !important;
   text-decoration: none !important;
 }
 
-.cs-footer__brand-link:hover strong {
-  color: var(--accent-bright);
+.cs-footer a:hover {
+  color: var(--cs-teal-dark) !important;
 }
 
-/* Light theme: keep terminal/code surfaces dark (website rule) */
-html:not(.dark) .cs-terminal,
-html:not(.dark) .cs-journey,
-html:not(.dark) .cs-flow {
-  background: var(--code-bg);
-  color: #d7dde5;
-  border-color: var(--border);
+.dark .cs-footer a:hover {
+  color: var(--cs-teal) !important;
+}
+
+.cs-footer__base {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cs-line);
+  font-size: var(--cs-text-sm);
+}
+
+.dark .cs-footer__base {
+  border-top-color: var(--cs-night-line);
+}
+
+@media (max-width: 960px) {
+  .cs-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .cs-footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cs-home-below {
+    padding-inline: 1.25rem;
+  }
+
+  .cs-footer__inner {
+    padding-inline: 1.25rem;
+  }
+
+  .cs-cta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* A nowrap button label cannot shrink below the 320px content box. */
+  .btn {
+    white-space: normal;
+  }
+}
+
+/* Local search chrome */
+.VPLocalSearchBox {
+  --vp-c-brand-1: var(--cs-teal-dark);
+}
+
+.DocSearch-Button,
+.VPNavBarSearch button {
+  border-radius: var(--cs-radius-button) !important;
 }

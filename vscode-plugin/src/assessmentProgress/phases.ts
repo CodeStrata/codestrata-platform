@@ -81,6 +81,6 @@ export function progressMessageForPhase(
 
 export function progressTitle(aiRequested: boolean): string {
   return aiRequested
-    ? "CodeStrata Engineering Assessment (optional AI)…"
-    : "CodeStrata Engineering Assessment…";
+    ? "Running CodeStrata assessment with AI…"
+    : "Running CodeStrata assessment…";
 }

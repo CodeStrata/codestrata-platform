@@ -1,72 +1,112 @@
-# Deployment Readiness — docs.codestrata.ai
+# Deployment — docs.codestrata.ai
 
-**Status:** Prepared, not deployed. Do not configure production DNS from this phase.
+**Policy:** `codestrata-documentation-deployment-policy:1.0` (Slice 14.12)  
+**Status:** Deployment architecture ready. **No production deploy performed in Epic 14.**
 
-## Build output
+## Authoritative package-root model
 
 | Item | Value |
 | ---- | ----- |
-| Command | `npm run build` |
-| Output directory | `docs/.vitepress/dist` |
-| Type | Static HTML/CSS/JS + assets |
-| Node | `>=20` |
+| Deployment package root | `docs/` (this directory) |
+| Cloudflare project / working directory | `docs/` |
+| After Community export | Exported repo root **is** this package root |
+| Install | `npm ci` |
+| Build | `npm run build` → VitePress only |
+| Proven VitePress output | `.vitepress/dist` |
+| Wrangler config | `wrangler.jsonc` (checked in) |
+| `assets.directory` | `./.vitepress/dist` |
+| Preflight | `npm run deploy:check` |
+| CI / Cloudflare upload | `npm run deploy:upload` (or `npm run deploy`) |
+| Local convenience (builds once, then uploads) | `npm run deploy:local` |
+| Dry-run (no upload) | `npm run deploy:dry-run` |
+| Node | `>=22` (matches Wrangler 4.x / Cloudflare static-assets toolchain) |
+| Hosting | Cloudflare Workers **Static Assets** |
 
-## Environment assumptions
+### Path interpretation rule
 
-- No backend services
-- No CodeStrata Platform runtime
-- No secrets required for build
-- Optional: `NODE_ENV=production` for production builds
+All Wrangler paths are relative to the **docs package root**.
 
-## Custom domain
+| Context | Correct assets directory |
+| ------- | ------------------------ |
+| Inside `docs/` (Cloudflare root / exported `codestrata-docs`) | `./.vitepress/dist` |
+| Monorepo-relative location on disk | `docs/.vitepress/dist` |
 
-- Target: `https://docs.codestrata.ai`
-- HTTPS required
-- DNS ownership: CodeStrata web/ops (future)
+**Never** put `docs/.vitepress/dist` in `wrangler.jsonc`. That is the v0.1.0 failure class.
 
-## Recommended host
+## Build ownership (Approach A)
 
-**Recommendation: Cloudflare Pages** (or GitHub Pages as a close alternative).
+1. Cloudflare (or CI) runs `npm ci`
+2. Cloudflare (or CI) runs `npm run build` **once**
+3. Preflight: `npm run deploy:check`
+4. Upload existing output: `npm run deploy:upload`
 
-| Option | Fit |
-| ------ | --- |
-| **Cloudflare Pages** | Static-native, custom domain, HTTPS, preview deploys, low ops, strong security defaults, cost-efficient |
-| GitHub Pages | Simple for public `codestrata-docs`; custom domain supported; preview via Actions artifacts / PR workflows |
-| AWS Amplify / S3+CloudFront | Full control; higher ops for equivalent static docs |
-| Vercel / Netlify | Excellent DX and previews; evaluate org preference and cost |
+`deploy` / `deploy:upload` must **not** invoke VitePress again.  
+`deploy:local` is operator-only convenience and must not be the Cloudflare deploy command.
 
-**Why Cloudflare Pages first:** static site support, custom domain + HTTPS,
-preview environments for Community PRs, low operational overhead, no server
-secrets for a docs-only site.
+## Historical failure (v0.1.0)
 
-## Preview strategy
+Sequence observed:
 
-- PR builds produce static artifacts or host preview URLs
-- Preview hosts must not be confused with the production canonical URL in human copy
-- Sitemap hostname remains production-oriented; robots on previews may disallow indexing if the host supports it
+1. `npm clean-install` and `npm run build` succeeded (VitePress OK)
+2. `npx wrangler deploy` dynamically installed Wrangler
+3. No checked-in config → Wrangler auto-setup in non-interactive CI
+4. Inferred `assets.directory = docs/.vitepress/dist`
+5. Second build may have run; upload failed because that path did not exist relative to the package working directory
 
-## Rollback
+**Conclusion:** Not a VitePress failure — a deployment configuration / working-directory / build-output contract failure.
 
-- Redeploy previous known-good build artifact / git tag
-- Keep prior Cloudflare/GitHub deployment immutable for fast rollback
+### Diagnostic steps if “assets.directory does not exist”
 
-## Ownership
+1. Confirm Cloudflare / CI working directory is the docs package root
+2. Confirm actual VitePress output after build is `.vitepress/dist`
+3. Confirm `wrangler.jsonc` lives next to `package.json`
+4. Confirm `assets.directory` is `./.vitepress/dist`
+5. Run `npm run deploy:check`
 
-| Concern | Owner (future) |
-| ------- | -------------- |
-| Content | Documentation / Community maintainers |
-| Deploy pipeline | Docs repo CI |
-| DNS / TLS | Web/ops |
-| Domain policy | CodeStrata org |
+## Cloudflare project settings (owner runbook)
 
-## No-secret default
+Configure the Cloudflare project so:
 
-- No analytics keys in repo by default
-- No Platform credentials in CI for docs builds
-- Future analytics require privacy review
+| Setting | Value |
+| ------- | ----- |
+| Repository root / project root | `docs` (monorepo subdirectory) **or** the exported `codestrata-docs` repository root |
+| Install command | `npm ci` |
+| Build command | `npm run build` |
+| Build output directory | `.vitepress/dist` |
+| Deploy command | `npm run deploy:upload` |
+| Wrangler config | `wrangler.jsonc` |
+| Node version | 22+ (match `engines.node`) |
+| Secrets | Cloudflare environment only — never in git |
 
-## Explicit non-actions (this phase)
+Do **not** enable Wrangler interactive setup. Do **not** let CI generate `wrangler.jsonc`.
 
-- No production DNS changes
-- No production deploy
-- No publishing of `codestrata-docs` remote
+Production branch / custom domain / DNS remain owner-operated release gates and are **not** claimed by this slice.
+
+## Secrets and security
+
+- No `CLOUDFLARE_API_TOKEN` (or any deploy credential) in source
+- Authentication is Cloudflare/environment-managed
+- Build requires no product secrets
+
+## Wrangler CLI telemetry
+
+Wrangler may emit its own anonymous CLI telemetry notice. That is **Cloudflare tooling telemetry**, not CodeStrata product telemetry. CodeStrata consent/contracts are unchanged. CI may set `WRANGLER_SEND_METRICS=false` if org policy prefers.
+
+## Preflight contract
+
+`npm run deploy:check` verifies:
+
+- checked-in `wrangler.jsonc`
+- local `wrangler` dependency (no `npx` auto-install)
+- `assets.directory` === proven `.vitepress/dist`
+- output exists with `index.html`, VitePress `assets/`, sitemap, favicon, brand marks
+- Community-only publish scope (no Platform/commercial/internal pages)
+- deploy scripts do not double-build
+
+## Explicit non-actions (this slice)
+
+- No production `wrangler deploy` during verification
+- No Cloudflare project/route/DNS creation from the verifier
+- No documentation redesign
+- No Design System visual-language change
+- No commit / tag / publish / deploy from this slice

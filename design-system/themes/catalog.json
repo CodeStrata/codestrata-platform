@@ -1,0 +1,20 @@
+{
+  "schema": "codestrata-theme-catalog",
+  "schema_version": "1.0.0",
+  "themes": {
+    "light": {
+      "default": true,
+      "bg": "#f4f6f3",
+      "fg": "#111815",
+      "accent": "#0f5d54",
+      "border": "#d6ddd8"
+    },
+    "dark": {
+      "default": false,
+      "bg": "#101a17",
+      "fg": "#edf3f0",
+      "accent": "#16756a",
+      "border": "#31433d"
+    }
+  }
+}

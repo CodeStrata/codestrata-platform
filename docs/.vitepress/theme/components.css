@@ -1,54 +1,52 @@
-/* Website-aligned documentation components (from codestrata.ai patterns) */
+/* Community docs components — Design System (Slice 14.2) */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.72rem 1.35rem;
-  border-radius: var(--radius);
-  font-size: 0.92rem;
-  font-weight: 560;
-  font-family: inherit;
+  padding: 11px 17px;
+  border-radius: var(--cs-radius-button);
+  font-size: var(--cs-text-base);
+  font-weight: 650;
+  font-family: var(--cs-font-body);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: transform 0.16s ease, background 0.18s ease, border-color 0.18s ease,
-    color 0.18s ease;
+  transition: background var(--cs-t-fast) var(--cs-ease),
+    border-color var(--cs-t-fast) var(--cs-ease), color var(--cs-t-fast) var(--cs-ease);
   white-space: nowrap;
   text-decoration: none !important;
-}
-
-.btn:active {
-  transform: translateY(1px);
+  box-shadow: none;
 }
 
 .btn--primary {
-  background: var(--accent);
-  color: var(--accent-fg) !important;
-  font-weight: 600;
-  position: relative;
-  overflow: hidden;
+  background: var(--cs-teal-dark);
+  border-color: var(--cs-teal-dark);
+  color: #ffffff !important;
 }
 
 .btn--primary:hover {
-  background: var(--accent-bright);
-  color: var(--accent-fg) !important;
+  background: var(--cs-teal);
+  border-color: var(--cs-teal);
+  color: #ffffff !important;
 }
 
-.btn--ghost {
-  border-color: var(--border-2);
-  color: var(--fg) !important;
-  font-weight: 600;
+.btn--ghost,
+.btn--secondary {
+  background: var(--cs-paper);
+  border-color: var(--cs-line-strong);
+  color: var(--cs-ink) !important;
 }
 
-.btn--ghost:hover {
-  border-color: var(--fg-dim);
-  background: var(--surface);
+.btn--ghost:hover,
+.btn--secondary:hover {
+  background: var(--cs-paper-soft);
+  border-color: var(--cs-muted-strong);
 }
 
 .btn--sm {
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
+  padding: 8px 12px;
+  font-size: var(--cs-text-md);
 }
 
 .btn-row {
@@ -62,198 +60,176 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--accent) !important;
-  font-size: 0.92rem;
-  font-weight: 540;
-  transition: gap 0.18s ease;
+  color: var(--cs-teal-dark) !important;
+  font-size: var(--cs-text-base);
+  font-weight: 600;
   text-decoration: none !important;
 }
 
 .arrow-link:hover {
-  gap: 0.7rem;
+  gap: 0.65rem;
 }
 
 .cs-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1.35rem;
+  background: var(--cs-paper-soft);
+  border: 1px solid var(--cs-line);
+  border-radius: var(--cs-radius);
+  padding: 1.5rem 1.75rem;
+  box-shadow: none;
 }
 
 .cs-card h3 {
   margin: 0 0 0.45rem;
-  font-size: 1.08rem;
-  font-weight: 640;
-  color: var(--fg);
+  font-family: var(--cs-font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--cs-ink);
 }
 
 .cs-card p {
   margin: 0;
-  color: var(--fg-muted);
+  color: var(--cs-muted);
   font-size: 0.95rem;
 }
 
 .cs-badge {
   display: inline-flex;
   align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--cs-font-mono);
+  font-size: var(--cs-text-xs);
   letter-spacing: 0.04em;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid var(--border-2);
-  color: var(--fg-muted);
-  background: var(--surface);
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--cs-radius-button);
+  border: 1px solid var(--cs-line);
+  background: var(--cs-paper);
+  color: var(--cs-muted-strong);
 }
 
-.cs-badge--accent {
-  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
-  color: var(--accent-bright);
+.cs-badge--success {
+  background: var(--cs-teal-soft);
+  border-color: color-mix(in srgb, var(--cs-teal) 35%, var(--cs-line));
+  color: var(--cs-teal-dark);
 }
 
-.cs-terminal {
-  background: var(--code-bg);
-  color: #d7dde5;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.8rem 1.1rem;
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
-  overflow-x: auto;
-  line-height: 1.65;
-}
-
-.cs-terminal .c {
-  color: #6b7480;
-}
-
-.cs-terminal .cmd {
-  color: var(--amber-bright);
+.cs-badge--warning {
+  background: var(--cs-rust-soft);
+  border-color: color-mix(in srgb, var(--cs-rust) 35%, var(--cs-line));
+  color: var(--cs-rust);
 }
 
 .cs-callout {
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--surface);
-  padding: 0.9rem 1.1rem;
-  margin: 1.25rem 0;
-  color: var(--fg-muted);
+  border: 1px solid var(--cs-line);
+  border-left: 3px solid var(--cs-teal);
+  background: var(--cs-paper-soft);
+  border-radius: var(--cs-radius);
+  padding: 1rem 1.15rem;
+  color: var(--cs-ink-soft);
+  font-size: 0.95rem;
 }
 
-.cs-callout--warn {
-  border-left-color: var(--amber-bright);
+.cs-callout a {
+  color: var(--cs-teal-dark);
 }
 
-.cs-callout--danger {
-  border-left-color: var(--risk);
-}
-
-.cs-flow {
-  font-family: var(--font-mono);
-  font-size: 0.84rem;
+.cs-terminal {
+  font-family: var(--cs-font-mono);
+  font-size: var(--cs-text-sm);
   line-height: 1.7;
-  color: #d7dde5;
-  background: var(--code-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.8rem 1.1rem;
+  padding: 1rem 1.15rem;
+  background: var(--cs-night);
+  border: 1px solid var(--cs-night-line);
+  border-radius: var(--cs-radius);
+  color: var(--cs-night-ink);
   overflow-x: auto;
-  white-space: pre;
 }
 
-/* Site footer (aligned with codestrata.ai .footer) */
-.cs-footer {
-  border-top: 1px solid var(--border);
-  padding-block: 3.2rem 2.2rem;
-  background: var(--bg-2);
-  margin-top: 3rem;
+.cs-terminal .c {
+  color: var(--cs-night-muted);
 }
 
-.cs-footer__inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 1.5rem;
+.cs-terminal .cmd {
+  color: var(--cs-teal);
 }
 
-.cs-footer__grid {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr 1fr 1fr;
-  gap: 2.4rem;
-  margin-bottom: 2.6rem;
+.cs-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--cs-line);
+  border-radius: var(--cs-radius);
 }
 
-@media (max-width: 780px) {
-  .cs-footer__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-}
-
-.cs-footer h4 {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
-  margin: 0 0 1rem;
-  font-weight: 500;
-}
-
-.cs-footer ul {
-  list-style: none;
-  padding: 0;
+.cs-table-wrap table {
   margin: 0;
-  display: grid;
-  gap: 0.55rem;
+  width: 100%;
 }
 
-.cs-footer a {
-  font-size: 0.9rem;
-  color: var(--fg-muted);
-  text-decoration: none;
-  transition: color 0.18s ease;
-}
-
-.cs-footer a:hover {
-  color: var(--fg);
-}
-
-.cs-footer__brand {
-  color: var(--fg-muted);
-  font-size: 0.92rem;
-  line-height: 1.55;
-  max-width: 28ch;
-}
-
-.cs-footer__brand strong {
+/**
+ * VitePress ships `display: block; overflow-x: auto` on doc tables so wide
+ * tables scroll inside themselves. Keep that scroll container — overriding it
+ * with `display: table` pushes the whole page wider than 320px viewports.
+ */
+.VPDoc table {
   display: block;
-  color: var(--fg);
-  font-size: 1rem;
-  margin-bottom: 0.45rem;
-  transition: color 0.18s ease;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
 }
 
-.cs-footer a[target="_blank"]::after {
-  content: none;
+.VPDoc th {
+  color: var(--cs-muted-strong);
+  font-weight: 600;
+  font-size: var(--cs-text-sm);
+  text-align: left;
 }
 
-.cs-footer__base {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 1.7rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.83rem;
-  color: var(--fg-dim);
+.VPDoc td,
+.VPDoc th {
+  border-color: var(--cs-line);
 }
 
-.cs-footer__base a {
-  color: var(--fg-dim);
+.VPDoc .custom-block.tip {
+  border-color: color-mix(in srgb, var(--cs-teal) 40%, var(--cs-line));
+  background: var(--cs-teal-soft);
 }
 
-.cs-footer__base a:hover {
-  color: var(--fg);
+.VPDoc .custom-block.warning {
+  border-color: color-mix(in srgb, var(--cs-rust) 40%, var(--cs-line));
+  background: var(--cs-rust-soft);
+}
+
+.dark .VPDoc .custom-block.tip {
+  background: color-mix(in srgb, var(--cs-teal) 18%, var(--cs-night-soft));
+}
+
+.dark .VPDoc .custom-block.warning {
+  background: color-mix(in srgb, var(--cs-rust) 18%, var(--cs-night-soft));
+}
+
+/**
+ * Forced-colors baseline (Slice 14.11). Badge and callout state is signalled by
+ * background fill, which is discarded in high-contrast modes, so restore a
+ * border and system text colour.
+ */
+@media (forced-colors: active) {
+  .cs-badge,
+  .cs-card,
+  .cs-callout,
+  .cs-terminal,
+  .cs-table-wrap,
+  .VPDoc .custom-block {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+
+  .btn {
+    border: 1px solid CanvasText;
+  }
+
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 3px;
+  }
 }

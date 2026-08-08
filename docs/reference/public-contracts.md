@@ -12,5 +12,5 @@ Public contracts define what Community clients may rely on:
 - Compatibility expectations between Engine and extension clients
 
 Authoritative technical definitions ship with **CodeStrata Engine**. This portal
-explains how contracts fit the developer journey; Engine `docs/` retains schema
-and implementation detail (see [Migration Plan](/MIGRATION_PLAN)).
+explains how contracts fit the Community developer journey; Engine `docs/` retains
+schema and implementation detail.

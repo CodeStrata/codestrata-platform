@@ -475,11 +475,22 @@ def build_html_report_view_model(report_input: ModernizationReportInput) -> Cust
 
 
 def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry, ...]:
-    """Stable TOC entries for the Epic 3 assessment-head report hierarchy."""
+    """Stable TOC entries for the Epic 3 assessment-head report hierarchy.
 
-    entries: list[ReportOutlineEntry] = [
-        ReportOutlineEntry(section_id="leadership-verdict", title="Leadership Verdict"),
-        ReportOutlineEntry(section_id="executive-summary", title="Executive Summary"),
+    Entries are presence-driven: an outline entry is emitted only when the
+    renderer emits the matching section, so contents links never resolve to a
+    missing anchor.
+    """
+
+    entries: list[ReportOutlineEntry] = []
+    if (document.leadership_verdict or "").strip():
+        entries.append(
+            ReportOutlineEntry(section_id="leadership-verdict", title="Leadership Verdict")
+        )
+    entries.append(
+        ReportOutlineEntry(section_id="executive-summary", title="Executive Summary")
+    )
+    entries.extend([
         ReportOutlineEntry(
             section_id=assessment_head_anchor(AssessmentHead.ENGINEERING_INTELLIGENCE),
             title=assessment_head_title(AssessmentHead.ENGINEERING_INTELLIGENCE),
@@ -491,11 +502,18 @@ def _build_outline(document: CustomerReportDocument) -> tuple[ReportOutlineEntry
             section_id=ASSESSMENT_RESULTS_ANCHOR,
             title=ASSESSMENT_RESULTS_TITLE,
         ),
-    ]
+    ])
+    rendered_heads = {section.head for section in document.assessment_heads}
+    head_anchors = {
+        section.head: (section.anchor or assessment_head_anchor(section.head))
+        for section in document.assessment_heads
+    }
     for head in ASSESSMENT_RESULT_HEADS:
+        if head.value not in rendered_heads:
+            continue
         entries.append(
             ReportOutlineEntry(
-                section_id=assessment_head_anchor(head),
+                section_id=head_anchors.get(head.value) or assessment_head_anchor(head),
                 title=assessment_head_title(head),
             )
         )

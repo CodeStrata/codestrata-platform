@@ -1755,7 +1755,7 @@
       "recommendations"
     ],
     "generation_mode": "deterministic",
-    "html_report_version": "3.0",
+    "html_report_version": "3.1",
     "product_name": "CodeStrata",
     "report_type": "engineering_assessment",
     "report_version": "1.2",

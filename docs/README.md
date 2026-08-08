@@ -1,28 +1,37 @@
 # CodeStrata Documentation
 
-Public documentation portal for **CodeStrata** Community assets.
+Public **Community Edition** documentation portal for CodeStrata.
 
 - Site root for future deploy: [https://docs.codestrata.ai](https://docs.codestrata.ai)
 - Standalone repository name (extraction): **`codestrata-docs`**
-- Framework: **VitePress** — see [ARCHITECTURE.md](./ARCHITECTURE.md)
+- Framework: **VitePress**
+- Visual system: consumes [`design-system/`](../design-system/) tokens (Slice 14.1 / 14.2)
+
+Active navigation is Community-only. Historical Platform / commercial pages may
+remain on disk for archive but are excluded from publish (`srcExclude`).
 
 ## Local development
 
-Requires **Node.js 20+**.
+Requires **Node.js 22+** (Wrangler 4.x / Cloudflare static-assets toolchain).
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
 Other commands:
 
 ```bash
-npm run build      # production static site → .vitepress/dist
-npm run preview    # preview production build
-npm test           # build + validation
-npm run validate   # validation against existing dist
+npm run build           # VitePress only → .vitepress/dist
+npm run preview         # preview production build
+npm test                # build + validation
+npm run validate        # validation against existing dist
+npm run deploy:check    # deployment preflight (no upload)
+npm run deploy:dry-run  # local Wrangler dry-run (no upload)
+npm run deploy:upload   # production upload via local Wrangler (operator)
 ```
+
+Cloudflare project root is this `docs/` package. See [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ## Content contribution
 

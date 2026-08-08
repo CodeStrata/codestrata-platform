@@ -3,8 +3,9 @@
  * policy_id = community-vscode-marketplace-branding-policy
  * policy_version = 1.0
  *
- * Visual reference: current codestrata.ai website (dark-first amber/slate).
- * Does not redesign website, reports, or Epic 14 design system.
+ * Visual reference: Design System 1.0 (light-first teal).
+ * Packaging identity: Slice 13.12. Gallery visual assets: Slice 14.6.
+ * Runtime VS Code chrome alignment is Slice 14.5.
  */
 
 export const MARKETPLACE_BRANDING_POLICY_ID =
@@ -19,16 +20,17 @@ export const MARKETPLACE_EXTENSION_VERSION = "0.2.0" as const;
 export const MARKETPLACE_TAGLINE =
   "Engineering decisions grounded in code." as const;
 
-export const MARKETPLACE_GALLERY_BANNER_COLOR = "#0f1216" as const;
-export const MARKETPLACE_GALLERY_BANNER_THEME = "dark" as const;
+/** Design System canvas token — Slice 14.6 Marketplace visual alignment. */
+export const MARKETPLACE_GALLERY_BANNER_COLOR = "#f4f6f3" as const;
+export const MARKETPLACE_GALLERY_BANNER_THEME = "light" as const;
 
 /** Deterministic Marketplace screenshot gallery order (relative media paths). */
 export const MARKETPLACE_GALLERY_ORDER: readonly string[] = [
-  "media/screenshot-findings.png",
+  "media/screenshot-assessment.png",
   "media/screenshot-report.png",
   "media/screenshot-progress.png",
-  "media/screenshot-activity.png",
-  "media/screenshot-recommendations.png",
+  "media/screenshot-initialization.png",
+  "media/screenshot-ai-assessment.png",
 ] as const;
 
 export const MARKETPLACE_REQUIRED_ASSETS: readonly string[] = [

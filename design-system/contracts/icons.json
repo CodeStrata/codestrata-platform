@@ -1,0 +1,60 @@
+{
+  "schema": "codestrata-brand-icon-contract",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "policy": "codestrata-brand-asset-policy:1.0",
+  "principles": {
+    "style": "monoline",
+    "color": "currentColor or inherited ink; semantic colour only through the visualization contract",
+    "meaning": "never colour alone; every icon is paired with a text label or accessible name",
+    "library_scope": "CodeStrata owns product identity only, not a generic UI icon library",
+    "generic_actions": "prefer host-native icons (VS Code codicons, browser and OS affordances)",
+    "emoji_as_product_icon": false
+  },
+  "custom_symbols": [
+    {
+      "id": "product_identity",
+      "asset": "codestrata-mark",
+      "derivatives": ["codestrata-mark-mono", "codestrata-mark-simplified-mono"],
+      "surfaces": [
+        "documentation_site",
+        "assessment_report",
+        "engineering_intelligence_report",
+        "vscode_extension",
+        "vscode_marketplace"
+      ],
+      "decorative_when_labelled": true
+    }
+  ],
+  "semantic_roles": {
+    "assessment": { "delivery": "text_label", "custom_symbol": false },
+    "evidence": { "delivery": "text_label_and_disclosure", "custom_symbol": false },
+    "finding": { "delivery": "text_label_and_severity_marker", "authority": "codestrata-visualization-contract:1.0" },
+    "recommendation": { "delivery": "text_label", "custom_symbol": false },
+    "risk": { "delivery": "severity_marker", "authority": "codestrata-visualization-contract:1.0" },
+    "status": { "delivery": "status_badge", "authority": "codestrata-visualization-contract:1.0" },
+    "info": { "delivery": "callout_label", "authority": "codestrata-cross-surface-presentation-policy:1.0" },
+    "external_link": { "delivery": "unicode_arrow", "glyphs": ["↗"], "custom_symbol": false },
+    "navigation": { "delivery": "unicode_arrow_or_host_native", "glyphs": ["→"], "custom_symbol": false }
+  },
+  "generic_inline_glyphs": [
+    {
+      "id": "docs_home",
+      "path": "docs/.vitepress/theme/CsDocsHomeLink.vue",
+      "role": "navigation",
+      "brand_symbol": false,
+      "color_behavior": "current_color",
+      "text_label_present": true,
+      "reason": "the documentation shell has no host-native home affordance"
+    }
+  ],
+  "vscode": {
+    "generic_action_icons": "codicons via $(name) syntax",
+    "custom_brand_icon_surfaces": ["activitybar_view_container"],
+    "custom_icon_for_generic_action_allowed": false
+  },
+  "reports": {
+    "custom_icon_surfaces": ["product_bar_identity_mark"],
+    "other_icons": "none — labels, badges and visualization markers carry meaning"
+  }
+}

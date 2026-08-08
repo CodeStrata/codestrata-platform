@@ -21,7 +21,7 @@ def _write(tmp_path: Path) -> object:
             "contract_version": "1.0.0",
             "schema_version": "1.2",
             "report_version": "1.2",
-            "html_report_version": "3.0",
+            "html_report_version": "3.1",
             "enabled_sections": ["findings", "recommendations"],
             "generation_mode": "deterministic",
             "generated_at": "2026-01-01T00:00:00Z",

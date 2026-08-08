@@ -1,0 +1,21 @@
+{
+  "schema": "codestrata-accessibility-rules",
+  "schema_version": "1.0.0",
+  "policy": "codestrata-accessibility-responsive-policy:1.0",
+  "contract": "codestrata-accessibility-contract:1.0",
+  "wcag_target": "2.2_AA_oriented",
+  "formal_certification_claimed": false,
+  "focus_ring": "theme-aware via --cs-focus (docs 3px/3px; reports 2px/2px)",
+  "skip_link_required": true,
+  "keyboard_navigation_required": true,
+  "prefers_reduced_motion_required": true,
+  "forced_colors_baseline_required": true,
+  "min_body_px": 16,
+  "status_not_color_only": true,
+  "themes": ["light", "dark"],
+  "contrast_targets": {
+    "normal_text": 4.5,
+    "large_text": 3.0,
+    "non_text_essential": 3.0
+  }
+}

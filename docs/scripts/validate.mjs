@@ -1,10 +1,6 @@
 #!/usr/bin/env node
 /**
- * Post-build validation for codestrata-docs.
- * - Internal link existence against dist HTML
- * - Forbidden content patterns (secrets, localhost, filesystem paths, platform internals)
- * - Required pages / assets
- * - Duplicate route heuristic via clean URL html files
+ * Post-build validation for codestrata-docs (Community Edition, Slice 14.2).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -36,14 +32,32 @@ const requiredFiles = [
   "favicon.svg",
   "robots.txt",
   "getting-started/index.html",
+  "getting-started/install.html",
+  "getting-started/repository-initialization.html",
   "extensions/vscode.html",
-  "community/vs-platform.html",
-  "platform/index.html",
+  "assessments/index.html",
+  "reports/index.html",
+  "reports/engineering-intelligence.html",
+  "reference/cli.html",
+  "reference/configuration.html",
+  "reference/api.html",
+  "reference/telemetry.html",
+  "security/privacy.html",
+  "troubleshooting/index.html",
+  "faq/index.html",
+  "reference/release-notes.html",
 ];
 
 for (const rel of requiredFiles) {
   if (!fs.existsSync(path.join(dist, rel))) {
     errors.push(`missing required dist file: ${rel}`);
+  }
+}
+
+// Commercial / Platform must not be in active published routes
+for (const rel of ["platform/index.html", "community/vs-platform.html"]) {
+  if (fs.existsSync(path.join(dist, rel))) {
+    errors.push(`commercial/platform route must not be published: ${rel}`);
   }
 }
 
@@ -82,6 +96,9 @@ function shouldScan(file) {
   if (rel.startsWith("node_modules/")) return false;
   if (rel.startsWith(".vitepress/dist/")) return false;
   if (rel.startsWith(".vitepress/cache/")) return false;
+  if (rel.startsWith("platform/")) return false;
+  if (rel.startsWith("internal/")) return false;
+  if (rel === "community/vs-platform.md") return false;
   if (rel === "package-lock.json") return false;
   return scanExt.has(path.extname(file));
 }
@@ -99,16 +116,6 @@ for (const base of contentRoots) {
   }
 }
 
-// Internal href check on dist HTML
-const hrefRe = /href="(\/[^"#?]*|[^h][^"]*\.html)"/gi;
-const assetExists = (urlPath) => {
-  let p = urlPath.split("?")[0].split("#")[0];
-  if (p.endsWith("/")) p += "index.html";
-  else if (!path.extname(p)) p += ".html";
-  const candidate = path.join(dist, p.replace(/^\//, ""));
-  return fs.existsSync(candidate);
-};
-
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
   let m;
@@ -121,7 +128,6 @@ for (const file of htmlFiles) {
       if (!fs.existsSync(asset)) errors.push(`missing asset ${href} from ${path.relative(dist, file)}`);
       continue;
     }
-    // skip external-looking and hash-only handled by regex
     if (href.includes("mailto:")) continue;
     const clean = href.split("#")[0].split("?")[0];
     if (!clean || clean === "/") {
@@ -130,10 +136,12 @@ for (const file of htmlFiles) {
       }
       continue;
     }
-    // ignore vitepress theme chrome links that point to known anchors only
     if (clean.startsWith("/#")) continue;
-    if (!assetExists(clean)) {
-      // Allow sitemap etc.
+    let p = clean;
+    if (p.endsWith("/")) p += "index.html";
+    else if (!path.extname(p)) p += ".html";
+    const candidate = path.join(dist, p.replace(/^\//, ""));
+    if (!fs.existsSync(candidate)) {
       if (clean === "/sitemap.xml" || clean.endsWith(".xml")) {
         if (!fs.existsSync(path.join(dist, clean.slice(1)))) {
           warnings.push(`sitemap missing: ${clean}`);
@@ -145,40 +153,36 @@ for (const file of htmlFiles) {
   }
 }
 
-// Metadata smoke: home title
 const home = fs.readFileSync(path.join(dist, "index.html"), "utf8");
 if (!/CodeStrata/i.test(home)) errors.push("home HTML missing CodeStrata brand");
-if (!/Engineering Intelligence for Modern Software/i.test(home)) {
-  errors.push("home HTML missing Engineering Intelligence for Modern Software title");
+if (!/Engineering decisions grounded in code/i.test(home)) {
+  errors.push("home HTML missing Community Design System tagline");
 }
-// Hero name must not restate brand or "Organizations"
 if (/class="name"[^>]*>[\s\S]*?Organizations/i.test(home)) {
   errors.push("home hero title still includes Organizations");
 }
 
-// Footer / logo UX checks (Phase 13.5)
 const footerMust = [
-  "https://codestrata.ai/#how",
-  "https://codestrata.ai/sample-report",
-  "https://codestrata.ai/approach",
-  "https://codestrata.ai/for-private-equity",
-  "https://codestrata.ai/ecommerce-eol",
-  "https://codestrata.ai/#engage",
-  "https://codestrata.ai/#partner",
-  "https://codestrata.ai/#faq",
-  "https://codestrata.ai/privacy",
+  "/getting-started/",
+  "/reference/cli",
+  "/extensions/vscode",
+  "/security/privacy",
+  "/faq/",
   "https://github.com/CodeStrata/codestrata-engine",
+  "https://codestrata.ai/",
 ];
 for (const href of footerMust) {
   if (!home.includes(href)) {
-    errors.push(`home footer missing website link: ${href}`);
+    errors.push(`home footer missing community link: ${href}`);
   }
 }
 if (home.includes("https://codestrata.ai/platform")) {
-  errors.push("footer still links to broken codestrata.ai/platform (404)");
+  errors.push("footer must not link to codestrata.ai/platform");
+}
+if (home.includes("/platform/") || home.includes("community/vs-platform")) {
+  errors.push("published home must not link to Platform or vs-platform docs");
 }
 if (!home.includes('class="cs-docs-home"') && !home.includes("cs-docs-home")) {
-  // Component may be hydrated client-side; check theme source instead.
   const themeIndex = fs.readFileSync(
     path.join(root, ".vitepress/theme/index.ts"),
     "utf8",
@@ -201,8 +205,26 @@ const configSrc = fs.readFileSync(path.join(root, ".vitepress/config.ts"), "utf8
 if (!configSrc.includes('logoLink: "https://codestrata.ai/"')) {
   errors.push('config logoLink must be https://codestrata.ai/');
 }
+if (!configSrc.includes("platform/**")) {
+  errors.push("config must srcExclude platform/**");
+}
+if (configSrc.includes('link: "/platform/"')) {
+  errors.push("config must not navigate to /platform/");
+}
 if (/codestrata ai --provider platform/.test(home)) {
   errors.push("published home must not advertise codestrata ai --provider platform");
+}
+
+// Design System consumption
+const tokensCss = fs.readFileSync(
+  path.join(root, ".vitepress/theme/tokens.css"),
+  "utf8",
+);
+if (!tokensCss.includes("design-system/tokens/tokens.css")) {
+  errors.push("theme tokens.css must import design-system tokens");
+}
+if (/--amber:\s*#d98a3d/.test(tokensCss)) {
+  errors.push("theme must not re-declare superseded amber palette as authority");
 }
 
 console.log(`Scanned ${htmlFiles.length} HTML files in dist`);

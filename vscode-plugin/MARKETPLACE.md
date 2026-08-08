@@ -105,12 +105,14 @@ Clean install/update validation: [docs/clean-install-update.md](docs/clean-insta
 
 - [ ] `npm test` (vscode-plugin)
 - [ ] `npm run package` produces VSIX containing icon + README
-- [ ] Icon 128 PNG present; screenshots synthetic / no secrets
+- [ ] Icon 128 PNG present; screenshots synthetic / no secrets (Slice 14.6 visuals)
+- [ ] Gallery banner uses Design System canvas (`#f4f6f3` / light)
 - [ ] README / CHANGELOG / SECURITY / PRIVACY / SUPPORT / LICENSE present
 - [ ] displayName + description accurate; no Platform-only claims
 - [ ] Publisher `codestrata` created and owned
 - [ ] Credentials only in approved secret storage
 - [ ] Human approval to publish
+- [ ] Marketplace visual assets verification PASS (sv14-6) when regenerating media
 
 ## Post-publish verification
 
@@ -125,5 +127,6 @@ Clean install/update validation: [docs/clean-install-update.md](docs/clean-insta
 - [`README.md`](README.md) — Marketplace listing
 - [`docs/marketplace-documentation.md`](docs/marketplace-documentation.md)
 - [`docs/marketplace-branding.md`](docs/marketplace-branding.md)
+- [`docs/marketplace-visual-assets.md`](docs/marketplace-visual-assets.md)
 - `vscode-plugin/RELEASE_CHECKLIST.md`
 - `governance/assets/extension-branding/MARKETPLACE_PUBLICATION.md`

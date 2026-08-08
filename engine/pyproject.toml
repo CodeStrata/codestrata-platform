@@ -106,7 +106,7 @@ codestrata = [
     "resources/**/*.yml",
     "resources/**/*.json",
     "resources/**/*.md",
-    "reporting/assets/*.png",
+    "reporting/assets/*.svg",
     "application/rules/data/*.json",
 ]
 

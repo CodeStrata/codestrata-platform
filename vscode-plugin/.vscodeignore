@@ -17,6 +17,7 @@ PLACEHOLDER.md
 EXTRACTION.md
 RELEASE_CHECKLIST.md
 media/SCREENSHOTS.md
+scripts/**
 **/*.test.js
 **/*.test.js.map
 runHostTests.js

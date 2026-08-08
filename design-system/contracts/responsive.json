@@ -1,0 +1,111 @@
+{
+  "schema": "codestrata-responsive-contract",
+  "schema_version": "1.0.0",
+  "contract_id": "codestrata-responsive-contract",
+  "contract_version": "1.0",
+  "policy": "codestrata-accessibility-responsive-policy:1.0",
+  "design_system": "codestrata-visual-design-system:1.0",
+  "breakpoint_authority": "design-system/responsive/rules.json",
+  "viewport_matrix_px": [320, 375, 390, 768, 1024, 1280, 1440],
+  "min_viewport_px": 320,
+  "page_level_horizontal_overflow_allowed": false,
+  "overflow_tolerance_px": 1,
+  "allowed_inner_overflow": {
+    "selectors": [
+      ".table-wrap",
+      ".table-wrapper",
+      ".responsive-table",
+      ".cs-table-wrap",
+      ".evidence-card",
+      ".evidence-block",
+      ".cs-terminal",
+      ".cs-journey",
+      "pre",
+      "div[class*='language-']"
+    ],
+    "requirement": "the container scrolls, the page does not; the container must be keyboard focusable"
+  },
+  "intrinsic_scaling": {
+    "svg_viewbox_required": true,
+    "fixed_pixel_logo_width_prohibited": true,
+    "image_max_width_100_percent_required": true,
+    "fluid_grids_preferred": "repeat(auto-fit, minmax(<floor>, 1fr))",
+    "long_token_wrapping_required": "overflow-wrap: anywhere with word-break: normal"
+  },
+  "surfaces": {
+    "documentation": {
+      "id": "community_documentation",
+      "engine": "vitepress",
+      "breakpoints_px": [960, 720],
+      "required_rules": [
+        { "id": "footer_two_column", "at_px": 960, "expect": "footer grid collapses to two columns" },
+        { "id": "footer_single_column", "at_px": 720, "expect": "footer grid collapses to one column" },
+        { "id": "cta_stack", "at_px": 720, "expect": "CTA grid collapses to one column" },
+        { "id": "home_padding", "at_px": 720, "expect": "home wrapper side padding reduces" },
+        { "id": "table_scroll", "at_px": 320, "expect": "document tables scroll inside a wrapper rather than widening the page" },
+        { "id": "code_scroll", "at_px": 320, "expect": "code blocks scroll horizontally rather than clipping" }
+      ],
+      "host_provided": ["mobile navigation drawer", "sidebar collapse", "local search dialog", "appearance toggle"],
+      "fixtures": ["landing", "getting started", "cli reference", "report documentation", "table and code heavy page"]
+    },
+    "assessment_report": {
+      "id": "assessment_html_report",
+      "breakpoints_px": [1040, 1024, 820, 560],
+      "required_rules": [
+        { "id": "toc_sticky", "at_px": 1040, "expect": "contents panel becomes sticky", "query": "min-width" },
+        { "id": "toc_static", "at_px": 1024, "expect": "contents panel becomes static and single column" },
+        { "id": "severity_grid_two_up", "at_px": 820, "expect": "severity strip collapses from five to two columns" },
+        { "id": "split_stack", "at_px": 820, "expect": "two-column split stacks" },
+        { "id": "cards_stack", "at_px": 560, "expect": "metric, stat, and KPI grids collapse to one column" }
+      ],
+      "authority_note": "Slice 14.9 owns the sticky-to-static contents behaviour; this contract records it without changing it",
+      "fixtures": ["representative synthetic report", "partial and not-assessed states"]
+    },
+    "engineering_intelligence_report": {
+      "id": "eir_static_html",
+      "breakpoints_px": [1040, 1024, 820, 560],
+      "required_rules": [
+        { "id": "toc_sticky", "at_px": 1040, "expect": "contents panel becomes sticky", "query": "min-width" },
+        { "id": "toc_static", "at_px": 1024, "expect": "contents panel becomes static and single column" },
+        { "id": "kpi_two_up", "at_px": 820, "expect": "summary KPI grid collapses to two columns" },
+        { "id": "kpi_stack", "at_px": 560, "expect": "summary KPI and cover meta grids collapse to one column" }
+      ],
+      "fixtures": ["representative synthetic commercial report"]
+    },
+    "vscode_extension": {
+      "id": "vscode_native_host",
+      "pixel_responsive_testing_applicable": false,
+      "reason": "host-controlled layout; no custom webview exists",
+      "codestrata_owned": [
+        "presentation strings stay short enough for narrow panels",
+        "activity icon scales from a viewBox",
+        "status bar text stays compact",
+        "no fixed-width custom surface is introduced"
+      ]
+    },
+    "marketplace": {
+      "id": "marketplace_gallery",
+      "pixel_responsive_testing_applicable": false,
+      "reason": "gallery layout is owned by the Marketplace host",
+      "codestrata_owned": [
+        "icon legible at 128 and at small render sizes",
+        "screenshot text readable at displayed gallery size",
+        "frames do not depend on the surrounding background",
+        "README carries the textual equivalent"
+      ]
+    }
+  },
+  "browser_validation": {
+    "method": "attempt documentElement.scrollLeft = scrollWidth; page overflow means scrollLeft becomes > 0",
+    "engine": "chromium via playwright",
+    "artifact": "reports/verification/sv14-11/browser-validation.json",
+    "optional": true,
+    "reason_optional": "browser binaries may be unavailable in restricted environments; static CSS checks always run",
+    "note": "overflow-x: clip can leave scrollWidth larger than clientWidth while still preventing user scrolling; the scrollLeft probe is authoritative"
+  },
+  "static_validation": {
+    "media_query_presence_required": true,
+    "media_query_presence_sufficient_for_pass": false,
+    "note": "presence checks are a floor; when a browser is available its measured result governs"
+  }
+}

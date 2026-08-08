@@ -1,0 +1,108 @@
+{
+  "schema": "codestrata-component-catalog",
+  "schema_version": "1.0.0",
+  "implementation_in_slice_14_1": false,
+  "components": [
+    {
+      "id": "button",
+      "variants": ["primary", "secondary", "ghost", "small"],
+      "rules": [
+        "primary_fill_teal_dark_text_white_radius_4",
+        "secondary_paper_border_line_strong",
+        "no_default_box_shadow",
+        "font_inter_14_weight_650"
+      ]
+    },
+    {
+      "id": "card",
+      "variants": ["paper", "paper_soft", "borderless_group"],
+      "rules": [
+        "default_border_1px_line_radius_6",
+        "background_paper_or_paper_soft",
+        "padding_approx_28px_for_content_cards",
+        "shadow_none_by_default"
+      ]
+    },
+    {
+      "id": "table",
+      "variants": ["default", "compact"],
+      "rules": [
+        "header_muted_strong",
+        "row_dividers_line",
+        "mono_for_ids_paths_scores"
+      ]
+    },
+    {
+      "id": "panel",
+      "variants": ["surface", "inset"],
+      "rules": ["paper_soft_or_night_soft", "1px_border"]
+    },
+    {
+      "id": "sidebar",
+      "variants": ["docs", "app"],
+      "rules": ["canvas_or_paper_soft", "active_link_teal_underline_or_soft_fill"]
+    },
+    {
+      "id": "navigation",
+      "variants": ["marketing_header", "footer", "docs"],
+      "rules": [
+        "sticky_header_blur_canvas",
+        "min_height_70",
+        "links_muted_strong",
+        "brand_space_grotesk_18_600"
+      ]
+    },
+    {
+      "id": "tabs",
+      "variants": ["underline", "soft"],
+      "rules": ["active_teal", "inactive_muted", "no_pill_clusters"]
+    },
+    {
+      "id": "progress",
+      "variants": ["indeterminate", "determinate"],
+      "rules": [
+        "indeterminate_preferred_for_assessments",
+        "no_fabricated_percentages",
+        "track_line_fill_teal"
+      ]
+    },
+    {
+      "id": "chart",
+      "variants": ["bar", "line", "donut"],
+      "rules": ["use_chart_token_series", "grid_line", "axis_muted"]
+    },
+    {
+      "id": "badge",
+      "variants": ["neutral", "success", "warning", "info"],
+      "rules": ["soft_tint_background", "mono_or_small_caps_label"]
+    },
+    {
+      "id": "alert",
+      "variants": ["info", "warning", "danger", "success"],
+      "rules": ["border_semantic", "no_alarmist_red_except_danger"]
+    },
+    {
+      "id": "score_card",
+      "variants": ["summary"],
+      "rules": ["score_uses_score_colors", "label_muted", "value_display_or_mono"]
+    },
+    {
+      "id": "evidence_card",
+      "variants": ["finding_linked"],
+      "rules": [
+        "path_and_rule_id_mono",
+        "evidence_boundary_visible",
+        "no_decorative_fog_without_resolution"
+      ]
+    },
+    {
+      "id": "recommendation_card",
+      "variants": ["actionable"],
+      "rules": [
+        "primary_action_clear",
+        "rationale_proportional",
+        "ids_mono"
+      ]
+    }
+  ]
+}

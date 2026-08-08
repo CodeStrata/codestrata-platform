@@ -3,73 +3,715 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src data:; font-src 'none'; connect-src 'none'; object-src 'none'; script-src 'none'; style-src 'unsafe-inline'">
 <title>Public OSS Engineering Intelligence Demonstration</title>
 <style>
 :root {
-  --ink: #1a1f24;
-  --muted: #5b6570;
-  --line: #d7dde3;
-  --bg: #f7f8fa;
-  --card: #ffffff;
-  --accent: #0f4c5c;
-  --warn: #8a5a00;
+  color-scheme: light;
+
+  /* Core palette (Slice 14.1 / codestrata.ai) */
+  --cs-canvas: #f4f6f3;
+  --cs-paper: #ffffff;
+  --cs-paper-soft: #f8f9f7;
+  --cs-ink: #111815;
+  --cs-ink-soft: #2d3934;
+  --cs-muted: #5f6b65;
+  --cs-muted-strong: #44514b;
+  --cs-line: #d6ddd8;
+  --cs-line-strong: #b8c3bd;
+  --cs-teal: #16756a;
+  --cs-teal-dark: #0f5d54;
+  --cs-teal-soft: #e0eee9;
+  --cs-rust: #a04b17;
+  --cs-rust-soft: #f3e7dc;
+  --cs-blue: #4d6885;
+  --cs-blue-soft: #e7ecf2;
+  --cs-night: #101a17;
+  --cs-night-soft: #15231f;
+  --cs-night-line: #31433d;
+  --cs-night-ink: #edf3f0;
+  --cs-night-muted: #aebdb7;
+
+  /* Dark-surface tints of the same brand hues (Slice 14.11); dark block only. */
+  --cs-teal-light: #35b3a4;
+  --cs-rust-light: #e5822f;
+  --cs-blue-light: #8fb0d4;
+  --cs-teal-soft-dark: #1a332e;
+  --cs-rust-soft-dark: #3a2418;
+  --cs-blue-soft-dark: #1e2a36;
+
+  /* Semantic aliases (design-system) */
+  --cs-bg: var(--cs-canvas);
+  --cs-bg-2: var(--cs-paper-soft);
+  --cs-surface: var(--cs-paper);
+  --cs-surface-2: var(--cs-paper-soft);
+  --cs-fg: var(--cs-ink);
+  --cs-fg-muted: var(--cs-muted);
+  --cs-accent: var(--cs-teal-dark);
+  --cs-accent-bright: var(--cs-teal);
+  --cs-accent-soft: var(--cs-teal-soft);
+  --cs-accent-fg: #ffffff;
+  --cs-border: var(--cs-line);
+  --cs-border-2: var(--cs-line-strong);
+  --cs-border-strong: var(--cs-line-strong);
+  --cs-focus: var(--cs-teal-dark);
+  --cs-mineral: var(--cs-teal);
+  --cs-danger: var(--cs-rust);
+  --cs-fog: var(--cs-muted);
+  --cs-fog-surface: var(--cs-paper-soft);
+  --cs-fog-border: var(--cs-line);
+  --cs-teal-alias: var(--cs-teal);
+
+  /* Status / risk / score (semantic — not free-form red/orange) */
+  --cs-status-success: var(--cs-teal);
+  --cs-status-info: var(--cs-blue);
+  --cs-status-warning: var(--cs-rust);
+  --cs-status-danger: var(--cs-rust);
+  --cs-status-neutral: var(--cs-muted);
+  --cs-risk-critical: var(--cs-rust);
+  --cs-risk-high: var(--cs-rust);
+  --cs-risk-medium: var(--cs-blue);
+  --cs-risk-low: var(--cs-teal);
+  --cs-risk-info: var(--cs-muted);
+  --cs-risk-critical-soft: var(--cs-rust-soft);
+  --cs-risk-high-soft: var(--cs-rust-soft);
+  --cs-risk-medium-soft: var(--cs-blue-soft);
+  --cs-risk-low-soft: var(--cs-teal-soft);
+  --cs-risk-info-soft: var(--cs-paper-soft);
+  --cs-score-excellent: var(--cs-teal);
+  --cs-score-good: var(--cs-teal);
+  --cs-score-fair: var(--cs-blue);
+  --cs-score-poor: var(--cs-rust);
+  --cs-score-unknown: var(--cs-muted);
+
+  /* Report severity aliases (stable for existing HTML classes) */
+  --cs-critical: var(--cs-risk-critical);
+  --cs-high: var(--cs-risk-high);
+  --cs-medium: var(--cs-risk-medium);
+  --cs-low: var(--cs-risk-low);
+  --cs-info: var(--cs-risk-info);
+  --cs-ai: var(--cs-blue);
+  --cs-good: var(--cs-status-success);
+  --cs-risk: var(--cs-status-danger);
+
+  /* Type — offline-safe stacks (no remote font loading) */
+  --cs-font-display: "Space Grotesk", Arial, sans-serif;
+  --cs-font-sans: "Inter", Arial, system-ui, sans-serif;
+  --cs-font-body: var(--cs-font-sans);
+  --cs-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Spacing / radius / elevation (Slice 14.1; report cards use shadow none by default) */
+  --cs-space-1: 0.25rem;
+  --cs-space-2: 0.5rem;
+  --cs-space-3: 0.75rem;
+  --cs-space-4: 1rem;
+  --cs-space-5: 1.5rem;
+  --cs-space-6: 1.75rem;
+  --cs-space-7: 2rem;
+  --cs-space-8: 3rem;
+  --cs-space-9: 4rem;
+  --cs-space-10: 6rem;
+  --cs-radius: 6px;
+  --cs-radius-control: 4px;
+  --cs-radius-button: 4px;
+  --cs-radius-large: 8px;
+  --cs-radius-pill: 999px;
+  --cs-shadow: none;
+  --cs-shadow-soft: 0 18px 48px rgba(24, 40, 34, 0.08);
+  --cs-shadow-none: none;
+  --cs-max-content: 1160px;
+  --cs-wrap: 1160px;
+  --cs-reading-max: 680px;
+  --cs-prose: 680px;
+
+  /* Report stylesheet aliases (stable for existing HTML report CSS). */
+  --bg: var(--cs-bg);
+  --bg-2: var(--cs-bg-2);
+  --surface: var(--cs-surface);
+  --surface-2: var(--cs-surface-2);
+  --ink: var(--cs-ink);
+  --muted: var(--cs-muted);
+  --border: var(--cs-border);
+  --border-2: var(--cs-border-2);
+  --accent: var(--cs-accent);
+  --accent-soft: var(--cs-accent-soft);
+  --focus: var(--cs-focus);
+  --teal: var(--cs-teal);
+  --shadow: var(--cs-shadow);
+  --radius: var(--cs-radius);
+  --critical: var(--cs-critical);
+  --high: var(--cs-high);
+  --medium: var(--cs-medium);
+  --low: var(--cs-low);
+  --info: var(--cs-info);
+  --ai: var(--cs-ai);
+  --good: var(--cs-good);
+  --risk: var(--cs-risk);
+  --fog: var(--cs-fog);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --cs-bg: var(--cs-night);
+    --cs-canvas: var(--cs-night);
+    --cs-bg-2: var(--cs-night-soft);
+    --cs-surface: var(--cs-night-soft);
+    --cs-surface-2: #1a2924;
+    --cs-fg: var(--cs-night-ink);
+    --cs-ink: var(--cs-night-ink);
+    --cs-ink-soft: #d5e0db;
+    --cs-muted: var(--cs-night-muted);
+    --cs-muted-strong: #c5d2cc;
+    --cs-border: var(--cs-night-line);
+    --cs-border-2: #3f534c;
+    --cs-line: var(--cs-night-line);
+    --cs-line-strong: #3f534c;
+    --cs-paper: var(--cs-night-soft);
+    --cs-paper-soft: #1a2924;
+    --cs-accent: var(--cs-teal-light);
+    --cs-accent-bright: #4fc4b3;
+    --cs-accent-soft: #1a332e;
+    --cs-accent-fg: #061411;
+    --cs-focus: var(--cs-teal-light);
+    --cs-fog-surface: #1a2924;
+    --cs-fog-border: var(--cs-night-line);
+    --cs-risk-critical-soft: var(--cs-rust-soft-dark);
+    --cs-risk-high-soft: var(--cs-rust-soft-dark);
+    --cs-risk-medium-soft: var(--cs-blue-soft-dark);
+    --cs-risk-low-soft: var(--cs-teal-soft-dark);
+    --cs-risk-info-soft: #1a2924;
+    --cs-shadow: none;
+    --cs-shadow-soft: 0 18px 48px rgba(0, 0, 0, 0.35);
+
+    /**
+     * Status / risk / score inks retuned for night surfaces (Slice 14.11).
+     * Light values are unchanged; the light inks reach only ~2.4:1 here.
+     */
+    --cs-teal-soft: var(--cs-teal-soft-dark);
+    --cs-rust-soft: var(--cs-rust-soft-dark);
+    --cs-blue-soft: var(--cs-blue-soft-dark);
+    --cs-status-success: var(--cs-teal-light);
+    --cs-status-info: var(--cs-blue-light);
+    --cs-status-warning: var(--cs-rust-light);
+    --cs-status-danger: var(--cs-rust-light);
+    --cs-status-neutral: var(--cs-night-muted);
+    --cs-risk-critical: var(--cs-rust-light);
+    --cs-risk-high: var(--cs-rust-light);
+    --cs-risk-medium: var(--cs-blue-light);
+    --cs-risk-low: var(--cs-teal-light);
+    --cs-risk-info: var(--cs-night-muted);
+    --cs-score-excellent: var(--cs-teal-light);
+    --cs-score-good: var(--cs-teal-light);
+    --cs-score-fair: var(--cs-blue-light);
+    --cs-score-poor: var(--cs-rust-light);
+    --cs-score-unknown: var(--cs-night-muted);
+    --cs-ai: var(--cs-blue-light);
+    --cs-danger: var(--cs-rust-light);
+    --cs-mineral: var(--cs-teal-light);
+    --cs-fog: var(--cs-night-muted);
+  }
 }
 * { box-sizing: border-box; }
-html { font-size: 16px; }
+html { scroll-padding-top: 1.25rem; max-width: 100%; overflow-x: hidden; }
 body {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--cs-font-sans);
   color: var(--ink);
   background: var(--bg);
-  line-height: 1.55;
+  line-height: 1.65;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.report-shell, .wrap, main {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-delay: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 a { color: var(--accent); }
-a:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
 .skip-link {
-  position: absolute; left: -999px; top: 0;
-  background: var(--card); padding: 0.5rem 1rem;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  transform: translateY(-250%);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.5rem 0.75rem;
+  z-index: 100;
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
 }
-.skip-link:focus { left: 1rem; top: 1rem; z-index: 10; }
-.wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
-header.cover {
-  background: var(--card);
-  border-bottom: 1px solid var(--line);
-  padding: 2rem 0 1.25rem;
+.skip-link:focus { transform: translateY(0); }
+.report-shell { min-height: 100vh; }
+.report-product-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
 }
-h1 { font-size: 2rem; margin: 0 0 0.5rem; font-weight: 700; }
-h2 { font-size: 1.35rem; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.35rem; }
-h3 { font-size: 1.1rem; margin-top: 1.25rem; }
+.report-product-mark {
+  display: inline-flex;
+  align-self: center;
+  color: var(--accent);
+}
+.report-product-mark .cs-mark {
+  width: 20px;
+  height: 20px;
+}
+.report-product-name {
+  font-family: var(--cs-font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+}
+.report-product-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.wrap {
+  max-width: var(--cs-max-content);
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+/* The cover is a section for landmark reasons; keep its original spacing. */
+section.cover {
+  margin-top: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.75rem 0 1.25rem;
+}
+section.cover .wrap {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.cover-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.35rem 1.5rem;
+}
+h1 {
+  font-family: var(--cs-font-display);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  margin: 0.35rem 0 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+h2 {
+  font-family: var(--cs-font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  margin-top: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.35rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+h3 {
+  font-family: var(--cs-font-display);
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+  font-weight: 600;
+}
+h4 {
+  font-size: 0.95rem;
+  margin: 0.85rem 0 0.35rem;
+  font-weight: 650;
+}
 .meta, .muted { color: var(--muted); }
+.cover-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.65rem;
+  margin: 0.85rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+.meta-item { display: flex; flex-direction: column; gap: 0.1rem; }
+.meta-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 650;
+}
+.meta-value {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.summary-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.85rem 0.95rem;
+}
+.kpi-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 650;
+}
+.kpi-value {
+  margin: 0.25rem 0 0;
+  font-family: var(--cs-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
 .badge {
-  display: inline-block; border: 1px solid var(--line);
-  padding: 0.15rem 0.5rem; border-radius: 0.25rem; font-size: 0.85rem;
-  background: var(--card);
+  display: inline-block;
+  border: 1px solid var(--border);
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--cs-radius-button);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.badge-status {
+  background: var(--cs-teal-soft);
+  color: var(--cs-status-success);
+  border-color: var(--cs-line-strong);
+}
+.status-badge {
+  display: inline-block;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--cs-radius-button);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid var(--cs-line-strong);
+  background: var(--cs-fog-surface);
+  color: var(--muted);
+}
+.status-severity-critical, .status-severity-high {
+  background: var(--cs-risk-critical-soft);
+  color: var(--critical);
+}
+.status-severity-medium {
+  background: var(--cs-risk-medium-soft);
+  color: var(--medium);
+}
+.status-severity-low {
+  background: var(--cs-risk-low-soft);
+  color: var(--low);
+}
+.status-severity-informational {
+  background: var(--cs-blue-soft);
+  color: var(--cs-status-info);
+}
+.status-severity-critical::before,
+.status-severity-high::before,
+.status-severity-medium::before,
+.status-severity-low::before,
+.status-severity-informational::before {
+  content: "";
+  display: inline-block;
+  width: 0.45em;
+  height: 0.45em;
+  margin-right: 0.3em;
+  border: 1.5px solid currentColor;
+  vertical-align: 0.05em;
+}
+.status-severity-critical::before { background: currentColor; }
+.status-severity-high::before { background: currentColor; opacity: 0.7; }
+.status-severity-medium::before { background: transparent; }
+.status-severity-low::before { border-radius: 50%; background: currentColor; }
+.status-severity-informational::before { border-radius: 50%; background: transparent; }
+.confidence-badge {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--cs-radius-button);
+  font-size: 0.72rem;
+  font-weight: 650;
+  border: 1px solid var(--cs-line-strong);
+  background: var(--cs-blue-soft);
+  color: var(--cs-status-info);
+}
+.confidence-badge-limited, .confidence-badge-unavailable {
+  background: var(--cs-paper-soft);
+  color: var(--cs-status-neutral);
 }
 nav.toc {
-  background: var(--card); border: 1px solid var(--line);
-  padding: 1rem 1.25rem; margin: 1.25rem 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
 }
-nav.toc ol { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+@media (min-width: 1040px) {
+  nav.toc {
+    position: sticky;
+    top: 0.5rem;
+    z-index: 20;
+  }
+}
+nav.toc h2 {
+  margin-top: 0;
+  border-bottom: 0;
+  font-size: 1.15rem;
+}
+nav.toc ol {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  columns: 2;
+  column-gap: 1.5rem;
+}
+nav.toc li { break-inside: avoid; margin: 0.3rem 0; }
+nav.toc a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+nav.toc a:hover, nav.toc a:focus:not(:focus-visible) {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  outline: none;
+}
+nav.toc a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+section {
+  margin-top: 0.5rem;
+}
+section > h2:first-child { margin-top: 1.75rem; }
+.table-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  contain: paint;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.75rem 0 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  background: var(--surface);
+}
+.table-wrap:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.table-wrap > table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}
 table {
-  width: 100%; border-collapse: collapse; background: var(--card);
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
   margin: 0.75rem 0 1.25rem;
 }
 th, td {
-  border: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; vertical-align: top; font-size: 0.95rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.92rem;
 }
-th { background: #eef2f5; font-family: system-ui, sans-serif; }
+.table-wrap th, .table-wrap td {
+  border-left: 0;
+  border-right: 0;
+}
+th {
+  background: var(--surface-2);
+  font-family: var(--cs-font-sans);
+  color: var(--muted);
+  font-weight: 650;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+td { overflow-wrap: anywhere; }
+td.numeric, th.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--cs-font-mono);
+}
+tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+}
+.empty-state {
+  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--border-2);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--muted);
+}
 details {
-  background: var(--card); border: 1px solid var(--line);
-  padding: 0.75rem 1rem; margin: 0.75rem 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
 }
-summary { cursor: pointer; font-weight: 600; }
-.disclaimer { border-left: 3px solid var(--warn); padding-left: 0.75rem; }
-footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
+details[id^="pattern-"], details[id^="observation-"] {
+  border-left: 3px solid var(--accent);
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--cs-font-display);
+}
+.evidence-block, .tech-ref {
+  font-family: var(--cs-font-mono);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.disclaimer {
+  border-left: 3px solid var(--cs-status-warning);
+  padding: 0.55rem 0.75rem;
+  background: var(--cs-rust-soft);
+  color: var(--ink);
+  border-radius: 0 var(--cs-radius-control) var(--cs-radius-control) 0;
+}
+article.drilldown-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--cs-radius-control);
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+}
+article.drilldown-card h3 { margin-top: 0; }
+.trace-list {
+  margin: 0.35rem 0 0.75rem;
+  padding-left: 1.15rem;
+}
+.trace-list li {
+  margin: 0.25rem 0;
+  font-family: var(--cs-font-mono);
+  font-size: 0.88rem;
+}
+footer.site-footer {
+  margin: 2.5rem 0 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+footer.site-footer p { max-width: 70ch; }
+
+@media (max-width: 1024px) {
+  nav.toc ol { columns: 1; }
+  nav.toc { position: static; }
+}
+@media (max-width: 820px) {
+  .wrap { padding: 1.1rem 0.95rem; }
+  .report-product-bar { padding-inline: 0.95rem; }
+  .summary-kpis { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .summary-kpis, .cover-meta { grid-template-columns: 1fr; }
+  h1 { font-size: 1.55rem; }
+}
+
+@media (forced-colors: active) {
+  .badge, .status-badge, .confidence-badge {
+    forced-color-adjust: none;
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+  .status-badge::before { border-color: CanvasText; }
+  details, article.drilldown-card, .table-wrap, nav.toc, .cover-panel, .kpi, .disclaimer {
+    border: 1px solid CanvasText;
+  }
+  a:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+  .skip-link { background: Canvas; color: CanvasText; border-color: CanvasText; }
+}
+
 @media print {
-  body { background: #fff; color: #000; }
-  nav.toc { break-inside: avoid; }
+  @page { margin: 1.4cm; }
+  :root {
+    color-scheme: light;
+    --cs-bg: #ffffff;
+    --cs-canvas: #ffffff;
+    --cs-surface: #ffffff;
+    --cs-surface-2: #f8f9f7;
+    --cs-paper: #ffffff;
+    --cs-paper-soft: #f8f9f7;
+    --cs-fog-surface: #f8f9f7;
+    --cs-ink: #111815;
+    --cs-muted: #5f6b65;
+    --cs-border: #d6ddd8;
+    --cs-border-2: #b8c3bd;
+    --cs-line: #d6ddd8;
+    --cs-line-strong: #b8c3bd;
+    --cs-teal-soft: #f8f9f7;
+    --cs-rust-soft: #f8f9f7;
+    --cs-blue-soft: #f8f9f7;
+    --cs-risk-critical-soft: #f8f9f7;
+    --cs-risk-high-soft: #f8f9f7;
+    --cs-risk-medium-soft: #f8f9f7;
+    --cs-risk-low-soft: #f8f9f7;
+    --cs-risk-info-soft: #f8f9f7;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f8f9f7;
+    --ink: #111815;
+    --muted: #5f6b65;
+    --border: #d6ddd8;
+  }
+  body { background: #ffffff !important; color: #111815 !important; }
+  .skip-link, .report-product-bar { display: none !important; }
+  nav.toc {
+    break-after: page;
+    position: static;
+    box-shadow: none;
+  }
+  nav.toc ol { columns: 1; }
+  nav.toc a { text-decoration: underline; color: #111815; }
   details {
     break-inside: avoid;
     display: block;
@@ -77,19 +719,40 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
   details > *:not(summary) { display: block !important; }
   details summary { margin-bottom: 0.35rem; }
   a[href^="#"]::after { content: ""; }
-  .skip-link { display: none; }
-  header.cover, section, article { break-inside: avoid-page; }
+  /* Cards and rows avoid splits; whole sections are often taller than a page. */
+  section.cover, article, tr { break-inside: avoid; }
+  .table-wrap { overflow: visible; border: 1px solid #d6ddd8; }
+  thead { display: table-header-group; }
+  tbody tr:nth-child(even) { background: transparent; }
+  .badge, .status-badge {
+    border: 1px solid #b8c3bd !important;
+    color: #111815 !important;
+    background: #f8f9f7 !important;
+  }
 }
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
-<header class="cover"><div class="wrap">
+<div class="report-shell">
+<header class="report-product-bar" role="banner"><span class="report-product-mark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" class="cs-mark" aria-hidden="true" focusable="false">
+  <rect x="1" y="3" width="20" height="3" rx="1.2" fill="currentColor"/>
+  <rect x="4" y="8" width="17" height="3" rx="1.2" fill="currentColor" opacity="0.78"/>
+  <rect x="1" y="13" width="14" height="3" rx="1.2" fill="currentColor" opacity="0.56"/>
+  <rect x="6" y="18" width="12" height="3" rx="1.2" fill="currentColor" opacity="0.38"/>
+</svg></span><span class="report-product-name">CodeStrata</span><span class="report-product-label">Engineering Intelligence Report</span></header>
+<section class="cover" aria-label="Report cover"><div class="wrap"><div class="cover-panel">
 <h1>Public OSS Engineering Intelligence Demonstration</h1>
-<p class="badge">Public OSS report</p>
-<p class="meta">Scope: public_oss · Repositories: 5 · Confidence: unavailable</p>
-<p class="meta">Report ID: eir:97542882a05ceb5e5ea2a553 · EIR schema: 1.0 · Export schema: 1.0</p>
-</div></header>
+<p class="badge badge-status">Public OSS report</p>
+<div class="cover-meta">
+<div class="meta-item"><span class="meta-label">Scope</span><span class="meta-value">public_oss</span></div>
+<div class="meta-item"><span class="meta-label">Repositories</span><span class="meta-value">5</span></div>
+<div class="meta-item"><span class="meta-label">Confidence</span><span class="meta-value">unavailable</span></div>
+<div class="meta-item"><span class="meta-label">Report ID</span><span class="meta-value tech-ref">eir:8739bb81bcd7350952203bd5</span></div>
+<div class="meta-item"><span class="meta-label">EIR schema</span><span class="meta-value">1.0</span></div>
+<div class="meta-item"><span class="meta-label">Export schema</span><span class="meta-value">1.0</span></div>
+</div>
+</div></div></section>
 <div class="wrap">
 <nav class="toc" aria-label="Table of contents"><h2>Contents</h2><ol><li><a href="#section-scope">Report Scope and Dataset</a></li><li><a href="#section-orientation">Executive Orientation</a></li><li><a href="#section-summary">Engineering Intelligence Summary</a></li><li><a href="#section-technology">Technology Distribution</a></li><li><a href="#section-capability">Capability Comparison</a></li><li><a href="#section-heads">Assessment-Head Distributions</a></li><li><a href="#section-patterns">Recurring Patterns</a></li><li><a href="#section-observations">Modernization Observations</a></li><li><a href="#section-confidence">Report Confidence</a></li><li><a href="#section-limitations">Dataset Limitations</a></li><li><a href="#section-drilldowns">Repository Drill-Downs</a></li><li><a href="#section-methodology">Methodology</a></li><li><a href="#section-metadata">Export Metadata</a></li><li><a href="#drilldown-drilldown-18dc3893bcb310f3bdd834e8">Repository: angular-realworld-example-app</a></li><li><a href="#drilldown-drilldown-0e8ac32134b7ad34655c0c26">Repository: BookStack</a></li><li><a href="#drilldown-drilldown-136845cca78739435c70806c">Repository: eShop</a></li><li><a href="#drilldown-drilldown-b19c4ff81e5455e22cf667e6">Repository: full-stack-fastapi-template</a></li><li><a href="#drilldown-drilldown-76d069038c81833ac8cc49c0">Repository: spring-petclinic</a></li></ol></nav>
 <main id="main">
@@ -99,17 +762,20 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 <p>Classification: <strong>Public OSS report</strong></p>
 <p>Export scope: public_oss. Repository count:
 5.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Repository population (safe aliases)</caption>
 <thead><tr><th scope="col">Repository</th><th scope="col">Source type</th></tr></thead>
 <tbody><tr><td>BookStack</td><td>public_oss</td></tr><tr><td>angular-realworld-example-app</td><td>public_oss</td></tr><tr><td>eShop</td><td>public_oss</td></tr><tr><td>full-stack-fastapi-template</td><td>public_oss</td></tr><tr><td>spring-petclinic</td><td>public_oss</td></tr></tbody>
 </table>
+</div>
 </section>
 
 
 <section id="section-orientation">
 <h2>Executive Orientation</h2>
 <p class="muted">Structured orientation only — not a free-form narrative.</p>
+<div class="summary-kpis" role="group" aria-label="Dataset coverage metrics"><div class="kpi"><p class="kpi-label">Repositories</p><p class="kpi-value">5</p></div><div class="kpi"><p class="kpi-label">Recurring patterns</p><p class="kpi-value">34</p></div><div class="kpi"><p class="kpi-label">Modernization observations</p><p class="kpi-value">6</p></div><div class="kpi"><p class="kpi-label">Limitations</p><p class="kpi-value">28</p></div><div class="kpi"><p class="kpi-label">Repository drill-downs</p><p class="kpi-value">5</p></div></div>
 <ul><li>Repository count: 5</li><li>Report confidence: unavailable</li><li>Recurring patterns: 34</li><li>Modernization observations: 6</li><li>Classification: Public OSS report</li></ul>
 
 </section>
@@ -117,64 +783,78 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 
 <section id="section-summary">
 <h2>Engineering Intelligence Summary</h2>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Section availability counts</caption>
 <tbody>
-<tr><th scope="row">Repositories</th><td>5</td></tr>
-<tr><th scope="row">Recurring patterns</th><td>34</td></tr>
-<tr><th scope="row">Modernization observations</th><td>6</td></tr>
-<tr><th scope="row">Limitations</th><td>28</td></tr>
-<tr><th scope="row">Repository drill-downs</th><td>5</td></tr>
+<tr><th scope="row">Repositories</th><td class="numeric">5</td></tr>
+<tr><th scope="row">Recurring patterns</th><td class="numeric">34</td></tr>
+<tr><th scope="row">Modernization observations</th><td class="numeric">6</td></tr>
+<tr><th scope="row">Limitations</th><td class="numeric">28</td></tr>
+<tr><th scope="row">Repository drill-downs</th><td class="numeric">5</td></tr>
 </tbody>
 </table>
+</div>
 </section>
 
 
 <section id="section-technology">
 <h2>Technology Distribution</h2>
 <p class="muted">Descriptive presence only — no lifecycle support claims.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Technology presence</caption>
 <thead><tr>
 <th scope="col">Category</th><th scope="col">Technology</th>
-<th scope="col">Repositories</th><th scope="col">Denominator</th>
+<th scope="col" class="numeric">Repositories</th><th scope="col" class="numeric">Denominator</th>
 <th scope="col">Ratio</th><th scope="col">Version states</th>
 </tr></thead>
-<tbody><tr><td>language</td><td>JavaScript</td><td>4</td><td>5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>runtime</td><td>Node.js</td><td>4</td><td>5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>npm</td><td>4</td><td>5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>language</td><td>TypeScript</td><td>4</td><td>5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>framework</td><td>.NET</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>.NET SDK / MSBuild</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Angular</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>framework</td><td>ASP.NET Core</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Blazor</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>C#</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>Composer</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Entity Framework Core</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>FastAPI</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>build_tool</td><td>Gradle</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>Java</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>Jest</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>testing</td><td>JUnit</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Laravel</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>build_tool</td><td>Maven</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>NuGet</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>PHP</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>PHPUnit</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>language</td><td>Python</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Spring Boot</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>Uv</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>Vitest</td><td>1</td><td>5</td><td>0.2000</td><td>known</td></tr><tr><td>testing</td><td>xUnit</td><td>1</td><td>5</td><td>0.2000</td><td>unavailable</td></tr></tbody>
+<tbody><tr><td>language</td><td>JavaScript</td><td class="numeric">4</td><td class="numeric">5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>runtime</td><td>Node.js</td><td class="numeric">4</td><td class="numeric">5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>npm</td><td class="numeric">4</td><td class="numeric">5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>language</td><td>TypeScript</td><td class="numeric">4</td><td class="numeric">5</td><td>0.8000</td><td>unavailable</td></tr><tr><td>framework</td><td>.NET</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>.NET SDK / MSBuild</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Angular</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>framework</td><td>ASP.NET Core</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Blazor</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>C#</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>Composer</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Entity Framework Core</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>FastAPI</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>build_tool</td><td>Gradle</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>Java</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>Jest</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>testing</td><td>JUnit</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Laravel</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>build_tool</td><td>Maven</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>NuGet</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>language</td><td>PHP</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>PHPUnit</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>language</td><td>Python</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>framework</td><td>Spring Boot</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>build_tool</td><td>Uv</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr><tr><td>testing</td><td>Vitest</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>known</td></tr><tr><td>testing</td><td>xUnit</td><td class="numeric">1</td><td class="numeric">5</td><td>0.2000</td><td>unavailable</td></tr></tbody>
 </table>
+</div>
 </section>
 
 
 <section id="section-capability">
 <h2>Capability Comparison</h2>
 <p class="muted">Factual snapshots only — no ranking or composite portfolio scores.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Repository capability snapshots</caption>
 <thead><tr>
 <th scope="col">Head</th><th scope="col">Repository</th>
 <th scope="col">Activation</th><th scope="col">Coverage</th>
-<th scope="col">Confidence</th><th scope="col">Findings</th>
-<th scope="col">Recommendations</th><th scope="col">Priority Actions</th>
+<th scope="col">Confidence</th>
+<th scope="col" class="numeric">Findings</th>
+<th scope="col" class="numeric">Recommendations</th>
+<th scope="col" class="numeric">Priority Actions</th>
 <th scope="col">Highest severity</th>
 </tr></thead>
-<tbody><tr><td>ai_readiness</td><td>angular-realworld-example-app</td><td>disabled</td><td>disabled</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>ai_readiness</td><td>BookStack</td><td>disabled</td><td>disabled</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>ai_readiness</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>3</td><td>0</td><td>0</td><td>informational</td></tr><tr><td>ai_readiness</td><td>full-stack-fastapi-template</td><td>disabled</td><td>disabled</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>ai_readiness</td><td>spring-petclinic</td><td>disabled</td><td>disabled</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>architecture_intelligence</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>2</td><td>0</td><td>0</td><td>low</td></tr><tr><td>architecture_intelligence</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>8</td><td>0</td><td>0</td><td>medium</td></tr><tr><td>architecture_intelligence</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>6</td><td>0</td><td>0</td><td>medium</td></tr><tr><td>architecture_intelligence</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>3</td><td>0</td><td>0</td><td>high</td></tr><tr><td>architecture_intelligence</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>6</td><td>0</td><td>0</td><td>medium</td></tr><tr><td>cloud_readiness</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>4</td><td>1</td><td>0</td><td>low</td></tr><tr><td>cloud_readiness</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>5</td><td>1</td><td>0</td><td>low</td></tr><tr><td>cloud_readiness</td><td>eShop</td><td>disabled</td><td>disabled</td><td>unavailable</td><td>1</td><td>1</td><td>0</td><td>low</td></tr><tr><td>cloud_readiness</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>7</td><td>0</td><td>0</td><td>low</td></tr><tr><td>cloud_readiness</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>9</td><td>1</td><td>0</td><td>low</td></tr><tr><td>dependency_intelligence</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>4</td><td>1</td><td>0</td><td>medium</td></tr><tr><td>dependency_intelligence</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>2</td><td>1</td><td>0</td><td>medium</td></tr><tr><td>dependency_intelligence</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>3</td><td>1</td><td>0</td><td>medium</td></tr><tr><td>dependency_intelligence</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>4</td><td>2</td><td>0</td><td>medium</td></tr><tr><td>dependency_intelligence</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>1</td><td>0</td><td>0</td><td>low</td></tr><tr><td>engineering_intelligence</td><td>angular-realworld-example-app</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>engineering_intelligence</td><td>BookStack</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>engineering_intelligence</td><td>eShop</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>engineering_intelligence</td><td>full-stack-fastapi-template</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>engineering_intelligence</td><td>spring-petclinic</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>modernization_assessment</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>modernization_assessment</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>modernization_assessment</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>modernization_assessment</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>modernization_assessment</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>2</td><td>0</td><td>0</td><td>informational</td></tr><tr><td>security_intelligence</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>2</td><td>1</td><td>0</td><td>high</td></tr><tr><td>security_intelligence</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>4</td><td>2</td><td>0</td><td>medium</td></tr><tr><td>security_intelligence</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>1</td><td>0</td><td>0</td><td>high</td></tr><tr><td>security_intelligence</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>3</td><td>1</td><td>0</td><td>high</td></tr><tr><td>security_intelligence</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>technical_debt_intelligence</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>3</td><td>0</td><td>0</td><td>low</td></tr><tr><td>technical_debt_intelligence</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>9</td><td>2</td><td>0</td><td>medium</td></tr><tr><td>technical_debt_intelligence</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>4</td><td>2</td><td>0</td><td>low</td></tr><tr><td>technical_debt_intelligence</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>5</td><td>1</td><td>0</td><td>medium</td></tr><tr><td>technical_debt_intelligence</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>5</td><td>0</td><td>0</td><td>medium</td></tr><tr><td>technology_inventory</td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>technology_inventory</td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>technology_inventory</td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>technology_inventory</td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr><tr><td>technology_inventory</td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td>0</td><td>0</td><td>0</td><td>n/a</td></tr></tbody>
+<tbody><tr><td><code class='tech-ref'>ai_readiness</code></td><td>angular-realworld-example-app</td><td>disabled</td><td>disabled</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>ai_readiness</code></td><td>BookStack</td><td>disabled</td><td>disabled</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>ai_readiness</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">3</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-informational"><span class="sr-only">Severity: </span>informational</span></td></tr><tr><td><code class='tech-ref'>ai_readiness</code></td><td>full-stack-fastapi-template</td><td>disabled</td><td>disabled</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>ai_readiness</code></td><td>spring-petclinic</td><td>disabled</td><td>disabled</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">2</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">8</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">6</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">3</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-high"><span class="sr-only">Severity: </span>high</span></td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">6</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">4</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">5</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td>eShop</td><td>disabled</td><td>disabled</td><td>unavailable</td><td class="numeric">1</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">7</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">9</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">4</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">2</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">3</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">4</td><td class="numeric">2</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">1</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td>angular-realworld-example-app</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td>BookStack</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td>eShop</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td>full-stack-fastapi-template</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td>spring-petclinic</td><td>unavailable</td><td>unavailable</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">2</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-informational"><span class="sr-only">Severity: </span>informational</span></td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">2</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-high"><span class="sr-only">Severity: </span>high</span></td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">4</td><td class="numeric">2</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">1</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-high"><span class="sr-only">Severity: </span>high</span></td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">3</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-high"><span class="sr-only">Severity: </span>high</span></td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">3</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">9</td><td class="numeric">2</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">4</td><td class="numeric">2</td><td class="numeric">0</td><td><span class="status-badge status-severity-low"><span class="sr-only">Severity: </span>low</span></td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">5</td><td class="numeric">1</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">0</td><td><span class="status-badge status-severity-medium"><span class="sr-only">Severity: </span>medium</span></td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td>angular-realworld-example-app</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td>BookStack</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td>eShop</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td>full-stack-fastapi-template</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td>spring-petclinic</td><td>activated</td><td>partial</td><td>unavailable</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td>n/a</td></tr></tbody>
 </table>
+</div>
 </section>
 
 
 <section id="section-heads">
 <h2>Assessment-Head Distributions</h2>
 <p class="muted">Cross-sectional counts — not temporal trends.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Assessment-head distribution</caption>
 <thead><tr>
-<th scope="col">Head</th><th scope="col">Repositories</th>
-<th scope="col">Activated</th><th scope="col">Complete</th>
-<th scope="col">Partial</th><th scope="col">Findings</th>
-<th scope="col">Recommendations</th><th scope="col">Priority Actions</th>
+<th scope="col">Head</th>
+<th scope="col" class="numeric">Repositories</th>
+<th scope="col" class="numeric">Activated</th>
+<th scope="col" class="numeric">Complete</th>
+<th scope="col" class="numeric">Partial</th>
+<th scope="col" class="numeric">Findings</th>
+<th scope="col" class="numeric">Recommendations</th>
+<th scope="col" class="numeric">Priority Actions</th>
 </tr></thead>
-<tbody><tr><td>ai_readiness</td><td>5</td><td>1</td><td>0</td><td>1</td><td>3</td><td>0</td><td>0</td></tr><tr><td>architecture_intelligence</td><td>5</td><td>5</td><td>0</td><td>5</td><td>25</td><td>0</td><td>0</td></tr><tr><td>cloud_readiness</td><td>5</td><td>4</td><td>0</td><td>4</td><td>26</td><td>4</td><td>0</td></tr><tr><td>dependency_intelligence</td><td>5</td><td>5</td><td>0</td><td>5</td><td>14</td><td>5</td><td>0</td></tr><tr><td>engineering_intelligence</td><td>5</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>modernization_assessment</td><td>5</td><td>5</td><td>0</td><td>5</td><td>2</td><td>0</td><td>0</td></tr><tr><td>security_intelligence</td><td>5</td><td>5</td><td>0</td><td>5</td><td>10</td><td>4</td><td>0</td></tr><tr><td>technical_debt_intelligence</td><td>5</td><td>5</td><td>0</td><td>5</td><td>26</td><td>5</td><td>0</td></tr><tr><td>technology_inventory</td><td>5</td><td>5</td><td>0</td><td>5</td><td>0</td><td>0</td><td>0</td></tr></tbody>
+<tbody><tr><td><code class='tech-ref'>ai_readiness</code></td><td class="numeric">5</td><td class="numeric">1</td><td class="numeric">0</td><td class="numeric">1</td><td class="numeric">3</td><td class="numeric">0</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>architecture_intelligence</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">25</td><td class="numeric">0</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>cloud_readiness</code></td><td class="numeric">5</td><td class="numeric">4</td><td class="numeric">0</td><td class="numeric">4</td><td class="numeric">26</td><td class="numeric">4</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>dependency_intelligence</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">14</td><td class="numeric">5</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>engineering_intelligence</code></td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>modernization_assessment</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">2</td><td class="numeric">0</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>security_intelligence</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">10</td><td class="numeric">4</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>technical_debt_intelligence</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">26</td><td class="numeric">5</td><td class="numeric">0</td></tr><tr><td><code class='tech-ref'>technology_inventory</code></td><td class="numeric">5</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">5</td><td class="numeric">0</td><td class="numeric">0</td><td class="numeric">0</td></tr></tbody>
 </table>
+</div>
 </section>
 
 
@@ -193,15 +873,18 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 <section id="section-confidence">
 <h2>Report Confidence</h2>
 <p class="disclaimer"><strong>Confidence is not an accuracy percentage.</strong></p>
+<p class="muted">Confidence reflects evidence strength for this export — not repository health.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <tbody>
-<tr><th scope="row">Level</th><td>unavailable</td></tr>
-<tr><th scope="row">Included repositories</th><td>5</td></tr>
-<tr><th scope="row">Comparable repositories</th><td>0</td></tr>
+<tr><th scope="row">Level</th><td><span class="confidence-badge confidence-badge-unavailable">unavailable</span></td></tr>
+<tr><th scope="row">Included repositories</th><td class="numeric">5</td></tr>
+<tr><th scope="row">Comparable repositories</th><td class="numeric">0</td></tr>
 <tr><th scope="row">Dataset coverage</th><td>partial</td></tr>
 <tr><th scope="row">Weakest material source confidence</th><td>limited</td></tr>
 </tbody>
 </table>
+</div>
 <h3>Basis</h3>
 <ul><li>canonical_assessment_sources</li><li>comparable_repository_sample</li><li>complete_section_denominators</li><li>legacy_source_presence</li><li>mixed_assessment_coverage</li><li>mixed_source_confidence</li><li>non_temporal_dataset</li><li>public_source_revisions_pinned</li><li>schema_mixed</li><li>small_repository_sample</li></ul>
 </section>
@@ -210,6 +893,7 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 <section id="section-limitations">
 <h2>Dataset Limitations</h2>
 <p class="muted">Interpretation impact — not Finding Severity.</p>
+<div class="table-wrap" tabindex="0">
 <table>
 <caption>Structured dataset limitations</caption>
 <thead><tr>
@@ -218,26 +902,29 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 </tr></thead>
 <tbody><tr><td>assessment_confidence</td><td>moderate</td><td>[confidence:limited] Weakest materially contributing assessment-head confidence is limited.</td><td>report-wide</td></tr><tr><td>assessment_coverage</td><td>moderate</td><td>[coverage:partial] Material assessment-head coverage is partial for one or more heads.</td><td>report-wide</td></tr><tr><td>language_representation</td><td>material</td><td>[language:javascript] C#, Java, JavaScript, PHP, Python, TypeScript repositories account for 4 of 5 repositories in this selected dataset; findings may not generalize to other language ecosystems.</td><td>report-wide</td></tr><tr><td>legacy_source</td><td>moderate</td><td>[legacy:5] 5 included repository assessment(s) are legacy-limited and must not be treated as canonical-complete.</td><td>report-wide</td></tr><tr><td>non_temporal_dataset</td><td>moderate</td><td>[non_temporal_snapshot] This report is a cross-sectional snapshot of the selected assessed dataset. It does not establish improvement, decline, progress, or regression over time.</td><td>report-wide</td></tr><tr><td>sample_size</td><td>material</td><td>[comparable:small:0] Comparable repository count (0) is below the policy minimum for material cross-repository sections.</td><td>report-wide</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:c56c57b1a20ed7baeebfc1db] Recurring pattern &#x27;pattern:c56c57b1a20ed7baeebfc1db&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>angular-realworld-example-app, eShop</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:f710abad7d2dc794abf3f12f] Recurring pattern &#x27;pattern:f710abad7d2dc794abf3f12f&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, eShop</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:a9e8ba9df8b7b562a76da35e] Recurring pattern &#x27;pattern:a9e8ba9df8b7b562a76da35e&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>eShop, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:28cfdc59892fba43c0a0e279] Recurring pattern &#x27;pattern:28cfdc59892fba43c0a0e279&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[observation_sample:obs:79545787cf21632c473069f0] Modernization observation &#x27;obs:79545787cf21632c473069f0&#x27; is supported by exactly two repositories.</td><td>angular-realworld-example-app, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:d3f7652c6bf9e5580154c7d3] Recurring pattern &#x27;pattern:d3f7652c6bf9e5580154c7d3&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:68325d7606ad0fd243be379c] Recurring pattern &#x27;pattern:68325d7606ad0fd243be379c&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>angular-realworld-example-app, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:e1e5c72a682d8611da1f0d7b] Recurring pattern &#x27;pattern:e1e5c72a682d8611da1f0d7b&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, spring-petclinic</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:64365bb3a92cf9af636c8ad9] Recurring pattern &#x27;pattern:64365bb3a92cf9af636c8ad9&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, spring-petclinic</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:9173938a61078bd0491a83cf] Recurring pattern &#x27;pattern:9173938a61078bd0491a83cf&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, spring-petclinic</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:a78ba88551fafbc0431c63a8] Recurring pattern &#x27;pattern:a78ba88551fafbc0431c63a8&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:1fbdf16aa3f0cbee71e821ea] Recurring pattern &#x27;pattern:1fbdf16aa3f0cbee71e821ea&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>angular-realworld-example-app, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[observation_sample:obs:3700290659ece4a6b85af1c5] Modernization observation &#x27;obs:3700290659ece4a6b85af1c5&#x27; is supported by exactly two repositories.</td><td>BookStack, eShop</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:768ecb11b654504561e5cf39] Recurring pattern &#x27;pattern:768ecb11b654504561e5cf39&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, full-stack-fastapi-template</td></tr><tr><td>sample_size</td><td>minor</td><td>[pattern_sample:pattern:f7ae52b21bef1ef31db83ffe] Recurring pattern &#x27;pattern:f7ae52b21bef1ef31db83ffe&#x27; is supported by exactly two repositories; interpret as a minimal recurring signal.</td><td>BookStack, spring-petclinic</td></tr><tr><td>schema_compatibility</td><td>moderate</td><td>[schema:mixed] Included assessments use mixed assessment schema versions (1.2).</td><td>report-wide</td></tr><tr><td>section_support</td><td>informational</td><td>[observation_local:18] Modernization observations include material support-chain limitation disclosures; observation-local limitations remain authoritative.</td><td>report-wide</td></tr><tr><td>section_support</td><td>informational</td><td>[pattern_local:68] Recurring patterns include material local limitation disclosures; pattern-local limitations remain authoritative.</td><td>report-wide</td></tr><tr><td>section_support</td><td>moderate</td><td>[tech_local:1] Technology Distribution includes 1 material local limitation disclosure(s) (technology_inventory_unavailable_for_5_repositories). Section-local detail remains authoritative.</td><td>report-wide</td></tr><tr><td>section_support</td><td>moderate</td><td>[capability_local:19:9] Capability Comparison includes 19 material local limitation disclosure(s) across heads: ai_readiness, architecture_intelligence, cloud_readiness, dependency_intelligence, engineering_intelligence, modernization_assessment, security_intelligence, technical_debt_intelligence, technology_inventory. Head-local detail remains authoritative.</td><td>report-wide</td></tr><tr><td>selection_bias</td><td>material</td><td>[selection:public_oss_dataset] Repository selection for this dataset was curated or validation-driven. The dataset is not a random sample and is not representative of all software repositories. Observed distributions must not be generalized as industry prevalence.</td><td>report-wide</td></tr><tr><td>source_visibility</td><td>moderate</td><td>[source_type:public_oss] Source type &#x27;public_oss&#x27; accounts for 5 of 5 included repositories in this selected dataset.</td><td>report-wide</td></tr></tbody>
 </table>
+</div>
 </section>
 
 <section id="section-drilldowns"><h2>Repository Drill-Downs</h2><p class='muted'>Bounded navigation subsets — not complete assessment reports.</p>
-<article id="drilldown-drilldown-18dc3893bcb310f3bdd834e8"><h3>angular-realworld-example-app</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><h4>Technology summary</h4><ul><li>build_tool:npm@unavailable</li><li>framework:Angular@21.2.12</li><li>language:JavaScript@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:Vitest@^4.0.18</li></ul><h4>Selected findings</h4><ul><li>finding: informational:repository.metrics.summary</li><li>finding: medium:dep002</li><li>finding: informational:cloud008</li><li>finding: informational:arch007</li><li>finding: medium:dep003</li><li>finding: high:sec004</li><li>finding: informational:cloud010</li><li>finding: informational:build.system.summary</li><li>finding: low:arch004</li><li>finding: informational:cloud.cloud-040</li><li>finding: low:cloud.cloud-061</li><li>finding: informational:codestrata-rule-node-engine-detected</li><li>finding: medium:codestrata-rule-npm-lockfile-missing</li><li>finding: high:security.credential-literal</li><li>finding: low:testing.test-003</li></ul><h4>Selected recommendations</h4><ul><li>recommendation: critical:security</li><li>recommendation: medium:cloud</li><li>recommendation: medium:dependency</li></ul><h4>Highest priority action IDs</h4><ul><li>None in bounded subset.</li></ul></article>
-<article id="drilldown-drilldown-0e8ac32134b7ad34655c0c26"><h3>BookStack</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul><li>build_tool:Composer@unavailable</li><li>build_tool:npm@unavailable</li><li>framework:Laravel@^v12.26.4</li><li>language:JavaScript@unavailable</li><li>language:PHP@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:Jest@^30.3.0</li><li>testing:PHPUnit@^11.5</li></ul><h4>Selected findings</h4><ul><li>finding: medium:sec006</li><li>finding: medium:dep002</li><li>finding: medium:sec005</li><li>finding: medium:sec005</li><li>finding: informational:arch002</li><li>finding: informational:arch001</li><li>finding: informational:arch003</li><li>finding: medium:architecture.dependency-cycle</li><li>finding: medium:architecture.excessive-cross-module-coup</li><li>finding: medium:architecture.framework-leakage</li><li>finding: low:cloud.cloud-061</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-ci-workflow</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: medium:security.debug-enabled</li><li>finding: medium:technical_debt.deep-nesting</li><li>finding: medium:technical_debt.excessive-branching</li><li>finding: medium:technical_debt.excessive-parameters</li><li>finding: medium:technical_debt.large-callable</li><li>finding: medium:technical_debt.oversized-type</li></ul><h4>Selected recommendations</h4><ul><li>recommendation: medium:testing</li><li>recommendation: high:security</li><li>recommendation: medium:cloud</li><li>recommendation: high:security</li><li>recommendation: high:ci_cd</li><li>recommendation: low:maintainability</li><li>recommendation: low:build</li><li>recommendation: low:dependency</li></ul><h4>Highest priority action IDs</h4><ul><li>None in bounded subset.</li></ul></article>
-<article id="drilldown-drilldown-136845cca78739435c70806c"><h3>eShop</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><h4>Technology summary</h4><ul><li>build_tool:NuGet@unavailable</li><li>build_tool:npm@unavailable</li><li>framework:.NET@unavailable</li><li>framework:ASP.NET Core@unavailable</li><li>framework:Blazor@unavailable</li><li>framework:Entity Framework Core@unavailable</li><li>language:C#@unavailable</li><li>language:JavaScript@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:xUnit@unavailable</li></ul><h4>Selected findings</h4><ul><li>finding: medium:dep002</li><li>finding: medium:dep001</li><li>finding: low:cloud009</li><li>finding: informational:arch002</li><li>finding: informational:arch007</li><li>finding: informational:arch003</li><li>finding: informational:repository.metrics.summary</li><li>finding: informational:arch001</li><li>finding: informational:arch005</li><li>finding: informational:build.system.summary</li><li>finding: informational:ai_readiness.ai-001</li><li>finding: informational:ai_readiness.ai-020</li><li>finding: informational:ai_readiness.ai-060</li><li>finding: medium:architecture.invalid-dependency-directio</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: high:security.credential-literal</li><li>finding: low:testing.test-002</li></ul><h4>Selected recommendations</h4><ul><li>recommendation: medium:ci_cd</li><li>recommendation: medium:testing</li><li>recommendation: medium:cloud</li><li>recommendation: low:maintainability</li><li>recommendation: low:dependency</li></ul><h4>Highest priority action IDs</h4><ul><li>None in bounded subset.</li></ul></article>
-<article id="drilldown-drilldown-b19c4ff81e5455e22cf667e6"><h3>full-stack-fastapi-template</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul><li>build_tool:npm@unavailable</li><li>build_tool:uv@unavailable</li><li>framework:FastAPI@&gt;=0.139.0,&lt;1.0.0</li><li>language:JavaScript@unavailable</li><li>language:Python@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li></ul><h4>Selected findings</h4><ul><li>finding: medium:sec006</li><li>finding: medium:dep002</li><li>finding: medium:dep003</li><li>finding: informational:arch005</li><li>finding: informational:cloud002</li><li>finding: informational:cloud008</li><li>finding: informational:cloud001</li><li>finding: informational:arch002</li><li>finding: high:sec001</li><li>finding: informational:cloud010</li><li>finding: high:architecture.component-concentration</li><li>finding: informational:cloud.cloud-010</li><li>finding: informational:cloud.cloud-040</li><li>finding: low:cloud.cloud-061</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: medium:codestrata-rule-npm-lockfile-missing</li><li>finding: medium:security.debug-enabled</li><li>finding: medium:technical_debt.oversized-type</li><li>finding: low:testing.test-002</li></ul><h4>Selected recommendations</h4><ul><li>recommendation: high:security</li><li>recommendation: low:maintainability</li><li>recommendation: low:dependency</li><li>recommendation: medium:dependency</li></ul><h4>Highest priority action IDs</h4><ul><li>None in bounded subset.</li></ul></article>
-<article id="drilldown-drilldown-76d069038c81833ac8cc49c0"><h3>spring-petclinic</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul><li>build_tool:Gradle@unavailable</li><li>build_tool:Maven@unavailable</li><li>framework:Spring Boot@unavailable</li><li>language:Java@unavailable</li><li>testing:JUnit@unavailable</li></ul><h4>Selected findings</h4><ul><li>finding: informational:arch002</li><li>finding: informational:cloud003</li><li>finding: informational:cloud002</li><li>finding: informational:arch007</li><li>finding: informational:arch003</li><li>finding: informational:arch005</li><li>finding: informational:cloud010</li><li>finding: informational:cloud008</li><li>finding: low:dep003</li><li>finding: informational:arch001</li><li>finding: medium:architecture.framework-leakage</li><li>finding: informational:cloud.cloud-010</li><li>finding: informational:cloud.cloud-011</li><li>finding: informational:cloud.cloud-040</li><li>finding: informational:cloud.cloud-060</li><li>finding: low:cloud.cloud-061</li><li>finding: informational:codestrata-rule-java-detected</li><li>finding: medium:technical_debt.excessive-branching</li><li>finding: medium:technical_debt.large-callable</li><li>finding: medium:testing.test-001</li></ul><h4>Selected recommendations</h4><ul><li>recommendation: low:cloud</li></ul><h4>Highest priority action IDs</h4><ul><li>None in bounded subset.</li></ul></article>
+<article class="drilldown-card" id="drilldown-drilldown-18dc3893bcb310f3bdd834e8"><h3>angular-realworld-example-app</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><h4>Technology summary</h4><ul class='trace-list'><li>build_tool:npm@unavailable</li><li>framework:Angular@21.2.12</li><li>language:JavaScript@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:Vitest@^4.0.18</li></ul><h4>Selected findings</h4><ul class='trace-list'><li>finding: informational:repository.metrics.summary</li><li>finding: medium:dep002</li><li>finding: informational:cloud008</li><li>finding: informational:arch007</li><li>finding: medium:dep003</li><li>finding: high:sec004</li><li>finding: informational:cloud010</li><li>finding: informational:build.system.summary</li><li>finding: low:arch004</li><li>finding: informational:cloud.cloud-040</li><li>finding: low:cloud.cloud-061</li><li>finding: informational:codestrata-rule-node-engine-detected</li><li>finding: medium:codestrata-rule-npm-lockfile-missing</li><li>finding: high:security.credential-literal</li><li>finding: low:testing.test-003</li></ul><h4>Selected recommendations</h4><ul class='trace-list'><li>recommendation: critical:security</li><li>recommendation: medium:cloud</li><li>recommendation: medium:dependency</li></ul><h4>Highest priority action IDs</h4><ul class='trace-list'><li>None in bounded subset.</li></ul></article>
+<article class="drilldown-card" id="drilldown-drilldown-0e8ac32134b7ad34655c0c26"><h3>BookStack</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul class='trace-list'><li>build_tool:Composer@unavailable</li><li>build_tool:npm@unavailable</li><li>framework:Laravel@^v12.26.4</li><li>language:JavaScript@unavailable</li><li>language:PHP@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:Jest@^30.3.0</li><li>testing:PHPUnit@^11.5</li></ul><h4>Selected findings</h4><ul class='trace-list'><li>finding: medium:sec006</li><li>finding: medium:dep002</li><li>finding: medium:sec005</li><li>finding: medium:sec005</li><li>finding: informational:arch002</li><li>finding: informational:arch001</li><li>finding: informational:arch003</li><li>finding: medium:architecture.dependency-cycle</li><li>finding: medium:architecture.excessive-cross-module-coup</li><li>finding: medium:architecture.framework-leakage</li><li>finding: low:cloud.cloud-061</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-ci-workflow</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: medium:security.debug-enabled</li><li>finding: medium:technical_debt.deep-nesting</li><li>finding: medium:technical_debt.excessive-branching</li><li>finding: medium:technical_debt.excessive-parameters</li><li>finding: medium:technical_debt.large-callable</li><li>finding: medium:technical_debt.oversized-type</li></ul><h4>Selected recommendations</h4><ul class='trace-list'><li>recommendation: medium:testing</li><li>recommendation: high:security</li><li>recommendation: medium:cloud</li><li>recommendation: high:security</li><li>recommendation: high:ci_cd</li><li>recommendation: low:maintainability</li><li>recommendation: low:build</li><li>recommendation: low:dependency</li></ul><h4>Highest priority action IDs</h4><ul class='trace-list'><li>None in bounded subset.</li></ul></article>
+<article class="drilldown-card" id="drilldown-drilldown-136845cca78739435c70806c"><h3>eShop</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><h4>Technology summary</h4><ul class='trace-list'><li>build_tool:NuGet@unavailable</li><li>build_tool:npm@unavailable</li><li>framework:.NET@unavailable</li><li>framework:ASP.NET Core@unavailable</li><li>framework:Blazor@unavailable</li><li>framework:Entity Framework Core@unavailable</li><li>language:C#@unavailable</li><li>language:JavaScript@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li><li>testing:xUnit@unavailable</li></ul><h4>Selected findings</h4><ul class='trace-list'><li>finding: medium:dep002</li><li>finding: medium:dep001</li><li>finding: low:cloud009</li><li>finding: informational:arch002</li><li>finding: informational:arch007</li><li>finding: informational:arch003</li><li>finding: informational:repository.metrics.summary</li><li>finding: informational:arch001</li><li>finding: informational:arch005</li><li>finding: informational:build.system.summary</li><li>finding: informational:ai_readiness.ai-001</li><li>finding: informational:ai_readiness.ai-020</li><li>finding: informational:ai_readiness.ai-060</li><li>finding: medium:architecture.invalid-dependency-directio</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: high:security.credential-literal</li><li>finding: low:testing.test-002</li></ul><h4>Selected recommendations</h4><ul class='trace-list'><li>recommendation: medium:ci_cd</li><li>recommendation: medium:testing</li><li>recommendation: medium:cloud</li><li>recommendation: low:maintainability</li><li>recommendation: low:dependency</li></ul><h4>Highest priority action IDs</h4><ul class='trace-list'><li>None in bounded subset.</li></ul></article>
+<article class="drilldown-card" id="drilldown-drilldown-b19c4ff81e5455e22cf667e6"><h3>full-stack-fastapi-template</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul class='trace-list'><li>build_tool:npm@unavailable</li><li>build_tool:uv@unavailable</li><li>framework:FastAPI@&gt;=0.139.0,&lt;1.0.0</li><li>language:JavaScript@unavailable</li><li>language:Python@unavailable</li><li>language:TypeScript@unavailable</li><li>runtime:Node.js@unavailable</li></ul><h4>Selected findings</h4><ul class='trace-list'><li>finding: medium:sec006</li><li>finding: medium:dep002</li><li>finding: medium:dep003</li><li>finding: informational:arch005</li><li>finding: informational:cloud002</li><li>finding: informational:cloud008</li><li>finding: informational:cloud001</li><li>finding: informational:arch002</li><li>finding: high:sec001</li><li>finding: informational:cloud010</li><li>finding: high:architecture.component-concentration</li><li>finding: informational:cloud.cloud-010</li><li>finding: informational:cloud.cloud-040</li><li>finding: low:cloud.cloud-061</li><li>finding: low:codestrata-rule-large-repository</li><li>finding: low:codestrata-rule-missing-node-engine</li><li>finding: medium:codestrata-rule-npm-lockfile-missing</li><li>finding: medium:security.debug-enabled</li><li>finding: medium:technical_debt.oversized-type</li><li>finding: low:testing.test-002</li></ul><h4>Selected recommendations</h4><ul class='trace-list'><li>recommendation: high:security</li><li>recommendation: low:maintainability</li><li>recommendation: low:dependency</li><li>recommendation: medium:dependency</li></ul><h4>Highest priority action IDs</h4><ul class='trace-list'><li>None in bounded subset.</li></ul></article>
+<article class="drilldown-card" id="drilldown-drilldown-76d069038c81833ac8cc49c0"><h3>spring-petclinic</h3><p class='meta'>Source type: public_oss · Confidence: limited</p><p>Detailed assessment available to authorized users.</p><p class="disclaimer">Drill-down includes a bounded navigation subset of entities; use the canonical assessment report for the complete result.</p><h4>Technology summary</h4><ul class='trace-list'><li>build_tool:Gradle@unavailable</li><li>build_tool:Maven@unavailable</li><li>framework:Spring Boot@unavailable</li><li>language:Java@unavailable</li><li>testing:JUnit@unavailable</li></ul><h4>Selected findings</h4><ul class='trace-list'><li>finding: informational:arch002</li><li>finding: informational:cloud003</li><li>finding: informational:cloud002</li><li>finding: informational:arch007</li><li>finding: informational:arch003</li><li>finding: informational:arch005</li><li>finding: informational:cloud010</li><li>finding: informational:cloud008</li><li>finding: low:dep003</li><li>finding: informational:arch001</li><li>finding: medium:architecture.framework-leakage</li><li>finding: informational:cloud.cloud-010</li><li>finding: informational:cloud.cloud-011</li><li>finding: informational:cloud.cloud-040</li><li>finding: informational:cloud.cloud-060</li><li>finding: low:cloud.cloud-061</li><li>finding: informational:codestrata-rule-java-detected</li><li>finding: medium:technical_debt.excessive-branching</li><li>finding: medium:technical_debt.large-callable</li><li>finding: medium:testing.test-001</li></ul><h4>Selected recommendations</h4><ul class='trace-list'><li>recommendation: low:cloud</li></ul><h4>Highest priority action IDs</h4><ul class='trace-list'><li>None in bounded subset.</li></ul></article>
 </section>
 
 <section id="section-methodology">
 <h2>Methodology</h2>
+<div class="table-wrap" tabindex="0">
 <table>
 <tbody>
 <tr><th scope="row">Assessment schema versions</th><td>1.2</td></tr>
-<tr><th scope="row">Interpretation policy bundle</th><td>interp-bundle:c719915c68cf94601a0e8f0b</td></tr>
-<tr><th scope="row">Export policy</th><td>website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0</td></tr>
-<tr><th scope="row">Aggregation policy</th><td>intelligence-aggregation:v1</td></tr>
+<tr><th scope="row">Interpretation policy bundle</th><td class="tech-ref">interp-bundle:a394af0337e541d0f269cf95</td></tr>
+<tr><th scope="row">Export policy</th><td class="tech-ref">website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v2:csp=eir-website-csp-v1:schema=1.0</td></tr>
+<tr><th scope="row">Aggregation policy</th><td class="tech-ref">intelligence-aggregation:v1</td></tr>
 </tbody>
 </table>
+</div>
 <ul><li>Report confidence is not an accuracy percentage or repository score.</li><li>Report confidence uses weakest-material-support with explicit caps.</li><li>Results must not be generalized beyond the selected dataset.</li><li>Static analysis of selected assessed repositories only.</li><li>This report is a cross-sectional snapshot, not a temporal trend.</li><li>Results must not be generalized beyond the selected dataset.</li></ul>
 <p class="disclaimer">Public exports must not be presented as industry benchmarks unless the dataset and methodology independently support that claim.</p>
 </section>
@@ -245,20 +932,23 @@ footer { margin: 2.5rem 0 1rem; color: var(--muted); font-size: 0.9rem; }
 
 <section id="section-metadata">
 <h2>Export Metadata</h2>
+<div class="table-wrap" tabindex="0">
 <table>
 <tbody>
-<tr><th scope="row">Export ID</th><td>eir-export:990bfa68300f695451d8e365</td></tr>
-<tr><th scope="row">Source report ID</th><td>eir:97542882a05ceb5e5ea2a553</td></tr>
+<tr><th scope="row">Export ID</th><td class="tech-ref">eir-export:3bd9fea3d4e1e29ac9945433</td></tr>
+<tr><th scope="row">Source report ID</th><td class="tech-ref">eir:8739bb81bcd7350952203bd5</td></tr>
 <tr><th scope="row">Export schema</th><td>1.0</td></tr>
 <tr><th scope="row">JSON projection</th><td>eir-website-json-v1</td></tr>
-<tr><th scope="row">HTML template</th><td>eir-static-html-v1</td></tr>
+<tr><th scope="row">HTML template</th><td>eir-static-html-v2</td></tr>
 <tr><th scope="row">Generated at</th><td>not supplied</td></tr>
 </tbody>
 </table>
+</div>
 </section>
 
 </main>
-<footer><p>Website-safe sanitized projection of a commercial Engineering Intelligence Report. Not a canonical repository assessment artifact.</p></footer>
+<footer class="site-footer"><p>Website-safe sanitized projection of a commercial Engineering Intelligence Report. Not a canonical repository assessment artifact.</p></footer>
+</div>
 </div>
 </body>
 </html>

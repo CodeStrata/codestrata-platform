@@ -1,15 +1,27 @@
 ---
-title: Public API
-description: Public API surfaces related to CodeStrata Engine and Community usage.
+title: Community API
+description: Community-facing API and programmatic surfaces for CodeStrata Engine usage.
 ---
 
-# Public API
+# Community API
 
 Community developers primarily use the **CLI**. Engine may expose additional
-programmatic or HTTP surfaces documented with Engine public contracts.
+programmatic surfaces documented with Engine public contracts.
 
-CodeStrata Platform REST APIs (`/api/v1` and related organizational surfaces) are
-**Platform** capabilities — not Community Engine defaults. See
-[Community vs Platform](/community/vs-platform) and [Platform](/platform/).
+## Primary interface
 
-Do not assume Platform endpoints are available from a local Engine install.
+- [CLI reference](/reference/cli) — assess, init, doctor, version
+- [Public contracts](/reference/public-contracts) — schemas and compatibility notes
+- Optional [MCP](/reference/mcp) for agent tooling
+
+## Boundaries
+
+Organizational REST surfaces, Data Lake ingestion, and commercial Platform APIs are
+**not** part of Community Edition documentation. Local Engine installs do not require
+those services.
+
+## Related
+
+- [Configuration](/reference/configuration)
+- [Compatibility](/reference/compatibility)
+- [Privacy](/security/privacy)

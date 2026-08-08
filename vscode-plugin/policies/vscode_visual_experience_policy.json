@@ -1,0 +1,30 @@
+{
+  "policy_id": "codestrata-vscode-visual-experience-policy",
+  "policy_version": "1.0",
+  "slice": "14.5",
+  "design_system_version": "1.0",
+  "design_system_policy": "codestrata-design-system-policy:1.0",
+  "extension_version": "0.2.0",
+  "host_editor": "vscode",
+  "native_host_controls_authoritative": true,
+  "website_css_injection_allowed": false,
+  "product_identity_alignment_required": true,
+  "command_ids_change_allowed": false,
+  "runtime_behavior_change_allowed": false,
+  "theme_compatibility_required": true,
+  "light_theme_supported": true,
+  "dark_theme_supported": true,
+  "accessibility_required": true,
+  "marketplace_asset_changes_allowed": false,
+  "assessment_schema_bump_allowed": false,
+  "extension_version_bump_allowed": false,
+  "start_slice_14_6": false,
+  "universal_logo_authority_change_allowed": false,
+  "limitations": [
+    "extension_host_screenshot_automation_may_be_unavailable",
+    "native_surfaces_cannot_match_website_pixel_for_pixel",
+    "marketplace_assets_aligned_via_14_6",
+    "final_icon_logo_authority_deferred_to_14_10",
+    "worktree_uncommitted"
+  ]
+}

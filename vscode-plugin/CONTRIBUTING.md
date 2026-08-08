@@ -24,7 +24,9 @@ Press **F5** in VS Code to launch an Extension Development Host.
 
 ## Design
 
-Branding follows the CodeStrata Design System (amber strata accents, dark-first).  
+Branding follows the CodeStrata Design System 1.0 (light-first teal identity)
+expressed through VS Code–native surfaces. Do not inject website CSS into
+native host UI. Marketplace gallery assets are owned by Slice 14.6.
 Command and UI copy should say **Engineering Assessment** and **CodeStrata Engine**.
 
 ## Conduct & security

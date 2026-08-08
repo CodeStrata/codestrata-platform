@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Theme validation: dark / light token application + persistence key presence.
- * Run against a preview server: DOCS_BASE_URL=http://127.0.0.1:4173 node scripts/theme-validate.mjs
+ * Theme validation against Design System tokens (Slice 14.2).
+ * Run: DOCS_BASE_URL=http://127.0.0.1:4173 node scripts/theme-validate.mjs
  */
 import { createRequire } from "node:module";
 
@@ -28,9 +28,10 @@ async function readTokens() {
     return {
       darkClass: document.documentElement.classList.contains("dark"),
       dataTheme: document.documentElement.getAttribute("data-theme"),
-      bg: cs.getPropertyValue("--bg").trim(),
-      amber: cs.getPropertyValue("--amber").trim(),
-      codeBg: cs.getPropertyValue("--code-bg").trim(),
+      bg: cs.getPropertyValue("--bg").trim() || cs.getPropertyValue("--cs-bg").trim(),
+      canvas: cs.getPropertyValue("--cs-canvas").trim(),
+      tealDark: cs.getPropertyValue("--cs-teal-dark").trim(),
+      codeBg: cs.getPropertyValue("--code-bg").trim() || cs.getPropertyValue("--vp-code-bg").trim(),
       storage: localStorage.getItem("vitepress-theme-appearance"),
     };
   });
@@ -44,30 +45,30 @@ async function setTheme(mode) {
   await page.waitForTimeout(400);
 }
 
-// Dark
 await setTheme("dark");
 let t = await readTokens();
 if (!t.darkClass) errors.push("dark mode missing .dark class");
-if (t.bg !== "#0b0d10") errors.push(`dark --bg expected #0b0d10 got ${t.bg}`);
-if (t.amber !== "#d98a3d") errors.push(`dark --amber expected #d98a3d got ${t.amber}`);
-if (t.codeBg !== "#0d1014") errors.push(`dark --code-bg expected #0d1014 got ${t.codeBg}`);
+if (t.canvas !== "#101a17" && t.bg !== "#101a17") {
+  errors.push(`dark canvas/bg expected #101a17 got canvas=${t.canvas} bg=${t.bg}`);
+}
+if (t.tealDark !== "#0f5d54") {
+  errors.push(`--cs-teal-dark expected #0f5d54 got ${t.tealDark}`);
+}
 
-// Toggle must exist (desktop nav)
-const toggle = page.locator(".VPNavBar .VPSwitchAppearance").first();
 const toggleCount = await page.locator(".VPSwitchAppearance").count();
 if (toggleCount === 0) errors.push("theme toggle not found");
 else {
-  // Prefer visible nav-bar switch; force if in overflow
-  const navToggle = page.locator('.VPNavBarAppearance .VPSwitchAppearance, .VPNavBar .VPSwitchAppearance').first();
+  const navToggle = page
+    .locator(".VPNavBarAppearance .VPSwitchAppearance, .VPNavBar .VPSwitchAppearance")
+    .first();
   await navToggle.click({ force: true, timeout: 5000 }).catch(async () => {
     await page.locator(".VPSwitchAppearance").last().click({ force: true });
   });
   await page.waitForTimeout(400);
   t = await readTokens();
   if (t.darkClass) errors.push("toggle did not switch to light");
-  if (t.bg !== "#ffffff") errors.push(`light --bg expected #ffffff got ${t.bg}`);
-  if (t.codeBg !== "#0f1216") {
-    errors.push(`light --code-bg should stay dark (#0f1216), got ${t.codeBg}`);
+  if (t.canvas !== "#f4f6f3" && t.bg !== "#f4f6f3") {
+    errors.push(`light canvas/bg expected #f4f6f3 got canvas=${t.canvas} bg=${t.bg}`);
   }
   if (t.dataTheme && t.dataTheme !== "light") {
     errors.push(`data-theme expected light got ${t.dataTheme}`);
@@ -79,7 +80,6 @@ else {
   if (t.darkClass) errors.push("light preference did not persist across reload");
 }
 
-// auto / system preference storage
 await setTheme("auto");
 t = await readTokens();
 if (t.storage !== "auto") errors.push(`expected storage auto, got ${t.storage}`);
@@ -90,4 +90,4 @@ if (errors.length) {
   for (const e of errors) console.error("ERROR:", e);
   process.exit(1);
 }
-console.log("PASS: theme dark/light/toggle/persistence/auto validated");
+console.log("PASS: theme dark/light/toggle/persistence/auto validated (Design System)");

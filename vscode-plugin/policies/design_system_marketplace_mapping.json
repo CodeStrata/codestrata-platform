@@ -1,0 +1,45 @@
+{
+  "schema": "codestrata-design-system-marketplace-mapping",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "token_catalog": "design-system/tokens/catalog.json",
+  "mappings": {
+    "marketplace_icon": {
+      "surface": "marketplace_specific_derivative",
+      "palette_tokens": ["canvas", "paper", "teal", "teal_dark", "ink", "muted", "line"],
+      "notes": "Branded raster for Marketplace listing; not the universal logo; not the activity SVG."
+    },
+    "gallery_banner": {
+      "color_token": "canvas",
+      "theme": "light",
+      "accent_token": "teal",
+      "notes": "package.json galleryBanner.color reads Design System canvas."
+    },
+    "screenshot_frame": {
+      "background_token": "canvas",
+      "surface_token": "paper",
+      "border_token": "line",
+      "ink_token": "ink",
+      "muted_token": "muted",
+      "accent_token": "teal",
+      "radius_token": "md",
+      "shadow": "restrained"
+    },
+    "captions": {
+      "hierarchy": "typography.scale",
+      "tone": "technical_product"
+    },
+    "report_risk_status": {
+      "source": "design-system/tokens/catalog.json status_colors and risk_colors",
+      "notes": "Assessment report screenshot uses Slice 14.3 semantic tokens via Design System."
+    }
+  },
+  "forbidden_primary_hex": [
+    "#d98a3d",
+    "#D97706",
+    "#F59E0B",
+    "#FBBF24",
+    "#0f1216",
+    "#0b0d10"
+  ]
+}

@@ -6,7 +6,8 @@ Public visual authority for the documentation portal.
 
 1. Live site: https://codestrata.ai/ (inspected 2026-07-28)
 2. Published website assets: `https://codestrata.ai/assets/styles.css`, `fonts.css`
-3. `governance/assets/DESIGN-SYSTEM.md` (brand foundation)
+3. `design-system/` (`codestrata-visual-design-system:1.0`; brand assets via
+   `codestrata-brand-asset-policy:1.0`)
 4. Documentation accessibility adaptations (this file)
 
 Website application source is **not** present in this monorepo. Values below were
@@ -22,8 +23,12 @@ taken from the live CSS and computed styles (browser CDP), not guessed.
 | Fonts | https://codestrata.ai/assets/fonts/*.woff2 |
 | Framework | Static HTML + first-party CSS (no React/Vue marketing framework detected in HTML) |
 
-Local brand masters (logos only): `governance/assets/svg/` — copied into
-`docs/public/brand/` for standalone use.
+Local brand masters (logos only): `design-system/assets/brand/` — the authority as of
+Slice 14.10. Derivatives are generated into `docs/public/brand/` and `docs/public/favicon.svg`
+by `scripts/generate_brand_assets.py` so the exported documentation repository is
+self-contained. `docs/public/design-tokens/tokens.css` mirrors Design System 1.0
+(`design-system/tokens/tokens.css`) as of Slice 14.13 — not the historical live-site
+amber capture below. `governance/assets/svg/` is a historical archive and no longer a master.
 
 ## Website tokens (captured)
 
@@ -121,7 +126,7 @@ No runtime dependency on the website repository or `governance/`.
 
 | Element | Status |
 | ------- | ------ |
-| Logo lockup | **matched** (governance SVG masters used on site family) |
+| Logo lockup | **matched** (Design System brand masters, Slice 14.10) |
 | Typography families / weights | **matched** |
 | Background / surfaces / borders | **matched** |
 | Amber accent | **matched** |

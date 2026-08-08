@@ -26,18 +26,18 @@ PLUGIN_ROOT = "vscode-plugin"
 DISPLAY_NAME = "CodeStrata – Engineering Intelligence"
 PUBLISHER = "codestrata"
 PACKAGE_NAME = "codestrata-vscode"
-GALLERY_COLOR = "#0f1216"
-GALLERY_THEME = "dark"
+GALLERY_COLOR = "#f4f6f3"
+GALLERY_THEME = "light"
 ICON_RELATIVE = "media/codestrata-icon.png"
 ICON_WIDTH = 128
 ICON_HEIGHT = 128
 
 GALLERY_ORDER = (
-    "media/screenshot-findings.png",
+    "media/screenshot-assessment.png",
     "media/screenshot-report.png",
     "media/screenshot-progress.png",
-    "media/screenshot-activity.png",
-    "media/screenshot-recommendations.png",
+    "media/screenshot-initialization.png",
+    "media/screenshot-ai-assessment.png",
 )
 
 VSCODE_CATEGORIES = frozenset(

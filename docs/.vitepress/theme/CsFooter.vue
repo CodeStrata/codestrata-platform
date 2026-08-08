@@ -2,7 +2,6 @@
 const year = new Date().getFullYear();
 const SITE = "https://codestrata.ai";
 
-/** External website destinations (match https://codestrata.ai footer). */
 function extAttrs(href) {
   if (href.startsWith("mailto:")) {
     return {};
@@ -24,97 +23,53 @@ function extAttrs(href) {
           >
             <strong>CodeStrata</strong>
           </a>
-          Engineering Intelligence for Modern Software.
-          Documentation for Community Engine, assessments, and IDE extensions.
+          Engineering decisions grounded in code. Community Edition
+          documentation for Engine, assessments, reports, and VS Code.
         </div>
         <div>
-          <h4>Product</h4>
+          <h4>Docs</h4>
           <ul>
+            <li><a href="/getting-started/">Getting Started</a></li>
+            <li><a href="/getting-started/install">Installation</a></li>
+            <li><a href="/reference/cli">CLI</a></li>
+            <li><a href="/extensions/vscode">VS Code</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Assess</h4>
+          <ul>
+            <li><a href="/assessments/">Running Assessments</a></li>
+            <li><a href="/reports/">Assessment Reports</a></li>
             <li>
-              <a :href="SITE + '/#how'" v-bind="extAttrs(SITE + '/#how')"
-                >How it works</a
+              <a href="/reports/engineering-intelligence"
+                >Engineering Intelligence</a
               >
             </li>
-            <li>
-              <a
-                :href="SITE + '/sample-report'"
-                v-bind="extAttrs(SITE + '/sample-report')"
-                >Sample report</a
-              >
-            </li>
-            <li>
-              <a
-                :href="SITE + '/approach'"
-                v-bind="extAttrs(SITE + '/approach')"
-                >Methodology</a
-              >
-            </li>
+            <li><a href="/troubleshooting/">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Trust</h4>
+          <ul>
+            <li><a href="/security/privacy">Privacy</a></li>
+            <li><a href="/reference/telemetry">Telemetry</a></li>
+            <li><a href="/faq/">FAQ</a></li>
             <li>
               <a
                 href="https://github.com/CodeStrata/codestrata-engine"
                 target="_blank"
                 rel="noopener noreferrer"
-                >Open source engine</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h4>Solutions</h4>
-          <ul>
-            <li>
-              <a
-                :href="SITE + '/for-private-equity'"
-                v-bind="extAttrs(SITE + '/for-private-equity')"
-                >Technical due diligence</a
+                >GitHub</a
               >
             </li>
             <li>
-              <a
-                :href="SITE + '/ecommerce-eol'"
-                v-bind="extAttrs(SITE + '/ecommerce-eol')"
-                >E-commerce EOL exposure</a
-              >
-            </li>
-            <li>
-              <a
-                :href="SITE + '/#engage'"
-                v-bind="extAttrs(SITE + '/#engage')"
-                >Portfolio Scan</a
-              >
-            </li>
-            <li>
-              <a
-                :href="SITE + '/#partner'"
-                v-bind="extAttrs(SITE + '/#partner')"
-                >Design partners</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h4>Company</h4>
-          <ul>
-            <li>
-              <a :href="SITE + '/#faq'" v-bind="extAttrs(SITE + '/#faq')"
-                >FAQ</a
-              >
-            </li>
-            <li>
-              <a href="mailto:satish@codestrata.ai">Contact</a>
-            </li>
-            <li>
-              <a
-                :href="SITE + '/privacy'"
-                v-bind="extAttrs(SITE + '/privacy')"
-                >Privacy</a
-              >
+              <a :href="SITE + '/'" v-bind="extAttrs(SITE + '/')">codestrata.ai</a>
             </li>
           </ul>
         </div>
       </div>
       <div class="cs-footer__base">
-        <span>© {{ year }} CodeStrata</span>
+        <span>© {{ year }} CodeStrata · Community Edition</span>
         <span>
           <a :href="SITE + '/'" target="_blank" rel="noopener noreferrer"
             >codestrata.ai</a

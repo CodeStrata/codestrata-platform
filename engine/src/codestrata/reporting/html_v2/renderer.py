@@ -5,6 +5,8 @@ Presentation only — no analysis or enrichment business logic.
 
 from __future__ import annotations
 
+import re
+
 from codestrata.design_system.tokens import DESIGN_SYSTEM_REF
 from codestrata.reporters.html_rendering import escape_and_wrap, escape_html, wrap_table
 from codestrata.reporting.ai_readiness.intelligence import (
@@ -21,7 +23,7 @@ from codestrata.reporting.branding import (
     BRAND_NAME,
     BRAND_REPORT_NAME,
     BRAND_VERSION,
-    logo_data_uri,
+    brand_mark_svg,
 )
 from codestrata.reporting.cloud.intelligence import (
     scrub_soft_cloud_claims,
@@ -121,7 +123,7 @@ class HtmlReportRenderer:
                 '<meta charset="utf-8">',
                 f'<meta http-equiv="Content-Security-Policy" content="{CONTENT_SECURITY_POLICY}">',
                 '<meta name="viewport" content="width=device-width, initial-scale=1">',
-                '<meta name="color-scheme" content="light">',
+                '<meta name="color-scheme" content="light dark">',
                 (
                     f'<meta name="generator" content="{escape_html(BRAND_NAME)} '
                     f'{escape_html(BRAND_REPORT_NAME)}">'
@@ -131,8 +133,17 @@ class HtmlReportRenderer:
                 f"<style>{_CSS}</style>",
                 "</head>",
                 "<body>",
-                '<a class="skip-link" href="#contents">Skip to contents</a>',
+                '<a class="skip-link" href="#main-content">Skip to main content</a>',
+                '<div class="report-shell">',
+                (
+                    '<header class="report-product-bar" role="banner">'
+                    f'<span class="report-product-mark" aria-hidden="true">{brand_mark_svg()}</span>'
+                    f'<span class="report-product-name">{escape_html(BRAND_NAME)}</span>'
+                    f'<span class="report-product-label">{escape_html(BRAND_REPORT_NAME)}</span>'
+                    "</header>"
+                ),
                 '<div class="page">',
+                '<main id="main-content" role="main">',
                 _render_hero(view),
                 _render_toc(view),
                 _render_leadership_verdict(view),
@@ -226,14 +237,17 @@ class HtmlReportRenderer:
             )
             parts.extend(
                 [
+                    "</main>",
+                    # Outside <main> so the footer exposes the contentinfo landmark.
                     _render_footer(view),
-                    "</div>",
+                    "</div>",  # .page
+                    "</div>",  # .report-shell
                     "</body>",
                     "</html>",
                     "",
                 ]
             )
-            return _ensure_responsive_tables("\n".join(parts))
+            return _ensure_table_semantics(_ensure_responsive_tables("\n".join(parts)))
         finally:
             end_evidence_anchor_scope(evidence_scope)
 
@@ -266,6 +280,35 @@ def _ensure_responsive_tables(html: str) -> str:
             pieces.append("</div>")
         index = end
     return "".join(pieces)
+
+
+_THEAD_BLOCK = re.compile(r"<thead>(.*?)</thead>", re.IGNORECASE | re.DOTALL)
+_TH_WITHOUT_SCOPE = re.compile(r"<th(?![^>]*\bscope=)([^>]*)>", re.IGNORECASE)
+_TH_COLUMN_SCOPE = r'<th scope="col"\1>'
+_TABLE_WRAPPERS: tuple[str, ...] = (
+    '<div class="table-wrap responsive-table">',
+    '<div class="table-wrap">',
+    '<div class="table-wrapper">',
+)
+
+
+def _ensure_table_semantics(html: str) -> str:
+    """Associate header cells with their columns and let keyboards scroll wide tables.
+
+    Header cells are emitted per section; declaring ``scope`` centrally keeps the
+    association correct without touching table data. ``tabindex`` is required
+    because a horizontally scrolling container is otherwise unreachable without a
+    pointer.
+    """
+
+    def _scope_header_row(match: re.Match[str]) -> str:
+        scoped = _TH_WITHOUT_SCOPE.sub(_TH_COLUMN_SCOPE, match.group(1))
+        return f"<thead>{scoped}</thead>"
+
+    html = _THEAD_BLOCK.sub(_scope_header_row, html)
+    for wrapper in _TABLE_WRAPPERS:
+        html = html.replace(wrapper, f'{wrapper[:-1]} tabindex="0">')
+    return html
 
 
 def _section(
@@ -422,7 +465,7 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
         )
         parts.append(
             '<div class="eis-intel-group" data-group="overall_status">\n'
-            "<h4>Overall assessment status</h4>\n"
+            "<h3>Overall assessment status</h3>\n"
             '<div class="table-wrap"><table>\n'
             "<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>\n"
             f"<tbody>{rows}</tbody>\n</table></div>\n"
@@ -444,7 +487,7 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
         )
         parts.append(
             '<div class="eis-intel-group" data-group="assessment_heads">\n'
-            "<h4>Assessment heads assessed</h4>\n"
+            "<h3>Assessment heads assessed</h3>\n"
             '<p class="muted">Status and counts from each assessment head. '
             "Detailed findings remain in Assessment Results.</p>\n"
             '<div class="table-wrap"><table>\n'
@@ -460,7 +503,7 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
         items = "".join(f"<li>{escape_html(item)}</li>" for item in section.observations)
         parts.append(
             '<div class="eis-intel-group" data-group="observations">\n'
-            "<h4>High-level engineering observations</h4>\n"
+            "<h3>High-level engineering observations</h3>\n"
             f'<ul class="plain">{items}</ul>\n'
             "</div>"
         )
@@ -476,7 +519,7 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
         )
         parts.append(
             '<div class="eis-intel-group" data-group="cross_head">\n'
-            "<h4>Cross-head summary</h4>\n"
+            "<h3>Cross-head summary</h3>\n"
             '<div class="table-wrap"><table>\n'
             "<thead><tr><th>Fact</th><th>Value</th><th>Note</th></tr></thead>\n"
             f"<tbody>{rows}</tbody>\n</table></div>\n"
@@ -493,14 +536,14 @@ def _render_engineering_intelligence(section: EngineeringIntelligenceSection) ->
     ) or "<li>None</li>"
     parts.append(
         '<div class="eis-intel-group" data-group="priority_actions">\n'
-        "<h4>Priority Action summary</h4>\n"
+        "<h3>Priority Action summary</h3>\n"
         f"<p><strong>Total actions:</strong> {section.priority_action_total}. "
         'Full detail remains in <a class="id-link" href="#priority-actions">'
         "Priority Actions</a>.</p>\n"
         '<div class="split">\n'
-        "<div><h5>By priority</h5>"
+        "<div><h4>By priority</h4>"
         f'<ul class="plain">{pa_priority}</ul></div>\n'
-        "<div><h5>By horizon</h5>"
+        "<div><h4>By horizon</h4>"
         f'<ul class="plain">{pa_horizon}</ul></div>\n'
         "</div>\n"
         "</div>"
@@ -760,9 +803,11 @@ def _render_legacy_pack_section_alias(section: AssessmentHeadSectionView) -> str
     if alias is None:
         return ""
     legacy_id, legacy_title = alias
+    # Visually hidden but not aria-hidden: legacy deep links land here, so the
+    # target must stay in the accessibility tree.
     return (
-        f'<span id="{escape_html(legacy_id)}" class="section-anchor-only" '
-        f'aria-hidden="true">{escape_html(legacy_title)}</span>\n'
+        f'<span id="{escape_html(legacy_id)}" class="section-anchor-only">'
+        f"{escape_html(legacy_title)}</span>\n"
     )
 
 
@@ -1018,9 +1063,9 @@ def _render_hero(view: HtmlReportViewModel) -> str:
     return (
         '<header class="hero" id="cover">\n'
         '<div class="hero-brand">\n'
-        f'<img class="brand-logo" src="{logo_data_uri()}" '
-        f'alt="{escape_html(BRAND_NAME)}" width="140" height="40">\n'
-        '<p class="hero-eyebrow" aria-label="Report edition">'
+        f'<p class="brand-lockup">{brand_mark_svg()}'
+        f'<span class="brand-word">{escape_html(BRAND_NAME)}</span></p>\n'
+        '<p class="hero-eyebrow">'
         f"Community Edition · {escape_html(summary.assessment_mode_label)}</p>\n"
         f'<h1 class="report-title">{escape_html(BRAND_REPORT_NAME)}</h1>\n'
         '<p class="hero-lede">Engineering Intelligence for the current '
@@ -1462,6 +1507,7 @@ def _render_finding_card(item: FindingView, *, compact: bool) -> str:
         f'<article class="item-card finding"{anchor_attr}>\n'
         f'<header class="item-header">'
         f'<span class="badge severity-{escape_html(item.severity)}">'
+        '<span class="sr-only">Severity: </span>'
         f"{escape_html(item.severity)}</span> "
         f"<strong>{escape_html(item.title)}</strong>"
         f"</header>\n"
@@ -1839,12 +1885,35 @@ def _limitation_items(limitations: object) -> str:
 
 
 def _status_badge_class(status_label: str) -> str:
+    """Map domain status labels to semantic status badge classes (Slice 14.8).
+
+    Domain truth is unchanged. ``not-assessed`` must not match success via the
+    substring ``assessed``.
+    """
     key = (status_label or "").strip().lower().replace(" ", "-").replace("_", "-")
+    if not key:
+        return "status-badge"
+    if any(
+        token in key
+        for token in (
+            "not-assessed",
+            "not-available",
+            "not-enabled",
+            "unavailable",
+            "unknown",
+            "disabled",
+        )
+    ) or key.startswith("not-"):
+        if "partial" in key:
+            return "status-badge status-badge-partial"
+        return "status-badge status-badge-not-assessed"
     if any(token in key for token in ("fail", "error")):
         return "status-badge status-badge-failed"
     if any(token in key for token in ("partial", "limited", "degraded")):
         return "status-badge status-badge-partial"
-    if any(token in key for token in ("success", "complete", "ok", "ready", "assessed")):
+    if key in {"assessed", "succeeded", "success", "complete", "ok", "ready"}:
+        return "status-badge status-badge-succeeded"
+    if any(token in key for token in ("success", "complete", "ready")):
         return "status-badge status-badge-succeeded"
     return "status-badge"
 
@@ -4976,7 +5045,7 @@ def _render_metadata(view: HtmlReportViewModel) -> str:
 
 def _render_footer(view: HtmlReportViewModel | None = None) -> str:
     engine = view.metadata.engine_version if view is not None else BRAND_VERSION
-    report_version = view.metadata.report_version if view is not None else "3.0"
+    report_version = view.metadata.report_version if view is not None else "3.1"
     mode = view.summary.assessment_mode_label if view is not None else "Deterministic"
     ai_status = view.metadata.ai_status if view is not None else "not_requested"
     return (

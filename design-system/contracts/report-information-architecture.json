@@ -1,0 +1,291 @@
+{
+  "schema": "codestrata-report-information-architecture-contract",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "policy": "codestrata-report-information-architecture-policy:1.0",
+  "presentation_contract": "design-system/contracts/presentation.json",
+  "visualization_contract": "design-system/contracts/visualization.json",
+  "domain_truth_authoritative": true,
+  "products_remain_distinct": true,
+  "notes": [
+    "Presentation contract only — does not duplicate report data schemas.",
+    "Section order authority stays with each product renderer/verifier.",
+    "Hierarchy defines semantics; reports need not implement every level as a separate section."
+  ],
+  "hierarchy_levels": {
+    "0": {
+      "role": "report_identity",
+      "question": "Which CodeStrata artifact is this?",
+      "content": ["product_bar", "report_title", "report_scope", "bounded_primary_metadata"]
+    },
+    "1": {
+      "role": "orientation",
+      "question": "What am I looking at?",
+      "content": ["report_purpose", "scope", "coverage", "contents_navigation"]
+    },
+    "2": {
+      "role": "executive_summary",
+      "question": "What matters?",
+      "content": ["status_metrics", "key_signals", "leadership_narrative"],
+      "invented_conclusions_allowed": false
+    },
+    "3": {
+      "role": "primary_analysis",
+      "question": "What did CodeStrata evaluate?",
+      "content": ["assessment_heads", "capability_sections"]
+    },
+    "4": {
+      "role": "finding_evidence",
+      "question": "What supports these conclusions?",
+      "content": ["findings", "evidence", "drilldowns", "traceability"],
+      "sub_roles": ["finding_detail", "evidence_detail"]
+    },
+    "5": {
+      "role": "recommendation_detail",
+      "question": "What should I do next?",
+      "content": ["recommendations", "priority_actions", "roadmap", "observations"],
+      "invented_priorities_or_timelines_allowed": false
+    },
+    "6": {
+      "role": "supporting_detail",
+      "question": "What reference detail supports the report?",
+      "content": ["technology_detail", "patterns", "methodology", "limitations", "metadata", "appendix"],
+      "sub_roles": ["supporting_detail", "technical_appendix", "report_metadata", "limitations"]
+    }
+  },
+  "heading_rules": {
+    "h1": "report_title_only",
+    "h1_count": 1,
+    "h2": "major_report_section",
+    "h3": "domain_head_or_capability_subsection",
+    "h4": "finding_recommendation_evidence_or_metric_grouping",
+    "h5_h6": "discouraged_use_only_inside_deep_technical_detail",
+    "styling_only_headings_allowed": false,
+    "arbitrary_skip_allowed": false,
+    "legacy_exceptions": [
+      {
+        "surface": "assessment_report",
+        "case": "assessment_head_pack_bodies_reuse_h3_h4",
+        "classification": "legacy_hierarchy",
+        "action": "documented_not_reordered_in_14_9"
+      }
+    ]
+  },
+  "section_header_anatomy": {
+    "parts": ["eyebrow", "heading", "description", "optional_status_or_metric", "anchor"],
+    "required_parts": ["heading", "anchor"],
+    "status_or_metric_required_on_every_section": false,
+    "eyebrow_decorative": true,
+    "consumers": {
+      "assessment_report": ["eyebrow", "heading", "description", "anchor"],
+      "eir": ["heading", "description", "anchor"]
+    }
+  },
+  "navigation": {
+    "grammar": "single_contents_navigation_per_report",
+    "desktop": {
+      "pattern": "sticky_contents_panel",
+      "scope": "major_sections_only",
+      "lists_individual_findings": false
+    },
+    "mobile": {
+      "pattern": "static_contents_block_at_top_of_report",
+      "side_rail_allowed": false,
+      "breakpoints": ["1024px", "820px", "560px"]
+    },
+    "print": {
+      "chrome_hidden": ["product_bar", "skip_link", "anchor_only_aliases"],
+      "contents_retained": true,
+      "links_readable": true
+    },
+    "javascript_required": false,
+    "network_required": false,
+    "active_scroll_tracking": "intentionally_absent_no_js_architecture",
+    "breadcrumbs": {
+      "enabled": false,
+      "decision": "standalone_report_artifacts_have_no_parent_hierarchy_to_traverse"
+    },
+    "skip_link_required": true,
+    "landmark_required": true,
+    "dead_links_allowed": false
+  },
+  "anchor_rules": {
+    "case": "lowercase",
+    "separator": "kebab-case",
+    "semantic": true,
+    "deterministic": true,
+    "random_ids_allowed": false,
+    "timestamp_in_id_allowed": false,
+    "repository_name_in_section_id_allowed": false,
+    "duplicate_ids_allowed": false,
+    "entity_anchors_derived_from_canonical_ids": true,
+    "removal_policy": "preserve_or_alias"
+  },
+  "assessment_report": {
+    "owner": "community_engine",
+    "renderer": "engine/src/codestrata/reporting/html_v2/renderer.py",
+    "order_authority": "engine/verification/assessment_report/contract.py:EXPECTED_SECTION_ORDER",
+    "contents_anchor": "contents",
+    "landmark_anchor": "main-content",
+    "sections": [
+      {"anchor": "cover", "role": "report_identity", "level": 0, "heading": "h1", "conditional": false},
+      {"anchor": "contents", "role": "navigation", "level": 1, "heading": "h2", "conditional": true},
+      {"anchor": "leadership-verdict", "role": "executive_summary", "level": 2, "heading": "h2", "conditional": true},
+      {"anchor": "executive-summary", "role": "executive_summary", "level": 2, "heading": "h2", "conditional": false},
+      {"anchor": "engineering-intelligence-summary", "role": "executive_summary", "level": 2, "heading": "h2", "conditional": false, "note": "head_synthesis_no_new_conclusions"},
+      {"anchor": "key-takeaways", "role": "executive_summary", "level": 2, "heading": "h2", "conditional": false},
+      {"anchor": "priority-actions", "role": "recommendation_detail", "level": 5, "heading": "h2", "conditional": false, "note": "leadership_band_placement_preserved"},
+      {"anchor": "engineering-risks", "role": "executive_summary", "level": 2, "heading": "h2", "conditional": false},
+      {"anchor": "assessment-results", "role": "primary_analysis", "level": 3, "heading": "h2", "conditional": false},
+      {"anchor": "phased-modernization-plan", "role": "recommendation_detail", "level": 5, "heading": "h2", "conditional": true},
+      {"anchor": "modernization-advisor", "role": "supporting_detail", "level": 6, "heading": "h2", "conditional": true},
+      {"anchor": "technical-appendix", "role": "technical_appendix", "level": 6, "heading": "h2", "conditional": false}
+    ],
+    "subsections": {
+      "parent": "assessment-results",
+      "heading": "h3",
+      "anchors": [
+        "technology-inventory",
+        "architecture-intelligence",
+        "technical-debt-intelligence",
+        "dependency-intelligence",
+        "security-intelligence",
+        "cloud-readiness",
+        "ai-readiness",
+        "modernization-assessment"
+      ],
+      "internal_order": [
+        "status",
+        "summary_or_pack_content",
+        "findings",
+        "recommendations",
+        "coverage_confidence_limitations"
+      ],
+      "fields_used_must_exist": true
+    },
+    "legacy_anchor_aliases": [
+      "architecture-assessment",
+      "technical-debt-assessment",
+      "dependency-assessment",
+      "security-assessment",
+      "cloud-assessment",
+      "ai-readiness-assessment"
+    ],
+    "entity_anchor_prefixes": [
+      "finding-",
+      "recommendation-",
+      "priority-action-",
+      "roadmap-initiative-",
+      "evidence-"
+    ],
+    "metadata_placement": {
+      "primary": "cover",
+      "secondary": ["technical-appendix", "footer"]
+    },
+    "findings_evidence_relationship": {
+      "pattern": "finding_card_links_evidence_and_recommendation",
+      "evidence_detail_location": "technical-appendix",
+      "cross_reference_required": true
+    },
+    "recommendation_placement": {
+      "detail": "priority-actions",
+      "head_level": "concise_reference_link_only",
+      "duplicate_full_content_allowed": false
+    }
+  },
+  "eir": {
+    "owner": "commercial_platform",
+    "renderer": "platform/src/codestrata_platform/intelligence_reporting/presentation/static_html/renderer.py",
+    "order_authority": "platform/src/codestrata_platform/intelligence_reporting/presentation/static_html/sections.py:SECTION_ORDER",
+    "landmark_anchor": "main",
+    "sections": [
+      {"anchor": "cover", "role": "report_identity", "level": 0, "heading": "h1"},
+      {"anchor": "section-scope", "role": "orientation", "level": 1, "heading": "h2"},
+      {"anchor": "section-orientation", "role": "executive_summary", "level": 2, "heading": "h2"},
+      {"anchor": "section-summary", "role": "executive_summary", "level": 2, "heading": "h2"},
+      {"anchor": "section-technology", "role": "secondary_analysis", "level": 3, "heading": "h2"},
+      {"anchor": "section-capability", "role": "primary_analysis", "level": 3, "heading": "h2"},
+      {"anchor": "section-heads", "role": "primary_analysis", "level": 3, "heading": "h2"},
+      {"anchor": "section-patterns", "role": "secondary_analysis", "level": 3, "heading": "h2"},
+      {"anchor": "section-observations", "role": "recommendation_detail", "level": 5, "heading": "h2", "note": "observations_not_prescriptions"},
+      {"anchor": "section-confidence", "role": "supporting_detail", "level": 6, "heading": "h2"},
+      {"anchor": "section-limitations", "role": "limitations", "level": 6, "heading": "h2"},
+      {"anchor": "section-drilldowns", "role": "evidence_detail", "level": 4, "heading": "h2"},
+      {"anchor": "section-methodology", "role": "supporting_detail", "level": 6, "heading": "h2"},
+      {"anchor": "section-metadata", "role": "report_metadata", "level": 6, "heading": "h2"}
+    ],
+    "entity_anchor_prefixes": ["pattern-", "observation-", "drilldown-"],
+    "disclosure": {
+      "element": "details",
+      "collapsed": ["recurring_pattern_detail", "modernization_observation_detail"],
+      "always_visible": ["section_headings", "orientation_kpis", "confidence_level", "limitations"]
+    },
+    "metadata_placement": {
+      "primary": "cover",
+      "secondary": ["section-methodology", "section-metadata", "footer"]
+    },
+    "evidence_projection": {
+      "raw_evidence_included": false,
+      "traceability_representation": "bounded_drilldown_reference_lists",
+      "reintroduce_raw_evidence_allowed": false
+    },
+    "commercial_only_sections": [
+      "section-capability",
+      "section-heads",
+      "section-patterns",
+      "section-observations",
+      "section-drilldowns"
+    ]
+  },
+  "components": {
+    "report_header": {"purpose": "product bar + report identity", "heading": "h1", "consumers": ["assessment_report", "eir"]},
+    "report_orientation": {"purpose": "scope/purpose/coverage framing", "heading": "h2", "consumers": ["assessment_report", "eir"]},
+    "report_toc": {"purpose": "single contents navigation", "heading": "h2", "javascript": false, "consumers": ["assessment_report", "eir"]},
+    "report_section": {"purpose": "major report section", "heading": "h2", "consumers": ["assessment_report", "eir"]},
+    "report_subsection": {"purpose": "head/capability subsection", "heading": "h3", "consumers": ["assessment_report"]},
+    "report_findings_group": {"purpose": "findings grouped with evidence references", "heading": "h4", "consumers": ["assessment_report"]},
+    "report_recommendations_group": {"purpose": "recommendation/action grouping", "heading": "h4", "consumers": ["assessment_report", "eir"]},
+    "report_supporting_detail": {"purpose": "methodology/limitations/appendix", "heading": "h2", "consumers": ["assessment_report", "eir"]},
+    "report_metadata": {"purpose": "bounded report metadata", "heading": "h2", "consumers": ["assessment_report", "eir"]},
+    "report_footer": {"purpose": "artifact provenance and boundary statement", "consumers": ["assessment_report", "eir"]}
+  },
+  "density": {
+    "executive_summary": "concise_high_signal",
+    "primary_analysis": "moderate",
+    "finding_evidence": "compact_technical",
+    "supporting_detail": "dense_tables_allowed",
+    "dashboard_card_conversion_allowed": false,
+    "character": "evidence_oriented_technical_documentation"
+  },
+  "empty_sections": {
+    "navigation_may_link_absent_section": false,
+    "fabricated_content_to_preserve_nav_allowed": false,
+    "explicit_state_labels": ["not_assessed", "not_enabled", "unavailable", "no_findings_produced"],
+    "state_authority": "design-system/contracts/visualization.json"
+  },
+  "labels": {
+    "canonical": [
+      "Contents",
+      "Executive Summary",
+      "Assessment Results",
+      "Priority Actions",
+      "Recommendations",
+      "Findings",
+      "Evidence",
+      "Limitations",
+      "Methodology",
+      "Technical Appendix"
+    ],
+    "domain_entity_rename_allowed": false,
+    "product_vocabulary_authority": "owning_product"
+  },
+  "boundaries": {
+    "eir_sections_in_assessment_allowed": false,
+    "assessment_sections_in_eir_allowed": false,
+    "commercial_navigation_in_community_docs_allowed": false,
+    "visualization_semantics_change_allowed": false,
+    "asset_redesign": "14.10",
+    "accessibility_certification": "14.11",
+    "documentation_deployment": "14.12"
+  }
+}

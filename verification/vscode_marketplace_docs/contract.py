@@ -49,11 +49,11 @@ REQUIRED_HEADINGS = (
 )
 
 GALLERY_ORDER = (
-    "media/screenshot-findings.png",
+    "media/screenshot-assessment.png",
     "media/screenshot-report.png",
     "media/screenshot-progress.png",
-    "media/screenshot-activity.png",
-    "media/screenshot-recommendations.png",
+    "media/screenshot-initialization.png",
+    "media/screenshot-ai-assessment.png",
 )
 
 FORBIDDEN_CLAIM_FRAGMENTS = (

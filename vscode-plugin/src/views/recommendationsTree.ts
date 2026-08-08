@@ -1,6 +1,10 @@
 import * as vscode from "vscode";
 
 import type { Recommendation } from "../reports/types";
+import {
+  EMPTY_RECOMMENDATIONS_DESCRIPTION,
+  EMPTY_RECOMMENDATIONS_TITLE,
+} from "../ui/presentationCopy";
 
 export class RecommendationItem extends vscode.TreeItem {
   constructor(public readonly recommendation: Recommendation) {
@@ -68,8 +72,8 @@ export class RecommendationsTreeProvider
     if (this.recommendations.length === 0) {
       const empty = new RecommendationItem({
         id: "empty",
-        title: "No recommendations loaded",
-        description: "Run CodeStrata: Run Assessment",
+        title: EMPTY_RECOMMENDATIONS_TITLE,
+        description: EMPTY_RECOMMENDATIONS_DESCRIPTION,
       });
       empty.iconPath = new vscode.ThemeIcon("info");
       empty.contextValue = "codestrataRecommendationEmpty";

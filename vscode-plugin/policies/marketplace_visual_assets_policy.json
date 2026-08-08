@@ -1,0 +1,55 @@
+{
+  "policy_id": "codestrata-marketplace-visual-assets-policy",
+  "policy_version": "1.0",
+  "slice": "14.6",
+  "design_system_version": "1.0",
+  "extension_version": "0.2.0",
+  "marketplace_branding_policy_version": "1.0",
+  "marketplace_documentation_policy_version": "1.0",
+  "vscode_visual_policy_version": "1.0",
+  "visual_reference": "codestrata_design_system",
+  "current_brand_required": true,
+  "legacy_amber_allowed": false,
+  "cursor_allowed": false,
+  "commercial_feature_visuals_allowed": false,
+  "synthetic_content_required": true,
+  "customer_data_allowed": false,
+  "universal_logo_authority_change_allowed": false,
+  "runtime_behavior_change_allowed": false,
+  "marketplace_copy_semantics_change_allowed": false,
+  "assessment_schema_bump_allowed": false,
+  "extension_version_bump_allowed": false,
+  "start_slice_14_7": false,
+  "icon_classification": "marketplace_specific_derivative",
+  "gallery_banner_color_token": "canvas",
+  "gallery_banner_theme": "light",
+  "screenshot_width": 1280,
+  "screenshot_height": 720,
+  "screenshot_aspect": "16:9",
+  "gallery_order": [
+    "media/screenshot-assessment.png",
+    "media/screenshot-report.png",
+    "media/screenshot-progress.png",
+    "media/screenshot-initialization.png",
+    "media/screenshot-ai-assessment.png"
+  ],
+  "required_assets": [
+    "media/codestrata-icon.png",
+    "media/marketplace-banner.png",
+    "media/screenshot-assessment.png",
+    "media/screenshot-report.png",
+    "media/screenshot-progress.png",
+    "media/screenshot-initialization.png",
+    "media/screenshot-ai-assessment.png"
+  ],
+  "runtime_assets_must_not_change": [
+    "media/codestrata-activity.svg"
+  ],
+  "limitations": [
+    "extension_host_screenshot_automation_may_be_unavailable",
+    "pixel_perfect_screenshot_determinism_depends_on_rendering_host",
+    "universal_logo_authority_deferred_to_14_10",
+    "marketplace_not_remotely_previewed_or_published",
+    "worktree_uncommitted"
+  ]
+}

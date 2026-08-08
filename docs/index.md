@@ -1,66 +1,65 @@
 ---
 layout: home
-title: Engineering Intelligence for Modern Software
-description: Engineering Intelligence for Modern Software — CodeStrata Engine, assessments, reports, and IDE extensions.
+title: Community Edition Documentation
+description: Install CodeStrata Engine, run local Engineering Assessments, open reports, and use the VS Code extension — Community Edition only.
 
 hero:
-  name: Engineering Intelligence for Modern Software
+  name: Engineering decisions grounded in code.
   text: ""
-  tagline: Understand, assess, modernize, and transform software systems with confidence — starting with deterministic Engineering Assessments.
+  tagline: Community Edition documentation for CodeStrata Engine — local assessments, inspectable reports, and the VS Code extension.
   actions:
     - theme: brand
       text: Get Started
       link: /getting-started/
     - theme: alt
-      text: Install the Engine
+      text: Install Engine
       link: /getting-started/install
     - theme: alt
-      text: View GitHub
-      link: https://github.com/CodeStrata/codestrata-engine
+      text: VS Code Extension
+      link: /extensions/vscode
 
 features:
-  - title: Install Engine
-    details: Install CodeStrata Engine with pip, a venv, or from source — then verify with codestrata version and doctor.
-  - title: First Assessment
-    details: Run a deterministic Engineering Assessment with --no-ai and open the HTML report.
-  - title: Understand Reports
-    details: Read findings, recommendations, and evidence in the Strata-style Engineering Assessment report.
+  - title: Install
+    details: Install CodeStrata Engine, verify with codestrata version and doctor, then initialize a repository.
+  - title: Assess
+    details: Run deterministic Engineering Assessments locally with --no-ai, or opt into Engine-owned AI enrichment.
+  - title: Reports
+    details: Open HTML assessment reports and review findings, recommendations, and evidence boundaries.
   - title: VS Code
-    details: Thin Engine client — findings, recommendations, diagnostics, and report access in the editor.
-  - title: CLI · API · MCP
-    details: Community CLI journey commands, public contracts, and optional MCP — Platform stays separate.
+    details: Thin Engine client — discover CLI, run assessments, open local reports, and keep source local.
 ---
 
 <div class="cs-home-below">
 
-<p class="cs-eyebrow">01 // PRIMARY JOURNEY</p>
+<p class="cs-eyebrow">Community journey</p>
 
 <pre class="cs-journey">Install CodeStrata Engine
         ↓
-Assess a repository
+Initialize repository configuration
         ↓
-Review findings and recommendations
+Run a local Engineering Assessment
         ↓
-Use VS Code integration</pre>
+Review the HTML report in VS Code or browser</pre>
 
-<p class="cs-eyebrow" style="margin-top:2.5rem">02 // START HERE</p>
+<p class="cs-eyebrow" style="margin-top:2.5rem">Start here</p>
 
 <div class="cs-cta-grid">
-  <a href="/getting-started/install">Install <span>→</span></a>
-  <a href="/getting-started/first-assessment">First Assessment <span>→</span></a>
-  <a href="/reports/">Understand Reports <span>→</span></a>
+  <a href="/getting-started/install">Installation <span>→</span></a>
+  <a href="/getting-started/repository-initialization">Repository init <span>→</span></a>
+  <a href="/getting-started/first-assessment">First assessment <span>→</span></a>
+  <a href="/reports/">Assessment reports <span>→</span></a>
   <a href="/extensions/vscode">VS Code <span>→</span></a>
-  <a href="/reference/cli">CLI <span>→</span></a>
-  <a href="/reference/api">API and MCP <span>→</span></a>
-  <a href="/troubleshooting/">Troubleshooting <span>→</span></a>
+  <a href="/reference/cli">CLI reference <span>→</span></a>
+  <a href="/security/privacy">Privacy <span>→</span></a>
+  <a href="/faq/">FAQ <span>→</span></a>
 </div>
 
-<pre class="cs-terminal"><span class="c"># deterministic by default</span>
+<pre class="cs-terminal"><span class="c"># deterministic assessment (local)</span>
 <span class="cmd">$</span> codestrata assess --repo . --output reports --no-ai
 <span class="c">→ reports/&lt;repo&gt;/&lt;timestamp&gt;/report.html</span></pre>
 
 <div class="cs-callout" style="margin-top:1.5rem">
-Deterministic Engineering Intelligence is the default. Optional AI uses <strong>your</strong> provider credentials — AI is a capability, not the product name. Platform capabilities are commercial and separate — see <a href="/community/vs-platform">Community vs Platform</a>.
+Deterministic Engineering Assessments are the default. Optional AI uses <strong>your</strong> provider credentials through the Engine — the VS Code extension does not send repository source to AI providers directly. This documentation covers <strong>Community Edition</strong> only.
 </div>
 
 </div>

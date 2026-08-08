@@ -1,0 +1,213 @@
+{
+  "schema": "codestrata-accessibility-contract",
+  "schema_version": "1.0.0",
+  "contract_id": "codestrata-accessibility-contract",
+  "contract_version": "1.0",
+  "policy": "codestrata-accessibility-responsive-policy:1.0",
+  "design_system": "codestrata-visual-design-system:1.0",
+  "token_authority": "design-system/tokens/catalog.json",
+  "note": "Rules only. Colour values live in the token catalog and are referenced by token name.",
+  "wcag": {
+    "target": "2.2_AA_oriented",
+    "certified": false,
+    "certification_claim_prohibited": true,
+    "pass_means": "the surface meets this automated structural and computed accessibility contract"
+  },
+  "contrast": {
+    "targets": {
+      "normal_text": 4.5,
+      "large_text": 3.0,
+      "non_text_essential": 3.0,
+      "focus_indicator": 3.0
+    },
+    "large_text_threshold": {
+      "regular_min_px": 24,
+      "bold_min_px": 19
+    },
+    "required_pairs": {
+      "light": [
+        { "id": "body_on_canvas", "foreground": "ink", "background": "canvas", "kind": "normal_text" },
+        { "id": "body_on_surface", "foreground": "ink", "background": "paper", "kind": "normal_text" },
+        { "id": "secondary_on_canvas", "foreground": "ink_soft", "background": "canvas", "kind": "normal_text" },
+        { "id": "muted_on_canvas", "foreground": "muted", "background": "canvas", "kind": "normal_text" },
+        { "id": "muted_on_surface", "foreground": "muted", "background": "paper", "kind": "normal_text" },
+        { "id": "muted_on_surface_2", "foreground": "muted", "background": "paper_soft", "kind": "normal_text" },
+        { "id": "link_on_canvas", "foreground": "teal_dark", "background": "canvas", "kind": "normal_text" },
+        { "id": "link_on_surface", "foreground": "teal_dark", "background": "paper", "kind": "normal_text" },
+        { "id": "focus_on_canvas", "foreground": "teal_dark", "background": "canvas", "kind": "focus_indicator" },
+        { "id": "focus_on_surface", "foreground": "teal_dark", "background": "paper", "kind": "focus_indicator" },
+        { "id": "status_success", "foreground": "teal", "background": "teal_soft", "kind": "normal_text" },
+        { "id": "status_info", "foreground": "blue", "background": "blue_soft", "kind": "normal_text" },
+        { "id": "status_warning", "foreground": "rust", "background": "rust_soft", "kind": "normal_text" },
+        { "id": "status_neutral", "foreground": "muted", "background": "paper_soft", "kind": "normal_text" },
+        { "id": "risk_critical", "foreground": "rust", "background": "rust_soft", "kind": "normal_text" },
+        { "id": "risk_high", "foreground": "rust", "background": "rust_soft", "kind": "normal_text" },
+        { "id": "risk_medium", "foreground": "blue", "background": "blue_soft", "kind": "normal_text" },
+        { "id": "risk_low", "foreground": "teal", "background": "teal_soft", "kind": "normal_text" },
+        { "id": "callout_text", "foreground": "ink", "background": "teal_soft", "kind": "normal_text" },
+        { "id": "accent_button_text", "foreground": "paper", "background": "teal_dark", "kind": "normal_text" },
+        { "id": "table_header", "foreground": "muted", "background": "paper_soft", "kind": "normal_text" }
+      ],
+      "dark": [
+        { "id": "body_on_night", "foreground": "night_ink", "background": "night", "kind": "normal_text" },
+        { "id": "body_on_night_surface", "foreground": "night_ink", "background": "night_soft", "kind": "normal_text" },
+        { "id": "muted_on_night", "foreground": "night_muted", "background": "night", "kind": "normal_text" },
+        { "id": "muted_on_night_surface", "foreground": "night_muted", "background": "night_soft", "kind": "normal_text" },
+        { "id": "link_on_night", "foreground": "teal_light", "background": "night", "kind": "normal_text" },
+        { "id": "link_on_night_surface", "foreground": "teal_light", "background": "night_soft", "kind": "normal_text" },
+        { "id": "focus_on_night", "foreground": "teal_light", "background": "night", "kind": "focus_indicator" },
+        { "id": "focus_on_night_surface", "foreground": "teal_light", "background": "night_soft", "kind": "focus_indicator" },
+        { "id": "status_success_dark", "foreground": "teal_light", "background": "teal_soft_dark", "kind": "normal_text" },
+        { "id": "status_info_dark", "foreground": "blue_light", "background": "blue_soft_dark", "kind": "normal_text" },
+        { "id": "status_warning_dark", "foreground": "rust_light", "background": "rust_soft_dark", "kind": "normal_text" },
+        { "id": "status_neutral_dark", "foreground": "night_muted", "background": "night_soft", "kind": "normal_text" },
+        { "id": "risk_critical_dark", "foreground": "rust_light", "background": "rust_soft_dark", "kind": "normal_text" },
+        { "id": "risk_high_dark", "foreground": "rust_light", "background": "rust_soft_dark", "kind": "normal_text" },
+        { "id": "risk_medium_dark", "foreground": "blue_light", "background": "blue_soft_dark", "kind": "normal_text" },
+        { "id": "risk_low_dark", "foreground": "teal_light", "background": "teal_soft_dark", "kind": "normal_text" },
+        { "id": "code_on_night_surface", "foreground": "night_ink", "background": "night_soft", "kind": "normal_text" }
+      ],
+      "print": [
+        { "id": "print_body", "foreground": "ink", "background": "paper", "kind": "normal_text" },
+        { "id": "print_muted", "foreground": "muted", "background": "paper", "kind": "normal_text" },
+        { "id": "print_status_label", "foreground": "ink", "background": "paper_soft", "kind": "normal_text" }
+      ]
+    }
+  },
+  "focus": {
+    "visible_required": true,
+    "token": "focus",
+    "treatment": "outline 2px solid var(--cs-focus) with 2px offset (reports); 3px with 3px offset (documentation)",
+    "outline_removal_requires_replacement": true,
+    "focus_not_obscured_by_sticky_chrome": true,
+    "must_not_rely_on_subtle_colour_difference_alone": true
+  },
+  "keyboard": {
+    "required": true,
+    "no_keyboard_traps": true,
+    "scrollable_regions_must_be_focusable": true,
+    "native_disclosure_preferred_over_custom_widgets": true,
+    "vscode_delegated_to_host": true
+  },
+  "semantics": {
+    "single_h1_per_document": true,
+    "no_heading_level_skips": true,
+    "headings_not_used_for_styling": true,
+    "landmarks": {
+      "banner": "exactly one per document",
+      "main": "exactly one per document",
+      "navigation": "labelled when more than one exists",
+      "contentinfo": "must not be nested inside main"
+    },
+    "skip_link": {
+      "required_for_long_documents": true,
+      "target_must_exist_unconditionally": true,
+      "visible_on_focus": true
+    },
+    "aria": {
+      "prefer_semantic_html": true,
+      "naming_prohibited_on_roles": ["generic", "paragraph", "presentation", "none"],
+      "aria_hidden_permitted_for": ["decorative brand mark adjacent to visible text", "decorative section eyebrow"],
+      "aria_hidden_prohibited_for": ["link targets", "elements carrying the only textual status label"],
+      "redundant_role_on_native_element_discouraged": true
+    }
+  },
+  "tables": {
+    "semantic_table_required": true,
+    "layout_tables_prohibited": true,
+    "header_cells_required": true,
+    "scope_required_on_header_cells": true,
+    "overflow_wrapper_required": true,
+    "overflow_wrapper_must_be_keyboard_scrollable": true,
+    "shrink_text_to_fit_prohibited": true
+  },
+  "links": {
+    "generic_link_text_discouraged": ["click here", "here", "read more", "link"],
+    "external_new_tab_requires_rel": ["noopener", "noreferrer"],
+    "new_tab_should_be_disclosed": true,
+    "empty_links_prohibited": true
+  },
+  "images": {
+    "informative_requires_alt": true,
+    "decorative_requires_empty_alt_or_aria_hidden": true,
+    "alt_must_not_be_filename": true,
+    "redundant_alt_beside_visible_name_prohibited": true,
+    "critical_text_in_small_raster_prohibited": true,
+    "text_in_raster_must_meet_contrast_targets": true
+  },
+  "status_and_risk": {
+    "authority": "codestrata-visualization-contract:1.0",
+    "colour_only_prohibited": true,
+    "textual_label_required": true,
+    "shape_marker_required_for_severity": true,
+    "must_survive_print": true,
+    "must_survive_forced_colors": true,
+    "confidence_remains_informational_and_textual": true,
+    "chart_requires_textual_equivalent": true
+  },
+  "motion": {
+    "reduced_motion_guard_required": true,
+    "guard_properties": [
+      "animation-duration",
+      "animation-delay",
+      "animation-iteration-count",
+      "transition-duration",
+      "transition-delay",
+      "scroll-behavior"
+    ],
+    "animation_must_not_be_added_to_demonstrate_compliance": true
+  },
+  "forced_colors": {
+    "baseline_required": true,
+    "must_retain": ["text", "borders", "labels", "focus indicator"],
+    "background_fill_only_signalling_prohibited": true,
+    "windows_high_contrast_visual_theme_not_required": true
+  },
+  "zoom_and_text": {
+    "root_font_size_must_not_be_fixed_px": true,
+    "relative_units_required_for_type": true,
+    "min_effective_body_px": 16,
+    "min_supporting_text_px": 11,
+    "text_must_remain_readable_at_200_percent": true,
+    "user_scalable_no_prohibited": true,
+    "viewport_meta_required": "width=device-width, initial-scale=1"
+  },
+  "touch_targets": {
+    "interactive_control_min_px": 44,
+    "compact_nav_control_min_px": 34,
+    "inline_text_links_exempt": true,
+    "applies_to": ["mobile navigation toggle", "icon buttons", "compact controls"]
+  },
+  "language": {
+    "html_lang_required": true,
+    "current_value": "en",
+    "internationalisation_not_started": true
+  },
+  "print": {
+    "readable_ink_required": true,
+    "navigation_chrome_hidden": true,
+    "status_meaning_preserved": true,
+    "links_remain_visible": true,
+    "tables_not_clipped": true,
+    "card_break_control_expected": true,
+    "dark_theme_must_not_leak_into_print": true,
+    "publication_grade_pagination_not_required": true
+  },
+  "surface_exceptions": {
+    "vscode_extension": {
+      "reason": "no custom webview exists; presentation uses native VS Code host surfaces",
+      "delegated_to_host": ["focus order", "keyboard navigation", "contrast", "theming", "zoom"],
+      "codestrata_owned": [
+        "accessibilityInformation labels",
+        "textual status alongside icons",
+        "tree item label/description/tooltip",
+        "currentColor activity icon",
+        "presentation string length"
+      ]
+    },
+    "marketplace": {
+      "reason": "gallery is raster and hosted by the Marketplace",
+      "codestrata_owned": ["alt text", "text contrast inside generated fixtures", "textual equivalent in README"]
+    }
+  }
+}

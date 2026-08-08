@@ -1,0 +1,68 @@
+{
+  "policy_id": "codestrata-documentation-deployment-policy",
+  "policy_version": "1.0",
+  "slice": "14.12",
+  "hosting_provider": "cloudflare",
+  "hosting_mode": "static_assets",
+  "deployment_configuration_checked_in": true,
+  "build_output_explicit": true,
+  "output_alignment_required": true,
+  "local_wrangler_required": true,
+  "dynamic_wrangler_install_allowed": false,
+  "interactive_setup_allowed": false,
+  "deployment_source_mutation_allowed": false,
+  "build_once_required": true,
+  "production_deploy_in_verification_allowed": false,
+  "credentials_in_source_allowed": false,
+  "community_publish_scope_required": true,
+  "package_root": "docs",
+  "package_root_model": "B_docs_package_root",
+  "cloudflare_project_root": "docs",
+  "wrangler_config": "wrangler.jsonc",
+  "vitepress_output_relative_to_package": ".vitepress/dist",
+  "assets_directory": "./.vitepress/dist",
+  "path_interpretation_rule": "All Wrangler paths are relative to the docs package root (the Cloudflare project working directory). After Community export, the exported repository root IS this package root.",
+  "build_ownership": "A_cloudflare_build_phase",
+  "build_ownership_detail": "Cloudflare (or CI) runs npm ci then npm run build. The deploy command uploads the existing dist and must not invoke VitePress again.",
+  "commands": {
+    "install": "npm ci",
+    "build": "npm run build",
+    "preflight": "npm run deploy:check",
+    "upload": "npm run deploy:upload",
+    "local_convenience": "npm run deploy:local"
+  },
+  "node_engines": ">=22",
+  "vitepress_pin_posture": "do_not_upgrade_for_deployment_hardening",
+  "worker_runtime": {
+    "main_entrypoint_required": false,
+    "nodejs_compat_allowed": false,
+    "observability_required": false
+  },
+  "forbidden": {
+    "npx_wrangler_dynamic_install": true,
+    "wrangler_auto_setup": true,
+    "assets_directory_docs_dot_vitepress_dist": true,
+    "production_deploy_by_verifier": true,
+    "start_slice_14_13": false,
+    "start_epic_15": true
+  },
+  "historical_failure": {
+    "id": "v0.1.0_path_ambiguity",
+    "summary": "VitePress build succeeded but Wrangler auto-setup inferred assets.directory=docs/.vitepress/dist, which does not exist relative to the docs package root (.vitepress/dist is correct).",
+    "class": "deployment_configuration_working_directory_build_output_contract"
+  },
+  "expected_unchanged": {
+    "design_system": "1.0",
+    "accessibility_responsive": "1.0",
+    "assessment_schema": "1.2",
+    "extension_version": "0.2.0"
+  },
+  "limitations": [
+    "no_real_cloudflare_upload_during_verification",
+    "cloudflare_dashboard_settings_require_owner_confirmation",
+    "dependency_advisories_without_safe_compatible_fix_deferred",
+    "one_os_clean_ci_validation",
+    "real_cloudflare_auth_not_exercised",
+    "worktree_uncommitted"
+  ]
+}

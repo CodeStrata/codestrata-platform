@@ -815,15 +815,15 @@
   ],
   "export_metadata": {
     "classification": "Public OSS report",
-    "export_id": "eir-export:990bfa68300f695451d8e365",
-    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
+    "export_id": "eir-export:3bd9fea3d4e1e29ac9945433",
+    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v2:csp=eir-website-csp-v1:schema=1.0",
     "export_schema_version": "1.0",
     "generated_at": null,
-    "html_template_version": "eir-static-html-v1",
-    "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+    "html_template_version": "eir-static-html-v2",
+    "interpretation_policy_bundle_id": "interp-bundle:a394af0337e541d0f269cf95",
     "json_projection_version": "eir-website-json-v1",
     "source_eir_schema_version": "1.0",
-    "source_report_id": "eir:97542882a05ceb5e5ea2a553"
+    "source_report_id": "eir:8739bb81bcd7350952203bd5"
   },
   "export_schema_version": "1.0",
   "limitations": [
@@ -1074,8 +1074,8 @@
     "assessment_schema_versions": [
       "1.2"
     ],
-    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
-    "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+    "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v2:csp=eir-website-csp-v1:schema=1.0",
+    "interpretation_policy_bundle_id": "interp-bundle:a394af0337e541d0f269cf95",
     "limitations": [
       "website_export_is_sanitized_projection",
       "canonical_assessment_reports_remain_source_of_truth"
@@ -2152,7 +2152,7 @@
       "title": "Recurring condition: technical_debt.excessive-branching"
     }
   ],
-  "report_id": "eir:97542882a05ceb5e5ea2a553",
+  "report_id": "eir:8739bb81bcd7350952203bd5",
   "report_schema_version": "1.0",
   "repository_drilldowns": [
     {

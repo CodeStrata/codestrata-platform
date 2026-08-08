@@ -6,6 +6,10 @@ import type { FindingsGroupBy } from "../config/settings";
 import { filterFindings, groupFindings } from "../reports/findingsModel";
 import { primaryEvidencePath } from "../reports/parser";
 import type { Finding } from "../reports/types";
+import {
+  EMPTY_FINDINGS_FILTERED,
+  EMPTY_FINDINGS_LABEL,
+} from "../ui/presentationCopy";
 
 export type FindingsTreeNode = FindingGroupNode | FindingItemNode;
 
@@ -99,8 +103,8 @@ export class FindingsTreeProvider
       const empty = new FindingGroupNode(
         "empty",
         this.findings.length === 0
-          ? "No findings loaded — run Engineering Assessment"
-          : "No findings match the current filter",
+          ? EMPTY_FINDINGS_LABEL
+          : EMPTY_FINDINGS_FILTERED,
         []
       );
       empty.collapsibleState = vscode.TreeItemCollapsibleState.None;

@@ -20,7 +20,10 @@ recommendations, diagnostics, and HTML report access.
 4. Optionally run **Initialize Repository** (Engine writes
    `codestrata.toml`; already-initialized is preserved; invalid/partial config
    fails closed). See the extension repository docs for initialization boundaries.
-5. Run your first Engineering Assessment.
+5. Run your first assessment, then open the generated report when prompted.
+
+The extension follows CodeStrata Design System identity on native VS Code surfaces
+(no website CSS in the editor chrome). Marketplace gallery assets are separate.
 
 Manual Engine install if needed:
 

@@ -1,7 +1,7 @@
 /**
  * CodeStrata Swagger UI theme bridge
- * Reuses docs/public design tokens (synced into design-tokens/tokens.css).
- * Visual authority: codestrata.ai → Community docs → WEBSITE_STYLE_ALIGNMENT.md
+ * Reuses Design System 1.0 public token copy (design-tokens/tokens.css).
+ * Visual authority: codestrata-visual-design-system:1.0 (Slice 14.13 aligned).
  */
 
 *,
@@ -289,12 +289,20 @@ html[data-theme="light"] .cs-brand__logo--dark {
   color: var(--fg-muted) !important;
 }
 
-/* Semantic method colors retained */
-.swagger-ui .opblock.opblock-get { border-color: color-mix(in srgb, #4fb3a5 55%, var(--border)) !important; }
-.swagger-ui .opblock.opblock-post { border-color: color-mix(in srgb, #d98a3d 55%, var(--border)) !important; }
+/* Semantic HTTP method borders mapped to Design System hues (no amber brand). */
+.swagger-ui .opblock.opblock-get {
+  border-color: color-mix(in srgb, var(--cs-teal) 55%, var(--border)) !important;
+}
+.swagger-ui .opblock.opblock-post {
+  border-color: color-mix(in srgb, var(--cs-teal-dark) 55%, var(--border)) !important;
+}
 .swagger-ui .opblock.opblock-put,
-.swagger-ui .opblock.opblock-patch { border-color: color-mix(in srgb, #7a8ba6 55%, var(--border)) !important; }
-.swagger-ui .opblock.opblock-delete { border-color: color-mix(in srgb, #e06c5b 55%, var(--border)) !important; }
+.swagger-ui .opblock.opblock-patch {
+  border-color: color-mix(in srgb, var(--cs-blue) 55%, var(--border)) !important;
+}
+.swagger-ui .opblock.opblock-delete {
+  border-color: color-mix(in srgb, var(--cs-rust) 55%, var(--border)) !important;
+}
 
 .swagger-ui .opblock .opblock-summary-method {
   font-family: var(--font-mono) !important;

@@ -36,8 +36,9 @@ describe("marketplace branding policy", () => {
 describe("gallery order", () => {
   it("lists five deterministic screenshots", () => {
     assert.equal(MARKETPLACE_GALLERY_ORDER.length, 5);
-    assert.equal(MARKETPLACE_GALLERY_ORDER[0], "media/screenshot-findings.png");
+    assert.equal(MARKETPLACE_GALLERY_ORDER[0], "media/screenshot-assessment.png");
     assert.equal(MARKETPLACE_GALLERY_ORDER[1], "media/screenshot-report.png");
+    assert.equal(MARKETPLACE_GALLERY_ORDER[4], "media/screenshot-ai-assessment.png");
   });
 });
 

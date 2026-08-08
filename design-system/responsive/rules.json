@@ -1,0 +1,22 @@
+{
+  "schema": "codestrata-responsive-rules",
+  "schema_version": "1.0.0",
+  "policy": "codestrata-accessibility-responsive-policy:1.0",
+  "contract": "codestrata-responsive-contract:1.0",
+  "breakpoints_px": {
+    "wrap": 1160,
+    "nav": 1040,
+    "tablet": 960,
+    "mobile": 720,
+    "report_toc_sticky": 1040,
+    "report_toc_static": 1024,
+    "report_mid": 820,
+    "report_narrow": 560
+  },
+  "viewport_matrix_px": [320, 375, 390, 768, 1024, 1280, 1440],
+  "min_viewport_px": 320,
+  "no_horizontal_page_scroll": true,
+  "tables_may_scroll_inside_panel": true,
+  "code_may_scroll_inside_panel": true,
+  "scroll_containers_keyboard_reachable": true
+}

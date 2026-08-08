@@ -12,7 +12,7 @@ from codestrata_platform.intelligence_reporting.domain.visibility import (
 
 WEBSITE_SAFE_EIR_EXPORT_SCHEMA_VERSION = "1.0"
 CSP_POLICY_VERSION = "eir-website-csp-v1"
-HTML_TEMPLATE_VERSION = "eir-static-html-v1"
+HTML_TEMPLATE_VERSION = "eir-static-html-v2"
 JSON_PROJECTION_VERSION = "eir-website-json-v1"
 ARTIFACT_TEMPLATE_VERSION = "eir-export-artifacts-v1"
 

@@ -114,7 +114,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
     vscodeignore = _read(monorepo, "vscode-plugin/.vscodeignore")
     pkg = _pkg(monorepo)
     ext = _read(monorepo, "vscode-plugin/src/extension.ts")
-    tokens = _read(monorepo, "docs/public/design-tokens/tokens.css")
+    ds_tokens = _read(monorepo, "design-system/tokens/tokens.css")
     gallery_banner = pkg.get("galleryBanner") or {}
 
     missing = required_assets_present(monorepo)
@@ -294,10 +294,10 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
                 "icon:governance_sync",
                 (
                     monorepo
-                    / "governance/assets/extension-branding/codestrata-extension-icon-128.png"
+                    / "governance/assets/extension-branding/codestrata-marketplace-icon-derivative-128.png"
                 ).read_bytes()
                 == (monorepo / "vscode-plugin" / ICON_RELATIVE).read_bytes(),
-                "matches governance 128 master",
+                "matches marketplace derivative 128",
                 "icon",
             ),
             CheckResult(
@@ -329,14 +329,14 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
             CheckResult(
                 "gallery_order:policy",
                 policy_gallery
-                and GALLERY_ORDER[0].endswith("screenshot-findings.png")
+                and GALLERY_ORDER[0].endswith("screenshot-assessment.png")
                 and GALLERY_ORDER[1].endswith("screenshot-report.png"),
-                "findings then report first",
+                "assessment then report first",
                 "gallery_order",
             ),
             CheckResult(
                 "gallery_order:readme",
-                readme.find("screenshot-findings.png")
+                readme.find("screenshot-assessment.png")
                 < readme.find("screenshot-report.png")
                 < readme.find("screenshot-progress.png"),
                 "readme order",
@@ -360,14 +360,16 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
                     m.startswith("![") and "](" in m
                     for m in re.findall(r"!\[[^\]]*\]\([^)]+\)", readme)
                 )
-                and "![Findings" in readme,
+                and "![CodeStrata" in readme,
                 "readme alts present",
                 "accessibility",
             ),
             CheckResult(
                 "website:tokens",
-                "#0f1216" in tokens and "#d98a3d" in tokens and GALLERY_COLOR in policy,
-                "website palette mirrored",
+                "#f4f6f3" in ds_tokens
+                and "#16756a" in ds_tokens
+                and GALLERY_COLOR in policy,
+                "design system canvas/teal",
                 "website_reference",
             ),
             CheckResult(

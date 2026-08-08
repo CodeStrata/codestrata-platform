@@ -18,8 +18,13 @@ and methodology independently support that claim.
 | Export policy / projection / validation / manifest | `application/website_export/` |
 | Self-contained HTML renderer | `presentation/static_html/` |
 | Path-safe writer | `infrastructure/static_export_writer.py` |
+| Presentation design policy | `codestrata-engineering-intelligence-report-design-policy:1.0` |
 
 Platform-only. Engine and Community Edition do not expose EIR website export.
+
+HTML presentation consumes Design System 1.0 tokens (embedded; offline/CSP).
+Template identity: `eir-static-html-v2` (presentation-only bump from `v1`).
+See [eir-report-design.md](./eir-report-design.md).
 
 ## Pipeline
 

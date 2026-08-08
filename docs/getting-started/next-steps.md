@@ -12,8 +12,8 @@ description: After your first assessment — reports, AI, and IDE extensions.
 | Optional AI | `codestrata ai` → [AI Providers](/ai-providers/) |
 | VS Code workflow | [VS Code Extension](/extensions/vscode) |
 | CLI reference | [CLI](/reference/cli) |
-| Community vs Platform | [Community vs Platform](/community/vs-platform) |
-| Stuck? | [Troubleshooting](/troubleshooting/) |
+| Privacy & telemetry | [Privacy](/security/privacy) · [Telemetry](/reference/telemetry) |
+| Stuck? | [Troubleshooting](/troubleshooting/) · [FAQ](/faq/) |
 
 Install an IDE extension when you want assessments and findings inside the editor.
 The CLI path remains fully supported without extensions.

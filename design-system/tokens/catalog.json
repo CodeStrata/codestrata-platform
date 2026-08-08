@@ -1,0 +1,242 @@
+{
+  "schema": "codestrata-design-tokens",
+  "schema_version": "1.0.0",
+  "authority": "https://codestrata.ai",
+  "css_authority": "https://codestrata.ai/assets/site.css",
+  "captured": "2026-08-07",
+  "default_theme": "light",
+  "colors": {
+    "canvas": "#f4f6f3",
+    "paper": "#ffffff",
+    "paper_soft": "#f8f9f7",
+    "ink": "#111815",
+    "ink_soft": "#2d3934",
+    "muted": "#5f6b65",
+    "muted_strong": "#44514b",
+    "line": "#d6ddd8",
+    "line_strong": "#b8c3bd",
+    "teal": "#16756a",
+    "teal_dark": "#0f5d54",
+    "teal_soft": "#e0eee9",
+    "rust": "#a04b17",
+    "rust_soft": "#f3e7dc",
+    "blue": "#4d6885",
+    "blue_soft": "#e7ecf2",
+    "night": "#101a17",
+    "night_soft": "#15231f",
+    "night_line": "#31433d",
+    "night_ink": "#edf3f0",
+    "night_muted": "#aebdb7",
+    "teal_light": "#35b3a4",
+    "rust_light": "#e5822f",
+    "blue_light": "#8fb0d4",
+    "teal_soft_dark": "#1a332e",
+    "rust_soft_dark": "#3a2418",
+    "blue_soft_dark": "#1e2a36"
+  },
+  "status_colors": {
+    "success": "#16756a",
+    "info": "#4d6885",
+    "warning": "#a04b17",
+    "danger": "#a04b17",
+    "neutral": "#5f6b65"
+  },
+  "risk_colors": {
+    "critical": "#a04b17",
+    "high": "#a04b17",
+    "medium": "#4d6885",
+    "low": "#16756a",
+    "info": "#5f6b65"
+  },
+  "score_colors": {
+    "excellent": "#16756a",
+    "good": "#16756a",
+    "fair": "#4d6885",
+    "poor": "#a04b17",
+    "unknown": "#5f6b65"
+  },
+  "chart_colors": {
+    "series_1": "#16756a",
+    "series_2": "#a04b17",
+    "series_3": "#4d6885",
+    "series_4": "#2d3934",
+    "series_5": "#b8c3bd",
+    "grid": "#d6ddd8",
+    "axis": "#5f6b65"
+  },
+  "dark_theme_colors": {
+    "note": "Dark-surface mapping of the same hues; light values above are unchanged.",
+    "slice": "14.11",
+    "accent": "#35b3a4",
+    "focus": "#35b3a4",
+    "status": {
+      "success": "#35b3a4",
+      "info": "#8fb0d4",
+      "warning": "#e5822f",
+      "danger": "#e5822f",
+      "neutral": "#aebdb7"
+    },
+    "risk": {
+      "critical": "#e5822f",
+      "high": "#e5822f",
+      "medium": "#8fb0d4",
+      "low": "#35b3a4",
+      "info": "#aebdb7"
+    },
+    "score": {
+      "excellent": "#35b3a4",
+      "good": "#35b3a4",
+      "fair": "#8fb0d4",
+      "poor": "#e5822f",
+      "unknown": "#aebdb7"
+    },
+    "soft_backgrounds": {
+      "teal_soft": "#1a332e",
+      "rust_soft": "#3a2418",
+      "blue_soft": "#1e2a36",
+      "risk_info_soft": "#1a2924",
+      "surface": "#15231f",
+      "surface_2": "#1a2924",
+      "canvas": "#101a17"
+    }
+  },
+  "typography": {
+    "font_display": "\"Space Grotesk\", Arial, sans-serif",
+    "font_body": "\"Inter\", Arial, sans-serif",
+    "font_mono": "\"IBM Plex Mono\", ui-monospace, SFMono-Regular, Menlo, monospace",
+    "body_size_px": 16,
+    "body_line_height": 1.65,
+    "display_weight": 500,
+    "brand_weight": 600,
+    "button_weight": 650,
+    "scale": {
+      "xs": "11px",
+      "sm": "12px",
+      "md": "13px",
+      "base": "14px",
+      "body": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "h3": "22px",
+      "h2": "36px",
+      "h1": "44px",
+      "display": "48px"
+    }
+  },
+  "spacing": {
+    "unit_px": 4,
+    "scale": {
+      "1": "4px",
+      "2": "8px",
+      "3": "12px",
+      "4": "16px",
+      "5": "24px",
+      "6": "28px",
+      "7": "32px",
+      "8": "48px",
+      "9": "64px",
+      "10": "96px"
+    },
+    "section_pad_observed": "large vertical rhythm; hero and sections use generous whitespace",
+    "wrap_gutter": "32px each side (min(100% - 64px, wrap))"
+  },
+  "radius": {
+    "none": "0px",
+    "button": "4px",
+    "control": "4px",
+    "base": "6px",
+    "card": "6px",
+    "large": "8px",
+    "pill": "999px"
+  },
+  "borders": {
+    "width": "1px",
+    "color": "#d6ddd8",
+    "color_strong": "#b8c3bd",
+    "header_bottom": "1px solid rgba(184, 195, 189, 0.72)",
+    "roles": {
+      "subtle": "line",
+      "default": "line",
+      "strong": "line_strong",
+      "focus": "teal"
+    }
+  },
+  "elevation": {
+    "none": "none",
+    "soft": "0 18px 48px rgba(24, 40, 34, 0.08)",
+    "card_default": "none",
+    "primary_button": "none",
+    "roles": {
+      "none": "none",
+      "subtle": "soft",
+      "raised": "soft"
+    }
+  },
+  "semantic_color_roles": {
+    "canvas": "canvas",
+    "surface": "paper",
+    "surface-raised": "paper",
+    "surface-subtle": "paper_soft",
+    "surface-code": "night",
+    "text-primary": "ink",
+    "text-secondary": "ink_soft",
+    "text-muted": "muted",
+    "border-default": "line",
+    "border-strong": "line_strong",
+    "accent": "teal_dark",
+    "accent-hover": "teal",
+    "accent-muted": "teal_soft",
+    "informational": "blue",
+    "success": "status_colors.success",
+    "warning": "status_colors.warning",
+    "danger": "status_colors.danger",
+    "focus": "teal"
+  },
+  "typography_roles": {
+    "display": "display",
+    "h1": "h1",
+    "h2": "h2",
+    "h3": "h3",
+    "h4": "xl",
+    "body": "body",
+    "body-small": "base",
+    "meta": "sm",
+    "label": "sm",
+    "metric": "h3",
+    "caption": "xs",
+    "code": "sm"
+  },
+  "layout_primitives": {
+    "content_max_px": 1160,
+    "reading_max_px": 680,
+    "wide_data_max_px": 1160,
+    "page_gutter": "32px",
+    "section_gap": "24px",
+    "grid_gap": "16px"
+  },
+  "animation": {
+    "ease": "ease",
+    "fast_s": 0.16,
+    "mid_s": 0.2,
+    "header_blur_px": 12,
+    "reduced_motion": "disable_nonessential_transitions"
+  },
+  "breakpoints": {
+    "nav_collapse_px": 1040,
+    "tablet_px": 960,
+    "mobile_px": 720,
+    "wrap_px": 1160
+  },
+  "layout": {
+    "max_width_px": 1160,
+    "nav_min_height_px": 70,
+    "scroll_padding_top_px": 82,
+    "header": "sticky_blur_canvas"
+  },
+  "historical_superseded": {
+    "note": "Pre-2026-08 amber/dark-first tokens remain in docs/public/design-tokens for docs sync history; live website is teal/rust light-first.",
+    "amber": "#d98a3d",
+    "bg_dark_legacy": "#0b0d10",
+    "bg_2_dark_legacy": "#0f1216"
+  }
+}

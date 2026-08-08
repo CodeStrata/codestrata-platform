@@ -1,0 +1,233 @@
+{
+  "schema": "codestrata-presentation-contract",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "token_authority": "design-system/tokens/catalog.json",
+  "css_authority": "design-system/tokens/tokens.css",
+  "policy": "codestrata-cross-surface-presentation-policy:1.0",
+  "typography_roles": {
+    "display": {
+      "family": "font_display",
+      "weight": 500,
+      "size_token": "display",
+      "line_height": 1.12,
+      "letter_spacing": "normal",
+      "use": "hero_and_product_brand_moments"
+    },
+    "h1": {
+      "family": "font_display",
+      "weight": 500,
+      "size_token": "h1",
+      "line_height": 1.15,
+      "letter_spacing": "normal",
+      "use": "page_title"
+    },
+    "h2": {
+      "family": "font_display",
+      "weight": 500,
+      "size_token": "h2",
+      "line_height": 1.2,
+      "letter_spacing": "normal",
+      "use": "section_title"
+    },
+    "h3": {
+      "family": "font_display",
+      "weight": 600,
+      "size_token": "h3",
+      "line_height": 1.25,
+      "letter_spacing": "normal",
+      "use": "subsection_title"
+    },
+    "h4": {
+      "family": "font_body",
+      "weight": 600,
+      "size_token": "xl",
+      "line_height": 1.35,
+      "letter_spacing": "normal",
+      "use": "card_and_panel_title"
+    },
+    "body": {
+      "family": "font_body",
+      "weight": 400,
+      "size_token": "body",
+      "line_height": 1.65,
+      "letter_spacing": "normal",
+      "use": "primary_prose"
+    },
+    "body-small": {
+      "family": "font_body",
+      "weight": 400,
+      "size_token": "base",
+      "line_height": 1.5,
+      "letter_spacing": "normal",
+      "use": "compact_prose"
+    },
+    "meta": {
+      "family": "font_body",
+      "weight": 400,
+      "size_token": "sm",
+      "line_height": 1.4,
+      "letter_spacing": "normal",
+      "use": "timestamps_ids_secondary_meta"
+    },
+    "label": {
+      "family": "font_body",
+      "weight": 600,
+      "size_token": "sm",
+      "line_height": 1.3,
+      "letter_spacing": "0.02em",
+      "use": "form_and_badge_labels"
+    },
+    "metric": {
+      "family": "font_display",
+      "weight": 500,
+      "size_token": "h3",
+      "line_height": 1.1,
+      "letter_spacing": "normal",
+      "use": "kpi_and_score_values"
+    },
+    "caption": {
+      "family": "font_body",
+      "weight": 400,
+      "size_token": "xs",
+      "line_height": 1.35,
+      "letter_spacing": "normal",
+      "use": "figure_and_screenshot_captions"
+    },
+    "code": {
+      "family": "font_mono",
+      "weight": 400,
+      "size_token": "sm",
+      "line_height": 1.5,
+      "letter_spacing": "normal",
+      "use": "inline_and_block_technical_content"
+    }
+  },
+  "typography_delivery_modes": {
+    "web_surface": {
+      "fonts": "intended_codestrata_stacks",
+      "remote_fonts_allowed": true,
+      "note": "Community docs and website may load Space Grotesk / Inter / IBM Plex Mono"
+    },
+    "offline_report": {
+      "fonts": "same_semantic_stacks_with_system_fallback",
+      "remote_fonts_allowed": false,
+      "note": "Assessment and EIR HTML embed stacks; no network font dependency"
+    },
+    "native_host": {
+      "fonts": "vscode_and_system_typography",
+      "remote_fonts_allowed": false,
+      "note": "VS Code owns fonts; do not inject website font CSS into native chrome"
+    },
+    "raster_asset": {
+      "fonts": "approved_local_or_system_safe",
+      "remote_fonts_allowed": false,
+      "note": "Marketplace PNG generation may use system-safe fonts"
+    }
+  },
+  "semantic_color_roles": {
+    "canvas": "colors.canvas",
+    "surface": "colors.paper",
+    "surface-raised": "colors.paper",
+    "surface-subtle": "colors.paper_soft",
+    "surface-code": "colors.night",
+    "text-primary": "colors.ink",
+    "text-secondary": "colors.ink_soft",
+    "text-muted": "colors.muted",
+    "border-default": "colors.line",
+    "border-strong": "colors.line_strong",
+    "accent": "colors.teal_dark",
+    "accent-hover": "colors.teal",
+    "accent-muted": "colors.teal_soft",
+    "informational": "colors.blue",
+    "success": "status_colors.success",
+    "warning": "status_colors.warning",
+    "danger": "status_colors.danger",
+    "focus": "colors.teal"
+  },
+  "surface_hierarchy": [
+    "canvas",
+    "surface",
+    "surface-raised",
+    "surface-subtle",
+    "surface-code",
+    "surface-accent",
+    "surface-warning",
+    "surface-danger"
+  ],
+  "surface_token_map": {
+    "canvas": "colors.canvas",
+    "surface": "colors.paper",
+    "surface-raised": "colors.paper",
+    "surface-subtle": "colors.paper_soft",
+    "surface-code": "colors.night",
+    "surface-accent": "colors.teal_soft",
+    "surface-warning": "colors.rust_soft",
+    "surface-danger": "colors.rust_soft"
+  },
+  "spacing": {
+    "authority": "spacing.scale",
+    "unit_px": 4,
+    "exception_categories": [
+      "hairline_1px_alignment",
+      "icon_optical_alignment",
+      "print_mechanics",
+      "raster_framing"
+    ]
+  },
+  "radius_roles": {
+    "small": "radius.button",
+    "standard": "radius.card",
+    "large": "radius.large",
+    "pill": "radius.pill"
+  },
+  "border_roles": {
+    "subtle": "colors.line",
+    "default": "colors.line",
+    "strong": "colors.line_strong",
+    "focus": "colors.teal"
+  },
+  "shadow_roles": {
+    "none": "elevation.none",
+    "subtle": "elevation.soft",
+    "raised": "elevation.soft",
+    "raster_frame": {
+      "exception": "marketplace_raster_only",
+      "note": "Screenshot frames may use restrained stronger treatment; values must still derive from elevation tokens where practical"
+    }
+  },
+  "layout_primitives": {
+    "content-max": "layout.max_width_px",
+    "reading-max": 680,
+    "wide-data-max": "layout.max_width_px",
+    "page-gutter": "spacing.wrap_gutter",
+    "section-gap": "spacing.scale.5",
+    "grid-gap": "spacing.scale.4"
+  },
+  "layout_modes": {
+    "documentation_reading": {
+      "max": "content-max",
+      "prose": "reading-max"
+    },
+    "report_standard": {
+      "max": "content-max"
+    },
+    "report_wide_data": {
+      "max": "wide-data-max"
+    },
+    "marketplace_frame": {
+      "max": "raster_dimensions",
+      "exception": "marketplace_raster_exceptions_allowed"
+    },
+    "native_host": {
+      "max": "host_controlled",
+      "exception": "vscode_native_exceptions_allowed"
+    }
+  },
+  "deferred": {
+    "charts": "14.8_complete_foundation",
+    "navigation_ia": "14.9_complete",
+    "universal_assets": "14.10",
+    "accessibility_acceptance": "14.11"
+  }
+}

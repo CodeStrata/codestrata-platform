@@ -1,0 +1,28 @@
+{
+  "policy_id": "codestrata-design-system-policy",
+  "policy_version": "1.0",
+  "package_root": "design-system",
+  "authoritative_source": "https://codestrata.ai",
+  "capture_date": "2026-08-07",
+  "definition_only": true,
+  "product_redesign_allowed": false,
+  "docs_redesign_allowed": false,
+  "assessment_report_redesign_allowed": false,
+  "engineering_intelligence_redesign_allowed": false,
+  "vscode_redesign_allowed": false,
+  "marketplace_redesign_allowed": false,
+  "start_slice_14_2": false,
+  "token_catalog_required": true,
+  "component_catalog_required": true,
+  "surface_language_required": true,
+  "accessibility_required": true,
+  "responsive_required": true,
+  "light_theme_default": true,
+  "dark_theme_supported": true,
+  "limitations": [
+    "definition_only_no_product_application",
+    "historical_amber_tokens_superseded_by_live_website",
+    "slice_14_2_not_started",
+    "worktree_uncommitted"
+  ]
+}

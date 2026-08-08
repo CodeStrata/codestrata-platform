@@ -1,26 +1,21 @@
 import { defineConfig } from "vitepress";
 
 /**
- * CodeStrata public documentation portal.
+ * CodeStrata Community Edition documentation (Slice 14.2).
  * Canonical public URL: https://docs.codestrata.ai
- * Local/preview builds keep base `/` — deployment sets the domain.
+ *
+ * Community-only active navigation. Design System: design-system/ (Slice 14.1).
  */
 export default defineConfig({
   title: "CodeStrata Docs",
   description:
-    "Engineering Intelligence for Modern Software — CodeStrata Engine, assessments, reports, and IDE extensions.",
+    "Community Edition documentation for CodeStrata Engine — install, assess, reports, VS Code, and privacy.",
   lang: "en-US",
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: false,
-  /**
-   * Theme: dark-first brand default; users can switch to light.
-   * `true` enables prefers-color-scheme when no stored preference (system).
-   * Preference persists in localStorage (`vitepress-theme-appearance`).
-   */
+  /** Light-first (Design System default); dark available via toggle. */
   appearance: true,
-  // Keep repo policy / meta files at docs/ root without colliding with section routes
-  // (e.g. SECURITY.md vs security/).
   srcExclude: [
     "README.md",
     "LICENSE",
@@ -29,6 +24,15 @@ export default defineConfig({
     "SUPPORT.md",
     "CONTRIBUTING.md",
     "VISUAL_REGRESSION.md",
+    "ARCHITECTURE.md",
+    "CI.md",
+    "DEPLOYMENT.md",
+    "EXTRACTION.md",
+    "MIGRATION_PLAN.md",
+    "WEBSITE_STYLE_ALIGNMENT.md",
+    "platform/**",
+    "community/vs-platform.md",
+    "internal/**",
     "**/node_modules/**",
   ],
   head: [
@@ -44,22 +48,21 @@ export default defineConfig({
       },
     ],
     ["link", { rel: "stylesheet", href: "/fonts.css" }],
-    ["meta", { name: "theme-color", content: "#0b0d10" }],
+    ["meta", { name: "theme-color", content: "#f4f6f3" }],
     ["meta", { property: "og:type", content: "website" }],
-    ["meta", { property: "og:title", content: "CodeStrata Docs" }],
+    ["meta", { property: "og:title", content: "CodeStrata Community Docs" }],
     [
       "meta",
       {
         property: "og:description",
         content:
-          "Engineering Intelligence for Modern Software. Assess repositories with CodeStrata Engine.",
+          "Community Edition documentation — Engine, assessments, reports, and VS Code.",
       },
     ],
     ["meta", { property: "og:url", content: "https://docs.codestrata.ai/" }],
     ["meta", { name: "twitter:card", content: "summary" }],
   ],
   markdown: {
-    // High-contrast dark blocks in both appearance modes (website code surfaces stay dark).
     theme: {
       light: "github-dark",
       dark: "github-dark",
@@ -71,153 +74,109 @@ export default defineConfig({
       dark: "/brand/lockup-horizontal-on-dark.svg",
       alt: "CodeStrata",
     },
-    // Logo click is wired to https://codestrata.ai/ (new tab) in CsDocsHomeLink.
-    // Keep a sensible fallback for no-JS crawlers.
     logoLink: "https://codestrata.ai/",
     siteTitle: false,
     nav: [
       { text: "Get Started", link: "/getting-started/" },
-      { text: "Engine", link: "/engine/" },
+      { text: "CLI", link: "/reference/cli" },
+      { text: "VS Code", link: "/extensions/vscode" },
       { text: "Assessments", link: "/assessments/" },
       { text: "Reports", link: "/reports/" },
       {
-        text: "Extensions",
-        items: [
-          { text: "VS Code Extension", link: "/extensions/vscode" },
-        ],
-      },
-      { text: "AI Providers", link: "/ai-providers/" },
-      {
         text: "Reference",
         items: [
-          { text: "CLI", link: "/reference/cli" },
           { text: "Configuration", link: "/reference/configuration" },
-          { text: "JSON Reports", link: "/reference/json-reports" },
-          { text: "Findings", link: "/reference/findings" },
-          { text: "Public API", link: "/reference/api" },
-          { text: "MCP", link: "/reference/mcp" },
-          { text: "Compatibility", link: "/reference/compatibility" },
+          { text: "AI Providers", link: "/ai-providers/" },
+          { text: "Community API", link: "/reference/api" },
+          { text: "Telemetry", link: "/reference/telemetry" },
+          { text: "Privacy", link: "/security/privacy" },
           { text: "Release Notes", link: "/reference/release-notes" },
         ],
       },
-      {
-        text: "Community",
-        items: [
-          { text: "Community vs Platform", link: "/community/vs-platform" },
-          { text: "Examples", link: "/community/examples" },
-          { text: "Contributing", link: "/community/contributing" },
-          { text: "Troubleshooting", link: "/troubleshooting/" },
-        ],
-      },
-      { text: "Platform", link: "/platform/" },
+      { text: "FAQ", link: "/faq/" },
       {
         text: "Main Site",
         link: "https://codestrata.ai/",
       },
     ],
     sidebar: {
-      "/getting-started/": [
+      "/": [
         {
           text: "Getting Started",
           items: [
             { text: "Overview", link: "/getting-started/" },
             { text: "Prerequisites", link: "/getting-started/prerequisites" },
-            { text: "Install Engine", link: "/getting-started/install" },
-            { text: "First Assessment", link: "/getting-started/first-assessment" },
+            { text: "Installation", link: "/getting-started/install" },
+            {
+              text: "Repository Initialization",
+              link: "/getting-started/repository-initialization",
+            },
+            {
+              text: "First Assessment",
+              link: "/getting-started/first-assessment",
+            },
             { text: "Next Steps", link: "/getting-started/next-steps" },
           ],
         },
-      ],
-      "/engine/": [
         {
-          text: "CodeStrata Engine",
+          text: "Engine & CLI",
           items: [
-            { text: "Overview", link: "/engine/" },
+            { text: "Engine Overview", link: "/engine/" },
             { text: "Installation", link: "/engine/installation" },
             { text: "Doctor", link: "/engine/doctor" },
+            { text: "CLI Reference", link: "/reference/cli" },
+            { text: "Configuration", link: "/reference/configuration" },
           ],
         },
-      ],
-      "/assessments/": [
         {
-          text: "Engineering Assessments",
+          text: "Assessments & Reports",
           items: [
-            { text: "Overview", link: "/assessments/" },
-            { text: "Deterministic vs AI", link: "/assessments/deterministic-vs-ai" },
+            { text: "Running Assessments", link: "/assessments/" },
+            {
+              text: "Deterministic vs AI",
+              link: "/assessments/deterministic-vs-ai",
+            },
+            { text: "Assessment Reports", link: "/reports/" },
+            {
+              text: "Findings & Recommendations",
+              link: "/reports/findings",
+            },
+            {
+              text: "Engineering Intelligence Reports",
+              link: "/reports/engineering-intelligence",
+            },
+            { text: "JSON Reports", link: "/reference/json-reports" },
+            { text: "Findings Reference", link: "/reference/findings" },
           ],
         },
-      ],
-      "/reports/": [
         {
-          text: "Understanding Reports",
-          items: [
-            { text: "Overview", link: "/reports/" },
-            { text: "Findings & Recommendations", link: "/reports/findings" },
-          ],
-        },
-      ],
-      "/extensions/": [
-        {
-          text: "IDE Extensions",
+          text: "VS Code Extension",
           items: [
             { text: "Overview", link: "/extensions/" },
             { text: "VS Code", link: "/extensions/vscode" },
           ],
         },
-      ],
-      "/ai-providers/": [
         {
-          text: "AI Providers",
-          items: [{ text: "Overview", link: "/ai-providers/" }],
-        },
-      ],
-      "/reference/": [
-        {
-          text: "Reference",
+          text: "AI, Privacy & API",
           items: [
-            { text: "CLI", link: "/reference/cli" },
-            { text: "Configuration", link: "/reference/configuration" },
-            { text: "JSON Reports", link: "/reference/json-reports" },
-            { text: "Findings", link: "/reference/findings" },
-            { text: "Public API", link: "/reference/api" },
+            { text: "AI Providers", link: "/ai-providers/" },
+            { text: "Telemetry", link: "/reference/telemetry" },
+            { text: "Privacy", link: "/security/privacy" },
+            { text: "Security", link: "/security/" },
+            { text: "Community API", link: "/reference/api" },
             { text: "MCP", link: "/reference/mcp" },
-            { text: "Public Contracts", link: "/reference/public-contracts" },
             { text: "Compatibility", link: "/reference/compatibility" },
-            { text: "Release Notes", link: "/reference/release-notes" },
           ],
         },
-      ],
-      "/community/": [
         {
-          text: "Community",
+          text: "Help",
           items: [
-            { text: "Community vs Platform", link: "/community/vs-platform" },
+            { text: "Troubleshooting", link: "/troubleshooting/" },
+            { text: "FAQ", link: "/faq/" },
+            { text: "Release Notes", link: "/reference/release-notes" },
             { text: "Examples", link: "/community/examples" },
             { text: "Contributing", link: "/community/contributing" },
           ],
-        },
-      ],
-      "/security/": [
-        {
-          text: "Security & Privacy",
-          items: [
-            { text: "Security", link: "/security/" },
-            { text: "Privacy", link: "/security/privacy" },
-            { text: "Responsible Disclosure", link: "/security/disclosure" },
-            { text: "Support", link: "/security/support" },
-          ],
-        },
-      ],
-      "/troubleshooting/": [
-        {
-          text: "Troubleshooting",
-          items: [{ text: "Common issues", link: "/troubleshooting/" }],
-        },
-      ],
-      "/platform/": [
-        {
-          text: "Platform",
-          items: [{ text: "Overview", link: "/platform/" }],
         },
       ],
     },

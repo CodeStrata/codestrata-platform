@@ -1,0 +1,20 @@
+{
+  "captured": "2026-08-07",
+  "homepage": "https://codestrata.ai/",
+  "css": "https://codestrata.ai/assets/site.css",
+  "default_theme": "light",
+  "primary_cta": "#0f5d54",
+  "canvas": "#f4f6f3",
+  "ink": "#111815",
+  "teal": "#16756a",
+  "rust": "#a04b17",
+  "blue": "#4d6885",
+  "wrap_px": 1160,
+  "radius_px": 6,
+  "button_radius_px": 4,
+  "fonts": {
+    "display": "Space Grotesk",
+    "body": "Inter",
+    "mono": "IBM Plex Mono"
+  }
+}

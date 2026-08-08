@@ -1,0 +1,121 @@
+{
+  "schema": "codestrata-consumer-presentation-mappings",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "policy": "codestrata-cross-surface-presentation-policy:1.0",
+  "consumers": {
+    "documentation": {
+      "slice": "14.2",
+      "bridge": "css_import",
+      "token_path": "docs/.vitepress/theme/tokens.css",
+      "imports": ["design-system/tokens/tokens.css"],
+      "layout_mode": "documentation_reading",
+      "typography_delivery": "web_surface",
+      "component_implementations": {
+        "card": ".cs-card",
+        "data_table": ".cs-table-wrap / .VPDoc table",
+        "callout": ".cs-callout / .custom-block",
+        "code_block": "vitepress code blocks",
+        "primary_action": ".btn--primary / VP brand button"
+      },
+      "approved_exceptions": [
+        "vitepress_variable_remapping",
+        "dark_theme_accent_bright_adaptation"
+      ]
+    },
+    "assessment_report": {
+      "slice": "14.3",
+      "bridge": "python_embed",
+      "token_module": "codestrata.design_system.tokens",
+      "styles": "engine/src/codestrata/reporting/html_v2/styles.py",
+      "layout_mode": "report_standard",
+      "typography_delivery": "offline_report",
+      "component_implementations": {
+        "summary_card": ".content-card / executive summary",
+        "metric_card": ".metric-card",
+        "finding_card": ".item-card / finding",
+        "evidence_block": "evidence surfaces",
+        "recommendation_card": ".recommendation-card",
+        "data_table": ".table-wrap",
+        "risk_badge": ".badge.severity-*"
+      },
+      "approved_exceptions": [
+        "print_white_canvas_dark_ink",
+        "offline_system_font_fallback",
+        "card_shadow_none_default"
+      ]
+    },
+    "eir": {
+      "slice": "14.4",
+      "bridge": "python_embed_via_engine",
+      "token_module": "codestrata.design_system.tokens",
+      "styles": "platform/src/codestrata_platform/intelligence_reporting/presentation/static_html/styles.py",
+      "layout_mode": "report_wide_data",
+      "typography_delivery": "offline_report",
+      "component_implementations": {
+        "metric_card": "KPI panels",
+        "summary_card": ".cover-panel",
+        "finding_card": "drilldown-card",
+        "recommendation_card": "recommendation displays",
+        "data_table": ".table-wrap",
+        "risk_badge": ".status-badge / .badge"
+      },
+      "approved_exceptions": [
+        "print_white_canvas_dark_ink",
+        "offline_system_font_fallback",
+        "raw_evidence_may_be_omitted_by_export_policy"
+      ]
+    },
+    "vscode": {
+      "slice": "14.5",
+      "bridge": "native_host_mapping",
+      "mapping": "vscode-plugin/policies/design_system_vscode_mapping.json",
+      "layout_mode": "native_host",
+      "typography_delivery": "native_host",
+      "owns": [
+        "fonts",
+        "notification_surfaces",
+        "settings_surfaces",
+        "quick_picks",
+        "menus",
+        "progress",
+        "editor_chrome"
+      ],
+      "codestrata_expression": [
+        "naming",
+        "currentColor_activity_icon",
+        "ThemeIcons",
+        "concise_wording",
+        "branded_imagery_where_host_supports"
+      ],
+      "approved_exceptions": [
+        "vscode_native_exceptions_allowed",
+        "no_website_css_injection",
+        "no_custom_teal_notification_buttons"
+      ]
+    },
+    "marketplace": {
+      "slice": "14.6",
+      "bridge": "catalog_read_plus_mapping",
+      "mapping": "vscode-plugin/policies/design_system_marketplace_mapping.json",
+      "generator": "vscode-plugin/scripts/generate_marketplace_visuals.py",
+      "layout_mode": "marketplace_frame",
+      "typography_delivery": "raster_asset",
+      "component_implementations": {
+        "card": "screenshot_frame",
+        "metric_card": "report_screenshot_metrics"
+      },
+      "approved_exceptions": [
+        "marketplace_raster_exceptions_allowed",
+        "system_safe_fonts",
+        "pixel_dimensions_not_css"
+      ]
+    }
+  },
+  "forbidden_active": {
+    "amber_primary": ["#d98a3d", "#D97706", "#F59E0B"],
+    "cream_foundation": ["#F4F1EA", "#f7f5f2"],
+    "legacy_dark_slate_foundation": ["#0f1216", "#0b0d10"],
+    "georgia_display": ["Georgia", "georgia"]
+  }
+}

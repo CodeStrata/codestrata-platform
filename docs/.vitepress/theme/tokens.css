@@ -1,589 +1,247 @@
-/* Bridge CodeStrata public tokens → VitePress theme variables.
-   Removes stock VitePress blue/indigo palette in BOTH themes. */
+/**
+ * CodeStrata Community Docs — Design System bridge (Slice 14.2)
+ *
+ * Consumes authoritative tokens from design-system/ (Slice 14.1).
+ * Do NOT duplicate palette values here.
+ */
 
-@import "../../public/design-tokens/tokens.css";
+@import "../../../design-system/tokens/tokens.css";
 
 :root {
   color-scheme: light dark;
-  --vp-font-family-base: var(--font-body);
-  --vp-font-family-mono: var(--font-mono);
 
-  --vp-c-bg: var(--bg);
-  --vp-c-bg-alt: var(--bg-2);
-  --vp-c-bg-elv: var(--surface);
-  --vp-c-bg-soft: var(--surface);
+  /* Legacy aliases used by docs components → Design System */
+  --bg: var(--cs-bg);
+  --bg-2: var(--cs-surface-2);
+  --surface: var(--cs-surface);
+  --surface-2: var(--cs-surface-2);
+  --border: var(--cs-border);
+  --border-2: var(--cs-border-strong);
+  --fg: var(--cs-fg);
+  --fg-muted: var(--cs-fg-muted);
+  --fg-dim: var(--cs-muted-strong);
+  --accent: var(--cs-accent);
+  --accent-bright: var(--cs-accent-bright);
+  --accent-fg: var(--cs-accent-fg);
+  --code-bg: var(--cs-night);
+  --shadow: var(--cs-shadow);
+  --font-body: var(--cs-font-body);
+  --font-display: var(--cs-font-display);
+  --font-mono: var(--cs-font-mono);
+  --radius: var(--cs-radius);
+  --radius-lg: var(--cs-radius);
+  --radius-xl: var(--cs-radius-large);
+  --maxw: var(--cs-wrap);
+  --nav-h: var(--cs-nav-h);
+  --hero-glow: color-mix(in srgb, var(--cs-teal) 12%, transparent);
+  --good: var(--cs-status-success);
+  --risk: var(--cs-status-danger);
+  --fog: var(--cs-blue);
+  --fog-surface: var(--cs-blue-soft);
+  --fog-border: var(--cs-line-strong);
 
-  --vp-c-border: var(--border);
-  --vp-c-divider: var(--border);
-  --vp-c-gutter: var(--border);
+  /* VitePress remapping — remove stock indigo */
+  --vp-font-family-base: var(--cs-font-body);
+  --vp-font-family-mono: var(--cs-font-mono);
 
-  --vp-c-text-1: var(--fg);
-  --vp-c-text-2: var(--fg-muted);
-  --vp-c-text-3: var(--fg-dim);
+  --vp-c-bg: var(--cs-canvas);
+  --vp-c-bg-alt: var(--cs-paper-soft);
+  --vp-c-bg-elv: var(--cs-paper);
+  --vp-c-bg-soft: var(--cs-paper-soft);
 
-  --vp-c-brand-1: var(--accent);
-  --vp-c-brand-2: var(--accent-bright);
-  --vp-c-brand-3: var(--amber-deep);
-  --vp-c-brand-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+  --vp-c-border: var(--cs-line);
+  --vp-c-divider: var(--cs-line);
+  --vp-c-gutter: var(--cs-line);
 
-  --vp-c-default-1: var(--surface-2);
-  --vp-c-default-2: var(--surface);
-  --vp-c-default-3: var(--bg-2);
-  --vp-c-default-soft: var(--surface);
+  --vp-c-text-1: var(--cs-ink);
+  --vp-c-text-2: var(--cs-muted);
+  --vp-c-text-3: var(--cs-muted-strong);
 
-  --vp-c-mute: var(--surface);
-  --vp-c-mute-1: var(--surface);
-  --vp-c-mute-2: var(--surface-2);
-  --vp-c-mute-3: var(--border);
+  --vp-c-brand-1: var(--cs-teal-dark);
+  --vp-c-brand-2: var(--cs-teal);
+  --vp-c-brand-3: var(--cs-teal-dark);
+  --vp-c-brand-soft: var(--cs-teal-soft);
 
-  --vp-c-indigo-1: var(--accent);
-  --vp-c-indigo-2: var(--accent-bright);
-  --vp-c-indigo-3: var(--amber-deep);
-  --vp-c-indigo-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+  --vp-c-default-1: var(--cs-paper-soft);
+  --vp-c-default-2: var(--cs-paper);
+  --vp-c-default-3: var(--cs-canvas);
+  --vp-c-default-soft: var(--cs-paper-soft);
 
-  /* Kill residual VitePress stock blues in chrome / code accents */
-  --vp-c-brand: var(--accent);
-  --vp-code-link-color: var(--amber-bright);
-  --vp-code-line-highlight-color: color-mix(in srgb, var(--accent) 18%, transparent);
+  --vp-c-mute: var(--cs-paper-soft);
+  --vp-c-mute-1: var(--cs-paper-soft);
+  --vp-c-mute-2: var(--cs-line);
+  --vp-c-mute-3: var(--cs-line-strong);
+
+  --vp-c-indigo-1: var(--cs-teal-dark);
+  --vp-c-indigo-2: var(--cs-teal);
+  --vp-c-indigo-3: var(--cs-teal-dark);
+  --vp-c-indigo-soft: var(--cs-teal-soft);
+
+  --vp-c-brand: var(--cs-teal-dark);
+  --vp-code-link-color: var(--cs-teal);
+  --vp-code-line-highlight-color: color-mix(in srgb, var(--cs-teal) 18%, transparent);
 
   --vp-button-brand-border: transparent;
-  --vp-button-brand-text: var(--accent-fg);
-  --vp-button-brand-bg: var(--accent);
+  --vp-button-brand-text: #ffffff;
+  --vp-button-brand-bg: var(--cs-teal-dark);
   --vp-button-brand-hover-border: transparent;
-  --vp-button-brand-hover-text: var(--accent-fg);
-  --vp-button-brand-hover-bg: var(--accent-bright);
+  --vp-button-brand-hover-text: #ffffff;
+  --vp-button-brand-hover-bg: var(--cs-teal);
   --vp-button-brand-active-border: transparent;
-  --vp-button-brand-active-text: var(--accent-fg);
-  --vp-button-brand-active-bg: var(--amber-deep);
-
-  --vp-button-alt-border: var(--border-2);
-  --vp-button-alt-text: var(--fg);
-  --vp-button-alt-bg: transparent;
-  --vp-button-alt-hover-border: var(--fg-dim);
-  --vp-button-alt-hover-text: var(--fg);
-  --vp-button-alt-hover-bg: var(--surface);
-
-  --vp-code-bg: var(--code-bg);
-  --vp-code-color: #d7dde5;
-  --vp-code-block-bg: var(--code-bg);
-  --vp-code-copy-code-bg: var(--surface-2);
-  --vp-code-copy-code-border-color: var(--border);
-
-  --vp-nav-height: var(--nav-h);
-  --vp-nav-bg-color: color-mix(in srgb, var(--bg) 80%, transparent);
-  --vp-sidebar-bg-color: var(--bg);
-  --vp-local-nav-bg-color: var(--bg);
-
-  --vp-c-tip-1: var(--accent);
-  --vp-c-tip-2: var(--accent-bright);
-  --vp-c-tip-3: var(--amber-deep);
-  --vp-c-tip-soft: color-mix(in srgb, var(--accent) 14%, transparent);
-
-  --vp-c-warning-1: var(--amber-bright);
-  --vp-c-warning-soft: color-mix(in srgb, var(--amber) 14%, transparent);
-
-  --vp-c-danger-1: var(--risk);
-  --vp-c-danger-soft: color-mix(in srgb, var(--danger) 14%, transparent);
-
-  --vp-shadow-1: var(--shadow);
-  --vp-shadow-2: var(--shadow);
-  --vp-shadow-3: var(--shadow);
-
-  --vp-c-bg-svp: var(--bg);
-  --vp-input-border-color: var(--border-2);
-  --vp-input-switch-bg-color: var(--surface-2);
-}
-
-/* Ensure dark class gets same semantic bridge (values come from design-tokens). */
-.dark {
-  color-scheme: dark;
-}
-
-html,
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.6;
-}
-
-::selection {
-  background: color-mix(in srgb, var(--accent) 35%, transparent);
-  color: var(--fg);
-}
-
-/* Prefer dark-first: match website sticky translucent header */
-.VPNav {
-  background: color-mix(in srgb, var(--bg) 80%, transparent) !important;
-  backdrop-filter: blur(14px) saturate(160%);
-  border-bottom: 1px solid var(--border) !important;
-}
-
-.VPNavBar {
-  background: transparent !important;
-  border-bottom: none !important;
-  height: var(--nav-h) !important;
-}
-
-.VPNavBar .divider,
-.VPNavBar.has-sidebar .divider {
-  display: none;
-}
-
-.VPNavBarTitle .title {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--fg) !important;
-  border: none !important;
-}
-
-.VPNavBarTitle .logo {
-  height: 28px;
-  margin-right: 0.65rem;
-}
-
-.VPNavBarMenuLink,
-.VPNavBarMenuGroup .button {
-  font-size: 0.9rem !important;
-  font-weight: 500 !important;
-  color: var(--fg-muted) !important;
-}
-
-.VPNavBarMenuLink:hover,
-.VPNavBarMenuGroup:hover .button,
-.VPNavBarMenuLink.active {
-  color: var(--fg) !important;
-}
-
-.VPNavBarMenuLink.active::after {
-  content: "";
-  display: block;
-  height: 1.5px;
-  background: var(--accent);
-  border-radius: 2px;
-  margin-top: 3px;
-}
-
-.VPNavBarExtra .VPSwitch,
-.VPNavBarHamburger,
-.VPSwitchAppearance {
-  border-color: var(--border-2) !important;
-  background: var(--surface) !important;
-}
-
-.VPSwitchAppearance:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.DocSearch-Button {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--fg-muted) !important;
-}
-
-.DocSearch-Button:hover {
-  border-color: var(--border-2) !important;
-  color: var(--fg) !important;
-}
-
-/* Hero / home */
-.VPHero {
-  padding-top: 3.5rem !important;
-}
-
-.VPHero .name {
-  font-family: var(--font-display) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.02em !important;
-  line-height: 1.04 !important;
-  background: none !important;
-  -webkit-text-fill-color: unset !important;
-  color: var(--fg) !important;
-  max-width: 18ch;
-}
-
-.VPHero .name .clip,
-.VPHero .clip {
-  background: linear-gradient(120deg, var(--amber-bright), var(--amber-deep));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-
-.VPHero .text {
-  font-family: var(--font-display) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.015em !important;
-  color: var(--fg) !important;
-  max-width: 22ch;
-}
-
-.VPHero .tagline {
-  font-family: var(--font-body) !important;
-  font-size: clamp(1.08rem, 1.5vw, 1.24rem) !important;
-  font-weight: 420;
-  color: var(--fg-muted) !important;
-  max-width: 58ch;
-  line-height: 1.55 !important;
-}
-
-.VPButton {
-  border-radius: var(--radius) !important;
-  font-weight: 600 !important;
-  font-size: 0.92rem !important;
-  padding: 0.72rem 1.35rem !important;
-  transition: transform 0.16s ease, background 0.18s ease, border-color 0.18s ease !important;
-}
-
-.VPButton:active {
-  transform: translateY(1px);
-}
-
-.VPButton.brand {
-  background: var(--accent) !important;
-  color: var(--accent-fg) !important;
-  border-color: transparent !important;
-}
-
-.VPButton.brand:hover {
-  background: var(--accent-bright) !important;
-  color: var(--accent-fg) !important;
-}
-
-.VPButton.alt {
-  background: transparent !important;
-  border: 1px solid var(--border-2) !important;
-  color: var(--fg) !important;
-}
-
-.VPButton.alt:hover {
-  border-color: var(--fg-dim) !important;
-  background: var(--surface) !important;
-}
-
-.VPFeatures .box {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-lg) !important;
-  box-shadow: none !important;
-}
-
-.VPFeatures .title {
-  font-family: var(--font-body) !important;
-  font-weight: 640 !important;
-  font-size: 1.08rem !important;
-  color: var(--fg) !important;
-}
-
-.VPFeatures .details {
-  color: var(--fg-muted) !important;
-  font-size: 0.95rem !important;
-}
-
-/* Sidebar */
-.VPSidebar {
-  background: var(--bg) !important;
-  border-right: 1px solid var(--border) !important;
-  padding: 1rem 0.85rem 2.5rem !important;
-  box-sizing: border-box !important;
-}
-
-.VPSidebar .nav {
-  margin-top: 0.25rem;
-}
-
-.VPSidebarItem {
-  margin: 0 !important;
-}
-
-.VPSidebarItem.level-0 {
-  padding-top: 0.35rem;
-  padding-bottom: 0.85rem;
-}
-
-.VPSidebarItem.level-0 + .VPSidebarItem.level-0 {
-  margin-top: 0.35rem !important;
-  border-top: 1px solid var(--border);
-  padding-top: 0.85rem;
-}
-
-.VPSidebarItem.level-0 > .item {
-  display: flex;
-  align-items: center;
-  min-height: 1.75rem;
-  padding: 0.35rem 0.65rem 0.55rem !important;
-}
-
-.VPSidebarItem.level-0 > .item .text,
-.VPSidebarItem.level-0 > .item .link > .text {
-  font-family: var(--font-mono) !important;
-  font-size: 0.72rem !important;
-  letter-spacing: 0.13em !important;
-  text-transform: uppercase !important;
-  color: var(--fg-dim) !important;
-  font-weight: 500 !important;
-  line-height: 1.35 !important;
-}
-
-.VPSidebarItem.level-1 {
-  padding-left: 0.15rem;
-}
-
-.VPSidebarItem.level-1 > .item {
-  padding: 0.1rem 0 !important;
-}
-
-.VPSidebarItem .link {
-  display: flex !important;
-  align-items: center !important;
-  gap: 0.4rem;
-  border-radius: 8px;
-  color: var(--fg-muted) !important;
-  font-size: 0.9rem !important;
-  line-height: 1.35 !important;
-  padding: 0.42rem 0.7rem 0.42rem 0.75rem !important;
-  min-height: 2rem;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.VPSidebarItem .link .text {
-  line-height: 1.35 !important;
-}
-
-.VPSidebarItem .link:hover {
-  color: var(--fg) !important;
-  background: var(--surface) !important;
-}
-
-.VPSidebarItem.is-active > .item .link {
-  color: var(--fg) !important;
-  background: color-mix(in srgb, var(--accent) 12%, var(--surface)) !important;
-  font-weight: 560;
-}
-
-.VPSidebarItem.is-active > .item .link::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0.4rem !important;
-  bottom: 0.4rem !important;
-  width: 2px !important;
-  border-radius: 1px !important;
-  background: var(--accent) !important;
-  transform: none !important;
-}
-
-/* Avoid sidebar / content collision on narrow desktop widths */
-@media (min-width: 960px) and (max-width: 1280px) {
-  .VPSidebar {
-    width: var(--vp-sidebar-width) !important;
-  }
-}
-
-@media (max-width: 959px) {
-  .VPSidebar {
-    padding-top: 0.75rem !important;
-  }
-}
-
-/* Content typography */
-.vp-doc h1,
-.vp-doc h2 {
-  font-family: var(--font-display) !important;
-  font-weight: 600 !important;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-  color: var(--fg);
-}
-
-.vp-doc h1 {
-  font-size: clamp(2rem, 4vw, 2.6rem) !important;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.vp-doc h2 {
-  font-size: clamp(1.45rem, 2.4vw, 1.85rem) !important;
-  border-top-color: var(--border) !important;
-}
-
-.vp-doc h3 {
-  font-family: var(--font-body) !important;
-  font-weight: 640 !important;
-  font-size: 1.08rem !important;
-}
-
-.vp-doc p,
-.vp-doc li {
-  color: var(--fg-muted);
-  text-wrap: pretty;
-  max-width: 68ch;
-}
-
-.vp-doc a {
-  color: var(--accent);
-  font-weight: 540;
-  text-decoration: none;
-}
-
-.vp-doc a:hover {
-  color: var(--accent-bright);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.vp-doc table {
-  border-color: var(--border);
-  font-size: 0.92rem;
-}
-
-.vp-doc tr {
-  border-color: var(--border);
-  background: transparent;
-}
-
-.vp-doc tr:nth-child(2n) {
-  background: var(--surface) !important;
-}
-
-.vp-doc th,
-.vp-doc td {
-  border-color: var(--border);
-}
-
-.vp-doc th {
-  background: var(--surface);
-  color: var(--fg);
-  font-weight: 600;
-}
-
-.vp-doc div[class*="language-"],
-.vp-doc .vp-code-group {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--code-bg) !important;
-}
-
-/* Readable terminal/code text — avoid low-contrast blue on black (light + dark). */
-.vp-doc div[class*="language-"] code,
-.vp-doc [class*="language-"] code,
-.vp-doc .shiki,
-.vp-doc .shiki span {
-  font-family: var(--font-mono) !important;
-  font-size: 0.84rem !important;
-  line-height: 1.65 !important;
-}
-
-.vp-doc div[class*="language-"] code,
-.vp-doc [class*="language-"] code {
-  color: #e8edf4 !important;
-}
-
-/* Raise contrast for common Shiki token hues used for commands/strings */
-.vp-doc .shiki span[style*="#6A9955"],
-.vp-doc .shiki span[style*="#6a9955"] {
-  color: #8fb573 !important; /* comments */
-}
-
-.vp-doc .shiki span[style*="#569CD6"],
-.vp-doc .shiki span[style*="#569cd6"],
-.vp-doc .shiki span[style*="#4FC1FF"],
-.vp-doc .shiki span[style*="#4fc1ff"],
-.vp-doc .shiki span[style*="#9CDCFE"],
-.vp-doc .shiki span[style*="#9cdcfe"],
-.vp-doc .shiki span[style*="#5468ff"],
-.vp-doc .shiki span[style*="#79b8ff"],
-.vp-doc .shiki span[style*="#79B8FF"] {
-  color: #f0c090 !important; /* keywords / commands → amber-tint, high contrast */
-}
-
-.vp-doc .shiki span[style*="#CE9178"],
-.vp-doc .shiki span[style*="#ce9178"],
-.vp-doc .shiki span[style*="#D7BA7D"],
-.vp-doc .shiki span[style*="#d7ba7d"] {
-  color: #f0d0a8 !important; /* strings */
-}
-
-.vp-doc .shiki span[style*="#D4D4D4"],
-.vp-doc .shiki span[style*="#d4d4d4"] {
-  color: #e8edf4 !important;
-}
-
-html:not(.dark) .vp-doc div[class*="language-"],
-html:not(.dark) .vp-doc .vp-code-group,
-.dark .vp-doc div[class*="language-"],
-.dark .vp-doc .vp-code-group {
-  background: var(--code-bg) !important;
-}
-
-.vp-doc :not(pre) > code {
-  background: var(--surface-2);
-  color: var(--fg);
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.84em;
-  padding: 0.15em 0.4em;
-}
-
-.vp-doc .custom-block {
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--surface);
-}
-
-.vp-doc .custom-block.tip {
-  border-left: 3px solid var(--accent);
-}
-
-.vp-doc .custom-block.warning {
-  border-left: 3px solid var(--amber-bright);
-}
-
-.vp-doc .custom-block.danger {
-  border-left: 3px solid var(--risk);
-}
-
-/* Prev / next */
-.VPDocFooter .pager-link {
-  border: 1px solid var(--border) !important;
-  border-radius: var(--radius-lg) !important;
-  background: var(--surface) !important;
-}
-
-.VPDocFooter .pager-link:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--border-2)) !important;
-}
-
-.VPDocFooter .pager-link .title {
-  color: var(--fg) !important;
-}
-
-/* Hide default VitePress footer message; we use CsFooter */
-.VPFooter,
-footer.VPFooter {
-  display: none !important;
-  height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  overflow: hidden !important;
-}
-
+  --vp-button-brand-active-text: #ffffff;
+  --vp-button-brand-active-bg: var(--cs-teal-dark);
+
+  --vp-button-alt-border: var(--cs-line-strong);
+  --vp-button-alt-text: var(--cs-ink);
+  --vp-button-alt-bg: var(--cs-paper);
+  --vp-button-alt-hover-border: var(--cs-muted-strong);
+  --vp-button-alt-hover-text: var(--cs-ink);
+  --vp-button-alt-hover-bg: var(--cs-paper-soft);
+
+  --vp-code-bg: var(--cs-night);
+  --vp-code-color: var(--cs-night-ink);
+  --vp-code-block-bg: var(--cs-night);
+  --vp-code-copy-code-bg: var(--cs-night-soft);
+  --vp-code-copy-code-border-color: var(--cs-night-line);
+
+  --vp-nav-height: var(--cs-nav-h);
+  --vp-nav-bg-color: color-mix(in srgb, var(--cs-canvas) 94%, transparent);
+  --vp-sidebar-bg-color: var(--cs-canvas);
+  --vp-local-nav-bg-color: var(--cs-canvas);
+
+  --vp-c-tip-1: var(--cs-teal);
+  --vp-c-tip-2: var(--cs-teal-dark);
+  --vp-c-tip-3: var(--cs-teal);
+  --vp-c-tip-soft: var(--cs-teal-soft);
+
+  --vp-c-warning-1: var(--cs-rust);
+  --vp-c-warning-2: var(--cs-rust);
+  --vp-c-warning-3: var(--cs-rust);
+  --vp-c-warning-soft: var(--cs-rust-soft);
+
+  --vp-c-danger-1: var(--cs-rust);
+  --vp-c-danger-2: var(--cs-rust);
+  --vp-c-danger-3: var(--cs-rust);
+  --vp-c-danger-soft: var(--cs-rust-soft);
+
+  --vp-c-success-1: var(--cs-teal);
+  --vp-c-success-2: var(--cs-teal-dark);
+  --vp-c-success-3: var(--cs-teal);
+  --vp-c-success-soft: var(--cs-teal-soft);
+
+  --vp-c-sponsor: var(--cs-teal);
+
+  --vp-input-border-color: var(--cs-line);
+  --vp-input-bg-color: var(--cs-paper);
+  --vp-input-switch-bg-color: var(--cs-line);
+
+  --vp-home-hero-name-color: var(--cs-ink);
+  --vp-home-hero-name-background: transparent;
+  --vp-home-hero-tagline-color: var(--cs-muted);
+
+  --vp-shadow-1: var(--cs-shadow-none);
+  --vp-shadow-2: var(--cs-shadow);
+  --vp-shadow-3: var(--cs-shadow);
+  --vp-shadow-4: var(--cs-shadow);
+  --vp-shadow-5: var(--cs-shadow);
+}
+
+html.dark,
+html[data-theme="dark"],
+:root.dark {
+  --bg: var(--cs-bg);
+  --bg-2: var(--cs-surface-2);
+  --surface: var(--cs-surface);
+  --surface-2: var(--cs-surface-2);
+  --border: var(--cs-border);
+  --border-2: var(--cs-border-strong);
+  --fg: var(--cs-fg);
+  --fg-muted: var(--cs-fg-muted);
+  --fg-dim: var(--cs-muted-strong);
+  --accent: var(--cs-accent);
+  --accent-bright: var(--cs-accent-bright);
+  --accent-fg: var(--cs-accent-fg);
+  --code-bg: var(--cs-night);
+  --hero-glow: color-mix(in srgb, var(--cs-teal) 16%, transparent);
+
+  --vp-c-bg: var(--cs-canvas);
+  --vp-c-bg-alt: var(--cs-night-soft);
+  --vp-c-bg-elv: var(--cs-night-soft);
+  --vp-c-bg-soft: var(--cs-night-soft);
+  --vp-c-border: var(--cs-night-line);
+  --vp-c-divider: var(--cs-night-line);
+  --vp-c-gutter: var(--cs-night-line);
+  --vp-c-text-1: var(--cs-night-ink);
+  --vp-c-text-2: var(--cs-night-muted);
+  --vp-c-text-3: var(--cs-night-muted);
+  --vp-c-brand-1: var(--cs-teal);
+  --vp-c-brand-2: var(--cs-accent-bright);
+  --vp-c-brand-3: var(--cs-teal);
+  --vp-c-brand-soft: color-mix(in srgb, var(--cs-teal) 22%, transparent);
+  --vp-button-brand-bg: var(--cs-teal);
+  --vp-button-brand-text: var(--cs-accent-fg);
+  --vp-button-brand-hover-bg: var(--cs-accent-bright);
+  --vp-button-brand-hover-text: var(--cs-accent-fg);
+  --vp-nav-bg-color: color-mix(in srgb, var(--cs-night) 94%, transparent);
+  --vp-sidebar-bg-color: var(--cs-night);
+  --vp-local-nav-bg-color: var(--cs-night);
+  --vp-code-bg: var(--cs-night);
+  --vp-code-block-bg: var(--cs-night);
+}
+
+/* Typography: display face for headings */
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3,
+.VPHomeHero .name,
+.VPHomeHero .text {
+  font-family: var(--cs-font-display);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.12;
+}
+
+/* --cs-focus is theme-aware; --cs-teal alone drops below 3:1 on the night canvas. */
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline: 3px solid var(--cs-focus);
+  outline-offset: 3px;
+}
+
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Long unbroken identifiers and URLs must not widen the page. */
+.VPDoc p,
+.VPDoc li,
+.VPDoc td,
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3 {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.VPDoc img {
+  max-width: 100%;
+  height: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation: none !important;
-    transition: none !important;
+    animation-delay: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-delay: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

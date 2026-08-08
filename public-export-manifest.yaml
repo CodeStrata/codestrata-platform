@@ -396,6 +396,9 @@ exports:
         - public/brand/lockup-horizontal-on-dark.svg
         - scripts/visual-capture.mjs
         - scripts/validate.mjs
+        - scripts/deploy-check.mjs
+        - wrangler.jsonc
+        - policies/documentation_deployment_policy.json
         - getting-started/index.md
         - extensions/vscode.md
         - extensions/cursor.md

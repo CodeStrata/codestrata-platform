@@ -14,7 +14,7 @@ function syncDataTheme(isDark: boolean) {
   );
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
-    meta.setAttribute("content", isDark ? "#0b0d10" : "#ffffff");
+    meta.setAttribute("content", isDark ? "#101a17" : "#f4f6f3");
   }
 }
 

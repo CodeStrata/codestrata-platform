@@ -84,6 +84,11 @@ import {
   disposeOutputChannel,
   showOutput,
 } from "./ui/output";
+import {
+  ASSESSMENT_COMPLETE_DISMISS,
+  ASSESSMENT_COMPLETE_MESSAGE,
+  ASSESSMENT_COMPLETE_OPEN_REPORT,
+} from "./ui/presentationCopy";
 import { StatusBarController } from "./ui/statusBar";
 import { FindingsTreeProvider } from "./views/findingsTree";
 import { RecommendationsTreeProvider } from "./views/recommendationsTree";
@@ -820,26 +825,17 @@ export function activate(context: vscode.ExtensionContext): void {
               },
             });
 
-            const aiNote =
-              aiRequested && summary?.ai_status
-                ? ` AI status: ${summary.ai_status}.`
-                : aiRequested
-                  ? " AI is optional; check output if enhancements were skipped."
-                  : " Deterministic mode (--no-ai).";
-
             progressLifecycle.close(progressStatusFromPrimary("success"));
             session.markProgressClosed();
 
             // Slice 13.7: Approach B — prompt; do not auto-open.
             // Open failure must not rewrite assessment success.
             const open = await vscode.window.showInformationMessage(
-              `Engineering Assessment complete: ${artifacts.findings.length} findings, ` +
-                `${artifacts.recommendations.length} recommendations.` +
-                aiNote,
-              "Open HTML Report",
-              "Show Findings"
+              ASSESSMENT_COMPLETE_MESSAGE,
+              ASSESSMENT_COMPLETE_OPEN_REPORT,
+              ASSESSMENT_COMPLETE_DISMISS
             );
-            if (open === "Open HTML Report") {
+            if (open === ASSESSMENT_COMPLETE_OPEN_REPORT) {
               session.transitionTo("opening_report");
               const opened = await openHtmlReportSafe(
                 workspaceFolder,
@@ -860,9 +856,6 @@ export function activate(context: vscode.ExtensionContext): void {
                 resultCategory: "ok",
                 primaryExit: "success",
               });
-            }
-            if (open === "Show Findings") {
-              await vscode.commands.executeCommand("codestrata.findings.focus");
             }
             return "success" as const;
           },

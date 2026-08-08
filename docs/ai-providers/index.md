@@ -26,9 +26,8 @@ codestrata ai --provider openai
 codestrata ai doctor
 ```
 
-AI providers are **Amazon Bedrock** and **OpenAI**. CodeStrata Platform is
-separate commercial connectivity (not an AI provider) — see
-[Community vs Platform](/community/vs-platform).
+AI providers are **Amazon Bedrock** and **OpenAI**. Organizational Platform
+connectivity is outside Community Edition documentation scope.
 
 ## Install provider extras
 
@@ -177,8 +176,8 @@ codestrata assess --repo . --output reports --no-ai
 ## What AI is not
 
 - Not the product name (“CodeStrata AI” is not used)
-- Not a substitute for CodeStrata Platform
 - Not required for Community Edition assessments
+- Not a path to upload repository source from the VS Code extension
 
-Never put Platform API keys in Engine AI configuration. See
-[Community vs Platform](/community/vs-platform).
+Never put commercial Platform API keys in Engine AI configuration. Use only the
+provider credentials documented above for Bedrock or OpenAI.

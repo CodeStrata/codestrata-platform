@@ -1,0 +1,113 @@
+{
+  "policy_id": "codestrata-accessibility-responsive-policy",
+  "policy_version": "1.0",
+  "slice": "14.11",
+  "design_system_version": "1.0",
+  "design_system_ref": "codestrata-visual-design-system:1.0",
+  "additive_under_design_system_1_0": true,
+  "depends_on": [
+    "codestrata-visual-design-system:1.0",
+    "codestrata-cross-surface-presentation-policy:1.0",
+    "codestrata-visualization-policy:1.0",
+    "codestrata-report-information-architecture-policy:1.0",
+    "codestrata-brand-asset-policy:1.0"
+  ],
+  "contracts": [
+    "design-system/contracts/accessibility.json",
+    "design-system/contracts/responsive.json"
+  ],
+  "wcag_target": "2.2_AA_oriented",
+  "formal_certification_claimed": false,
+  "certification_language": "CodeStrata targets WCAG 2.2 AA-compatible presentation for Community web and report surfaces. Automated verification is not a substitute for formal accessibility certification.",
+  "keyboard_access_required": true,
+  "visible_focus_required": true,
+  "focus_indicator_min_contrast": 3.0,
+  "color_only_meaning_allowed": false,
+  "semantic_heading_required": true,
+  "single_h1_required": true,
+  "landmarks_required": true,
+  "unique_banner_landmark_required": true,
+  "labelled_navigation_when_ambiguous_required": true,
+  "skip_navigation_required_for_long_documents": true,
+  "skip_link_target_must_exist": true,
+  "accessible_tables_required": true,
+  "table_header_scope_required": true,
+  "scrollable_region_keyboard_reachable_required": true,
+  "image_alt_contract_required": true,
+  "decorative_asset_hidden_required": true,
+  "aria_on_generic_role_allowed": false,
+  "reduced_motion_required": true,
+  "text_zoom_required": true,
+  "root_font_size_must_respect_user_preference": true,
+  "responsive_mobile_required": true,
+  "min_viewport_px": 320,
+  "responsive_table_overflow_required": true,
+  "responsive_code_overflow_required": true,
+  "page_level_horizontal_overflow_allowed": false,
+  "inner_overflow_containers_allowed": [
+    "table",
+    "code",
+    "evidence"
+  ],
+  "print_readability_required": true,
+  "forced_colors_baseline_required": true,
+  "dark_theme_contrast_required": true,
+  "touch_target_min_px": 44,
+  "compact_control_min_px": 34,
+  "native_vscode_host_exception_allowed": true,
+  "automated_tooling_not_equivalent_to_certification": true,
+  "contrast_targets": {
+    "normal_text": 4.5,
+    "large_text": 3.0,
+    "non_text_essential": 3.0,
+    "large_text_min_px": 24,
+    "large_text_bold_min_px": 19
+  },
+  "prohibited": {
+    "outline_removal_without_replacement": true,
+    "color_only_status_or_risk": true,
+    "critical_text_baked_into_small_raster": true,
+    "user_scalable_no": true,
+    "domain_truth_change_for_presentation": true,
+    "report_ia_change": true,
+    "visualization_semantics_change": true,
+    "brand_geometry_change": true,
+    "design_system_palette_replacement": true,
+    "runtime_behavior_change": true,
+    "start_slice_14_13": false,
+    "start_epic_15": true
+  },
+  "boundaries": {
+    "report_information_architecture": "codestrata-report-information-architecture-policy:1.0 (Slice 14.9) owns headings, section order, anchors, and contents; unchanged here",
+    "visualization": "codestrata-visualization-policy:1.0 (Slice 14.8) owns severity/risk/status/score semantics; unchanged here",
+    "brand_assets": "codestrata-brand-asset-policy:1.0 (Slice 14.10) owns mark geometry and derivatives; unchanged here",
+    "marketplace_gallery": "Slice 14.6 owns gallery strategy and screenshot order; unchanged here",
+    "documentation_deployment": "Slice 14.12 (codestrata-documentation-deployment-policy:1.0) owns Wrangler/Cloudflare configuration; complete and not modified here",
+    "vscode_runtime": "Command IDs, configuration keys, and runtime flow unchanged; the native host owns extension accessibility"
+  },
+  "expected_unchanged": {
+    "design_system_version": "1.0",
+    "cross_surface_presentation_version": "1.0",
+    "visualization_version": "1.0",
+    "report_information_architecture_version": "1.0",
+    "brand_asset_version": "1.0",
+    "assessment_schema_version": "1.2",
+    "extension_version": "0.2.0"
+  },
+  "verification": {
+    "package": "verification/responsive_accessibility",
+    "schema": "responsive-accessibility-verification:1.0.0",
+    "report": "reports/verification/sv14-11/responsive-accessibility-verification.json",
+    "browser_validation_artifact": "reports/verification/sv14-11/browser-validation.json"
+  },
+  "limitations": [
+    "automated_structural_and_computed_checks_only_no_formal_wcag_certification",
+    "manual_screen_reader_validation_not_performed",
+    "browser_validation_limited_to_one_chromium_engine_on_one_os",
+    "print_pagination_not_publication_quality",
+    "vscode_accessibility_delegated_to_native_host",
+    "marketplace_screenshots_remain_raster_fixtures",
+    "forced_colors_baseline_not_validated_on_windows_high_contrast",
+    "worktree_uncommitted"
+  ]
+}

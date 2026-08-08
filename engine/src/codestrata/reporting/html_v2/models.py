@@ -437,7 +437,7 @@ class AssessmentMetadataView(BaseModel):
     timing_report_ms: float | None = None
     ai_status: str
     model_id: str | None = None
-    report_version: str = "3.0"
+    report_version: str = "3.1"
     engine_version: str = "0.1.0"
     advisor_version: str | None = None
     repository_name: str | None = None

@@ -553,8 +553,8 @@ def check_marketplace(monorepo: Path) -> list[CheckResult]:
     banner = pkg.get("galleryBanner", {})
     _add(
         checks,
-        "marketplace:gallery_dark",
-        banner.get("theme") == "dark" and banner.get("color") == "#0f1216",
+        "marketplace:gallery_banner",
+        banner.get("theme") == "light" and banner.get("color") == "#f4f6f3",
         str(banner),
         "marketplace_branding",
     )

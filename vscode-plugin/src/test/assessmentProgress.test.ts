@@ -52,7 +52,7 @@ describe("progress phases", () => {
       progressMessageForPhase("running_assessment", false).includes("/"),
       false
     );
-    assert.equal(progressTitle(true).includes("optional AI"), true);
+    assert.equal(progressTitle(true).includes("with AI"), true);
   });
 });
 

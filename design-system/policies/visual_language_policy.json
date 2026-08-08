@@ -1,0 +1,35 @@
+{
+  "policy_id": "codestrata-visual-language-policy",
+  "policy_version": "1.0",
+  "personality": "measurement_instrument_with_bedside_manner",
+  "tagline": "Engineering decisions grounded in code.",
+  "default_color_scheme": "light",
+  "primary_accent_family": "teal",
+  "supporting_accent_family": "rust",
+  "informational_accent_family": "blue",
+  "display_font": "Space Grotesk",
+  "body_font": "Inter",
+  "mono_font": "IBM Plex Mono",
+  "register_split": "proportional_argument_mono_facts",
+  "card_style": "bordered_paper_flat",
+  "shadow_budget": "sparse_soft_elevation",
+  "radius_base_px": 6,
+  "button_radius_px": 4,
+  "icon_style": "monoline_stroke",
+  "layout_max_width_px": 1160,
+  "evidence_is_hero": true,
+  "accent_budget_per_viewport": 3,
+  "surfaces_covered": [
+    "assessment_report",
+    "documentation",
+    "engineering_intelligence_report",
+    "marketplace_assets",
+    "vscode_extension"
+  ],
+  "apply_to_surfaces_in_this_slice": false,
+  "limitations": [
+    "language_defined_not_applied",
+    "slice_14_2_not_started",
+    "worktree_uncommitted"
+  ]
+}

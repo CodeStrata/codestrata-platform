@@ -1,0 +1,108 @@
+{
+  "contract_id": "codestrata-cross-surface-consistency-contract",
+  "contract_version": "1.0",
+  "schema": "codestrata-cross-surface-consistency-contract",
+  "schema_version": "1.0.0",
+  "policy": "codestrata-cross-surface-consistency-policy:1.0",
+  "design_system_version": "1.0",
+  "pixel_identity_required": false,
+  "matrix": {
+    "rows": [
+      "identity",
+      "typography",
+      "canvas",
+      "primary_text",
+      "accent",
+      "surface",
+      "border",
+      "radius",
+      "shadow",
+      "product_bar",
+      "section_header",
+      "cards",
+      "evidence",
+      "status",
+      "risk",
+      "code",
+      "tables",
+      "navigation",
+      "responsive",
+      "accessibility"
+    ],
+    "columns": [
+      "docs",
+      "assessment",
+      "eir",
+      "vscode",
+      "marketplace",
+      "api_portal"
+    ],
+    "cell_values": [
+      "canonical",
+      "adapted",
+      "not_applicable",
+      "violation"
+    ]
+  },
+  "adaptations": [
+    {
+      "id": "vscode_native_host",
+      "surface": "vscode",
+      "kind": "approved_native_host_exception",
+      "summary": "Native typography, backgrounds, ThemeIcons; no website CSS injection"
+    },
+    {
+      "id": "offline_report_fonts",
+      "surface": "assessment_report",
+      "kind": "approved_offline_report_exception",
+      "summary": "System font fallback stacks for offline HTML reports"
+    },
+    {
+      "id": "offline_report_fonts_eir",
+      "surface": "eir",
+      "kind": "approved_offline_report_exception",
+      "summary": "System font fallback stacks for offline commercial reports"
+    },
+    {
+      "id": "print_report_overrides",
+      "surface": "assessment_report",
+      "kind": "approved_print_exception",
+      "summary": "Print forces light ink/paper and hides chrome"
+    },
+    {
+      "id": "print_report_overrides_eir",
+      "surface": "eir",
+      "kind": "approved_print_exception",
+      "summary": "Print forces light ink/paper and hides chrome"
+    },
+    {
+      "id": "marketplace_raster",
+      "surface": "marketplace",
+      "kind": "approved_raster_exception",
+      "summary": "Icon and gallery screenshots are deterministic raster derivatives"
+    },
+    {
+      "id": "api_portal_framework_shell",
+      "surface": "api_portal",
+      "kind": "intentional_surface_adaptation",
+      "summary": "Swagger UI shell with Design System token bridge and brand derivatives"
+    },
+    {
+      "id": "docs_vitepress_remap",
+      "surface": "documentation",
+      "kind": "intentional_surface_adaptation",
+      "summary": "VitePress variable remapping over Design System tokens"
+    }
+  ],
+  "legacy_active_forbidden": {
+    "amber_primary_hex": "#d98a3d",
+    "georgia_display": true,
+    "aimf_product_identity": true,
+    "cursor_product_identity": true
+  },
+  "public_token_mirrors": [
+    "docs/public/design-tokens/tokens.css",
+    "platform/api/openapi/swagger/design-tokens/tokens.css"
+  ],
+  "must_match_design_system_tokens": true
+}

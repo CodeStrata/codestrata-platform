@@ -1,0 +1,20 @@
+{
+  "schema": "codestrata-design-system-vscode-mapping",
+  "schema_version": "1.0.0",
+  "design_system_version": "1.0",
+  "host": "vscode",
+  "website_css_injection": false,
+  "mappings": [
+    {"from": "product_name", "to": "displayName_commands_category_output_channel"},
+    {"from": "teal_identity", "to": "conceptual_brand_not_native_chrome_color"},
+    {"from": "monoline_icons", "to": "activity_svg_currentColor_and_ThemeIcons"},
+    {"from": "concise_labeling", "to": "progress_notifications_empty_states"},
+    {"from": "light_dark_tokens", "to": "vscode_workbench_theme"},
+    {"from": "typography", "to": "host_fonts_only"}
+  ],
+  "forbidden_in_native_ui": [
+    "design-system/tokens/tokens.css",
+    "hardcoded_notification_backgrounds",
+    "hardcoded_menu_colors"
+  ]
+}

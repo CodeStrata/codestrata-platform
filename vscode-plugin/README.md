@@ -10,7 +10,7 @@ without leaving the editor.
 **Version:** 0.2.0 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
 `0.2.x`
 
-![Findings explorer showing assessment results](media/screenshot-findings.png)
+![CodeStrata VS Code extension showing findings for a synthetic Demo repository](media/screenshot-assessment.png)
 
 ## What CodeStrata Does
 
@@ -32,11 +32,11 @@ Screenshots below use synthetic fixture content.
 
 | | |
 | --- | --- |
-| Findings | ![Findings explorer with synthetic assessment results](media/screenshot-findings.png) |
-| HTML report | ![Engineering Intelligence HTML report](media/screenshot-report.png) |
-| Progress | ![Assessment progress notification in VS Code](media/screenshot-progress.png) |
-| Activity | ![CodeStrata activity container in the sidebar](media/screenshot-activity.png) |
-| Recommendations | ![Recommendations explorer](media/screenshot-recommendations.png) |
+| Assessment | ![CodeStrata VS Code extension showing findings for a synthetic Demo repository](media/screenshot-assessment.png) |
+| Assessment report | ![CodeStrata Assessment HTML report with executive summary and evidence-backed findings](media/screenshot-report.png) |
+| Progress | ![CodeStrata assessment progress notification with Assessment complete and Open Report](media/screenshot-progress.png) |
+| Initialization | ![CodeStrata Initialize Repository guidance for a synthetic Demo workspace](media/screenshot-initialization.png) |
+| Optional AI | ![CodeStrata optional AI-assisted assessment progress in VS Code](media/screenshot-ai-assessment.png) |
 
 ## Requirements
 
@@ -56,7 +56,7 @@ modify your `PATH` or shell profile.
 3. Run **CodeStrata: Initialize Repository** (creates or preserves Engine config).
 4. Run **CodeStrata: Run Assessment**.
 5. When prompted after success, open the HTML report—or use
-   **CodeStrata: Open HTML Report**.
+   **CodeStrata: Open HTML Report** (or choose **Open Report** when the assessment completes).
 6. Optionally run **CodeStrata: Run Assessment with AI** if Engine AI providers
    are configured.
 

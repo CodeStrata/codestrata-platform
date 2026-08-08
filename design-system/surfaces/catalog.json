@@ -1,0 +1,53 @@
+{
+  "schema": "codestrata-surface-language",
+  "schema_version": "1.0.0",
+  "implementation_in_slice_14_1": false,
+  "surfaces": {
+    "documentation": {
+      "theme_default": "light",
+      "dark_supported": true,
+      "fonts": ["Space Grotesk", "Inter", "IBM Plex Mono"],
+      "accent": "teal",
+      "layout": "docs_sidebar_plus_prose",
+      "cards": "bordered_paper_soft",
+      "code_blocks": "dark_preferring",
+      "notes": "Applied in Slice 14.2 Community docs rebuild (VitePress consumes design-system tokens)."
+    },
+    "assessment_report": {
+      "theme_default": "light",
+      "dark_supported": true,
+      "fonts": ["Space Grotesk", "Inter", "IBM Plex Mono"],
+      "accent": "teal",
+      "components": ["score_card", "evidence_card", "recommendation_card", "table", "badge", "alert"],
+      "progress": "indeterminate_or_sectioned",
+      "mono_for": ["paths", "rule_ids", "finding_ids"],
+      "notes": "Applied in Slice 14.3 Assessment HTML redesign (engine html_v2 embeds design-system tokens)."
+    },
+    "engineering_intelligence_report": {
+      "theme_default": "light",
+      "dark_supported": true,
+      "fonts": ["Space Grotesk", "Inter", "IBM Plex Mono"],
+      "accent": "teal",
+      "components": ["score_card", "chart", "table", "panel", "badge"],
+      "chart_palette": "chart_colors",
+      "notes": "Applied in Slice 14.4 EIR static HTML redesign (Platform embeds design-system tokens via codestrata.design_system.tokens)."
+    },
+    "vscode_extension": {
+      "theme_default": "follow_workbench",
+      "maps_to_tokens": true,
+      "accent": "teal_adapted_to_vscode_theme",
+      "progress": "indeterminate",
+      "cards": "tree_and_webview_panels_not_marketing_cards",
+      "marketplace_gallery_alignment": "canvas_teal_family",
+      "notes": "Applied in Slice 14.5 (native host + currentColor activity icon; no website CSS injection). Marketplace gallery assets aligned in Slice 14.6."
+    },
+    "marketplace_assets": {
+      "gallery_banner_color_current": "#f4f6f3",
+      "gallery_theme_current": "light",
+      "future_alignment": "design_system_canvas_token",
+      "icon_style": "marketplace_specific_derivative_raster",
+      "tagline": "Engineering decisions grounded in code.",
+      "notes": "Aligned in Slice 14.6 to Design System 1.0; universal logo authority remains Slice 14.10. Cross-surface presentation contracts applied in Slice 14.7."
+    }
+  }
+}

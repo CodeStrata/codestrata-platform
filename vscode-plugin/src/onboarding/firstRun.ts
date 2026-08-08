@@ -29,6 +29,17 @@ import {
   type EngineCandidate,
 } from "../engine/discovery";
 import { appendOutput, appendOutputLine, showOutput } from "../ui/output";
+import {
+  FIRST_RUN_ACTION_DISMISS,
+  FIRST_RUN_ACTION_DONE,
+  FIRST_RUN_ACTION_ENABLE_AI,
+  FIRST_RUN_ACTION_GET_STARTED,
+  FIRST_RUN_ACTION_LATER,
+  FIRST_RUN_ACTION_RUN_FIRST,
+  FIRST_RUN_CLI_MISSING_MESSAGE,
+  FIRST_RUN_ENGINE_READY_MESSAGE,
+  FIRST_RUN_WELCOME_MESSAGE,
+} from "../ui/presentationCopy";
 import { offerOptionalAiSetup, openEngineDocs } from "./aiSetup";
 
 export const STATE_FIRST_RUN_DONE = "codestrata.firstRunCompleted";
@@ -63,11 +74,11 @@ export async function maybeRunFirstRun(deps: OnboardingDeps): Promise<void> {
     return;
   }
   const choice = await vscode.window.showInformationMessage(
-    "Welcome to CodeStrata\n\nEngineering Intelligence for Modern Software Organizations.\n\nGet started to detect a local CodeStrata Engine CLI.",
-    "Get Started",
-    "Later"
+    FIRST_RUN_WELCOME_MESSAGE,
+    FIRST_RUN_ACTION_GET_STARTED,
+    FIRST_RUN_ACTION_LATER
   );
-  if (choice !== "Get Started") {
+  if (choice !== FIRST_RUN_ACTION_GET_STARTED) {
     await deps.context.globalState.update(STATE_WELCOME_DISMISSED, true);
     return;
   }
@@ -114,14 +125,14 @@ export async function runWelcomeFlow(
       );
       await runDoctorQuiet(existing.executable, workspaceFolder);
       const next = await vscode.window.showInformationMessage(
-        "Welcome to CodeStrata. CodeStrata Engine is ready. Engineering Intelligence for Modern Software Organizations.",
-        "Run First Engineering Assessment",
-        "Enable AI Enhancements…",
-        "Dismiss"
+        FIRST_RUN_ENGINE_READY_MESSAGE,
+        FIRST_RUN_ACTION_RUN_FIRST,
+        FIRST_RUN_ACTION_ENABLE_AI,
+        FIRST_RUN_ACTION_DISMISS
       );
-      if (next === "Run First Engineering Assessment") {
+      if (next === FIRST_RUN_ACTION_RUN_FIRST) {
         await deps.runFirstAssessment();
-      } else if (next === "Enable AI Enhancements…") {
+      } else if (next === FIRST_RUN_ACTION_ENABLE_AI) {
         await offerOptionalAiSetup();
       }
       if (options?.markCompleteOnSuccess) {
@@ -132,7 +143,7 @@ export async function runWelcomeFlow(
   }
 
   const choice = await vscode.window.showInformationMessage(
-    "Welcome to CodeStrata\n\nEngineering Intelligence for Modern Software Organizations.\n\nCodeStrata Engine CLI was not detected. Installation is guidance-only — the extension will not install packages automatically.",
+    FIRST_RUN_CLI_MISSING_MESSAGE,
     { modal: true },
     "Installation Guidance…",
     "Learn More",
@@ -158,14 +169,14 @@ export async function runWelcomeFlow(
   }
 
   const after = await vscode.window.showInformationMessage(
-    "If you installed CodeStrata Engine, you can run an assessment now.",
-    "Run First Engineering Assessment",
-    "Enable AI Enhancements…",
-    "Done"
+    "If you installed CodeStrata CLI, you can run an assessment now.",
+    FIRST_RUN_ACTION_RUN_FIRST,
+    FIRST_RUN_ACTION_ENABLE_AI,
+    FIRST_RUN_ACTION_DONE
   );
-  if (after === "Run First Engineering Assessment") {
+  if (after === FIRST_RUN_ACTION_RUN_FIRST) {
     await deps.runFirstAssessment();
-  } else if (after === "Enable AI Enhancements…") {
+  } else if (after === FIRST_RUN_ACTION_ENABLE_AI) {
     await offerOptionalAiSetup();
   }
 }
