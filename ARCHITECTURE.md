@@ -1,7 +1,7 @@
 # CodeStrata Architecture
 
 **Audience:** Monorepo maintainers and integrators.  
-**Version:** 0.1.0
+**Version:** 0.2.0
 
 This document is the **ecosystem / monorepo architecture map** for
 `codestrata-platform`. It is not the public documentation portal architecture.

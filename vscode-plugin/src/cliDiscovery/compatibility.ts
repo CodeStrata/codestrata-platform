@@ -11,13 +11,6 @@ export {
   COMPATIBILITY_MINIMUM_CLI,
 } from "../cliCompatibility";
 
-/** @deprecated Use COMPATIBILITY_MINIMUM_CLI — retained alias for callers. */
-export const MIN_DISCOVERY_CLI_VERSION: SemanticVersion = {
-  major: 0,
-  minor: 2,
-  patch: 0,
-};
-
 export const EXTENSION_MAJOR_FOR_DISCOVERY = 0 as const;
 
 export type CompatibilityCategory =

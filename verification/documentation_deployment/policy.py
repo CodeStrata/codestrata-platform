@@ -74,7 +74,7 @@ def check_policy(inv: DeploymentInventory) -> tuple[list[CheckResult], list[Defe
     )
     add(
         "policy:forbidden_14_13",
-        policy.get("forbidden", {}).get("start_epic_15") is True,
+        policy.get("forbidden", {}).get("start_slice_15_7") is True,
         "prohibited",
     )
     add(

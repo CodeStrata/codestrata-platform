@@ -1,0 +1,8 @@
+{
+  "schema": "repository-code-cleanup-verification:1.0.0",
+  "schema_id": "repository-code-cleanup-verification",
+  "schema_version": "1.0.0",
+  "epic": 16,
+  "slice": "16.3",
+  "policy": "repository-code-cleanup-policy:1.0"
+}

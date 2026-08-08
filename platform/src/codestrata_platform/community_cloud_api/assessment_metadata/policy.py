@@ -12,6 +12,7 @@ from codestrata_platform.community_cloud_api.assessment_metadata.enums import (
     AssessmentMode,
     AssessmentStatus,
     CountBucket,
+    PackageEcosystem,
     PrimaryLanguage,
     RepositoryShape,
 )
@@ -98,6 +99,9 @@ class CommunityAssessmentMetadataPolicy:
     allowed_primary_languages: tuple[str, ...] = tuple(
         sorted(item.value for item in PrimaryLanguage)
     )
+    allowed_package_ecosystems: tuple[str, ...] = tuple(
+        sorted(item.value for item in PackageEcosystem)
+    )
     allowed_assessment_schema_versions: tuple[str, ...] = ALLOWED_ASSESSMENT_SCHEMA_VERSIONS
     count_bucket_vocabulary: tuple[str, ...] = tuple(
         sorted(item.value for item in CountBucket)
@@ -151,6 +155,11 @@ class CommunityAssessmentMetadataPolicy:
         )
         object.__setattr__(
             self,
+            "allowed_package_ecosystems",
+            tuple(sorted(self.allowed_package_ecosystems)),
+        )
+        object.__setattr__(
+            self,
             "allowed_assessment_schema_versions",
             tuple(sorted(self.allowed_assessment_schema_versions)),
         )
@@ -177,6 +186,7 @@ class CommunityAssessmentMetadataPolicy:
             "allowed_assessment_statuses": list(self.allowed_assessment_statuses),
             "allowed_clients": list(self.allowed_clients),
             "allowed_heads": list(self.allowed_heads),
+            "allowed_package_ecosystems": list(self.allowed_package_ecosystems),
             "allowed_primary_languages": list(self.allowed_primary_languages),
             "allowed_repository_shapes": list(self.allowed_repository_shapes),
             "count_bucket_vocabulary": list(self.count_bucket_vocabulary),

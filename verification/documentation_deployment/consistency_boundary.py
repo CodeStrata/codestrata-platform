@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from verification.documentation_deployment.contract import FORBIDDEN_EPIC_15_PATHS
+from verification.documentation_deployment.contract import FORBIDDEN_15_7_PATHS
 from verification.documentation_deployment.inventory import DeploymentInventory
 from verification.documentation_deployment.models import CheckResult, Defect
 
@@ -18,7 +18,7 @@ def check_consistency_boundary(
     def add(name: str, ok: bool, detail: str) -> None:
         checks.append(CheckResult(name, ok, detail, "consistency_boundary"))
 
-    markers = [rel for rel in FORBIDDEN_EPIC_15_PATHS if (inv.monorepo / rel).exists()]
+    markers = [rel for rel in FORBIDDEN_15_7_PATHS if (inv.monorepo / rel).exists()]
     add(
         "consistency_boundary:no_epic_15",
         not markers,
@@ -26,7 +26,7 @@ def check_consistency_boundary(
     )
     add(
         "consistency_boundary:policy_forbids_epic_15",
-        inv.policy.get("forbidden", {}).get("start_epic_15") is True,
+        inv.policy.get("forbidden", {}).get("start_slice_15_7") is True,
         "prohibited",
     )
 
@@ -53,5 +53,5 @@ def check_consistency_boundary(
     )
 
     if markers:
-        defects.append(Defect("consistency_boundary", "Epic 15 started prematurely"))
+        defects.append(Defect("consistency_boundary", "Slice 15.7 started prematurely"))
     return checks, defects

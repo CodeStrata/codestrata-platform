@@ -146,11 +146,8 @@ MASTER_FILL_TOKENS: tuple[str, ...] = ("muted", "teal_dark", "teal", "rust")
 RETIRED_RASTER_REPORT_LOGO = "engine/src/codestrata/reporting/assets/codestrata-logo.png"
 
 # Slice 14.14 must not have started.
-FORBIDDEN_EPIC_15_PATHS: tuple[str, ...] = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
+    "reports/verification/sv15-7",
 )
 
 ALLOWED_LIMITATIONS: tuple[str, ...] = (
@@ -179,7 +176,7 @@ class Sv1410Contract:
     no_report_ia_change: bool = True
     no_visualization_change: bool = True
     no_marketplace_gallery_redesign: bool = True
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
 
 
 def default_contract() -> Sv1410Contract:

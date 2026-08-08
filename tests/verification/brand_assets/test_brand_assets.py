@@ -15,7 +15,7 @@ from verification.brand_assets.contract import (
     CONSUMER_COPIES,
     DOCS_CONFIG,
     DOCS_FAVICON,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     GENERATOR,
     ICON_CONTRACT,
     LEGACY_BRAND_HEX,
@@ -48,7 +48,7 @@ def test_brand_policy_declares_single_authority() -> None:
     assert policy["product_visual_authority"] == "design-system"
     assert policy["governance_assets_authoritative"] is False
     assert policy["legacy_amber_active_allowed"] is False
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
 
 
 def test_asset_and_icon_contracts_present() -> None:
@@ -166,7 +166,7 @@ def test_report_is_byte_stable(tmp_path: Path) -> None:
 
 
 def test_slice_14_14_not_started() -> None:
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (ROOT / relative).exists(), relative
     policy = _json(POLICY_RELATIVE)
     assert policy["accessibility_certification_claimed"] is False

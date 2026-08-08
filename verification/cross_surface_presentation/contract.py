@@ -22,11 +22,8 @@ CONSUMER_MAPPINGS = "design-system/contracts/consumer-mappings.json"
 TOKEN_CATALOG = "design-system/tokens/catalog.json"
 TOKEN_CSS = "design-system/tokens/tokens.css"
 
-FORBIDDEN_EPIC_15_PATHS = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS = (
+    "reports/verification/sv15-7",
 )
 
 REQUIRED_TYPOGRAPHY_ROLES = (
@@ -99,7 +96,7 @@ class Sv147Contract:
     schema_version: str = SCHEMA_VERSION
     package_id: str = CROSS_SURFACE_ID
     package_version: str = CROSS_SURFACE_VERSION
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
     no_runtime_behavior_change: bool = True
     no_commit: bool = True
 

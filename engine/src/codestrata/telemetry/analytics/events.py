@@ -159,7 +159,7 @@ _APPROVED_FAILURE_CATEGORIES: frozenset[str] = frozenset(
 
 _APPROVED_AI_CAPABILITIES: frozenset[str] = frozenset({"modernization_advisor"})
 _APPROVED_AI_PROVIDER_FAMILIES: frozenset[str] = frozenset(
-    {"aws_bedrock", "openai", "unavailable"}
+    {"aws_bedrock", "openai", "openrouter", "unavailable"}
 )
 _APPROVED_AI_MODEL_FAMILIES: frozenset[str] = frozenset(
     {"amazon_nova_family", "gpt_family", "unavailable"}

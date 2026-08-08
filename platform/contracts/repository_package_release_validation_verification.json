@@ -1,0 +1,51 @@
+{
+  "schema": "repository-package-release-validation-verification:1.0.0",
+  "schema_name": "repository-package-release-validation-verification",
+  "schema_version": "1.0.0",
+  "slice": "16.9",
+  "epic": 16,
+  "package": "verification/repository_package_release_validation",
+  "policy": "repository-package-release-validation-policy:1.0",
+  "report": "reports/verification/sv16-9/repository-package-release-validation-verification.json",
+  "export_targets": [
+    "community",
+    "infrastructure",
+    "insights"
+  ],
+  "community_repositories": [
+    "codestrata-engine",
+    "codestrata-examples",
+    "codestrata-vscode",
+    "codestrata-docs"
+  ],
+  "standalone_focus": [
+    "community",
+    "docs",
+    "insights",
+    "infrastructure"
+  ],
+  "version_anchors": {
+    "engine_cli": "0.2.0",
+    "vscode": "0.2.0",
+    "assessment": "1.2"
+  },
+  "boundaries": {
+    "no_publish": true,
+    "no_deploy": true,
+    "no_tag": true,
+    "no_commit": true,
+    "start_slice_16_10": false
+  },
+  "required_report_fields": [
+    "verdict",
+    "export_validation",
+    "standalone_package_validation",
+    "standalone_build_validation",
+    "release_artifact_validation",
+    "public_repository_readiness",
+    "security_validation",
+    "determinism",
+    "defects",
+    "limitations"
+  ]
+}

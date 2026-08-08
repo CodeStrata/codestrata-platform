@@ -13,14 +13,6 @@ export interface EngineCandidate {
   source: "configured" | "workspace-venv" | "active-python" | "path";
 }
 
-export interface EngineResolution {
-  selected?: EngineCandidate;
-  candidates: EngineCandidate[];
-  versionOutput?: string;
-  error?: string;
-}
-
-const PATH_SEP = process.platform === "win32" ? ";" : ":";
 const VENV_BIN = process.platform === "win32" ? "Scripts" : "bin";
 const EXE_NAME = process.platform === "win32" ? "codestrata.exe" : "codestrata";
 
@@ -78,21 +70,6 @@ export function listEngineCandidates(
   return candidates;
 }
 
-export function isExecutablePresent(executable: string): boolean {
-  if (
-    path.isAbsolute(executable) ||
-    executable.includes("/") ||
-    executable.includes("\\")
-  ) {
-    try {
-      return fs.existsSync(executable);
-    } catch {
-      return false;
-    }
-  }
-  return true;
-}
-
 export function redactSecrets(text: string): string {
   return text
     .replace(/(api[_-]?key\s*[=:]\s*)\S+/gi, "$1***")
@@ -104,11 +81,4 @@ export function redactSecrets(text: string): string {
 /** Prefer source-only labels in user-facing text; path form is for debug helpers. */
 export function formatCandidateLabel(candidate: EngineCandidate): string {
   return `${candidate.source}`;
-}
-
-export function pathEntries(): string[] {
-  return (process.env.PATH || "")
-    .split(PATH_SEP)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
 }

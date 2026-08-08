@@ -8,7 +8,9 @@
       "slice": "14.2",
       "bridge": "css_import",
       "token_path": "docs/.vitepress/theme/tokens.css",
-      "imports": ["design-system/tokens/tokens.css"],
+      "imports": [
+        "design-system/tokens/tokens.css"
+      ],
       "layout_mode": "documentation_reading",
       "typography_delivery": "web_surface",
       "component_implementations": {
@@ -110,12 +112,48 @@
         "system_safe_fonts",
         "pixel_dimensions_not_css"
       ]
+    },
+    "community_insights": {
+      "slice": "15.10",
+      "bridge": "css_export_copy",
+      "token_path": "insights/public/design-tokens/tokens.css",
+      "imports": [
+        "design-system/tokens/tokens.css"
+      ],
+      "layout_mode": "internal_web_application",
+      "typography_delivery": "web_surface",
+      "product_classification": "internal_web_application",
+      "component_implementations": {
+        "metric_card": ".cs-metric-card",
+        "app_shell": ".cs-app / .cs-header",
+        "navigation": ".cs-nav",
+        "status_badge": ".cs-badge",
+        "distribution_chart": ".cs-bar-chart",
+        "metric_table": ".cs-metric-table"
+      },
+      "approved_exceptions": [
+        "internal_dashboard_information_density",
+        "dashboard_information_density_in_15_10"
+      ]
     }
   },
   "forbidden_active": {
-    "amber_primary": ["#d98a3d", "#D97706", "#F59E0B"],
-    "cream_foundation": ["#F4F1EA", "#f7f5f2"],
-    "legacy_dark_slate_foundation": ["#0f1216", "#0b0d10"],
-    "georgia_display": ["Georgia", "georgia"]
+    "amber_primary": [
+      "#d98a3d",
+      "#D97706",
+      "#F59E0B"
+    ],
+    "cream_foundation": [
+      "#F4F1EA",
+      "#f7f5f2"
+    ],
+    "legacy_dark_slate_foundation": [
+      "#0f1216",
+      "#0b0d10"
+    ],
+    "georgia_display": [
+      "Georgia",
+      "georgia"
+    ]
   }
 }

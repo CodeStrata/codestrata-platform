@@ -43,7 +43,7 @@ def test_policy_and_contract_present() -> None:
     assert policy["section_reorder_allowed"] is False
     assert policy["navigation_javascript_allowed"] is False
     assert policy["global_breadcrumbs_allowed"] is False
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
 
     ia = json.loads((root / IA_CONTRACT).read_text(encoding="utf-8"))
     assert ia["schema"] == "codestrata-report-information-architecture-contract"
@@ -121,10 +121,10 @@ def test_build_and_write_report_twice_byte_identical() -> None:
 
 def test_slice_14_14_not_started() -> None:
     root = monorepo_root_from_here()
-    from verification.report_navigation_ia.contract import FORBIDDEN_EPIC_15_PATHS
+    from verification.report_navigation_ia.contract import FORBIDDEN_15_7_PATHS
 
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (root / relative).exists(), relative
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
     assert policy["universal_asset_change_allowed"] is False

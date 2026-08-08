@@ -1,0 +1,58 @@
+{
+  "policy_id": "repository-boundary-residency-policy",
+  "policy_version": "1.0",
+  "schema": "repository-boundary-residency-policy:1.0",
+  "epic": 16,
+  "slice": "16.7",
+  "authority": "Repository ownership and residency normalization pre-cutover. No remote creation. No cutover. No dual-authoring of masters.",
+  "repository_ownership": true,
+  "current_vs_future_residency": true,
+  "visibility_rules": true,
+  "source_authority_monorepo_pre_cutover": true,
+  "distribution_modes": true,
+  "import_boundaries": true,
+  "shared_contracts": true,
+  "policy_mirrors": true,
+  "export_boundaries": true,
+  "no_dual_authoring": true,
+  "no_remote_creation": true,
+  "no_cutover": true,
+  "platform_package_accountability": true,
+  "design_system_model": "SHARED_AUTHORITY",
+  "production_ingestion_enabled": false,
+  "classifications": [
+    "CORRECT_RESIDENCY",
+    "MOVE_WITHIN_MONOREPO",
+    "EXPORT_TO_FUTURE_REPOSITORY",
+    "GENERATE_FOR_CONSUMER",
+    "SHARED_AUTHORITY",
+    "COMPATIBILITY_RETAIN",
+    "HISTORICAL_RETAIN",
+    "OWNER_REVIEW_REQUIRED",
+    "REMOVE_IF_DUPLICATE",
+    "DEFER_UNTIL_CUTOVER"
+  ],
+  "residency_map": "platform/policies/repository_residency_map.json",
+  "platform_package_register": "platform/policies/platform_package_register.json",
+  "policy_authority": {
+    "authoritative_root": "platform/policies/",
+    "insights_mirrors": "insights/policies/",
+    "mirror_relationship": "CONSUMER_MIRROR_byte_identical"
+  },
+  "forbidden_runtime_imports": [
+    "engine->codestrata_platform",
+    "insights->codestrata_platform",
+    "docs->platform/src",
+    "infrastructure->engine/src runtime",
+    "vscode->engine/src monorepo"
+  ],
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false,
+  "verification": {
+    "package": "verification/repository_boundary_residency",
+    "schema": "repository-boundary-residency-verification:1.0.0",
+    "report": "reports/verification/sv16-7/repository-boundary-residency-verification.json"
+  }
+}

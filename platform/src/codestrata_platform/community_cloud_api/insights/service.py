@@ -1,0 +1,251 @@
+"""On-demand Insights aggregation service."""
+
+from __future__ import annotations
+
+from datetime import date
+
+from codestrata_platform.community_cloud_api.insights.aggregators import AGGREGATORS
+from codestrata_platform.community_cloud_api.insights.completeness import finalize_limitations
+from codestrata_platform.community_cloud_api.insights.decoding import (
+    decode_object_bytes,
+    normalize_event,
+)
+from codestrata_platform.community_cloud_api.insights.errors import (
+    INVALID_METRIC,
+    INVALID_WINDOW,
+    QUERY_LIMIT_EXCEEDED,
+    InsightsAggregationError,
+)
+from codestrata_platform.community_cloud_api.insights.models import (
+    AggregationContext,
+    MetricRequest,
+    MetricResult,
+    MetricWindow,
+    OverviewRequest,
+)
+from codestrata_platform.community_cloud_api.insights.policy import (
+    DEFAULT_OVERVIEW_METRICS,
+    SUPPORTED_METRICS,
+)
+from codestrata_platform.community_cloud_api.insights.registry import (
+    get_aggregator,
+    is_external_metric,
+)
+from codestrata_platform.community_cloud_api.insights.validation_dataset import (
+    ValidationCatalogPort,
+    aggregate_validation_dataset,
+)
+from codestrata_platform.community_cloud_api.insights_query.errors import InsightsQueryPlanError
+from codestrata_platform.community_cloud_api.insights_query.models import DateWindow, QueryPlan
+from codestrata_platform.community_cloud_api.insights_query.planner import plan_metric_query
+from codestrata_platform.community_cloud_api.insights_storage.reader import (
+    BoundedS3Reader,
+    ReaderResult,
+)
+
+
+class InsightsAggregationService:
+    def __init__(
+        self,
+        *,
+        reader: BoundedS3Reader | None = None,
+        validation_catalog: ValidationCatalogPort | None = None,
+    ) -> None:
+        self._reader = reader
+        self._validation_catalog = validation_catalog
+
+    def aggregate_metric(self, request: MetricRequest) -> MetricResult:
+        return aggregate_metric(
+            request,
+            reader=self._reader,
+            validation_catalog=self._validation_catalog,
+        )
+
+    def aggregate_dashboard_overview(
+        self, request: OverviewRequest
+    ) -> tuple[MetricResult, ...]:
+        return aggregate_dashboard_overview(
+            request,
+            reader=self._reader,
+            validation_catalog=self._validation_catalog,
+        )
+
+
+def aggregate_metric(
+    request: MetricRequest,
+    *,
+    reader: BoundedS3Reader | None = None,
+    validation_catalog: ValidationCatalogPort | None = None,
+    preloaded: AggregationContext | None = None,
+) -> MetricResult:
+    metric_id = request.metric_id
+    if metric_id not in SUPPORTED_METRICS:
+        raise InsightsAggregationError(INVALID_METRIC, "unknown")
+    if request.end_date_utc < request.start_date_utc:
+        raise InsightsAggregationError(INVALID_WINDOW, "end_before_start")
+
+    if is_external_metric(metric_id):
+        if validation_catalog is None:
+            return MetricResult(
+                metric_id=metric_id,
+                status="error",
+                window=MetricWindow(
+                    request.start_date_utc, request.end_date_utc, "external"
+                ),
+                value=None,
+                completeness="unavailable",
+                limitations=finalize_limitations(
+                    ["source_unavailable", "validation_growth_snapshots_unavailable"]
+                ),
+            )
+        return aggregate_validation_dataset(
+            validation_catalog,
+            start=request.start_date_utc,
+            end=request.end_date_utc,
+        )
+
+    try:
+        ctx = preloaded or _load_context(
+            metric_id=metric_id,
+            start=request.start_date_utc,
+            end=request.end_date_utc,
+            reader=reader,
+        )
+    except InsightsAggregationError as exc:
+        return _error_result(metric_id, request, exc)
+
+    aggregator = get_aggregator(metric_id)
+    return aggregator(ctx, request.start_date_utc, request.end_date_utc)
+
+
+def aggregate_dashboard_overview(
+    request: OverviewRequest,
+    *,
+    reader: BoundedS3Reader | None = None,
+    validation_catalog: ValidationCatalogPort | None = None,
+) -> tuple[MetricResult, ...]:
+    """Per-metric isolation; reuse S3 reads when planner prefixes match."""
+
+    metric_ids = request.metric_ids or DEFAULT_OVERVIEW_METRICS
+    read_cache: dict[tuple[str, ...], ReaderResult] = {}
+    context_cache: dict[tuple[str, ...], AggregationContext] = {}
+    ordered: list[MetricResult] = []
+
+    for mid in metric_ids:
+        req = MetricRequest(mid, request.start_date_utc, request.end_date_utc)
+        if mid not in SUPPORTED_METRICS:
+            ordered.append(
+                MetricResult(
+                    metric_id=mid,
+                    status="error",
+                    window=MetricWindow(
+                        request.start_date_utc, request.end_date_utc, "bounded_period"
+                    ),
+                    value=None,
+                    completeness="unavailable",
+                    limitations=finalize_limitations(["source_unavailable"]),
+                )
+            )
+            continue
+        if is_external_metric(mid):
+            ordered.append(
+                aggregate_metric(req, validation_catalog=validation_catalog)
+            )
+            continue
+        try:
+            plan = _plan(mid, request.start_date_utc, request.end_date_utc)
+            prefix_key = plan.prefixes
+            if prefix_key not in context_cache:
+                if reader is None:
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required")
+                if prefix_key not in read_cache:
+                    read_cache[prefix_key] = reader.read_plan(plan)
+                context_cache[prefix_key] = _context_from_reader_result(read_cache[prefix_key])
+            result = AGGREGATORS[mid](
+                context_cache[prefix_key],
+                request.start_date_utc,
+                request.end_date_utc,
+            )
+            ordered.append(result)
+        except InsightsAggregationError as exc:
+            ordered.append(_error_result(mid, req, exc))
+        except Exception:
+            ordered.append(
+                MetricResult(
+                    metric_id=mid,
+                    status="error",
+                    window=MetricWindow(
+                        request.start_date_utc, request.end_date_utc, "bounded_period"
+                    ),
+                    value=None,
+                    completeness="unavailable",
+                    limitations=finalize_limitations(["source_unavailable"]),
+                )
+            )
+    return tuple(ordered)
+
+
+def _plan(metric_id: str, start: date, end: date) -> QueryPlan:
+    try:
+        return plan_metric_query(
+            metric=metric_id, window=DateWindow(start_date=start, end_date=end)
+        )
+    except InsightsQueryPlanError as exc:
+        if exc.code == "invalid_query_window":
+            raise InsightsAggregationError(INVALID_WINDOW, exc.detail) from None
+        raise InsightsAggregationError(INVALID_METRIC, exc.detail) from None
+
+
+def _load_context(
+    *,
+    metric_id: str,
+    start: date,
+    end: date,
+    reader: BoundedS3Reader | None,
+) -> AggregationContext:
+    if reader is None:
+        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required")
+    plan = _plan(metric_id, start, end)
+    return _context_from_reader_result(reader.read_plan(plan))
+
+
+def _context_from_reader_result(result: ReaderResult) -> AggregationContext:
+    ctx = AggregationContext(diagnostics=result.diagnostics)
+    for obj in result.objects:
+        envelope = decode_object_bytes(obj.body)
+        if envelope is None:
+            ctx.diagnostics.malformed_objects += 1
+            continue
+        event = normalize_event(envelope)
+        if event is None:
+            schema = envelope.get("envelope_schema_version")
+            if schema != "1.0":
+                ctx.diagnostics.unsupported_schema_objects += 1
+            else:
+                ctx.diagnostics.malformed_objects += 1
+            continue
+        ctx.events.append(event)
+    return ctx
+
+
+def _error_result(
+    metric_id: str, request: MetricRequest, exc: InsightsAggregationError
+) -> MetricResult:
+    completeness = "unavailable"
+    lim = ["source_unavailable"]
+    if exc.code == QUERY_LIMIT_EXCEEDED:
+        completeness = "partial"
+        lim = ["query_budget_reached"]
+    elif exc.code == INVALID_WINDOW:
+        completeness = "unavailable"
+        lim = ["source_unavailable"]
+    return MetricResult(
+        metric_id=metric_id,
+        status="error",
+        window=MetricWindow(
+            request.start_date_utc, request.end_date_utc, "bounded_period"
+        ),
+        value=None,
+        completeness=completeness,  # type: ignore[arg-type]
+        limitations=finalize_limitations(lim),
+    )

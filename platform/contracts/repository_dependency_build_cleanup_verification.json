@@ -1,0 +1,7 @@
+{
+  "schema": "repository-dependency-build-cleanup-verification",
+  "schema_version": "1.0.0",
+  "package": "verification/repository_dependency_build_cleanup",
+  "report": "reports/verification/sv16-5/repository-dependency-build-cleanup-verification.json",
+  "policy": "platform/policies/repository_dependency_build_cleanup_policy.json"
+}

@@ -25,7 +25,6 @@
   "commit_created": false,
   "published": false,
   "deployed": false,
-  "start_epic_15": false,
   "design_system_version": "1.0",
   "assessment_schema_version": "1.2",
   "extension_version": "0.2.0",
@@ -51,14 +50,14 @@
     "codestrata-cross-surface-consistency-policy:1.0"
   ],
   "prohibited": {
-    "start_epic_15": true,
     "schema_bump": true,
     "version_bump": true,
     "production_deploy_by_verifier": true,
     "wholesale_redesign": true,
     "domain_truth_change": true,
     "release_tag_by_verifier": true,
-    "commit_by_verifier": true
+    "commit_by_verifier": true,
+    "start_slice_15_7": true
   },
   "limitations": [
     "no_production_cloudflare_upload",
@@ -71,5 +70,7 @@
     "legacy_epic_11_13_historic_verification_drift_retained",
     "worktree_uncommitted",
     "v0_2_0_not_tagged_or_released"
-  ]
+  ],
+  "epic_15_slice_15_1_allowed_after_completion": true,
+  "start_slice_15_7": false
 }

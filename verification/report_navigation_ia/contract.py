@@ -94,11 +94,8 @@ EIR_SECTION_ORDER: tuple[str, ...] = (
 )
 
 # Slice 14.14 must not have started.
-FORBIDDEN_EPIC_15_PATHS = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS = (
+    "reports/verification/sv15-7",
 )
 
 ALLOWED_LIMITATIONS = frozenset(
@@ -123,7 +120,7 @@ class Sv149Contract:
     schema_version: str = SCHEMA_VERSION
     package_id: str = REPORT_IA_ID
     package_version: str = REPORT_IA_VERSION
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
     no_schema_change: bool = True
     no_section_reorder: bool = True
     no_commit: bool = True

@@ -15,7 +15,7 @@ EXTENSION_OPERATION_CATALOG_URN = (
     f"{EXTENSION_OPERATION_CATALOG_ID}:{EXTENSION_OPERATION_CATALOG_VERSION}"
 )
 
-# Canonical operations derived from vscode-plugin + cursor-plugin public commands.
+# Canonical operations derived from vscode-plugin public commands.
 CANONICAL_EXTENSION_OPERATIONS: tuple[str, ...] = (
     "activate",
     "ask_suggested",

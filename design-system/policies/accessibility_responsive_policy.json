@@ -75,7 +75,7 @@
     "design_system_palette_replacement": true,
     "runtime_behavior_change": true,
     "start_slice_14_13": false,
-    "start_epic_15": true
+    "start_slice_15_7": true
   },
   "boundaries": {
     "report_information_architecture": "codestrata-report-information-architecture-policy:1.0 (Slice 14.9) owns headings, section order, anchors, and contents; unchanged here",

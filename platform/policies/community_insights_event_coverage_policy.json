@@ -1,0 +1,580 @@
+{
+  "policy_id": "community-insights-event-coverage-policy",
+  "policy_version": "1.0",
+  "slice": "15.3",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0",
+    "community-analytics-partition-policy:1.0"
+  ],
+  "authority": "Existing Community Cloud event contracts are authoritative. Dashboard requirements cannot override telemetry privacy.",
+  "partition_redesign_required": false,
+  "path_layout_unchanged": true,
+  "runtime_ingestion_changes_allowed": false,
+  "schema_activation_allowed_in_15_3": false,
+  "aggregations_allowed_in_15_3": false,
+  "apis_allowed_in_15_3": false,
+  "dashboard_ui_allowed_in_15_3": false,
+  "start_slice_15_7": true,
+  "existing_event_contracts_authoritative": true,
+  "metrics_must_derive_from_approved_fields": true,
+  "raw_customer_source_data_forbidden": true,
+  "schema_changes_must_be_additive_and_privacy_reviewed": true,
+  "model_adoption_restricted_by_privacy": true,
+  "model_adoption_decision": "C_normalized_model_family_allowed",
+  "validation_dataset_growth_external": true,
+  "streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "schema_versions": {
+    "lake_envelope": "1.0",
+    "community-telemetry": "1.0",
+    "community-assessment-metadata": "1.0",
+    "community-cli-event": "1.0",
+    "community-extension-event": "1.0",
+    "community-ai-usage": "1.0"
+  },
+  "installation_identity": {
+    "field": "payload.installation_id",
+    "platform_optional": true,
+    "generated_by_platform": false,
+    "engine_generation": "uuid_v4",
+    "engine_persistence": "~/.codestrata/anonymous-installation-identity.json",
+    "vscode_epic10_identity_free": true,
+    "cli_vs_vscode_same_installation": "not_guaranteed_independent_clients",
+    "reset_behavior": "no_auto_regenerate_valid_id; recover_on_corruption_may_mint_new",
+    "stable_enough_for_unique_count": "yes_when_present_with_documented_undercount",
+    "redesign_in_15_3": false
+  },
+  "activity_definition": {
+    "active_installation": "anonymous installation_id observed on an approved activity event within the window",
+    "approved_activity_sources": [
+      {
+        "stream": "assessment_metadata",
+        "rule": "any accepted assessment_metadata_submitted event"
+      },
+      {
+        "stream": "telemetry",
+        "rule": "event_type in feature_invoked|feature_completed|application_started|application_completed|operation_failed"
+      },
+      {
+        "stream": "cli_event",
+        "rule": "event.operation in assess|assess_with_ai (primary); other ops secondary"
+      },
+      {
+        "stream": "extension_event",
+        "rule": "event.operation in assess|assess_with_ai (usage); activate alone is NOT usage"
+      },
+      {
+        "stream": "ai_usage",
+        "rule": "any accepted ai_usage event"
+      }
+    ],
+    "do_not_count": [
+      "raw_event_count_without_installation_id",
+      "extension_activate_alone_as_usage",
+      "open_report_as_assessment_failure"
+    ]
+  },
+  "assessment_success_failure": {
+    "authoritative_status": "payload.assessment.assessment_status",
+    "authoritative_result": "payload.execution.result",
+    "success_values": {
+      "assessment_status": [
+        "completed",
+        "partially_completed"
+      ],
+      "execution.result": [
+        "succeeded",
+        "partially_succeeded"
+      ]
+    },
+    "failure_values": {
+      "assessment_status": [
+        "failed"
+      ],
+      "execution.result": [
+        "failed"
+      ]
+    },
+    "not_authoritative": [
+      "open_report",
+      "report_json_generated_false",
+      "cli_event.open"
+    ]
+  },
+  "ai_model_privacy": {
+    "outcome": "C",
+    "allowed_field": "payload.usage.model_family",
+    "forbidden_fields": [
+      "model_id",
+      "exact_model",
+      "raw_model_identifier"
+    ],
+    "exact_model_collection_permitted": false
+  },
+  "ai_provider_vocab": {
+    "allowed_field": "payload.usage.provider_family",
+    "canonical_today": [
+      "aws_bedrock",
+      "openai",
+      "openrouter",
+      "unavailable"
+    ],
+    "alias_bedrock": "aws_bedrock",
+    "openrouter_present": true,
+    "credentials_forbidden": true
+  },
+  "vscode_usage_definition": {
+    "stream": "extension_event",
+    "usage_operations": [
+      "assess",
+      "assess_with_ai"
+    ],
+    "activate_alone_counts_as_usage": false,
+    "version_field": "payload.client.version"
+  },
+  "validation_dataset_growth": {
+    "classification": "external_metric_source",
+    "authoritative_source": "validation/repository-catalog/catalog.json",
+    "schema_name": "codestrata-repository-catalog",
+    "force_into_telemetry": false
+  },
+  "schema_classifications": {
+    "community-telemetry": "sufficient_with_optionality_limitation",
+    "community-assessment-metadata": "sufficient_with_optionality_limitation",
+    "community-cli-event": "sufficient_with_optionality_limitation",
+    "community-extension-event": "sufficient_with_optionality_limitation",
+    "community-ai-usage": "sufficient_with_optionality_limitation",
+    "lake-envelope": "sufficient_no_change",
+    "named_package_ecosystem_dimension": "sufficient_no_change",
+    "openrouter_provider_family": "sufficient_no_change",
+    "validation_dataset_growth": "external_metric",
+    "exact_model_id_metric": "metric_deferred_for_privacy"
+  },
+  "change_register": [
+    {
+      "change_id": "CR-15.3-001",
+      "title": "optional_named_package_ecosystem_label",
+      "status": "implemented_in_15_4",
+      "activated_in_runtime": true,
+      "privacy_reviewed": true,
+      "description": "Additive optional categorical field for package-ecosystem label if product requires named ecosystems beyond primary_language. Must not include package names, deps, paths, or repos.",
+      "production_wire_enabled": false
+    },
+    {
+      "change_id": "CR-15.3-002",
+      "title": "openrouter_provider_family_catalog_entry",
+      "status": "implemented_in_15_4",
+      "activated_in_runtime": true,
+      "privacy_reviewed": true,
+      "description": "If OpenRouter becomes an Engine integration, add provider_family openrouter (or alias) to ai-provider-family-catalog. No credentials/endpoints.",
+      "production_wire_enabled": false
+    },
+    {
+      "change_id": "CR-15.3-003",
+      "title": "vscode_installation_id_when_lake_wired",
+      "status": "implemented_in_15_4",
+      "activated_in_runtime": true,
+      "privacy_reviewed": true,
+      "description": "When VS Code Community Cloud wiring lands, prefer sending approved anonymous installation_id so install/DAU/MAU are not identity-free undercount. Does not redesign identity.",
+      "production_wire_enabled": false
+    }
+  ],
+  "metric_coverage": {
+    "total_anonymous_installations": {
+      "status": "supported_with_optionality_limitation",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "telemetry",
+        "assessment_metadata",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "deduplication_key": "payload.installation_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [],
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional; vscode_epic10_identity_free; reinstall_mints_new_id"
+    },
+    "daily_active_installations": {
+      "status": "supported_with_optionality_limitation",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "activity_filter": "approved_activity_sources",
+      "deduplication_key": "payload.installation_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "day"
+      ],
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional; must_not_count_every_raw_event"
+    },
+    "monthly_active_installations": {
+      "status": "supported_with_optionality_limitation",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "activity_filter": "approved_activity_sources",
+      "deduplication_key": "payload.installation_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "month"
+      ],
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional"
+    },
+    "first_assessments": {
+      "status": "supported_with_optionality_limitation",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.installation_id",
+        "acceptance.partition_date"
+      ],
+      "deduplication_key": "payload.installation_id_first_seen_assessment",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [],
+      "derive_not_flag": true,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional"
+    },
+    "repeat_assessments": {
+      "status": "supported_with_optionality_limitation",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "deduplication_key": "payload.installation_id_with_count_ge_2",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [],
+      "derive_not_flag": true,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional"
+    },
+    "successful_assessments": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.assessment_status",
+        "payload.execution.result"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "success_semantics": "assessment_status in completed|partially_completed OR execution.result in succeeded|partially_succeeded",
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "failed_assessments": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.assessment_status",
+        "payload.execution.result"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "failure_semantics": "assessment_status=failed OR execution.result=failed; NOT open_report",
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "cli_version_adoption": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "cli_event"
+      ],
+      "required_fields": [
+        "payload.client.version"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.client.version"
+      ],
+      "semantic_version": true,
+      "executable_path_forbidden": true,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "assessment_head_usage": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.executed_heads"
+      ],
+      "secondary_fields": [
+        "payload.context.selected_assessment_heads"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "executed_head"
+      ],
+      "findings_forbidden": true,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "language_ecosystem_distribution": {
+      "status": "supported",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.repository.primary_language",
+        "payload.repository.package_ecosystem"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.repository.primary_language"
+      ],
+      "allowed_language_ids": [
+        "python",
+        "java",
+        "javascript",
+        "typescript",
+        "go",
+        "csharp",
+        "rust",
+        "unknown",
+        "unavailable"
+      ],
+      "named_ecosystems_present": true,
+      "future_schema_enhancement_required": false,
+      "future_enhancement_ref": "CR-15.3-001",
+      "external_metric_source": false,
+      "privacy": "approved",
+      "undercount_risk": "package_ecosystem_optional"
+    },
+    "ai_provider_adoption": {
+      "status": "supported",
+      "schema_impact": "sufficient_with_optionality_limitation",
+      "source_streams": [
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.usage.provider_family"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.usage.provider_family"
+      ],
+      "canonical_today": [
+        "aws_bedrock",
+        "openai",
+        "openrouter",
+        "unavailable"
+      ],
+      "openrouter_requires_catalog_change": false,
+      "future_schema_enhancement_required": false,
+      "future_enhancement_ref": "CR-15.3-002",
+      "privacy": "approved",
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "ai_model_adoption": {
+      "status": "supported_as_model_family_only",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.usage.model_family"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.usage.model_family"
+      ],
+      "privacy_decision": "C_normalized_model_family_allowed",
+      "exact_model_id_forbidden": true,
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "privacy": "approved",
+      "undercount_risk": "family_granularity_only"
+    },
+    "vscode_extension_usage": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "extension_event"
+      ],
+      "required_fields": [
+        "payload.event.operation",
+        "payload.client.name"
+      ],
+      "usage_operations": [
+        "assess",
+        "assess_with_ai"
+      ],
+      "activate_alone_counts_as_usage": false,
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.event.operation"
+      ],
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "installation_id_optional_for_active_install_variant"
+    },
+    "release_adoption": {
+      "status": "supported",
+      "schema_impact": "sufficient_no_change",
+      "source_streams": [
+        "cli_event",
+        "extension_event"
+      ],
+      "required_fields": [
+        "payload.client.version",
+        "payload.client.name"
+      ],
+      "deduplication_key": "payload.event_id",
+      "time_field": "acceptance.partition_date",
+      "grouping_dimensions": [
+        "payload.client.name",
+        "payload.client.version"
+      ],
+      "no_new_release_identity": true,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "external_metric_source": false,
+      "undercount_risk": "none_material"
+    },
+    "validation_dataset_growth": {
+      "status": "external_metric_source",
+      "schema_impact": "external_metric",
+      "source_streams": [],
+      "required_fields": [],
+      "authoritative_source": "validation/repository-catalog/catalog.json",
+      "external_metric_source": true,
+      "force_into_telemetry": false,
+      "privacy": "approved",
+      "future_schema_enhancement_required": false,
+      "undercount_risk": "not_applicable"
+    }
+  },
+  "privacy_forbidden_dashboard_fields": [
+    "repository_name",
+    "repository_path",
+    "source_file",
+    "file_path",
+    "finding_details",
+    "evidence",
+    "recommendation_text",
+    "prompt",
+    "ai_response",
+    "credentials",
+    "aws_profile",
+    "account_id",
+    "endpoint",
+    "base_url",
+    "organization_identity",
+    "customer_identity",
+    "email",
+    "ip_address",
+    "hostname",
+    "machine_identity",
+    "model_id",
+    "package_name",
+    "dependency_name"
+  ],
+  "limitations": [
+    "production_ingestion_still_unwired",
+    "installation_id_optional_may_undercount",
+    "vscode_epic10_identity_free",
+    "model_adoption_family_granularity_only",
+    "no_aggregations_built_in_15_3",
+    "no_schema_activation_in_15_3",
+    "worktree_uncommitted",
+    "package_ecosystem_optional"
+  ],
+  "verification": {
+    "package": "verification/community_insights_event_coverage",
+    "schema": "community-insights-event-coverage-verification:1.0.0",
+    "report": "reports/verification/sv15-3/community-insights-event-coverage-verification.json"
+  },
+  "slice_15_4_allowed": true,
+  "slice_15_5_allowed": true,
+  "slice_15_6_allowed": true,
+  "slice_15_7_allowed": true,
+  "start_slice_15_8": true,
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "slice_15_10_allowed": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

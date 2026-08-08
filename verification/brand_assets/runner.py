@@ -51,13 +51,13 @@ def release_posture() -> dict[str, bool]:
         "no_runtime_change": True,
         "no_tag": True,
         "slice_14_10_complete": True,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
 
 
 def build_report(monorepo: Path) -> BrandAssetsReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
     assert contract.single_master_required is True
     assert contract.no_schema_change is True
 
@@ -128,7 +128,7 @@ def write_report(monorepo: Path, report: BrandAssetsReport) -> Path:
         "The Design System owns the master mark and wordmark; every product surface "
         "consumes an approved derivative. Report information architecture, visualization "
         "semantics, schemas, and runtime behaviour are unchanged. Slice 14.13 complete. "
-        "Epic 15 not started. "
+        "Slice 15.7 not started. "
         "No commit/tag/publish/deploy.\n",
         encoding="utf-8",
     )

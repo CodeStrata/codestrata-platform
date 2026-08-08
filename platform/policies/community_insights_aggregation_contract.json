@@ -1,0 +1,43 @@
+{
+  "contract_id": "community-insights-aggregation-contract",
+  "contract_version": "1.0",
+  "policy_ref": "community-insights-aggregation-policy:1.0",
+  "metrics_contract_ref": "community-insights-metrics-contract:1.0",
+  "service_api": {
+    "aggregate_metric": "MetricRequest -> MetricResult",
+    "aggregate_dashboard_overview": "OverviewRequest -> tuple[MetricResult, ...]"
+  },
+  "reader": {
+    "planner_prefixes_only": true,
+    "list_objects_v2": true,
+    "get_object": true,
+    "quarantine_forbidden": true,
+    "write_forbidden": true,
+    "caller_prefix_forbidden": true
+  },
+  "privacy": {
+    "metric_result_aggregate_only": true,
+    "installation_id_internal_only": true,
+    "no_s3_keys_in_results": true,
+    "no_raw_boto_exceptions": true
+  },
+  "cache_mode": "none",
+  "checkpoint_mode": "retention_only_with_limitation",
+  "start_slice_15_8": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

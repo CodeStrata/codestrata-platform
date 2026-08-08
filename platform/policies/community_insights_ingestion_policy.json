@@ -1,0 +1,226 @@
+{
+  "policy_id": "community-insights-ingestion-policy",
+  "policy_version": "1.0",
+  "slice": "15.4",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0",
+    "community-analytics-partition-policy:1.0",
+    "community-insights-event-coverage-policy:1.0"
+  ],
+  "authority": "Privacy-safe analytics ingestion hardening for future Insights Dashboard. Dashboard requirements cannot override telemetry privacy.",
+  "operational_activation_state": "activation_ready_but_production_disabled",
+  "enable_ingestion_wire": false,
+  "writer_iam_attached": false,
+  "production_transmission_enabled": false,
+  "partition_layout_unchanged": true,
+  "aggregations_allowed_in_15_4": false,
+  "dashboard_ui_allowed_in_15_4": false,
+  "start_slice_15_7": true,
+  "approved_event_streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "approved_dashboard_dimensions": [
+    "payload.installation_id",
+    "payload.client.name",
+    "payload.client.version",
+    "payload.assessment.assessment_status",
+    "payload.assessment.executed_heads",
+    "payload.execution.result",
+    "payload.repository.primary_language",
+    "payload.repository.package_ecosystem",
+    "payload.usage.provider_family",
+    "payload.usage.model_family",
+    "payload.event.operation",
+    "acceptance.partition_date"
+  ],
+  "privacy_forbidden_fields": [
+    "repository_name",
+    "repository_path",
+    "file_path",
+    "source_code",
+    "findings",
+    "evidence",
+    "recommendation_text",
+    "prompt",
+    "ai_response",
+    "credentials",
+    "aws_profile",
+    "account_id",
+    "endpoint",
+    "base_url",
+    "organization_identity",
+    "customer_identity",
+    "email",
+    "ip_address",
+    "hostname",
+    "machine_identity",
+    "model_id",
+    "package_name",
+    "dependency_name",
+    "machineId"
+  ],
+  "installation_identity": {
+    "field": "payload.installation_id",
+    "semantics": "anonymous_aggregate_deduplication_only",
+    "not_authentication": true,
+    "not_customer_identity": true,
+    "not_machine_identity": true,
+    "not_repository_identity": true,
+    "engine_persistence": "~/.codestrata/anonymous-installation-identity.json",
+    "vscode_source": "engine_shared_file_via_CODESTRATA_HOME",
+    "vscode_machineId_forbidden": true,
+    "second_tracking_identity_forbidden": true,
+    "optional": true,
+    "exposed_in_user_diagnostics": false
+  },
+  "package_ecosystem": {
+    "field": "repository.package_ecosystem",
+    "stream": "assessment_metadata",
+    "optional": true,
+    "schema_version": "1.0",
+    "additive_compatible": true,
+    "closed_vocabulary": [
+      "maven",
+      "gradle",
+      "npm",
+      "python",
+      "nuget",
+      "composer",
+      "cargo",
+      "mixed",
+      "unknown",
+      "unavailable"
+    ],
+    "never_collect": [
+      "package_name",
+      "dependency_name",
+      "artifact_coordinates",
+      "group_id",
+      "project_name",
+      "manifest_path",
+      "dependency_version_list"
+    ]
+  },
+  "provider_family": {
+    "field": "usage.provider_family",
+    "canonical": [
+      "aws_bedrock",
+      "openai",
+      "openrouter",
+      "unavailable"
+    ],
+    "openrouter_present": true,
+    "credentials_forbidden": true,
+    "endpoint_forbidden": true
+  },
+  "model_family": {
+    "field": "usage.model_family",
+    "privacy_decision": "C_normalized_model_family_allowed",
+    "canonical": [
+      "amazon_nova_family",
+      "gpt_family",
+      "other_supported",
+      "unavailable"
+    ],
+    "exact_model_id_forbidden": true,
+    "opaque_provider_model_reference_forbidden": true
+  },
+  "consent": {
+    "redesign_forbidden": true,
+    "new_prompt_forbidden": true,
+    "denied_must_not_emit": true,
+    "unchanged": true
+  },
+  "non_interactive": {
+    "unchanged": true,
+    "silent_policy_change_forbidden": true
+  },
+  "failure_isolation": {
+    "analytics_must_not_fail_assessment": true,
+    "analytics_must_not_fail_cli": true,
+    "analytics_must_not_fail_vscode_workflow": true,
+    "fail_soft": true,
+    "unbounded_retry_forbidden": true
+  },
+  "server_revalidation_required": true,
+  "quarantine": {
+    "path_shape": "quarantine/reason=<safe_reason>/year=/month=/day=/<opaque>.json",
+    "raw_sensitive_value_in_reason_forbidden": true
+  },
+  "s3_metadata": {
+    "allowlist_only": true,
+    "high_cardinality_dimensions_forbidden": true,
+    "examples": [
+      "codestrata-client-type",
+      "codestrata-assessment-schema"
+    ]
+  },
+  "change_register_disposition": {
+    "CR-15.3-001": {
+      "status": "implemented_in_15_4",
+      "activated_in_contract": true,
+      "activated_in_production_wire": false
+    },
+    "CR-15.3-002": {
+      "status": "implemented_in_15_4",
+      "activated_in_contract": true,
+      "activated_in_production_wire": false
+    },
+    "CR-15.3-003": {
+      "status": "implemented_in_15_4",
+      "activated_in_contract": true,
+      "activated_in_production_wire": false,
+      "notes": "VS Code reads Engine shared identity file; local analytics remain identity-free; transmission disabled"
+    }
+  },
+  "schema_impact": {
+    "assessment_metadata": "sufficient_additive_optional_package_ecosystem",
+    "ai_usage": "sufficient_additive_openrouter_provider_family",
+    "telemetry": "sufficient_no_change",
+    "cli_event": "sufficient_no_change",
+    "extension_event": "sufficient_identity_projection_ready",
+    "lake_envelope": "sufficient_no_change"
+  },
+  "limitations": [
+    "production_ingestion_still_unwired",
+    "writer_iam_unattached",
+    "installation_id_optional_may_undercount",
+    "package_ecosystem_optional",
+    "no_aggregations_built_in_15_4",
+    "no_dashboard_in_15_4",
+    "transmission_disabled",
+    "worktree_uncommitted"
+  ],
+  "verification": {
+    "package": "verification/community_insights_ingestion",
+    "schema": "community-insights-ingestion-verification:1.0.0",
+    "report": "reports/verification/sv15-4/community-insights-ingestion-verification.json"
+  },
+  "slice_15_5_allowed": true,
+  "slice_15_6_allowed": true,
+  "slice_15_7_allowed": true,
+  "start_slice_15_8": true,
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "slice_15_10_allowed": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

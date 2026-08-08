@@ -18,7 +18,7 @@ Authoritative completion gate for **Epic 14 – Unified CodeStrata Community Exp
 - Assessment schema remains 1.2; EIR schemas unchanged; VS Code / Marketplace 0.2.0
 - Community / commercial boundary preserved
 - Privacy / source locality preserved
-- Epic 15 absent (`start_epic_15 = false`)
+- Slice 15.2 absent (`start_slice_15_7 = false`)
 - Release posture: no commit/tag/publish/deploy
 
 ## Run

@@ -9,7 +9,7 @@ from pathlib import Path
 from verification.responsive_accessibility.checks import check_all
 from verification.responsive_accessibility.contract import (
     ACCESSIBILITY_CONTRACT,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     POLICY_RELATIVE,
     RESPONSIVE_CONTRACT,
     VIEWPORT_MATRIX_PX,
@@ -37,7 +37,7 @@ def test_policy_declares_wcag_oriented_baseline() -> None:
     assert policy["wcag_target"] == "2.2_AA_oriented"
     assert policy["formal_certification_claimed"] is False
     assert policy["color_only_meaning_allowed"] is False
-    assert policy["prohibited"]["start_epic_15"] is True
+    assert policy["prohibited"]["start_slice_15_7"] is True
 
 
 def test_accessibility_and_responsive_contracts_present() -> None:
@@ -119,7 +119,7 @@ def test_marketplace_readme_alts_are_present() -> None:
 
 
 def test_slice_14_14_has_not_started() -> None:
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (ROOT / relative).exists(), relative
 
 
@@ -144,6 +144,6 @@ def test_runner_is_deterministic() -> None:
     assert payload["schema_name"] == "responsive-accessibility-verification"
     assert payload["schema_version"] == "1.0.0"
     assert payload["verdict"] in {"PASS", "PASS_WITH_LIMITATIONS"}
-    assert payload["release_posture"]["start_epic_15"] is False
+    assert payload["release_posture"]["start_slice_15_7"] is False
     assert payload["wcag_posture"]["certified"] is False
     assert "/Users/" not in first_path.read_text(encoding="utf-8")

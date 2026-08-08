@@ -103,6 +103,20 @@ output/*
 tmp/
 temp/
 *.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+
+# ==========================================
+# Packaging archives (package-local VSIX covered under vscode-plugin/)
+# ==========================================
+
+*.vsix
 
 # ==========================================
 # Jupyter
@@ -173,6 +187,7 @@ governance/archive/
 
 # Public export staging
 .export-staging/
+export-staging/
 
 # Nested clone workspaces under local knowledge dirs
 **/.codestrata/workspace/**

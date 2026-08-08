@@ -29,10 +29,11 @@ INTENDED_VSCODE_VERSION = "0.2.0"
 ACTIVE_EDITOR_EXTENSIONS = ("vscode",)
 ACTIVE_CLIENTS = ("codestrata_cli", "vscode_extension")
 RETIRED_CLIENTS = ("cursor_extension",)
-EXPORT_TARGETS = ("community", "infrastructure")
+EXPORT_TARGETS = ("community", "infrastructure", "insights")
 TARGET_VISIBILITY = {
     "community": "public_product_export",
     "infrastructure": "private",
+    "insights": "private_internal_application",
 }
 
 POLICY_REGISTRY = {

@@ -1,0 +1,393 @@
+{
+  "policy_id": "community-insights-query-policy",
+  "policy_version": "1.0",
+  "slice": "15.5",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0",
+    "community-analytics-partition-policy:1.0",
+    "community-insights-event-coverage-policy:1.0",
+    "community-insights-ingestion-policy:1.0"
+  ],
+  "authority": "Bounded S3 query/read strategy for future on-demand Insights aggregation. Dashboard APIs must never accept raw S3 prefixes.",
+  "partition_layout_unchanged": true,
+  "partition_redesign_required": false,
+  "direct_s3_read_strategy": "preferred",
+  "athena_required": false,
+  "glue_required": false,
+  "database_required": false,
+  "redis_required": false,
+  "scheduled_etl_required": false,
+  "distributed_cache_required": false,
+  "cache_optional": true,
+  "aggregations_allowed_in_15_5": false,
+  "dashboard_ui_allowed_in_15_5": false,
+  "ingestion_enablement_allowed_in_15_5": false,
+  "start_slice_15_7": true,
+  "timezone": "UTC",
+  "accepted_prefix_root": "raw/",
+  "quarantine_prefix_root": "quarantine/",
+  "quarantine_query_forbidden": true,
+  "arbitrary_caller_prefix_forbidden": true,
+  "raw_root_list_forbidden": true,
+  "bucket_wide_list_forbidden": true,
+  "allowed_streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "supported_schema_versions_by_stream": {
+    "telemetry": [
+      "1.0"
+    ],
+    "assessment_metadata": [
+      "1.0"
+    ],
+    "cli_event": [
+      "1.0"
+    ],
+    "extension_event": [
+      "1.0"
+    ],
+    "ai_usage": [
+      "1.0"
+    ]
+  },
+  "prefix_template": "raw/stream={stream}/schema_version={schema_version}/year={YYYY}/month={MM}/day={DD}/",
+  "forbidden_prefix_dimensions": [
+    "installation_id",
+    "provider_family",
+    "model_family",
+    "primary_language",
+    "package_ecosystem",
+    "client_version",
+    "repository_name",
+    "hostname",
+    "email"
+  ],
+  "date_windows": {
+    "single_day": {
+      "max_span_days": 1
+    },
+    "rolling_7_days": {
+      "max_span_days": 7
+    },
+    "rolling_30_days": {
+      "max_span_days": 30
+    },
+    "rolling_31_days": {
+      "max_span_days": 31
+    },
+    "calendar_month": {
+      "max_span_days": 31
+    },
+    "bounded_custom": {
+      "max_span_days": 31
+    },
+    "lifetime_retention_window": {
+      "max_span_days": 365
+    }
+  },
+  "max_date_span_days_default": 31,
+  "max_date_span_days_lifetime": 365,
+  "budgets": {
+    "max_keys_per_page": 1000,
+    "max_pages_per_query": 20,
+    "max_list_requests_per_query": 50,
+    "max_get_requests_per_query": 2000,
+    "max_objects_per_query": 2000,
+    "max_bytes_per_query": 100000000,
+    "max_single_object_bytes": 70000,
+    "listing_timeout_seconds": 10,
+    "object_read_timeout_seconds": 5,
+    "total_query_budget_seconds": 25
+  },
+  "lifetime_metric_strategy": {
+    "metric": "total_anonymous_installations",
+    "decision": "retention_window_with_hard_budgets_and_future_checkpoint",
+    "approach": "B_plus_A",
+    "retention_bound_days": 365,
+    "on_demand_scan_allowed_within_budgets": true,
+    "unbounded_scan_forbidden": true,
+    "future_aggregation_state_required": true,
+    "future_owner_slice": "15.7",
+    "notes": "Retention gives an upper calendar bound but is not by itself a cost bound. Object/byte budgets apply. Compact checkpoint deferred to 15.7."
+  },
+  "first_repeat_assessment_strategy": {
+    "future_aggregation_state_required": true,
+    "future_owner_slice": "15.7",
+    "on_demand_within_budgets_ok_for_discovery": true,
+    "notes": "Per-installation history may exceed budgets as volume grows; compact derived state recommended for 15.7."
+  },
+  "partial_result_behavior": {
+    "statuses": [
+      "complete",
+      "partial",
+      "unavailable"
+    ],
+    "budget_exceeded_must_not_claim_complete": true,
+    "malformed_objects_omit_and_count": true,
+    "zeros_must_not_imply_complete_on_partial": true
+  },
+  "error_taxonomy": [
+    "invalid_query_window",
+    "unsupported_stream",
+    "unsupported_schema_version",
+    "query_limit_exceeded",
+    "object_limit_exceeded",
+    "byte_limit_exceeded",
+    "malformed_object",
+    "unsupported_object_schema",
+    "storage_unavailable",
+    "access_denied",
+    "internal_query_error"
+  ],
+  "iam_reader_minimum": {
+    "allow": [
+      "s3:ListBucket",
+      "s3:GetObject"
+    ],
+    "list_prefix_constraint": "raw/",
+    "get_prefix_constraint": "raw/",
+    "deny": [
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "quarantine_access",
+      "bucket_administration"
+    ],
+    "attached_in_15_5": false
+  },
+  "athena_reconsider_triggers": [
+    "query_latency_exceeds_bound",
+    "object_count_exceeds_direct_read_budget",
+    "raw_json_volume_too_large",
+    "analytical_dimensions_grow_substantially",
+    "many_concurrent_internal_users",
+    "complex_joins_become_necessary"
+  ],
+  "object_format": {
+    "current": "individual_json_envelope",
+    "parquet_migration_now": false,
+    "future_compaction_trigger": "direct_read_budgets_routinely_exceeded"
+  },
+  "external_metrics": {
+    "validation_dataset_growth": {
+      "query_strategy": "external_metric_source",
+      "s3_query": false,
+      "source": "validation/repository-catalog/catalog.json"
+    }
+  },
+  "metric_query_matrix": {
+    "total_anonymous_installations": {
+      "streams": [
+        "telemetry",
+        "assessment_metadata",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "min_window": "lifetime_retention_window",
+      "max_window": "lifetime_retention_window",
+      "dedup": true,
+      "cross_stream": true,
+      "future_checkpoint": true,
+      "direct_s3_suitable": true
+    },
+    "daily_active_installations": {
+      "streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "min_window": "single_day",
+      "max_window": "single_day",
+      "dedup": true,
+      "cross_stream": true,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "monthly_active_installations": {
+      "streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "min_window": "rolling_30_days",
+      "max_window": "calendar_month",
+      "dedup": true,
+      "cross_stream": true,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "first_assessments": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "lifetime_retention_window",
+      "max_window": "lifetime_retention_window",
+      "dedup": true,
+      "cross_stream": false,
+      "future_checkpoint": true,
+      "direct_s3_suitable": true
+    },
+    "repeat_assessments": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "lifetime_retention_window",
+      "max_window": "lifetime_retention_window",
+      "dedup": true,
+      "cross_stream": false,
+      "future_checkpoint": true,
+      "direct_s3_suitable": true
+    },
+    "successful_assessments": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "failed_assessments": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "cli_version_adoption": {
+      "streams": [
+        "cli_event"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "assessment_head_usage": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "language_ecosystem_distribution": {
+      "streams": [
+        "assessment_metadata"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "ai_provider_adoption": {
+      "streams": [
+        "ai_usage"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "ai_model_adoption": {
+      "streams": [
+        "ai_usage"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "vscode_extension_usage": {
+      "streams": [
+        "extension_event"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "release_adoption": {
+      "streams": [
+        "cli_event",
+        "extension_event"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": true,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "validation_dataset_growth": {
+      "streams": [],
+      "query_strategy": "external_metric_source",
+      "s3_query": false,
+      "direct_s3_suitable": false
+    }
+  },
+  "limitations": [
+    "no_s3_reader_runtime_in_15_5",
+    "no_aggregation_service_in_15_5",
+    "no_dashboard_in_15_5",
+    "reader_iam_unattached",
+    "production_ingestion_still_unwired",
+    "lifetime_checkpoint_deferred_to_15_7",
+    "first_repeat_checkpoint_deferred_to_15_7",
+    "worktree_uncommitted"
+  ],
+  "verification": {
+    "package": "verification/community_insights_query_strategy",
+    "schema": "community-insights-query-strategy-verification:1.0.0",
+    "report": "reports/verification/sv15-5/community-insights-query-strategy-verification.json"
+  },
+  "slice_15_6_allowed": true,
+  "slice_15_7_allowed": true,
+  "start_slice_15_8": true,
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "slice_15_10_allowed": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

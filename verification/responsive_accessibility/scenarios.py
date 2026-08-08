@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from verification.responsive_accessibility.contrast import contrast_ratio
-from verification.responsive_accessibility.contract import FORBIDDEN_EPIC_15_PATHS
+from verification.responsive_accessibility.contract import FORBIDDEN_15_7_PATHS
 from verification.responsive_accessibility.determinism import check_determinism
 from verification.responsive_accessibility.inventory import SurfaceInventory, token_colors
 from verification.responsive_accessibility.models import CheckResult
@@ -173,7 +173,7 @@ def run_negative_scenarios(inv: SurfaceInventory) -> list[CheckResult]:
         (
             "X",
             "slice_14_14_starts",
-            not any((inv.monorepo / path).exists() for path in FORBIDDEN_EPIC_15_PATHS),
+            not any((inv.monorepo / path).exists() for path in FORBIDDEN_15_7_PATHS),
         ),
         (
             "Y",

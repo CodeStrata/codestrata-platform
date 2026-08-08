@@ -25,11 +25,8 @@ CONSUMER_MAPPINGS = "design-system/contracts/consumer-mappings.json"
 TOKEN_CATALOG = "design-system/tokens/catalog.json"
 TOKEN_CSS = "design-system/tokens/tokens.css"
 
-FORBIDDEN_EPIC_15_PATHS: tuple[str, ...] = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
+    "reports/verification/sv15-7",
 )
 
 LEGACY_AMBER_HEX = "#d98a3d"
@@ -59,7 +56,7 @@ class Sv1413Contract:
     schema_version: str = SCHEMA_VERSION
     package_id: str = CROSS_SURFACE_CONSISTENCY_ID
     package_version: str = CROSS_SURFACE_CONSISTENCY_VERSION
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
     no_runtime_behavior_change: bool = True
     no_commit: bool = True
 

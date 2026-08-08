@@ -51,13 +51,13 @@ def release_posture() -> dict[str, bool]:
         "no_section_reorder": True,
         "no_tag": True,
         "slice_14_9_complete": True,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
 
 
 def build_report(monorepo: Path) -> ReportNavigationIaReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
     assert contract.no_schema_change is True
     assert contract.no_section_reorder is True
 

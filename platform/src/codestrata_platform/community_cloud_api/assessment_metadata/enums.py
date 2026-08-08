@@ -84,6 +84,25 @@ class PrimaryLanguage(str, Enum):
     UNAVAILABLE = "unavailable"
 
 
+class PackageEcosystem(str, Enum):
+    """Normalized package-ecosystem category (Slice 15.4 / CR-15.3-001).
+
+    Closed vocabulary — never package names, dependency names, coordinates,
+    group IDs, manifest paths, or version lists.
+    """
+
+    MAVEN = "maven"
+    GRADLE = "gradle"
+    NPM = "npm"
+    PYTHON = "python"
+    NUGET = "nuget"
+    COMPOSER = "composer"
+    CARGO = "cargo"
+    MIXED = "mixed"
+    UNKNOWN = "unknown"
+    UNAVAILABLE = "unavailable"
+
+
 class AssessmentMetadataIngestionStatus(str, Enum):
     ACCEPTED = "accepted"
     ALREADY_ACCEPTED = "already_accepted"

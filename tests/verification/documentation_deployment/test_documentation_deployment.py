@@ -8,7 +8,7 @@ from pathlib import Path
 from verification.documentation_deployment.checks import check_all
 from verification.documentation_deployment.contract import (
     ASSETS_DIR,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     POLICY_RELATIVE,
     WRANGLER_VERSION,
     monorepo_root_from_here,
@@ -30,7 +30,7 @@ def test_policy_contract() -> None:
     assert policy["policy_version"] == "1.0"
     assert policy["package_root_model"] == "B_docs_package_root"
     assert policy["assets_directory"] == ASSETS_DIR
-    assert policy["forbidden"]["start_epic_15"] is True
+    assert policy["forbidden"]["start_slice_15_7"] is True
 
 
 def test_package_root_model_b() -> None:
@@ -70,7 +70,7 @@ def test_preflight_script_present() -> None:
 
 
 def test_slice_14_14_not_started() -> None:
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (ROOT / relative).exists(), relative
 
 
@@ -85,7 +85,7 @@ def test_runner_deterministic_and_passes() -> None:
     assert payload["schema_version"] == "1.0.0"
     assert payload["verdict"] in {"PASS", "PASS_WITH_LIMITATIONS"}
     assert payload["failed_checks"] == 0
-    assert payload["release_posture"]["start_epic_15"] is False
+    assert payload["release_posture"]["start_slice_15_7"] is False
     assert payload["release_posture"]["no_production_deploy"] is True
     assert "/Users/" not in first_path.read_text(encoding="utf-8")
 

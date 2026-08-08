@@ -132,7 +132,7 @@ def test_default_ai_usage_policy_limitations_document_the_dimension_decision() -
     assert "no_extra_partition_dimensions" in blob
     assert "client_type_in_metadata_not_path" in blob
     assert "capability_provider_model_remain_private_payload" in blob
-    assert "no_openrouter_support" in blob
+    assert "openrouter_provider_family_supported" in blob
 
 
 def test_default_ai_usage_policy_max_partition_depth_covers_required_dimensions() -> None:

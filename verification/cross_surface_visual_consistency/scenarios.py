@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from verification.cross_surface_visual_consistency._helpers import add, scan_hex
 from verification.cross_surface_visual_consistency.contract import (
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     LEGACY_AMBER_HEX,
 )
 from verification.cross_surface_visual_consistency.inventory import ConsistencyInventory
@@ -28,7 +28,7 @@ def check_scenarios(inv: ConsistencyInventory) -> list[CheckResult]:
         ("L", "brand_masters", "codestrata-mark.svg" in inv.brand_masters),
         ("M", "assessment_renders", bool(inv.assessment_html)),
         ("N", "eir_renders", bool(inv.eir_html)),
-        ("O", "epic_15_absent", not any((inv.monorepo / p).exists() for p in FORBIDDEN_EPIC_15_PATHS)),
+        ("O", "slice_15_7_absent", not any((inv.monorepo / p).exists() for p in FORBIDDEN_15_7_PATHS)),
         ("P", "dist_or_buildable", inv.dist_exists),
         ("Q", "consumer_mappings", bool(inv.consumer_mappings)),
         ("R", "presentation_contract", bool(inv.presentation_contract)),

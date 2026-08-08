@@ -159,6 +159,7 @@ exports:
       - "CHANGELOG.md"
       - "codestrata.toml"
       - ".env.example"
+      - ".gitignore"
       - ".github/**"
     # Pull a minimal smoke fixture into the engine mirror for offline quick-start.
     extra_includes:
@@ -366,8 +367,11 @@ exports:
       - "**/node_modules/**"
       - ".vitepress/dist/**"
       - ".vitepress/cache/**"
+      - ".wrangler/**"
+      - "**/.wrangler/**"
       - "visual-baselines/**"
       - ".tmp*"
+      - "internal/**"
     validation:
       require_files:
         - README.md
@@ -408,6 +412,8 @@ exports:
         - "governance/**"
         - "infrastructure/**"
         - "visual-baselines/**"
+        - ".wrangler/**"
+        - "internal/**"
         - "**/*.py"
         - "node_modules/**"
         - "platform/src/**"

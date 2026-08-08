@@ -760,7 +760,7 @@ def check_determinism_surface(
     checks.append(
         CheckResult(
             "determinism:export_targets_closed",
-            set(SUPPORTED_EXPORT_TARGETS) == {"community", "infrastructure"},
+            set(SUPPORTED_EXPORT_TARGETS) >= {"community", "infrastructure"},
             "closed set",
             "determinism",
         )

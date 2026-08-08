@@ -21,7 +21,7 @@ def test_policy_and_contract_present() -> None:
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
     assert policy["policy_id"] == POLICY_ID
     assert policy["policy_version"] == "1.0"
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
     assert policy["scoring_change_allowed"] is False
     assert policy["zero_findings_implies_health"] is False
     viz = json.loads(
@@ -70,10 +70,10 @@ def test_build_and_write_report_twice_byte_identical() -> None:
 
 def test_slice_14_14_not_started() -> None:
     root = monorepo_root_from_here()
-    from verification.visualization_system.contract import FORBIDDEN_EPIC_15_PATHS
+    from verification.visualization_system.contract import FORBIDDEN_15_7_PATHS
 
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (root / relative).exists(), relative
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
     assert policy["navigation_ia_change_allowed"] is False

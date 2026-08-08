@@ -1,0 +1,253 @@
+{
+  "policy_id": "community-analytics-partition-policy",
+  "policy_version": "1.0",
+  "slice": "15.2",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0"
+  ],
+  "baseline_slice": "15.1",
+  "partition_redesign_required": false,
+  "additive_path_dimensions_required": false,
+  "backward_compatible": true,
+  "ingestion_unchanged": true,
+  "event_schemas_unchanged": true,
+  "existing_data_migration_required": false,
+  "authoritative_accepted_path": "raw/stream=<stream>/schema_version=<ver>/year=<YYYY>/month=<MM>/day=<DD>/<opaque>.json",
+  "authoritative_quarantine_path": "quarantine/reason=<safe_reason>/year=<YYYY>/month=<MM>/day=<DD>/<opaque>.json",
+  "accepted_prefix": "raw/",
+  "quarantine_prefix": "quarantine/",
+  "hive_style_partitions": true,
+  "path_dimensions": [
+    "stream",
+    "schema_version",
+    "year",
+    "month",
+    "day"
+  ],
+  "allowed_event_streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "object_filename": "opaque_hex.json",
+  "optional_s3_metadata_filters": [
+    "codestrata-client-type",
+    "codestrata-assessment-schema"
+  ],
+  "forbidden_path_dimensions": [
+    "installation_id",
+    "event_id",
+    "client_version",
+    "event_type",
+    "operation",
+    "assessment_status",
+    "executed_heads",
+    "primary_language",
+    "provider_family",
+    "model_family",
+    "repository_name",
+    "file_path",
+    "source_code"
+  ],
+  "privacy_safe_partitioning": true,
+  "installation_id_in_path_allowed": false,
+  "bounded_query_model": {
+    "day_prefix": "raw/stream=<stream>/schema_version=<ver>/year=<Y>/month=<M>/day=<D>/",
+    "month_prefix_set": "union of day prefixes for calendar month",
+    "stream_isolation": "queries must target one stream unless metric explicitly requires union",
+    "retention_bound_days": 365,
+    "max_scan_class": "stream_plus_date_prefixes_then_payload_aggregate"
+  },
+  "dashboard_metric_support": {
+    "total_anonymous_installations": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "telemetry",
+        "assessment_metadata"
+      ],
+      "notes": "Distinct payload.installation_id over retention-bounded day prefixes; undercount if ID omitted."
+    },
+    "daily_active_installations": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "telemetry",
+        "assessment_metadata"
+      ],
+      "notes": "Distinct installation_id within a single day prefix (or union of same-day stream prefixes)."
+    },
+    "monthly_active_installations": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "telemetry",
+        "assessment_metadata"
+      ],
+      "notes": "Distinct installation_id across day prefixes for the month window."
+    },
+    "first_assessments": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "Derive first-seen assessment per installation_id; no is_first flag in lake."
+    },
+    "repeat_assessments": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "installation_id with count >= 2 in window."
+    },
+    "successful_assessments": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "Filter assessment_status / execution.result in payload after day/month-bounded list."
+    },
+    "failed_assessments": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "Filter failed status/result in payload after bounded list."
+    },
+    "cli_version_adoption": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "cli_event"
+      ],
+      "notes": "client.version is payload-only; path must not include version."
+    },
+    "assessment_head_usage": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "executed_heads in payload; secondary context on cli/extension/ai_usage."
+    },
+    "language_ecosystem_distribution": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "assessment_metadata"
+      ],
+      "notes": "primary_language in payload. Named package ecosystems may need future payload enhancement."
+    },
+    "ai_provider_adoption": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "ai_usage"
+      ],
+      "notes": "usage.provider_family in payload."
+    },
+    "ai_model_adoption": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "ai_usage"
+      ],
+      "notes": "usage.model_family in payload (families only)."
+    },
+    "vscode_extension_usage": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "extension_event"
+      ],
+      "notes": "Stream day prefixes bound volume; client_type metadata can refine; ops/active installs need payload aggregation. Crude event-volume by day prefix alone is Supported directly."
+    },
+    "release_adoption": {
+      "support": "Requires bounded aggregation",
+      "primary_streams": [
+        "cli_event",
+        "assessment_metadata"
+      ],
+      "notes": "client.version mix requires payload aggregation. Assessment-schema mix via codestrata-assessment-schema metadata is Supported directly as a narrow surrogate. GitHub download counts are Not applicable to the lake."
+    },
+    "validation_dataset_growth": {
+      "support": "Not applicable",
+      "primary_streams": [],
+      "notes": "Curated validation/repository-catalog is not a lake stream."
+    }
+  },
+  "metric_support_summary": {
+    "Supported directly": [
+      "vscode_extension_usage_event_volume_by_day_prefix",
+      "release_adoption_assessment_schema_metadata_surrogate"
+    ],
+    "Requires bounded aggregation": [
+      "total_anonymous_installations",
+      "daily_active_installations",
+      "monthly_active_installations",
+      "first_assessments",
+      "repeat_assessments",
+      "successful_assessments",
+      "failed_assessments",
+      "cli_version_adoption",
+      "assessment_head_usage",
+      "language_ecosystem_distribution",
+      "ai_provider_adoption",
+      "ai_model_adoption",
+      "vscode_extension_usage",
+      "release_adoption"
+    ],
+    "Requires future enhancement": [
+      "named_package_ecosystem_dimensions"
+    ],
+    "Not applicable": [
+      "validation_dataset_growth",
+      "github_release_download_counts"
+    ]
+  },
+  "query_locality": {
+    "stream_prefix_isolates_category": true,
+    "date_hierarchy_bounds_retention_window": true,
+    "schema_version_isolates_contract_evolution": true,
+    "opaque_object_names_prevent_identity_listing": true
+  },
+  "aggregation_suitability": "payload_fields_after_bounded_prefix_list",
+  "retention_compatibility": true,
+  "export_compatibility": true,
+  "public_export_allowed": false,
+  "start_slice_15_7": true,
+  "slice_15_3_allowed": true,
+  "aggregations_allowed_in_15_2": false,
+  "apis_allowed_in_15_2": false,
+  "dashboard_ui_allowed_in_15_2": false,
+  "ingestion_enablement_allowed_in_15_2": false,
+  "limitations": [
+    "production_ingestion_still_unwired",
+    "no_aggregations_built_in_15_2",
+    "no_athena_glue_catalog_in_15_2",
+    "installation_id_optional_may_undercount",
+    "named_ecosystems_not_in_payload",
+    "worktree_uncommitted"
+  ],
+  "verification": {
+    "package": "verification/community_analytics_partition",
+    "schema": "community-analytics-partition-verification:1.0.0",
+    "report": "reports/verification/sv15-2/community-analytics-partition-verification.json"
+  },
+  "slice_15_4_allowed": true,
+  "slice_15_5_allowed": true,
+  "slice_15_6_allowed": true,
+  "slice_15_7_allowed": true,
+  "start_slice_15_8": true,
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

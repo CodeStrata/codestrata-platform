@@ -1,0 +1,10 @@
+{
+  "schema": "repository-documentation-verification:1.0.0",
+  "schema_id": "repository-documentation-verification",
+  "schema_version": "1.0.0",
+  "epic": 16,
+  "slice": "16.2",
+  "description": "Documentation cleanup verification for Community public-ready docs.",
+  "policy": "repository-documentation-policy:1.0",
+  "allowed_verdicts": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"]
+}

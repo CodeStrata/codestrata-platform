@@ -9,9 +9,14 @@ from enum import Enum
 class ExportTarget(str, Enum):
     COMMUNITY = "community"
     INFRASTRUCTURE = "infrastructure"
+    INSIGHTS = "insights"
 
 
-SUPPORTED_TARGETS = (ExportTarget.COMMUNITY, ExportTarget.INFRASTRUCTURE)
+SUPPORTED_TARGETS = (
+    ExportTarget.COMMUNITY,
+    ExportTarget.INFRASTRUCTURE,
+    ExportTarget.INSIGHTS,
+)
 
 # Rejected aliases / non-targets (fail closed)
 REJECTED_TARGET_TOKENS = frozenset(
@@ -54,6 +59,13 @@ TARGET_REGISTRY: dict[ExportTarget, TargetDescriptor] = {
         manifest_schema="infrastructure-repository-export-manifest:1.0.0",
         destination_semantics="single_repository_directory",
         handler="infrastructure_adapter",
+    ),
+    ExportTarget.INSIGHTS: TargetDescriptor(
+        target=ExportTarget.INSIGHTS,
+        visibility="private_internal_application",
+        manifest_schema="insights-repository-export-manifest:1.0.0",
+        destination_semantics="single_repository_directory",
+        handler="insights_adapter",
     ),
 }
 

@@ -1,0 +1,81 @@
+{
+  "policy_id": "repository-consistency-policy",
+  "policy_version": "1.0",
+  "schema": "repository-consistency-policy:1.0",
+  "epic": 16,
+  "slice": "16.8",
+  "authority": "Repository-wide consistency validation after Epic 16 cleanup. Validation-first; narrow fixes only.",
+  "authoritative_source_resolution": {
+    "policies": "platform/policies/ is authoritative; insights/policies/ are CONSUMER_MIRROR_byte_identical where mirrored",
+    "design_system": "design-system/ sole foundational visual authority",
+    "brand": "design-system/assets/brand/ master; asset-authority-manifest.json",
+    "residency": "platform/policies/repository_residency_map.json",
+    "platform_packages": "platform/policies/platform_package_register.json",
+    "dependencies": "platform/policies/repository_dependency_register.json",
+    "builds": "platform/policies/repository_build_authority_register.json",
+    "generated": "platform/policies/repository_generated_artifact_register.json",
+    "owner_review": "platform/policies/repository_owner_review_register.json"
+  },
+  "version_consistency": {
+    "engine_cli": "0.2.0",
+    "vscode": "0.2.0",
+    "assessment": "1.2",
+    "do_not_bump": true
+  },
+  "public_private_scope_consistency": true,
+  "repository_ownership_consistency": true,
+  "source_generated_consistency": true,
+  "build_authority_consistency": true,
+  "policy_contract_uniqueness": true,
+  "design_brand_uniqueness": true,
+  "historical_isolation": true,
+  "owner_review_handling": "consolidated_register_no_silent_delete",
+  "no_release_publish_deploy": true,
+  "no_remote_creation": true,
+  "no_cutover": true,
+  "production_ingestion_enabled": false,
+  "export_targets": [
+    "community",
+    "infrastructure",
+    "insights"
+  ],
+  "forbidden_export_targets": [
+    "platform",
+    "cursor",
+    "codestrata-cursor"
+  ],
+  "required_top_level": [
+    "engine",
+    "platform",
+    "infrastructure",
+    "vscode-plugin",
+    "insights",
+    "docs",
+    "design-system",
+    "verification",
+    "tests",
+    "scripts",
+    "governance",
+    "validation",
+    "examples"
+  ],
+  "classified_additional_top_level": {
+    "knowledge": "Community engineering knowledge (FOUNDATION); not a product runtime",
+    "reports": "Generated verification/report outputs (gitignored regenerable where policy says)",
+    "test-fixtures": "Tracked fixtures for tests",
+    "public-export-manifest.yaml": "Community export staging contract"
+  },
+  "forbidden_top_level": [
+    "cursor-plugin",
+    "codestrata-cursor"
+  ],
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false,
+  "verification": {
+    "package": "verification/repository_consistency",
+    "schema": "repository-consistency-verification:1.0.0",
+    "report": "reports/verification/sv16-8/repository-consistency-verification.json"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "schema": "repository-storage-generated-cleanup-verification",
+  "schema_version": "1.0.0",
+  "package": "verification/repository_storage_generated_cleanup",
+  "report": "reports/verification/sv16-6/repository-storage-generated-cleanup-verification.json",
+  "policy": "platform/policies/repository_storage_generated_cleanup_policy.json"
+}

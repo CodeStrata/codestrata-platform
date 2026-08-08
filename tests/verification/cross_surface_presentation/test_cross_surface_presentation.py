@@ -22,7 +22,7 @@ def test_policy_and_contracts_present() -> None:
     assert policy["policy_id"] == POLICY_ID
     assert policy["policy_version"] == "1.0"
     assert policy["start_slice_14_13"] is True
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
     assert policy["design_system_bump_required"] is False
     assert (root / "design-system/contracts/presentation.json").is_file()
     assert (root / "design-system/contracts/components.json").is_file()
@@ -59,9 +59,9 @@ def test_build_and_write_report_twice_byte_identical() -> None:
 
 def test_slice_14_14_not_started() -> None:
     root = monorepo_root_from_here()
-    from verification.cross_surface_presentation.contract import FORBIDDEN_EPIC_15_PATHS
+    from verification.cross_surface_presentation.contract import FORBIDDEN_15_7_PATHS
 
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (root / relative).exists(), relative
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
     assert policy["navigation_standardization_complete"] is True
@@ -69,4 +69,4 @@ def test_slice_14_14_not_started() -> None:
     assert policy["asset_standardization_complete"] is True
     assert policy["accessibility_final_validation_complete"] is True
     assert policy["start_slice_14_13"] is True
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False

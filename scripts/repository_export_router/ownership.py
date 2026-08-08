@@ -25,6 +25,8 @@ def detect_destination_owner(destination: Path) -> ExportTarget | None:
         if isinstance(data, dict):
             if data.get("schema_name") == "infrastructure-repository-export-manifest":
                 return ExportTarget.INFRASTRUCTURE
+            if data.get("schema_name") == "insights-repository-export-manifest":
+                return ExportTarget.INSIGHTS
 
     # Community: staging root contains per-repo .codestrata-export-snapshot.json
     # or nested export dirs with snapshots

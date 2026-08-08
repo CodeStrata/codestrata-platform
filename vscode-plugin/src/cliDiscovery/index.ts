@@ -33,7 +33,6 @@ export {
 
 export {
   EXTENSION_MAJOR_FOR_DISCOVERY,
-  MIN_DISCOVERY_CLI_VERSION,
   classifyDiscoveryCompatibility,
   isProvisionallyCompatible,
   type CompatibilityCategory,

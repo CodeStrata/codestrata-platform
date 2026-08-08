@@ -16,8 +16,9 @@ This package is **not** part of the Platform runtime wheel /
 - Static infrastructure contract (+ optional OpenTofu CLI validate)
 - Reuse SV.9 integration report (`community-data-lake-verification.json`)
 
-Does **not** enable production ingestion, attach writer IAM, wire endpoints to
-S3, or start Epic 9.
+Does **not** enable production ingestion, attach writer IAM, or wire endpoints to
+S3. Epic 9 (privacy-first telemetry) is a separate completed epic and is not
+owned by this package.
 
 ## Commands
 
@@ -44,7 +45,7 @@ Schema: `community-data-lake-completion-verification` / `1.0.0`
 | --- | --- |
 | SV.9 | Community Data Lake integration (streams, adapters, privacy) |
 | **Slice 8.15** | Epic 8 completion + boundary verification (this package) |
-| Epic 9 | Not started |
+| Epic 9 | Complete (separate epic; outside this package) |
 
 ## Limitations
 

@@ -71,11 +71,8 @@ DEPLOYMENT_PATHS: tuple[str, ...] = (
 )
 
 # Slice 14.14 must not have started.
-FORBIDDEN_EPIC_15_PATHS: tuple[str, ...] = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
+    "reports/verification/sv15-7",
 )
 
 VIEWPORT_MATRIX_PX: tuple[int, ...] = (320, 375, 390, 768, 1024, 1280, 1440)
@@ -119,7 +116,7 @@ class Sv1411Contract:
     no_visualization_change: bool = True
     no_brand_geometry_change: bool = True
     no_deployment_change: bool = True
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
 
 
 def default_contract() -> Sv1411Contract:

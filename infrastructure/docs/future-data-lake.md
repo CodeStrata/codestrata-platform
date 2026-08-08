@@ -45,17 +45,20 @@ delivery guarantee is claimed. `HeadObject` (used once per precondition
 resolution) is already covered by the existing `s3:GetObject` writer IAM
 grant — no IAM change was needed.
 
-## Deferred to later Epic 8 slices
+## Deferred after Epic 8 (still unwired / not started)
 
-- Endpoint → sink → S3 wiring (Slice 8.3+)
+Epic 8 completed the lake foundation, stream partition policies, quarantine,
+retention, encryption, access, storage abstraction, and verification. The
+items below remain deferred to **post-Epic-8** slices (including Epic 15
+analytics consumers). They are **not** unfinished Epic 8 work:
+
+- Endpoint → sink → S3 wiring (production ingestion)
 - Durable event identity store coordination
-- Quarantine persistence implemented in Platform (Slice 8.9); still unwired
-  from endpoints. Infra Put/Get + 90-day lifecycle already sufficient — no
-  HCL change required for 8.9.
+- Writer IAM attachment
 - SSE-KMS migration
 - Final (non-review-required) retention policy sign-off
 - Analytics / query layer (Athena, Glue) — not started
-- Dashboards / Community Insights consumers
+- Dashboards / Community Insights consumers (Slice 15.2+)
 - Replay and deletion workflows
 
 ## Must not reuse

@@ -1,0 +1,40 @@
+{
+  "contract_id": "community-insights-query-contract",
+  "contract_version": "1.0",
+  "policy_ref": "community-insights-query-policy:1.0",
+  "planner": {
+    "module": "codestrata_platform.community_cloud_api.insights_query.planner",
+    "sdk_free": true,
+    "network_free": true,
+    "credential_free": true
+  },
+  "query_plan_fields": [
+    "streams",
+    "schema_versions",
+    "prefixes",
+    "start_date",
+    "end_date",
+    "max_objects",
+    "max_bytes",
+    "max_list_requests",
+    "max_get_requests",
+    "max_pages",
+    "max_keys_per_page",
+    "quarantine_excluded",
+    "completeness_default"
+  ],
+  "prefix_ownership": "planner_only",
+  "caller_raw_prefix_accepted": false,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

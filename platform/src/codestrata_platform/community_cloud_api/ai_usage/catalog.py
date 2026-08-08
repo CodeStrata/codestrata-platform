@@ -36,6 +36,7 @@ AI_CAPABILITY_ALIASES: dict[str, str] = {
 CANONICAL_AI_PROVIDER_FAMILIES: tuple[str, ...] = (
     "aws_bedrock",
     "openai",
+    "openrouter",
     "unavailable",
 )
 

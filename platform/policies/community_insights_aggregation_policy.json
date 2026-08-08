@@ -1,0 +1,129 @@
+{
+  "policy_id": "community-insights-aggregation-policy",
+  "policy_version": "1.0",
+  "slice": "15.7",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0",
+    "community-analytics-partition-policy:1.0",
+    "community-insights-event-coverage-policy:1.0",
+    "community-insights-ingestion-policy:1.0",
+    "community-insights-query-policy:1.0",
+    "community-insights-metrics-policy:1.0"
+  ],
+  "authority": "Privacy-safe on-demand aggregation from bounded Community Data Lake reads into MetricResult.",
+  "production_ingestion_enabled": false,
+  "production_data_available": false,
+  "athena_required": false,
+  "glue_required": false,
+  "redis_required": false,
+  "rds_required": false,
+  "database_required": false,
+  "dashboard_ui_allowed_in_15_7": false,
+  "authentication_allowed_in_15_7": false,
+  "start_slice_15_8": true,
+  "direct_s3_preferred": true,
+  "cache_mode": "none",
+  "checkpoint_mode": "retention_only_with_limitation",
+  "checkpoint_s3_derived_prefix_enabled": false,
+  "derived_insights_prefix_forbidden_without_policy_update": true,
+  "raw_event_responses_forbidden": true,
+  "caller_prefix_forbidden": true,
+  "quarantine_query_forbidden": true,
+  "minimum_group_count": 3,
+  "suppressed_group_label": "other_suppressed",
+  "percentage_after_suppression": true,
+  "headline_totals_not_suppressed": true,
+  "batch_overview_enabled": true,
+  "external_validation_adapter": "local_repository_catalog",
+  "external_validation_deployment_sourcing_deferred": true,
+  "supported_metrics": [
+    "total_anonymous_installations",
+    "daily_active_installations",
+    "monthly_active_installations",
+    "first_assessments",
+    "repeat_assessments",
+    "successful_assessments",
+    "failed_assessments",
+    "cli_version_adoption",
+    "assessment_head_usage",
+    "language_ecosystem_distribution",
+    "ai_provider_adoption",
+    "ai_model_adoption",
+    "vscode_extension_usage",
+    "release_adoption",
+    "validation_dataset_growth"
+  ],
+  "error_codes": [
+    "invalid_metric",
+    "invalid_window",
+    "storage_unavailable",
+    "query_limit_exceeded",
+    "unsupported_schema",
+    "malformed_data",
+    "external_source_unavailable",
+    "internal_aggregation_error"
+  ],
+  "bounded_limitations": [
+    "optional_identity_undercount",
+    "retention_window_limited",
+    "suppressed_small_groups",
+    "malformed_objects_omitted",
+    "query_budget_reached",
+    "source_unavailable",
+    "first_repeat_retention_only",
+    "validation_growth_snapshots_unavailable",
+    "production_ingestion_still_unwired",
+    "no_live_dashboard_data_claim"
+  ],
+  "overview_groups": {
+    "activity": [
+      "total_anonymous_installations",
+      "daily_active_installations",
+      "monthly_active_installations"
+    ],
+    "assessment": [
+      "first_assessments",
+      "repeat_assessments",
+      "successful_assessments",
+      "failed_assessments"
+    ],
+    "adoption": [
+      "cli_version_adoption",
+      "release_adoption",
+      "ai_provider_adoption",
+      "ai_model_adoption",
+      "vscode_extension_usage"
+    ],
+    "technology": [
+      "assessment_head_usage",
+      "language_ecosystem_distribution"
+    ],
+    "validation": [
+      "validation_dataset_growth"
+    ]
+  },
+  "verification": {
+    "package": "verification/community_insights_aggregation",
+    "schema": "community-insights-aggregation-verification:1.0.0",
+    "report": "reports/verification/sv15-7/community-insights-aggregation-verification.json"
+  },
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "slice_15_10_allowed": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

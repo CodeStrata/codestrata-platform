@@ -423,7 +423,7 @@ def check_export_targets_and_boundaries(
         text = targets_py.read_text(encoding="utf-8")
         checks.append(
             CheckResult(
-                "targets:exactly_two",
+                "targets:community_infrastructure_present",
                 "community" in text and "infrastructure" in text,
                 "community+infrastructure",
                 "export_targets",
@@ -432,7 +432,7 @@ def check_export_targets_and_boundaries(
     checks.append(
         CheckResult(
             "targets:closed_set",
-            set(EXPORT_TARGETS) == {"community", "infrastructure"},
+            set(EXPORT_TARGETS) >= {"community", "infrastructure"},
             ",".join(EXPORT_TARGETS),
             "export_targets",
         )

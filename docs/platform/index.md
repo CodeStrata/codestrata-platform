@@ -1,9 +1,14 @@
 ---
 title: CodeStrata Platform
-description: Public positioning for CodeStrata Platform — commercial organizational Engineering Intelligence.
+description: ARCHIVE — unpublished Platform positioning retained on disk; not part of Community documentation.
 ---
 
 # CodeStrata Platform
+
+> **ARCHIVE / UNPUBLISHED (Slice 16.2)** — This tree is excluded from the
+> Community VitePress publish set (`srcExclude: platform/**`). It is **not**
+> current Community documentation. Prefer Community Getting Started and the
+> marketing site for Platform positioning.
 
 **CodeStrata Platform** is the commercial product for organizational Engineering
 Intelligence.

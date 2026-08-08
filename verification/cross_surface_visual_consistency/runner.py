@@ -48,13 +48,13 @@ def release_posture(*, complete: bool) -> dict[str, bool]:
         "no_runtime_change": True,
         "no_tag": True,
         "slice_14_13_complete": complete,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
 
 
 def build_report(monorepo: Path) -> CrossSurfaceVisualConsistencyReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
 
     inv = build_inventory(monorepo)
     checks, defects, matrix = check_all(monorepo, inventory=inv)

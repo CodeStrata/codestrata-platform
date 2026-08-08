@@ -10,7 +10,7 @@ from verification.visualization_system.contract import (
     ASSESSMENT_STYLES,
     EIR_RENDERER,
     EIR_STYLES,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     FORBIDDEN_HEALTH_LABELS,
     POLICY_ID,
     POLICY_RELATIVE,
@@ -64,7 +64,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
         and policy.get("invented_health_score_allowed") is False
         and policy.get("zero_findings_implies_health") is False
         and policy.get("color_only_meaning_allowed") is False
-        and policy.get("start_epic_15") is False,
+        and policy.get("start_slice_15_7") is False,
         "guards",
         "visualization_policy",
     )
@@ -459,7 +459,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
         "14.9_owns_ia",
         "navigation_boundary",
     )
-    for rel in FORBIDDEN_EPIC_15_PATHS:
+    for rel in FORBIDDEN_15_7_PATHS:
         _add(
             checks,
             f"asset_boundary:absent:{rel.replace('/', '_')}",
@@ -509,7 +509,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
         ("U", "marketplace_no_eir", viz["consumers"]["marketplace"]["commercial_eir"] is False),
         ("V", "vscode_no_dashboard", viz["consumers"]["vscode"]["health_dashboard"] is False),
         ("W", "nav_ia_unchanged", policy.get("navigation_ia_change_allowed") is False),
-        ("X", "epic_15_false", policy.get("start_epic_15") is False),
+        ("X", "slice_15_7_false", policy.get("start_slice_15_7") is False),
         ("Y", "policy_deterministic", "timestamp" not in policy_text),
         ("Z", "no_path_leak", "/Users/" not in policy_text),
     ]

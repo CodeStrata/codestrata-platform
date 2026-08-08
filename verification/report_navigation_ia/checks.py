@@ -26,7 +26,7 @@ from verification.report_navigation_ia.contract import (
     EIR_SECTION_ORDER,
     EIR_SECTIONS,
     EIR_STYLES,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     IA_CONTRACT,
     POLICY_ID,
     POLICY_RELATIVE,
@@ -200,7 +200,7 @@ def check_all(  # noqa: PLR0915 - single deterministic check surface
         and policy.get("universal_asset_change_allowed") is False
         and policy.get("accessibility_certification_claimed") is False
         and policy.get("documentation_deployment_complete") is True
-        and policy.get("start_epic_15") is False,
+        and policy.get("start_slice_15_7") is False,
         "boundaries",
         "ia_policy",
     )
@@ -1013,7 +1013,7 @@ def check_all(  # noqa: PLR0915 - single deterministic check surface
     )
 
     # ------------------------------------------------------------ asset boundary
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         _add(
             checks,
             f"asset_boundary:absent:{relative.replace('/', '_')}",
@@ -1231,13 +1231,13 @@ def check_all(  # noqa: PLR0915 - single deterministic check surface
         (
             "W",
             "no_epic_completion_work",
-            policy.get("start_epic_15") is False,
+            policy.get("start_slice_15_7") is False,
         ),
         (
             "X",
             "slice_14_14_not_started",
-            policy.get("start_epic_15") is False
-            and all(not (monorepo / rel).exists() for rel in FORBIDDEN_EPIC_15_PATHS),
+            policy.get("start_slice_15_7") is False
+            and all(not (monorepo / rel).exists() for rel in FORBIDDEN_15_7_PATHS),
         ),
         ("Y", "verifier_deterministic", render_eir_html(monorepo) == eir_html),
         (

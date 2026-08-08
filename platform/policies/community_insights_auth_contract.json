@@ -1,0 +1,60 @@
+{
+  "contract_id": "community-insights-auth-contract",
+  "contract_version": "1.0",
+  "policy_urn": "community-insights-auth-policy:1.0",
+  "password_secret_authority": "aws_secrets_manager",
+  "password_secret_id": "codestrata/insights/dashboard-password",
+  "session_secret_id": "codestrata/insights/session-secret",
+  "password_value_in_source": false,
+  "password_value_in_terraform_default": false,
+  "password_value_in_lambda_env": false,
+  "password_value_in_frontend": false,
+  "session_claims_allowed": [
+    "authenticated",
+    "iat",
+    "exp",
+    "sv"
+  ],
+  "session_claims_forbidden": [
+    "password",
+    "email",
+    "user_id",
+    "installation_id",
+    "customer_id",
+    "aws"
+  ],
+  "browser_must_never_receive": [
+    "dashboard_password",
+    "aws_credentials",
+    "secrets_manager_values",
+    "raw_session_secret",
+    "installation_ids",
+    "raw_telemetry",
+    "s3_keys"
+  ],
+  "protected_routes": [
+    "insights.api.overview"
+  ],
+  "public_auth_routes": [
+    "insights.auth.login",
+    "insights.auth.logout",
+    "insights.auth.session"
+  ],
+  "aggregation_unaware_of_password": true,
+  "auth_unaware_of_metric_semantics": true,
+  "production_deployment_enabled": false,
+  "start_slice_15_10": true,
+  "start_slice_15_11": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

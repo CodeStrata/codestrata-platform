@@ -53,9 +53,9 @@ def check_policy(inv: ConsistencyInventory) -> list[CheckResult]:
     add(
         checks,
         "policy:prohibited_epic_15",
-        policy.get("prohibited", {}).get("start_epic_15") is True
+        policy.get("prohibited", {}).get("start_slice_15_7") is True
         and policy.get("prohibited", {}).get("wholesale_redesign") is True,
-        "epic_15_prohibited",
+        "slice_15_7_prohibited",
         "policy",
     )
     add(

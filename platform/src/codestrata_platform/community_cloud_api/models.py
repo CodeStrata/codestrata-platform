@@ -26,6 +26,10 @@ class RequestContext:
     validated_request: Any | None = None
     # Safe principal only — never raw token / fingerprint.
     authenticated_client: Any | None = None
+    # Transport headers for Insights session cookies / CSRF (Slice 15.9).
+    cookie_header: str | None = None
+    origin_header: str | None = None
+    referer_header: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "api_version", (self.api_version or "").strip())
@@ -35,6 +39,12 @@ class RequestContext:
         object.__setattr__(self, "request_id", rid)
         ctype = (self.content_type or "").strip() or None
         object.__setattr__(self, "content_type", ctype)
+        cookie = (self.cookie_header or "").strip() or None
+        object.__setattr__(self, "cookie_header", cookie)
+        origin = (self.origin_header or "").strip() or None
+        object.__setattr__(self, "origin_header", origin)
+        referer = (self.referer_header or "").strip() or None
+        object.__setattr__(self, "referer_header", referer)
 
     def with_validated_request(self, model: Any) -> RequestContext:
         return RequestContext(
@@ -46,6 +56,9 @@ class RequestContext:
             accepted_json=self.accepted_json,
             validated_request=model,
             authenticated_client=self.authenticated_client,
+            cookie_header=self.cookie_header,
+            origin_header=self.origin_header,
+            referer_header=self.referer_header,
         )
 
     def with_authenticated_client(self, principal: Any | None) -> RequestContext:
@@ -58,6 +71,9 @@ class RequestContext:
             accepted_json=self.accepted_json,
             validated_request=self.validated_request,
             authenticated_client=principal,
+            cookie_header=self.cookie_header,
+            origin_header=self.origin_header,
+            referer_header=self.referer_header,
         )
 
     def to_stable_dict(self) -> dict[str, Any]:

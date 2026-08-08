@@ -1,0 +1,7 @@
+{
+  "schema": "repository-boundary-residency-verification",
+  "schema_version": "1.0.0",
+  "package": "verification/repository_boundary_residency",
+  "report": "reports/verification/sv16-7/repository-boundary-residency-verification.json",
+  "policy": "platform/policies/repository_boundary_residency_policy.json"
+}

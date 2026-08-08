@@ -17,14 +17,16 @@ SV128_OUTPUT_RELATIVE = "reports/verification/sv12-8"
 REPORT_JSON = "repository-export-target-verification.json"
 
 AUTHORITATIVE_COMMAND = "scripts/export_repository.py"
-SUPPORTED_TARGETS = ("community", "infrastructure")
+SUPPORTED_TARGETS = ("community", "infrastructure", "insights")
 TARGET_VISIBILITY = {
     "community": "public_product_export",
     "infrastructure": "private",
+    "insights": "private_internal_application",
 }
 TARGET_MANIFEST_SCHEMAS = {
     "community": "codestrata.community_release:2",
     "infrastructure": "infrastructure-repository-export-manifest:1.0.0",
+    "insights": "insights-repository-export-manifest:1.0.0",
 }
 
 ASSESSMENT_SCHEMA_VERSION = "1.2"

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from verification.documentation_deployment.contract import ASSETS_DIR, FORBIDDEN_EPIC_15_PATHS
+from verification.documentation_deployment.contract import ASSETS_DIR, FORBIDDEN_15_7_PATHS
 from verification.documentation_deployment.inventory import DeploymentInventory
 from verification.documentation_deployment.models import CheckResult
 from verification.documentation_deployment.output_alignment import compare_configured_vs_actual
@@ -32,7 +32,7 @@ def check_negative_scenarios(inv: DeploymentInventory) -> list[CheckResult]:
         ("M", "monorepo_package_json", not (inv.monorepo / "package.json").is_file()),
         ("N", "dist_not_gitignored", ".vitepress/dist" in inv.gitignore_text),
         ("O", "platform_pages_in_dist", not any("platform/" in f for f in inv.dist_files)),
-        ("P", "start_epic_15", not any((inv.monorepo / p).exists() for p in FORBIDDEN_EPIC_15_PATHS)),
+        ("P", "start_slice_15_7", not any((inv.monorepo / p).exists() for p in FORBIDDEN_15_7_PATHS)),
         ("Q", "interactive_setup_allowed", inv.policy.get("interactive_setup_allowed") is False),
         ("R", "deployment_source_mutation", inv.policy.get("deployment_source_mutation_allowed") is False),
         ("S", "assets_directory_exact", config_dir == ASSETS_DIR),

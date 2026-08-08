@@ -1,0 +1,63 @@
+"""Tests for Slice 15.7 community insights aggregation verification."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from codestrata_platform.community_cloud_api.insights.policy import SUPPORTED_METRICS
+from verification.community_insights_aggregation.contract import (
+    POLICY_ID,
+    POLICY_RELATIVE,
+    SCHEMA_NAME,
+    SCHEMA_VERSION,
+    monorepo_root_from_here,
+)
+from verification.community_insights_aggregation.determinism import reports_byte_identical
+from verification.community_insights_aggregation.inventory import load_json
+from verification.community_insights_aggregation.reporting import write_report
+from verification.community_insights_aggregation.runner import build_report
+from verification.community_insights_aggregation.scenarios import AGGREGATION_SCENARIOS
+
+
+def test_policy() -> None:
+    monorepo = monorepo_root_from_here()
+    policy = load_json(monorepo, POLICY_RELATIVE)
+    assert policy["policy_id"] == POLICY_ID
+    assert policy.get("start_slice_16_2", False) is False
+    assert policy["athena_required"] is False
+    assert policy["cache_mode"] == "none"
+    assert policy["checkpoint_mode"] == "retention_only_with_limitation"
+    assert set(policy["supported_metrics"]) == set(SUPPORTED_METRICS)
+
+
+def test_scenarios() -> None:
+    assert len(AGGREGATION_SCENARIOS) == 26
+    assert AGGREGATION_SCENARIOS[0][0] == "A"
+    assert AGGREGATION_SCENARIOS[-1][0] == "Z"
+
+
+def test_build_report() -> None:
+    monorepo = monorepo_root_from_here()
+    report = build_report(monorepo)
+    assert report.schema_name == SCHEMA_NAME
+    assert report.schema_version == SCHEMA_VERSION
+    assert report.failed_checks == 0
+    assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
+    assert report.athena_required is False
+    assert report.release_posture.get("start_slice_15_9", False) is False
+    assert report.release_posture["dashboard_ui_built"] is False
+    assert report.release_posture["auth_built"] is False
+    path = write_report(monorepo, report)
+    text = Path(path).read_text(encoding="utf-8")
+    assert "timestamp" not in text.lower()
+    assert "/Users/" not in text
+    assert "raw/stream=" not in text
+
+
+def test_determinism() -> None:
+    monorepo = monorepo_root_from_here()
+    a = build_report(monorepo).to_dict()
+    b = build_report(monorepo).to_dict()
+    assert reports_byte_identical(a, b)
+    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)

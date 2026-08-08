@@ -1,6 +1,5 @@
 # Local OpenTofu / Terraform artifacts — never commit
 .terraform/
-.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
 *.tfplan
@@ -10,6 +9,9 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Provider lockfiles are tracked for reproducible validation (Slice 16.5).
+# Do not ignore .terraform.lock.hcl
 
 # Variable files with real values
 *.auto.tfvars

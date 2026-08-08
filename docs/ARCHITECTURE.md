@@ -45,7 +45,8 @@ docs/
   ai-providers/
   reference/
   community/
-  platform/
+  platform/            # ARCHIVE / unpublished (srcExclude)
+  internal/            # INTERNAL / unpublished (srcExclude)
   security/
   troubleshooting/
   scripts/             # validation

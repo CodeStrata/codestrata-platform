@@ -41,7 +41,7 @@ def write_report(
         "CodeStrata v0.2.0 epic scope when verdict is PASS or PASS_WITH_LIMITATIONS.\n\n"
         "Completion means product-experience scope is complete. It does not mean "
         "v0.2.0 is tagged or released. Tagging occurs only after the full E2E smoke "
-        "gate. Epic 15 not started. No commit/tag/publish/deploy.\n",
+        "gate. Slice 15.7 not started. No commit/tag/publish/deploy.\n",
         encoding="utf-8",
     )
     return json_path

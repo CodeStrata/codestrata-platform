@@ -205,11 +205,8 @@ EPIC14_POLICIES: tuple[tuple[str, str, str], ...] = (
     ),
 )
 
-FORBIDDEN_EPIC_15_PATHS: tuple[str, ...] = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
+    "reports/verification/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(
@@ -238,7 +235,7 @@ class Sv1414Contract:
     schema_version: str = SCHEMA_VERSION
     package_id: str = UNIFIED_PRODUCT_EXPERIENCE_COMPLETION_ID
     package_version: str = UNIFIED_PRODUCT_EXPERIENCE_COMPLETION_VERSION
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
     no_commit: bool = True
     no_tag: bool = True
     no_publish: bool = True

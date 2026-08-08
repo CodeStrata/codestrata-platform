@@ -140,7 +140,7 @@ policy.policy_token  # "community-ai-usage-partition-policy:1.0"
 Limitations recorded on the policy include
 `client_type_in_metadata_not_path`,
 `capability_provider_model_remain_private_payload`, and
-`no_openrouter_support`.
+`openrouter_provider_family_supported`.
 
 ## Projection flow: `project_ai_usage_storage_object`
 

@@ -1,0 +1,39 @@
+"""Report writer for Slice 16.5."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from verification.repository_dependency_build_cleanup.contract import (
+    REPORT_JSON,
+    REPORT_MD,
+    SCHEMA_NAME,
+    SCHEMA_VERSION,
+    SV165_OUTPUT_RELATIVE,
+)
+from verification.repository_dependency_build_cleanup.determinism import (
+    dict_to_canonical_json,
+    report_text_is_safe,
+)
+from verification.repository_dependency_build_cleanup.models import RepositoryDependencyBuildCleanupReport
+
+
+def write_report(monorepo: Path, report: RepositoryDependencyBuildCleanupReport) -> Path:
+    out_dir = monorepo / SV165_OUTPUT_RELATIVE
+    out_dir.mkdir(parents=True, exist_ok=True)
+    json_path = out_dir / REPORT_JSON
+    text = dict_to_canonical_json(report.to_dict())
+    safe, reason = report_text_is_safe(text)
+    assert safe, f"unsafe report content: {reason}"
+    json_path.write_text(text, encoding="utf-8")
+    (out_dir / REPORT_MD).write_text(
+        f"# {SCHEMA_NAME}:{SCHEMA_VERSION}\n\n"
+        f"Verdict: **{report.verdict}**\n\n"
+        f"Checks: {report.total_checks} (failed: {report.failed_checks})\n\n"
+        "Slice 16.5 cleans dependency declarations and build tooling with evidence. "
+        "No forced framework modernization. No product version bumps. "
+        "Storage cleanup and repository residency deferred. Slice 16.6 not started. "
+        "No commit/tag/publish/deploy.\n",
+        encoding="utf-8",
+    )
+    return json_path

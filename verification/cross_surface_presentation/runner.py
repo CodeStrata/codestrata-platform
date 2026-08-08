@@ -50,13 +50,13 @@ def release_posture() -> dict[str, bool]:
         "no_tag": True,
         "runtime_behavior_unchanged": True,
         "slice_14_7_complete": True,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
 
 
 def build_report(monorepo: Path) -> CrossSurfacePresentationReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
 
     checks, defects, _meta = check_all(monorepo)
     limitations = sorted(ALLOWED_LIMITATIONS)

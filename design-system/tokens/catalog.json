@@ -234,7 +234,7 @@
     "header": "sticky_blur_canvas"
   },
   "historical_superseded": {
-    "note": "Pre-2026-08 amber/dark-first tokens remain in docs/public/design-tokens for docs sync history; live website is teal/rust light-first.",
+    "note": "Pre-2026-08 amber/dark-first tokens are retained only as catalog history. Active authority is design-system/tokens/tokens.css (teal/rust light-first). docs/public and swagger design-tokens copies are GENERATED_COPY / authorized packaging mirrors with consumer aliases — not competing masters.",
     "amber": "#d98a3d",
     "bg_dark_legacy": "#0b0d10",
     "bg_2_dark_legacy": "#0f1216"

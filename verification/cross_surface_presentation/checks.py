@@ -8,7 +8,7 @@ from pathlib import Path
 from verification.cross_surface_presentation.contract import (
     COMPONENT_CONTRACT,
     CONSUMER_MAPPINGS,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     LEGACY_ACTIVE_HEX,
     POLICY_ID,
     POLICY_RELATIVE,
@@ -118,7 +118,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
         and policy.get("vscode_native_exceptions_allowed") is True
         and policy.get("marketplace_raster_exceptions_allowed") is True
         and policy.get("chart_standardization_complete") is True
-        and policy.get("start_epic_15") is False
+        and policy.get("start_slice_15_7") is False
         and policy.get("design_system_bump_required") is False,
         "exceptions_ok",
         "visual_policy",
@@ -528,7 +528,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
         "14.11",
         "accessibility_boundary",
     )
-    for rel in FORBIDDEN_EPIC_15_PATHS:
+    for rel in FORBIDDEN_15_7_PATHS:
         _add(
             checks,
             f"slice14_10:absent:{rel.replace('/', '_')}",
@@ -601,7 +601,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
             "nav_ia_complete",
             policy.get("navigation_standardization_complete") is True,
         ),
-        ("X", "slice_epic_15_absent", not any((monorepo / rel).exists() for rel in FORBIDDEN_EPIC_15_PATHS)),
+        ("X", "slice_slice_15_7_absent", not any((monorepo / rel).exists() for rel in FORBIDDEN_15_7_PATHS)),
         ("Y", "policy_deterministic", "timestamp" not in policy_text),
         ("Z", "no_path_leak", "/Users/" not in policy_text),
     ]

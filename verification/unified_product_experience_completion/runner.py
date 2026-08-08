@@ -27,7 +27,7 @@ from verification.unified_product_experience_completion.domain_checks import (
     check_documentation,
     check_documentation_deployment,
     check_eir_report,
-    check_epic_15_boundary,
+    check_slice_15_7_boundary,
     check_historical_verification_boundary,
     check_marketplace,
     check_presentation,
@@ -100,7 +100,7 @@ def build_report(
     run_regressions: bool = True,
 ) -> UnifiedProductExperienceCompletionReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
     assert contract.no_commit is True
     assert contract.marketplace_published is False
 
@@ -162,7 +162,7 @@ def build_report(
     checks.extend(c)
     defects.extend(d)
 
-    c, d = check_epic_15_boundary(monorepo)
+    c, d = check_slice_15_7_boundary(monorepo)
     checks.extend(c)
     defects.extend(d)
 
@@ -303,7 +303,7 @@ def build_report(
             checks, "historical_verification_boundary"
         ),
         release_posture_status=_status(checks, "release_posture"),
-        epic_15_boundary_status=_status(checks, "epic_15_boundary"),
+        slice_15_7_boundary_status=_status(checks, "slice_15_7_boundary"),
         determinism_status=_status(checks, "determinism"),
         release_posture=release_posture,
         defects=uniq,

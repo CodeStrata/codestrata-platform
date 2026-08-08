@@ -18,7 +18,7 @@ REPORT_JSON = "ci-release-boundary-verification.json"
 REPORT_MD = "ci-release-boundary-verification.md"
 
 AUTHORITATIVE_EXPORT_COMMAND = "scripts/export_repository.py"
-SUPPORTED_EXPORT_TARGETS = ("community", "infrastructure")
+SUPPORTED_EXPORT_TARGETS = ("community", "infrastructure", "insights")
 ACTIVE_EDITOR_EXTENSIONS = ("vscode",)
 
 REQUIRED_CI_JOBS = (

@@ -1,0 +1,1 @@
+STRATEGY="retention_window_with_hard_budgets_and_future_checkpoint"

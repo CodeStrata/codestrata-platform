@@ -66,6 +66,9 @@ def validate_assessment_metadata_semantics(
 
     if model.repository.primary_language not in active.allowed_primary_languages:
         errors.append(field_error("repository.primary_language", FIELD_INVALID_ENUM))
+    if model.repository.package_ecosystem is not None:
+        if model.repository.package_ecosystem not in active.allowed_package_ecosystems:
+            errors.append(field_error("repository.package_ecosystem", FIELD_INVALID_ENUM))
     if model.repository.repository_shape not in active.allowed_repository_shapes:
         errors.append(field_error("repository.repository_shape", FIELD_INVALID_ENUM))
     for field_name, bucket in (

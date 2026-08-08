@@ -44,7 +44,7 @@
     "assets_directory_docs_dot_vitepress_dist": true,
     "production_deploy_by_verifier": true,
     "start_slice_14_13": false,
-    "start_epic_15": true
+    "start_slice_15_7": true
   },
   "historical_failure": {
     "id": "v0.1.0_path_ambiguity",

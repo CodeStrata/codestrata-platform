@@ -1,0 +1,30 @@
+{
+  "schema": "repository-inventory-verification:1.0.0",
+  "schema_id": "repository-inventory-verification",
+  "schema_version": "1.0.0",
+  "epic": 16,
+  "slice": "16.1",
+  "description": "Audit-only repository inventory and classification report for Epic 16 cleanup.",
+  "required_top_level_fields": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "package_version",
+    "epic",
+    "slice",
+    "verdict",
+    "total_checks",
+    "failed_checks",
+    "classification_counts",
+    "duplicate_candidates",
+    "stale_candidates",
+    "delete_candidates",
+    "archive_candidates",
+    "owner_review_items",
+    "special_audits",
+    "inventory_summary",
+    "release_posture"
+  ],
+  "allowed_verdicts": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"],
+  "policy": "repository-cleanup-policy:1.0"
+}

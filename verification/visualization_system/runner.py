@@ -51,13 +51,13 @@ def release_posture() -> dict[str, bool]:
         "no_scoring_change": True,
         "no_tag": True,
         "slice_14_8_complete": True,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
 
 
 def build_report(monorepo: Path) -> VisualizationSystemReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
     assert contract.no_scoring_change is True
 
     checks, defects, _meta = check_all(monorepo)

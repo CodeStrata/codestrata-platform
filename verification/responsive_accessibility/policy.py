@@ -102,7 +102,7 @@ def check_policy(inv: SurfaceInventory) -> tuple[list[CheckResult], list[Defect]
     )
     add(
         "policy:prohibits_forward_slice",
-        policy.get("prohibited", {}).get("start_epic_15") is True,
+        policy.get("prohibited", {}).get("start_slice_15_7") is True,
         "14_13_prohibited",
     )
     add(

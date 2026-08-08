@@ -13,7 +13,7 @@ AI_ANALYTICS_MODEL_FAMILY_CATALOG_VERSION = "1.0"
 APPROVED_AI_CAPABILITIES: frozenset[str] = frozenset({"modernization_advisor"})
 
 APPROVED_AI_PROVIDER_FAMILIES: frozenset[str] = frozenset(
-    {"aws_bedrock", "openai", "unavailable"}
+    {"aws_bedrock", "openai", "openrouter", "unavailable"}
 )
 
 APPROVED_AI_MODEL_FAMILIES: frozenset[str] = frozenset(
@@ -55,6 +55,7 @@ _PROVIDER_ALIASES: dict[str, str] = {
     "aws_bedrock": "aws_bedrock",
     "bedrock": "aws_bedrock",
     "openai": "openai",
+    "openrouter": "openrouter",
     "unavailable": "unavailable",
 }
 

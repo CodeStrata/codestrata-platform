@@ -48,7 +48,7 @@ _LIMITATIONS: tuple[str, ...] = (
     "exact_tokens_latency_cost_prohibited",
     "token_usage_bucket_excluded_in_slice_10_6",
     "tool_rag_graph_omitted_in_slice_10_6",
-    "openrouter_not_supported",
+    "openrouter_family_only_no_endpoints_or_keys",
     "ai_provider_platform_redesign_deferred",
     "vscode_analytics_deferred_to_slice_10_7",
     "fail_silent_optional_integration",

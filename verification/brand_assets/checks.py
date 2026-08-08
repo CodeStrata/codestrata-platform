@@ -39,7 +39,7 @@ from verification.brand_assets.contract import (
     ENGINE_RESOURCES,
     ENGINE_STYLES,
     EXPORT_MANIFEST,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     GENERATOR,
     GOVERNANCE_ARCHIVE,
     ICON_CONTRACT,
@@ -296,7 +296,7 @@ def check_all(  # noqa: PLR0912, PLR0915 - one deterministic check surface
         "visualization_semantics_change_allowed",
         "marketplace_gallery_redesign_allowed",
         "design_system_palette_change_allowed",
-        "start_epic_15",
+        "start_slice_15_7",
     )
     wrong_false = [key for key in required_false if policy.get(key) is not False]
     _add(
@@ -1473,11 +1473,11 @@ def check_all(  # noqa: PLR0912, PLR0915 - one deterministic check surface
         "deployment_boundary",
     )
     forbidden_present = [
-        relative for relative in FORBIDDEN_EPIC_15_PATHS if (monorepo / relative).exists()
+        relative for relative in FORBIDDEN_15_7_PATHS if (monorepo / relative).exists()
     ]
     _add(
         checks,
-        "deployment_boundary:slice_epic_15_absent",
+        "deployment_boundary:slice_slice_15_7_absent",
         not forbidden_present,
         "absent" if not forbidden_present else ",".join(forbidden_present),
         "deployment_boundary",
@@ -1630,7 +1630,7 @@ def check_all(  # noqa: PLR0912, PLR0915 - one deterministic check surface
             "visualization_semantics_unchanged",
             viz_contract.get("schema_version") == "1.0.0",
         ),
-        ("X", "slice_epic_15_absent", not forbidden_present),
+        ("X", "slice_slice_15_7_absent", not forbidden_present),
         ("Y", "verifier_deterministic", generator_check.returncode == 0),
         (
             "Z",

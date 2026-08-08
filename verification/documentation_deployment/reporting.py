@@ -24,7 +24,7 @@ def write_report(monorepo: Path, report: DocumentationDeploymentReport) -> Path:
         "Slice 14.12 validates Cloudflare Static Assets deployment configuration "
         "for the docs package (model B). Build-once Approach A, local Wrangler, "
         "and output alignment are enforced. No production deploy. Slice 14.13 complete. "
-        "Epic 15 not started. No commit/tag/publish/deploy.\n",
+        "Slice 15.7 not started. No commit/tag/publish/deploy.\n",
         encoding="utf-8",
     )
     return json_path

@@ -1,13 +1,10 @@
 /**
- * CodeStrata public design tokens (standalone export copy)
- * --------------------------------------------------------
- * Authority: design-system/tokens/tokens.css (codestrata-visual-design-system:1.0)
- * Slice 14.13: replaces amber-era / dark-first mirror so Community docs dist and
- * Swagger no longer ship competing brand identity.
- *
- * Keep in sync with design-system/tokens/tokens.css. Do not reintroduce amber
- * as primary accent. Legacy --bg/--accent aliases below map to Design System
- * semantics for Swagger / older component bridges.
+ * CodeStrata Swagger design tokens (GENERATED_COPY / AUTHORIZED_DERIVATIVE)
+ * ------------------------------------------------------------------------
+ * Authority: design-system/tokens/tokens.css
+ * Packaging mirror aligned with docs/public/design-tokens/tokens.css.
+ * Classification (Slice 16.4): not an independent foundational palette.
+ * Do not reintroduce amber as primary accent.
  */
 
 :root {

@@ -217,7 +217,7 @@ _LIMITATIONS: tuple[str, ...] = (
     "exact_token_cost_excluded",
     "installation_id_private_payload_only",
     "no_store_wiring_this_module_only_projects",
-    "no_openrouter_support",
+    "openrouter_provider_family_supported",
 )
 
 ALLOWED_PARTITION_PROJECTION_ERROR_CODES: frozenset[str] = frozenset(

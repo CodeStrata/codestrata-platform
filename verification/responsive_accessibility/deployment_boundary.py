@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from verification.responsive_accessibility.contract import (
     DEPLOYMENT_PATHS,
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
 )
 from verification.responsive_accessibility.inventory import SurfaceInventory
 from verification.responsive_accessibility.models import CheckResult, Defect
@@ -20,7 +20,7 @@ def check_deployment_boundary(inv: SurfaceInventory) -> tuple[list[CheckResult],
         checks.append(CheckResult(name, ok, detail, _CATEGORY))
 
     present_forbidden = [
-        path for path in FORBIDDEN_EPIC_15_PATHS if (inv.monorepo / path).exists()
+        path for path in FORBIDDEN_15_7_PATHS if (inv.monorepo / path).exists()
     ]
     add(
         "deployment_boundary:forbidden_14_13_absent",

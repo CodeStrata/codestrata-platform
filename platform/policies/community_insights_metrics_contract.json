@@ -1,0 +1,54 @@
+{
+  "contract_id": "community-insights-metrics-contract",
+  "contract_version": "1.0",
+  "policy_ref": "community-insights-metrics-policy:1.0",
+  "metric_result": {
+    "metric_id": "string",
+    "status": [
+      "ok",
+      "suppressed",
+      "error"
+    ],
+    "window": {
+      "start_date_utc": "YYYY-MM-DD",
+      "end_date_utc": "YYYY-MM-DD",
+      "horizon": "daily|rolling_30_day|retention_window|checkpoint_backed|external|bounded_period"
+    },
+    "value": "number|null",
+    "groups": [
+      {
+        "dimension": "string",
+        "key": "string",
+        "count": "number",
+        "share": "number|null",
+        "suppressed": "boolean"
+      }
+    ],
+    "completeness": [
+      "complete",
+      "partial",
+      "unavailable",
+      "not_applicable"
+    ],
+    "denominator": "number|null",
+    "share": "number|null",
+    "limitations": [
+      "string"
+    ]
+  },
+  "ui_must_not_compute_metrics": true,
+  "aggregation_owns_computation": true,
+  "raw_events_forbidden": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

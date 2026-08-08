@@ -96,7 +96,11 @@ def test_classifications_cover_required_jobs() -> None:
 
 
 def test_export_targets_closed() -> None:
-    assert set(SUPPORTED_EXPORT_TARGETS) == {"community", "infrastructure"}
+    assert set(SUPPORTED_EXPORT_TARGETS) == {
+        "community",
+        "infrastructure",
+        "insights",
+    }
 
 
 def test_runner_passes() -> None:

@@ -105,6 +105,9 @@ def create_community_cloud_app(
     ai_usage_sink: object | None = None,
     event_identity_lookup: object | None = None,
     event_identity_recorder: object | None = None,
+    insights_auth_service: object | None = None,
+    insights_aggregation_service: object | None = None,
+    insights_extra_allowed_origins: frozenset[str] | None = None,
 ) -> FastAPI:
     """Create the Community Cloud API ASGI app.
 
@@ -202,6 +205,33 @@ def create_community_cloud_app(
         logger=active_logger,
     )
 
+    from codestrata_platform.community_cloud_api.insights.service import (
+        InsightsAggregationService,
+    )
+    from codestrata_platform.community_cloud_api.insights_auth.policy import (
+        default_insights_auth_policy,
+    )
+    from codestrata_platform.community_cloud_api.insights_auth.routes import (
+        register_insights_auth_routes,
+    )
+    from codestrata_platform.community_cloud_api.insights_auth.service import (
+        InsightsAuthService,
+    )
+
+    insights_agg = (
+        insights_aggregation_service
+        if isinstance(insights_aggregation_service, InsightsAggregationService)
+        else InsightsAggregationService()
+    )
+    insights_auth = (
+        insights_auth_service
+        if isinstance(insights_auth_service, InsightsAuthService)
+        else InsightsAuthService(
+            policy=default_insights_auth_policy(),
+            extra_allowed_origins=insights_extra_allowed_origins,
+        )
+    )
+
     active_registry = registry or RouteRegistry.foundation_v1(
         telemetry_service=telemetry_service,
         assessment_metadata_service=assessment_metadata_service,
@@ -209,6 +239,12 @@ def create_community_cloud_app(
         extension_event_service=extension_event_service,
         ai_usage_service=ai_usage_service,
     )
+    if active_registry.get(version=API_VERSION_V1, method="POST", path="/insights/auth/login") is None:
+        register_insights_auth_routes(
+            active_registry,
+            auth=insights_auth,
+            aggregation=insights_agg,
+        )
 
     active_rate_policy = validate_rate_limit_policy(
         rate_limit_policy or default_rate_limit_policy(),
@@ -255,6 +291,8 @@ def create_community_cloud_app(
     app.state.community_cloud_cli_event_service = cli_event_service
     app.state.community_cloud_extension_event_service = extension_event_service
     app.state.community_cloud_ai_usage_service = ai_usage_service
+    app.state.community_insights_auth_service = insights_auth
+    app.state.community_insights_aggregation_service = insights_agg
     app.add_middleware(_FoundationMiddleware)
 
     @app.exception_handler(RequestValidationError)
@@ -323,6 +361,9 @@ async def _handle_request(
         request_id=client_request_id,
         content_type=content_type,
         accepted_json=True,
+        cookie_header=request.headers.get("cookie"),
+        origin_header=request.headers.get("origin"),
+        referer_header=request.headers.get("referer"),
     )
 
     def _finish(response: Response, *, error_code: str | None = None) -> Response:

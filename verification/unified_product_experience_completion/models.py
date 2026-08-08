@@ -98,7 +98,7 @@ class UnifiedProductExperienceCompletionReport:
     current_regression_status: str = "not_executed"
     historical_verification_boundary_status: str = "not_executed"
     release_posture_status: str = "not_executed"
-    epic_15_boundary_status: str = "not_executed"
+    slice_15_7_boundary_status: str = "not_executed"
     determinism_status: str = "not_executed"
     release_posture: dict[str, Any] = field(default_factory=dict)
     defects: list[Defect] = field(default_factory=list)
@@ -129,7 +129,7 @@ class UnifiedProductExperienceCompletionReport:
             "documentation_status": self.documentation_status,
             "eir_report_status": self.eir_report_status,
             "epic": self.epic,
-            "epic_15_boundary_status": self.epic_15_boundary_status,
+            "slice_15_7_boundary_status": self.slice_15_7_boundary_status,
             "epic_complete": self.epic_complete,
             "failed_checks": self.failed_checks,
             "historical_verification_boundary_status": (

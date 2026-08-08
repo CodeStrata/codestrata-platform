@@ -19,7 +19,7 @@ def test_capability_catalog_closed() -> None:
 def test_provider_family_catalog() -> None:
     assert "openai" in APPROVED_AI_PROVIDER_FAMILIES
     assert "aws_bedrock" in APPROVED_AI_PROVIDER_FAMILIES
-    assert "openrouter" not in APPROVED_AI_PROVIDER_FAMILIES
+    assert "openrouter" in APPROVED_AI_PROVIDER_FAMILIES
 
 
 def test_model_family_catalog() -> None:

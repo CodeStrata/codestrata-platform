@@ -1283,9 +1283,9 @@ def run_analytics_boundary_checks() -> tuple[list[CheckResult], dict[str, Any]]:
     }
     checks = [
         CheckResult(
-            name="openrouter_absent_from_approved_ai_provider_families",
+            name="openrouter_present_as_bounded_provider_family",
             category="analytics_boundary",
-            ok=not openrouter_in_families,
+            ok=openrouter_in_families,
             detail=f"families={sorted(APPROVED_AI_PROVIDER_FAMILIES)}",
         ),
         CheckResult(

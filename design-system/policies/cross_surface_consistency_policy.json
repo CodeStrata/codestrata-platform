@@ -73,7 +73,7 @@
     "schema_bump": true,
     "version_bump": true,
     "production_deploy": true,
-    "start_epic_15": true
+    "start_slice_15_7": true
   },
   "limitations": [
     "native_vscode_remains_host_specific",

@@ -1,0 +1,766 @@
+{
+  "policy_id": "community-insights-metrics-policy",
+  "policy_version": "1.0",
+  "slice": "15.6",
+  "epic": 15,
+  "depends_on": [
+    "community-data-lake-policy:1.0",
+    "community-analytics-partition-policy:1.0",
+    "community-insights-event-coverage-policy:1.0",
+    "community-insights-ingestion-policy:1.0",
+    "community-insights-query-policy:1.0"
+  ],
+  "authority": "Authoritative business and privacy meaning of Community Insights metrics. Aggregation (15.7) and dashboard UI (15.8+) must consume this contract; UI must not invent metric logic.",
+  "production_data_available": false,
+  "production_ingestion_enabled": false,
+  "aggregations_allowed_in_15_6": false,
+  "dashboard_ui_allowed_in_15_6": false,
+  "authentication_allowed_in_15_6": false,
+  "start_slice_15_7": true,
+  "time_semantics": {
+    "storage_timezone": "UTC",
+    "query_windows_timezone": "UTC",
+    "dashboard_display_timezone_initial": "UTC",
+    "browser_local_display_may_come_later": true,
+    "aggregation_windows_remain_utc_authoritative": true,
+    "hidden_timezone_conversion_forbidden": true
+  },
+  "display_wording": {
+    "installations_label": "Anonymous installations",
+    "users_label_forbidden": true,
+    "ai_model_family_label": "AI model family adoption",
+    "exact_ai_model_adoption_label_forbidden": true,
+    "mau_display_label": "30-day active installations",
+    "calendar_mau_label_forbidden_for_rolling_30": true
+  },
+  "approved_activity": {
+    "assessment_metadata": "any accepted assessment_metadata_submitted",
+    "telemetry": [
+      "feature_invoked",
+      "feature_completed",
+      "application_started",
+      "application_completed",
+      "operation_failed"
+    ],
+    "cli_event": [
+      "assess",
+      "assess_with_ai"
+    ],
+    "extension_event": [
+      "assess",
+      "assess_with_ai"
+    ],
+    "ai_usage": "any accepted ai_usage event",
+    "excluded": [
+      "extension_activate_alone",
+      "open_report_alone",
+      "raw_event_count_without_installation_id",
+      "telemetry_housekeeping_without_approved_types"
+    ]
+  },
+  "completeness_states": [
+    "complete",
+    "partial",
+    "unavailable",
+    "not_applicable"
+  ],
+  "zero_versus_unavailable": {
+    "zero_is_valid_metric_value": true,
+    "unavailable_is_different_from_zero": true,
+    "budget_exceeded_must_not_become_zero": true,
+    "missing_identity_must_not_silently_zero_without_limitation": true
+  },
+  "privacy": {
+    "raw_events_api_forbidden": true,
+    "installation_id_internal_dedup_only": true,
+    "installation_id_api_response_forbidden": true,
+    "authentication_does_not_relax_privacy": true,
+    "allowed_aggregate_dimensions": [
+      "date_window",
+      "client_family",
+      "client_version",
+      "assessment_head",
+      "primary_language",
+      "package_ecosystem",
+      "provider_family",
+      "model_family",
+      "result_category"
+    ],
+    "forbidden_exposures": [
+      "installation_id",
+      "repository",
+      "repository_name",
+      "source_code",
+      "file_path",
+      "findings",
+      "evidence",
+      "recommendations",
+      "prompts",
+      "ai_responses",
+      "exact_model_id",
+      "credentials",
+      "endpoint",
+      "hostname",
+      "email",
+      "organization_identity",
+      "customer_identity",
+      "ip_address"
+    ]
+  },
+  "cohort_suppression": {
+    "dimensional_breakdown_minimum_group_count": 3,
+    "headline_totals_suppress_below_threshold": false,
+    "suppressed_group_label": "other_suppressed",
+    "percentage_computed_after_suppression": true,
+    "differential_privacy_noise": false
+  },
+  "percentages": {
+    "api_returns_count_and_denominator": true,
+    "ui_must_not_redefine_share": true,
+    "share_optional_field": true
+  },
+  "freshness": {
+    "model": "near_current_query_time",
+    "optional_cache_ttl_seconds": 300,
+    "real_time_promise_forbidden": true,
+    "wording": "Updated on dashboard refresh, subject to ingestion availability."
+  },
+  "low_cost_architecture": {
+    "s3_raw_source": true,
+    "bounded_direct_reads": true,
+    "on_demand_aggregation": true,
+    "optional_short_ttl_cache": true,
+    "athena_required": false,
+    "glue_required": false,
+    "analytics_warehouse_required": false,
+    "redis_required": false,
+    "rds_required": false
+  },
+  "aggregation_state_requirements_for_15_7": {
+    "first_seen_assessment_checkpoint": true,
+    "first_seen_installation_checkpoint_optional": true,
+    "cumulative_first_repeat_counters": true,
+    "permanent_identity_registry_casual_creation_forbidden": true,
+    "anonymous_installation_id_may_be_retained_internally_per_existing_policy": true,
+    "one_way_hash_redesign_not_required_in_15_6": true
+  },
+  "query_horizons": {
+    "daily": [
+      "daily_active_installations"
+    ],
+    "rolling_30_day": [
+      "monthly_active_installations"
+    ],
+    "retention_window": [
+      "total_anonymous_installations",
+      "first_assessments",
+      "repeat_assessments"
+    ],
+    "checkpoint_backed": [
+      "first_assessments",
+      "repeat_assessments",
+      "total_anonymous_installations"
+    ],
+    "external": [
+      "validation_dataset_growth"
+    ],
+    "bounded_period_default": [
+      "successful_assessments",
+      "failed_assessments",
+      "cli_version_adoption",
+      "assessment_head_usage",
+      "language_ecosystem_distribution",
+      "ai_provider_adoption",
+      "ai_model_adoption",
+      "vscode_extension_usage",
+      "release_adoption"
+    ]
+  },
+  "metric_catalog": {
+    "total_anonymous_installations": {
+      "metric_id": "total_anonymous_installations",
+      "display_name": "Anonymous installations",
+      "description": "Count of distinct approved anonymous installation_id values observed within retained Community analytics history.",
+      "source_streams": [
+        "telemetry",
+        "assessment_metadata",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "time_window": "retention_window",
+      "deduplication_rule": "distinct payload.installation_id",
+      "grouping_dimensions": [],
+      "numerator": "distinct_installation_ids",
+      "denominator": null,
+      "completeness_semantics": "partial_if_budget_or_identity_gaps",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "optional_installation_id_undercount",
+        "reinstall_may_mint_new_id",
+        "not_people",
+        "not_customers",
+        "not_guaranteed_device_persistence"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "checkpoint_backed_retention_scan",
+      "allowed_dashboard_representation": [
+        "single_number"
+      ],
+      "forbidden_interpretation": [
+        "users",
+        "customers",
+        "people",
+        "raw_event_count"
+      ]
+    },
+    "daily_active_installations": {
+      "metric_id": "daily_active_installations",
+      "display_name": "Daily active installations",
+      "description": "Distinct installation_id values with at least one approved activity event during one UTC calendar day.",
+      "source_streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "time_window": "single_utc_day",
+      "deduplication_rule": "distinct payload.installation_id per UTC day",
+      "grouping_dimensions": [
+        "utc_day"
+      ],
+      "numerator": "distinct_active_installation_ids",
+      "denominator": null,
+      "completeness_semantics": "partial_if_budget_or_identity_gaps",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "optional_installation_id_undercount",
+        "activation_alone_excluded"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_single_day_multi_stream",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "raw_event_volume",
+        "extension_activation",
+        "report_open_alone"
+      ]
+    },
+    "monthly_active_installations": {
+      "metric_id": "monthly_active_installations",
+      "display_name": "30-day active installations",
+      "description": "Distinct installation_id values with at least one approved activity event in a rolling 30-day UTC window ending on the selected end date.",
+      "source_streams": [
+        "assessment_metadata",
+        "telemetry",
+        "cli_event",
+        "extension_event",
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "time_window": "rolling_30_utc_days",
+      "deduplication_rule": "distinct payload.installation_id over rolling 30 days",
+      "grouping_dimensions": [],
+      "numerator": "distinct_active_installation_ids",
+      "denominator": null,
+      "completeness_semantics": "partial_if_budget_or_identity_gaps",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "not_calendar_month_mau",
+        "optional_installation_id_undercount"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_rolling_30_multi_stream",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "calendar_mau",
+        "users",
+        "raw_event_count"
+      ]
+    },
+    "first_assessments": {
+      "metric_id": "first_assessments",
+      "display_name": "First assessments",
+      "description": "Count of earliest accepted assessment events per installation observable in retained Community analytics history (or future first_seen checkpoint).",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.installation_id",
+        "acceptance.partition_date"
+      ],
+      "time_window": "retention_window_with_future_checkpoint",
+      "deduplication_rule": "one first-seen assessment per installation_id",
+      "grouping_dimensions": [],
+      "numerator": "first_seen_assessment_events",
+      "denominator": null,
+      "completeness_semantics": "partial_until_checkpoint_stabilizes_lifetime",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "retained_history_first_not_absolute_lifetime_until_15_7_checkpoint",
+        "optional_installation_id",
+        "no_first_assessment_telemetry_flag"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "checkpoint_first_seen_assessment",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "absolute_lifetime_first_without_checkpoint"
+      ]
+    },
+    "repeat_assessments": {
+      "metric_id": "repeat_assessments",
+      "display_name": "Repeat assessments",
+      "description": "Count of assessment events from installations that already have an earlier accepted assessment in aggregation state/history (repeat assessment events).",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.installation_id"
+      ],
+      "time_window": "selected_period_with_history_context",
+      "deduplication_rule": "event_id for repeat events; not installation-count primary",
+      "grouping_dimensions": [],
+      "numerator": "repeat_assessment_events",
+      "denominator": null,
+      "completeness_semantics": "partial_without_checkpoint_history",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "counts_events_not_installations",
+        "requires_history_or_checkpoint"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "checkpoint_backed_repeat_events",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "repeat_installation_count_as_primary",
+        "first_assessment_flag"
+      ]
+    },
+    "successful_assessments": {
+      "metric_id": "successful_assessments",
+      "display_name": "Successful assessments",
+      "description": "Assessment events where assessment_status in completed|partially_completed or execution.result in succeeded|partially_succeeded.",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.assessment_status",
+        "payload.execution.result"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id",
+      "grouping_dimensions": [
+        "result_category"
+      ],
+      "numerator": "successful_assessment_events",
+      "denominator": null,
+      "completeness_semantics": "complete_when_query_complete",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "cancelled_excluded"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_period_filter",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "report_missing_as_failure",
+        "report_open_failure",
+        "telemetry_failure",
+        "cancelled_as_failed"
+      ]
+    },
+    "failed_assessments": {
+      "metric_id": "failed_assessments",
+      "display_name": "Failed assessments",
+      "description": "Assessment events where assessment_status=failed or execution.result=failed. Cancelled assessments are excluded (separate future category).",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.assessment_status",
+        "payload.execution.result"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id",
+      "grouping_dimensions": [
+        "result_category"
+      ],
+      "numerator": "failed_assessment_events",
+      "denominator": null,
+      "completeness_semantics": "complete_when_query_complete",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "cancelled_excluded_not_failed"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_period_filter",
+      "allowed_dashboard_representation": [
+        "single_number",
+        "time_series"
+      ],
+      "forbidden_interpretation": [
+        "report_open_failure",
+        "cancelled_merged_into_failed",
+        "analytics_failure"
+      ]
+    },
+    "cli_version_adoption": {
+      "metric_id": "cli_version_adoption",
+      "display_name": "CLI version adoption",
+      "description": "Share of distinct installation_id values observed on cli_event by payload.client.version over the selected period.",
+      "source_streams": [
+        "cli_event"
+      ],
+      "required_fields": [
+        "payload.client.version",
+        "payload.installation_id"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "distinct installation_id per version",
+      "grouping_dimensions": [
+        "client_version"
+      ],
+      "numerator": "distinct_installations_per_version",
+      "denominator": "distinct_installations_on_cli_event_in_period",
+      "completeness_semantics": "partial_when_installation_id_missing",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "events_without_installation_id_excluded_from_share",
+        "not_event_volume_adoption"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_version_share",
+      "allowed_dashboard_representation": [
+        "bar_share",
+        "table"
+      ],
+      "forbidden_interpretation": [
+        "event_count_as_installation_adoption"
+      ]
+    },
+    "assessment_head_usage": {
+      "metric_id": "assessment_head_usage",
+      "display_name": "Assessment-head usage",
+      "description": "Count of completed/partially_completed assessments in which each canonical head appears in executed_heads; share of such assessments optional.",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.assessment.executed_heads",
+        "payload.assessment.assessment_status"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id per head occurrence",
+      "grouping_dimensions": [
+        "assessment_head"
+      ],
+      "numerator": "completed_assessments_containing_head",
+      "denominator": "completed_or_partially_completed_assessments",
+      "completeness_semantics": "complete_when_query_complete",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "absence_may_mean_disabled_or_unavailable",
+        "no_finding_counts"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_head_counts",
+      "allowed_dashboard_representation": [
+        "bar_count",
+        "bar_share"
+      ],
+      "forbidden_interpretation": [
+        "finding_counts",
+        "evidence"
+      ]
+    },
+    "language_ecosystem_distribution": {
+      "metric_id": "language_ecosystem_distribution",
+      "display_name": "Language and ecosystem distribution",
+      "description": "Two separate distributions: primary_language and package_ecosystem from assessment_metadata. Never merged into one undifferentiated category.",
+      "source_streams": [
+        "assessment_metadata"
+      ],
+      "required_fields": [
+        "payload.repository.primary_language",
+        "payload.repository.package_ecosystem"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id",
+      "grouping_dimensions": [
+        "primary_language",
+        "package_ecosystem"
+      ],
+      "numerator": "assessment_events_per_category",
+      "denominator": "assessment_events_in_period",
+      "completeness_semantics": "package_ecosystem_optional_may_be_absent",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "language_and_ecosystem_must_remain_separate_charts",
+        "package_ecosystem_optional"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_categorical_counts",
+      "allowed_dashboard_representation": [
+        "primary_language_chart",
+        "package_ecosystem_chart"
+      ],
+      "forbidden_interpretation": [
+        "merged_language_ecosystem_single_axis",
+        "package_names",
+        "dependency_names",
+        "filenames",
+        "repo_names"
+      ]
+    },
+    "ai_provider_adoption": {
+      "metric_id": "ai_provider_adoption",
+      "display_name": "AI provider adoption",
+      "description": "Share of ai_usage events by provider_family excluding unavailable from adoption share; unavailable may be reported separately.",
+      "source_streams": [
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.usage.provider_family"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id",
+      "grouping_dimensions": [
+        "provider_family"
+      ],
+      "numerator": "events_per_provider_family_excluding_unavailable",
+      "denominator": "ai_usage_events_excluding_unavailable",
+      "completeness_semantics": "complete_when_query_complete",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "unavailable_excluded_from_share",
+        "not_provider_quality"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_provider_share",
+      "allowed_dashboard_representation": [
+        "bar_share"
+      ],
+      "forbidden_interpretation": [
+        "provider_quality",
+        "credentials",
+        "endpoints"
+      ]
+    },
+    "ai_model_adoption": {
+      "metric_id": "ai_model_adoption",
+      "display_name": "AI model family adoption",
+      "description": "Share of ai_usage events by normalized model_family only. Exact model_id never collected or displayed.",
+      "source_streams": [
+        "ai_usage"
+      ],
+      "required_fields": [
+        "payload.usage.model_family"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "payload.event_id",
+      "grouping_dimensions": [
+        "model_family"
+      ],
+      "numerator": "events_per_model_family",
+      "denominator": "ai_usage_events_in_period",
+      "completeness_semantics": "complete_when_query_complete",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "family_granularity_only",
+        "other_supported_or_unavailable_valid"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_model_family_share",
+      "allowed_dashboard_representation": [
+        "bar_share"
+      ],
+      "forbidden_interpretation": [
+        "exact_model_adoption",
+        "model_id",
+        "ProviderModelReference"
+      ]
+    },
+    "vscode_extension_usage": {
+      "metric_id": "vscode_extension_usage",
+      "display_name": "VS Code extension usage",
+      "description": "Distinct anonymous installation_id values with at least one approved VS Code Community operation (assess or assess_with_ai) in the selected period.",
+      "source_streams": [
+        "extension_event"
+      ],
+      "required_fields": [
+        "payload.event.operation",
+        "payload.installation_id",
+        "payload.client.name"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "distinct installation_id",
+      "grouping_dimensions": [],
+      "numerator": "distinct_installations_with_usage_ops",
+      "denominator": null,
+      "completeness_semantics": "partial_when_installation_id_missing",
+      "privacy_classification": "headline_aggregate",
+      "known_limitations": [
+        "activation_alone_excluded",
+        "optional_installation_id"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_vscode_installations",
+      "allowed_dashboard_representation": [
+        "single_number"
+      ],
+      "forbidden_interpretation": [
+        "activation_as_usage",
+        "assessment_event_count_as_primary"
+      ]
+    },
+    "release_adoption": {
+      "metric_id": "release_adoption",
+      "display_name": "Release adoption",
+      "description": "Umbrella for separate CLI and VS Code extension version distributions by client.name + client.version. No synthetic unified release number.",
+      "source_streams": [
+        "cli_event",
+        "extension_event"
+      ],
+      "required_fields": [
+        "payload.client.name",
+        "payload.client.version"
+      ],
+      "time_window": "selected_bounded_period",
+      "deduplication_rule": "distinct installation_id per client family and version when available",
+      "grouping_dimensions": [
+        "client_family",
+        "client_version"
+      ],
+      "numerator": "distinct_installations_per_client_version",
+      "denominator": "distinct_installations_per_client_family",
+      "completeness_semantics": "partial_when_installation_id_missing",
+      "privacy_classification": "dimensional_aggregate",
+      "known_limitations": [
+        "cli_and_vscode_versions_independent",
+        "no_unified_release_identity"
+      ],
+      "external_internal_source": "internal_data_lake",
+      "aggregation_strategy_hint": "on_demand_split_client_version_shares",
+      "allowed_dashboard_representation": [
+        "cli_version_chart",
+        "vscode_version_chart"
+      ],
+      "forbidden_interpretation": [
+        "merged_cli_vscode_single_version_axis"
+      ]
+    },
+    "validation_dataset_growth": {
+      "metric_id": "validation_dataset_growth",
+      "display_name": "Validation dataset size",
+      "description": "Count of repositories/fixtures in the authoritative validation catalog. Growth-over-time requires future snapshots; Git timestamps are not an approved growth source.",
+      "source_streams": [],
+      "required_fields": [],
+      "time_window": "external_point_in_time",
+      "deduplication_rule": "catalog_entry_id",
+      "grouping_dimensions": [],
+      "numerator": "catalog_repository_count",
+      "denominator": null,
+      "completeness_semantics": "current_size_supported_growth_requires_snapshots",
+      "privacy_classification": "external_internal_catalog",
+      "known_limitations": [
+        "no_historical_growth_without_snapshots",
+        "not_community_telemetry"
+      ],
+      "external_internal_source": "external_metric_source",
+      "authoritative_source": "validation/repository-catalog/catalog.json",
+      "aggregation_strategy_hint": "external_catalog_read",
+      "allowed_dashboard_representation": [
+        "single_number"
+      ],
+      "forbidden_interpretation": [
+        "fabricated_from_telemetry",
+        "git_timestamp_growth_without_contract"
+      ]
+    }
+  },
+  "metric_result_contract": {
+    "contract_id": "community-insights-metrics-contract",
+    "contract_version": "1.0",
+    "fields": [
+      "metric_id",
+      "status",
+      "window",
+      "value",
+      "groups",
+      "completeness",
+      "limitations",
+      "denominator",
+      "share"
+    ],
+    "forbidden_fields": [
+      "raw_events",
+      "installation_ids",
+      "object_keys",
+      "payloads"
+    ],
+    "owners": {
+      "computation": "aggregation_service_15_7",
+      "presentation": "insights_dashboard_15_8"
+    }
+  },
+  "limitations": [
+    "production_ingestion_still_unwired",
+    "no_live_dashboard_data_claim",
+    "optional_installation_id_undercount",
+    "first_repeat_checkpoint_deferred_to_15_7",
+    "validation_growth_snapshots_not_yet_defined",
+    "no_aggregation_runtime_in_15_6",
+    "no_dashboard_in_15_6",
+    "worktree_uncommitted"
+  ],
+  "verification": {
+    "package": "verification/community_insights_metrics",
+    "schema": "community-insights-metrics-verification:1.0.0",
+    "report": "reports/verification/sv15-6/community-insights-metrics-verification.json"
+  },
+  "slice_15_7_allowed": true,
+  "start_slice_15_8": true,
+  "slice_15_8_allowed": true,
+  "start_slice_15_9": true,
+  "start_slice_15_10": true,
+  "slice_15_9_allowed": true,
+  "start_slice_15_11": true,
+  "slice_15_10_allowed": true,
+  "start_slice_15_12": true,
+  "start_epic_16": false,
+  "start_slice_16_2": false,
+  "start_slice_16_3": false,
+  "start_slice_16_4": false,
+  "start_slice_16_5": true,
+  "start_slice_16_6": true,
+  "start_slice_16_7": true,
+  "start_slice_16_8": true,
+  "start_slice_16_9": true,
+  "start_slice_16_10": true,
+  "start_epic_17": false
+}

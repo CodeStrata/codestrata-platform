@@ -1,0 +1,126 @@
+{
+  "schema": "codestrata-platform-package-register:1.0",
+  "slice": "16.7",
+  "packages": [
+    {
+      "package": "community_cloud_api",
+      "path": "platform/src/codestrata_platform/community_cloud_api/",
+      "classification": "ACTIVE_COMMUNITY_BACKEND",
+      "purpose": "Community Cloud API, lake projection, Insights aggregation/auth, telemetry ingestion",
+      "runtime_callers": ["community cloud HTTP", "insights auth", "data lake clients"],
+      "community_v020_relevance": "required",
+      "commercial_relevance": "none",
+      "future_repository": "codestrata-platform",
+      "decision": "KEEP_PLATFORM_INTERNAL",
+      "evidence": "app.py and insights/auth/data_lake modules; Epic 7/15 active"
+    },
+    {
+      "package": "api",
+      "path": "platform/src/codestrata_platform/api/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Commercial Platform HTTP API surface",
+      "runtime_callers": ["platform commercial API"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "controllers/DTO under api/; not Community Cloud"
+    },
+    {
+      "package": "application",
+      "path": "platform/src/codestrata_platform/application/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Commercial application services (assessment/answering/portfolio/KG commands)",
+      "runtime_callers": ["platform commercial services"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "application/commands and services; not community_cloud_api"
+    },
+    {
+      "package": "domain",
+      "path": "platform/src/codestrata_platform/domain/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Commercial domain models",
+      "runtime_callers": ["platform application/api"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "domain/intelligence portfolio retrieval KG"
+    },
+    {
+      "package": "infrastructure",
+      "path": "platform/src/codestrata_platform/infrastructure/",
+      "classification": "SHARED_INFRA_HELPER",
+      "purpose": "Platform persistence/retrieval adapters used by commercial + helpers",
+      "runtime_callers": ["platform services", "optional community helpers"],
+      "community_v020_relevance": "partial",
+      "commercial_relevance": "active_helper",
+      "future_repository": "codestrata-platform",
+      "decision": "KEEP_PLATFORM_INTERNAL",
+      "evidence": "persistence migrations repositories; not OpenTofu infrastructure/"
+    },
+    {
+      "package": "intelligence_reporting",
+      "path": "platform/src/codestrata_platform/intelligence_reporting/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Executive/Engineering Intelligence Report (Platform-only)",
+      "runtime_callers": ["platform EIR presentation"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "Slice 16.3 OWNER_REVIEW; Engine must not import"
+    },
+    {
+      "package": "rag",
+      "path": "platform/src/codestrata_platform/rag/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Platform RAG answering/embeddings",
+      "runtime_callers": ["platform rag CLI/MCP"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "Slice 16.3 OWNER_REVIEW"
+    },
+    {
+      "package": "knowledge_graph",
+      "path": "platform/src/codestrata_platform/knowledge_graph/",
+      "classification": "COMMERCIAL_PROTOTYPE",
+      "purpose": "Knowledge graph CLI/MCP/schemas",
+      "runtime_callers": ["platform KG extensions"],
+      "community_v020_relevance": "none",
+      "commercial_relevance": "prototype",
+      "future_repository": "codestrata-platform",
+      "decision": "OWNER_REVIEW_REQUIRED",
+      "evidence": "Slice 16.3 OWNER_REVIEW"
+    },
+    {
+      "package": "extensions",
+      "path": "platform/src/codestrata_platform/extensions/",
+      "classification": "SHARED_INFRA_HELPER",
+      "purpose": "Platform CLI/MCP/AI provider extension registration",
+      "runtime_callers": ["codestrata entry points"],
+      "community_v020_relevance": "optional",
+      "commercial_relevance": "active_helper",
+      "future_repository": "codestrata-platform",
+      "decision": "KEEP_PLATFORM_INTERNAL",
+      "evidence": "pyproject entry-points codestrata.*_extensions"
+    },
+    {
+      "package": "security",
+      "path": "platform/src/codestrata_platform/security/",
+      "classification": "SHARED_INFRA_HELPER",
+      "purpose": "Platform security helpers",
+      "runtime_callers": ["platform services"],
+      "community_v020_relevance": "partial",
+      "commercial_relevance": "active_helper",
+      "future_repository": "codestrata-platform",
+      "decision": "KEEP_PLATFORM_INTERNAL",
+      "evidence": "security package present under platform"
+    }
+  ]
+}

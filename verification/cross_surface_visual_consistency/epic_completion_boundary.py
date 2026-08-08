@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from verification.cross_surface_visual_consistency._helpers import add
-from verification.cross_surface_visual_consistency.contract import FORBIDDEN_EPIC_15_PATHS
+from verification.cross_surface_visual_consistency.contract import FORBIDDEN_15_7_PATHS
 from verification.cross_surface_visual_consistency.inventory import ConsistencyInventory
 from verification.cross_surface_visual_consistency.models import CheckResult, Defect
 
@@ -14,22 +14,22 @@ def check_epic_completion_boundary(
     checks: list[CheckResult] = []
     defects: list[Defect] = []
 
-    present = [rel for rel in FORBIDDEN_EPIC_15_PATHS if (inv.monorepo / rel).exists()]
+    present = [rel for rel in FORBIDDEN_15_7_PATHS if (inv.monorepo / rel).exists()]
     add(
         checks,
-        "epic_completion_boundary:epic_15_absent",
+        "epic_completion_boundary:slice_15_7_absent",
         not present,
         "absent" if not present else ",".join(present),
         "epic_completion_boundary",
     )
     if present:
-        defects.append(Defect("epic_completion_boundary", "Epic 15 started"))
+        defects.append(Defect("epic_completion_boundary", "Slice 15.7 started"))
 
     add(
         checks,
-        "epic_completion_boundary:start_epic_15_false",
-        inv.policy.get("prohibited", {}).get("start_epic_15") is True,
-        "epic_15_forbidden",
+        "epic_completion_boundary:start_slice_15_7_false",
+        inv.policy.get("prohibited", {}).get("start_slice_15_7") is True,
+        "slice_15_7_forbidden",
         "epic_completion_boundary",
     )
     add(

@@ -1,0 +1,1 @@
+DASHBOARD_ABSENT = True

@@ -14,6 +14,7 @@ from codestrata_platform.community_cloud_api.assessment_metadata.enums import (
     AssessmentMode,
     AssessmentStatus,
     CountBucket,
+    PackageEcosystem,
     PrimaryLanguage,
     RepositoryShape,
 )
@@ -116,6 +117,8 @@ class RepositoryMetadata(CommunityApiRequestModel):
     has_tests: StrictBool
     has_build_files: StrictBool
     has_dependency_manifests: StrictBool
+    # Optional additive (Slice 15.4 / CR-15.3-001). Schema 1.0 additive-compatible.
+    package_ecosystem: StrictStr | None = Field(default=None, min_length=1, max_length=32)
 
     @field_validator("primary_language")
     @classmethod
@@ -125,6 +128,21 @@ class RepositoryMetadata(CommunityApiRequestModel):
             raise ValueError("invalid_enum")
         if contains_secret_like_value(text):
             raise ValueError("unsafe_value")
+        return text
+
+    @field_validator("package_ecosystem")
+    @classmethod
+    def _package_ecosystem(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        text = value.strip()
+        if text not in {item.value for item in PackageEcosystem}:
+            raise ValueError("invalid_enum")
+        if contains_secret_like_value(text):
+            raise ValueError("unsafe_value")
+        # Reject values that look like package coordinates / names.
+        if any(ch in text for ch in ("/", ":", "@", ".", " ")):
+            raise ValueError("invalid_enum")
         return text
 
     @field_validator(

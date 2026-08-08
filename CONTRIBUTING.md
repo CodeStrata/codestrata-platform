@@ -13,9 +13,11 @@ This monorepo (`codestrata-platform`) is the private source of truth.
 | Governance (how we build) | [governance/README.md](governance/README.md) |
 | Engineering Knowledge (what we know) | [knowledge/README.md](knowledge/README.md) |
 | Coding standards | [governance/standards/CODING_STANDARDS.md](governance/standards/CODING_STANDARDS.md) |
-| Design System | [governance/assets/DESIGN-SYSTEM.md](governance/assets/DESIGN-SYSTEM.md) |
-| Current direction | [ROADMAP.md](ROADMAP.md) |
+| Design System | [design-system/README.md](design-system/README.md) (authoritative) |
+| Historical design notes | [governance/assets/DESIGN-SYSTEM.md](governance/assets/DESIGN-SYSTEM.md) |
+| Release history | [CHANGELOG.md](CHANGELOG.md) · [ROADMAP.md](ROADMAP.md) (archive candidate) |
 | Ecosystem architecture | [ARCHITECTURE.md](ARCHITECTURE.md) · [engine/docs/architecture-guide.md](engine/docs/architecture-guide.md) |
+| Documentation cleanup | [platform/docs/repository-cleanup/community-documentation-cleanup.md](platform/docs/repository-cleanup/community-documentation-cleanup.md) |
 | Documentation inventory | [governance/DOCUMENTATION_INVENTORY.md](governance/DOCUMENTATION_INVENTORY.md) |
 | Public API / SDK contracts | [governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md](governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md) |
 

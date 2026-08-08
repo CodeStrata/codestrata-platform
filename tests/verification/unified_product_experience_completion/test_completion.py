@@ -38,7 +38,7 @@ def test_completion_policy() -> None:
     assert policy["policy_version"] == "1.0"
     assert policy["epic"] == 14
     assert policy["slice_count"] == 14
-    assert policy["start_epic_15"] is False
+    assert policy["start_slice_15_7"] is False
     assert policy["production_deploy_complete"] is False
     assert policy["release_tag_created"] is False
     assert policy["design_system_complete"] is True
@@ -83,7 +83,7 @@ def test_build_report_without_heavy_regressions(tmp_path: Path) -> None:
     assert report.completed_slices == TOTAL_SLICES
     assert report.total_slices == TOTAL_SLICES
     assert report.epic_complete is True
-    assert report.release_posture.get("start_epic_15") is False
+    assert report.release_posture.get("start_slice_15_7") is False
     assert report.release_posture.get("commit_created") is False
     assert report.release_posture.get("tag_created") is False
     assert report.release_posture.get("published") is False

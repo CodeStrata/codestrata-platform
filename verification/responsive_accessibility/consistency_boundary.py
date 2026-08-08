@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from verification.responsive_accessibility.contract import FORBIDDEN_EPIC_15_PATHS
+from verification.responsive_accessibility.contract import FORBIDDEN_15_7_PATHS
 from verification.responsive_accessibility.inventory import SurfaceInventory
 from verification.responsive_accessibility.models import CheckResult, Defect
 
@@ -55,7 +55,7 @@ def check_consistency_boundary(inv: SurfaceInventory) -> tuple[list[CheckResult]
         str(inv.vscode_package.get("version")),
     )
 
-    markers = [path for path in FORBIDDEN_EPIC_15_PATHS if (inv.monorepo / path).exists()]
+    markers = [path for path in FORBIDDEN_15_7_PATHS if (inv.monorepo / path).exists()]
     add(
         "consistency_boundary:no_slice_14_14_markers",
         not markers,

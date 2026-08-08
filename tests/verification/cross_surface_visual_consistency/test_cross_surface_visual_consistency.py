@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 
 from verification.cross_surface_visual_consistency.contract import (
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     LEGACY_AMBER_HEX,
     POLICY_ID,
     POLICY_RELATIVE,
@@ -23,7 +23,7 @@ def test_policy_and_contract_present() -> None:
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
     assert policy["policy_id"] == POLICY_ID
     assert policy["policy_version"] == "1.0"
-    assert policy["prohibited"]["start_epic_15"] is True
+    assert policy["prohibited"]["start_slice_15_7"] is True
     assert (root / "design-system/contracts/cross-surface-consistency.json").is_file()
 
 
@@ -58,7 +58,7 @@ def test_assessment_product_bar_mark() -> None:
 
 def test_slice_14_14_not_started() -> None:
     root = monorepo_root_from_here()
-    for relative in FORBIDDEN_EPIC_15_PATHS:
+    for relative in FORBIDDEN_15_7_PATHS:
         assert not (root / relative).exists(), relative
 
 

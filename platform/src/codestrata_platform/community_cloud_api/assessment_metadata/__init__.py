@@ -12,6 +12,7 @@ from codestrata_platform.community_cloud_api.assessment_metadata.enums import (
     AssessmentMode,
     AssessmentStatus,
     CountBucket,
+    PackageEcosystem,
     PrimaryLanguage,
     RepositoryShape,
 )
@@ -73,6 +74,7 @@ __all__ = [
     "CountBucket",
     "InMemoryAssessmentMetadataSink",
     "IngestAssessmentMetadata",
+    "PackageEcosystem",
     "PrimaryLanguage",
     "RepositoryMetadata",
     "RepositoryShape",

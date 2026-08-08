@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from verification.unified_product_experience_completion.contract import (
-    FORBIDDEN_EPIC_15_PATHS,
+    FORBIDDEN_15_7_PATHS,
     EXTENSION_VERSION,
 )
 from verification.unified_product_experience_completion.inventory import (
@@ -597,55 +597,63 @@ def check_privacy_boundary(
     return checks, defects
 
 
-def check_epic_15_boundary(
+def check_slice_15_7_boundary(
     monorepo: Path,
 ) -> tuple[list[CheckResult], list[Defect]]:
     checks: list[CheckResult] = []
     defects: list[Defect] = []
-    present = [rel for rel in FORBIDDEN_EPIC_15_PATHS if exists(monorepo, rel)]
+    present = [rel for rel in FORBIDDEN_15_7_PATHS if exists(monorepo, rel)]
     _add(
         checks,
         defects,
-        "epic15:forbidden_paths_absent",
+        "slice15:forbidden_paths_absent",
         not present,
         "absent" if not present else ",".join(present),
-        "epic_15_boundary",
-        "epic_15_started",
+        "slice_15_7_boundary",
+        "slice_15_2_started",
     )
-    # Dynamic sv15-* scan under reports/verification
+    # Dynamic sv15-2+ scan under reports/verification (sv15-1 audit is allowed).
     reports = monorepo / "reports" / "verification"
     sv15 = []
     if reports.is_dir():
         sv15 = sorted(
-            p.name for p in reports.iterdir() if p.is_dir() and p.name.startswith("sv15-")
+            p.name
+            for p in reports.iterdir()
+            if p.is_dir()
+            and p.name.startswith("sv15-")
+            and p.name not in {"sv15-1", "sv15-2", "sv15-3", "sv15-4", "sv15-5", "sv15-6", "sv15-7", "sv15-8", "sv15-9", "sv15-10", "sv15-11", "sv15-12", "sv16-1"}
         )
     _add(
         checks,
         defects,
-        "epic15:no_sv15_reports",
+        "slice15:no_sv15_2_plus_reports",
         not sv15,
         "absent" if not sv15 else ",".join(sv15),
-        "epic_15_boundary",
-        "epic_15_started",
+        "slice_15_7_boundary",
+        "slice_15_2_started",
     )
-    # verification packages named for epic 15
+    # verification packages for Slice 15.2 dashboard only
     ver_root = monorepo / "verification"
-    epic15_pkgs = []
+    slice152_pkgs = []
     if ver_root.is_dir():
-        epic15_pkgs = sorted(
+        slice152_pkgs = sorted(
             p.name
             for p in ver_root.iterdir()
             if p.is_dir()
-            and ("epic15" in p.name.lower() or "epic_15" in p.name.lower())
+            and (
+                "community_insights_dashboard" in p.name.lower()
+                or "slice_15_2" in p.name.lower()
+                or p.name.lower() == "epic15_slice_15_2"
+            )
         )
     _add(
         checks,
         defects,
-        "epic15:no_epic15_packages",
-        not epic15_pkgs,
-        "absent" if not epic15_pkgs else ",".join(epic15_pkgs),
-        "epic_15_boundary",
-        "epic_15_started",
+        "slice15:no_15_2_packages",
+        not slice152_pkgs,
+        "absent" if not slice152_pkgs else ",".join(slice152_pkgs),
+        "slice_15_7_boundary",
+        "slice_15_2_started",
     )
     policy = load_json(
         monorepo,
@@ -655,9 +663,9 @@ def check_epic_15_boundary(
         checks,
         defects,
         "epic15:start_flag_false",
-        policy.get("start_epic_15") is False,
-        str(policy.get("start_epic_15")),
-        "epic_15_boundary",
+        policy.get("start_slice_15_7") is False,
+        str(policy.get("start_slice_15_7")),
+        "slice_15_7_boundary",
     )
     return checks, defects
 
@@ -675,7 +683,7 @@ def check_release_posture() -> tuple[list[CheckResult], list[Defect], dict[str, 
         "docs_production_deployed": False,
         "production_deploy_complete": False,
         "release_tag_created": False,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
     }
     for key, expected in posture.items():
         if key == "epic_14_complete":

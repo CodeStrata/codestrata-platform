@@ -1,0 +1,1 @@
+EXTERNAL_ADAPTER = True

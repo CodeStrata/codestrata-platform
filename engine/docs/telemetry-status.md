@@ -85,9 +85,10 @@ tests use the typed status model’s stable serialization.
 
 Successful inspection exits **0**.
 
-## Deferred
+## Deferred / historical
 
-- Cursor privacy-first telemetry (out of scope; Epic 10 not started)
+- Former CodeStrata Cursor Extension telemetry — **removed** in Epic 12; not an
+  active Community product surface
 
 VS Code command-local telemetry (Slice 9.13) and cross-client / Epic completion
 verification (Slices 9.14–9.15) are documented under

@@ -65,7 +65,7 @@ def release_posture(*, complete: bool) -> dict[str, bool]:
         "no_tag": True,
         "report_ia_remains_1_0": True,
         "slice_14_11_complete": complete,
-        "start_epic_15": False,
+        "start_slice_15_7": False,
         "visualization_remains_1_0": True,
         "wcag_certification_claimed": False,
     }
@@ -73,7 +73,7 @@ def release_posture(*, complete: bool) -> dict[str, bool]:
 
 def build_report(monorepo: Path) -> ResponsiveAccessibilityReport:
     contract = default_contract()
-    assert contract.start_epic_15 is False
+    assert contract.start_slice_15_7 is False
     assert contract.wcag_certification_claimed is False
     assert contract.no_schema_change is True
 

@@ -67,7 +67,7 @@ No public CLI option or environment variable activates HTTP.
 
 ## What this slice does not do
 
-- Cursor integration (deferred beyond Slice 9.14)
+- Former Cursor extension integration — removed in Epic 12 (not deferred work)
 - Installation IDs, consent persistence, queues, workers
 - Endpoint / credential CLI flags
 - Assessment schema or analyzer changes

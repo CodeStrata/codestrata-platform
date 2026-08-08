@@ -29,11 +29,8 @@ EIR_RENDERER = (
     "presentation/static_html/renderer.py"
 )
 
-FORBIDDEN_EPIC_15_PATHS = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS = (
+    "reports/verification/sv15-7",
 )
 
 FORBIDDEN_HEALTH_LABELS = ("Healthy", "Passed", "Safe", "Secure")
@@ -58,7 +55,7 @@ class Sv148Contract:
     schema_version: str = SCHEMA_VERSION
     package_id: str = VISUALIZATION_ID
     package_version: str = VISUALIZATION_VERSION
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
     no_scoring_change: bool = True
     no_commit: bool = True
 

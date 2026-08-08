@@ -59,7 +59,7 @@ def check_command_surface(monorepo: Path) -> tuple[list[CheckResult], list[Defec
         ),
         CheckResult(
             "command:closed_choices",
-            "community" in text and "infrastructure" in text,
+            "community" in text and "infrastructure" in text and "insights" in text,
             "closed set",
             "command",
         ),
@@ -73,9 +73,9 @@ def check_command_surface(monorepo: Path) -> tuple[list[CheckResult], list[Defec
 def check_registry() -> tuple[list[CheckResult], list[Defect]]:
     checks = [
         CheckResult(
-            "registry:exactly_two",
+            "registry:exactly_three",
             set(t.value for t in TARGET_REGISTRY) == set(SUPPORTED_TARGETS),
-            "community+infrastructure",
+            "community+infrastructure+insights",
             "registry",
         ),
         CheckResult(

@@ -1,5 +1,9 @@
 # Platform documentation (private)
 
+> **INTERNAL (Slice 16.2)** — Not Community documentation. Do not present these
+> pages as available Community capabilities. Public Community docs live under
+> `docs/`.
+
 Audience: Platform package developers and maintainers.
 Owner: `platform/` (never exported to public mirrors).
 

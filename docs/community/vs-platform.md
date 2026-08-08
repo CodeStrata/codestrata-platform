@@ -41,7 +41,13 @@ Commercial capabilities such as:
 - Organizational governance
 - Commercial deployment and support
 
-Learn more: [https://codestrata.ai/platform](https://codestrata.ai/platform)
+Public Platform positioning (marketing site, not Community docs):
+[https://codestrata.ai/platform](https://codestrata.ai/platform)
+
+> **Note:** This page is retained for maintainer boundary clarity. It is
+> **excluded** from the published Community VitePress navigation
+> (`srcExclude`). Community users should follow Getting Started — not Platform
+> documentation trees under `docs/platform/` (archive / unpublished).
 
 ## Rules of thumb
 
@@ -51,5 +57,3 @@ Learn more: [https://codestrata.ai/platform](https://codestrata.ai/platform)
 | Platform may depend on Engine | Engine must not require Platform for Community assess |
 | Credentials differ | Engine AI keys ≠ Platform API keys |
 | No false Community claims | Platform features are not available inside Community by default |
-
-More: [Platform overview](/platform/).

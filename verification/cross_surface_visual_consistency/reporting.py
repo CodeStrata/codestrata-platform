@@ -30,7 +30,7 @@ def write_report(monorepo: Path, report: CrossSurfaceVisualConsistencyReport) ->
         f"Checks: {report.total_checks} (failed: {report.failed_checks})\n\n"
         "Slice 14.13 validates cross-surface visual consistency across Docs, "
         "Assessment HTML, EIR HTML, VS Code, Marketplace, and API portal surfaces. "
-        "Design System remains 1.0. Epic 15 not started. "
+        "Design System remains 1.0. Slice 15.7 not started. "
         "No commit/tag/publish/deploy.\n",
         encoding="utf-8",
     )

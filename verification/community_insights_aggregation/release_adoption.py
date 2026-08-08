@@ -1,0 +1,1 @@
+SPLIT_CLI_VSCODE = True

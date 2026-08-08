@@ -1,0 +1,25 @@
+{
+  "schema": "repository-cleanup-completion-verification:1.0.0",
+  "schema_name": "repository-cleanup-completion-verification",
+  "schema_version": "1.0.0",
+  "epic": 16,
+  "slice": "16.10",
+  "package": "verification/repository_cleanup_completion",
+  "policy": "repository-cleanup-completion-policy:1.0",
+  "report": "reports/verification/sv16-10/repository-cleanup-completion-verification.json",
+  "slice_count": 10,
+  "start_epic_17": false,
+  "required_report_fields": [
+    "verdict",
+    "slice_completion_matrix",
+    "policy_registry",
+    "contract_registry",
+    "version_registry",
+    "owner_review_final_register",
+    "technical_debt_handoff",
+    "release_posture",
+    "epic17_readiness",
+    "defects",
+    "limitations"
+  ]
+}

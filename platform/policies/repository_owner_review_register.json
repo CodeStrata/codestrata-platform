@@ -1,0 +1,205 @@
+{
+  "schema": "repository-owner-review-register:1.0",
+  "slice": "16.8",
+  "authority": "Consolidated remaining owner-review items from Slices 16.1\u201316.7. Do not resolve implicitly.",
+  "items": [
+    {
+      "id": "OR-16.8-001",
+      "source_slices": [
+        "16.3",
+        "16.7"
+      ],
+      "topic": "Platform commercial/prototype packages",
+      "paths": [
+        "platform/src/codestrata_platform/api/",
+        "platform/src/codestrata_platform/application/",
+        "platform/src/codestrata_platform/domain/",
+        "platform/src/codestrata_platform/intelligence_reporting/",
+        "platform/src/codestrata_platform/rag/",
+        "platform/src/codestrata_platform/knowledge_graph/"
+      ],
+      "decision_needed": "Retain as OWNER_REVIEW commercial prototypes vs prune vs promote",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-002",
+      "source_slices": [
+        "16.3"
+      ],
+      "topic": "Community exporter implementation ownership",
+      "paths": [
+        "scripts/export-public-repos.py"
+      ],
+      "decision_needed": "Confirm long-term ownership vs router-only adapters",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-003",
+      "source_slices": [
+        "16.3"
+      ],
+      "topic": "E2E validation assess script retention",
+      "paths": [
+        "scripts/run_e2e_validation_assess.py"
+      ],
+      "decision_needed": "Keep as intentional compatibility tooling or relocate",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-004",
+      "source_slices": [
+        "16.3"
+      ],
+      "topic": "VS Code engine discovery candidates list",
+      "paths": [
+        "vscode-plugin/src/engine/discovery.ts"
+      ],
+      "decision_needed": "Confirm listEngineCandidates remains intentional compatibility",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-005",
+      "source_slices": [
+        "16.4"
+      ],
+      "topic": "governance/assets amber archive retention vs prune",
+      "paths": [
+        "governance/assets/"
+      ],
+      "decision_needed": "Mass-prune historical amber archive or retain as HISTORICAL only",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-006",
+      "source_slices": [
+        "16.4"
+      ],
+      "topic": "Insights public brand tracking vs generator inclusion",
+      "paths": [
+        "insights/public/brand/"
+      ],
+      "decision_needed": "Track generated brand copies or regenerate-only",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-007",
+      "source_slices": [
+        "16.4"
+      ],
+      "topic": "Docs public token alias mirror strategy",
+      "paths": [
+        "docs/public/design-tokens/tokens.css"
+      ],
+      "decision_needed": "Byte-identical vs aliased GENERATED_COPY policy tightening",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-008",
+      "source_slices": [
+        "16.4"
+      ],
+      "topic": "Sample report fixture Georgia stacks",
+      "paths": [
+        "test-fixtures/sample-reports/"
+      ],
+      "decision_needed": "Refresh TEST_FIXTURE HTML to current Design System typography",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-009",
+      "source_slices": [
+        "16.5"
+      ],
+      "topic": "mangum dependency debt",
+      "paths": [
+        "platform/pyproject.toml"
+      ],
+      "decision_needed": "Upgrade/replace/retain mangum pin with rationale",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-010",
+      "source_slices": [
+        "16.5"
+      ],
+      "topic": "pgvector dependency debt",
+      "paths": [
+        "platform/pyproject.toml"
+      ],
+      "decision_needed": "Upgrade/replace/retain pgvector pin with rationale",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-011",
+      "source_slices": [
+        "16.5"
+      ],
+      "topic": "Framework upgrade / transitive advisories",
+      "paths": [
+        "docs/package.json",
+        "insights/package.json"
+      ],
+      "decision_needed": "Schedule VitePress/Vite framework upgrades outside Epic 16",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-012",
+      "source_slices": [
+        "16.6"
+      ],
+      "topic": ".codestrata-examples nested Git / environment residue",
+      "paths": [
+        ".codestrata-examples/"
+      ],
+      "decision_needed": "Owner cleanup of environment-protected nested Git residue",
+      "status": "OPEN",
+      "limitation": "environment_protected"
+    },
+    {
+      "id": "OR-16.8-013",
+      "source_slices": [
+        "16.6"
+      ],
+      "topic": "Historical verification report posture",
+      "paths": [
+        "reports/verification/"
+      ],
+      "decision_needed": "Confirm regenerable/gitignored posture remains acceptable",
+      "status": "OPEN"
+    },
+    {
+      "id": "OR-16.8-014",
+      "source_slices": [
+        "16.6"
+      ],
+      "topic": "OpenTofu provider cache network limitation",
+      "paths": [
+        "infrastructure/"
+      ],
+      "decision_needed": "Accept network Forbidden/timeout limitation or refresh locks offline",
+      "status": "OPEN",
+      "limitation": "opentofu_provider_network"
+    },
+    {
+      "id": "OR-16.8-015",
+      "source_slices": [
+        "16.7"
+      ],
+      "topic": "Future physical repository cutovers / remotes",
+      "paths": [],
+      "decision_needed": "Create remotes and cut over only in later slices (not 16.8)",
+      "status": "OPEN",
+      "deferred_to": "post-16.8 / Slice 16.9+"
+    }
+  ],
+  "rules": {
+    "no_silent_delete": true,
+    "no_implicit_resolution": true,
+    "status_values": [
+      "OPEN",
+      "ACCEPTED",
+      "RESOLVED",
+      "DEFERRED"
+    ]
+  }
+}

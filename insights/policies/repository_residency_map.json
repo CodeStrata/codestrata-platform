@@ -1,0 +1,117 @@
+{
+  "schema": "codestrata-repository-residency-map:1.0",
+  "slice": "16.7",
+  "source_authority": "monorepo_pre_cutover",
+  "cutover_performed": false,
+  "remote_repositories_created": false,
+  "entries": [
+    {
+      "component": "engine",
+      "current_source_root": "engine/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-engine",
+      "visibility": "public_community",
+      "distribution_mode": "source_package",
+      "export_target": "community",
+      "runtime_owner": "engine",
+      "status": "CORRECT_RESIDENCY",
+      "notes_code": "Community assessment runtime and CLI"
+    },
+    {
+      "component": "platform",
+      "current_source_root": "platform/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-platform",
+      "visibility": "private",
+      "distribution_mode": "internal_backend",
+      "export_target": null,
+      "runtime_owner": "platform",
+      "status": "CORRECT_RESIDENCY",
+      "notes_code": "Private backend; never public Community export"
+    },
+    {
+      "component": "infrastructure",
+      "current_source_root": "infrastructure/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-infrastructure",
+      "visibility": "private",
+      "distribution_mode": "export",
+      "export_target": "infrastructure",
+      "runtime_owner": "infrastructure",
+      "status": "EXPORT_TO_FUTURE_REPOSITORY",
+      "notes_code": "IaC only; Approach A standalone export"
+    },
+    {
+      "component": "insights",
+      "current_source_root": "insights/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-insights",
+      "visibility": "private_internal",
+      "distribution_mode": "export",
+      "export_target": "insights",
+      "runtime_owner": "insights_frontend",
+      "status": "EXPORT_TO_FUTURE_REPOSITORY",
+      "notes_code": "Frontend only; backend remains Platform"
+    },
+    {
+      "component": "docs",
+      "current_source_root": "docs/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-docs",
+      "visibility": "public",
+      "distribution_mode": "export",
+      "export_target": "community",
+      "runtime_owner": "docs",
+      "status": "EXPORT_TO_FUTURE_REPOSITORY",
+      "notes_code": "Community staging mirror via public export manifest"
+    },
+    {
+      "component": "vscode",
+      "current_source_root": "vscode-plugin/",
+      "current_authority": "monorepo",
+      "future_repository": "codestrata-vscode",
+      "visibility": "public_marketplace",
+      "distribution_mode": "source_package",
+      "export_target": "community",
+      "runtime_owner": "vscode",
+      "status": "CORRECT_RESIDENCY",
+      "notes_code": "Extension runtime; CLI remains Engine-owned"
+    },
+    {
+      "component": "design-system",
+      "current_source_root": "design-system/",
+      "current_authority": "monorepo_shared",
+      "future_repository": "shared_authority_until_cutover",
+      "visibility": "shared_source_public_derivatives",
+      "distribution_mode": "generated_consumers",
+      "export_target": null,
+      "runtime_owner": "design_system",
+      "status": "SHARED_AUTHORITY",
+      "notes_code": "Central masters; consumers receive GENERATED_COPY/AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "component": "verification",
+      "current_source_root": "verification/",
+      "current_authority": "monorepo",
+      "future_repository": "monorepo_engineering",
+      "visibility": "private_engineering",
+      "distribution_mode": "monorepo_only",
+      "export_target": null,
+      "runtime_owner": "verification",
+      "status": "CORRECT_RESIDENCY",
+      "notes_code": "MONOREPO_VERIFICATION_AUTHORITY; not Community runtime"
+    },
+    {
+      "component": "brand-master",
+      "current_source_root": "design-system/assets/brand/",
+      "current_authority": "design_system",
+      "future_repository": "shared_authority_until_cutover",
+      "visibility": "shared_source_public_derivatives",
+      "distribution_mode": "generated_consumers",
+      "export_target": null,
+      "runtime_owner": "design_system",
+      "status": "SHARED_AUTHORITY",
+      "notes_code": "No competing consumer masters"
+    }
+  ]
+}

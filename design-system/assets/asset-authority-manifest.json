@@ -1,0 +1,98 @@
+{
+  "schema": "codestrata-asset-authority-manifest:1.0",
+  "slice": "16.4",
+  "design_authority": "design-system/",
+  "entries": [
+    {
+      "master": "design-system/tokens/tokens.css",
+      "generator": null,
+      "consumer_derivative": null,
+      "destination": "design-system",
+      "classification": "AUTHORITATIVE_MASTER"
+    },
+    {
+      "master": "design-system/tokens/catalog.json",
+      "generator": null,
+      "consumer_derivative": null,
+      "destination": "design-system",
+      "classification": "AUTHORITATIVE_MASTER"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "scripts/generate_brand_assets.py",
+      "consumer_derivative": "docs/public/brand/",
+      "destination": "codestrata-docs",
+      "classification": "AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "scripts/generate_brand_assets.py",
+      "consumer_derivative": "platform/api/openapi/swagger/brand/",
+      "destination": "codestrata-platform-api",
+      "classification": "AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "scripts/generate_brand_assets.py",
+      "consumer_derivative": "engine/src/codestrata/reporting/assets/",
+      "destination": "codestrata-engine",
+      "classification": "AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "scripts/generate_brand_assets.py",
+      "consumer_derivative": "vscode-plugin/media/codestrata-activity.svg",
+      "destination": "codestrata-vscode",
+      "classification": "AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "master": "design-system/tokens/tokens.css",
+      "generator": "manual_sync_with_aliases",
+      "consumer_derivative": "docs/public/design-tokens/tokens.css",
+      "destination": "codestrata-docs",
+      "classification": "GENERATED_COPY"
+    },
+    {
+      "master": "design-system/tokens/tokens.css",
+      "generator": "cp_from_docs_public",
+      "consumer_derivative": "platform/api/openapi/swagger/design-tokens/tokens.css",
+      "destination": "codestrata-platform-api",
+      "classification": "GENERATED_COPY"
+    },
+    {
+      "master": "design-system/tokens/tokens.css",
+      "generator": "vitepress_import_bridge",
+      "consumer_derivative": "docs/.vitepress/theme/tokens.css",
+      "destination": "codestrata-docs",
+      "classification": "ACTIVE_CONSUMER_TOKEN_BRIDGE"
+    },
+    {
+      "master": "design-system/tokens/tokens.css",
+      "generator": "insights_standalone_copy",
+      "consumer_derivative": "insights/public/design-tokens/tokens.css",
+      "destination": "codestrata-insights",
+      "classification": "GENERATED_COPY"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "insights_standalone_copy",
+      "consumer_derivative": "insights/public/brand/",
+      "destination": "codestrata-insights",
+      "classification": "AUTHORIZED_DERIVATIVE"
+    },
+    {
+      "master": "design-system/assets/brand/",
+      "generator": "vscode-plugin/scripts/generate_marketplace_visuals.py",
+      "consumer_derivative": "vscode-plugin/media/",
+      "destination": "codestrata-vscode",
+      "classification": "ACTIVE_SURFACE_ASSET"
+    },
+    {
+      "master": "governance/assets/",
+      "generator": null,
+      "consumer_derivative": null,
+      "destination": "historical_archive",
+      "classification": "HISTORICAL_ARCHIVE"
+    }
+  ]
+}

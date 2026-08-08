@@ -23,11 +23,8 @@ WRANGLER_VERSION = "4.120.0"
 VITEPRESS_PIN = "1.6.4"
 EXPORT_MANIFEST = "public-export-manifest.yaml"
 
-FORBIDDEN_EPIC_15_PATHS: tuple[str, ...] = (
-    "verification/epic15_start",
-    "verification/epic_15",
-    "tests/verification/epic15_start",
-    "reports/verification/sv15-1",
+FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
+    "reports/verification/sv15-7",
 )
 
 ALLOWED_LIMITATIONS: tuple[str, ...] = (
@@ -53,7 +50,7 @@ class Sv1412Contract:
     extension_version: str = "0.2.0"
     no_production_deploy: bool = True
     no_commit: bool = True
-    start_epic_15: bool = False
+    start_slice_15_7: bool = False
 
 
 def default_contract() -> Sv1412Contract:

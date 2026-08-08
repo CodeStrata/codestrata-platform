@@ -64,12 +64,12 @@ def check_completion_policy(
         "commit_created",
         "published",
         "deployed",
-        "start_epic_15",
+        "start_slice_15_7",
     ):
         add(f"policy:{flag}_false", policy.get(flag) is False, str(policy.get(flag)))
     add(
-        "policy:prohibited_start_epic_15",
-        policy.get("prohibited", {}).get("start_epic_15") is True,
+        "policy:prohibited_start_slice_15_7",
+        policy.get("prohibited", {}).get("start_slice_15_7") is True,
         "forbidden",
     )
     return checks, defects

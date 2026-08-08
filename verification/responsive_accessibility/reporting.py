@@ -31,7 +31,7 @@ def write_report(monorepo: Path, report: ResponsiveAccessibilityReport) -> Path:
         "AA-oriented accessibility and responsive contract. Automated verification "
         "is not a substitute for formal accessibility certification. Report content, "
         "scoring, risk semantics, report IA, brand geometry, schemas, and runtime "
-        "behaviour are unchanged. Slice 14.13 complete. Epic 15 not started. "
+        "behaviour are unchanged. Slice 14.13 complete. Slice 15.7 not started. "
         "No commit/tag/publish/deploy.\n",
         encoding="utf-8",
     )

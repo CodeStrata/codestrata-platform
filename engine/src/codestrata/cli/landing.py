@@ -29,11 +29,15 @@ from codestrata.cli.ux import (
 from codestrata.package_metadata import get_package_version
 from codestrata.reporting.contract.constants import ASSESSMENT_JSON_SCHEMA_VERSION
 
-# Design-system amber (governance/assets/DESIGN-SYSTEM.md).
+# Design System 1.0 accent (design-system/tokens/tokens.css --cs-teal-dark / --cs-teal).
 # Foreground colors only — never bgcolor / reverse / screen fills.
-AMBER = "#d98a3d"
-AMBER_BRIGHT = "#eca860"
-AMBER_DIM = "#b06a24"  # --amber-deep; panel borders
+ACCENT = "#0f5d54"  # --cs-teal-dark / --cs-accent
+ACCENT_BRIGHT = "#16756a"  # --cs-teal / --cs-accent-bright
+ACCENT_DIM = "#0f5d54"  # panel borders (teal-dark)
+# Historical aliases retained for any external importers of the old names.
+AMBER = ACCENT
+AMBER_BRIGHT = ACCENT_BRIGHT
+AMBER_DIM = ACCENT_DIM
 BRIGHT_WHITE = "bold bright_white"
 WHITE = "white"
 DIM = "dim"
@@ -330,7 +334,7 @@ def render_landing(
 
     use_color = not active.no_color and _color_allowed() and not force_mono
 
-    wordmark = _center_styled(art, AMBER, width, enabled=use_color)
+    wordmark = _center_styled(art, ACCENT, width, enabled=use_color)
     brand = _center_styled(BRAND_STATEMENT, BRIGHT_WHITE, width, enabled=use_color)
     category = _center_styled(PRODUCT_CATEGORY, WHITE, width, enabled=use_color)
     edition = _center_styled(EDITION, DIM, width, enabled=use_color)
@@ -356,8 +360,8 @@ def render_landing(
     panel_w = max(24, min(needed, width - 2, 72 if width >= 80 else width - 2))
     start_panel = Panel(
         Align.center(start_body),
-        title=_fg("Start Here", AMBER, enabled=use_color),
-        border_style=AMBER_DIM if use_color else "dim",
+        title=_fg("Start Here", ACCENT, enabled=use_color),
+        border_style=ACCENT_DIM if use_color else "dim",
         width=panel_w,
         padding=(1, h_pad),
         # Transparent content area — preserve the user's terminal background.
@@ -371,7 +375,7 @@ def render_landing(
     steps.add_column(
         justify="right",
         width=label_width,
-        style=AMBER if use_color else "bold",
+        style=ACCENT if use_color else "bold",
         no_wrap=True,
     )
     steps.add_column(style=CYAN if use_color else "bold", no_wrap=True)
@@ -420,7 +424,7 @@ def render_landing(
             Text(""),
             Align.center(start_panel, width=width),
             Text(""),
-            _center_styled("Next Steps", AMBER, width, enabled=use_color),
+            _center_styled("Next Steps", ACCENT, width, enabled=use_color),
             Align.center(steps, width=width),
             Text(""),
             _center_styled(meta, DIM, width, enabled=use_color),
@@ -481,6 +485,8 @@ def show_landing_or_help(
 
 
 __all__ = [
+    "ACCENT",
+    "ACCENT_BRIGHT",
     "AMBER",
     "AMBER_BRIGHT",
     "BRAND_STATEMENT",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Authoritative repository export router (Slice 12.8).
+"""Authoritative repository export router (Slice 12.8 / 15.8).
 
 Supports exactly one target per invocation:
 
@@ -13,9 +13,15 @@ Supports exactly one target per invocation:
     --destination <infrastructure-repository-directory> \\
     --dry-run
 
+  python scripts/export_repository.py \\
+    --target insights \\
+    --destination <insights-repository-directory> \\
+    --dry-run
+
 Community destination is a staging root that may contain multiple public/private
 mirror repositories. Infrastructure destination is a single private repository
-directory (Approach A).
+directory (Approach A). Insights destination is a single private internal
+application repository (codestrata-insights).
 
 Does not: merge target policies, create remotes, git commit/push/tag, AWS calls,
 OpenTofu plan/apply/destroy, or publish/deploy.
@@ -40,7 +46,7 @@ from repository_export_router.targets import SUPPORTED_TARGETS  # noqa: E402
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Export one repository target (community | infrastructure). "
+            "Export one repository target (community | infrastructure | insights). "
             "No default target. No Git/AWS/deploy."
         )
     )
@@ -56,7 +62,8 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help=(
             "Destination path (required). Community: staging root for multiple "
-            "mirror repos. Infrastructure: single private repository directory."
+            "mirror repos. Infrastructure: single private repository directory. "
+            "Insights: single private codestrata-insights application directory."
         ),
     )
     parser.add_argument(

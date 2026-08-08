@@ -1,11 +1,13 @@
 /**
- * CodeStrata Community Docs — Design System bridge (Slice 14.2)
+ * CodeStrata Community Docs — Design System bridge (Slice 14.2 / 16.7)
  *
- * Consumes authoritative tokens from design-system/ (Slice 14.1).
- * Do NOT duplicate palette values here.
+ * Consumes the docs-local GENERATED_COPY of Design System tokens
+ * (`docs/public/design-tokens/tokens.css`), not a monorepo sibling path.
+ * Authoritative master remains `design-system/tokens/tokens.css`.
+ * Do NOT invent a competing palette here.
  */
 
-@import "../../../design-system/tokens/tokens.css";
+@import "../../public/design-tokens/tokens.css";
 
 :root {
   color-scheme: light dark;

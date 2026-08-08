@@ -263,15 +263,17 @@
     "lint": "tsc -p ./ --noEmit",
     "test": "npm run compile && node --test ./out/test/extensionCore.test.js ./out/test/telemetryRuntime.test.js ./out/test/analyticsRuntime.test.js ./out/test/communityWorkflow.test.js ./out/test/cliDiscovery.test.js ./out/test/cliInstallation.test.js ./out/test/repositoryInitialization.test.js ./out/test/assessmentExecution.test.js ./out/test/assessmentProgress.test.js ./out/test/reportOpening.test.js ./out/test/failureRecovery.test.js ./out/test/telemetryConsentIntegration.test.js ./out/test/sourceLocality.test.js ./out/test/cliCompatibility.test.js ./out/test/marketplaceBranding.test.js ./out/test/marketplaceDocs.test.js ./out/test/cleanInstall.test.js",
     "test:host": "npm run compile && node ./out/test/runHostTests.js",
-    "package": "npm run compile && npx --yes @vscode/vsce@2.32.0 package --no-dependencies",
-    "package:dry": "npm run compile && npx --yes @vscode/vsce@2.32.0 ls --no-dependencies",
-    "publish:vsce:dry": "npm run package && npx --yes @vscode/vsce@2.32.0 publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
-    "publish:ovsx:dry": "npm run package && npx --yes ovsx publish ./codestrata-vscode-${npm_package_version}.vsix --no-wait --help"
+    "package": "npm run compile && vsce package --no-dependencies",
+    "package:dry": "npm run compile && vsce ls --no-dependencies",
+    "publish:vsce:dry": "npm run package && vsce publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
+    "publish:ovsx:dry": "npm run package && ovsx publish ./codestrata-vscode-${npm_package_version}.vsix --no-wait --help"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
     "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "2.32.0",
+    "ovsx": "0.10.1",
     "typescript": "^5.3.3"
   }
 }

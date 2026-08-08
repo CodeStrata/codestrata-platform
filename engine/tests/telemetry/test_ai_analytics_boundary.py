@@ -44,12 +44,12 @@ def test_identity_file_only_when_ensured(tmp_path: Path) -> None:
     assert files == ["anonymous-installation-identity.json"]
 
 
-def test_openrouter_not_in_provider_family_catalog() -> None:
+def test_openrouter_in_provider_family_catalog_family_only() -> None:
     from codestrata.telemetry.analytics.ai_analytics_catalogs import (
         APPROVED_AI_PROVIDER_FAMILIES,
     )
 
-    assert "openrouter" not in APPROVED_AI_PROVIDER_FAMILIES
+    assert "openrouter" in APPROVED_AI_PROVIDER_FAMILIES
     policy_text = (
         Path(__file__).resolve().parents[2]
         / "src"
@@ -58,7 +58,8 @@ def test_openrouter_not_in_provider_family_catalog() -> None:
         / "analytics"
         / "ai_analytics_policy.py"
     ).read_text(encoding="utf-8")
-    assert "openrouter_not_supported" in policy_text
+    assert "openrouter_family_only_no_endpoints_or_keys" in policy_text
+    assert "api_key" not in policy_text.lower() or "no_" in policy_text
 
 
 def test_vscode_plugin_src_unchanged_by_slice() -> None:

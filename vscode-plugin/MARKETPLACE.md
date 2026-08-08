@@ -33,11 +33,14 @@ confirmed (clean install/update validation is a separate release step).
 
 ## Branding assets
 
-Canonical sources: `governance/assets/extension-branding/`
+Authoritative brand masters: `design-system/assets/brand/`  
+Marketplace packaging derivatives: `vscode-plugin/media/`  
+Generator: `vscode-plugin/scripts/generate_marketplace_visuals.py`  
+Historical amber-era sources (archive only): `governance/assets/extension-branding/`
 
-- Icon PNG sizes 16–512 + SVG tile
-- Marketplace banner 1280×640
 - Packaged icon: `media/codestrata-icon.png` (128×128)
+- Marketplace gallery screenshots: five Community journey images under `media/`
+- Optional banner art: `media/marketplace-banner.png`
 - Screenshots: gallery order documented in branding docs and `README.md`
 
 ## Secrets (never in git)

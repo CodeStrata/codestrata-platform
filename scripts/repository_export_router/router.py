@@ -7,6 +7,7 @@ from pathlib import Path
 from repository_export_router.community_adapter import export_community_target
 from repository_export_router.destination import require_destination
 from repository_export_router.infrastructure_adapter import export_infrastructure_target
+from repository_export_router.insights_adapter import export_insights_target
 from repository_export_router.models import RouterResult
 from repository_export_router.targets import ExportTarget, parse_target
 
@@ -36,6 +37,12 @@ def export_repository(
         )
     if parsed is ExportTarget.INFRASTRUCTURE:
         return export_infrastructure_target(
+            destination=destination,
+            dry_run=dry_run,
+            source_root=root,
+        )
+    if parsed is ExportTarget.INSIGHTS:
+        return export_insights_target(
             destination=destination,
             dry_run=dry_run,
             source_root=root,
