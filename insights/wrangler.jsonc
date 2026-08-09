@@ -16,6 +16,11 @@
   "compatibility_date": "2025-04-01",
   "workers_dev": true,
   "main": "workers/api-proxy.ts",
+  // Cloudflare Git runs `npx wrangler deploy` without a separate Vite step.
+  // Custom build guarantees dist/ exists on a clean clone before assets upload.
+  "build": {
+    "command": "npm run build"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

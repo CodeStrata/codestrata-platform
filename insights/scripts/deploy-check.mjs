@@ -54,6 +54,14 @@ const pkg = JSON.parse(readFileSync(PACKAGE_JSON, "utf8"));
 if (!pkg.devDependencies?.wrangler && !pkg.dependencies?.wrangler) {
   fail("wrangler must be declared in package.json dependencies");
 }
+const deployScript = pkg.scripts?.deploy || "";
+if (!/\bnpm run build\b/.test(deployScript)) {
+  fail("package.json scripts.deploy must run npm run build before upload");
+}
+const dryRunScript = pkg.scripts?.["deploy:dry-run"] || "";
+if (dryRunScript && !/\bbuild\b/.test(dryRunScript)) {
+  fail("package.json scripts.deploy:dry-run must build before wrangler dry-run");
+}
 
 if (config) {
   if (config.name !== "codestrata-insights") {
@@ -86,6 +94,12 @@ if (config) {
   }
   if (!config.vars?.UPSTREAM_API_BASE) {
     fail("vars.UPSTREAM_API_BASE required for API proxy");
+  }
+  const buildCommand = config.build?.command;
+  if (!buildCommand || typeof buildCommand !== "string") {
+    fail("build.command required so clean Cloudflare clones generate dist/ before deploy");
+  } else if (!/\bnpm run build\b/.test(buildCommand)) {
+    fail(`build.command must invoke npm run build (got ${buildCommand})`);
   }
   if (/cloudflare|api.?token|secret/i.test(JSON.stringify(config))) {
     // structural presence of secret-like keys beyond UPSTREAM is rejected below

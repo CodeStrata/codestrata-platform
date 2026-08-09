@@ -17,9 +17,9 @@
     "test:watch": "vitest",
     "deploy:check": "node scripts/deploy-check.mjs",
     "deploy:upload": "wrangler deploy",
-    "deploy": "npm run deploy:upload",
-    "deploy:dry-run": "wrangler deploy --dry-run",
-    "deploy:local": "npm run build && npm run deploy:check && npm run deploy:upload"
+    "deploy": "npm run build && npm run deploy:check && npm run deploy:upload",
+    "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
+    "deploy:local": "npm run deploy"
   },
   "dependencies": {
     "react": "^19.1.0",
