@@ -168,8 +168,8 @@ def _check_production_route_count() -> list[CheckResult]:
     count = app.state.community_cloud_route_registry.diagnostics().registered_route_count
     return [
         CheckResult(
-            name="boundary:production_six_routes_not_seven",
-            ok=count == 6,
+            name="boundary:production_ingestion_and_insights_routes",
+            ok=count == 10,
             detail=f"count={count}",
             category="boundary",
         )

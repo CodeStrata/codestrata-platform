@@ -1,0 +1,34 @@
+/**
+ * CodeStrata Community Insights — Cloudflare Static Assets + same-origin API proxy.
+ *
+ * Package root / Cloudflare project working directory: this insights/ directory.
+ * Vite output (proven): ./dist
+ *
+ * /api/* is handled by workers/api-proxy.ts (run_worker_first) and forwarded to
+ * the Community Cloud API. SPA routes use single-page-application not_found_handling.
+ *
+ * Never put monorepo-relative paths like "insights/dist" in assets.directory.
+ * Never commit Cloudflare API tokens.
+ */
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "codestrata-insights",
+  "compatibility_date": "2025-04-01",
+  "workers_dev": true,
+  "main": "workers/api-proxy.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "routes": [
+    {
+      "pattern": "insights.codestrata.ai",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "UPSTREAM_API_BASE": "https://4qp72fmi85.execute-api.us-west-2.amazonaws.com"
+  }
+}

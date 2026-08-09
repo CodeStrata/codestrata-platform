@@ -12,7 +12,7 @@ from verification.vscode_repository_initialization import (
 
 SCHEMA_NAME = "vscode-repository-initialization-verification"
 SCHEMA_VERSION = "1.0.0"
-SV134_OUTPUT_RELATIVE = "reports/verification/sv13-4"
+SV134_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-4"
 REPORT_JSON = "vscode-repository-initialization-verification.json"
 REPORT_MD = "vscode-repository-initialization-verification.md"
 

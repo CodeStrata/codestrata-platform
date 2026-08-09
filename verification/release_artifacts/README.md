@@ -18,7 +18,7 @@ Optional flags:
 ```bash
 python -m verification.release_artifacts \
   --monorepo-root . \
-  --output-dir reports/verification/sv16 \
+  --output-dir .codestrata-artifacts/validation/suites/sv16 \
   --skip-build \
   --skip-install
 ```
@@ -40,7 +40,7 @@ Verified locally (SV.16A): OpenTofu **v1.12.5**, fmt/init/validate passed for
 Reports are written under:
 
 ```
-reports/verification/sv16/
+.codestrata-artifacts/validation/suites/sv16/
 ├── release-artifact-verification.json
 ├── release-artifact-verification.md
 ├── release-notes-input.json

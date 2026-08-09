@@ -1,16 +1,22 @@
-check "foundation_fail_closed" {
+check "production_posture" {
   assert {
-    condition     = var.enable_ingestion == false
-    error_message = "Ingestion must remain disabled for the production foundation."
+    condition = contains(
+      ["enabled_verifier_unavailable", "enabled_secrets_manager_verifier"],
+      var.authentication_mode
+    )
+    error_message = "authentication_mode must keep authentication enabled."
   }
 
   assert {
-    condition     = var.authentication_mode == "enabled_verifier_unavailable"
-    error_message = "Authentication must stay enabled without a production verifier in this slice."
+    condition = contains(
+      ["production_foundation", "production_ingestion"],
+      var.deployment_mode
+    )
+    error_message = "deployment_mode must be production_foundation or production_ingestion."
   }
 
   assert {
-    condition     = var.deployment_mode == "production_foundation"
-    error_message = "deployment_mode must remain production_foundation."
+    condition     = !(var.enable_ingestion && var.deployment_mode == "production_foundation")
+    error_message = "enable_ingestion=true requires deployment_mode=production_ingestion."
   }
 }

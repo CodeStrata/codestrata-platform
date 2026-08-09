@@ -58,12 +58,12 @@
       "current_source_root": "docs/",
       "current_authority": "monorepo",
       "future_repository": "codestrata-docs",
-      "visibility": "public",
+      "visibility": "private",
       "distribution_mode": "export",
       "export_target": "community",
       "runtime_owner": "docs",
       "status": "EXPORT_TO_FUTURE_REPOSITORY",
-      "notes_code": "Community staging mirror via public export manifest"
+      "notes_code": "GitHub repository private; Cloudflare site docs.codestrata.ai remains publicly reachable"
     },
     {
       "component": "vscode",

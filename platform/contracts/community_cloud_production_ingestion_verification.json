@@ -1,0 +1,19 @@
+{
+  "schema": "community-cloud-production-ingestion-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.7",
+  "package": "verification/community_cloud_production_ingestion",
+  "policy": "community-cloud-production-ingestion-policy:1.0",
+  "register": "community-cloud-production-ingestion-register:1.0",
+  "report": "reports/verification/sv17-7/community-cloud-production-ingestion-verification.json",
+  "start_slice_17_7": true,
+  "start_slice_17_8": false,
+  "production_ingestion_enabled": true,
+  "client_consent_still_required": true,
+  "writer_attached": true,
+  "five_streams_enabled": true,
+  "data_lake_private": true,
+  "quarantine_enabled": true,
+  "report_artifacts_in_lake": false,
+  "destructive_actions_allowed": false
+}

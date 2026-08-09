@@ -12,7 +12,7 @@ from verification.vscode_cli_installation import (
 
 SCHEMA_NAME = "vscode-cli-installation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV133_OUTPUT_RELATIVE = "reports/verification/sv13-3"
+SV133_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-3"
 REPORT_JSON = "vscode-cli-installation-verification.json"
 REPORT_MD = "vscode-cli-installation-verification.md"
 

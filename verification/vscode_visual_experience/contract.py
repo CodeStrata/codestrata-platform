@@ -9,7 +9,7 @@ from verification.vscode_visual_experience import VSCODE_VISUAL_ID, VSCODE_VISUA
 
 SCHEMA_NAME = "vscode-visual-experience-verification"
 SCHEMA_VERSION = "1.0.0"
-SV145_OUTPUT_RELATIVE = "reports/verification/sv14-5"
+SV145_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-5"
 REPORT_JSON = "vscode-visual-experience-verification.json"
 REPORT_MD = "vscode-visual-experience-verification.md"
 

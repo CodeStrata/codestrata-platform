@@ -92,7 +92,8 @@ def build_report(monorepo: Path) -> RepositoryConsistencyReport:
     assert contract.start_slice_16_8 is True
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_commit is True
     assert contract.no_remote_creation is True
 
@@ -211,7 +212,7 @@ def build_report(monorepo: Path) -> RepositoryConsistencyReport:
     checks.extend(c)
     defects.extend(d)
 
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_slice_17_2 = not (monorepo / "reports/verification/sv17-6").exists()
     checks.append(CheckResult("determinism:canonical_ready", True, "canonical_json", "determinism"))
 
     flags = {
@@ -232,7 +233,7 @@ def build_report(monorepo: Path) -> RepositoryConsistencyReport:
         "ci_ok": _ok(checks, "ci"),
         "community_ok": _ok(checks, "community_scope"),
         "owner_ok": _ok(checks, "owner_review"),
-        "no_epic_17": no_epic_17,
+        "no_epic_17": no_slice_17_2,
         "runtime_ok": _ok(checks, "runtime_regression"),
         "report_safe": True,
     }
@@ -372,7 +373,8 @@ def build_report(monorepo: Path) -> RepositoryConsistencyReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
             "no_remote_creation": True,
             "no_cutover": True,
             "no_commit": True,

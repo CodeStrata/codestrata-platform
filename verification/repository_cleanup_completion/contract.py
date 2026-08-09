@@ -12,7 +12,7 @@ from verification.repository_cleanup_completion import (
 
 SCHEMA_NAME = "repository-cleanup-completion-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1610_OUTPUT_RELATIVE = "reports/verification/sv16-10"
+SV1610_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-10"
 REPORT_JSON = "repository-cleanup-completion-verification.json"
 REPORT_MD = "repository-cleanup-completion-verification.md"
 
@@ -54,7 +54,8 @@ class Sv1610Contract:
     package_id: str = REPOSITORY_CLEANUP_COMPLETION_ID
     package_version: str = REPOSITORY_CLEANUP_COMPLETION_VERSION
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True  # Epic 17 may proceed after Epic 16 completion
+    start_slice_17_2: bool = True
     epic_complete: bool = True
     no_commit: bool = True
     no_tag: bool = True

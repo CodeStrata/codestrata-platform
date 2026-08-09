@@ -37,11 +37,19 @@ def check_completion_policy(
     add_check(
         checks,
         defects,
-        "policy:start_epic_17_false",
-        policy.get("start_epic_17", False) is False,
+        "policy:start_epic_17_true",
+        policy.get("start_epic_17", False) is True,
         str(policy.get("start_epic_17")),
         "policy",
-        classification="epic_17_started",
+    )
+    add_check(
+        checks,
+        defects,
+        "policy:start_slice_17_2_true",
+        policy.get("start_slice_17_2", False) is True,
+        str(policy.get("start_slice_17_2")),
+        "policy",
+        classification="slice_17_4_started",
     )
     for key in (
         "repository_inventory_complete",

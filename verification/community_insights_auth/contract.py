@@ -12,7 +12,7 @@ from verification.community_insights_auth import (
 
 SCHEMA_NAME = "community-insights-auth-verification"
 SCHEMA_VERSION = "1.0.0"
-SV159_OUTPUT_RELATIVE = "reports/verification/sv15-9"
+SV159_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-9"
 REPORT_JSON = "community-insights-auth-verification.json"
 REPORT_MD = "community-insights-auth-verification.md"
 
@@ -50,7 +50,7 @@ PASSWORD_SECRET_ID = "codestrata/insights/dashboard-password"
 SESSION_SECRET_ID = "codestrata/insights/session-secret"
 
 FORBIDDEN_15_10_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

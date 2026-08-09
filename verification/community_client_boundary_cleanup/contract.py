@@ -13,7 +13,7 @@ from verification.community_client_boundary_cleanup import (
 SCHEMA_NAME = "community-client-boundary-cleanup-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV124_OUTPUT_RELATIVE = "reports/verification/sv12-4"
+SV124_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-4"
 REPORT_JSON = "community-client-boundary-cleanup-verification.json"
 REPORT_MD = "community-client-boundary-cleanup-verification.md"
 

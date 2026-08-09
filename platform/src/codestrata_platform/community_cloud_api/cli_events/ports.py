@@ -60,12 +60,23 @@ class CliEventSinkResult:
 
 
 class CliEventSink(Protocol):
-    def accept(self, event: ValidatedCliEvent) -> CliEventSinkResult: ...
+    def accept(
+        self,
+        event: ValidatedCliEvent,
+        *,
+        request: Any | None = None,
+    ) -> CliEventSinkResult: ...
 
 
 class UnavailableCliEventSink:
-    def accept(self, event: ValidatedCliEvent) -> CliEventSinkResult:
+    def accept(
+        self,
+        event: ValidatedCliEvent,
+        *,
+        request: Any | None = None,
+    ) -> CliEventSinkResult:
         _ = event
+        _ = request
         return CliEventSinkResult(
             status=CliEventSinkStatus.UNAVAILABLE,
             reason="cli_event_sink_unavailable",
@@ -78,7 +89,13 @@ class InMemoryCliEventSink:
     fail_next: bool = False
     reject_next: bool = False
 
-    def accept(self, event: ValidatedCliEvent) -> CliEventSinkResult:
+    def accept(
+        self,
+        event: ValidatedCliEvent,
+        *,
+        request: Any | None = None,
+    ) -> CliEventSinkResult:
+        _ = request
         if self.fail_next:
             self.fail_next = False
             raise RuntimeError("simulated_cli_sink_failure")

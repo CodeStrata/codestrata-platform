@@ -13,7 +13,7 @@ from verification.anonymous_analytics_privacy import (
 SCHEMA_NAME = "anonymous-analytics-privacy-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV108_OUTPUT_RELATIVE = "reports/verification/sv10-8"
+SV108_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv10-8"
 REPORT_JSON = "anonymous-analytics-privacy-verification.json"
 REPORT_MD = "anonymous-analytics-privacy-verification.md"
 

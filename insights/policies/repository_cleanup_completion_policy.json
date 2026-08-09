@@ -31,7 +31,7 @@
   "commit_created": false,
   "tag_created": false,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "production_ingestion_enabled": false,
   "authoritative_slice_policies": [
     "repository-cleanup-policy:1.0",
@@ -49,5 +49,9 @@
     "package": "verification/repository_cleanup_completion",
     "schema": "repository-cleanup-completion-verification:1.0.0",
     "report": "reports/verification/sv16-10/repository-cleanup-completion-verification.json"
-  }
+  },
+  "epic_17_started": true,
+  "slice_17_1_allowed": true,
+  "start_slice_17_2": true,
+  "note_epic_17": "Epic 17 started after Epic 16 completion. Slice 17.1 architecture only; no production apply/deploy."
 }

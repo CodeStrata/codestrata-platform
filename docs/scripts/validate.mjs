@@ -202,8 +202,11 @@ if (!/rel="noopener noreferrer"/.test(footerSrc) && !/noopener noreferrer/.test(
   errors.push("CsFooter missing noopener noreferrer on external links");
 }
 const configSrc = fs.readFileSync(path.join(root, ".vitepress/config.ts"), "utf8");
-if (!configSrc.includes('logoLink: "https://codestrata.ai/"')) {
-  errors.push('config logoLink must be https://codestrata.ai/');
+if (!configSrc.includes('logoLink: "/"')) {
+  errors.push('config logoLink must be "/" (docs home); Main Site is nav/sidebar');
+}
+if (!configSrc.includes('link: "https://codestrata.ai/"')) {
+  errors.push("config must expose Main Site → https://codestrata.ai/");
 }
 if (!configSrc.includes("platform/**")) {
   errors.push("config must srcExclude platform/**");

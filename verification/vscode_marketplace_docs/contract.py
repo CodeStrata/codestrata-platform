@@ -12,7 +12,7 @@ from verification.vscode_marketplace_docs import (
 
 SCHEMA_NAME = "vscode-marketplace-documentation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1313_OUTPUT_RELATIVE = "reports/verification/sv13-13"
+SV1313_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-13"
 REPORT_JSON = "vscode-marketplace-documentation-verification.json"
 REPORT_MD = "vscode-marketplace-documentation-verification.md"
 

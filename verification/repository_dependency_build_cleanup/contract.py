@@ -12,7 +12,7 @@ from verification.repository_dependency_build_cleanup import (
 
 SCHEMA_NAME = "repository-dependency-build-cleanup-verification"
 SCHEMA_VERSION = "1.0.0"
-SV165_OUTPUT_RELATIVE = "reports/verification/sv16-5"
+SV165_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-5"
 REPORT_JSON = "repository-dependency-build-cleanup-verification.json"
 REPORT_MD = "repository-dependency-build-cleanup-verification.md"
 
@@ -59,7 +59,8 @@ class Sv165Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_storage_cleanup: bool = True
     no_repository_split: bool = True
     no_forced_framework_modernization: bool = True

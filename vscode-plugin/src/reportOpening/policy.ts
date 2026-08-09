@@ -8,8 +8,14 @@ export const REPORT_OPENING_POLICY_ID =
   "community-vscode-report-opening-policy" as const;
 export const REPORT_OPENING_POLICY_VERSION = "1.0" as const;
 
-/** Fixed Engine HTML report basename (not repository-specific). */
-export const ENGINE_HTML_REPORT_BASENAME = "report.html" as const;
+/** Preferred Engine HTML report basename (Slice 17.12). */
+export const ENGINE_HTML_REPORT_BASENAME = "assessment.html" as const;
+/** Legacy basename retained for migration compatibility. */
+export const LEGACY_ENGINE_HTML_REPORT_BASENAME = "report.html" as const;
+export const ENGINE_HTML_REPORT_BASENAMES = [
+  ENGINE_HTML_REPORT_BASENAME,
+  LEGACY_ENGINE_HTML_REPORT_BASENAME,
+] as const;
 
 export type ReportOpeningPolicy = {
   readonly policy_id: typeof REPORT_OPENING_POLICY_ID;

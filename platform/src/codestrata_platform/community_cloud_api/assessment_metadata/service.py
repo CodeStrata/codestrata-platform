@@ -276,7 +276,7 @@ class IngestAssessmentMetadata:
         )
 
         try:
-            sink_result = self.sink.accept(event)
+            sink_result = self.sink.accept(event, request=request)
         except Exception:  # noqa: BLE001
             return self._sink_unavailable(
                 context, request, decision, limitations, decision.status.value

@@ -12,7 +12,7 @@ from verification.unified_product_experience_completion import (
 
 SCHEMA_NAME = "unified-product-experience-completion-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1414_OUTPUT_RELATIVE = "reports/verification/sv14-14"
+SV1414_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-14"
 REPORT_JSON = "unified-product-experience-completion-verification.json"
 REPORT_MD = "unified-product-experience-completion-verification.md"
 
@@ -206,7 +206,7 @@ EPIC14_POLICIES: tuple[tuple[str, str, str], ...] = (
 )
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

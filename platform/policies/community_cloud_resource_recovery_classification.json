@@ -1,0 +1,94 @@
+{
+  "schema": "community-cloud-resource-recovery-classification:1.0",
+  "epic": 17,
+  "slice": "17.10",
+  "environment": "production",
+  "region": "us-west-2",
+  "components": [
+    {
+      "component": "Lambda",
+      "recovery_mode": "SAFE_IN_PLACE",
+      "rollback_mechanism": "update_function_code_to_prior_ecr_uri_or_config_restore",
+      "destructive_allowed": false,
+      "data_preservation_required": false,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "API Gateway",
+      "recovery_mode": "SAFE_RECREATE",
+      "rollback_mechanism": "opentofu_recreate_with_same_stage_configuration",
+      "destructive_allowed": false,
+      "data_preservation_required": false,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "ECR",
+      "recovery_mode": "DATA_PRESERVING_ONLY",
+      "rollback_mechanism": "retain_immutable_image_tags_point_lambda_to_prior",
+      "destructive_allowed": false,
+      "data_preservation_required": true,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "CloudWatch log group",
+      "recovery_mode": "SAFE_IN_PLACE",
+      "rollback_mechanism": "opentofu_in_place_retention_or_config_restore",
+      "destructive_allowed": false,
+      "data_preservation_required": false,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "IAM policies",
+      "recovery_mode": "SAFE_IN_PLACE",
+      "rollback_mechanism": "opentofu_policy_document_restore",
+      "destructive_allowed": false,
+      "data_preservation_required": false,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "Secrets",
+      "recovery_mode": "DATA_PRESERVING_ONLY",
+      "rollback_mechanism": "secrets_manager_version_restore_identifiers_only",
+      "destructive_allowed": false,
+      "data_preservation_required": true,
+      "operator_class": "owner_attach_required",
+      "verification_status": "classified"
+    },
+    {
+      "component": "Data Lake S3",
+      "recovery_mode": "NEVER_AUTOMATICALLY_DESTROY",
+      "rollback_mechanism": "object_version_retention_no_bucket_destroy",
+      "destructive_allowed": false,
+      "data_preservation_required": true,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "remote-state S3",
+      "recovery_mode": "NEVER_AUTOMATICALLY_DESTROY",
+      "rollback_mechanism": "backend_read_only_recovery_simulation",
+      "destructive_allowed": false,
+      "data_preservation_required": true,
+      "operator_class": "codestrata_infra",
+      "verification_status": "classified"
+    },
+    {
+      "component": "GitHub OIDC",
+      "recovery_mode": "SAFE_IN_PLACE",
+      "rollback_mechanism": "trust_policy_and_role_policy_restore",
+      "destructive_allowed": false,
+      "data_preservation_required": false,
+      "operator_class": "owner_attach_required",
+      "verification_status": "classified"
+    }
+  ],
+  "start_slice_17_10": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

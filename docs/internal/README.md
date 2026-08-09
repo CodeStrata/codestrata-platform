@@ -1,9 +1,10 @@
 # Internal documentation (unpublished)
 
-> **INTERNAL / ARCHIVE CANDIDATE (Slice 16.2)** — Excluded from Community
-> VitePress publish (`srcExclude: internal/**`). Not part of the public
-> Community documentation hierarchy. Retained for maintainer audits; do not
-> present as current product guidance.
+> **INTERNAL / HISTORICAL (pre-Epic-17 documentation audit)** — Excluded from
+> Community VitePress publish (`srcExclude: internal/**`). Not part of the
+> public Community documentation hierarchy.
 
-Files here include historical security-detector precision audits and related
-scratch artifacts. Prefer `docs/security/` for Community security topics.
+One-off security-detector precision audits and scratch helpers that previously
+lived here were removed as `DELETE_CANDIDATE` (generated audit dumps and
+underscore scratch artifacts). Prefer `docs/security/` for Community security
+topics and `reports/verification/` for verification evidence.

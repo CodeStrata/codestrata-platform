@@ -22,7 +22,7 @@ variable "environment_name" {
 variable "aws_region" {
   description = "AWS region for the data lake bucket."
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-2"
 
   validation {
     condition     = can(regex("^[a-z]{2}-[a-z]+-[0-9]+$", var.aws_region))
@@ -86,14 +86,9 @@ variable "encryption_mode" {
 }
 
 variable "enable_ingestion_wire" {
-  description = "Whether the data lake bucket is wired into any ingestion path (Lambda, EventBridge, etc.). This slice creates bucket foundation only, so this must remain false."
+  description = "Whether the data lake writer path is intentionally activated for ingestion (Slice 17.7+)."
   type        = bool
   default     = false
-
-  validation {
-    condition     = var.enable_ingestion_wire == false
-    error_message = "enable_ingestion_wire must remain false; this slice provides bucket foundation only, with no ingestion wiring."
-  }
 }
 
 variable "force_destroy" {

@@ -5,7 +5,7 @@
 | Policy | `community-insights-validation-policy:1.0` |
 | Contract | `community-insights-validation-contract:1.0` |
 | Schema | `community-insights-validation-verification:1.0.0` |
-| Report | `reports/verification/sv15-11/community-insights-validation-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-11/community-insights-validation-verification.json` |
 
 Offline/mock validation of the complete Insights path using synthetic Data Lake
 fixtures, fake S3, fake secrets, and TestClient HTTPS. No AWS, deploy, or live

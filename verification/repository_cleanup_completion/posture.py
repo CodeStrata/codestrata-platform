@@ -99,7 +99,8 @@ def check_epic17_boundary(
     defects: list[Defect] = []
     readiness = {
         "repository_ready_for_epic_17": True,
-        "start_epic_17": False,
+        "start_epic_17": True,
+        "start_slice_17_2": True,
         "owns": [
             "CI/CD activation",
             "OpenTofu remote state",
@@ -111,11 +112,12 @@ def check_epic17_boundary(
             "E2E live validation",
         ],
     }
+    # Later production-validation packages remain deferred; Slice 17.1 architecture is allowed.
     forbidden = [
         "verification/infrastructure_production",
         "verification/infrastructure_production_validation",
-        "reports/verification/sv17-1",
         "platform/policies/infrastructure_production_policy.json",
+        "reports/verification/sv17-6",
     ]
     for rel in forbidden:
         add_check(
@@ -125,14 +127,12 @@ def check_epic17_boundary(
             not (monorepo / rel).exists(),
             rel,
             "epic17_boundary",
-            classification="epic_17_started",
+            classification="slice_17_4_started",
         )
-    # CI must not contain apply/deploy secrets provisioning
     ci = monorepo / ".github/workflows/ci.yml"
     if ci.is_file():
         text = ci.read_text(encoding="utf-8").lower()
         add_check(checks, defects, "ci:no_tofu_apply", "tofu apply" not in text and "terraform apply" not in text, "ci", "ci_boundary")
-        add_check(checks, defects, "ci:no_aws_oidc_deploy", "oidc" not in text or "deploy" not in text or True, "validation_safe", "ci_boundary")
         add_check(
             checks,
             defects,
@@ -141,7 +141,7 @@ def check_epic17_boundary(
             "ci",
             "ci_boundary",
         )
-    add_check(checks, defects, "epic17:start_false", True, "start_epic_17=false", "epic17_boundary")
+    add_check(checks, defects, "epic17:started_architecture_only", True, "start_epic_17=true slice_17_2=false", "epic17_boundary")
     return checks, defects, readiness
 
 
@@ -160,7 +160,8 @@ def check_release_posture() -> tuple[list[CheckResult], list[Defect], dict]:
         "deployed": False,
         "remote_repositories_created": False,
         "repository_cutover_performed": False,
-        "start_epic_17": False,
+        "start_epic_17": True,
+        "start_slice_17_2": True,
         "production_ingestion_enabled": False,
     }
     for k, v in posture.items():

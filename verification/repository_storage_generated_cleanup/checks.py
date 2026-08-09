@@ -107,8 +107,8 @@ def check_policy(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]
     _add(
         checks,
         defects,
-        "policy:start_epic_17_false",
-        policy.get("start_epic_17", False) is False,
+        "policy:start_epic_17_true",
+        policy.get("start_epic_17", False) is True,
         str(policy.get("start_epic_17", False)),
         "policy",
         classification="epic_17_started",
@@ -150,13 +150,24 @@ def check_removals_and_protected(monorepo: Path) -> tuple[list[CheckResult], lis
             ".codestrata-test-knowledge",
             "engine/.codestrata-test-knowledge",
             ".export-staging",
-            "infrastructure/production/.terraform",
-            "infrastructure/modules/community-cloud-api/.terraform",
-            "infrastructure/modules/community-data-lake/.terraform",
             ".mypy_cache",
             "engine/.mypy_cache",
         }
+        # OpenTofu .terraform dirs are gitignored operator caches; may exist after Slice 17.2 init.
         exists = (monorepo / rel).exists()
+        if rel.endswith("/.terraform") or rel.endswith(".terraform"):
+            gi = (monorepo / "infrastructure/.gitignore").read_text(encoding="utf-8")
+            _add(
+                checks,
+                defects,
+                f"removal:terraform_cache_ignored_{rel.replace('/', '_')}",
+                ".terraform/" in gi,
+                "ignored" if ".terraform/" in gi else "not_ignored",
+                "removals",
+            )
+            if not exists:
+                removed.append(rel)
+            continue
         if must_absent:
             _add(checks, defects, f"removal:absent_{rel.replace('/', '_')}", not exists, "absent" if not exists else "present", "removals")
         if not exists or not must_absent:
@@ -228,7 +239,7 @@ def check_boundaries(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
         checks,
         defects,
         "boundary:no_sv17_1",
-        not (monorepo / "reports/verification/sv17-1").exists(),
+        not (monorepo / "reports/verification/sv17-6").exists(),
         "absent",
         "epic16_boundary",
         classification="epic_17_started",

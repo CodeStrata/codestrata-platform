@@ -18,7 +18,8 @@ This monorepo (`codestrata-platform`) is the private source of truth.
 | Release history | [CHANGELOG.md](CHANGELOG.md) · [ROADMAP.md](ROADMAP.md) (archive candidate) |
 | Ecosystem architecture | [ARCHITECTURE.md](ARCHITECTURE.md) · [engine/docs/architecture-guide.md](engine/docs/architecture-guide.md) |
 | Documentation cleanup | [platform/docs/repository-cleanup/community-documentation-cleanup.md](platform/docs/repository-cleanup/community-documentation-cleanup.md) |
-| Documentation inventory | [governance/DOCUMENTATION_INVENTORY.md](governance/DOCUMENTATION_INVENTORY.md) |
+| Documentation registry (authoritative) | [governance/DOCUMENTATION_REGISTRY.md](governance/DOCUMENTATION_REGISTRY.md) |
+| Documentation inventory (historical) | [governance/DOCUMENTATION_INVENTORY.md](governance/DOCUMENTATION_INVENTORY.md) |
 | Public API / SDK contracts | [governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md](governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md) |
 
 ## Setup

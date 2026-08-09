@@ -1,0 +1,20 @@
+{
+  "schema": "community-cloud-remote-state-register:1.0",
+  "epic": 17,
+  "slice": "17.2",
+  "environment": "production",
+  "region": "us-west-2",
+  "backend_type": "s3",
+  "state_bucket_name": "codestrata-opentofu-state-production-865ff868",
+  "state_key": "codestrata/community-cloud/production/terraform.tfstate",
+  "locking_method": "s3_native_lockfile",
+  "use_lockfile": true,
+  "encryption_mode": "sse_s3",
+  "versioning": true,
+  "public_access_block": true,
+  "dynamodb_required": false,
+  "bootstrap_status": "complete",
+  "recovery_state": "STATE_E_BACKEND_ALREADY_COMPLETE",
+  "bootstrap_method": "aws_cli_bucket_plus_opentofu_controls",
+  "notes": "Bucket created during recovery of partial 17.2; controls validated via AWS API. No account IDs/ARNs/profiles/paths/timestamps stored here."
+}

@@ -25,7 +25,7 @@ def test_contract_gates() -> None:
     assert c.start_slice_16_8 is True
     assert c.start_slice_16_9 is True
     assert c.start_slice_16_10 is True
-    assert getattr(c, "start_epic_17", False) is False
+    assert getattr(c, "start_epic_17", False) is True
     assert c.no_commit is True
     assert c.no_publish is True
     assert c.no_deploy is True
@@ -37,7 +37,7 @@ def test_policy_gates() -> None:
     assert policy.get("start_slice_16_8", False) is True
     assert policy.get("start_slice_16_9", False) is True
     assert policy.get("start_slice_16_10", False) is True
-    assert policy.get("start_epic_17", False) is False
+    assert policy.get("start_epic_17", False) is True
     assert policy.get("schema") == "repository-consistency-policy:1.0"
 
 
@@ -51,7 +51,7 @@ def test_owner_register_present() -> None:
 
 def test_epic_17_absent() -> None:
     root = monorepo_root_from_here()
-    assert not (root / "reports/verification/sv17-1").exists()
+    assert not (root / "reports/verification/sv17-2").exists()
     assert not (root / "verification/infrastructure_production").exists()
 
 

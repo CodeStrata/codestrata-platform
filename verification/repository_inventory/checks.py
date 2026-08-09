@@ -153,8 +153,8 @@ def check_policy(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]
     _add(
         checks,
         defects,
-        "policy:start_epic_17_false",
-        policy.get("start_epic_17", False) is False,
+        "policy:start_epic_17_true",
+        policy.get("start_epic_17", False) is True,
         str(policy.get("start_epic_17", False)),
         "policy",
         classification="epic_17_started",
@@ -241,7 +241,7 @@ def check_no_cleanup_mutations(monorepo: Path) -> tuple[list[CheckResult], list[
         "boundary",
         classification="slice_16_5_started",
     )
-    sv167 = monorepo / "reports" / "verification" / "sv17-1"
+    sv167 = monorepo / "reports" / "verification" / "sv17-6"
     _add(
         checks,
         defects,

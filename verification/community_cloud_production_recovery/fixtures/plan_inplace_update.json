@@ -1,0 +1,14 @@
+{
+  "format_version": "1.2",
+  "resource_changes": [
+    {
+      "address": "module.community_cloud_api.aws_cloudwatch_log_group.lambda",
+      "mode": "managed",
+      "type": "aws_cloudwatch_log_group",
+      "name": "lambda",
+      "change": {
+        "actions": ["update"]
+      }
+    }
+  ]
+}

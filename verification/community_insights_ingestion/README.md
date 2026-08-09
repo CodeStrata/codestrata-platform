@@ -4,7 +4,7 @@
 | --- | --- |
 | Policy | `community-insights-ingestion-policy:1.0` |
 | Schema | `community-insights-ingestion-verification:1.0.0` |
-| Report | `reports/verification/sv15-4/community-insights-ingestion-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-4/community-insights-ingestion-verification.json` |
 | Activation | `activation_ready_but_production_disabled` |
 
 ```bash

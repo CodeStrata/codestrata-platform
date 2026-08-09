@@ -5,7 +5,7 @@
 | Policy | `community-insights-metrics-policy:1.0` |
 | Contract | `community-insights-metrics-contract:1.0` |
 | Schema | `community-insights-metrics-verification:1.0.0` |
-| Report | `reports/verification/sv15-6/community-insights-metrics-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-6/community-insights-metrics-verification.json` |
 
 ```bash
 PYTHONPATH=engine/src:platform/src:. .venv/bin/python -m verification.community_insights_metrics

@@ -13,7 +13,7 @@ from verification.cursor_release_surface_removal import (
 SCHEMA_NAME = "cursor-release-surface-removal-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV122_OUTPUT_RELATIVE = "reports/verification/sv12-2"
+SV122_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-2"
 REPORT_JSON = "cursor-release-surface-removal-verification.json"
 REPORT_MD = "cursor-release-surface-removal-verification.md"
 

@@ -80,8 +80,39 @@
   background: var(--cs-canvas);
 }
 
-.VPHomeHero {
-  padding-top: 2.5rem !important;
+/*
+ * VitePress VPHero uses margin-top: -nav-height (full-bleed under fixed nav)
+ * plus padding-top: nav-height + gap so the H1 clears the bar.
+ * Never set padding-top to only nav-height + a tiny gap — that leaves the
+ * heading visually under/against the nav after the negative margin.
+ */
+.VPHero.VPHomeHero {
+  padding-top: calc(
+    var(--vp-nav-height, var(--cs-nav-h, 70px)) + var(--vp-layout-top-height, 0px) + 48px
+  ) !important;
+}
+
+@media (min-width: 960px) {
+  .VPHero.VPHomeHero {
+    padding-top: calc(
+      var(--vp-nav-height, var(--cs-nav-h, 70px)) + var(--vp-layout-top-height, 0px) + 80px
+    ) !important;
+  }
+}
+
+/* Anchor targets must clear the sticky header on inner pages. */
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3,
+.VPDoc h4,
+.VPContent h1,
+.VPContent h2,
+.VPContent h3 {
+  scroll-margin-top: var(--cs-scroll-pad, 82px);
+}
+
+html {
+  scroll-padding-top: var(--cs-scroll-pad, 82px);
 }
 
 .VPHomeHero .name {
@@ -278,6 +309,20 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   padding-top: 1rem;
   border-top: 1px solid var(--cs-line);
   font-size: var(--cs-text-sm);
+}
+
+.cs-footer--minimal .cs-footer__inner--minimal {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 2rem 1.25rem;
+  font-size: var(--cs-text-sm);
+}
+
+.cs-footer--minimal {
+  margin-top: 1.5rem;
+  background: transparent;
 }
 
 .dark .cs-footer__base {

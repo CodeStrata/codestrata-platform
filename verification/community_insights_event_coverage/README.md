@@ -8,7 +8,7 @@ Data-coverage audit: can existing event contracts support Community Insights met
 | --- | --- |
 | Policy | `community-insights-event-coverage-policy:1.0` |
 | Schema | `community-insights-event-coverage-verification:1.0.0` |
-| Report | `reports/verification/sv15-3/community-insights-event-coverage-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-3/community-insights-event-coverage-verification.json` |
 
 ## Run
 

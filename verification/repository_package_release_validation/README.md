@@ -6,10 +6,11 @@ independently releasable. **Validation only** — no publish, deploy, tag, or co
 - Policy: `repository-package-release-validation-policy:1.0`
 - Contract: `platform/contracts/repository_package_release_validation_verification.json`
 - Schema: `repository-package-release-validation-verification:1.0.0`
-- Report: `reports/verification/sv16-9/repository-package-release-validation-verification.json`
+- Report: `.codestrata-artifacts/validation/suites/sv16-9/repository-package-release-validation-verification.json`
 
 ```bash
 PYTHONPATH=. python -m verification.repository_package_release_validation
 ```
 
-Slice 16.10 is not started.
+**Status:** Complete (Epic 16 finished through Slice 16.10).  
+No publish/deploy/tag/commit from this package.

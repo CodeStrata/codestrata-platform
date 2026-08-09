@@ -11,7 +11,7 @@ cd ..
 .venv/bin/python -m pytest tests/verification/vscode_clean_install -q
 ```
 
-Report: `reports/verification/sv13-14/vscode-clean-install-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-14/vscode-clean-install-verification.json`
 
 The verifier builds/uses `vscode-plugin/codestrata-vscode-0.2.0.vsix` and
 inventories contents without leaking absolute paths.

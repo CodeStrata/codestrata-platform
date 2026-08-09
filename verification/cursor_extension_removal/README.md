@@ -1,7 +1,7 @@
 # Slice 12.1 — Cursor Extension Removal Verification
 
 Schema: `cursor-extension-removal-verification` @ `1.0.0`  
-Report: `reports/verification/sv12-1/cursor-extension-removal-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-1/cursor-extension-removal-verification.json`
 
 ## Posture
 

@@ -17,7 +17,7 @@ npm test
 npm run package:dry
 ```
 
-Report: `reports/verification/sv13-1/vscode-community-workflow-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-1/vscode-community-workflow-verification.json`
 
 ## Verifies
 

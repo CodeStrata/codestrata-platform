@@ -1,18 +1,14 @@
 # Slice 16.7 — Repository Boundary & Residency Cleanup
 
-Normalizes repository ownership/residency pre-cutover. No remote creation. No cutover.
+Validates public/private residency classifications and export boundaries.
 
 ## Run
 
 ```bash
-python -m verification.repository_boundary_residency
+PYTHONPATH=. python -m verification.repository_boundary_residency
 ```
 
-Report: `reports/verification/sv16-7/repository-boundary-residency-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv16-7/repository-boundary-residency-verification.json`
 
-Maps:
-
-- `platform/policies/repository_residency_map.json`
-- `platform/policies/platform_package_register.json`
-
-Slice 16.8 not started. No commit/tag/publish/deploy.
+**Status:** Complete (Epic 16 finished through Slice 16.10).  
+No commit/tag/publish/deploy from this package.

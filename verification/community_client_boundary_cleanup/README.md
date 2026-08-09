@@ -34,7 +34,7 @@ PYTHONPATH=platform/src:. .venv/bin/python -m verification.community_client_boun
 
 Report:
 
-`reports/verification/sv12-4/community-client-boundary-cleanup-verification.json`
+`.codestrata-artifacts/validation/suites/sv12-4/community-client-boundary-cleanup-verification.json`
 
 Schema: `community-client-boundary-cleanup-verification:1.0.0`
 

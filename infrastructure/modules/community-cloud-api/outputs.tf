@@ -1,3 +1,13 @@
+output "lambda_execution_role_name" {
+  description = "IAM role name assumed by the Community Cloud Lambda."
+  value       = aws_iam_role.lambda_execution.name
+}
+
+output "lambda_execution_role_arn" {
+  description = "IAM role ARN assumed by the Community Cloud Lambda."
+  value       = aws_iam_role.lambda_execution.arn
+}
+
 output "api_endpoint" {
   description = "Base HTTPS endpoint for the Community Cloud HTTP API."
   value       = aws_apigatewayv2_api.community_cloud.api_endpoint

@@ -2,11 +2,11 @@
 # Copy to terraform.tfvars locally (gitignored) and replace placeholders.
 
 project_name = "codestrata"
-aws_region   = "us-east-1"
+aws_region   = "us-west-2"
 
 # Immutable image reference after build+push (tag or digest).
 # Example shape only — not a live registry:
-lambda_image_uri = "123456789012.dkr.ecr.us-east-1.amazonaws.com/codestrata/community-cloud-api:v0.2.0-REPLACE_ME"
+lambda_image_uri = "123456789012.dkr.ecr.us-west-2.amazonaws.com/codestrata/community-cloud-api:v0.2.0-REPLACE_ME"
 
 lambda_memory_size     = 512
 lambda_timeout_seconds = 30

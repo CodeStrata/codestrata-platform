@@ -20,6 +20,7 @@ INCLUDE_PREFIXES: tuple[str, ...] = (
     "tsconfig.node.json",
     "vite.config.ts",
     "vitest.config.ts",
+    "wrangler.jsonc",
     "index.html",
     "README.md",
     "LICENSE",
@@ -30,6 +31,9 @@ INCLUDE_PREFIXES: tuple[str, ...] = (
     "tests/",
     "docs/",
     "policies/",
+    "workers/",
+    "scripts/",
+    ".github/",
 )
 
 EXCLUDE_NAME_PARTS: frozenset[str] = frozenset(

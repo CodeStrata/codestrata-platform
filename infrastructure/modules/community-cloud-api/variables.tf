@@ -22,7 +22,7 @@ variable "environment_name" {
 variable "aws_region" {
   description = "AWS region for API resources."
   type        = string
-  default     = "us-east-1"
+  default     = "us-west-2"
 
   validation {
     condition     = can(regex("^[a-z]{2}-[a-z]+-[0-9]+$", var.aws_region))
@@ -106,13 +106,16 @@ variable "log_retention_days" {
 }
 
 variable "authentication_mode" {
-  description = "Application authentication mode. Foundation keeps verifier unavailable."
+  description = "Application authentication mode."
   type        = string
   default     = "enabled_verifier_unavailable"
 
   validation {
-    condition     = contains(["enabled_verifier_unavailable"], var.authentication_mode)
-    error_message = "authentication_mode must keep authentication enabled without inventing credentials."
+    condition = contains(
+      ["enabled_verifier_unavailable", "enabled_secrets_manager_verifier"],
+      var.authentication_mode
+    )
+    error_message = "authentication_mode must keep authentication enabled."
   }
 }
 
@@ -133,20 +136,18 @@ variable "deployment_mode" {
   default     = "production_foundation"
 
   validation {
-    condition     = var.deployment_mode == "production_foundation"
-    error_message = "deployment_mode must be production_foundation."
+    condition = contains(
+      ["production_foundation", "production_ingestion"],
+      var.deployment_mode
+    )
+    error_message = "deployment_mode must be production_foundation or production_ingestion."
   }
 }
 
 variable "enable_ingestion" {
-  description = "Whether durable ingestion is considered enabled. Foundation keeps this false."
+  description = "Whether durable production ingestion is enabled (Slice 17.7+). Requires sinks, verifier, and writer attachment."
   type        = bool
   default     = false
-
-  validation {
-    condition     = var.enable_ingestion == false
-    error_message = "enable_ingestion must remain false until durable sinks and verifier exist."
-  }
 }
 
 variable "api_throttle_burst_limit" {
@@ -175,6 +176,47 @@ variable "ecr_repository_name" {
   description = "ECR repository name. Empty selects a deterministic default."
   type        = string
   default     = ""
+}
+
+variable "insights_secrets_backend" {
+  description = "Insights secrets port backend. aws enables Secrets Manager reads (identifiers only in env)."
+  type        = string
+  default     = "unavailable"
+
+  validation {
+    condition     = contains(["unavailable", "aws"], var.insights_secrets_backend)
+    error_message = "insights_secrets_backend must be unavailable or aws."
+  }
+}
+
+variable "insights_password_secret_id" {
+  description = "Secrets Manager secret name for dashboard password verifier (value out of band)."
+  type        = string
+  default     = "codestrata/insights/dashboard-password"
+}
+
+variable "insights_session_secret_id" {
+  description = "Secrets Manager secret name for session signing material (value out of band)."
+  type        = string
+  default     = "codestrata/insights/session-secret"
+}
+
+variable "data_lake_bucket_name" {
+  description = "Community Data Lake bucket name for production ingestion wiring (empty when disabled)."
+  type        = string
+  default     = ""
+}
+
+variable "ingestion_wire" {
+  description = "Second hard gate for Data Lake adapter wiring (Slice 17.7)."
+  type        = bool
+  default     = false
+}
+
+variable "community_credentials_secret_id" {
+  description = "Secrets Manager secret name for Community client credential fingerprints (values out of band)."
+  type        = string
+  default     = "codestrata/community/client-credentials"
 }
 
 variable "tags" {

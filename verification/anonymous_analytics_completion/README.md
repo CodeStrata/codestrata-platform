@@ -26,7 +26,7 @@ Optional:
 ```bash
 PYTHONPATH=platform:platform/src:engine:engine/src:. .venv/bin/python -m verification.anonymous_analytics_completion \
   --monorepo-root . \
-  --output-dir reports/verification/sv10-9
+  --output-dir .codestrata-artifacts/validation/suites/sv10-9
 ```
 
 Pytest:
@@ -51,7 +51,7 @@ PYTHONPATH=platform:platform/src:engine:engine/src:. .venv/bin/python -m verific
 ## Output
 
 ```
-reports/verification/sv10-9/
+.codestrata-artifacts/validation/suites/sv10-9/
 ├── anonymous-analytics-completion-verification.json
 └── anonymous-analytics-completion-verification.md
 ```

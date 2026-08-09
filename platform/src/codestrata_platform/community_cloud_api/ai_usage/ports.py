@@ -58,12 +58,23 @@ class AiUsageSinkResult:
 
 
 class AiUsageSink(Protocol):
-    def accept(self, event: ValidatedAiUsageEvent) -> AiUsageSinkResult: ...
+    def accept(
+        self,
+        event: ValidatedAiUsageEvent,
+        *,
+        request: Any | None = None,
+    ) -> AiUsageSinkResult: ...
 
 
 class UnavailableAiUsageSink:
-    def accept(self, event: ValidatedAiUsageEvent) -> AiUsageSinkResult:
+    def accept(
+        self,
+        event: ValidatedAiUsageEvent,
+        *,
+        request: Any | None = None,
+    ) -> AiUsageSinkResult:
         _ = event
+        _ = request
         return AiUsageSinkResult(
             status=AiUsageSinkStatus.UNAVAILABLE,
             reason="ai_usage_sink_unavailable",
@@ -76,7 +87,13 @@ class InMemoryAiUsageSink:
     fail_next: bool = False
     reject_next: bool = False
 
-    def accept(self, event: ValidatedAiUsageEvent) -> AiUsageSinkResult:
+    def accept(
+        self,
+        event: ValidatedAiUsageEvent,
+        *,
+        request: Any | None = None,
+    ) -> AiUsageSinkResult:
+        _ = request
         if self.fail_next:
             self.fail_next = False
             raise RuntimeError("simulated_ai_usage_sink_failure")

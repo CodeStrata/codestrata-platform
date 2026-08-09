@@ -50,7 +50,17 @@ def classify_retry(
             limitations=("no_authoritative_identity_store",),
         )
 
-    existing = lookup.get(event_key)
+    try:
+        existing = lookup.get(event_key)
+    except Exception:  # noqa: BLE001 — identity store errors fail closed as unavailable
+        return RetryDecision(
+            status=RetryStatus.UNAVAILABLE,
+            event_key=event_key,
+            payload_fingerprint=fingerprint,
+            reason="lookup_unavailable",
+            safe_event_reference=safe_ref,
+            limitations=("authoritative_identity_store_unavailable",),
+        )
     if existing is None:
         return RetryDecision(
             status=RetryStatus.FIRST_SEEN,

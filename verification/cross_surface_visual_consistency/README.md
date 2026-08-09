@@ -13,7 +13,7 @@ cd /path/to/codestrata-platform
 PYTHONPATH=engine/src:platform/src:. .venv/bin/python -m verification.cross_surface_visual_consistency
 ```
 
-Report: `reports/verification/sv14-13/cross-surface-visual-consistency-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-13/cross-surface-visual-consistency-verification.json`
 
 ## Scope
 

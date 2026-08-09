@@ -1,0 +1,104 @@
+{
+  "schema": "codestrata-deployment-component-register:1.0",
+  "epic": 17,
+  "slice": "17.1",
+  "status": "architecture_frozen",
+  "components": [
+    {
+      "name": "Infrastructure",
+      "owner_repo_current": "infrastructure/",
+      "owner_repo_future": "codestrata-infrastructure",
+      "lifecycle": "opentofu_plan_apply",
+      "units": [
+        "community-cloud-api module (API GW, Lambda resource, ECR, IAM, CloudWatch)",
+        "community-data-lake module (S3 foundation)",
+        "community-insights-auth module (Secrets ID contracts; apply in later slice)"
+      ],
+      "deploy_in_epic_17": true,
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "Community Cloud API",
+      "owner_repo_current": "platform/src/codestrata_platform/community_cloud_api/",
+      "owner_repo_future": "codestrata-platform",
+      "lifecycle": "container_image_then_lambda_image_uri_update",
+      "source_package": "platform/deployment/community-cloud-api/",
+      "build_command": "./infrastructure/scripts/build-community-cloud-api.sh --tag <immutable-tag>",
+      "test_command": "pytest platform/tests (focused community_cloud_api)",
+      "artifact_format": "OCI container image → ECR",
+      "aws_runtime_resource": "aws_lambda_function.community_cloud (codestrata-community-cloud-production-api)",
+      "deployment_method": "ecr_push + lambda update-function-code --image-uri",
+      "versioning_strategy": "immutable_ecr_tag_or_digest",
+      "rollback_strategy": "update_function_code_to_previous_image_uri",
+      "infrastructure_dependency": "ECR repo + Lambda + API GW must exist",
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "Data Lake",
+      "owner_repo_current": "infrastructure/modules/community-data-lake/",
+      "owner_repo_future": "codestrata-infrastructure",
+      "lifecycle": "opentofu",
+      "aws_runtime_resource": "S3 codestrata-community-data-lake-production",
+      "ingestion_enabled": false,
+      "notes": "Writer IAM exists but unwired; activation owned by later Epic 17 slices",
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "Insights APIs",
+      "owner_repo_current": "platform/src/codestrata_platform/community_cloud_api/insights/",
+      "owner_repo_future": "codestrata-platform",
+      "lifecycle": "same_lambda_image_as_community_cloud_api",
+      "aws_runtime_resource": "Community Cloud API Lambda routes",
+      "auth_runtime": "insights_auth package + Secrets Manager IDs",
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "Insights frontend",
+      "owner_repo_current": "insights/",
+      "owner_repo_future": "codestrata-insights",
+      "lifecycle": "static_spa_cloudflare",
+      "host": "insights.codestrata.ai",
+      "build_command": "npm ci && npm run build",
+      "test_command": "npm test",
+      "artifact_format": "static dist/",
+      "api_proxy": "https://insights.codestrata.ai/api/v1/... → Community Cloud API",
+      "auth": "shared internal password + HttpOnly signed session; Secrets Manager authority",
+      "frontend_aws_credentials": false,
+      "frontend_secrets_manager_read": false,
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "Docs",
+      "owner_repo_current": "docs/",
+      "owner_repo_future": "codestrata-docs",
+      "lifecycle": "vitepress_cloudflare_static_assets",
+      "host": "docs.codestrata.ai",
+      "policy": "codestrata-documentation-deployment-policy:1.0",
+      "build_root": "docs/",
+      "output": "./.vitepress/dist",
+      "wrangler": "docs/wrangler.jsonc locally pinned",
+      "deploy_allowed_in_17_1": false
+    },
+    {
+      "name": "VS Code / CLI publication",
+      "owner_repo_current": "vscode-plugin/ ; engine/",
+      "owner_repo_future": "codestrata-vscode ; codestrata-engine",
+      "lifecycle": "publication",
+      "deploy_in_epic_17": false,
+      "epic": 19,
+      "deploy_allowed_in_17_1": false
+    }
+  ],
+  "ownership_matrix": {
+    "lambda_creation_config": "OpenTofu / infrastructure",
+    "lambda_code_package_updates": "platform-deploy application pipeline",
+    "lambda_aliases": "not required for v0.2.0; optional later",
+    "api_gateway": "OpenTofu / infrastructure",
+    "s3_data_lake": "OpenTofu / infrastructure",
+    "iam": "OpenTofu / infrastructure",
+    "secrets_manager_references": "OpenTofu IDs + runtime consumers; values owner-managed",
+    "cloudwatch": "OpenTofu / infrastructure",
+    "dns_cloudflare": "owner-operated Cloudflare; docs/insights deploy workflows",
+    "static_frontend_deployment": "insights-deploy / docs-deploy workflows"
+  }
+}

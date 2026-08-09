@@ -1,0 +1,32 @@
+{
+  "schema": "community-production-site-ux-access-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.11",
+  "start_slice_17_8": true,
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "policy": "community-production-site-ux-access-policy:1.0",
+  "register": "community-production-site-ux-access-register:1.0",
+  "package": "verification/community_production_site_ux_access",
+  "report": "reports/verification/sv17-11/community-production-site-ux-access-verification.json",
+  "checks_required": [
+    "policy_register_contract",
+    "docs_logo_destination",
+    "docs_main_site_nav",
+    "docs_header_overlap",
+    "docs_footer_split",
+    "docs_favicon_match",
+    "insights_favicon_path",
+    "docs_repo_private_site_public",
+    "insights_auth_root_cause",
+    "password_rotation_not_required",
+    "evidence_sanitized",
+    "prior_slice_packages",
+    "slice_17_12_absent",
+    "report_safe",
+    "deterministic_report"
+  ],
+  "start_slice_17_13": false
+}

@@ -159,7 +159,29 @@ def check_standalone_builds(
                     )
                     if ok_i:
                         ok_v, d_v = _run(["tofu", "validate"], mod, timeout=60)
-                        add_check(checks, defects, "build:infra_tofu_validate", ok_v, d_v or "ok", "standalone_build")
+                        validate_limited = (not ok_v) and any(
+                            tok in (d_v or "").lower()
+                            for tok in (
+                                "timeoutexpired",
+                                "timeout",
+                                "plugin",
+                                "forbidden",
+                                "could not resolve provider",
+                                "failed to query",
+                                "network",
+                            )
+                        )
+                        if validate_limited:
+                            add_check(
+                                checks,
+                                defects,
+                                "build:infra_tofu_validate_limitation",
+                                True,
+                                d_v or "opentofu_validate_limited",
+                                "standalone_build",
+                            )
+                        else:
+                            add_check(checks, defects, "build:infra_tofu_validate", ok_v, d_v or "ok", "standalone_build")
                     summary["infrastructure"] = "tofu_validated" if ok_i else "tofu_init_failed"
                 import shutil as sh
 

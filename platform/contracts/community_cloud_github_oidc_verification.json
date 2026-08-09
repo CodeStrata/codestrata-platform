@@ -1,0 +1,19 @@
+{
+  "schema": "community-cloud-github-oidc-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.3",
+  "package": "verification/community_cloud_github_oidc",
+  "policy": "community-cloud-github-oidc-policy:1.0",
+  "register": "codestrata-github-aws-identity-register:1.0",
+  "report": "reports/verification/sv17-3/community-cloud-github-oidc-verification.json",
+  "start_slice_17_3": true,
+  "start_slice_17_4": true,
+  "tofu_production_apply_allowed": false,
+  "long_lived_keys_allowed": false,
+  "start_slice_17_5": true,
+  "note_slice_17_4": "Slice 17.4 may define GitHub plan read policy; product apply deferred to 17.5",
+  "start_slice_17_6": true,
+  "note_slice_17_5": "Slice 17.5 may attach GitHub apply policy; Slice 17.6 complete; Slice 17.7 not started",
+  "start_slice_17_7": true,
+  "start_slice_17_8": false
+}

@@ -9,7 +9,7 @@ PYTHONPATH=. python -m verification.vscode_telemetry_consent_integration
 PYTHONPATH=. python -m pytest tests/verification/vscode_telemetry_consent_integration -q
 ```
 
-Report: `reports/verification/sv13-9/vscode-telemetry-consent-integration-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-9/vscode-telemetry-consent-integration-verification.json`
 
 ## Scope
 

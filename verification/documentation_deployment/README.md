@@ -18,7 +18,7 @@ Validates Cloudflare Static Assets deployment configuration for the `docs/` pack
 PYTHONPATH=engine/src:platform/src:. python -m verification.documentation_deployment
 ```
 
-Reports: `reports/verification/sv14-12/`
+Reports: `.codestrata-artifacts/validation/suites/sv14-12/`
 
 ## Boundaries
 

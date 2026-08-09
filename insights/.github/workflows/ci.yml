@@ -1,0 +1,35 @@
+# codestrata-insights — CI build (no Cloudflare credentials required).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: insights-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run deploy:check
+      - name: Refuse AWS / secret surfaces
+        run: |
+          echo "aws_sdk_forbidden=true"
+          echo "cloudflare_deploy=separate_workflow"

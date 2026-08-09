@@ -15,7 +15,7 @@ def check_release_boundary(monorepo: Path) -> tuple[list[CheckResult], list[Defe
         checks,
         defects,
         "release_boundary:no_sv17_1",
-        not (monorepo / "reports/verification/sv17-1").exists(),
+        not (monorepo / "reports/verification/sv17-6").exists(),
         "sv16-10 absent",
         "release_boundary",
         classification="epic_17_started",

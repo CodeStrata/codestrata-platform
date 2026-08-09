@@ -77,10 +77,13 @@ def test_engine_has_no_data_lake() -> None:
     assert offenders == []
 
 
-def test_app_and_wiring_have_no_storage_factory() -> None:
-    for path in (APP_PY, DEPLOYMENT_WIRING):
-        text = path.read_text(encoding="utf-8")
-        assert "storage_factory" not in text
-        assert "create_community_data_lake_store" not in text
-        assert "CommunityDataLakeStoragePolicy" not in text
-        assert "data_lake" not in text
+def test_app_has_no_storage_factory_and_wiring_is_gated() -> None:
+    app_text = APP_PY.read_text(encoding="utf-8")
+    assert "storage_factory" not in app_text
+    assert "create_community_data_lake_store" not in app_text
+    assert "CommunityDataLakeStoragePolicy" not in app_text
+
+    wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
+    assert "ingestion_enabled" in wiring_text
+    assert "UnavailableCommunityCredentialVerifier" in wiring_text
+    assert "InMemoryTelemetryEventSink" not in wiring_text

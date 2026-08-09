@@ -12,7 +12,7 @@ from verification.community_insights_aggregation import (
 
 SCHEMA_NAME = "community-insights-aggregation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV157_OUTPUT_RELATIVE = "reports/verification/sv15-7"
+SV157_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-7"
 REPORT_JSON = "community-insights-aggregation-verification.json"
 REPORT_MD = "community-insights-aggregation-verification.md"
 
@@ -30,7 +30,7 @@ STORAGE_PACKAGE = (
 )
 
 FORBIDDEN_15_8_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

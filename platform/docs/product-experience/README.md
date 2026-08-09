@@ -1,72 +1,36 @@
-# Product Experience Baseline & Audit
+# Product Experience — Historical Baseline (Phase 9)
 
-**Phase:** 9.1  
-**Status:** Audit complete (evidence-based; no product changes)  
-**Audience:** Maintainers planning Phase 9 implementation
+> **HISTORICAL / INTERNAL** — Phase 9 product-experience baseline and audits.
+> Do **not** treat as current Community documentation or as competing Design
+> System / architecture authority. Prefer:
+>
+> - Community docs portal: [`docs/`](../../../docs/)
+> - Design System 1.0: [`design-system/`](../../../design-system/)
+> - Monorepo architecture: [`ARCHITECTURE.md`](../../../ARCHITECTURE.md)
+> - Engine docs: [`engine/docs/`](../../../engine/docs/)
 
-## Purpose
+**Audience:** Maintainers reviewing historical PE evidence.  
+**Status:** Phase 9 complete; planning/backlog files removed in the pre-Epic-17
+documentation audit.
 
-Document the **current** CodeStrata product experience before PE changes.
-Findings are grounded in CLI behavior, configuration, implementation paths,
-tests, and representative golden-path runs performed in this phase.
-
-## Canonical authorities (do not duplicate)
-
-| Concern | Location |
-| ------- | -------- |
-| How CodeStrata is built | [`governance/`](../../../governance/) |
-| What CodeStrata knows | [`knowledge/`](../../../knowledge/) |
-| Design System | [`governance/assets/DESIGN-SYSTEM.md`](../../../governance/assets/DESIGN-SYSTEM.md) |
-| Rule Catalog | [`knowledge/RULE_CATALOG.md`](../../../knowledge/RULE_CATALOG.md) |
-| Traceability | [`knowledge/TRACEABILITY.md`](../../../knowledge/TRACEABILITY.md) |
-| Branding naming (Governance) | [`governance/standards/BRANDING_GUIDELINES.md`](../../../governance/standards/BRANDING_GUIDELINES.md) |
-
-## Document index
+## Retained historical audits
 
 | Document | Contents |
 | -------- | -------- |
-| [CURRENT_USER_JOURNEYS.md](CURRENT_USER_JOURNEYS.md) | Journeys by persona |
-| [CLI_AUDIT.md](CLI_AUDIT.md) | Public CLI inventory |
-| [CONFIGURATION_AUDIT.md](CONFIGURATION_AUDIT.md) | Config / env / gates |
-| [AI_EXPERIENCE_AUDIT.md](AI_EXPERIENCE_AUDIT.md) | AI entry points & behavior |
-| [REPORT_EXPERIENCE_AUDIT.md](REPORT_EXPERIENCE_AUDIT.md) | Reports & outputs |
-| [API_MCP_AUDIT.md](API_MCP_AUDIT.md) | REST + MCP (9.1 baseline) |
-| [API_MCP_EXPERIENCE.md](API_MCP_EXPERIENCE.md) | Phase 9.5 integrator experience |
-| [SDK_READINESS.md](SDK_READINESS.md) | Phase 9.7 public SDK readiness (signed) |
-| [EXTENSION_READINESS.md](EXTENSION_READINESS.md) | VS Code extension readiness (Cursor removed — historical) |
-| [INTEGRATION_EXAMPLES.md](INTEGRATION_EXAMPLES.md) | REST / MCP / CLI / report examples |
-| Engine documentation portal | [engine/docs/README.md](../../../engine/docs/README.md) (Phase 9.6) |
-| Public contract policy | [PUBLIC_CONTRACT_COMPATIBILITY.md](../../../governance/playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md) |
-| [BRANDING_TERMINOLOGY_AUDIT.md](BRANDING_TERMINOLOGY_AUDIT.md) | Naming drift |
-| [COMMUNITY_PLATFORM_EXPERIENCE.md](COMMUNITY_PLATFORM_EXPERIENCE.md) | Boundaries |
-| [PRODUCT_EXPERIENCE_GAPS.md](PRODUCT_EXPERIENCE_GAPS.md) | P0–P3 backlog |
-| [PHASE_9_IMPLEMENTATION_PLAN.md](PHASE_9_IMPLEMENTATION_PLAN.md) | Recommended sequence |
+| [CURRENT_USER_JOURNEYS.md](CURRENT_USER_JOURNEYS.md) | Journeys by persona (historical) |
+| [CLI_AUDIT.md](CLI_AUDIT.md) | Public CLI inventory (historical) |
+| [CONFIGURATION_AUDIT.md](CONFIGURATION_AUDIT.md) | Config / env / gates (historical) |
+| [AI_EXPERIENCE_AUDIT.md](AI_EXPERIENCE_AUDIT.md) | AI entry points (historical) |
+| [REPORT_EXPERIENCE_AUDIT.md](REPORT_EXPERIENCE_AUDIT.md) | Reports & outputs (historical) |
+| [API_MCP_AUDIT.md](API_MCP_AUDIT.md) | REST + MCP baseline (historical) |
+| [API_MCP_EXPERIENCE.md](API_MCP_EXPERIENCE.md) | Integrator experience notes |
+| [SDK_READINESS.md](SDK_READINESS.md) | SDK readiness notes |
+| [EXTENSION_READINESS.md](EXTENSION_READINESS.md) | Extension readiness (Cursor removed) |
+| [INTEGRATION_EXAMPLES.md](INTEGRATION_EXAMPLES.md) | Integration examples |
+| [BRANDING_TERMINOLOGY_AUDIT.md](BRANDING_TERMINOLOGY_AUDIT.md) | Naming drift audit |
+| [COMMUNITY_PLATFORM_EXPERIENCE.md](COMMUNITY_PLATFORM_EXPERIENCE.md) | Community vs Platform boundary notes |
 
-## Canonical architecture (preserved)
+## Removed as planning/temp (pre-Epic-17 audit)
 
-```text
-Assessment → Assessment Intelligence → Published CEIM → Engineering Knowledge Graph
-→ Repository Retrieval → Repository Answering → Portfolio Intelligence
-→ Portfolio Retrieval → Portfolio Answering → Executive Intelligence
-→ On-read Presentation → On-read Strategic Roadmap
-```
-
-This audit does **not** change that flow.
-
-## Golden-path status (this audit)
-
-| Path | Result | Notes |
-| ---- | ------ | ----- |
-| Doctor with repo `codestrata.toml` | Pass | Checks OK |
-| Assess `--no-ai` with repo `codestrata.toml` | **Fail mid-run** | `ai.bedrock.answer_model` empty→None validation (P0) |
-| Assess `--no-ai` with packaged defaults.toml | Pass | HTML+JSON written |
-| Assess `--with-ai` without AWS creds | Pass with fallback | Reports written; `AI status: fallback` |
-| Missing config file | Exit 1 | Clear message |
-| MCP tools (default config) | Blocked | `[mcp].enabled=false` |
-| Platform OpenAPI | Not live-hit | Documented from code/tests |
-| Remote GitHub scan | Not run | Needs network/token |
-
-## Related
-
-- Engine user docs: [`engine/docs/README.md`](../../../engine/docs/README.md)
-- Platform maintainer docs: [`../README.md`](../README.md)
+- `PHASE_9_IMPLEMENTATION_PLAN.md` — planning output; do not implement from disk
+- `PRODUCT_EXPERIENCE_GAPS.md` — Phase 9.1 backlog superseded by later epics

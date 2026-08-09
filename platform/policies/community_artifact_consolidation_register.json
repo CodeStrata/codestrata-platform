@@ -1,0 +1,40 @@
+{
+  "schema": "community-artifact-consolidation-register:1.0",
+  "epic": 17,
+  "slice": "17.12",
+  "artifact_root": ".codestrata-artifacts",
+  "assessments_path": ".codestrata-artifacts/assessments",
+  "intelligence_path": ".codestrata-artifacts/intelligence",
+  "validation_path": ".codestrata-artifacts/validation",
+  "manifests_path": ".codestrata-artifacts/manifests",
+  "temporary_path": ".codestrata-artifacts/temporary",
+  "assessment_manifest_basename": "assessment.json",
+  "assessment_html_basename": "assessment.html",
+  "heads_dirname": "heads",
+  "data_lake_report_upload_forbidden": true,
+  "legacy_reports_deprecated": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false,
+  "entries": [
+    {
+      "id": "artifact_root",
+      "status": "authoritative",
+      "path": ".codestrata-artifacts"
+    },
+    {
+      "id": "assessment_layout",
+      "status": "authoritative",
+      "path": ".codestrata-artifacts/assessments/<run-id>/"
+    },
+    {
+      "id": "validation_layout",
+      "status": "authoritative",
+      "path": ".codestrata-artifacts/validation/suites/"
+    },
+    {
+      "id": "data_lake_boundary",
+      "status": "preserved",
+      "rule": "reports_never_auto_upload"
+    }
+  ]
+}

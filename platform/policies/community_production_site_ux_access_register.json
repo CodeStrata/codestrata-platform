@@ -1,0 +1,96 @@
+{
+  "schema": "community-production-site-ux-access-register:1.0",
+  "epic": 17,
+  "slice": "17.11",
+  "environment": "production",
+  "region": "us-west-2",
+  "docs_repo_visibility": "private",
+  "docs_site_public": true,
+  "docs_header_overlap_fixed": true,
+  "docs_logo_destination": "/",
+  "docs_main_site_destination": "https://codestrata.ai/",
+  "docs_inner_footer_posture": "minimal/legal-only on inner pages",
+  "docs_favicon_status": "approved dark-theme mark",
+  "insights_favicon_status": "approved dark-theme mark",
+  "insights_auth_root_cause": "sm_stores_scrypt_verifier_owner_must_use_plaintext_owner_once",
+  "insights_password_rotation_performed": false,
+  "insights_login_status": "owner_once_login_verified",
+  "production_sites_status": "cloudflare_live_private_repos_public_sites",
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "entries": [
+    {
+      "id": "docs_nav_logo",
+      "surface": "docs",
+      "capability": "logo_to_docs_home",
+      "status": "fixed",
+      "expected": "/",
+      "source": "docs/.vitepress/config.ts"
+    },
+    {
+      "id": "docs_main_site_nav",
+      "surface": "docs",
+      "capability": "main_site_explicit_nav",
+      "status": "fixed",
+      "expected": "https://codestrata.ai/",
+      "source": "docs/.vitepress/config.ts"
+    },
+    {
+      "id": "docs_header_overlap",
+      "surface": "docs",
+      "capability": "fixed_header_scroll_offset",
+      "status": "fixed",
+      "expected": "padding-top and scroll-margin-top",
+      "source": "docs/.vitepress/theme/custom.css"
+    },
+    {
+      "id": "docs_footer_split",
+      "surface": "docs",
+      "capability": "home_full_inner_minimal_footer",
+      "status": "fixed",
+      "expected": "minimal/legal-only on inner pages",
+      "source": "docs/.vitepress/theme/CsFooter.vue"
+    },
+    {
+      "id": "docs_favicon",
+      "surface": "docs",
+      "capability": "approved_dark_theme_favicon",
+      "status": "fixed",
+      "expected": "codestrata-mark-on-dark.svg",
+      "source": "docs/public/favicon.svg"
+    },
+    {
+      "id": "insights_favicon",
+      "surface": "insights",
+      "capability": "approved_dark_theme_favicon",
+      "status": "fixed",
+      "expected": "/brand/codestrata-mark-on-dark.svg",
+      "source": "insights/index.html"
+    },
+    {
+      "id": "insights_auth_rca",
+      "surface": "insights",
+      "capability": "password_rca_documented",
+      "status": "verified_live",
+      "expected": "sm_stores_scrypt_verifier_owner_must_use_plaintext_owner_once",
+      "evidence": "infrastructure/production/.local/sv17-11/password-rca.json"
+    },
+    {
+      "id": "docs_repo_visibility",
+      "surface": "github",
+      "capability": "private_repo_public_site",
+      "status": "reconciled_private",
+      "expected": "private repo, public docs.codestrata.ai",
+      "repository_name": "codestrata-docs"
+    },
+    {
+      "id": "insights_repo_visibility",
+      "surface": "github",
+      "capability": "private_repo",
+      "status": "verified",
+      "expected": "private",
+      "repository_name": "codestrata-insights"
+    }
+  ],
+  "start_slice_17_13": false
+}

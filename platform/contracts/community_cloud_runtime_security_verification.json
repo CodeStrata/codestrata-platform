@@ -1,0 +1,20 @@
+{
+  "schema": "community-cloud-runtime-security-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.6",
+  "package": "verification/community_cloud_runtime_security",
+  "policy": "community-cloud-runtime-security-policy:1.0",
+  "register": "community-cloud-runtime-security-register:1.0",
+  "report": "reports/verification/sv17-6/community-cloud-runtime-security-verification.json",
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "production_ingestion_enabled": false,
+  "secrets_configured": true,
+  "insights_auth_runtime_ready": true,
+  "data_lake_writer_ready": true,
+  "data_lake_reader_ready": true,
+  "provider_credentials_configured": false,
+  "writer_attached": false,
+  "destructive_actions_allowed": false,
+  "start_slice_17_8": false
+}

@@ -83,7 +83,8 @@ def build_report(monorepo: Path) -> RepositoryCodeCleanupReport:
     assert getattr(contract, "start_slice_16_8", False) is True
     assert getattr(contract, "start_slice_16_9", False) is True
     assert getattr(contract, "start_slice_16_10", False) is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_commit is True
 
     checks: list[CheckResult] = []
@@ -159,7 +160,7 @@ def build_report(monorepo: Path) -> RepositoryCodeCleanupReport:
         cursor_ok=cursor_ok,
         aimf_ok=aimf_ok,
         ingestion_ok=ingestion_ok,
-        no_16_4=no_16_4 and not (monorepo / "reports/verification/sv17-1").exists(),
+        no_16_4=no_16_4 and not (monorepo / "reports/verification/sv17-6").exists(),
         register_ok=register_ok,
         report_safe=draft_safe,
     )
@@ -239,7 +240,8 @@ def build_report(monorepo: Path) -> RepositoryCodeCleanupReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
             "assets_cleaned": False,
             "dependencies_cleaned": False,
             "generated_storage_cleaned": False,

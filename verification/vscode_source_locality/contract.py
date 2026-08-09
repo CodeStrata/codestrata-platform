@@ -12,7 +12,7 @@ from verification.vscode_source_locality import (
 
 SCHEMA_NAME = "vscode-source-locality-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1310_OUTPUT_RELATIVE = "reports/verification/sv13-10"
+SV1310_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-10"
 REPORT_JSON = "vscode-source-locality-verification.json"
 REPORT_MD = "vscode-source-locality-verification.md"
 

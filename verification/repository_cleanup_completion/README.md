@@ -9,4 +9,4 @@ cleanup/release hygiene is coherent and ready to hand off to Epic 17.
 PYTHONPATH=. python -m verification.repository_cleanup_completion
 ```
 
-Report: `reports/verification/sv16-10/repository-cleanup-completion-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv16-10/repository-cleanup-completion-verification.json`

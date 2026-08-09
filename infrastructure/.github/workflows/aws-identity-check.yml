@@ -1,0 +1,39 @@
+# codestrata-infrastructure — GitHub OIDC identity check (no product apply).
+name: aws-identity-check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aws-identity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oidc-identity:
+    name: oidc-identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.CODESTRATA_GITHUB_AWS_ROLE_ARN }}
+          aws-region: us-west-2
+          role-session-name: codestrata-infra-gha-${{ github.run_id }}
+          role-duration-seconds: 3600
+
+      - name: Caller identity (safe)
+        run: |
+          aws sts get-caller-identity --query Arn --output text | sed -E 's/[0-9]{12}/<ACCOUNT>/g'
+
+      - name: Refuse product deploy surface
+        run: |
+          echo "identity_check_only=true"
+          echo "production_apply=forbidden"

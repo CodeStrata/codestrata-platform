@@ -13,7 +13,7 @@ from verification.ci_release_boundaries import (
 SCHEMA_NAME = "ci-release-boundary-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV129_OUTPUT_RELATIVE = "reports/verification/sv12-9"
+SV129_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-9"
 REPORT_JSON = "ci-release-boundary-verification.json"
 REPORT_MD = "ci-release-boundary-verification.md"
 

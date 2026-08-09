@@ -5,7 +5,7 @@
 | Policy | `community-insights-query-policy:1.0` |
 | Contract | `community-insights-query-contract:1.0` |
 | Schema | `community-insights-query-strategy-verification:1.0.0` |
-| Report | `reports/verification/sv15-5/community-insights-query-strategy-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-5/community-insights-query-strategy-verification.json` |
 
 ```bash
 PYTHONPATH=engine/src:platform/src:. .venv/bin/python -m verification.community_insights_query_strategy

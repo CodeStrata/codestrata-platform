@@ -9,7 +9,7 @@ for future Community Insights Dashboard work.
 | --- | --- |
 | Policy | `community-data-lake-policy:1.0` |
 | Schema | `community-data-lake-audit-verification:1.0.0` |
-| Report | `reports/verification/sv15-1/community-data-lake-audit-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-1/community-data-lake-audit-verification.json` |
 | Contract doc | `platform/docs/community-cloud-api/community-data-lake-contract.md` |
 
 ## Run

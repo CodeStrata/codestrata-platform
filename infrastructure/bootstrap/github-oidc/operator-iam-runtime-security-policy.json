@@ -1,0 +1,138 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "InsightsSecretsManageExactIds",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:CreateSecret",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:UpdateSecret",
+        "secretsmanager:TagResource",
+        "secretsmanager:UntagResource",
+        "secretsmanager:ListSecretVersionIds"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:us-west-2:*:secret:codestrata/insights/dashboard-password-*",
+        "arn:aws:secretsmanager:us-west-2:*:secret:codestrata/insights/session-secret-*"
+      ]
+    },
+    {
+      "Sid": "InsightsSecretsCreateByName",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:CreateSecret"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "secretsmanager:Name": [
+            "codestrata/insights/dashboard-password",
+            "codestrata/insights/session-secret"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "InsightsRuntimePoliciesManage",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreatePolicy",
+        "iam:DeletePolicy",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:ListPolicyVersions",
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicyVersion",
+        "iam:TagPolicy",
+        "iam:UntagPolicy",
+        "iam:ListEntitiesForPolicy",
+        "iam:ListPolicyTags"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:policy/codestrata-community-insights-production-reader",
+        "arn:aws:iam::*:policy/codestrata-community-insights-production-secrets"
+      ]
+    },
+    {
+      "Sid": "AttachInsightsPoliciesToLambdaRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:ListAttachedRolePolicies",
+        "iam:GetRole",
+        "iam:ListRolePolicies",
+        "iam:GetRolePolicy"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/codestrata-community-cloud-production-lambda"
+      ]
+    },
+    {
+      "Sid": "IamSimulateRuntimeRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:SimulatePrincipalPolicy",
+        "iam:GetContextKeysForPrincipalPolicy"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "LambdaEnvUpdateForSecretIds",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:UpdateFunctionConfiguration",
+        "lambda:UpdateFunctionCode",
+        "lambda:ListTags"
+      ],
+      "Resource": [
+        "arn:aws:lambda:us-west-2:*:function:codestrata-community-cloud-production-api",
+        "arn:aws:lambda:us-west-2:*:function:codestrata-community-cloud-production-api:*"
+      ]
+    },
+    {
+      "Sid": "DataLakeListForNoNewEventGate",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetObject",
+        "s3:GetObjectVersion"
+      ],
+      "Resource": [
+        "arn:aws:s3:::codestrata-community-data-lake-production",
+        "arn:aws:s3:::codestrata-community-data-lake-production/*"
+      ]
+    },
+    {
+      "Sid": "ManageGitHubApplyPolicySlice176",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreatePolicy",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:ListPolicyVersions",
+        "iam:CreatePolicyVersion",
+        "iam:DeletePolicyVersion",
+        "iam:TagPolicy",
+        "iam:UntagPolicy",
+        "iam:ListEntitiesForPolicy",
+        "iam:ListPolicyTags",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:ListAttachedRolePolicies",
+        "iam:GetRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:policy/CodeStrataGitHubInfrastructureApply",
+        "arn:aws:iam::*:policy/CodeStrataGitHubInfrastructurePlan",
+        "arn:aws:iam::*:role/codestrata-github-actions-production"
+      ]
+    }
+  ]
+}

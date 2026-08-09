@@ -12,7 +12,7 @@ from verification.cross_surface_visual_consistency import (
 
 SCHEMA_NAME = "cross-surface-visual-consistency-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1413_OUTPUT_RELATIVE = "reports/verification/sv14-13"
+SV1413_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-13"
 REPORT_JSON = "cross-surface-visual-consistency-verification.json"
 REPORT_MD = "cross-surface-visual-consistency-verification.md"
 
@@ -26,7 +26,7 @@ TOKEN_CATALOG = "design-system/tokens/catalog.json"
 TOKEN_CSS = "design-system/tokens/tokens.css"
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 LEGACY_AMBER_HEX = "#d98a3d"

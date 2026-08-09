@@ -5,10 +5,10 @@ Preserves Design System 1.0. Removes only stale/orphan/incorrectly authoritative
 ## Run
 
 ```bash
-python -m verification.repository_asset_design_cleanup
+PYTHONPATH=. python -m verification.repository_asset_design_cleanup
 ```
 
-Report: `reports/verification/sv16-4/repository-asset-design-cleanup-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv16-4/repository-asset-design-cleanup-verification.json`
 
-Slice 16.5 dependency cleanup is allowed; Slice 16.6 storage cleanup is not started.
-No commit/tag/publish/deploy.
+**Status:** Complete (Epic 16 finished through Slice 16.10).  
+No commit/tag/publish/deploy from this package.

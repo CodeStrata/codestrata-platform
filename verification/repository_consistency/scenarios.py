@@ -37,7 +37,7 @@ def check_scenarios(
         ("T", "Community docs advertise internal Insights", flags.get("community_ok", False)),
         ("U", "commercial Platform advertised as Community", flags.get("community_ok", False)),
         ("V", "owner-review item silently deleted", flags.get("owner_ok", False)),
-        ("W", "Epic 17 starts", flags.get("no_epic_17", False)),
+        ("W", "Slice 17.2 starts early", flags.get("no_epic_17", False)),
         ("X", "current regression fails", flags.get("runtime_ok", False)),
         ("Y", "verifier nondeterministic", True),
         ("Z", "report leaks local paths/timestamps/secrets", flags.get("report_safe", False)),

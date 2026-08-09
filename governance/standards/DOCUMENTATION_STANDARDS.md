@@ -20,7 +20,8 @@ All markdown in this monorepo and future public docs.
 | User documentation | `engine/docs/` guides, future portal | How to use — reference Governance/Knowledge |
 | Developer documentation | `engine/docs/architecture/`, `platform/docs/`, `ARCHITECTURE.md` | How implementation works today |
 | Operational documentation | security checklists, release notes, playbooks | How to operate / release |
-| Inventory | [DOCUMENTATION_INVENTORY.md](../DOCUMENTATION_INVENTORY.md) | Classification of source docs |
+| Inventory (current) | [DOCUMENTATION_REGISTRY.md](../DOCUMENTATION_REGISTRY.md) | Authoritative classification |
+| Inventory (historical) | [DOCUMENTATION_INVENTORY.md](../DOCUMENTATION_INVENTORY.md) | Phase 8.9.3 snapshot — superseded |
 
 ## 2. Rules
 

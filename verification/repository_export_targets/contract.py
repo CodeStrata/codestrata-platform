@@ -13,7 +13,7 @@ from verification.repository_export_targets import (
 SCHEMA_NAME = "repository-export-target-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV128_OUTPUT_RELATIVE = "reports/verification/sv12-8"
+SV128_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-8"
 REPORT_JSON = "repository-export-target-verification.json"
 
 AUTHORITATIVE_COMMAND = "scripts/export_repository.py"

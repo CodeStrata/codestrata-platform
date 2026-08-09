@@ -1,0 +1,53 @@
+{
+  "policy_id": "community-artifact-consolidation-policy",
+  "policy_version": "1.0",
+  "schema": "community-artifact-consolidation-policy:1.0",
+  "epic": 17,
+  "slice": "17.12",
+  "authority": "Authoritative local runtime artifact consolidation for CodeStrata Community. Single root .codestrata-artifacts/ for assessments, intelligence, validation, manifests, and temporary outputs. Does not redesign assessment/EI/telemetry algorithms, AWS, Cloudflare, Insights, docs, or cloud artifact storage. Slice 17.13 not started.",
+  "start_epic_17": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false,
+  "artifact_root": ".codestrata-artifacts",
+  "layout": {
+    "assessments": ".codestrata-artifacts/assessments/<assessment-run-id>/",
+    "assessment_manifest": "assessment.json",
+    "assessment_html": "assessment.html",
+    "heads": "heads/*.json",
+    "intelligence": ".codestrata-artifacts/intelligence/<portfolio-run-id>/",
+    "validation": ".codestrata-artifacts/validation/{repositories,suites,logs}/",
+    "manifests": ".codestrata-artifacts/manifests/",
+    "temporary": ".codestrata-artifacts/temporary/"
+  },
+  "assessment_manifest_is_lightweight": true,
+  "heads_remain_source_of_truth": true,
+  "engineering_intelligence_community_single_repo_forbidden": true,
+  "engineering_intelligence_requires_portfolio": true,
+  "data_lake_report_upload_forbidden": true,
+  "cloud_artifact_storage_forbidden": true,
+  "duplicate_runtime_outputs_forbidden": true,
+  "legacy_reports_directory_deprecated": true,
+  "legacy_reports_migration_supported": true,
+  "cli_output_default": ".codestrata-artifacts/assessments",
+  "vscode_output_default": ".codestrata-artifacts/assessments",
+  "verification_output_root": ".codestrata-artifacts/validation/suites",
+  "release_boundary": {
+    "commit_required": false,
+    "tag_allowed": false,
+    "publish_allowed": false,
+    "publish_cli_allowed": false,
+    "publish_vscode_allowed": false
+  },
+  "verification": {
+    "package": "verification/community_artifact_consolidation",
+    "schema": "community-artifact-consolidation-verification:1.0.0",
+    "report": ".codestrata-artifacts/validation/suites/sv17-12/community-artifact-consolidation-verification.json"
+  },
+  "notes": [
+    "Assessment algorithms and head schemas are unchanged.",
+    "assessment.json is a lightweight manifest referencing heads/.",
+    "Community Data Lake remains telemetry-only; reports never auto-upload.",
+    "Slice 17.13 is not started."
+  ]
+}

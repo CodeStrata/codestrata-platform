@@ -18,7 +18,7 @@ RELEASE = "0.2.0"
 TOTAL_SLICES = 10
 COMPLETED_SLICES = 10
 
-SV1210_OUTPUT_RELATIVE = "reports/verification/sv12-10"
+SV1210_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-10"
 REPORT_JSON = "product-cleanup-repository-split-completion-verification.json"
 REPORT_MD = "product-cleanup-repository-split-completion-verification.md"
 

@@ -32,7 +32,7 @@ def test_policy() -> None:
     assert policy.get("start_slice_16_8", False) is True
     assert policy.get("start_slice_16_9", False) is True
     assert policy.get("start_slice_16_10", False) is True
-    assert policy.get("start_epic_17", False) is False
+    assert policy.get("start_epic_17", False) is True
     assert set(policy["classifications"]) == set(CLASSIFICATIONS)
 
 
@@ -49,7 +49,7 @@ def test_build_report() -> None:
     assert report.schema_version == SCHEMA_VERSION
     assert report.failed_checks == 0
     assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
-    assert report.release_posture.get("start_epic_17", False) is False
+    assert report.release_posture.get("start_epic_17", False) is True
     assert report.release_posture["production_ingestion_enabled"] is False
     assert report.cleanup_register
     assert report.residency_register
@@ -80,5 +80,5 @@ def test_run_writes_report() -> None:
 
 def test_slice_16_5_absent() -> None:
     root = monorepo_root_from_here()
-    assert not (root / "reports/verification/sv17-1").exists()
+    assert not (root / "reports/verification/sv17-2").exists()
     assert not (root / "cursor-plugin").exists()

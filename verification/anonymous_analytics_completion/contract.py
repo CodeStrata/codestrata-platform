@@ -17,12 +17,12 @@ EPIC = "10"
 EXPECTED_SLICE_COUNT = 9
 SLICES_COMPLETED: tuple[str, ...] = tuple(f"10.{i}" for i in range(1, 10))
 
-SV109_OUTPUT_RELATIVE = "reports/verification/sv10-9"
+SV109_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv10-9"
 REPORT_JSON = "anonymous-analytics-completion-verification.json"
 REPORT_MD = "anonymous-analytics-completion-verification.md"
 
 PRIVACY_REPORT_RELATIVE = (
-    "reports/verification/sv10-8/anonymous-analytics-privacy-verification.json"
+    ".codestrata-artifacts/validation/suites/sv10-8/anonymous-analytics-privacy-verification.json"
 )
 PRIVACY_SCHEMA = "anonymous-analytics-privacy-verification"
 PRIVACY_EXPECTED_CHECKS = 157

@@ -10,6 +10,7 @@ import {
 import {
   HttpInsightsAuthClient,
   resolveInsightsApiBaseUrl,
+  AuthApiError,
   type InsightsAuthClient,
 } from "../api/authClient";
 
@@ -64,9 +65,15 @@ export function AuthProvider({
       try {
         await client.login(password);
         setState("authenticated");
-      } catch {
+      } catch (err) {
         setState("unauthenticated");
-        setLoginError("Invalid password");
+        if (err instanceof AuthApiError && err.code === "unavailable") {
+          setLoginError("Authentication unavailable. Try again shortly.");
+        } else if (err instanceof AuthApiError && err.code === "access_denied") {
+          setLoginError("Request blocked. Refresh and try again.");
+        } else {
+          setLoginError("Invalid password");
+        }
         throw new Error("login_failed");
       }
     },

@@ -11,11 +11,13 @@ from codestrata_platform.community_cloud_api.deployment.settings import (
     load_deployment_settings,
 )
 from codestrata_platform.community_cloud_api.deployment.wiring import (
+    create_production_app,
     create_production_foundation_app,
 )
 
 __all__ = [
     "DeploymentSettings",
+    "create_production_app",
     "create_production_foundation_app",
     "get_handler",
     "handler",

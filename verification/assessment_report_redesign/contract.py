@@ -12,7 +12,7 @@ from verification.assessment_report_redesign import (
 
 SCHEMA_NAME = "assessment-html-report-redesign-verification"
 SCHEMA_VERSION = "1.0.0"
-SV143_OUTPUT_RELATIVE = "reports/verification/sv14-3"
+SV143_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-3"
 REPORT_JSON = "assessment-html-report-redesign-verification.json"
 REPORT_MD = "assessment-html-report-redesign-verification.md"
 

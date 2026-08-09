@@ -204,7 +204,7 @@ def detect_start_here_context(
     has_report = False
     if reports_dir.is_dir():
         try:
-            has_report = any(reports_dir.rglob("report.html"))
+            has_report = any(reports_dir.rglob("assessment.html"))
         except OSError:
             has_report = False
     return StartHereContext(

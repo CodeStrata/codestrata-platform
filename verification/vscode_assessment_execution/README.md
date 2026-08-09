@@ -10,7 +10,7 @@ PYTHONPATH=. python -m verification.vscode_assessment_execution
 PYTHONPATH=. python -m pytest tests/verification/vscode_assessment_execution -q
 ```
 
-Report: `reports/verification/sv13-5/vscode-assessment-execution-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-5/vscode-assessment-execution-verification.json`
 
 ## Scope
 

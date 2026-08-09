@@ -97,7 +97,8 @@ def build_report(monorepo: Path) -> RepositoryPackageReleaseValidationReport:
     contract = default_contract()
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_publish is True
     assert contract.no_commit is True
 
@@ -143,10 +144,10 @@ def build_report(monorepo: Path) -> RepositoryPackageReleaseValidationReport:
     checks.extend(c)
     defects.extend(d)
 
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_slice_17_2 = not (monorepo / "reports/verification/sv17-6").exists()
     no_epic19 = not (monorepo / "verification/release_readiness").exists()
     checks.append(
-        CheckResult("boundary:no_sv17_1", no_epic_17, "sv17-1 absent", "release_boundary")
+        CheckResult("boundary:no_sv17_4", no_slice_17_2, "sv17-2 absent", "release_boundary")
     )
     checks.append(
         CheckResult("boundary:no_epic19_package", no_epic19, "no release_readiness pkg", "release_boundary")
@@ -162,7 +163,7 @@ def build_report(monorepo: Path) -> RepositoryPackageReleaseValidationReport:
         "security_ok": _ok(checks, "security"),
         "determinism_ok": _ok(checks, "determinism"),
         "no_publish": True,
-        "no_epic_17": no_epic_17,
+        "no_epic_17": no_slice_17_2,
         "no_epic19": no_epic19,
         "no_cutover": True,
         "report_safe": True,
@@ -260,7 +261,8 @@ def build_report(monorepo: Path) -> RepositoryPackageReleaseValidationReport:
         release_posture={
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
             "no_publish": True,
             "no_deploy": True,
             "no_tag": True,

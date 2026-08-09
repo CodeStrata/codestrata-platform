@@ -25,7 +25,7 @@ Optional:
 ```bash
 PYTHONPATH=engine/src:. .venv/bin/python -m verification.privacy_first_telemetry_completion \
   --monorepo-root . \
-  --output-dir reports/verification/sv9-15
+  --output-dir .codestrata-artifacts/validation/suites/sv9-15
 ```
 
 Pytest:
@@ -51,7 +51,7 @@ PYTHONPATH=engine/src:. .venv/bin/python -m verification.privacy_first_telemetry
 ## Output
 
 ```
-reports/verification/sv9-15/
+.codestrata-artifacts/validation/suites/sv9-15/
 ├── privacy-first-telemetry-completion-verification.json
 └── privacy-first-telemetry-completion-verification.md
 ```

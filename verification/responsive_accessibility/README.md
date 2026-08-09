@@ -14,7 +14,7 @@ the report records the limitation.
 
 ## Report
 
-`reports/verification/sv14-11/responsive-accessibility-verification.json`
+`.codestrata-artifacts/validation/suites/sv14-11/responsive-accessibility-verification.json`
 
 Schema: `responsive-accessibility-verification:1.0.0`
 

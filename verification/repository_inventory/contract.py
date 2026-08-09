@@ -12,7 +12,7 @@ from verification.repository_inventory import (
 
 SCHEMA_NAME = "repository-inventory-verification"
 SCHEMA_VERSION = "1.0.0"
-SV161_OUTPUT_RELATIVE = "reports/verification/sv16-1"
+SV161_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-1"
 REPORT_JSON = "repository-inventory-verification.json"
 REPORT_MD = "repository-inventory-verification.md"
 
@@ -111,7 +111,8 @@ class Sv161Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_commit: bool = True
     no_tag: bool = True
     no_publish: bool = True

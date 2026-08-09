@@ -12,7 +12,7 @@ from verification.community_data_lake_audit import (
 
 SCHEMA_NAME = "community-data-lake-audit-verification"
 SCHEMA_VERSION = "1.0.0"
-SV151_OUTPUT_RELATIVE = "reports/verification/sv15-1"
+SV151_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-1"
 REPORT_JSON = "community-data-lake-audit-verification.json"
 REPORT_MD = "community-data-lake-audit-verification.md"
 
@@ -42,7 +42,7 @@ FINDING_CLASSES: tuple[str, ...] = (
 )
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

@@ -58,14 +58,25 @@ class TelemetrySinkResult:
 
 
 class TelemetryEventSink(Protocol):
-    def accept(self, event: ValidatedTelemetryEvent) -> TelemetrySinkResult: ...
+    def accept(
+        self,
+        event: ValidatedTelemetryEvent,
+        *,
+        request: Any | None = None,
+    ) -> TelemetrySinkResult: ...
 
 
 class UnavailableTelemetryEventSink:
     """Default production sink — never claims durable acceptance."""
 
-    def accept(self, event: ValidatedTelemetryEvent) -> TelemetrySinkResult:
+    def accept(
+        self,
+        event: ValidatedTelemetryEvent,
+        *,
+        request: Any | None = None,
+    ) -> TelemetrySinkResult:
         _ = event
+        _ = request
         return TelemetrySinkResult(
             status=TelemetrySinkStatus.UNAVAILABLE,
             reason="telemetry_sink_unavailable",
@@ -84,7 +95,13 @@ class InMemoryTelemetryEventSink:
     fail_next: bool = False
     reject_next: bool = False
 
-    def accept(self, event: ValidatedTelemetryEvent) -> TelemetrySinkResult:
+    def accept(
+        self,
+        event: ValidatedTelemetryEvent,
+        *,
+        request: Any | None = None,
+    ) -> TelemetrySinkResult:
+        _ = request
         if self.fail_next:
             self.fail_next = False
             raise RuntimeError("simulated_sink_failure")

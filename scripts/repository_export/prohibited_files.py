@@ -12,6 +12,7 @@ EXCLUDE_DIR_NAMES = frozenset(
         ".git",
         ".terraform",
         ".tofu",
+        ".local",
         "__pycache__",
         ".pytest_cache",
         ".mypy_cache",
@@ -154,6 +155,8 @@ def excluded_category_for(rel_posix: str) -> str | None:
                 ".tofu",
             }:
                 return "provider_plugin_cache"
+            if part == ".local":
+                return "operator_local_artifacts"
             if part in {
                 "__pycache__",
                 ".pytest_cache",

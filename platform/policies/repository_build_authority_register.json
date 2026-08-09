@@ -5,55 +5,86 @@
     {
       "surface": "Engine",
       "package_root": "engine/",
-      "commands": ["python -m pytest", "python -m build"],
+      "commands": [
+        "python -m pytest",
+        "python -m build"
+      ],
       "notes": "codestrata 0.2.0 CLI via engine pyproject"
     },
     {
       "surface": "Platform",
       "package_root": "platform/",
-      "commands": ["python -m pytest"],
+      "commands": [
+        "python -m pytest"
+      ],
       "notes": "codestrata-platform private package"
     },
     {
       "surface": "Docs",
       "package_root": "docs/",
-      "commands": ["npm ci", "npm run build", "npm run validate", "npm run deploy:check"],
+      "commands": [
+        "npm ci",
+        "npm run build",
+        "npm run validate",
+        "npm run deploy:check"
+      ],
       "notes": "package-root independent; local wrangler"
     },
     {
       "surface": "VS Code",
       "package_root": "vscode-plugin/",
-      "commands": ["npm ci", "npm run compile", "npm test", "npm run package:dry"],
+      "commands": [
+        "npm ci",
+        "npm run compile",
+        "npm test",
+        "npm run package:dry"
+      ],
       "notes": "local @vscode/vsce 2.32.0"
     },
     {
       "surface": "Insights",
       "package_root": "insights/",
-      "commands": ["npm ci", "npm test", "npm run build", "npm run typecheck"],
+      "commands": [
+        "npm ci",
+        "npm test",
+        "npm run build",
+        "npm run typecheck"
+      ],
       "notes": "standalone; no chart/AWS SDK"
     },
     {
       "surface": "Infrastructure",
       "package_root": "infrastructure/",
-      "commands": ["tofu fmt", "tofu init -backend=false", "tofu validate"],
+      "commands": [
+        "tofu fmt",
+        "tofu init -backend=false",
+        "tofu validate"
+      ],
       "notes": "no plan/apply in cleanup slices"
     },
     {
       "surface": "Repository exports",
       "package_root": "scripts/",
-      "commands": ["python scripts/export_repository.py"],
+      "commands": [
+        "python scripts/export_repository.py"
+      ],
       "notes": "community / infrastructure / insights targets"
     },
     {
       "surface": "Brand generation",
       "package_root": "scripts/",
-      "commands": ["python scripts/generate_brand_assets.py", "python scripts/generate_brand_assets.py --check"],
+      "commands": [
+        "python scripts/generate_brand_assets.py",
+        "python scripts/generate_brand_assets.py --check"
+      ],
       "notes": "Design System brand authority"
     },
     {
       "surface": "Release verification",
       "package_root": "verification/",
-      "commands": ["python -m verification.<package>"],
+      "commands": [
+        "python -m verification.<package>"
+      ],
       "notes": "Epic verification runners; no publish/deploy"
     }
   ]

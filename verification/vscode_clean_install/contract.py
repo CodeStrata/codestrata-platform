@@ -12,7 +12,7 @@ from verification.vscode_clean_install import (
 
 SCHEMA_NAME = "vscode-clean-install-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1314_OUTPUT_RELATIVE = "reports/verification/sv13-14"
+SV1314_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-14"
 REPORT_JSON = "vscode-clean-install-verification.json"
 REPORT_MD = "vscode-clean-install-verification.md"
 

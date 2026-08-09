@@ -12,7 +12,7 @@ from verification.repository_documentation import (
 
 SCHEMA_NAME = "repository-documentation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV162_OUTPUT_RELATIVE = "reports/verification/sv16-2"
+SV162_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-2"
 REPORT_JSON = "repository-documentation-verification.json"
 REPORT_MD = "repository-documentation-verification.md"
 
@@ -97,7 +97,8 @@ class Sv162Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_commit: bool = True
     no_tag: bool = True
     no_publish: bool = True

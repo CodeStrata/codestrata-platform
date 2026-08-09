@@ -12,7 +12,7 @@ from verification.community_insights_ingestion import (
 
 SCHEMA_NAME = "community-insights-ingestion-verification"
 SCHEMA_VERSION = "1.0.0"
-SV154_OUTPUT_RELATIVE = "reports/verification/sv15-4"
+SV154_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-4"
 REPORT_JSON = "community-insights-ingestion-verification.json"
 REPORT_MD = "community-insights-ingestion-verification.md"
 
@@ -46,7 +46,7 @@ PROVIDER_FAMILIES: tuple[str, ...] = (
 )
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

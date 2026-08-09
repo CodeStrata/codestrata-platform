@@ -31,7 +31,7 @@ def test_policy_exists_and_audit_only() -> None:
     assert policy.get("start_slice_16_8", False) is True
     assert policy.get("start_slice_16_9", False) is True
     assert policy.get("start_slice_16_10", False) is True
-    assert policy.get("start_epic_17", False) is False
+    assert policy.get("start_epic_17", False) is True
     assert policy["delete_forbidden_in_16_1"] is True
     assert set(policy["classifications"]) == set(CLASSIFICATIONS)
 
@@ -44,7 +44,7 @@ def test_build_report_pass_with_limitations() -> None:
     assert report.failed_checks == 0
     assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
     assert report.release_posture["cleanup_performed"] is False
-    assert report.release_posture.get("start_epic_17", False) is False
+    assert report.release_posture.get("start_epic_17", False) is True
     assert report.inventory_summary["entry_count"] > 0
     assert "engine" in report.area_counts
     assert sum(report.classification_counts.values()) >= report.inventory_summary["entry_count"]
@@ -78,4 +78,4 @@ def test_run_writes_sv16_1_report() -> None:
 
 def test_slice_16_5_not_started() -> None:
     root = monorepo_root_from_here()
-    assert not (root / "reports/verification/sv17-1").exists()
+    assert not (root / "reports/verification/sv17-2").exists()

@@ -1,0 +1,18 @@
+{
+  "schema": "community-cloud-production-plan-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.4",
+  "package": "verification/community_cloud_production_plan",
+  "policy": "community-cloud-production-plan-policy:1.0",
+  "register": "community-cloud-production-plan-register:1.0",
+  "report": "reports/verification/sv17-4/community-cloud-production-plan-verification.json",
+  "start_slice_17_4": true,
+  "start_slice_17_5": true,
+  "plan_only": true,
+  "product_apply": false,
+  "production_ingestion_enabled": false,
+  "destructive_actions_allowed": false,
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "start_slice_17_8": false
+}

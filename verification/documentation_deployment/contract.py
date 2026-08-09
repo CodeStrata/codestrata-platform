@@ -7,7 +7,7 @@ from pathlib import Path
 
 SCHEMA_NAME = "documentation-deployment-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1412_OUTPUT_RELATIVE = "reports/verification/sv14-12"
+SV1412_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-12"
 REPORT_JSON = "documentation-deployment-verification.json"
 REPORT_MD = "documentation-deployment-verification.md"
 
@@ -24,7 +24,7 @@ VITEPRESS_PIN = "1.6.4"
 EXPORT_MANIFEST = "public-export-manifest.yaml"
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 ALLOWED_LIMITATIONS: tuple[str, ...] = (

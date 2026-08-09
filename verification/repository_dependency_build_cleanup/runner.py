@@ -76,7 +76,8 @@ def build_report(monorepo: Path) -> RepositoryDependencyBuildCleanupReport:
     assert contract.start_slice_16_8 is True
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_storage_cleanup is True
     assert contract.no_commit is True
 
@@ -126,7 +127,7 @@ def build_report(monorepo: Path) -> RepositoryDependencyBuildCleanupReport:
     c, d = check_boundaries(monorepo)
     checks.extend(c)
     defects.extend(d)
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_epic_17 = not (monorepo / "reports/verification/sv17-6").exists()
 
     c, d, version_authority = check_versions(monorepo)
     checks.extend(c)
@@ -289,7 +290,8 @@ def build_report(monorepo: Path) -> RepositoryDependencyBuildCleanupReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
         },
         statuses=statuses,
         scenario_results=scenario_results,

@@ -1,0 +1,56 @@
+# Slice 17.3 — GitHub → AWS OIDC identity check (structural / post-push).
+#
+# Validates short-lived OIDC assumption of codestrata-github-actions-production.
+# Identity-only job: no production-apply step, no product deploy, no Secrets, no ingestion.
+#
+# Live execution requires owner push + GitHub Environment "production".
+# Ordinary ci.yml must not gain id-token write.
+
+name: aws-identity-check
+
+on:
+  workflow_dispatch:
+  # push trigger intentionally omitted until owner activates OIDC in a controlled push.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aws-identity-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  oidc-identity:
+    name: oidc-identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.CODESTRATA_GITHUB_AWS_ROLE_ARN }}
+          aws-region: us-west-2
+          role-session-name: codestrata-gha-${{ github.run_id }}
+          role-duration-seconds: 3600
+
+      - name: Caller identity (safe)
+        run: |
+          aws sts get-caller-identity --query Arn --output text | sed -E 's/[0-9]{12}/<ACCOUNT>/g'
+          aws sts get-caller-identity --query Account --output text >/dev/null
+
+      - name: Dedicated state bucket head
+        env:
+          STATE_BUCKET: codestrata-opentofu-state-production-865ff868
+        run: |
+          aws s3api head-bucket --bucket "$STATE_BUCKET" --region us-west-2
+          echo "state_bucket_head=ok"
+
+      - name: Refuse product deploy surface
+        run: |
+          echo "identity_check_only=true"
+          echo "production_apply=forbidden"
+          echo "product_deploy=forbidden"

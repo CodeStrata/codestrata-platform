@@ -9,7 +9,7 @@ from verification.report_navigation_ia import REPORT_IA_ID, REPORT_IA_VERSION
 
 SCHEMA_NAME = "report-navigation-information-architecture-verification"
 SCHEMA_VERSION = "1.0.0"
-SV149_OUTPUT_RELATIVE = "reports/verification/sv14-9"
+SV149_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-9"
 REPORT_JSON = "report-navigation-information-architecture-verification.json"
 REPORT_MD = "report-navigation-information-architecture-verification.md"
 
@@ -95,7 +95,7 @@ EIR_SECTION_ORDER: tuple[str, ...] = (
 
 # Slice 14.14 must not have started.
 FORBIDDEN_15_7_PATHS = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 ALLOWED_LIMITATIONS = frozenset(

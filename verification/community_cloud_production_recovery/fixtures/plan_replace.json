@@ -1,0 +1,14 @@
+{
+  "format_version": "1.2",
+  "resource_changes": [
+    {
+      "address": "module.community_cloud_api.aws_api_gateway_rest_api.api",
+      "mode": "managed",
+      "type": "aws_api_gateway_rest_api",
+      "name": "api",
+      "change": {
+        "actions": ["create", "delete"]
+      }
+    }
+  ]
+}

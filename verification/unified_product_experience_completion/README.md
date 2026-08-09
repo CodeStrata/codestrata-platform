@@ -8,7 +8,7 @@ Authoritative completion gate for **Epic 14 – Unified CodeStrata Community Exp
 | --- | --- |
 | Policy | `codestrata-unified-product-experience-completion-policy:1.0` |
 | Schema | `unified-product-experience-completion-verification:1.0.0` |
-| Report | `reports/verification/sv14-14/unified-product-experience-completion-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv14-14/unified-product-experience-completion-verification.json` |
 
 ## What it proves
 

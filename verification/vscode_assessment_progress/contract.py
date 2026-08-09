@@ -12,7 +12,7 @@ from verification.vscode_assessment_progress import (
 
 SCHEMA_NAME = "vscode-assessment-progress-verification"
 SCHEMA_VERSION = "1.0.0"
-SV136_OUTPUT_RELATIVE = "reports/verification/sv13-6"
+SV136_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-6"
 REPORT_JSON = "vscode-assessment-progress-verification.json"
 REPORT_MD = "vscode-assessment-progress-verification.md"
 

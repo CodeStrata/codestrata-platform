@@ -241,7 +241,7 @@ class IngestAiUsage:
         )
 
         try:
-            sink_result = self.sink.accept(event)
+            sink_result = self.sink.accept(event, request=request)
         except Exception:  # noqa: BLE001
             return self._sink_unavailable(context, request, decision, limitations)
 

@@ -17,7 +17,7 @@ optional AI). Does not publish, bump versions, or change Marketplace copy semant
 pytest tests/verification/marketplace_visual_assets -q
 ```
 
-Report: `reports/verification/sv14-6/marketplace-visual-assets-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-6/marketplace-visual-assets-verification.json`
 
 ## Boundaries
 

@@ -9,7 +9,7 @@ PYTHONPATH=. python -m verification.vscode_failure_recovery
 PYTHONPATH=. python -m pytest tests/verification/vscode_failure_recovery -q
 ```
 
-Report: `reports/verification/sv13-8/vscode-failure-recovery-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-8/vscode-failure-recovery-verification.json`
 
 ## Scope
 

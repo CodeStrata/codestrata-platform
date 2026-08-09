@@ -8,7 +8,7 @@ Authoritative completion gate for **Epic 15 – Community Insights**.
 | --- | --- |
 | Policy | `community-insights-completion-policy:1.0` |
 | Schema | `community-insights-completion-verification:1.0.0` |
-| Report | `reports/verification/sv15-12/community-insights-completion-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-12/community-insights-completion-verification.json` |
 
 ## What it proves
 

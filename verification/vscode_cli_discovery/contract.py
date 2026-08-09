@@ -13,7 +13,7 @@ from verification.vscode_cli_discovery import (
 SCHEMA_NAME = "vscode-cli-discovery-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV132_OUTPUT_RELATIVE = "reports/verification/sv13-2"
+SV132_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-2"
 REPORT_JSON = "vscode-cli-discovery-verification.json"
 REPORT_MD = "vscode-cli-discovery-verification.md"
 

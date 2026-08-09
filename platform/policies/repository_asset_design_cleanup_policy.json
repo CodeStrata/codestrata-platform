@@ -56,11 +56,12 @@
   "start_slice_16_8": true,
   "start_slice_16_9": true,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "verification": {
     "package": "verification/repository_asset_design_cleanup",
     "schema": "repository-asset-design-cleanup-verification:1.0.0",
     "report": "reports/verification/sv16-4/repository-asset-design-cleanup-verification.json",
     "asset_manifest": "design-system/assets/asset-authority-manifest.json"
-  }
+  },
+  "start_slice_17_2": true
 }

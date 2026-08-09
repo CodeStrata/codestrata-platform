@@ -12,7 +12,7 @@ from verification.vscode_marketplace_branding import (
 
 SCHEMA_NAME = "vscode-marketplace-branding-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1312_OUTPUT_RELATIVE = "reports/verification/sv13-12"
+SV1312_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-12"
 REPORT_JSON = "vscode-marketplace-branding-verification.json"
 REPORT_MD = "vscode-marketplace-branding-verification.md"
 

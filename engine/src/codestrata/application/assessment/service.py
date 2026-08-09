@@ -23,6 +23,7 @@ from codestrata.config.settings import (
 )
 from codestrata.models import AnalysisResult, Repository
 from codestrata.reporters.report_paths import (
+    DEFAULT_ASSESS_OUTPUT_DIRECTORY,
     ReportPaths,
     create_report_paths,
     format_report_run_timestamp,
@@ -94,7 +95,6 @@ if TYPE_CHECKING:
     from codestrata.ai.providers.base import AIModelProvider
     from codestrata.domain.ai_enrichment import AiEnrichmentResult
 
-DEFAULT_ASSESS_OUTPUT_DIRECTORY = Path("reports")
 DEFAULT_ASSESS_REPORT_TITLE = "Engineering Assessment"
 DEFAULT_ASSESS_TEMPERATURE = 0.0
 DEFAULT_ASSESS_MAX_OUTPUT_TOKENS = 5000
@@ -3195,7 +3195,10 @@ class AssessmentApplicationService:
 
         if write_reports:
             try:
-                deleted = prune_excess_report_runs(written_paths.run_directory.parent)
+                deleted = prune_excess_report_runs(
+                    written_paths.run_directory.parent,
+                    repository_slug=written_paths.repository_name,
+                )
                 if deleted:
                     for path in deleted:
                         active_console.print(f"Removed aged report run: {path.name}")

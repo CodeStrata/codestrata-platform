@@ -56,10 +56,11 @@
   "start_slice_16_8": true,
   "start_slice_16_9": true,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "verification": {
     "package": "verification/repository_dependency_build_cleanup",
     "schema": "repository-dependency-build-cleanup-verification:1.0.0",
     "report": "reports/verification/sv16-5/repository-dependency-build-cleanup-verification.json"
-  }
+  },
+  "start_slice_17_2": true
 }

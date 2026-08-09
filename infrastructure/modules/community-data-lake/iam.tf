@@ -64,10 +64,78 @@ data "aws_iam_policy_document" "writer_policy" {
     ]
   }
 
-  # ListBucket is intentionally omitted: writers use deterministic keys and
-  # do not need to enumerate bucket contents. If a future slice needs it,
-  # scope it with a Condition StringLike s3:prefix restricted to raw/* and
-  # quarantine/* — never grant an unconditional ListBucket.
+  statement {
+    sid    = "WriteIdentityObjects"
+    effect = "Allow"
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.community_data_lake.arn}/identity/*",
+    ]
+  }
+
+  statement {
+    sid    = "VerifyIdentityObjects"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.community_data_lake.arn}/identity/*",
+    ]
+  }
+
+  # S3 returns 403 (not 404) for GetObject on a missing key when the caller
+  # lacks ListBucket. Identity + immutable writes use GetObject for miss
+  # detection; scope ListBucket to approved prefixes only.
+  statement {
+    sid    = "ListApprovedWriterPrefixes"
+    effect = "Allow"
+
+    actions = [
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      aws_s3_bucket.community_data_lake.arn,
+    ]
+
+    condition {
+      test     = "StringLike"
+      variable = "s3:prefix"
+      values = [
+        "${local.accepted_prefix}",
+        "${local.accepted_prefix}*",
+        "${local.quarantine_prefix}",
+        "${local.quarantine_prefix}*",
+        "identity/",
+        "identity/*",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "DenyIdentityObjectDeletion"
+    effect = "Deny"
+
+    actions = [
+      "s3:DeleteObject",
+      "s3:DeleteObjectVersion",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.community_data_lake.arn}/identity/*",
+    ]
+  }
+
+  # ListBucket is required for correct missing-object detection on GetObject
+  # (without it S3 returns 403 instead of 404). Scope is prefix-conditioned
+  # above — never grant unconditional ListBucket or cross-bucket list.
 
   statement {
     sid    = "DenyAcceptedObjectDeletion"

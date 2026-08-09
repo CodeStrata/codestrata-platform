@@ -10,7 +10,7 @@ python -m verification.brand_assets
 pytest tests/verification/brand_assets -q
 ```
 
-Output: `reports/verification/sv14-10/brand-assets-verification.json`
+Output: `.codestrata-artifacts/validation/suites/sv14-10/brand-assets-verification.json`
 (schema `brand-assets-verification:1.0.0`) plus a short Markdown summary. The
 report is deterministic and contains no absolute paths, user data, or clock
 values.

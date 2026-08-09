@@ -6,13 +6,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INFRA_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 PROD_ROOT="${INFRA_ROOT}/production"
 VAR_FILE=""
+OUT_FILE=""
 
 usage() {
   cat <<'EOF'
-Usage: plan-production.sh [--var-file PATH]
+Usage: plan-production.sh [--var-file PATH] [--out PATH]
 
 Runs tofu plan against infrastructure/production.
 Does not apply. Does not auto-approve. Does not embed credentials.
+
+Options:
+  --var-file PATH   Optional tfvars file
+  --out PATH        Optional plan binary output (-out); never applied by this script
 EOF
 }
 
@@ -20,6 +25,10 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --var-file)
       VAR_FILE="${2:-}"
+      shift 2
+      ;;
+    --out|-out)
+      OUT_FILE="${2:-}"
       shift 2
       ;;
     -h|--help)
@@ -63,7 +72,11 @@ PLAN_ARGS=(plan -input=false -detailed-exitcode)
 if [[ -n "${VAR_FILE}" ]]; then
   PLAN_ARGS+=(-var-file="${VAR_FILE}")
 fi
+if [[ -n "${OUT_FILE}" ]]; then
+  mkdir -p "$(dirname "${OUT_FILE}")"
+  PLAN_ARGS+=(-out="${OUT_FILE}")
+fi
 
 echo "==> ${IAC_BIN} ${PLAN_ARGS[*]}"
-echo "NOTE: This script never runs apply."
+echo "NOTE: This script never runs apply. Optional -out only stores a plan binary; it is never applied here."
 "${IAC_BIN}" "${PLAN_ARGS[@]}"

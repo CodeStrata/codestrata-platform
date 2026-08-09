@@ -12,7 +12,7 @@ from verification.repository_package_release_validation import (
 
 SCHEMA_NAME = "repository-package-release-validation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV169_OUTPUT_RELATIVE = "reports/verification/sv16-9"
+SV169_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-9"
 REPORT_JSON = "repository-package-release-validation-verification.json"
 REPORT_MD = "repository-package-release-validation-verification.md"
 
@@ -59,7 +59,8 @@ class Sv169Contract:
     package_version: str = REPOSITORY_PACKAGE_RELEASE_VALIDATION_VERSION
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_publish: bool = True
     no_deploy: bool = True
     no_tag: bool = True

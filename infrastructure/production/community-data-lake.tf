@@ -4,6 +4,6 @@ module "community_data_lake" {
   project_name          = var.project_name
   environment_name      = "production"
   aws_region            = var.aws_region
-  enable_ingestion_wire = false
+  enable_ingestion_wire = true
   tags                  = var.tags
 }

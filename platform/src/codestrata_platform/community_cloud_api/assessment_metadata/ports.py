@@ -61,7 +61,10 @@ class AssessmentMetadataSinkResult:
 
 class AssessmentMetadataSink(Protocol):
     def accept(
-        self, event: ValidatedAssessmentMetadataEvent
+        self,
+        event: ValidatedAssessmentMetadataEvent,
+        *,
+        request: Any | None = None,
     ) -> AssessmentMetadataSinkResult: ...
 
 
@@ -69,9 +72,13 @@ class UnavailableAssessmentMetadataSink:
     """Default production sink — never claims durable acceptance."""
 
     def accept(
-        self, event: ValidatedAssessmentMetadataEvent
+        self,
+        event: ValidatedAssessmentMetadataEvent,
+        *,
+        request: Any | None = None,
     ) -> AssessmentMetadataSinkResult:
         _ = event
+        _ = request
         return AssessmentMetadataSinkResult(
             status=AssessmentMetadataSinkStatus.UNAVAILABLE,
             reason="assessment_metadata_sink_unavailable",
@@ -87,8 +94,12 @@ class InMemoryAssessmentMetadataSink:
     reject_next: bool = False
 
     def accept(
-        self, event: ValidatedAssessmentMetadataEvent
+        self,
+        event: ValidatedAssessmentMetadataEvent,
+        *,
+        request: Any | None = None,
     ) -> AssessmentMetadataSinkResult:
+        _ = request
         if self.fail_next:
             self.fail_next = False
             raise RuntimeError("simulated_metadata_sink_failure")

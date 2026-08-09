@@ -15,7 +15,7 @@ python scripts/export_repository.py --target infrastructure --destination <repo-
 PYTHONPATH=. .venv/bin/python -m verification.repository_export_targets
 ```
 
-Report: `reports/verification/sv12-8/repository-export-target-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-8/repository-export-target-verification.json`
 
 ## Notes
 

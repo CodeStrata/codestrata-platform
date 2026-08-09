@@ -7,7 +7,7 @@ from pathlib import Path
 
 SCHEMA_NAME = "responsive-accessibility-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1411_OUTPUT_RELATIVE = "reports/verification/sv14-11"
+SV1411_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-11"
 REPORT_JSON = "responsive-accessibility-verification.json"
 REPORT_MD = "responsive-accessibility-verification.md"
 BROWSER_ARTIFACT = "browser-validation.json"
@@ -72,7 +72,7 @@ DEPLOYMENT_PATHS: tuple[str, ...] = (
 
 # Slice 14.14 must not have started.
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 VIEWPORT_MATRIX_PX: tuple[int, ...] = (320, 375, 390, 768, 1024, 1280, 1440)

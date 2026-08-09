@@ -25,7 +25,7 @@ Optional:
 ```bash
 PYTHONPATH=engine/src:. .venv/bin/python -m verification.anonymous_analytics_privacy \
   --monorepo-root . \
-  --output-dir reports/verification/sv10-8
+  --output-dir .codestrata-artifacts/validation/suites/sv10-8
 ```
 
 Pytest:
@@ -44,7 +44,7 @@ cd vscode-plugin && npm test
 ## Output
 
 ```
-reports/verification/sv10-8/
+.codestrata-artifacts/validation/suites/sv10-8/
 ├── anonymous-analytics-privacy-verification.json
 └── anonymous-analytics-privacy-verification.md
 ```

@@ -70,7 +70,8 @@ def build_report(monorepo: Path) -> RepositoryBoundaryResidencyReport:
     assert contract.start_slice_16_8 is True
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_remote_creation is True
     assert contract.no_cutover is True
     assert contract.no_commit is True
@@ -112,7 +113,7 @@ def build_report(monorepo: Path) -> RepositoryBoundaryResidencyReport:
     checks.extend(c)
     defects.extend(d)
     boundaries_ok = all(x.ok for x in c)
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_epic_17 = not (monorepo / "reports/verification/sv17-6").exists()
 
     checks.append(CheckResult("determinism:canonical_ready", True, "canonical_json", "determinism"))
     checks.append(CheckResult("vscode:local_engine_helpers_only", True, "vscode-plugin/src/engine", "vscode"))
@@ -213,7 +214,8 @@ def build_report(monorepo: Path) -> RepositoryBoundaryResidencyReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
         },
         statuses=statuses,
         scenario_results=scenario_results,

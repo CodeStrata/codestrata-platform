@@ -12,7 +12,7 @@ from verification.community_insights_completion import (
 
 SCHEMA_NAME = "community-insights-completion-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1512_OUTPUT_RELATIVE = "reports/verification/sv15-12"
+SV1512_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-12"
 REPORT_JSON = "community-insights-completion-verification.json"
 REPORT_MD = "community-insights-completion-verification.md"
 
@@ -171,7 +171,7 @@ EPIC15_POLICIES: tuple[tuple[str, str, str], ...] = (
 )
 
 FORBIDDEN_EPIC16_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 FORBIDDEN_EPIC16_PACKAGES: tuple[str, ...] = (

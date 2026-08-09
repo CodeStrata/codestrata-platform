@@ -10,7 +10,7 @@ Schema: `assessment-html-report-redesign-verification:1.0.0`
 
 Report output:
 
-`reports/verification/sv14-3/assessment-html-report-redesign-verification.json`
+`.codestrata-artifacts/validation/suites/sv14-3/assessment-html-report-redesign-verification.json`
 
 ## Scope
 

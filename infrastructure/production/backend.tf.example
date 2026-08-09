@@ -2,20 +2,21 @@
 # Do not commit a live backend.tf containing account-specific identifiers.
 #
 # Requirements for production remote state:
-# - Encrypted S3 bucket dedicated to OpenTofu/Terraform state (NOT the future
+# - Encrypted S3 bucket dedicated to OpenTofu/Terraform state (NOT the
 #   Community Data Lake)
-# - State locking (e.g. DynamoDB lock table)
-# - Restricted IAM for state access
+# - Native S3 lockfile locking (use_lockfile = true) — NO DynamoDB lock table
+# - Restricted IAM for state object + lockfile access
 # - Versioning enabled on the state bucket
-# - Backup/recovery process documented operationally
+# - Block Public Access enabled
+# - Backup/recovery via S3 Versioning; stale locks via OpenTofu procedures
 # - Separate state per environment (production vs future dev/staging)
 
 # terraform {
 #   backend "s3" {
-#     bucket         = "REPLACE_WITH_STATE_BUCKET_NAME"
-#     key            = "codestrata/community-cloud-api/production/terraform.tfstate"
-#     region         = "REPLACE_WITH_AWS_REGION"
-#     encrypt        = true
-#     dynamodb_table = "REPLACE_WITH_LOCK_TABLE_NAME"
+#     bucket       = "REPLACE_WITH_STATE_BUCKET_NAME"
+#     key          = "codestrata/community-cloud/production/terraform.tfstate"
+#     region       = "us-west-2"
+#     encrypt      = true
+#     use_lockfile = true
 #   }
 # }

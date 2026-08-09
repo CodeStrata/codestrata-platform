@@ -1,7 +1,12 @@
 # Engine → Public Docs Migration Plan
 
-This plan classifies existing `engine/docs/` content for eventual adaptation into
-the public portal (`docs/`). **No source documents are deleted in this phase.**
+> **HISTORICAL** — Written for an earlier portal migration phase. The Community
+> VitePress portal under `docs/` is now the public documentation surface for
+> Community journeys. Prefer live `docs/` + `engine/docs/` over this plan.
+> Retained as migration evidence; do not treat as open work.
+
+This plan classifies existing `engine/docs/` content for adaptation into
+the public portal (`docs/`). **No source documents are deleted by this plan.**
 
 ## Ownership after migration
 

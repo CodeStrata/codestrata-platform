@@ -17,12 +17,12 @@ EPIC = "9"
 EXPECTED_SLICE_COUNT = 15
 SLICES_COMPLETED: tuple[str, ...] = tuple(f"9.{i}" for i in range(1, 16))
 
-SV915_OUTPUT_RELATIVE = "reports/verification/sv9-15"
+SV915_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv9-15"
 REPORT_JSON = "privacy-first-telemetry-completion-verification.json"
 REPORT_MD = "privacy-first-telemetry-completion-verification.md"
 
 CROSS_CLIENT_REPORT_RELATIVE = (
-    "reports/verification/sv9-14/cross-client-telemetry-privacy-verification.json"
+    ".codestrata-artifacts/validation/suites/sv9-14/cross-client-telemetry-privacy-verification.json"
 )
 CROSS_CLIENT_SCHEMA = "cross-client-telemetry-privacy-verification"
 

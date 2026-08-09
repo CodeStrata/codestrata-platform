@@ -9,7 +9,7 @@ PYTHONPATH=. python -m verification.vscode_cli_compatibility
 PYTHONPATH=. python -m pytest tests/verification/vscode_cli_compatibility -q
 ```
 
-Report: `reports/verification/sv13-11/vscode-cli-compatibility-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-11/vscode-cli-compatibility-verification.json`
 
 ## Scope
 

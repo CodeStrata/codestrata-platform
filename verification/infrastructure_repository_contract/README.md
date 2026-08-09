@@ -1,7 +1,7 @@
 # Slice 12.5 — Infrastructure Repository Contract Verification
 
 Schema: `infrastructure-repository-contract-verification` @ `1.0.0`  
-Report: `reports/verification/sv12-5/infrastructure-repository-contract-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-5/infrastructure-repository-contract-verification.json`
 
 ## Posture
 

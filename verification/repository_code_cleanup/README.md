@@ -6,13 +6,15 @@ Evidence-required removal of obsolete/dead/duplicate source code.
 
 - Policy: `repository-code-cleanup-policy:1.0`
 - Schema: `repository-code-cleanup-verification:1.0.0`
-- Report: `reports/verification/sv16-3/repository-code-cleanup-verification.json`
+- Report: `.codestrata-artifacts/validation/suites/sv16-3/repository-code-cleanup-verification.json`
 
 ## Run
 
 ```bash
-python -m verification.repository_code_cleanup
+PYTHONPATH=. python -m verification.repository_code_cleanup
 ```
 
-Does not clean assets (16.4), dependencies (16.5), generated storage (16.6), or split repos (16.7).
-No commit/tag/publish/deploy.
+**Status:** Complete. Later slices (16.4–16.10) also complete.  
+Assets (16.4), dependencies (16.5), generated storage (16.6), and residency (16.7)
+were owned by those slices — not this package.  
+No commit/tag/publish/deploy from this package.

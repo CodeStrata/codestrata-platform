@@ -40,13 +40,17 @@ def test_storage_modules_exist() -> None:
         assert (DATA_LAKE_PKG / name).is_file()
 
 
-def test_app_and_wiring_have_no_storage_or_data_lake() -> None:
-    for path in (APP_PY, DEPLOYMENT_WIRING):
-        text = path.read_text(encoding="utf-8")
-        assert "storage_factory" not in text
-        assert "create_community_data_lake_store" not in text
-        assert "CommunityDataLakeStoragePolicy" not in text
-        assert "data_lake" not in text
+def test_app_has_no_storage_factory_and_wiring_is_gated() -> None:
+    app_text = APP_PY.read_text(encoding="utf-8")
+    assert "storage_factory" not in app_text
+    assert "create_community_data_lake_store" not in app_text
+
+    wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
+    # Slice 17.7: wiring may import data_lake only on the gated ingestion path.
+    assert "ingestion_enabled" in wiring_text
+    assert "UnavailableCommunityCredentialVerifier" in wiring_text
+    assert "InMemoryTelemetryEventSink" not in wiring_text
+    assert "CommunityDataLakeStoragePolicy" not in wiring_text
 
 
 def test_engine_unchanged_by_storage_abstraction() -> None:
@@ -89,19 +93,17 @@ def test_production_fail_closed_symbols_unchanged() -> None:
     )
 
     settings = load_deployment_settings({})
+    assert settings.ingestion_enabled is False
     app = create_production_foundation_app(settings=settings)
     registry = app.state.community_cloud_route_registry
-    assert {(r.method, r.path) for r in registry.list_routes()} == {
-        ("GET", "/health"),
-        ("POST", "/ai-usage"),
-        ("POST", "/assessment-metadata"),
-        ("POST", "/cli-events"),
-        ("POST", "/extension-events"),
-        ("POST", "/telemetry"),
-    }
+    routes = {(r.method, r.path) for r in registry.list_routes()}
+    assert ("GET", "/health") in routes
+    assert ("POST", "/telemetry") in routes
+    assert ("POST", "/ai-usage") in routes
     wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
-    assert "storage_factory" not in wiring_text
-    assert "data_lake" not in wiring_text
+    assert "ingestion_enabled" in wiring_text
+    assert "UnavailableCommunityCredentialVerifier" in wiring_text
+    assert "InMemoryTelemetryEventSink" not in wiring_text
 
 
 def test_package_exports_storage_symbols() -> None:

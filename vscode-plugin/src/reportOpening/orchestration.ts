@@ -143,8 +143,10 @@ export function locateHtmlReport(
 }
 
 /**
- * Bounded discovery: only `<outputRoot>/<repo>/<run>/` with report.html.
- * Does not crawl the filesystem outside outputRoot.
+ * Bounded discovery for Slice 17.12 flat runs:
+ *   `<outputRoot>/<run-id>/assessment.html`
+ * plus legacy nested:
+ *   `<outputRoot>/<repo>/<run>/report.html`
  */
 export function findLatestHtmlRunDirectory(
   workspaceRoot: string,
@@ -159,31 +161,63 @@ export function findLatestHtmlRunDirectory(
     return undefined;
   }
   const candidates: { dir: string; mtime: number }[] = [];
-  let repoNames: string[];
+
+  const considerRun = (runPath: string, stat: fs.Stats): void => {
+    const htmlModern = path.join(runPath, "assessment.html");
+    const htmlLegacy = path.join(runPath, "report.html");
+    const html = fs.existsSync(htmlModern) ? htmlModern : htmlLegacy;
+    if (!fs.existsSync(html)) {
+      return;
+    }
+    try {
+      const htmlLstat = fs.lstatSync(html);
+      if (htmlLstat.isSymbolicLink() || !htmlLstat.isFile()) {
+        return;
+      }
+    } catch {
+      return;
+    }
+    const contained = resolveContainedPath(root, html);
+    if (!contained.contained) {
+      return;
+    }
+    candidates.push({ dir: runPath, mtime: stat.mtimeMs });
+  };
+
+  let topNames: string[];
   try {
-    repoNames = fs.readdirSync(root);
+    topNames = fs.readdirSync(root);
   } catch {
     return undefined;
   }
-  for (const repoName of repoNames) {
-    const repoPath = path.join(root, repoName);
-    let repoStat: fs.Stats;
+  for (const topName of topNames) {
+    const topPath = path.join(root, topName);
+    let topStat: fs.Stats;
     try {
-      repoStat = fs.lstatSync(repoPath);
+      topStat = fs.lstatSync(topPath);
     } catch {
       continue;
     }
-    if (repoStat.isSymbolicLink() || !repoStat.isDirectory()) {
+    if (topStat.isSymbolicLink() || !topStat.isDirectory()) {
       continue;
     }
+    // Flat Slice 17.12 run directory
+    if (
+      fs.existsSync(path.join(topPath, "assessment.html")) ||
+      fs.existsSync(path.join(topPath, "report.html"))
+    ) {
+      considerRun(topPath, topStat);
+      continue;
+    }
+    // Legacy nested repo/run
     let runNames: string[];
     try {
-      runNames = fs.readdirSync(repoPath);
+      runNames = fs.readdirSync(topPath);
     } catch {
       continue;
     }
     for (const runName of runNames) {
-      const runPath = path.join(repoPath, runName);
+      const runPath = path.join(topPath, runName);
       let stat: fs.Stats;
       try {
         stat = fs.lstatSync(runPath);
@@ -193,23 +227,7 @@ export function findLatestHtmlRunDirectory(
       if (stat.isSymbolicLink() || !stat.isDirectory()) {
         continue;
       }
-      const html = path.join(runPath, ENGINE_HTML_REPORT_BASENAME);
-      if (!fs.existsSync(html)) {
-        continue;
-      }
-      try {
-        const htmlLstat = fs.lstatSync(html);
-        if (htmlLstat.isSymbolicLink() || !htmlLstat.isFile()) {
-          continue;
-        }
-      } catch {
-        continue;
-      }
-      const contained = resolveContainedPath(root, html);
-      if (!contained.contained) {
-        continue;
-      }
-      candidates.push({ dir: runPath, mtime: stat.mtimeMs });
+      considerRun(runPath, stat);
     }
   }
   candidates.sort((a, b) => b.mtime - a.mtime);

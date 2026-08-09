@@ -12,7 +12,7 @@ from verification.vscode_telemetry_consent_integration import (
 
 SCHEMA_NAME = "vscode-telemetry-consent-integration-verification"
 SCHEMA_VERSION = "1.0.0"
-SV139_OUTPUT_RELATIVE = "reports/verification/sv13-9"
+SV139_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-9"
 REPORT_JSON = "vscode-telemetry-consent-integration-verification.json"
 REPORT_MD = "vscode-telemetry-consent-integration-verification.md"
 

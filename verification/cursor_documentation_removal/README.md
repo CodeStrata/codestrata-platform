@@ -1,7 +1,7 @@
 # Slice 12.3 — Cursor Documentation and Branding Removal
 
 Schema: `cursor-documentation-removal-verification` @ `1.0.0`  
-Report: `reports/verification/sv12-3/cursor-documentation-removal-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-3/cursor-documentation-removal-verification.json`
 
 ## Posture
 

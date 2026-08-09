@@ -21,6 +21,14 @@ tofu.tfvars
 secrets.tfvars
 *.secrets.tfvars
 
+# Live backend config with resolved bucket names (operator-local)
+backend.hcl
+**/backend.hcl
+
+# Bootstrap operator-local evidence / tfvars
+bootstrap/**/.local/
+**/bootstrap/**/.local/
+
 # Credentials and keys
 *.pem
 *.key
@@ -54,3 +62,11 @@ __pycache__/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Live backend config (account/bucket specific) — never commit
+backend.hcl
+**/backend.hcl
+
+# Production plan artifacts (Slice 17.4) — never commit
+production/**/.local/
+**/production/**/.local/

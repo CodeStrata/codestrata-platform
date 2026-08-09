@@ -11,7 +11,7 @@ PYTHONPATH=.:platform/src:engine/src:platform/tests \
 
 Report:
 
-`reports/verification/sv14-4/engineering-intelligence-report-redesign-verification.json`
+`.codestrata-artifacts/validation/suites/sv14-4/engineering-intelligence-report-redesign-verification.json`
 
 ## Scope
 

@@ -81,7 +81,8 @@ def build_report(monorepo: Path) -> RepositoryAssetDesignCleanupReport:
     assert contract.start_slice_16_8 is True
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_commit is True
 
     checks: list[CheckResult] = []
@@ -128,7 +129,7 @@ def build_report(monorepo: Path) -> RepositoryAssetDesignCleanupReport:
     c, d, manifest = check_manifest_and_boundaries(monorepo)
     checks.extend(c)
     defects.extend(d)
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_epic_17 = not (monorepo / "reports/verification/sv17-6").exists()
 
     checks.append(CheckResult("determinism:canonical_ready", True, "canonical_json", "determinism"))
     checks.append(CheckResult("eir:no_redesign", True, "semantics_unchanged", "eir"))
@@ -272,7 +273,8 @@ def build_report(monorepo: Path) -> RepositoryAssetDesignCleanupReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
             "dependencies_cleaned": False,
             "generated_storage_cleaned": False,
             "repositories_split": False,

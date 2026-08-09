@@ -12,7 +12,7 @@ from verification.marketplace_visual_assets import (
 
 SCHEMA_NAME = "marketplace-visual-assets-verification"
 SCHEMA_VERSION = "1.0.0"
-SV146_OUTPUT_RELATIVE = "reports/verification/sv14-6"
+SV146_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-6"
 REPORT_JSON = "marketplace-visual-assets-verification.json"
 REPORT_MD = "marketplace-visual-assets-verification.md"
 

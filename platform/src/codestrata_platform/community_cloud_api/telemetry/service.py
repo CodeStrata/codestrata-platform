@@ -267,7 +267,7 @@ class IngestTelemetryEvent:
         )
 
         try:
-            sink_result = self.sink.accept(event)
+            sink_result = self.sink.accept(event, request=request)
         except Exception:  # noqa: BLE001
             self.last_diagnostics = TelemetryIngestionDiagnostics(
                 request_validated=True,

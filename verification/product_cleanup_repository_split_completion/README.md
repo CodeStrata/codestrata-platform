@@ -23,7 +23,7 @@ PYTHONPATH=. python -m verification.product_cleanup_repository_split_completion 
   --skip-expensive --skip-vscode-npm
 ```
 
-Report: `reports/verification/sv12-10/product-cleanup-repository-split-completion-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-10/product-cleanup-repository-split-completion-verification.json`
 
 ## Slice matrix
 

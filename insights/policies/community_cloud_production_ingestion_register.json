@@ -1,0 +1,32 @@
+{
+  "schema": "community-cloud-production-ingestion-register:1.0",
+  "epic": 17,
+  "slice": "17.7",
+  "environment": "production",
+  "region": "us-west-2",
+  "writer_attachment_status": "attached",
+  "ingestion_flag_status": "enabled",
+  "stream_statuses": {
+    "telemetry": "accepted",
+    "assessment_metadata": "accepted",
+    "cli_events": "accepted",
+    "extension_events": "accepted",
+    "ai_usage": "accepted"
+  },
+  "accepted_fixture_count": 5,
+  "quarantine_fixture_count": 2,
+  "raw_object_delta": 7,
+  "quarantine_object_delta": 0,
+  "privacy_validation_status": "pass",
+  "schema_validation_status": "pass",
+  "failure_isolation_status": "pass",
+  "insights_smoke_status": "pass",
+  "zero_drift_status": "pass",
+  "rollback_ready": true,
+  "notes": [
+    "Five streams accepted via production API Gateway with Hive partitions.",
+    "Invalid fixtures rejected over HTTP before raw persistence (quarantine_behavior=http_reject_before_persist).",
+    "Community credentials stored as Secrets Manager fingerprints only.",
+    "No object keys, IDs, or secret values recorded."
+  ]
+}

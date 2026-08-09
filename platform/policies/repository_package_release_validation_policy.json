@@ -65,11 +65,13 @@
   "production_ingestion_enabled": false,
   "start_slice_16_9": true,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "verification": {
     "package": "verification/repository_package_release_validation",
     "schema": "repository-package-release-validation-verification:1.0.0",
     "contract": "platform/contracts/repository_package_release_validation_verification.json",
     "report": "reports/verification/sv16-9/repository-package-release-validation-verification.json"
-  }
+  },
+  "start_slice_17_2": true,
+  "note_epic_17": "Epic 17 started; Slice 17.1 architecture allowed; Slice 17.2 not started"
 }

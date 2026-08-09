@@ -1,0 +1,8 @@
+{
+  "schema": "community-artifact-consolidation-verification:1.0.0",
+  "package": "verification/community_artifact_consolidation",
+  "start_slice_17_12": true,
+  "start_slice_17_13": false,
+  "artifact_root": ".codestrata-artifacts",
+  "report": ".codestrata-artifacts/validation/suites/sv17-12/community-artifact-consolidation-verification.json"
+}

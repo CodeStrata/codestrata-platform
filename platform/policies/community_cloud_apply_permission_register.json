@@ -1,0 +1,122 @@
+{
+  "schema": "community-cloud-apply-permission-register:1.0",
+  "epic": 17,
+  "slice": "17.5",
+  "status": "activating_in_17_5",
+  "authority": "Mutation permissions for Slice 17.5 production foundation apply. Activating in 17.5; attach when operator IAM is ready. No AdministratorAccess.",
+  "start_slice_17_5": true,
+  "attached": false,
+  "administrator_access_allowed": false,
+  "services_required": [
+    "s3",
+    "lambda",
+    "ecr",
+    "apigatewayv2",
+    "iam",
+    "logs"
+  ],
+  "mutation_actions_by_service": {
+    "s3": {
+      "purpose": "Create and configure Community Data Lake bucket (not state bucket)",
+      "actions": [
+        "s3:CreateBucket",
+        "s3:PutBucketVersioning",
+        "s3:PutBucketEncryption",
+        "s3:PutBucketPublicAccessBlock",
+        "s3:PutBucketOwnershipControls",
+        "s3:PutBucketPolicy",
+        "s3:PutLifecycleConfiguration",
+        "s3:PutBucketTagging",
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "resource_scope": "codestrata-community-data-lake-production only"
+    },
+    "lambda": {
+      "purpose": "Create Community Cloud API Lambda (image package)",
+      "actions": [
+        "lambda:CreateFunction",
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:List*",
+        "lambda:AddPermission",
+        "lambda:TagResource"
+      ],
+      "resource_scope": "codestrata-community-cloud-production-api"
+    },
+    "ecr": {
+      "purpose": "Create private IMMUTABLE repository and lifecycle policy",
+      "actions": [
+        "ecr:CreateRepository",
+        "ecr:DescribeRepositories",
+        "ecr:GetLifecyclePolicy",
+        "ecr:PutLifecyclePolicy",
+        "ecr:PutImageTagMutability",
+        "ecr:PutImageScanningConfiguration",
+        "ecr:TagResource",
+        "ecr:List*"
+      ],
+      "resource_scope": "codestrata/community-cloud-api"
+    },
+    "apigatewayv2": {
+      "purpose": "Create HTTP API, routes, integration, stage with throttle",
+      "actions": [
+        "apigateway:POST",
+        "apigateway:GET",
+        "apigateway:PATCH",
+        "apigateway:PUT",
+        "apigateway:TagResource"
+      ],
+      "resource_scope": "HTTP API Gateway v2 for Community Cloud"
+    },
+    "iam": {
+      "purpose": "Create Lambda execution role/policies and unattached Data Lake writer policy",
+      "actions": [
+        "iam:CreateRole",
+        "iam:GetRole",
+        "iam:PassRole",
+        "iam:PutRolePolicy",
+        "iam:GetRolePolicy",
+        "iam:CreatePolicy",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "iam:TagRole",
+        "iam:TagPolicy",
+        "iam:List*"
+      ],
+      "resource_scope": "Community Cloud Lambda role + Data Lake writer policy only"
+    },
+    "logs": {
+      "purpose": "Create Lambda log group with retention",
+      "actions": [
+        "logs:CreateLogGroup",
+        "logs:PutRetentionPolicy",
+        "logs:DescribeLogGroups",
+        "logs:TagResource"
+      ],
+      "resource_scope": "/aws/lambda/codestrata-community-cloud-production-api"
+    }
+  },
+  "explicitly_excluded": [
+    "AdministratorAccess",
+    "PowerUserAccess",
+    "IAMFullAccess",
+    "secretsmanager:CreateSecret",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:GetSecretValue",
+    "dynamodb:*",
+    "athena:*",
+    "glue:*",
+    "ec2:*",
+    "ecs:*",
+    "eks:*",
+    "rds:*",
+    "elasticache:*",
+    "bedrock:InvokeModel"
+  ],
+  "notes": [
+    "Slice 17.5 activating \u2014 attach CodeStrataGitHubInfrastructureApply when owner completes operator IAM.",
+    "Derived from plan add=21 resource set (API + Data Lake + supporting IAM/logs/ECR).",
+    "Data Lake writer IAM policy is created but not attached; writer attach remains later."
+  ]
+}

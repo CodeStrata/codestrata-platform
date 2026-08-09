@@ -16,6 +16,7 @@ from codestrata_platform.community_cloud_api.data_lake.enums import (
     QuarantineValidationStage,
 )
 from codestrata_platform.community_cloud_api.data_lake.envelope_models import EnvelopeErrorCode
+from codestrata_platform.community_cloud_api.data_lake.envelope_validation import EnvelopeBuildError
 from codestrata_platform.community_cloud_api.data_lake.envelopes import EnvelopeValidationError
 from codestrata_platform.community_cloud_api.data_lake.errors import (
     DataLakeStorageError,
@@ -131,6 +132,16 @@ def map_exception_to_quarantine(exc: BaseException) -> QuarantineErrorMapping | 
             code = message.value
         else:
             code = str(message) if message else ""
+        reason = _ENVELOPE_ERROR_TO_REASON.get(code, QuarantineReasonCode.INVALID_ENVELOPE.value)
+        diagnostic = code if code in _ENVELOPE_ERROR_TO_REASON else "invalid_envelope"
+        return QuarantineErrorMapping(
+            quarantine_reason=reason,
+            validation_stage=QuarantineValidationStage.ENVELOPE_VALIDATION.value,
+            diagnostic_codes=(diagnostic,),
+        )
+
+    if isinstance(exc, EnvelopeBuildError):
+        code = exc.code.value if isinstance(exc.code, EnvelopeErrorCode) else str(exc.code)
         reason = _ENVELOPE_ERROR_TO_REASON.get(code, QuarantineReasonCode.INVALID_ENVELOPE.value)
         diagnostic = code if code in _ENVELOPE_ERROR_TO_REASON else "invalid_envelope"
         return QuarantineErrorMapping(

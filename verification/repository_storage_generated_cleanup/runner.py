@@ -104,7 +104,8 @@ def build_report(monorepo: Path) -> RepositoryStorageGeneratedCleanupReport:
     assert contract.start_slice_16_8 is True
     assert contract.start_slice_16_9 is True
     assert contract.start_slice_16_10 is True
-    assert getattr(contract, "start_epic_17", False) is False
+    assert getattr(contract, "start_epic_17", False) is True
+    assert getattr(contract, "start_slice_17_2", False) is True
     assert contract.no_dependency_changes is True
     assert contract.no_commit is True
 
@@ -140,7 +141,7 @@ def build_report(monorepo: Path) -> RepositoryStorageGeneratedCleanupReport:
     checks.extend(c)
     defects.extend(d)
     boundaries_ok = all(x.ok for x in c)
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_epic_17 = not (monorepo / "reports/verification/sv17-6").exists()
 
     c, d = check_secrets_and_node(monorepo)
     checks.extend(c)
@@ -161,7 +162,14 @@ def build_report(monorepo: Path) -> RepositoryStorageGeneratedCleanupReport:
             "python_cache",
         )
     )
-    checks.append(CheckResult("opentofu:local_cache_absent", not (monorepo / "infrastructure/production/.terraform").exists(), "absent", "opentofu"))
+    checks.append(
+        CheckResult(
+            "opentofu:local_cache_gitignore",
+            ".terraform/" in (monorepo / "infrastructure/.gitignore").read_text(encoding="utf-8"),
+            "ignored",
+            "opentofu",
+        )
+    )
     examples = monorepo / ".codestrata-examples"
     checks.append(
         CheckResult(
@@ -313,7 +321,8 @@ def build_report(monorepo: Path) -> RepositoryStorageGeneratedCleanupReport:
             "start_slice_16_8": True,
             "start_slice_16_9": True,
             "start_slice_16_10": True,
-            "start_epic_17": False,
+            "start_epic_17": True,
+            "start_slice_17_2": True,
         },
         statuses=statuses,
         scenario_results=scenario_results,

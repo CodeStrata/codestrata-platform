@@ -1,0 +1,46 @@
+# codestrata-infrastructure — offline OpenTofu validation (no AWS mutation).
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infra-validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-validate:
+    name: offline-validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.0
+
+      - name: tofu fmt -check
+        run: tofu fmt -check -recursive ../
+
+      - name: tofu init (no backend)
+        run: tofu init -backend=false -input=false
+
+      - name: tofu validate
+        run: tofu validate
+
+      - name: Refuse mutation
+        run: |
+          echo "validation_only=true"
+          echo "product_apply=forbidden"

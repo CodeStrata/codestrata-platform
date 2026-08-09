@@ -1,0 +1,29 @@
+{
+  "schema": "codestrata-github-oidc-trust-policy:1.0",
+  "epic": 17,
+  "slice": "17.8",
+  "repository": "CodeStrata/codestrata-infrastructure",
+  "repositories": [
+    "CodeStrata/codestrata-platform",
+    "CodeStrata/codestrata-infrastructure"
+  ],
+  "environment": "production",
+  "audience": "sts.amazonaws.com",
+  "allowed_subject_pattern": "repo:CodeStrata/codestrata-infrastructure:environment:production",
+  "allowed_subject_patterns": [
+    "repo:CodeStrata/codestrata-platform:environment:production",
+    "repo:CodeStrata/codestrata-infrastructure:environment:production"
+  ],
+  "transitional_dual_trust": true,
+  "transitional_dual_trust_bound": "pre_cutover_monorepo_plus_infrastructure_repo_only",
+  "organization_wildcard_allowed": false,
+  "wildcard_subject_forbidden": "repo:CodeStrata/*",
+  "role_name": "codestrata-github-actions-production",
+  "session_duration": 3600,
+  "OIDC_provider": "token.actions.githubusercontent.com",
+  "federated_action": "sts:AssumeRoleWithWebIdentity",
+  "forks_allowed": false,
+  "insights_aws_oidc_forbidden": true,
+  "docs_aws_oidc_forbidden": true,
+  "notes": "Transitional dual-repo trust during Slice 17.8 pre-cutover. Final intended subject after full cutover: repo:CodeStrata/codestrata-infrastructure:environment:production. No account IDs, ARNs, keys, tokens, paths, or timestamps."
+}

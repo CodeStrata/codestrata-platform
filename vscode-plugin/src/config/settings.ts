@@ -18,7 +18,7 @@ export interface CodestrataSettings {
 
 export const DEFAULT_SETTINGS: CodestrataSettings = {
   executable: "codestrata",
-  outputDirectory: "reports",
+  outputDirectory: ".codestrata-artifacts/assessments",
   configPath: "",
   defaultNoAi: true,
   extraArgs: [],
@@ -36,7 +36,7 @@ export function normalizeSettings(
   return {
     executable: String(raw.executable ?? DEFAULT_SETTINGS.executable).trim() || "codestrata",
     outputDirectory:
-      String(raw.outputDirectory ?? DEFAULT_SETTINGS.outputDirectory).trim() || "reports",
+      String(raw.outputDirectory ?? DEFAULT_SETTINGS.outputDirectory).trim() || ".codestrata-artifacts/assessments",
     configPath: String(raw.configPath ?? "").trim(),
     defaultNoAi: Boolean(
       raw.defaultNoAi === undefined ? DEFAULT_SETTINGS.defaultNoAi : raw.defaultNoAi

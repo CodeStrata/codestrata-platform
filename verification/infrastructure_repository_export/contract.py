@@ -13,7 +13,7 @@ from verification.infrastructure_repository_export import (
 SCHEMA_NAME = "infrastructure-repository-export-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV127_OUTPUT_RELATIVE = "reports/verification/sv12-7"
+SV127_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-7"
 REPORT_JSON = "infrastructure-repository-export-verification.json"
 REPORT_MD = "infrastructure-repository-export-verification.md"
 

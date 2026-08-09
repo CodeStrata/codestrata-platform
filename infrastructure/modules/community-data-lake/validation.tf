@@ -38,9 +38,4 @@ check "foundation_fail_closed" {
     condition     = var.encryption_mode == "sse_s3"
     error_message = "encryption_mode must be sse_s3 in this slice; SSE-KMS is a future migration."
   }
-
-  assert {
-    condition     = var.enable_ingestion_wire == false
-    error_message = "enable_ingestion_wire must remain false; bucket existence does not enable ingestion."
-  }
 }

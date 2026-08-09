@@ -1,0 +1,78 @@
+{
+  "schema": "community-cloud-incremental-deployment-register:1.0",
+  "epic": 17,
+  "slice": "17.9",
+  "environment": "production",
+  "region": "us-west-2",
+  "entries": [
+    {
+      "id": "baseline_zero_drift",
+      "status": "validated",
+      "plan_add": 0,
+      "plan_change": 0,
+      "plan_destroy": 0
+    },
+    {
+      "id": "controlled_change",
+      "type": "cloudwatch_log_retention_days",
+      "resource": "module.community_cloud_api.aws_cloudwatch_log_group.lambda",
+      "from": 30,
+      "to": 60,
+      "status": "validated"
+    },
+    {
+      "id": "incremental_plan",
+      "plan_add": 0,
+      "plan_change": 2,
+      "plan_destroy": 0,
+      "replace": 0,
+      "status": "validated"
+    },
+    {
+      "id": "incremental_apply",
+      "added": 0,
+      "changed": 1,
+      "destroyed": 0,
+      "status": "validated"
+    },
+    {
+      "id": "post_apply_zero_drift",
+      "plan_add": 0,
+      "plan_change": 0,
+      "plan_destroy": 0,
+      "status": "validated"
+    },
+    {
+      "id": "rollback",
+      "from": 60,
+      "to": 30,
+      "added": 0,
+      "changed": 1,
+      "destroyed": 0,
+      "status": "validated"
+    },
+    {
+      "id": "final_zero_drift",
+      "plan_add": 0,
+      "plan_change": 0,
+      "plan_destroy": 0,
+      "status": "validated"
+    },
+    {
+      "id": "github_workflows",
+      "plan": ".github/workflows/infrastructure-plan.yml",
+      "apply": ".github/workflows/infrastructure-apply.yml",
+      "status": "structurally_validated"
+    },
+    {
+      "id": "oidc_role",
+      "role_name": "codestrata-github-actions-production",
+      "status": "validated_least_privilege_no_admin"
+    }
+  ],
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

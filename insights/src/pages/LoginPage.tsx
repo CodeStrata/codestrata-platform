@@ -13,7 +13,11 @@ export function LoginPage(): ReactNode {
     clearLoginError();
     setSubmitting(true);
     try {
-      await login(password);
+      // Prefer live form value (autofill-safe) and strip paste whitespace/newlines.
+      // Trailing newline from copy/paste fails scrypt verify while looking identical in the field.
+      const form = event.currentTarget;
+      const live = String(new FormData(form).get("password") ?? password);
+      await login(live.trim());
       setPassword("");
     } catch {
       // Error surfaced via loginError — generic message only.
@@ -34,7 +38,9 @@ export function LoginPage(): ReactNode {
         />
         <h1>Community Insights</h1>
         <p className="cs-login__lead">
-          Internal adoption analytics. Sign in with the shared dashboard password.
+          Internal adoption analytics. Sign in with the shared dashboard
+          password (plaintext owner password — not the Secrets Manager verifier
+          JSON).
         </p>
         <form className="cs-login__form" onSubmit={onSubmit} noValidate>
           <div className="cs-field">

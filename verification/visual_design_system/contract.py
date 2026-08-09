@@ -12,7 +12,7 @@ from verification.visual_design_system import (
 
 SCHEMA_NAME = "codestrata-visual-design-system-verification"
 SCHEMA_VERSION = "1.0.0"
-SV141_OUTPUT_RELATIVE = "reports/verification/sv14-1"
+SV141_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-1"
 REPORT_JSON = "codestrata-visual-design-system-verification.json"
 REPORT_MD = "codestrata-visual-design-system-verification.md"
 

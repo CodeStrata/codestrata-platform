@@ -38,11 +38,13 @@ VALIDATION_COMMANDS = (
 REQUIRED_SOURCE_PREFIXES = (
     "infrastructure/modules/",
     "infrastructure/production/",
+    "infrastructure/bootstrap/",
     "infrastructure/tests/",
     "infrastructure/verification/",
     "infrastructure/docs/",
     "infrastructure/policies/",
     "infrastructure/scripts/",
+    "infrastructure/.github/",
 )
 
 REQUIRED_SOURCE_FILES = (

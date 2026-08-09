@@ -15,7 +15,7 @@ SCHEMA_NAME = "release-artifact-verification"
 SCHEMA_VERSION = "1.0.0"
 TARGET_REPOSITORY_COUNT = 22
 
-SV16_OUTPUT_RELATIVE = "reports/verification/sv16"
+SV16_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16"
 ARTIFACTS_SUBDIR = "artifacts"
 
 REPORT_JSON = "release-artifact-verification.json"
@@ -30,14 +30,14 @@ AUTHORITATIVE_INTERP_BUNDLE = "interp-bundle:c719915c68cf94601a0e8f0b"
 AUTHORITATIVE_EXPORT_ID = "eir-export:ca01b398f777e20ef75ea1f2"
 AUTHORITATIVE_REPOSITORY_COUNT = 22
 
-SV10_OUTPUT_RELATIVE = "engine/reports/verification/sv10"
+SV10_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv10"
 SV11_REPORT_RELATIVE = (
-    "engine/reports/verification/sv11/assessment-consistency-verification.json"
+    ".codestrata-artifacts/validation/suites/sv11/assessment-consistency-verification.json"
 )
-SV12_OUTPUT_RELATIVE = "platform/reports/verification/sv12"
-SV13_OUTPUT_RELATIVE = "platform/reports/verification/sv13"
-SV14_OUTPUT_RELATIVE = "platform/reports/verification/sv14"
-SV15_OUTPUT_RELATIVE = "platform/reports/verification/sv15"
+SV12_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12"
+SV13_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13"
+SV14_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14"
+SV15_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15"
 
 DEMO_RELATIVE = "platform/demo"
 SV12_EXPORT_MANIFEST = f"{SV12_OUTPUT_RELATIVE}/export-manifest.json"

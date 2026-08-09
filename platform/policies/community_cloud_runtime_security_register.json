@@ -1,0 +1,37 @@
+{
+  "schema": "community-cloud-runtime-security-register:1.0",
+  "epic": 17,
+  "slice": "17.6",
+  "environment": "production",
+  "region": "us-west-2",
+  "secret_identifiers": [
+    "codestrata/insights/dashboard-password",
+    "codestrata/insights/session-secret"
+  ],
+  "secret_value_storage": "secrets_manager_only",
+  "lambda_policy_names": [
+    "codestrata-community-cloud-production-lambda-logging",
+    "codestrata-community-cloud-production-lambda-ecr",
+    "codestrata-community-insights-production-reader",
+    "codestrata-community-insights-production-secrets",
+    "codestrata-community-data-lake-production-writer"
+  ],
+  "writer_attachment_status": "unattached_deferred_to_17_7",
+  "reader_attachment_status": "opentofu_and_script_ready",
+  "secret_policy_status": "opentofu_and_script_ready",
+  "ingestion_enabled": false,
+  "insights_auth_ready": true,
+  "github_apply_policy_status": "contract_defined_attach_pending_push",
+  "operator_policy_posture": "runtime_security_owner_attach_required",
+  "rotation_ready": true,
+  "secrets_operational_status": "pending_owner_iam_attach",
+  "lambda_secrets_iam_status": "pending_owner_iam_attach",
+  "lambda_image_tag": "v0.2.0-foundation-sv17-6",
+  "lambda_env_secret_identifiers_set": true,
+  "notes": [
+    "Register holds identifiers and posture only — never secret values.",
+    "Image v0.2.0-foundation-sv17-6 deployed; secret ID env vars set; ingestion remains false.",
+    "Secrets + reader/secrets managed-policy attach blocked until owner attaches CodeStrataOperatorRuntimeSecurity.",
+    "Writer policy exists but is not attached; attachment deferred to Slice 17.7."
+  ]
+}

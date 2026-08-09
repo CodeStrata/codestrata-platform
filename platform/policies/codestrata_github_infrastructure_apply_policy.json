@@ -1,0 +1,32 @@
+{
+  "Version": "2012-10-17",
+  "policy_name": "CodeStrataGitHubInfrastructureApply",
+  "status": "contract_defined",
+  "slice": "17.5",
+  "authority": "Mutation permissions for staged production OpenTofu apply of Community Cloud foundation. IAM JSON contract lives at infrastructure/bootstrap/github-oidc/codestrata-github-infrastructure-apply-policy.json. Attach via attach-github-infrastructure-apply-policy.sh after owner operator policy is in place. No AdministratorAccess. No Secrets Manager application secret values. No ingestion enablement.",
+  "iam_contract_relative": "infrastructure/bootstrap/github-oidc/codestrata-github-infrastructure-apply-policy.json",
+  "attach_script": "infrastructure/scripts/attach-github-infrastructure-apply-policy.sh",
+  "operator_attach_doc": "infrastructure/bootstrap/github-oidc/OWNER_ATTACH_PRODUCTION_APPLY.md",
+  "operator_iam_policy": "infrastructure/bootstrap/github-oidc/operator-iam-production-apply-policy.json",
+  "attached": false,
+  "administrator_access_allowed": false,
+  "explicitly_denied_or_absent": [
+    "AdministratorAccess",
+    "PowerUserAccess",
+    "IAMFullAccess",
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:PutSecretValue",
+    "secretsmanager:CreateSecret",
+    "dynamodb:*",
+    "athena:*",
+    "glue:*",
+    "rds:*",
+    "elasticache:*",
+    "bedrock:InvokeModel"
+  ],
+  "notes": [
+    "status=contract_defined until owner attach completes; then status=attached.",
+    "Does not authorize enabling production ingestion or attaching Data Lake writer to producers.",
+    "Live GitHub apply workflow awaits push + attached policy."
+  ]
+}

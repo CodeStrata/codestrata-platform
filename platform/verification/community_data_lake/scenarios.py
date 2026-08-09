@@ -52,17 +52,20 @@ def check_production_fail_closed() -> list[CheckResult]:
             category="production",
         ),
         CheckResult(
-            name="production:six_routes_retained",
-            ok=registry.diagnostics().registered_route_count == 6,
+            name="production:ingestion_and_insights_routes",
+            ok=registry.diagnostics().registered_route_count == 10,
             detail=f"count={registry.diagnostics().registered_route_count}",
             category="production",
         ),
         CheckResult(
-            name="production:wiring_no_data_lake",
-            ok="data_lake" not in wiring_text
-            and "storage_factory" not in wiring_text
-            and "create_community_data_lake_store" not in wiring_text,
-            detail="unwired",
+            name="production:wiring_ingestion_gated",
+            ok=(
+                "ingestion_enabled" in wiring_text
+                and "UnavailableCommunityCredentialVerifier" in wiring_text
+                and "create_community_data_lake_store" in wiring_text
+                and "InMemoryTelemetryEventSink" not in wiring_text
+            ),
+            detail="gated_wiring",
             category="production",
         ),
         CheckResult(

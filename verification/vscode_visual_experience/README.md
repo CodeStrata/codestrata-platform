@@ -8,7 +8,7 @@ Schema: `vscode-visual-experience-verification:1.0.0`
 .venv/bin/python -m verification.vscode_visual_experience
 ```
 
-Report: `reports/verification/sv14-5/vscode-visual-experience-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-5/vscode-visual-experience-verification.json`
 
 ## Scope
 

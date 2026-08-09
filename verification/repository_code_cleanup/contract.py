@@ -12,7 +12,7 @@ from verification.repository_code_cleanup import (
 
 SCHEMA_NAME = "repository-code-cleanup-verification"
 SCHEMA_VERSION = "1.0.0"
-SV163_OUTPUT_RELATIVE = "reports/verification/sv16-3"
+SV163_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-3"
 REPORT_JSON = "repository-code-cleanup-verification.json"
 REPORT_MD = "repository-code-cleanup-verification.md"
 
@@ -68,7 +68,8 @@ class Sv163Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_commit: bool = True
     no_tag: bool = True
     no_publish: bool = True

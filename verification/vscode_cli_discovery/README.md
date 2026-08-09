@@ -10,7 +10,7 @@ PYTHONPATH=. python -m verification.vscode_cli_discovery
 PYTHONPATH=. python -m pytest tests/verification/vscode_cli_discovery -q
 ```
 
-Report: `reports/verification/sv13-2/vscode-cli-discovery-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-2/vscode-cli-discovery-verification.json`
 
 ## Guarantees
 

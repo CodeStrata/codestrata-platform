@@ -1,0 +1,111 @@
+# Slice 17.4 — Infrastructure production plan (structural / post-push).
+#
+# PLAN ONLY. Never mutates AWS product infrastructure.
+# Live authenticated plan awaits owner push + vars.CODESTRATA_GITHUB_AWS_ROLE_ARN.
+# Product apply is Slice 17.5 and is not started here.
+
+name: infrastructure-plan
+
+on:
+  pull_request:
+    paths:
+      - "infrastructure/**"
+      - ".github/workflows/infrastructure-plan.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infrastructure-plan-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline-validate:
+    name: offline-validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: infrastructure/production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.0
+
+      - name: tofu fmt -check
+        run: tofu fmt -check -recursive
+
+      - name: tofu init (no backend)
+        run: tofu init -backend=false -input=false
+
+      - name: tofu validate
+        run: tofu validate
+
+      - name: Refuse mutation
+        run: |
+          echo "plan_only=true"
+          echo "product_apply=forbidden"
+          echo "mutation=never"
+
+  # Authenticated plan: workflow_dispatch, or when role ARN variable is present on PR.
+  # Structural validation only until owner push activates OIDC live.
+  authenticated-plan:
+    name: authenticated-plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: offline-validate
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      vars.CODESTRATA_GITHUB_AWS_ROLE_ARN != ''
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: infrastructure/production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.0
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.CODESTRATA_GITHUB_AWS_ROLE_ARN }}
+          aws-region: us-west-2
+          role-session-name: codestrata-gha-plan-${{ github.run_id }}
+          role-duration-seconds: 3600
+
+      - name: tofu init (remote backend)
+        run: |
+          # backend.hcl is operator-local / CI secret surface — use -backend-config from env when provided.
+          # Live run awaits push; structural workflow is plan-only.
+          tofu init -input=false
+
+      - name: tofu plan
+        run: |
+          mkdir -p .local
+          tofu plan -input=false -out=.local/gha.tfplan
+          tofu show -json .local/gha.tfplan > .local/gha.tfplan.json
+          # Sanitize account IDs from human summary only; never echo secrets.
+          tofu show -no-color .local/gha.tfplan | sed -E 's/[0-9]{12}/<ACCOUNT>/g' > .local/gha.tfplan.summary.txt
+          echo "NOTE: This workflow is plan-only."
+
+      - name: Upload plan summary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-plan-summary
+          path: |
+            infrastructure/production/.local/gha.tfplan.summary.txt
+          if-no-files-found: warn
+          retention-days: 14

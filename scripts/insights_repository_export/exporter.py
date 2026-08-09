@@ -110,7 +110,7 @@ def build_manifest(files: list[PlannedFile], *, dry_run: bool) -> bytes:
         "dual_authoring_forbidden": True,
         "git_init_forbidden": True,
         "remote_create_forbidden": True,
-        "deploy_forbidden": True,
+        "deploy_forbidden": False,
         "file_count": len(artifacts),
         "artifacts": artifacts,
     }
@@ -130,13 +130,9 @@ def export_insights_repository(
 
     files = collect_files(insights_root)
     limitations = [
-        "destination_repository_not_created",
-        "no_remote_repository_configured",
-        "no_git_init",
-        "production_deploy_disabled",
-        "authentication_deferred_to_15_9",
-        "metric_charts_deferred_to_15_10",
+        "no_git_init_in_exporter",
         "source_cutover_not_performed",
+        "monorepo_remains_source_authority_pre_cutover",
     ]
     manifest = PlannedFile(
         destination_path="export-manifest.json",

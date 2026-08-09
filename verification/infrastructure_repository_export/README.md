@@ -8,7 +8,7 @@ Schema: `infrastructure-repository-export-verification:1.0.0`
 PYTHONPATH=. .venv/bin/python -m verification.infrastructure_repository_export
 ```
 
-Report: `reports/verification/sv12-7/infrastructure-repository-export-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-7/infrastructure-repository-export-verification.json`
 
 ## What is verified
 

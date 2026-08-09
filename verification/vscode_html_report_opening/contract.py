@@ -12,7 +12,7 @@ from verification.vscode_html_report_opening import (
 
 SCHEMA_NAME = "vscode-html-report-opening-verification"
 SCHEMA_VERSION = "1.0.0"
-SV137_OUTPUT_RELATIVE = "reports/verification/sv13-7"
+SV137_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-7"
 REPORT_JSON = "vscode-html-report-opening-verification.json"
 REPORT_MD = "vscode-html-report-opening-verification.md"
 

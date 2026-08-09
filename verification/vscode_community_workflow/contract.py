@@ -13,7 +13,7 @@ from verification.vscode_community_workflow import (
 SCHEMA_NAME = "vscode-community-workflow-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV131_OUTPUT_RELATIVE = "reports/verification/sv13-1"
+SV131_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-1"
 REPORT_JSON = "vscode-community-workflow-verification.json"
 REPORT_MD = "vscode-community-workflow-verification.md"
 

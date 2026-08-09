@@ -65,12 +65,23 @@ class ExtensionEventSinkResult:
 
 
 class ExtensionEventSink(Protocol):
-    def accept(self, event: ValidatedExtensionEvent) -> ExtensionEventSinkResult: ...
+    def accept(
+        self,
+        event: ValidatedExtensionEvent,
+        *,
+        request: Any | None = None,
+    ) -> ExtensionEventSinkResult: ...
 
 
 class UnavailableExtensionEventSink:
-    def accept(self, event: ValidatedExtensionEvent) -> ExtensionEventSinkResult:
+    def accept(
+        self,
+        event: ValidatedExtensionEvent,
+        *,
+        request: Any | None = None,
+    ) -> ExtensionEventSinkResult:
         _ = event
+        _ = request
         return ExtensionEventSinkResult(
             status=ExtensionEventSinkStatus.UNAVAILABLE,
             reason="extension_event_sink_unavailable",
@@ -83,7 +94,13 @@ class InMemoryExtensionEventSink:
     fail_next: bool = False
     reject_next: bool = False
 
-    def accept(self, event: ValidatedExtensionEvent) -> ExtensionEventSinkResult:
+    def accept(
+        self,
+        event: ValidatedExtensionEvent,
+        *,
+        request: Any | None = None,
+    ) -> ExtensionEventSinkResult:
+        _ = request
         if self.fail_next:
             self.fail_next = False
             raise RuntimeError("simulated_extension_sink_failure")

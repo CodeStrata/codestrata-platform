@@ -16,7 +16,7 @@ exceptions). This is **not** a visual redesign.
 pytest tests/verification/cross_surface_presentation -q
 ```
 
-Report: `reports/verification/sv14-7/cross-surface-presentation-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-7/cross-surface-presentation-verification.json`
 
 ## Boundaries
 

@@ -21,7 +21,7 @@ section order, and boundaries.
 pytest tests/verification/report_navigation_ia -q
 ```
 
-Report: `reports/verification/sv14-9/report-navigation-information-architecture-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-9/report-navigation-information-architecture-verification.json`
 
 ## What is verified
 

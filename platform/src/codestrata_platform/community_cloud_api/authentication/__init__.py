@@ -46,6 +46,9 @@ from codestrata_platform.community_cloud_api.authentication.verifier import (
     InMemoryCommunityCredentialVerifier,
 )
 
+# AwsCommunityCredentialVerifier is imported lazily by production wiring to
+# avoid requiring boto3 for foundation-mode imports.
+
 __all__ = [
     "ACTIVE_AUTHENTICATION_POLICY",
     "AUTH_GROUP_COMMUNITY_INGESTION",

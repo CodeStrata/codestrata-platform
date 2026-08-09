@@ -173,6 +173,7 @@ artifacts/models/
 
 # CodeStrata local workspace
 .codestrata/
+.codestrata-artifacts/
 .codestrata-test-knowledge/
 
 # Generated analysis reports
@@ -191,3 +192,6 @@ export-staging/
 
 # Nested clone workspaces under local knowledge dirs
 **/.codestrata/workspace/**
+
+# Live OpenTofu backend config
+infrastructure/**/backend.hcl

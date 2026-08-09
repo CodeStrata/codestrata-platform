@@ -13,7 +13,7 @@ from verification.privacy_first_telemetry import (
 SCHEMA_NAME = "cross-client-telemetry-privacy-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV914_OUTPUT_RELATIVE = "reports/verification/sv9-14"
+SV914_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv9-14"
 REPORT_JSON = "cross-client-telemetry-privacy-verification.json"
 REPORT_MD = "cross-client-telemetry-privacy-verification.md"
 

@@ -1,0 +1,49 @@
+{
+  "schema": "community-production-repository-register:1.0",
+  "epic": 17,
+  "slice": "17.8",
+  "source_authority_status": "monorepo_engineering_authority_pre_cutover",
+  "entries": [
+    {
+      "repository_name": "codestrata-infrastructure",
+      "visibility": "private",
+      "export_target": "infrastructure",
+      "remote_exists": true,
+      "sync_status": "REMOTE_CREATED_EXPORT_SYNCED_PRE_CUTOVER",
+      "standalone_validation": "tofu_fmt_init_validate",
+      "deployment_status": "not_applied_from_export",
+      "production_hostname": null,
+      "https_status": "not_applicable",
+      "github_workflow_status": "validate_present",
+      "source_authority_status": "monorepo_pre_cutover"
+    },
+    {
+      "repository_name": "codestrata-insights",
+      "visibility": "private",
+      "export_target": "insights",
+      "remote_exists": true,
+      "sync_status": "REMOTE_CREATED_EXPORT_SYNCED_PRE_CUTOVER",
+      "standalone_validation": "npm_ci_typecheck_test_build_deploy_check",
+      "deployment_status": "cloudflare_live",
+      "production_hostname": "insights.codestrata.ai",
+      "https_status": "https_ok",
+      "github_workflow_status": "ci_success_local_owner_deploy_used",
+      "source_authority_status": "monorepo_pre_cutover"
+    },
+    {
+      "repository_name": "codestrata-docs",
+      "visibility": "private",
+      "export_target": "community",
+      "remote_exists": true,
+      "sync_status": "REMOTE_EXISTING_EXPORT_UPDATED",
+      "standalone_validation": "npm_ci_build_validate",
+      "deployment_status": "cloudflare_live",
+      "production_hostname": "docs.codestrata.ai",
+      "https_status": "https_ok",
+      "github_workflow_status": "remote_updated_cf_serving_export",
+      "source_authority_status": "monorepo_pre_cutover",
+      "site_public": true,
+      "note": "GitHub private; docs.codestrata.ai public"
+    }
+  ]
+}

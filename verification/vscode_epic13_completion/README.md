@@ -16,7 +16,7 @@ complete. It does **not** add product capability and does **not** start Epic 14.
 
 Report:
 
-`reports/verification/sv13-15/vscode-epic13-completion-verification.json`
+`.codestrata-artifacts/validation/suites/sv13-15/vscode-epic13-completion-verification.json`
 
 ## Contract highlights
 

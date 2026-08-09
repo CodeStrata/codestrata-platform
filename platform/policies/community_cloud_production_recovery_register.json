@@ -1,0 +1,103 @@
+{
+  "schema": "community-cloud-production-recovery-register:1.0",
+  "epic": 17,
+  "slice": "17.10",
+  "environment": "production",
+  "region": "us-west-2",
+  "entries": [
+    {
+      "id": "lambda_image_rollback",
+      "capability": "lambda_image_rollback",
+      "status": "ready",
+      "mechanism": "prior_ecr_image_uri_update"
+    },
+    {
+      "id": "lambda_config_rollback",
+      "capability": "lambda_config_rollback",
+      "status": "ready",
+      "mechanism": "opentofu_in_place_config_restore"
+    },
+    {
+      "id": "infrastructure_rollback",
+      "capability": "infrastructure_rollback",
+      "status": "ready",
+      "mechanism": "reviewed_plan_apply_with_destructive_gate"
+    },
+    {
+      "id": "state_recovery",
+      "capability": "state_recovery",
+      "status": "ready",
+      "mechanism": "remote_state_backend_read_restore_simulation"
+    },
+    {
+      "id": "state_lock_recovery",
+      "capability": "state_lock_recovery",
+      "status": "ready",
+      "mechanism": "dynamodb_lock_lifecycle_release"
+    },
+    {
+      "id": "insights_rollback",
+      "capability": "insights_rollback",
+      "status": "ready",
+      "mechanism": "cloudflare_pages_redeploy"
+    },
+    {
+      "id": "docs_rollback",
+      "capability": "docs_rollback",
+      "status": "ready",
+      "mechanism": "cloudflare_pages_redeploy"
+    },
+    {
+      "id": "destructive_plan_gate",
+      "capability": "destructive_plan_gate",
+      "status": "ready",
+      "mechanism": "block_destroy_or_replace"
+    },
+    {
+      "id": "data_lake_destroy_forbidden",
+      "capability": "data_lake_destroy_forbidden",
+      "status": "enforced",
+      "mechanism": "classification_never_automatically_destroy"
+    },
+    {
+      "id": "remote_state_destroy_forbidden",
+      "capability": "remote_state_destroy_forbidden",
+      "status": "enforced",
+      "mechanism": "classification_never_automatically_destroy"
+    },
+    {
+      "id": "final_zero_drift",
+      "capability": "final_zero_drift",
+      "status": "required",
+      "mechanism": "post_recovery_plan_noop"
+    },
+    {
+      "id": "github_iam_workflows",
+      "capability": "github_iam_and_workflows",
+      "status": "structurally_validated",
+      "mechanism": "oidc_plan_apply_gates"
+    },
+    {
+      "id": "secrets_safety",
+      "capability": "secrets_safety",
+      "status": "ready",
+      "mechanism": "identifiers_only_no_value_rotation_in_slice"
+    },
+    {
+      "id": "data_safety",
+      "capability": "data_safety",
+      "status": "ready",
+      "mechanism": "data_lake_object_preservation"
+    },
+    {
+      "id": "recovery_matrix",
+      "capability": "recovery_matrix",
+      "status": "ready",
+      "mechanism": "resource_recovery_classification_register"
+    }
+  ],
+  "start_slice_17_10": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

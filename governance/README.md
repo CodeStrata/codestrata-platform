@@ -35,7 +35,8 @@ AI is a **capability**, not part of the product name.
 ```text
 governance/
 ├── README.md                 # This file
-├── DOCUMENTATION_INVENTORY.md
+├── DOCUMENTATION_REGISTRY.md # Authoritative doc classification (current)
+├── DOCUMENTATION_INVENTORY.md # HISTORICAL Phase 8.9.3 snapshot
 ├── adr/                      # Architecture Decision Records
 ├── constitution/             # Normative product & engineering principles
 ├── standards/                # Day-to-day engineering & product standards
@@ -43,23 +44,25 @@ governance/
 ├── release/                  # Community release / extraction guidance
 ├── metrics/                  # Long-term Community/GitHub metric definitions
 ├── ai/                       # Instructions for AI-assisted development
-└── assets/                   # Brand package + DESIGN-SYSTEM.md (design authority)
+└── assets/                   # HISTORICAL amber brand archive (not Design System 1.0)
 ```
 
 Public API / SDK / CLI / report compatibility:
 [`playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md`](playbooks/PUBLIC_CONTRACT_COMPATIBILITY.md).
 
-**Design System authority:** [`assets/DESIGN-SYSTEM.md`](assets/DESIGN-SYSTEM.md)
+**Design System authority:** [`../design-system/`](../design-system/) (Design System 1.0).  
+**Historical amber archive:** [`assets/`](assets/) — do not treat as current design authority.
 
 ## How to use
 
 1. **Normative decisions** → start in `constitution/` (and `adr/` for accepted ADRs).
 2. **Implementation standards** → `standards/`.
-3. **Visual branding / Design System** → `assets/DESIGN-SYSTEM.md`.
+3. **Visual branding / Design System** → [`../design-system/`](../design-system/) (not `assets/`).
 4. **AI-assisted work** → `ai/` (especially `CURSOR_INSTRUCTIONS.md`).
 5. **Internal RC / dogfood / demos** → `playbooks/`.
 6. **Community public distribution** → `release/COMMUNITY_RELEASE_CHECKLIST.md`.
-7. **Implementation detail** → keep in engineering docs; link here rather than copy.
+7. **Documentation classification** → [`DOCUMENTATION_REGISTRY.md`](DOCUMENTATION_REGISTRY.md).
+8. **Implementation detail** → keep in engineering docs; link here rather than copy.
 
 ## Authority & conflict resolution
 
@@ -88,7 +91,8 @@ governance references without an explicit decision.
 
 ## Related existing docs (not replaced)
 
-- [DOCUMENTATION_INVENTORY.md](DOCUMENTATION_INVENTORY.md) — source doc classification
+- [DOCUMENTATION_REGISTRY.md](DOCUMENTATION_REGISTRY.md) — authoritative documentation registry
+- [DOCUMENTATION_INVENTORY.md](DOCUMENTATION_INVENTORY.md) — historical Phase 8.9.3 inventory (superseded)
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — implementation architecture map
 - [ROADMAP.md](../ROADMAP.md)
 - [CONTRIBUTING.md](../CONTRIBUTING.md)

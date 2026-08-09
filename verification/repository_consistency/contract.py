@@ -12,7 +12,7 @@ from verification.repository_consistency import (
 
 SCHEMA_NAME = "repository-consistency-verification"
 SCHEMA_VERSION = "1.0.0"
-SV168_OUTPUT_RELATIVE = "reports/verification/sv16-8"
+SV168_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-8"
 REPORT_JSON = "repository-consistency-verification.json"
 REPORT_MD = "repository-consistency-verification.md"
 
@@ -64,7 +64,8 @@ class Sv168Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_remote_creation: bool = True
     no_cutover: bool = True
     production_ingestion_enabled: bool = False

@@ -32,8 +32,8 @@ def test_load_settings_defaults_fail_closed() -> None:
     assert settings.ingestion_enabled is False
 
 
-def test_load_settings_rejects_ingestion_enabled() -> None:
-    with pytest.raises(ValueError, match="INGESTION_ENABLED"):
+def test_load_settings_rejects_ingestion_enabled_without_wire() -> None:
+    with pytest.raises(ValueError, match="DATA_LAKE_BUCKET|INGESTION_WIRE|DATA_LAKE_ADAPTER"):
         load_deployment_settings({"CODESTRATA_INGESTION_ENABLED": "true"})
 
 
@@ -45,7 +45,7 @@ def test_load_settings_rejects_auth_disabled() -> None:
 def test_production_app_health_and_route_count() -> None:
     app = create_production_foundation_app(settings=load_deployment_settings({}))
     registry = app.state.community_cloud_route_registry
-    assert registry.diagnostics().registered_route_count == 6
+    assert registry.diagnostics().registered_route_count == 10
     assert app.docs_url is None
     assert app.openapi_url is None
 
@@ -94,7 +94,7 @@ def test_lambda_handler_import_and_app() -> None:
     app = lambda_handler.get_app()
     assert (
         app.state.community_cloud_route_registry.diagnostics().registered_route_count
-        == 6
+        == 10
     )
     pytest.importorskip("mangum")
     handler = lambda_handler.get_handler()

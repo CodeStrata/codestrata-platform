@@ -10,7 +10,7 @@ PYTHONPATH=. python -m verification.vscode_repository_initialization
 PYTHONPATH=. python -m pytest tests/verification/vscode_repository_initialization -q
 ```
 
-Report: `reports/verification/sv13-4/vscode-repository-initialization-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-4/vscode-repository-initialization-verification.json`
 
 ## Scope
 

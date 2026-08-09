@@ -9,7 +9,7 @@ Schema: `vscode-marketplace-branding-verification:1.0.0`
 .venv/bin/python -m pytest tests/verification/vscode_marketplace_branding -q
 ```
 
-Report: `reports/verification/sv13-12/vscode-marketplace-branding-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-12/vscode-marketplace-branding-verification.json`
 
 ## Scope
 

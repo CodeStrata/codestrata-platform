@@ -31,7 +31,7 @@ def check_scenarios(*, flags: dict[str, bool]) -> tuple[list[CheckResult], list[
         ("T", "unresolved owner-review items disappear", flags.get("owner_ok", False)),
         ("U", "repository cutover occurs", flags.get("posture_ok", False)),
         ("V", "remote repository created", flags.get("posture_ok", False)),
-        ("W", "Epic 17 starts", flags.get("no_epic_17", False)),
+        ("W", "Slice 17.2 or production apply starts early", flags.get("no_slice_17_2", False)),
         ("X", "runtime regression fails", flags.get("matrix_ok", False)),
         ("Y", "verifier nondeterministic", True),
         ("Z", "completion report leaks paths/timestamps/secrets", flags.get("report_safe", False)),

@@ -13,7 +13,7 @@ from verification.cursor_documentation_removal import (
 SCHEMA_NAME = "cursor-documentation-removal-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV123_OUTPUT_RELATIVE = "reports/verification/sv12-3"
+SV123_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-3"
 REPORT_JSON = "cursor-documentation-removal-verification.json"
 REPORT_MD = "cursor-documentation-removal-verification.md"
 

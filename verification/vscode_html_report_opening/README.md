@@ -10,7 +10,7 @@ PYTHONPATH=. python -m verification.vscode_html_report_opening
 PYTHONPATH=. python -m pytest tests/verification/vscode_html_report_opening -q
 ```
 
-Report: `reports/verification/sv13-7/vscode-html-report-opening-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-7/vscode-html-report-opening-verification.json`
 
 ## Scope
 

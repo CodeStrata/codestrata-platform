@@ -68,4 +68,7 @@ resource "aws_iam_role_policy" "lambda_ecr_pull" {
   policy = data.aws_iam_policy_document.lambda_ecr_pull.json
 }
 
-# No S3 / DynamoDB / SQS / Secrets Manager / Parameter Store permissions.
+# No S3 / DynamoDB / SQS / Parameter Store permissions in this file.
+# Slice 17.6 Insights reader + Secrets Manager GetSecretValue are owned by
+# infrastructure/production/runtime-security.tf (managed policy attachments).
+# Data Lake writer remains unattached until Slice 17.7 / enable_ingestion_wire.

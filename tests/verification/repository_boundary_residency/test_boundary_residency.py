@@ -28,7 +28,7 @@ def test_policy() -> None:
     assert policy["start_slice_16_8"] is True
     assert policy.get("start_slice_16_9", False) is True
     assert policy.get("start_slice_16_10", False) is True
-    assert policy.get("start_epic_17", False) is False
+    assert policy.get("start_epic_17", False) is True
     assert set(policy["classifications"]) == set(CLASSIFICATIONS)
 
 
@@ -46,7 +46,7 @@ def test_build_report() -> None:
     assert report.schema_version == SCHEMA_VERSION
     assert report.failed_checks == 0
     assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
-    assert report.release_posture.get("start_epic_17", False) is False
+    assert report.release_posture.get("start_epic_17", False) is True
     assert report.release_posture["remote_repositories_created"] is False
     assert report.release_posture["cutover_performed"] is False
     assert "community_cloud_api" not in report.owner_review_items or True
@@ -75,4 +75,4 @@ def test_run_writes_report() -> None:
 
 def test_epic_17_absent() -> None:
     root = monorepo_root_from_here()
-    assert not (root / "reports/verification/sv17-1").exists()
+    assert not (root / "reports/verification/sv17-2").exists()

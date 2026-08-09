@@ -1,4 +1,9 @@
-"""Utilities for creating and retaining analysis report run directories."""
+"""Utilities for creating and retaining analysis report run directories.
+
+Slice 17.12: assessment runs live under
+``.codestrata-artifacts/assessments/<repo>-<YYYYMMDD-HHMMSS>/`` with
+``assessment.html``, ``assessment.json`` (manifest), and ``heads/``.
+"""
 
 from __future__ import annotations
 
@@ -10,15 +15,31 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
+from codestrata.artifacts.layout import (
+    ARTIFACT_ROOT_NAME,
+    ASSESSMENTS_DIRNAME,
+    AssessmentRunPaths,
+    create_assessment_run_paths,
+    format_run_timestamp,
+    sanitize_repository_slug,
+)
+from codestrata.artifacts.manifest import ASSESSMENT_HTML_BASENAME, ASSESSMENT_JSON_BASENAME
 from codestrata.models import AnalysisResult
 
 logger = logging.getLogger(__name__)
 
 _REPORT_RUN_DIRECTORY_PATTERN = re.compile(r"^\d{8}-\d{6}$")
+_ASSESSMENT_RUN_ID_PATTERN = re.compile(r"^[a-z0-9._-]+-\d{8}-\d{6}$")
 DEFAULT_RETAINED_RUN_COUNT = 3
 DEFAULT_ACTIVE_REPORT_RUNS_TO_KEEP = DEFAULT_RETAINED_RUN_COUNT
 _DEFAULT_REPORTS_TO_KEEP = DEFAULT_RETAINED_RUN_COUNT
 _UNSAFE_REPOSITORY_CHARS = re.compile(r"[^a-z0-9._-]+")
+
+LEGACY_REPORTS_DIRNAME = "reports"
+LEGACY_HTML_BASENAME = "report.html"
+LEGACY_JSON_BASENAME = "report.json"
+
+DEFAULT_ASSESS_OUTPUT_DIRECTORY = Path(f"{ARTIFACT_ROOT_NAME}/{ASSESSMENTS_DIRNAME}")
 
 
 class ReportRetentionError(RuntimeError):
@@ -35,17 +56,15 @@ class ReportPaths:
     html_report: Path
     timestamp: str
     repository_name: str
+    run_id: str = ""
+    heads_directory: Path | None = None
 
     @property
     def run_directory(self) -> Path:
-        """Alias for the timestamped run directory."""
-
         return self.directory
 
     @property
     def run_timestamp(self) -> str:
-        """Alias for the shared UTC run timestamp."""
-
         return self.timestamp
 
     @property
@@ -64,20 +83,21 @@ class ReportPaths:
 def sanitize_repository_directory_name(repository_name: str) -> str:
     """Return a filesystem-safe repository directory name."""
 
-    compact = repository_name.strip().lower()
-    slug = _UNSAFE_REPOSITORY_CHARS.sub("-", compact).strip(".-")
-    return slug or "repository"
+    return sanitize_repository_slug(repository_name)
 
 
 def format_report_run_timestamp(moment: datetime | None = None) -> str:
     """Return a UTC run timestamp formatted as ``YYYYMMDD-HHMMSS``."""
 
-    value = moment if moment is not None else datetime.now(UTC)
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=UTC)
-    else:
-        value = value.astimezone(UTC)
-    return value.strftime("%Y%m%d-%H%M%S")
+    return format_run_timestamp(moment)
+
+
+def _resolve_output_root(base_directory: Path) -> Path:
+    """Map legacy ``reports`` default to the authoritative assessments root."""
+
+    if base_directory == Path(LEGACY_REPORTS_DIRNAME) or base_directory.as_posix() == LEGACY_REPORTS_DIRNAME:
+        return DEFAULT_ASSESS_OUTPUT_DIRECTORY
+    return base_directory
 
 
 def create_report_paths(
@@ -90,15 +110,13 @@ def create_report_paths(
 ) -> ReportPaths:
     """Create report paths for one analysis or assessment run.
 
-    Layout:
+    Layout (Slice 17.12)::
 
-    ``<base_directory>/<sanitized-repository-name>/<YYYYMMDD-HHMMSS>/``
-
-    Path fields include ``report.html``, ``report.json``, and ``report.txt`` for
-    callers such as ``codestrata scan``. Assessment writes only HTML and JSON.
-
-    When ``timestamp`` is provided it is reused for the run directory. Otherwise a
-    single UTC timestamp is generated from ``clock`` (or ``datetime.now(UTC)``).
+        <output_root>/<sanitized-repository>-<YYYYMMDD-HHMMSS>/
+            assessment.html
+            assessment.json
+            heads/
+            report.txt   # legacy scan only
     """
 
     if timestamp is not None:
@@ -109,40 +127,79 @@ def create_report_paths(
         now = clock() if clock is not None else datetime.now(UTC)
         run_timestamp = format_report_run_timestamp(now)
 
-    repository_name = sanitize_repository_directory_name(result.repository.name)
-    repository_directory = base_directory / repository_name
-    run_directory = repository_directory / run_timestamp
+    output_root = _resolve_output_root(Path(base_directory))
+    # Workspace base for artifact tree when using default assessments path.
+    workspace: Path | None = None
+    if output_root == DEFAULT_ASSESS_OUTPUT_DIRECTORY or output_root.as_posix().endswith(
+        f"{ARTIFACT_ROOT_NAME}/{ASSESSMENTS_DIRNAME}"
+    ):
+        # If relative default, create under cwd; if absolute assessments path, use parent.parent.
+        if output_root.is_absolute():
+            workspace = output_root.parent.parent
+        else:
+            workspace = Path.cwd()
+        run = create_assessment_run_paths(
+            repository_name=result.repository.name,
+            base=workspace,
+            timestamp=run_timestamp,
+            create_directory=create_directory,
+        )
+        return _from_assessment_run(run)
 
+    # Custom --output: still use flat <root>/<run-id>/ with new basenames.
+    repo = sanitize_repository_directory_name(result.repository.name)
+    run_id = f"{repo}-{run_timestamp}"
+    run_directory = output_root / run_id
+    heads = run_directory / "heads"
     if create_directory:
-        run_directory.mkdir(parents=True, exist_ok=True)
-
+        heads.mkdir(parents=True, exist_ok=True)
     return ReportPaths(
         directory=run_directory,
         text_report=run_directory / "report.txt",
-        json_report=run_directory / "report.json",
-        html_report=run_directory / "report.html",
+        json_report=run_directory / ASSESSMENT_JSON_BASENAME,
+        html_report=run_directory / ASSESSMENT_HTML_BASENAME,
         timestamp=run_timestamp,
-        repository_name=repository_name,
+        repository_name=repo,
+        run_id=run_id,
+        heads_directory=heads,
+    )
+
+
+def _from_assessment_run(run: AssessmentRunPaths) -> ReportPaths:
+    return ReportPaths(
+        directory=run.directory,
+        text_report=run.text_report,
+        json_report=run.assessment_json,
+        html_report=run.assessment_html,
+        timestamp=run.timestamp,
+        repository_name=run.repository_name,
+        run_id=run.run_id,
+        heads_directory=run.heads_directory,
     )
 
 
 def is_completed_report_run(run_directory: Path) -> bool:
-    """Return True when a run directory contains required report artifacts.
-
-    Completed runs for both ``codestrata assess`` and ``codestrata scan`` include
-    ``report.html`` and ``report.json``. Incomplete or abandoned directories are
-    ignored by retention pruning.
-    """
+    """Return True when a run directory contains required report artifacts."""
 
     if run_directory.is_symlink() or not run_directory.is_dir():
         return False
-    return (run_directory / "report.html").is_file() and (run_directory / "report.json").is_file()
+    modern = (run_directory / ASSESSMENT_HTML_BASENAME).is_file() and (
+        run_directory / ASSESSMENT_JSON_BASENAME
+    ).is_file()
+    legacy = (run_directory / LEGACY_HTML_BASENAME).is_file() and (
+        run_directory / LEGACY_JSON_BASENAME
+    ).is_file()
+    return modern or legacy
 
 
 def list_active_report_run_directories(repository_directory: Path) -> list[Path]:
-    """Return timestamped run directories, newest first.
+    """Return run directories under a parent, newest first.
 
-    Ignores non-matching names, files, and symlink entries.
+    Supports:
+    - legacy ``reports/<repo>/<stamp>/``
+    - Slice 17.12 ``.codestrata-artifacts/assessments/<repo>-<stamp>/`` when
+      ``repository_directory`` is the assessments root (filter by slug prefix) or
+      a legacy repo folder.
     """
 
     if not repository_directory.exists():
@@ -150,15 +207,17 @@ def list_active_report_run_directories(repository_directory: Path) -> list[Path]
 
     candidates: list[Path] = []
     for path in repository_directory.iterdir():
-        if path.is_symlink():
+        if path.is_symlink() or not path.is_dir():
             continue
-        if path.is_dir() and _REPORT_RUN_DIRECTORY_PATTERN.match(path.name):
+        if _REPORT_RUN_DIRECTORY_PATTERN.match(path.name):
+            candidates.append(path)
+        elif _ASSESSMENT_RUN_ID_PATTERN.match(path.name):
             candidates.append(path)
     return sorted(candidates, key=lambda path: path.name, reverse=True)
 
 
 def list_completed_report_run_directories(repository_directory: Path) -> list[Path]:
-    """Return completed timestamped run directories, newest first."""
+    """Return completed run directories, newest first."""
 
     return [
         path
@@ -167,9 +226,22 @@ def list_completed_report_run_directories(repository_directory: Path) -> list[Pa
     ]
 
 
-def _is_safe_run_directory(repository_directory: Path, run_directory: Path) -> bool:
-    """Return True when ``run_directory`` is a direct child of the repository root."""
+def list_completed_assessment_runs(
+    assessments_root: Path,
+    *,
+    repository_slug: str | None = None,
+) -> list[Path]:
+    """List completed assessment runs under the assessments root."""
 
+    runs = list_completed_report_run_directories(assessments_root)
+    if repository_slug is None:
+        return runs
+    slug = sanitize_repository_slug(repository_slug)
+    prefix = f"{slug}-"
+    return [path for path in runs if path.name.startswith(prefix)]
+
+
+def _is_safe_run_directory(repository_directory: Path, run_directory: Path) -> bool:
     try:
         repository_root = repository_directory.resolve(strict=False)
         candidate = run_directory.resolve(strict=False)
@@ -181,18 +253,22 @@ def _is_safe_run_directory(repository_directory: Path, run_directory: Path) -> b
         return False
     if run_directory.is_symlink():
         return False
-    return bool(_REPORT_RUN_DIRECTORY_PATTERN.match(run_directory.name))
+    return bool(
+        _REPORT_RUN_DIRECTORY_PATTERN.match(run_directory.name)
+        or _ASSESSMENT_RUN_ID_PATTERN.match(run_directory.name)
+    )
 
 
 def retain_recent_reports(
     repository_directory: Path,
     keep: int = DEFAULT_RETAINED_RUN_COUNT,
+    *,
+    repository_slug: str | None = None,
 ) -> list[Path]:
-    """Keep only the newest completed report-run directories for one repository.
+    """Keep only the newest completed report-run directories.
 
-    Older completed runs are deleted in place. No archive directory is created.
-    Invalid names, unrelated files, incomplete directories, and symlink escapes are
-    ignored. Returns the list of deleted run directories.
+    When ``repository_slug`` is set and ``repository_directory`` is the
+    assessments root, only runs for that slug are considered.
     """
 
     if keep < 1:
@@ -201,7 +277,13 @@ def retain_recent_reports(
     if not repository_directory.exists():
         return []
 
-    completed = list_completed_report_run_directories(repository_directory)
+    if repository_slug is not None:
+        completed = list_completed_assessment_runs(
+            repository_directory, repository_slug=repository_slug
+        )
+    else:
+        completed = list_completed_report_run_directories(repository_directory)
+
     to_delete = completed[keep:]
     deleted: list[Path] = []
     for outdated_directory in to_delete:
@@ -226,7 +308,10 @@ def prune_excess_report_runs(
     repository_directory: Path,
     *,
     keep: int = DEFAULT_RETAINED_RUN_COUNT,
+    repository_slug: str | None = None,
 ) -> list[Path]:
     """Alias for :func:`retain_recent_reports` used by assessment cleanup."""
 
-    return retain_recent_reports(repository_directory, keep=keep)
+    return retain_recent_reports(
+        repository_directory, keep=keep, repository_slug=repository_slug
+    )

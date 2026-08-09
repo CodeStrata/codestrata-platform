@@ -1,0 +1,52 @@
+{
+  "policy_id": "community-cloud-runtime-security-policy",
+  "policy_version": "1.0",
+  "schema": "community-cloud-runtime-security-policy:1.0",
+  "epic": 17,
+  "slice": "17.6",
+  "authority": "Authoritative runtime security for CodeStrata Community Cloud production. Configure Insights auth secrets (identifiers + operational values in Secrets Manager only), wire Lambda runtime IAM for GetSecretValue, keep ingestion OFF, keep Data Lake writer unattached (deferred to 17.7), keep provider credentials unconfigured. Slice 17.7 started; ingestion authority moved.",
+  "start_epic_17": true,
+  "start_slice_17_1": true,
+  "start_slice_17_2": true,
+  "start_slice_17_3": true,
+  "start_slice_17_4": true,
+  "start_slice_17_5": true,
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "environment": "production",
+  "region": "us-west-2",
+  "secrets_configured": true,
+  "insights_auth_runtime_ready": true,
+  "data_lake_writer_ready": true,
+  "data_lake_reader_ready": true,
+  "production_ingestion_enabled": false,
+  "provider_credentials_configured": false,
+  "dynamodb": false,
+  "athena": false,
+  "glue": false,
+  "rds": false,
+  "redis": false,
+  "writer_attached": false,
+  "administrator_access_allowed": false,
+  "secret_identifiers": [
+    "codestrata/insights/dashboard-password",
+    "codestrata/insights/session-secret"
+  ],
+  "secret_value_storage": "secrets_manager_only",
+  "lambda_function_name": "codestrata-community-cloud-production-api",
+  "data_lake_bucket_name": "codestrata-community-data-lake-production",
+  "authoritative_documentation": "infrastructure/docs/infrastructure-deployment.md",
+  "verification": {
+    "package": "verification/community_cloud_runtime_security",
+    "schema": "community-cloud-runtime-security-verification:1.0.0",
+    "report": "reports/verification/sv17-6/community-cloud-runtime-security-verification.json"
+  },
+  "notes": [
+    "secrets_configured=true means identifiers and operational values live in Secrets Manager only.",
+    "data_lake_writer_ready=true is contract posture; writer_attachment_status=unattached_deferred_to_17_7.",
+    "provider_credentials_configured=false \u2014 no Bedrock/OpenAI runtime keys in Lambda env.",
+    "Fails closed when sanitized .local evidence is absent and runtime IAM/secrets are not wired."
+  ],
+  "start_slice_17_8": false,
+  "note_slice_17_7": "Slice 17.7 started; ingestion authority moved to community_cloud_production_ingestion_policy. Slice 17.8 not started."
+}

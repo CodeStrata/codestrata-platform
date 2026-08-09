@@ -12,7 +12,7 @@ from verification.vscode_cli_compatibility import (
 
 SCHEMA_NAME = "vscode-cli-compatibility-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1311_OUTPUT_RELATIVE = "reports/verification/sv13-11"
+SV1311_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-11"
 REPORT_JSON = "vscode-cli-compatibility-verification.json"
 REPORT_MD = "vscode-cli-compatibility-verification.md"
 

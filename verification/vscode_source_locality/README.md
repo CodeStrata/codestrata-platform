@@ -9,7 +9,7 @@ PYTHONPATH=. python -m verification.vscode_source_locality
 PYTHONPATH=. python -m pytest tests/verification/vscode_source_locality -q
 ```
 
-Report: `reports/verification/sv13-10/vscode-source-locality-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-10/vscode-source-locality-verification.json`
 
 ## Scope
 

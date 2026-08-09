@@ -72,10 +72,12 @@
   "start_slice_16_8": true,
   "start_slice_16_9": true,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "verification": {
     "package": "verification/repository_consistency",
     "schema": "repository-consistency-verification:1.0.0",
     "report": "reports/verification/sv16-8/repository-consistency-verification.json"
-  }
+  },
+  "start_slice_17_2": true,
+  "note_epic_17": "Epic 17 started; Slice 17.1 architecture allowed; Slice 17.2 not started"
 }

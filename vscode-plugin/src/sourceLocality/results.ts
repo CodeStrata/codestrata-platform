@@ -42,6 +42,7 @@ export type GeneratedArtifactClass =
 export const APPROVED_ENGINE_ARTIFACT_BASENAMES = [
   "codestrata.toml",
   "report.json",
+  "assessment.html",
   "report.html",
   "report.txt",
 ] as const;

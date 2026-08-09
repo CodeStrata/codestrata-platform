@@ -9,7 +9,7 @@ from verification.cross_surface_presentation import CROSS_SURFACE_ID, CROSS_SURF
 
 SCHEMA_NAME = "cross-surface-presentation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV147_OUTPUT_RELATIVE = "reports/verification/sv14-7"
+SV147_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-7"
 REPORT_JSON = "cross-surface-presentation-verification.json"
 REPORT_MD = "cross-surface-presentation-verification.md"
 
@@ -23,7 +23,7 @@ TOKEN_CATALOG = "design-system/tokens/catalog.json"
 TOKEN_CSS = "design-system/tokens/tokens.css"
 
 FORBIDDEN_15_7_PATHS = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 REQUIRED_TYPOGRAPHY_ROLES = (

@@ -12,7 +12,7 @@ from verification.repository_boundary_residency import (
 
 SCHEMA_NAME = "repository-boundary-residency-verification"
 SCHEMA_VERSION = "1.0.0"
-SV167_OUTPUT_RELATIVE = "reports/verification/sv16-7"
+SV167_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-7"
 REPORT_JSON = "repository-boundary-residency-verification.json"
 REPORT_MD = "repository-boundary-residency-verification.md"
 
@@ -70,7 +70,8 @@ class Sv167Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_remote_creation: bool = True
     no_cutover: bool = True
     no_dual_authoring: bool = True

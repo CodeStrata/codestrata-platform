@@ -25,7 +25,7 @@ Optional:
 ```bash
 PYTHONPATH=engine/src:. .venv/bin/python -m verification.privacy_first_telemetry \
   --monorepo-root . \
-  --output-dir reports/verification/sv9-14
+  --output-dir .codestrata-artifacts/validation/suites/sv9-14
 ```
 
 Pytest:
@@ -43,7 +43,7 @@ cd vscode-plugin && npm test
 ## Output
 
 ```
-reports/verification/sv9-14/
+.codestrata-artifacts/validation/suites/sv9-14/
 ├── cross-client-telemetry-privacy-verification.json
 └── cross-client-telemetry-privacy-verification.md
 ```

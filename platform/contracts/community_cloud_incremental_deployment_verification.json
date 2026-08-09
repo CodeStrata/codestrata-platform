@@ -1,0 +1,32 @@
+{
+  "schema": "community-cloud-incremental-deployment-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.9",
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "policy": "community-cloud-incremental-deployment-policy:1.0",
+  "register": "community-cloud-incremental-deployment-register:1.0",
+  "package": "verification/community_cloud_incremental_deployment",
+  "report": "reports/verification/sv17-9/community-cloud-incremental-deployment-verification.json",
+  "checks_required": [
+    "baseline_zero_drift",
+    "controlled_change_selected",
+    "incremental_plan_expected_only",
+    "no_destroy",
+    "no_replace",
+    "incremental_apply",
+    "post_apply_zero_drift",
+    "rollback",
+    "final_zero_drift",
+    "github_plan_workflow",
+    "github_apply_workflow",
+    "oidc_trust",
+    "oidc_least_privilege",
+    "prior_17_1_17_8_regressions",
+    "slice_17_12_absence",
+    "deterministic_report"
+  ],
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

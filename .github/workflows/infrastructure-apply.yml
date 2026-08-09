@@ -1,0 +1,137 @@
+# Slice 17.5 — Infrastructure production apply (manual / post-push).
+#
+# Mutates AWS product infrastructure ONLY via a reviewed saved plan file.
+# NEVER on pull_request. workflow_dispatch only. environment: production.
+#
+# Live authenticated apply awaits owner push + vars.CODESTRATA_GITHUB_AWS_ROLE_ARN
+# + attached CodeStrataGitHubInfrastructureApply policy.
+# Do NOT casually use tofu apply -auto-approve — apply the saved plan file.
+# Ingestion stays OFF. Writer stays unattached. No Secrets. No Insights/Docs.
+# Slice 17.6 is not started.
+
+name: infrastructure-apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type APPLY-PRODUCTION to confirm staged production apply"
+        required: true
+        type: string
+      plan_artifact_name:
+        description: "Optional artifact name containing a reviewed .tfplan (otherwise regenerate and require zero destroy/replace)"
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infrastructure-apply-production
+  cancel-in-progress: false
+
+jobs:
+  apply-production:
+    name: apply-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: github.event.inputs.confirm == 'APPLY-PRODUCTION'
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: infrastructure/production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.0
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.CODESTRATA_GITHUB_AWS_ROLE_ARN }}
+          aws-region: us-west-2
+          role-session-name: codestrata-gha-apply-${{ github.run_id }}
+          role-duration-seconds: 3600
+
+      - name: Refuse unreviewed auto-approve
+        run: |
+          echo "apply_mode=reviewed_saved_plan_only"
+          echo "auto_approve_on_unreviewed_plan=forbidden"
+          echo "ingestion=off"
+          echo "slice_17_6=not_started"
+          # Live run awaits push + attached apply IAM; structural workflow only until then.
+
+      - name: Require or regenerate reviewed plan
+        id: plan
+        run: |
+          set -euo pipefail
+          mkdir -p .local
+          # Prefer a previously reviewed plan artifact when provided; otherwise regenerate.
+          # NEVER apply without inspecting destroy/replace counts.
+          tofu init -input=false
+          if [[ -n "${{ github.event.inputs.plan_artifact_name }}" && -f .local/reviewed.tfplan ]]; then
+            echo "Using existing reviewed.tfplan"
+            PLAN_FILE=.local/reviewed.tfplan
+          else
+            echo "Regenerating plan for review gate (no auto-approve on unreviewed plan)"
+            tofu plan -input=false -out=.local/gha-apply.tfplan
+            PLAN_FILE=.local/gha-apply.tfplan
+          fi
+          tofu show -json "$PLAN_FILE" > .local/gha-apply.tfplan.json
+          python3 - <<'PY'
+          import json, sys
+          from pathlib import Path
+          rcs = json.loads(Path(".local/gha-apply.tfplan.json").read_text()).get("resource_changes") or []
+          destroy = replace = 0
+          for rc in rcs:
+              actions = tuple((rc.get("change") or {}).get("actions") or [])
+              if actions == ("delete",):
+                  destroy += 1
+              if "create" in actions and "delete" in actions:
+                  replace += 1
+          if destroy or replace:
+              print(f"FAIL closed: destroy={destroy} replace={replace}", file=sys.stderr)
+              sys.exit(2)
+          print(f"plan_gate_ok destroy=0 replace=0")
+          PY
+          echo "plan_file=$PLAN_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Apply reviewed plan file
+        run: |
+          set -euo pipefail
+          # Apply the saved plan file only — do not use tofu apply -auto-approve on a fresh unreviewed plan.
+          PLAN_FILE="${{ steps.plan.outputs.plan_file }}"
+          tofu apply -input=false "$PLAN_FILE"
+
+      - name: Post-apply zero-drift plan check
+        run: |
+          set -euo pipefail
+          # Exit code 2 from -detailed-exitcode means drift; fail closed.
+          if ! tofu plan -input=false -detailed-exitcode -out=.local/gha-post.tfplan; then
+            rc=$?
+            if [[ $rc -eq 2 ]]; then
+              echo "FAIL: post-apply drift detected" >&2
+              tofu show -no-color .local/gha-post.tfplan | sed -E 's/[0-9]{12}/<ACCOUNT>/g' | head -80 >&2
+              exit 2
+            fi
+            exit $rc
+          fi
+          echo "post_apply_drift=0"
+
+      - name: Upload sanitized plan summaries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-apply-summaries
+          path: |
+            infrastructure/production/.local/gha-apply.tfplan.json
+          if-no-files-found: warn
+          retention-days: 14

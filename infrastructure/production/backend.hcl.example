@@ -1,0 +1,9 @@
+# Copy to backend.hcl (gitignored) and fill real values locally.
+# Prefer: ./infrastructure/scripts/bootstrap-remote-state.sh
+# Do not commit backend.hcl with live bucket identifiers.
+
+bucket       = "REPLACE_WITH_STATE_BUCKET_NAME"
+key          = "codestrata/community-cloud/production/terraform.tfstate"
+region       = "us-west-2"
+encrypt      = true
+use_lockfile = true

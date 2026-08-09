@@ -1,0 +1,88 @@
+{
+  "policy_id": "community-production-sites-repository-deployment-policy",
+  "policy_version": "1.0",
+  "schema": "community-production-sites-repository-deployment-policy:1.0",
+  "epic": 17,
+  "slice": "17.8",
+  "authority": "Authoritative production repository create/sync and Community Insights/Docs Cloudflare deployment for CodeStrata v0.2.0. Uses Epic 12/16 repository export router. Monorepo remains engineering source authority until controlled cutover. Slice 17.9 started; incremental deployment authority moved. Slice 17.10 started; recovery authority moved.",
+  "start_epic_17": true,
+  "start_slice_17_8": true,
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "environment": "production",
+  "region": "us-west-2",
+  "export_authority": {
+    "router": "scripts/export_repository.py",
+    "targets": [
+      "community",
+      "infrastructure",
+      "insights"
+    ],
+    "docs_via": "community_staging_export_public_repos",
+    "docs_command": "python scripts/export-public-repos.py --repo codestrata-docs",
+    "infrastructure_command": "python scripts/export_repository.py --target infrastructure --destination <dir>",
+    "insights_command": "python scripts/export_repository.py --target insights --destination <dir>",
+    "invent_exporter_forbidden": true
+  },
+  "repositories": {
+    "infrastructure": {
+      "repository_name": "codestrata-infrastructure",
+      "owner": "CodeStrata",
+      "visibility": "private",
+      "export_target": "infrastructure",
+      "sync_status": "REMOTE_CREATED_EXPORT_SYNCED_PRE_CUTOVER"
+    },
+    "insights": {
+      "repository_name": "codestrata-insights",
+      "owner": "CodeStrata",
+      "visibility": "private",
+      "export_target": "insights",
+      "sync_status": "REMOTE_CREATED_EXPORT_SYNCED_PRE_CUTOVER",
+      "production_hostname": "insights.codestrata.ai"
+    },
+    "docs": {
+      "repository_name": "codestrata-docs",
+      "owner": "CodeStrata",
+      "visibility": "private",
+      "export_target": "community",
+      "sync_status": "REMOTE_EXISTING_EXPORT_UPDATED",
+      "production_hostname": "docs.codestrata.ai",
+      "site_public": true,
+      "note": "GitHub private; production hostname remains public via Cloudflare"
+    }
+  },
+  "source_authority_status": "monorepo_engineering_authority_pre_cutover",
+  "destructive_monorepo_cutover_allowed": false,
+  "delete_infrastructure_from_monorepo_allowed": false,
+  "delete_insights_from_monorepo_allowed": false,
+  "delete_docs_from_monorepo_allowed": false,
+  "oidc": {
+    "final_intended_subject": "repo:CodeStrata/codestrata-infrastructure:environment:production",
+    "transitional_dual_trust": true,
+    "transitional_subjects": [
+      "repo:CodeStrata/codestrata-platform:environment:production",
+      "repo:CodeStrata/codestrata-infrastructure:environment:production"
+    ],
+    "organization_wildcard_allowed": false,
+    "insights_aws_permissions_forbidden": true,
+    "docs_aws_permissions_forbidden": true
+  },
+  "hosting": {
+    "insights": "cloudflare_static_assets_with_api_proxy",
+    "docs": "cloudflare_static_assets",
+    "aws_s3_cloudfront_forbidden": true
+  },
+  "release_boundary": {
+    "publish_cli_allowed": false,
+    "publish_vscode_allowed": false,
+    "tag_v0_2_0_allowed": false
+  },
+  "verification": {
+    "package": "verification/community_production_sites_deployment",
+    "schema": "community-production-sites-deployment-verification:1.0.0",
+    "report": "reports/verification/sv17-8/community-production-sites-deployment-verification.json"
+  },
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

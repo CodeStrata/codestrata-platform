@@ -204,7 +204,7 @@
         },
         "codestrata.assessment.outputDirectory": {
           "type": "string",
-          "default": "reports",
+          "default": ".codestrata-artifacts/assessments",
           "scope": "resource",
           "description": "Output directory for Engineering Assessment reports (passed to codestrata assess --output). May be relative to the workspace."
         },

@@ -1,0 +1,81 @@
+{
+  "policy_id": "community-production-site-ux-access-policy",
+  "policy_version": "1.0",
+  "schema": "community-production-site-ux-access-policy:1.0",
+  "epic": 17,
+  "slice": "17.11",
+  "authority": "Authoritative production site UX and access validation for CodeStrata Community Docs and Insights. Verifies docs navigation/footer/favicon fixes, Insights favicon and shared-password auth RCA, and production sites posture (private GitHub repos, public Cloudflare sites). Does not start Slice 17.12, commit, tag, publish, rotate passwords, or redesign products.",
+  "start_epic_17": true,
+  "start_slice_17_8": true,
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "environment": "production",
+  "region": "us-west-2",
+  "docs_repo_visibility": "private",
+  "docs_site_public": true,
+  "docs_header_overlap_fixed": true,
+  "docs_logo_destination": "/",
+  "docs_main_site_destination": "https://codestrata.ai/",
+  "docs_inner_footer_posture": "minimal/legal-only on inner pages",
+  "docs_favicon_status": "approved dark-theme mark",
+  "insights_favicon_status": "approved dark-theme mark",
+  "insights_auth_root_cause": "sm_stores_scrypt_verifier_owner_must_use_plaintext_owner_once",
+  "insights_password_rotation_performed": false,
+  "insights_login_status": "owner_once_login_verified",
+  "production_sites_status": "cloudflare_live_private_repos_public_sites",
+  "source_authority_status": "monorepo_engineering_authority_pre_cutover",
+  "destructive_monorepo_cutover_allowed": false,
+  "password_rotation_required": false,
+  "evidence_dir": "infrastructure/production/.local/sv17-11",
+  "docs_sources": {
+    "config": "docs/.vitepress/config.ts",
+    "custom_css": "docs/.vitepress/theme/custom.css",
+    "footer": "docs/.vitepress/theme/CsFooter.vue",
+    "home_link": "docs/.vitepress/theme/CsDocsHomeLink.vue",
+    "favicon": "docs/public/favicon.svg",
+    "favicon_source": "design-system/assets/brand/codestrata-mark-on-dark.svg"
+  },
+  "insights_sources": {
+    "index_html": "insights/index.html",
+    "favicon": "insights/public/brand/codestrata-mark-on-dark.svg",
+    "favicon_source": "design-system/assets/brand/codestrata-mark-on-dark.svg",
+    "login_page": "insights/src/pages/LoginPage.tsx",
+    "auth_context": "insights/src/auth/AuthContext.tsx"
+  },
+  "repositories": {
+    "docs": {
+      "repository_name": "codestrata-docs",
+      "owner": "CodeStrata",
+      "visibility": "private",
+      "site_public": true,
+      "production_hostname": "docs.codestrata.ai"
+    },
+    "insights": {
+      "repository_name": "codestrata-insights",
+      "owner": "CodeStrata",
+      "visibility": "private",
+      "production_hostname": "insights.codestrata.ai"
+    }
+  },
+  "release_boundary": {
+    "publish_cli_allowed": false,
+    "publish_vscode_allowed": false,
+    "tag_v0_2_0_allowed": false,
+    "commit_required": false,
+    "tag_allowed": false,
+    "publish_allowed": false
+  },
+  "verification": {
+    "package": "verification/community_production_site_ux_access",
+    "schema": "community-production-site-ux-access-verification:1.0.0",
+    "report": "reports/verification/sv17-11/community-production-site-ux-access-verification.json"
+  },
+  "notes": [
+    "Secrets Manager stores scrypt verifier JSON; operators must sign in with plaintext owner-once password.",
+    "Password rotation is not required when owner-once already matches SM verifier.",
+    "Slice 17.12 is not started."
+  ],
+  "start_slice_17_13": false
+}

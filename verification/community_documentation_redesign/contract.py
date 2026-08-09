@@ -12,7 +12,7 @@ from verification.community_documentation_redesign import (
 
 SCHEMA_NAME = "community-documentation-redesign-verification"
 SCHEMA_VERSION = "1.0.0"
-SV142_OUTPUT_RELATIVE = "reports/verification/sv14-2"
+SV142_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-2"
 REPORT_JSON = "community-documentation-redesign-verification.json"
 REPORT_MD = "community-documentation-redesign-verification.md"
 

@@ -1,7 +1,7 @@
 # Slice 12.2 — Cursor Release Surface Removal Verification
 
 Schema: `cursor-release-surface-removal-verification` @ `1.0.0`  
-Report: `reports/verification/sv12-2/cursor-release-surface-removal-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-2/cursor-release-surface-removal-verification.json`
 
 ## Posture
 

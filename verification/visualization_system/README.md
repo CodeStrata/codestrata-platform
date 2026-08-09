@@ -17,7 +17,7 @@ invented dashboards.
 pytest tests/verification/visualization_system -q
 ```
 
-Report: `reports/verification/sv14-8/visualization-system-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-8/visualization-system-verification.json`
 
 ## Boundaries
 

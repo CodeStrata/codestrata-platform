@@ -8,7 +8,7 @@ Schema: `codestrata-visual-design-system-verification:1.0.0`
 .venv/bin/python -m verification.visual_design_system
 ```
 
-Report: `reports/verification/sv14-1/codestrata-visual-design-system-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-1/codestrata-visual-design-system-verification.json`
 
 ## Verifies
 

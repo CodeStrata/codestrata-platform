@@ -12,7 +12,7 @@ from verification.vscode_assessment_execution import (
 
 SCHEMA_NAME = "vscode-assessment-execution-verification"
 SCHEMA_VERSION = "1.0.0"
-SV135_OUTPUT_RELATIVE = "reports/verification/sv13-5"
+SV135_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-5"
 REPORT_JSON = "vscode-assessment-execution-verification.json"
 REPORT_MD = "vscode-assessment-execution-verification.md"
 

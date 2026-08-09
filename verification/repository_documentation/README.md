@@ -7,12 +7,13 @@ Documentation-only cleanup for public-ready Community docs (v0.2.0).
 - Policy: `repository-documentation-policy:1.0`
 - Guide: `platform/docs/repository-cleanup/community-documentation-cleanup.md`
 - Schema: `repository-documentation-verification:1.0.0`
-- Report: `reports/verification/sv16-2/repository-documentation-verification.json`
+- Report: `.codestrata-artifacts/validation/suites/sv16-2/repository-documentation-verification.json`
 
 ## Run
 
 ```bash
-python -m verification.repository_documentation
+PYTHONPATH=. python -m verification.repository_documentation
 ```
 
-Slice 16.3 is forbidden. No commit/tag/publish/deploy.
+**Status:** Complete (Epic 16 finished through Slice 16.10).  
+No commit/tag/publish/deploy from this package.

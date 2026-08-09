@@ -9,7 +9,7 @@ bounded Community Insights analytics. **No path redesign.**
 | --- | --- |
 | Policy | `community-analytics-partition-policy:1.0` |
 | Schema | `community-analytics-partition-verification:1.0.0` |
-| Report | `reports/verification/sv15-2/community-analytics-partition-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-2/community-analytics-partition-verification.json` |
 
 ## Run
 

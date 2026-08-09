@@ -84,7 +84,7 @@ PYTHONPATH=. python -m verification.ci_release_boundaries
 PYTHONPATH=. python -m pytest tests/verification/ci_release_boundaries -q
 ```
 
-Report: `reports/verification/sv12-9/ci-release-boundary-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv12-9/ci-release-boundary-verification.json`
 
 ## Explicit non-goals (Slice 12.9 scope)
 

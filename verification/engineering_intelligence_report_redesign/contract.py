@@ -12,7 +12,7 @@ from verification.engineering_intelligence_report_redesign import (
 
 SCHEMA_NAME = "engineering-intelligence-report-redesign-verification"
 SCHEMA_VERSION = "1.0.0"
-SV144_OUTPUT_RELATIVE = "reports/verification/sv14-4"
+SV144_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-4"
 REPORT_JSON = "engineering-intelligence-report-redesign-verification.json"
 REPORT_MD = "engineering-intelligence-report-redesign-verification.md"
 

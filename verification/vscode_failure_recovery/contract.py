@@ -12,7 +12,7 @@ from verification.vscode_failure_recovery import (
 
 SCHEMA_NAME = "vscode-failure-recovery-verification"
 SCHEMA_VERSION = "1.0.0"
-SV138_OUTPUT_RELATIVE = "reports/verification/sv13-8"
+SV138_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-8"
 REPORT_JSON = "vscode-failure-recovery-verification.json"
 REPORT_MD = "vscode-failure-recovery-verification.md"
 

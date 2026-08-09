@@ -1,0 +1,19 @@
+{
+  "schema": "community-cloud-remote-state-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.2",
+  "package": "verification/community_cloud_remote_state",
+  "policy": "community-cloud-remote-state-policy:1.0",
+  "register": "community-cloud-remote-state-register:1.0",
+  "report": "reports/verification/sv17-2/community-cloud-remote-state-verification.json",
+  "start_slice_17_2": true,
+  "start_slice_17_3": false,
+  "region": "us-west-2",
+  "dynamodb_required": false,
+  "tofu_production_apply_allowed": false,
+  "start_slice_17_4": true,
+  "start_slice_17_5": true,
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "start_slice_17_8": false
+}

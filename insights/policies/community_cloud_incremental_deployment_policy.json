@@ -1,0 +1,80 @@
+{
+  "policy_id": "community-cloud-incremental-deployment-policy",
+  "policy_version": "1.0",
+  "schema": "community-cloud-incremental-deployment-policy:1.0",
+  "epic": 17,
+  "slice": "17.9",
+  "authority": "Authoritative incremental deployment validation for CodeStrata Community Cloud production after the v0.2.0 foundation. Operations-only: prove plan \u2192 expected resources \u2192 apply \u2192 zero drift \u2192 rollback \u2192 zero drift. Does not redesign infrastructure, ingestion, telemetry, or Cloudflare. Slice 17.10 started; production recovery authority moved.",
+  "start_epic_17": true,
+  "start_slice_17_1": true,
+  "start_slice_17_2": true,
+  "start_slice_17_3": true,
+  "start_slice_17_4": true,
+  "start_slice_17_5": true,
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "start_slice_17_8": true,
+  "start_slice_17_9": true,
+  "start_slice_17_10": true,
+  "environment": "production",
+  "region": "us-west-2",
+  "redesign_infrastructure_allowed": false,
+  "modify_ingestion_allowed": false,
+  "touch_telemetry_allowed": false,
+  "create_new_aws_services_allowed": false,
+  "redesign_cloudflare_allowed": false,
+  "commit_required": false,
+  "tag_allowed": false,
+  "publish_allowed": false,
+  "controlled_change": {
+    "type": "cloudwatch_log_retention_days",
+    "resource": "module.community_cloud_api.aws_cloudwatch_log_group.lambda",
+    "baseline_value": 30,
+    "incremental_value": 60,
+    "rollback_value": 30,
+    "destroy_forbidden": true,
+    "replace_forbidden": true
+  },
+  "lifecycle": {
+    "baseline_zero_drift_required": true,
+    "plan_expected_resources_only": true,
+    "apply_required": true,
+    "post_apply_zero_drift_required": true,
+    "rollback_required": true,
+    "final_zero_drift_required": true
+  },
+  "github": {
+    "plan_workflow": ".github/workflows/infrastructure-plan.yml",
+    "apply_workflow": ".github/workflows/infrastructure-apply.yml",
+    "plan_only_on_pull_request": true,
+    "apply_workflow_dispatch_only": true,
+    "apply_on_pull_request_forbidden": true,
+    "environment": "production",
+    "oidc_role_var": "vars.CODESTRATA_GITHUB_AWS_ROLE_ARN",
+    "redesign_workflows_allowed": false
+  },
+  "oidc": {
+    "role_name": "codestrata-github-actions-production",
+    "transitional_dual_trust": true,
+    "organization_wildcard_allowed": false,
+    "administrator_access_allowed": false,
+    "session_duration_seconds": 3600
+  },
+  "apply_mode_accepted": "local_codestrata_infra_incremental",
+  "production_root": "infrastructure/production",
+  "authoritative_documentation": "infrastructure/docs/infrastructure-deployment.md",
+  "verification": {
+    "package": "verification/community_cloud_incremental_deployment",
+    "schema": "community-cloud-incremental-deployment-verification:1.0.0",
+    "report": "reports/verification/sv17-9/community-cloud-incremental-deployment-verification.json"
+  },
+  "notes": [
+    "Incremental change validated locally under codestrata_infra using reviewed saved OpenTofu plans.",
+    "GitHub plan/apply workflows validated structurally; live GitHub apply still requires owner-attached Plan/Apply IAM policies.",
+    "Dependent IAM logging policy may appear as plan update (known-after-apply) but apply resolves without semantic IAM change.",
+    "Slice 17.10 started; production recovery authority moved to community_cloud_production_recovery_policy. Slice 17.11 started; Slice 17.12 not started."
+  ],
+  "start_slice_17_11": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": false
+}

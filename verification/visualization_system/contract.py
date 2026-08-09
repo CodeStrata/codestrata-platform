@@ -9,7 +9,7 @@ from verification.visualization_system import VISUALIZATION_ID, VISUALIZATION_VE
 
 SCHEMA_NAME = "visualization-system-verification"
 SCHEMA_VERSION = "1.0.0"
-SV148_OUTPUT_RELATIVE = "reports/verification/sv14-8"
+SV148_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-8"
 REPORT_JSON = "visualization-system-verification.json"
 REPORT_MD = "visualization-system-verification.md"
 
@@ -30,7 +30,7 @@ EIR_RENDERER = (
 )
 
 FORBIDDEN_15_7_PATHS = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 FORBIDDEN_HEALTH_LABELS = ("Healthy", "Passed", "Safe", "Secure")

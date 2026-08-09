@@ -13,7 +13,7 @@ from verification.cursor_extension_removal import (
 SCHEMA_NAME = "cursor-extension-removal-verification"
 SCHEMA_VERSION = "1.0.0"
 
-SV121_OUTPUT_RELATIVE = "reports/verification/sv12-1"
+SV121_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv12-1"
 REPORT_JSON = "cursor-extension-removal-verification.json"
 REPORT_MD = "cursor-extension-removal-verification.md"
 

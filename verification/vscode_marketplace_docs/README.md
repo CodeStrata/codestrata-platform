@@ -9,7 +9,7 @@ Schema: `vscode-marketplace-documentation-verification:1.0.0`
 .venv/bin/python -m pytest tests/verification/vscode_marketplace_docs -q
 ```
 
-Report: `reports/verification/sv13-13/vscode-marketplace-documentation-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-13/vscode-marketplace-documentation-verification.json`
 
 ## Scope
 

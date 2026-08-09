@@ -72,9 +72,10 @@ export default defineConfig({
     logo: {
       light: "/brand/lockup-horizontal-on-light.svg",
       dark: "/brand/lockup-horizontal-on-dark.svg",
-      alt: "CodeStrata",
+      alt: "CodeStrata Docs",
     },
-    logoLink: "https://codestrata.ai/",
+    // Docs brand → docs home. Company site is the explicit "Main Site" nav item.
+    logoLink: "/",
     siteTitle: false,
     nav: [
       { text: "Get Started", link: "/getting-started/" },
@@ -176,6 +177,19 @@ export default defineConfig({
             { text: "Release Notes", link: "/reference/release-notes" },
             { text: "Examples", link: "/community/examples" },
             { text: "Contributing", link: "/community/contributing" },
+          ],
+        },
+        {
+          text: "Trust & Community",
+          items: [
+            { text: "Privacy", link: "/security/privacy" },
+            { text: "Security", link: "/security/" },
+            { text: "Telemetry", link: "/reference/telemetry" },
+            {
+              text: "GitHub",
+              link: "https://github.com/CodeStrata/codestrata-engine",
+            },
+            { text: "Main Site", link: "https://codestrata.ai/" },
           ],
         },
       ],

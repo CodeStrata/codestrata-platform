@@ -30,11 +30,11 @@ report_app = typer.Typer(
     help=(
         "Report helpers for assess HTML/JSON outputs.\n\n"
         "Examples:\n"
-        "  codestrata report validate reports/<run>/report.json\n"
+        "  codestrata report validate .codestrata-artifacts/assessments/<run>/assessment.json\n"
         "  codestrata open\n"
-        "  codestrata report open --path reports/<run>/report.html\n\n"
-        "Validate report.json schema, references, duplicates, evidence links, "
-        "and roadmap traceability without re-running assessment.\n\n"
+        "  codestrata report open --path .codestrata-artifacts/assessments/<run>/assessment.html\n\n"
+        "Validate assessment.json schema/references where applicable, "
+        "and open the customer HTML report.\n\n"
         f"Troubleshooting: {DOCS_TROUBLESHOOTING}"
     ),
     no_args_is_help=True,
@@ -42,12 +42,14 @@ report_app = typer.Typer(
 
 
 def _find_latest_html_report(search_root: Path) -> Path | None:
-    """Locate the newest report.html under a reports directory."""
+    """Locate the newest assessment.html (or legacy report.html) under output."""
 
     if not search_root.is_dir():
         return None
+    modern = list(search_root.rglob("assessment.html"))
+    legacy = list(search_root.rglob("report.html"))
     candidates = sorted(
-        search_root.rglob("report.html"),
+        modern + legacy,
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
@@ -57,7 +59,7 @@ def _find_latest_html_report(search_root: Path) -> Path | None:
 def open_html_report(
     *,
     path: Path | None = None,
-    output: Path = Path("reports"),
+    output: Path = Path(".codestrata-artifacts/assessments"),
     no_browser: bool = False,
 ) -> Path:
     """Resolve and optionally open an HTML assessment report."""
@@ -67,10 +69,10 @@ def open_html_report(
         raise FileNotFoundError(
             format_actionable_error(
                 what="No HTML report found.",
-                why=f"Looked under {_display(output)} for report.html.",
+                why=f"Looked under {_display(output)} for assessment.html (or report.html).",
                 fix=(
-                    "Run: codestrata assess --repo . --output reports --no-ai\n"
-                    "  Or pass: codestrata open --path <path-to-report.html>"
+                    "Run: codestrata assess --repo . --no-ai\n"
+                    "  Or pass: codestrata open --path <path-to-assessment.html>"
                 ),
             )
         )
@@ -79,7 +81,7 @@ def open_html_report(
             format_actionable_error(
                 what=f"HTML report not found: {_display(target)}",
                 why="The path does not exist or is not a file.",
-                fix="Pass a valid report.html from a completed assess run.",
+                fix="Pass a valid assessment.html from a completed assess run.",
             )
         )
     if not no_browser and not is_machine_mode():
@@ -128,7 +130,7 @@ def report_open_command(
         Path | None,
         typer.Option(
             "--path",
-            help="Explicit path to report.html (default: latest under --output).",
+            help="Explicit path to assessment.html (default: latest under --output).",
         ),
     ] = None,
     output: Annotated[
@@ -136,9 +138,9 @@ def report_open_command(
         typer.Option(
             "--output",
             "-o",
-            help="Reports directory used to find the latest HTML report.",
+            help="Assessments directory used to find the latest HTML report.",
         ),
-    ] = Path("reports"),
+    ] = Path(".codestrata-artifacts/assessments"),
     no_browser: Annotated[
         bool,
         typer.Option(
@@ -179,7 +181,7 @@ def register_open_command(app: typer.Typer) -> None:
             Path | None,
             typer.Option(
                 "--path",
-                help="Explicit path to report.html (default: latest under --output).",
+                help="Explicit path to assessment.html (default: latest under --output).",
             ),
         ] = None,
         output: Annotated[
@@ -187,9 +189,9 @@ def register_open_command(app: typer.Typer) -> None:
             typer.Option(
                 "--output",
                 "-o",
-                help="Reports directory used to find the latest HTML report.",
+                help="Assessments directory used to find the latest HTML report.",
             ),
-        ] = Path("reports"),
+        ] = Path(".codestrata-artifacts/assessments"),
         no_browser: Annotated[
             bool,
             typer.Option(

@@ -49,10 +49,11 @@
   "start_slice_16_8": true,
   "start_slice_16_9": true,
   "start_slice_16_10": true,
-  "start_epic_17": false,
+  "start_epic_17": true,
   "verification": {
     "package": "verification/repository_boundary_residency",
     "schema": "repository-boundary-residency-verification:1.0.0",
     "report": "reports/verification/sv16-7/repository-boundary-residency-verification.json"
-  }
+  },
+  "start_slice_17_2": true
 }

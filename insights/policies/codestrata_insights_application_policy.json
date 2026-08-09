@@ -28,8 +28,12 @@
   "no_secrets_manager": true,
   "authentication_deferred_to_15_9": false,
   "metric_charts_deferred_to_15_10": false,
-  "production_deploy_disabled": true,
-  "production_ingestion_enabled": false,
+  "production_deploy_disabled": false,
+  "production_deployment_enabled": true,
+  "production_host": "insights.codestrata.ai",
+  "cloudflare_project": "codestrata-insights",
+  "same_origin_api_proxy": true,
+  "production_ingestion_enabled": true,
   "start_slice_15_9": true,
   "robots": "noindex,nofollow",
   "export": {
@@ -37,9 +41,8 @@
     "visibility": "private_internal_application",
     "manifest_schema": "insights-repository-export-manifest:1.0.0",
     "no_git_init": true,
-    "no_remote": true,
-    "no_push": true,
-    "no_deploy": true
+    "remote_repository": "CodeStrata/codestrata-insights",
+    "no_deploy_from_exporter": true
   },
   "privacy_forbidden_in_frontend": [
     "installation_id",

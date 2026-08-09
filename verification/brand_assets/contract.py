@@ -7,7 +7,7 @@ from pathlib import Path
 
 SCHEMA_NAME = "brand-assets-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1410_OUTPUT_RELATIVE = "reports/verification/sv14-10"
+SV1410_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv14-10"
 REPORT_JSON = "brand-assets-verification.json"
 REPORT_MD = "brand-assets-verification.md"
 
@@ -147,7 +147,7 @@ RETIRED_RASTER_REPORT_LOGO = "engine/src/codestrata/reporting/assets/codestrata-
 
 # Slice 14.14 must not have started.
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv15-7",
+    ".codestrata-artifacts/validation/suites/sv15-7",
 )
 
 ALLOWED_LIMITATIONS: tuple[str, ...] = (

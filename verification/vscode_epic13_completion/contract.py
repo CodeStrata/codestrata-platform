@@ -12,7 +12,7 @@ from verification.vscode_epic13_completion import (
 
 SCHEMA_NAME = "vscode-epic13-completion-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1315_OUTPUT_RELATIVE = "reports/verification/sv13-15"
+SV1315_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv13-15"
 REPORT_JSON = "vscode-epic13-completion-verification.json"
 REPORT_MD = "vscode-epic13-completion-verification.md"
 

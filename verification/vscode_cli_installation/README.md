@@ -11,7 +11,7 @@ PYTHONPATH=. python -m verification.vscode_cli_installation
 PYTHONPATH=. python -m pytest tests/verification/vscode_cli_installation -q
 ```
 
-Report: `reports/verification/sv13-3/vscode-cli-installation-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv13-3/vscode-cli-installation-verification.json`
 
 ## Guarantees
 

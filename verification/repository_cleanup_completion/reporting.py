@@ -31,7 +31,8 @@ def write_report(monorepo: Path, report: RepositoryCleanupCompletionReport) -> P
         f"Verdict: **{report.verdict}**\n\n"
         f"Checks: {report.total_checks} (failed: {report.failed_checks})\n\n"
         "Epic 16 — Repository Cleanup & Release Hygiene complete. "
-        "Epic 17 has not started. No commit/tag/publish/deploy/remotes/cutover.\n",
+        "Epic 17 may proceed (architecture-first). Slice 17.2 not started. "
+        "No commit/tag/publish/deploy/remotes/cutover from this package.\n",
         encoding="utf-8",
     )
     return json_path

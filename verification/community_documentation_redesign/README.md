@@ -14,7 +14,7 @@ Also run docs package tests:
 cd docs && npm test
 ```
 
-Report: `reports/verification/sv14-2/community-documentation-redesign-verification.json`
+Report: `.codestrata-artifacts/validation/suites/sv14-2/community-documentation-redesign-verification.json`
 
 ## Verifies
 

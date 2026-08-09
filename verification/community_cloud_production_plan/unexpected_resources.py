@@ -1,0 +1,5 @@
+"""check_unexpected_resources wrapper for Slice 17.4."""
+
+from verification.community_cloud_production_plan.checks import check_unexpected_resources
+
+__all__ = ["check_unexpected_resources"]

@@ -12,7 +12,7 @@ from verification.repository_storage_generated_cleanup import (
 
 SCHEMA_NAME = "repository-storage-generated-cleanup-verification"
 SCHEMA_VERSION = "1.0.0"
-SV166_OUTPUT_RELATIVE = "reports/verification/sv16-6"
+SV166_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv16-6"
 REPORT_JSON = "repository-storage-generated-cleanup-verification.json"
 REPORT_MD = "repository-storage-generated-cleanup-verification.md"
 
@@ -83,7 +83,8 @@ class Sv166Contract:
     start_slice_16_8: bool = True
     start_slice_16_9: bool = True
     start_slice_16_10: bool = True
-    start_epic_17: bool = False
+    start_epic_17: bool = True
+    start_slice_17_2: bool = True
     no_dependency_changes: bool = True
     no_repository_relocation: bool = True
     no_runtime_semantic_change: bool = True

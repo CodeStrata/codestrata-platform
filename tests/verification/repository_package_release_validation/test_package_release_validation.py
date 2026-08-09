@@ -24,7 +24,7 @@ def test_contract_gates() -> None:
     c = default_contract()
     assert c.start_slice_16_9 is True
     assert c.start_slice_16_10 is True
-    assert getattr(c, "start_epic_17", False) is False
+    assert getattr(c, "start_epic_17", False) is True
     assert c.no_publish is True
     assert c.no_deploy is True
     assert c.no_commit is True
@@ -35,7 +35,7 @@ def test_policy_and_contract_files() -> None:
     policy = json.loads((root / POLICY_RELATIVE).read_text(encoding="utf-8"))
     assert policy.get("start_slice_16_9", False) is True
     assert policy.get("start_slice_16_10", False) is True
-    assert policy.get("start_epic_17", False) is False
+    assert policy.get("start_epic_17", False) is True
     assert policy.get("schema") == "repository-package-release-validation-policy:1.0"
     contract = json.loads((root / CONTRACT_RELATIVE).read_text(encoding="utf-8"))
     assert contract.get("schema") == "repository-package-release-validation-verification:1.0.0"
@@ -43,7 +43,7 @@ def test_policy_and_contract_files() -> None:
 
 def test_epic_17_absent() -> None:
     root = monorepo_root_from_here()
-    assert not (root / "reports/verification/sv17-1").exists()
+    assert not (root / "reports/verification/sv17-2").exists()
     assert not (root / "verification/infrastructure_production").exists()
     assert not (root / "verification/release_readiness").exists()
 
@@ -53,7 +53,7 @@ def test_build_report_safety() -> None:
     report = build_report(root)
     assert report.schema == SCHEMA_NAME
     assert report.schema_version == SCHEMA_VERSION
-    assert report.release_posture.get("start_epic_17", False) is False
+    assert report.release_posture.get("start_epic_17", False) is True
     assert report.release_posture.get("no_publish") is True
     text = dict_to_canonical_json(report.to_dict())
     assert "/Users/" not in text

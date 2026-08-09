@@ -3,7 +3,9 @@
 **Policy:** `repository-documentation-policy:1.0`  
 **Verification:** `repository-documentation-verification:1.0.0`  
 **Report:** `reports/verification/sv16-2/repository-documentation-verification.json`  
-**Scope:** Documentation-only. No runtime / API / schema changes. Slice 16.3 not started.
+**Scope:** Documentation-only. No runtime / API / schema changes.  
+**Status:** Slice 16.2 complete; Epic 16 (16.1–16.10) complete. Pre-Epic-17
+documentation audit may refine classifications without starting Epic 17.
 
 ## Purpose
 
@@ -27,7 +29,9 @@ knowledge correctly classified (not deleted).
 | Design System | `design-system/` (`design-system/README.md`, tokens under `design-system/tokens/`) |
 | VS Code Marketplace listing | `vscode-plugin/README.md` |
 | Engine maintainer docs | `engine/docs/README.md` |
-| Platform internal docs | `platform/docs/README.md` (INTERNAL) |
+| Documentation classification | `governance/DOCUMENTATION_REGISTRY.md` |
+| Documentation inventory (historical) | `governance/DOCUMENTATION_INVENTORY.md` |
+
 | Community Engine license | `engine/LICENSE` |
 | Community code of conduct | `engine/CODE_OF_CONDUCT.md` |
 

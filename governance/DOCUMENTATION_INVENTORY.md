@@ -1,6 +1,13 @@
 # Documentation Inventory
 
-**Status:** Phase 8.9.3 consolidation
+> **HISTORICAL / SUPERSEDED** — Phase 8.9.3 frozen inventory. Totals and paths
+> are outdated (e.g. lists `.pytest_cache`, pre-dates modern `docs/` portal and
+> Epic 16 cleanup). **Do not treat as current truth.**
+>
+> Current authority: [`DOCUMENTATION_REGISTRY.md`](DOCUMENTATION_REGISTRY.md)
+> (pre-Epic-17 documentation audit).
+
+**Status:** Phase 8.9.3 consolidation (frozen historical snapshot)  
 **Scope:** Source Markdown in the monorepo (excludes `.venv/`, `.git/`,
 `.export-staging/`, `.codestrata-examples/`, `reports/`, prompt packs).
 

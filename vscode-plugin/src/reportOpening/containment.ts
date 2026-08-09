@@ -5,7 +5,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-import { ENGINE_HTML_REPORT_BASENAME } from "./policy";
+import { ENGINE_HTML_REPORT_BASENAME, ENGINE_HTML_REPORT_BASENAMES } from "./policy";
 
 export type ResolveOutputRootResult = {
   readonly outputRoot: string;
@@ -22,7 +22,7 @@ export function resolveApprovedOutputRoot(
   outputDirectory: string
 ): ResolveOutputRootResult {
   const workspace = path.resolve(workspaceRoot);
-  const trimmed = (outputDirectory || "reports").trim() || "reports";
+  const trimmed = (outputDirectory || ".codestrata-artifacts/assessments").trim() || ".codestrata-artifacts/assessments";
   const outputRoot = path.isAbsolute(trimmed)
     ? path.resolve(trimmed)
     : path.resolve(workspace, trimmed);
@@ -135,12 +135,16 @@ export function validateHtmlReportFile(options: {
     return { ok: false, reason: "missing" };
   }
   const base = path.basename(target).toLowerCase();
-  if (base !== ENGINE_HTML_REPORT_BASENAME) {
+  if (!(ENGINE_HTML_REPORT_BASENAMES as readonly string[]).includes(base)) {
     return { ok: false, reason: "type_invalid" };
   }
   return { ok: true, path: target };
 }
 
 export function htmlPathForRunDirectory(runDirectory: string): string {
-  return path.join(runDirectory, ENGINE_HTML_REPORT_BASENAME);
+  const modern = path.join(runDirectory, ENGINE_HTML_REPORT_BASENAME);
+  if (fs.existsSync(modern)) {
+    return modern;
+  }
+  return path.join(runDirectory, "report.html");
 }

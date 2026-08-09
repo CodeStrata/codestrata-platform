@@ -12,7 +12,7 @@ from verification.community_insights_query_strategy import (
 
 SCHEMA_NAME = "community-insights-query-strategy-verification"
 SCHEMA_VERSION = "1.0.0"
-SV155_OUTPUT_RELATIVE = "reports/verification/sv15-5"
+SV155_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-5"
 REPORT_JSON = "community-insights-query-strategy-verification.json"
 REPORT_MD = "community-insights-query-strategy-verification.md"
 
@@ -43,7 +43,7 @@ LAKE_METRICS: tuple[str, ...] = (
 )
 
 FORBIDDEN_15_7_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_LIMITATIONS: frozenset[str] = frozenset(

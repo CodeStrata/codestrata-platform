@@ -12,7 +12,7 @@ from verification.community_insights_validation import (
 
 SCHEMA_NAME = "community-insights-validation-verification"
 SCHEMA_VERSION = "1.0.0"
-SV1511_OUTPUT_RELATIVE = "reports/verification/sv15-11"
+SV1511_OUTPUT_RELATIVE = ".codestrata-artifacts/validation/suites/sv15-11"
 REPORT_JSON = "community-insights-validation-verification.json"
 REPORT_MD = "community-insights-validation-verification.md"
 
@@ -88,7 +88,7 @@ PRIVACY_FORBIDDEN_FIELDS: tuple[str, ...] = (
 )
 
 FORBIDDEN_15_12_PATHS: tuple[str, ...] = (
-    "reports/verification/sv17-1",
+    ".codestrata-artifacts/validation/suites/sv17-1",
 )
 
 ALLOWED_PRIOR_REPORT_DIRS: frozenset[str] = frozenset(

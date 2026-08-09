@@ -1,0 +1,21 @@
+{
+  "schema": "community-cloud-cicd-architecture-verification:1.0.0",
+  "epic": 17,
+  "slice": "17.1",
+  "package": "verification/community_cloud_cicd_architecture",
+  "policy": "community-cloud-cicd-policy:1.0",
+  "registers": [
+    "codestrata-cicd-architecture:1.0",
+    "codestrata-deployment-component-register:1.0"
+  ],
+  "report": "reports/verification/sv17-1/community-cloud-cicd-architecture-verification.json",
+  "start_slice_17_1": true,
+  "start_slice_17_2": false,
+  "production_actions_allowed": false,
+  "aws_resources_created": false,
+  "tofu_apply_allowed": false,
+  "start_slice_17_5": true,
+  "start_slice_17_6": true,
+  "start_slice_17_7": true,
+  "start_slice_17_8": false
+}

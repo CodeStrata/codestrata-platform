@@ -6,7 +6,7 @@
 | Contract | `codestrata-insights-dashboard-contract:1.0` |
 | Schema | `community-insights-dashboard-verification:1.0.0` |
 | App | `insights/` |
-| Report | `reports/verification/sv15-10/community-insights-dashboard-verification.json` |
+| Report | `.codestrata-artifacts/validation/suites/sv15-10/community-insights-dashboard-verification.json` |
 
 ```bash
 cd insights && npm ci && npm test && npm run build

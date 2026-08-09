@@ -1,0 +1,26 @@
+{
+  "schema": "codestrata-github-aws-identity-register:1.0",
+  "epic": 17,
+  "slice": "17.3",
+  "provider": "token.actions.githubusercontent.com",
+  "audience": "sts.amazonaws.com",
+  "repository_identity": "CodeStrata/codestrata-platform",
+  "environment": "production",
+  "role_name": "codestrata-github-actions-production",
+  "trust_subject": "repo:CodeStrata/codestrata-platform:environment:production",
+  "session_duration": 3600,
+  "policy_names": [
+    "CodeStrataGitHubRemoteStateAccess"
+  ],
+  "current_capabilities": [
+    "oidc_assume",
+    "remote_state_s3"
+  ],
+  "deferred_capabilities": [
+    "infrastructure_plan_reads",
+    "infrastructure_apply",
+    "product_deploy"
+  ],
+  "status": "complete",
+  "notes": "Safe identity register only. No account IDs, ARNs, access keys, tokens, paths, or timestamps."
+}

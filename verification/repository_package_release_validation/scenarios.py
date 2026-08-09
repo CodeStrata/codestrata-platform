@@ -24,7 +24,7 @@ def check_scenarios(*, flags: dict[str, bool]) -> tuple[list[CheckResult], list[
         ("M", "secret/credential in export", flags.get("security_ok", False)),
         ("N", "absolute path / username leak", flags.get("security_ok", False)),
         ("O", "export inventories non-deterministic", flags.get("determinism_ok", False)),
-        ("P", "Epic 17 starts", flags.get("no_epic_17", False)),
+        ("P", "Slice 17.2 starts early", flags.get("no_epic_17", False)),
         ("Q", "Epic 19 release readiness begun", flags.get("no_epic19", False)),
         ("R", "remote created / cutover performed", flags.get("no_cutover", False)),
         ("S", "report leaks paths/timestamps/secrets", flags.get("report_safe", False)),

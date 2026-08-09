@@ -77,7 +77,8 @@ def _uniq(defects: list[Defect]) -> list[Defect]:
 def build_report(monorepo: Path) -> RepositoryCleanupCompletionReport:
     contract = default_contract()
     assert contract.start_slice_16_10 is True
-    assert contract.start_epic_17 is False
+    assert contract.start_epic_17 is True
+    assert contract.start_slice_17_2 is True
     assert contract.epic_complete is True
     assert contract.no_commit is True
 
@@ -147,7 +148,7 @@ def build_report(monorepo: Path) -> RepositoryCleanupCompletionReport:
     checks.extend(c)
     defects.extend(d)
 
-    no_epic_17 = not (monorepo / "reports/verification/sv17-1").exists()
+    no_slice_17_2 = not (monorepo / "reports/verification/sv17-6").exists()
     checks.append(CheckResult("determinism:canonical_ready", True, "canonical_json", "determinism"))
 
     flags = {
@@ -162,7 +163,7 @@ def build_report(monorepo: Path) -> RepositoryCleanupCompletionReport:
         "structure_ok": _ok(checks, "repository_structure"),
         "owner_ok": _ok(checks, "owner_review"),
         "posture_ok": _ok(checks, "release_posture"),
-        "no_epic_17": no_epic_17 and _ok(checks, "epic17_boundary"),
+        "no_slice_17_2": no_slice_17_2 and _ok(checks, "epic17_boundary"),
         "report_safe": True,
     }
     c, d, scenario_results = check_scenarios(flags=flags)
@@ -181,7 +182,7 @@ def build_report(monorepo: Path) -> RepositoryCleanupCompletionReport:
         "physical_repository_cutovers_deferred",
         "remote_repositories_absent",
         "worktree_uncommitted",
-        "epic17_not_started_by_design",
+        "epic17_started_architecture_only",
     ]
 
     statuses = {
@@ -268,7 +269,7 @@ def main() -> int:
     rel = path.relative_to(monorepo).as_posix()
     print(f"{report.verdict} checks={report.total_checks} failed={report.failed_checks} report={rel}")
     complete = sum(1 for r in report.slice_completion_matrix if r.get("completion_state") == "COMPLETE")
-    print(f"slice_matrix={complete}/10 start_epic_17=false")
+    print(f"slice_matrix={complete}/10 start_epic_17=true start_slice_17_2=true")
     return 0 if report.verdict != "FAIL" else 1
 
 
