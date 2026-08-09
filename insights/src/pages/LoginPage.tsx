@@ -8,7 +8,7 @@ export function LoginPage(): ReactNode {
   const errorId = useId();
   const passwordId = useId();
 
-  async function onSubmit(event: FormEvent) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     clearLoginError();
     setSubmitting(true);

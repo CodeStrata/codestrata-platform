@@ -129,8 +129,14 @@ if (config) {
       if (!existsSync(join(resolvedAssets, "sitemap.xml"))) {
         fail("sitemap.xml missing in build output");
       }
-      if (!existsSync(join(resolvedAssets, "favicon.svg"))) {
-        fail("favicon.svg missing in build output");
+      if (!existsSync(join(resolvedAssets, "favicon.ico"))) {
+        fail("favicon.ico missing in build output");
+      }
+      if (!existsSync(join(resolvedAssets, "favicon.png"))) {
+        fail("favicon.png missing in build output");
+      }
+      if (!existsSync(join(resolvedAssets, "apple-touch-icon.png"))) {
+        fail("apple-touch-icon.png missing in build output");
       }
       for (const brand of [
         "brand/lockup-horizontal-on-light.svg",

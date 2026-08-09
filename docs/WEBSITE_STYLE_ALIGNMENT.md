@@ -24,7 +24,8 @@ taken from the live CSS and computed styles (browser CDP), not guessed.
 | Framework | Static HTML + first-party CSS (no React/Vue marketing framework detected in HTML) |
 
 Local brand masters (logos only): `design-system/assets/brand/` — the authority as of
-Slice 14.10. Derivatives are generated into `docs/public/brand/` and `docs/public/favicon.svg`
+Slice 14.10. Derivatives are generated into `docs/public/brand/` and Docs/Insights
+favicon PNGs from `design-system/assets/brand/codestrata-app-icon.png`.
 by `scripts/generate_brand_assets.py` so the exported documentation repository is
 self-contained. `docs/public/design-tokens/tokens.css` mirrors Design System 1.0
 (`design-system/tokens/tokens.css`) as of Slice 14.13 — not the historical live-site

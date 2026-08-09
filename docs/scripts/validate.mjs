@@ -29,7 +29,9 @@ if (!fs.existsSync(dist)) {
 
 const requiredFiles = [
   "index.html",
-  "favicon.svg",
+  "favicon.ico",
+  "favicon.png",
+  "apple-touch-icon.png",
   "robots.txt",
   "getting-started/index.html",
   "getting-started/install.html",
