@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-status-workflow-cleanup-verification:1.0.0",
+  "title": "Community Status Workflow Cleanup Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic17_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-status-workflow-cleanup-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-status-workflow-cleanup-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "slice": { "const": "17.25" },
+    "suite_id": { "const": "sv17-25" },
+    "epic17_boundary": {
+      "type": "object",
+      "required": ["start_slice_17_25", "start_slice_17_26"],
+      "properties": {
+        "start_slice_17_25": { "const": true },
+        "start_slice_17_26": { "const": false }
+      }
+    }
+  }
+}

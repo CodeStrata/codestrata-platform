@@ -84,6 +84,11 @@
         "category": "CodeStrata"
       },
       {
+        "command": "codestrata.publishCurrentReport",
+        "title": "Publish/Share Current Report",
+        "category": "CodeStrata"
+      },
+      {
         "command": "codestrata.refreshFindings",
         "title": "Refresh Findings",
         "icon": "$(refresh)",

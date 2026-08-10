@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-epic17-completion-verification:1.0.0",
+  "title": "Community Epic 17 Completion Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "epic_verdict",
+    "slice",
+    "suite_id",
+    "epic17_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-epic17-completion-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-epic17-completion-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "epic_verdict": {
+      "enum": [
+        "EPIC_COMPLETE",
+        "EPIC_COMPLETE_WITH_RELEASE_CARRY_FORWARDS",
+        "EPIC_BLOCKED"
+      ]
+    },
+    "slice": { "const": "17.27" },
+    "suite_id": { "const": "sv17-27" },
+    "epic17_boundary": {
+      "type": "object",
+      "required": [
+        "start_slice_17_27",
+        "start_transparency_documentation_epic",
+        "start_release_readiness_epic"
+      ],
+      "properties": {
+        "start_slice_17_27": { "const": true },
+        "start_transparency_documentation_epic": { "const": false },
+        "start_release_readiness_epic": { "const": false }
+      }
+    }
+  }
+}

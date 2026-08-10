@@ -64,11 +64,12 @@ Lambda environment (non-secret):
 After a deployment exists:
 
 ```bash
-./infrastructure/scripts/smoke-health.sh "https://{api-id}.execute-api.{region}.amazonaws.com"
+./infrastructure/scripts/smoke-health.sh "https://api.codestrata.ai"
 ```
 
-Calls only `/api/v1/health`. Never run against production automatically from CI
-in this slice.
+Public authority is `https://api.codestrata.ai`. The raw execute-api hostname is a
+fallback implementation detail only (not the public contract). Calls only
+`/api/v1/health`. Never run against production automatically from CI in this slice.
 
 ## Local validation (no cloud)
 

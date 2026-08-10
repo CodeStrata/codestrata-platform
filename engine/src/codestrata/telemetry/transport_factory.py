@@ -1,6 +1,8 @@
-"""Explicit HTTP telemetry transport factory (Slice 9.11).
+"""HTTP telemetry transport factory (Slice 9.11 / 17.18).
 
-Never reads environment variables. Never becomes the product default.
+Never reads environment variables here. Product command-session construction
+may inject the result after explicit opt-in via ``product_transport``.
+``create_default_telemetry_runtime()`` does not call this factory.
 """
 
 from __future__ import annotations
@@ -17,8 +19,8 @@ def create_http_telemetry_transport(
 ) -> HttpTelemetryTransport:
     """Build an HTTP transport from validated configuration.
 
-    Callers must inject this transport explicitly into a session/runtime.
-    ``create_default_telemetry_runtime()`` does not call this factory.
+    Product opt-in resolves this via ``product_transport`` when a Community
+    credential is present. ``create_default_telemetry_runtime()`` does not.
     """
 
     return HttpTelemetryTransport(configuration, client=client)

@@ -47,7 +47,9 @@
       ],
       "Resource": [
         "arn:aws:s3:::codestrata-community-data-lake-production",
-        "arn:aws:s3:::codestrata-community-data-lake-production/*"
+        "arn:aws:s3:::codestrata-community-data-lake-production/*",
+        "arn:aws:s3:::codestrata-community-report-artifacts-production",
+        "arn:aws:s3:::codestrata-community-report-artifacts-production/*"
       ]
     },
     {
@@ -144,6 +146,21 @@
       "Resource": "*"
     },
     {
+      "Sid": "AcmApiCustomDomain",
+      "Effect": "Allow",
+      "Action": [
+        "acm:RequestCertificate",
+        "acm:DescribeCertificate",
+        "acm:DeleteCertificate",
+        "acm:ListCertificates",
+        "acm:ListTagsForCertificate",
+        "acm:AddTagsToCertificate",
+        "acm:RemoveTagsFromCertificate",
+        "acm:GetCertificate"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "CloudWatchLogsManageSpecificGroup",
       "Effect": "Allow",
       "Action": [
@@ -218,7 +235,8 @@
         "iam:ListPolicyTags"
       ],
       "Resource": [
-        "arn:aws:iam::*:policy/codestrata-community-data-lake-production-writer"
+        "arn:aws:iam::*:policy/codestrata-community-data-lake-production-writer",
+        "arn:aws:iam::*:policy/codestrata-community-report-artifacts-production-runtime"
       ]
     },
     {

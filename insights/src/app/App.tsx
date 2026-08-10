@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import type { ReactNode } from "react";
 import { AppShell } from "../components/AppShell";
 import { DashboardPage, PlaceholderSectionPage } from "../pages/DashboardPage";
+import { PublishedReportsPage } from "../pages/PublishedReportsPage";
 import { LoginPage, SessionLoading } from "../pages/LoginPage";
 import { AuthProvider, useAuth } from "../auth/AuthContext";
 import {
@@ -92,6 +93,10 @@ function ProtectedApp({ client }: { client: InsightsApiClient }): ReactNode {
                 focusSection="validation"
               />
             }
+          />
+          <Route
+            path="/published-reports"
+            element={<PublishedReportsPage client={client} />}
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

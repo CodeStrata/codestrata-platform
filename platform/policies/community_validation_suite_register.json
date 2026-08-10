@@ -1,0 +1,34 @@
+{
+  "schema": "community-validation-suite-register:1.0",
+  "epic": 17,
+  "slice": "17.13",
+  "artifact_root": ".codestrata-artifacts",
+  "suite_id": "sv17-13",
+  "repository_target": 22,
+  "start_slice_17_13": true,
+  "start_slice_17_14": false,
+  "entries": [
+    {
+      "id": "sv17-13",
+      "status": "scaffolding",
+      "path": ".codestrata-artifacts/validation/suites/sv17-13/",
+      "manifest": "manifest.json",
+      "verification_report": "community-22-repository-validation-verification.json"
+    },
+    {
+      "id": "assessments",
+      "status": "authoritative",
+      "path": ".codestrata-artifacts/assessments/"
+    },
+    {
+      "id": "intelligence",
+      "status": "authoritative",
+      "path": ".codestrata-artifacts/intelligence/"
+    },
+    {
+      "id": "data_lake_boundary",
+      "status": "preserved",
+      "rule": "telemetry_only_no_report_storage"
+    }
+  ]
+}

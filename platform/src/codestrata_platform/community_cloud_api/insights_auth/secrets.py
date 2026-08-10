@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import time
+from collections.abc import Callable
 from typing import Protocol
 
 from codestrata_platform.community_cloud_api.insights_auth.policy import (
     DEFAULT_PASSWORD_SECRET_ID,
     DEFAULT_SESSION_SECRET_ID,
 )
+
+# Session signing secret may be warm-cached. Password verifier is never cached.
+DEFAULT_SESSION_SECRET_CACHE_TTL_SECONDS = 300
 
 
 class SecretsPort(Protocol):
@@ -40,24 +45,37 @@ class FakeSecretsPort:
 
 
 class CachingSecretsPort:
-    """Bounded warm-runtime cache for session signing secret (not password)."""
+    """Bounded warm-runtime cache for session signing secret (not password).
+
+    Password verifier IDs must never be listed in ``cacheable_ids``. Session
+    secret entries expire after ``ttl_seconds`` so rotation becomes effective
+    without requiring a Lambda cold start (worst case: TTL window).
+    """
 
     def __init__(
         self,
         inner: SecretsPort,
         *,
         cacheable_ids: frozenset[str] | None = None,
+        ttl_seconds: int = DEFAULT_SESSION_SECRET_CACHE_TTL_SECONDS,
+        monotonic: Callable[[], float] | None = None,
     ) -> None:
         self._inner = inner
-        self._cache: dict[str, str] = {}
+        self._cache: dict[str, tuple[str, float]] = {}
         self._cacheable = cacheable_ids or frozenset({DEFAULT_SESSION_SECRET_ID})
+        self._ttl_seconds = max(0, int(ttl_seconds))
+        self._monotonic = monotonic or time.monotonic
 
     def get_secret_value(self, secret_id: str) -> str | None:
         if secret_id in self._cacheable and secret_id in self._cache:
-            return self._cache[secret_id]
+            value, expires_at = self._cache[secret_id]
+            if self._ttl_seconds <= 0 or self._monotonic() < expires_at:
+                return value
+            del self._cache[secret_id]
         value = self._inner.get_secret_value(secret_id)
         if value is not None and secret_id in self._cacheable:
-            self._cache[secret_id] = value
+            expires_at = self._monotonic() + float(self._ttl_seconds)
+            self._cache[secret_id] = (value, expires_at)
         return value
 
 
@@ -68,6 +86,7 @@ TEST_SESSION_SECRET = "test-only-session-signing-secret-NOT-PRODUCTION-32b"
 __all__ = [
     "CachingSecretsPort",
     "DEFAULT_PASSWORD_SECRET_ID",
+    "DEFAULT_SESSION_SECRET_CACHE_TTL_SECONDS",
     "DEFAULT_SESSION_SECRET_ID",
     "FakeSecretsPort",
     "SecretsPort",
@@ -107,5 +126,6 @@ def build_production_secrets_port(
     return CachingSecretsPort(
         inner,
         cacheable_ids=frozenset({session_id}),
+        ttl_seconds=DEFAULT_SESSION_SECRET_CACHE_TTL_SECONDS,
     )
 

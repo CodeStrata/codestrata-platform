@@ -1,0 +1,30 @@
+{
+  "artifacts": [
+    {
+      "byte_size": 402529,
+      "classification": "Public OSS report",
+      "content_type": "application/json",
+      "filename": "engineering-intelligence-report.json",
+      "sha256": "24f7d96b6499b599a00c2e994597d52326e25d97fb6d78a9c1ede51f7f10b612"
+    },
+    {
+      "byte_size": 112543,
+      "classification": "Public OSS report",
+      "content_type": "text/html; charset=utf-8",
+      "filename": "engineering-intelligence-report.html",
+      "sha256": "0dd692fc445cf0ebc634e4c789d2e1ba8a66160af19618420c44d027fff383f9"
+    }
+  ],
+  "classification": "Public OSS report",
+  "export_id": "eir-export:ca01b398f777e20ef75ea1f2",
+  "export_policy_id": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
+  "export_schema_version": "1.0",
+  "generated_at": null,
+  "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+  "limitations": [
+    "website_safe_export_is_sanitized_projection",
+    "public_exports_are_not_industry_benchmarks"
+  ],
+  "repository_count": 22,
+  "source_report_id": "eir:1eda169bfe4b7041265b253e"
+}

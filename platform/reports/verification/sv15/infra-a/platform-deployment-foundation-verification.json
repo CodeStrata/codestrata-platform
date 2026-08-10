@@ -1,0 +1,957 @@
+{
+  "api_gateway_type": "HTTP",
+  "authentication_posture": "enabled_verifier_unavailable",
+  "aws_provider_version_constraint": ">= 5.0.0, < 6.0.0",
+  "checks": [
+    {
+      "category": "structure",
+      "detail": "infrastructure/",
+      "name": "structure:infra_root",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "structure",
+      "detail": "docs/modules/production/policies/scripts/tests",
+      "name": "structure:required_dirs",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "structure",
+      "detail": "no infrastructure/dev",
+      "name": "structure:no_dev",
+      "ok": true,
+      "scenario": "B"
+    },
+    {
+      "category": "structure",
+      "detail": "no infrastructure/staging",
+      "name": "structure:no_staging",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "structure",
+      "detail": "no modules/data-lake",
+      "name": "structure:no_data_lake_module",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "structure",
+      "detail": "community-cloud-api only",
+      "name": "structure:single_module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "structure",
+      "detail": "count=12",
+      "name": "structure:module_files",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "structure",
+      "detail": "production",
+      "name": "structure:production_only_env",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "structure",
+      "detail": "no app python under modules",
+      "name": "structure:no_engine_source_copy",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "structure",
+      "detail": "single infrastructure root",
+      "name": "structure:no_hidden_sibling_infra",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": ">= 1.6.0",
+      "name": "opentofu:required_version_pinned",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": ">= 5.0.0, < 6.0.0",
+      "name": "opentofu:aws_provider_bounded",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "modern required_providers",
+      "name": "opentofu:no_0_11_syntax",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "not_executed_tool_unavailable",
+      "name": "opentofu:tool_status_honest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "incompatible_tool_present",
+      "name": "opentofu:terraform_0_11_not_used",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "ok",
+      "name": "module:required_variables",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "ok",
+      "name": "module:required_outputs",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "ok",
+      "name": "module:no_forbidden_resources",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "module",
+      "detail": "count=1",
+      "name": "module:one_lambda",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "module",
+      "detail": "production_foundation",
+      "name": "module:deployment_mode_default",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "enabled_verifier_unavailable",
+      "name": "module:auth_mode_default",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "api_gateway_plus_process_local",
+      "name": "module:rate_limit_mode_default",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "enable_ingestion=false",
+      "name": "module:ingestion_disabled_default",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "safe outputs",
+      "name": "module:no_secret_outputs",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "module",
+      "detail": "no hardcoded account id",
+      "name": "module:no_account_hardcoding",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "production",
+      "name": "production:environment_name",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "community_cloud_api",
+      "name": "production:one_module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "production_foundation",
+      "name": "production:deployment_mode",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "enabled_verifier_unavailable",
+      "name": "production:auth_mode",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "api_gateway_plus_process_local",
+      "name": "production:rate_limit_mode",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "enable_ingestion=false",
+      "name": "production:ingestion_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "backend.tf.example",
+      "name": "production:backend_example_only",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "example only",
+      "name": "production:no_tfvars_committed",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "no workspace env switching",
+      "name": "production:no_workspace_switching",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "HTTP API",
+      "name": "apigw:http_api",
+      "ok": true,
+      "scenario": "G"
+    },
+    {
+      "category": "api_gateway",
+      "detail": "no REST API",
+      "name": "apigw:no_rest_api",
+      "ok": true,
+      "scenario": "G"
+    },
+    {
+      "category": "api_gateway",
+      "detail": "AWS_PROXY",
+      "name": "apigw:lambda_proxy",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "api_gateway",
+      "detail": "2.0",
+      "name": "apigw:payload_2_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "proxy routes",
+      "name": "apigw:catch_all_proxy",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "stage throttling",
+      "name": "apigw:stage_throttling",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "no authorizer/cognito",
+      "name": "apigw:no_authorizer",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "no domain/waf/cors",
+      "name": "apigw:no_custom_domain_waf_cors",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "api_gateway",
+      "detail": "one HTTP API",
+      "name": "apigw:one_api",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "one function",
+      "name": "lambda:one_function",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "lambda",
+      "detail": "Image",
+      "name": "lambda:container_image",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "arm64",
+      "name": "lambda:architecture_supported",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "no VPC",
+      "name": "lambda:no_vpc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "foundation env keys",
+      "name": "lambda:env_allowlisted",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "ingestion from enable_ingestion",
+      "name": "lambda:ingestion_env_false",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "lambda",
+      "detail": "single shared function",
+      "name": "lambda:no_endpoint_specific_functions",
+      "ok": true,
+      "scenario": "F"
+    },
+    {
+      "category": "ecr",
+      "detail": "one repository",
+      "name": "ecr:one_private_repo",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "ecr",
+      "detail": "IMMUTABLE",
+      "name": "ecr:immutable_tags",
+      "ok": true,
+      "scenario": "J"
+    },
+    {
+      "category": "ecr",
+      "detail": "scan_on_push",
+      "name": "ecr:scan_on_push",
+      "ok": true,
+      "scenario": "K"
+    },
+    {
+      "category": "ecr",
+      "detail": "AES256",
+      "name": "ecr:encryption",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "ecr",
+      "detail": "bounded lifecycle",
+      "name": "ecr:lifecycle_policy",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "ecr",
+      "detail": "private",
+      "name": "ecr:not_public",
+      "ok": true,
+      "scenario": "I"
+    },
+    {
+      "category": "ecr",
+      "detail": "image store only",
+      "name": "ecr:not_data_lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "iam",
+      "detail": "lambda service trust",
+      "name": "iam:lambda_trust",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "iam",
+      "detail": "log stream/events",
+      "name": "iam:logging_actions_bounded",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "iam",
+      "detail": "ecr pull",
+      "name": "iam:ecr_pull_bounded",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "iam",
+      "detail": "single Resource=* exception",
+      "name": "iam:auth_token_exception_documented",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "iam",
+      "detail": "ok",
+      "name": "iam:no_data_plane_services",
+      "ok": true,
+      "scenario": "N"
+    },
+    {
+      "category": "iam",
+      "detail": "no Action=*",
+      "name": "iam:no_admin_star_actions",
+      "ok": true,
+      "scenario": "M"
+    },
+    {
+      "category": "logging",
+      "detail": "log group",
+      "name": "logging:explicit_log_group",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "retention_in_days",
+      "name": "logging:retention_explicit",
+      "ok": true,
+      "scenario": "L"
+    },
+    {
+      "category": "logging",
+      "detail": "uses log_retention_days",
+      "name": "logging:no_indefinite_default",
+      "ok": true,
+      "scenario": "L"
+    },
+    {
+      "category": "logging",
+      "detail": "deterministic local name",
+      "name": "logging:deterministic_name",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "no access_log_settings",
+      "name": "logging:no_access_log_settings",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "privacy comments present",
+      "name": "logging:privacy_documented",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "production_foundation",
+      "name": "config:deployment_mode",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "1.0",
+      "name": "config:api_version_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "enabled_verifier_unavailable",
+      "name": "config:auth_enabled",
+      "ok": true,
+      "scenario": "V"
+    },
+    {
+      "category": "configuration",
+      "detail": "api_gateway_plus_process_local",
+      "name": "config:rate_limit_enabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "wired to enable_ingestion",
+      "name": "config:ingestion_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "validation.tf checks",
+      "name": "config:fail_closed_checks",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "configuration",
+      "detail": "no test adapters",
+      "name": "config:no_test_adapters_in_hcl",
+      "ok": true,
+      "scenario": "W"
+    },
+    {
+      "category": "scripts",
+      "detail": "four scripts",
+      "name": "scripts:present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scripts",
+      "detail": "pipefail",
+      "name": "scripts:fail_fast",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scripts",
+      "detail": "no push by default",
+      "name": "scripts:build_no_push_default",
+      "ok": true,
+      "scenario": "T"
+    },
+    {
+      "category": "scripts",
+      "detail": "explicit tag",
+      "name": "scripts:build_requires_tag",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scripts",
+      "detail": "latest guard present",
+      "name": "scripts:build_rejects_latest",
+      "ok": true,
+      "scenario": "J"
+    },
+    {
+      "category": "scripts",
+      "detail": "non-destructive",
+      "name": "scripts:validate_no_apply",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scripts",
+      "detail": "plan only",
+      "name": "scripts:plan_no_auto_approve",
+      "ok": true,
+      "scenario": "S"
+    },
+    {
+      "category": "scripts",
+      "detail": "tofu required",
+      "name": "scripts:plan_requires_tofu",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scripts",
+      "detail": "health only",
+      "name": "scripts:smoke_health_only",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "scripts",
+      "detail": "no live credentials",
+      "name": "scripts:no_embedded_credentials",
+      "ok": true,
+      "scenario": "O"
+    },
+    {
+      "category": "state",
+      "detail": "tfstate ignored",
+      "name": "state:gitignore_tfstate",
+      "ok": true,
+      "scenario": "Q"
+    },
+    {
+      "category": "state",
+      "detail": "plans ignored",
+      "name": "state:gitignore_plans",
+      "ok": true,
+      "scenario": "R"
+    },
+    {
+      "category": "state",
+      "detail": ".terraform ignored",
+      "name": "state:gitignore_terraform_dir",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "state",
+      "detail": "tfvars ignored",
+      "name": "state:gitignore_tfvars",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "state",
+      "detail": "ok",
+      "name": "state:no_committed_state_or_plans",
+      "ok": true,
+      "scenario": "Q"
+    },
+    {
+      "category": "state",
+      "detail": "encrypted remote example",
+      "name": "state:backend_example_encrypted",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "state",
+      "detail": "state-management.md",
+      "name": "state:docs_cover_locking",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "state",
+      "detail": "example only",
+      "name": "state:no_backend_tf_committed",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "state",
+      "detail": "no live backend.tf",
+      "name": "state:repo_has_no_live_backend",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "Dockerfile",
+      "name": "packaging:dockerfile_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "lambda python 3.12",
+      "name": "packaging:lambda_python_base",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "mangum extra",
+      "name": "packaging:platform_lambda_extra",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "handler CMD",
+      "name": "packaging:handler_cmd",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "foundation ENV",
+      "name": "packaging:fail_closed_env",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "excludes tests/infra/state",
+      "name": "packaging:dockerignore_excludes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "packaging",
+      "detail": "no secrets",
+      "name": "packaging:no_credentials_in_dockerfile",
+      "ok": true,
+      "scenario": "O"
+    },
+    {
+      "category": "packaging",
+      "detail": "src copies only",
+      "name": "packaging:runtime_src_only",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "status=200",
+      "name": "runtime:health_200",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "count=6",
+      "name": "runtime:six_routes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "no openapi/docs",
+      "name": "runtime:docs_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "handler importable",
+      "name": "runtime:mangum_handler",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "foundation settings",
+      "name": "runtime:settings_fail_closed",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "runtime",
+      "detail": "status=503",
+      "name": "runtime:fail_closed:telemetry",
+      "ok": true,
+      "scenario": "Y"
+    },
+    {
+      "category": "runtime",
+      "detail": "status=503",
+      "name": "runtime:fail_closed:assessment-metadata",
+      "ok": true,
+      "scenario": "Y"
+    },
+    {
+      "category": "runtime",
+      "detail": "status=503",
+      "name": "runtime:fail_closed:cli-events",
+      "ok": true,
+      "scenario": "Y"
+    },
+    {
+      "category": "runtime",
+      "detail": "status=503",
+      "name": "runtime:fail_closed:extension-events",
+      "ok": true,
+      "scenario": "Y"
+    },
+    {
+      "category": "runtime",
+      "detail": "status=503",
+      "name": "runtime:fail_closed:ai-usage",
+      "ok": true,
+      "scenario": "Y"
+    },
+    {
+      "category": "safety",
+      "detail": "ok",
+      "name": "safety:no_secret_patterns",
+      "ok": true,
+      "scenario": "O"
+    },
+    {
+      "category": "safety",
+      "detail": "public-export-manifest",
+      "name": "safety:public_export_excludes_infra",
+      "ok": true,
+      "scenario": "Z"
+    },
+    {
+      "category": "extraction",
+      "detail": "extraction target named",
+      "name": "extraction:codestrata_infrastructure_named",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "extraction",
+      "detail": "modules HCL only",
+      "name": "extraction:no_app_python_in_modules",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "extraction",
+      "detail": "bounded path discovery",
+      "name": "extraction:scripts_resolve_paths",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "extraction",
+      "detail": "ok",
+      "name": "extraction:engine_unaware",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "extraction",
+      "detail": "future only",
+      "name": "extraction:data_lake_documented_not_implemented",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "extraction",
+      "detail": "state vs data lake",
+      "name": "extraction:state_separate_from_datalake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "no live dev root",
+      "name": "scenario:dev_absent",
+      "ok": true,
+      "scenario": "B"
+    },
+    {
+      "category": "scenarios",
+      "detail": "no live staging root",
+      "name": "scenario:staging_absent",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "scenarios",
+      "detail": "no lake resources",
+      "name": "scenario:data_lake_absent",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "scenarios",
+      "detail": "one lambda",
+      "name": "scenario:single_lambda",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "scenarios",
+      "detail": "HTTP API",
+      "name": "scenario:http_not_rest",
+      "ok": true,
+      "scenario": "G"
+    },
+    {
+      "category": "scenarios",
+      "detail": "private immutable",
+      "name": "scenario:private_ecr",
+      "ok": true,
+      "scenario": "I"
+    },
+    {
+      "category": "scenarios",
+      "detail": "no forbidden services",
+      "name": "scenario:forbidden_types_absent",
+      "ok": true,
+      "scenario": "N"
+    },
+    {
+      "category": "scenarios",
+      "detail": "no verifier/credentials in HCL",
+      "name": "scenario:no_test_verifier_in_hcl",
+      "ok": true,
+      "scenario": "W"
+    },
+    {
+      "category": "scenarios",
+      "detail": "plan script safe",
+      "name": "scenario:no_auto_approve",
+      "ok": true,
+      "scenario": "S"
+    },
+    {
+      "category": "determinism",
+      "detail": "structure checks stable",
+      "name": "determinism:structure_stable",
+      "ok": true,
+      "scenario": ""
+    }
+  ],
+  "defects": [],
+  "deployment_mode": "production_foundation",
+  "elapsed_ms": 485.0273330230266,
+  "environment_name": "production",
+  "infrastructure_module": "community-cloud-api",
+  "ingestion_posture": "disabled_fail_closed",
+  "lambda_architecture": "arm64",
+  "lambda_count": 1,
+  "limitations": [
+    "SV.9 verifies the Slice 7.14 production deployment foundation.",
+    "Does not run tofu apply, terraform apply, Docker build/push, or AWS deploy.",
+    "OpenTofu CLI validation is reported honestly when tofu is unavailable.",
+    "Does not start SV.10, Data Lake resources, or the 30-repository run.",
+    "OpenTofu CLI validate was not executed (tool unavailable)."
+  ],
+  "ok": true,
+  "opentofu_required_version": ">= 1.6.0",
+  "opentofu_validation_status": "not_executed_tool_unavailable",
+  "packaging_strategy": "lambda_container_ecr",
+  "rate_limit_posture": "api_gateway_plus_process_local",
+  "scenario_summary": {
+    "failed_checks": 0,
+    "total_checks": 131
+  },
+  "schema_name": "platform-deployment-foundation-verification",
+  "schema_version": "1.0.0",
+  "terraform_tool_status": "incompatible_tool_present",
+  "verdict": "pass",
+  "verification_id": "platform-deployment-foundation-verification",
+  "warnings": [
+    "terraform 0.11.13 present but not used for modern HCL",
+    "OpenTofu CLI validation not executed because tofu is unavailable"
+  ]
+}

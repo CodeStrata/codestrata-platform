@@ -29,12 +29,12 @@ from codestrata.ai.providers.exceptions import (
     AIResponseValidationError,
 )
 from codestrata.ai.providers.models import (
-    DEFAULT_TIMEOUT_SECONDS,
     ModelInvocationOptions,
     ModelInvocationResult,
     ModernizationModelRequest,
 )
 from codestrata.ai.providers.parsing import parse_recommendation_response
+from codestrata.ai.providers.settings_policies import provider_timeout_seconds
 from codestrata.config.settings import CodestrataSettings, OpenRouterSettings
 
 logger = logging.getLogger(__name__)
@@ -50,16 +50,22 @@ class OpenRouterAIModelProvider(AIModelProvider):
         *,
         settings: CodestrataSettings | None = None,
         openrouter_settings: OpenRouterSettings | None = None,
-        timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+        timeout_seconds: float | None = None,
         client: Any | None = None,
     ) -> None:
-        if timeout_seconds <= 0:
-            raise AIProviderConfigurationError("timeout_seconds must be positive")
         self._settings = settings
         self._openrouter = openrouter_settings or (
             settings.ai.openrouter if settings is not None else OpenRouterSettings()
         )
-        self._timeout_seconds = timeout_seconds
+        resolved_timeout = provider_timeout_seconds(
+            settings,
+            provider="openrouter",
+            explicit=timeout_seconds,
+            provider_settings_timeout=self._openrouter.timeout_seconds,
+        )
+        if resolved_timeout <= 0:
+            raise AIProviderConfigurationError("timeout_seconds must be positive")
+        self._timeout_seconds = resolved_timeout
         self._client = client
 
     def invoke(

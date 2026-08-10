@@ -1,0 +1,13 @@
+{
+  "schema": "community-telemetry-consent-verification",
+  "schema_version": "1.0.0",
+  "package_id": "community-telemetry-consent-verification",
+  "slice": "17.17",
+  "epic": 17,
+  "suite_id": "sv17-17",
+  "policy": "community-telemetry-consent-validation-policy:1.0",
+  "register": "community-telemetry-consent-register:1.0",
+  "start_slice_17_17": true,
+  "start_slice_17_18": true,
+  "output_relative": ".codestrata-artifacts/validation/suites/sv17-17/community-telemetry-consent-verification.json"
+}

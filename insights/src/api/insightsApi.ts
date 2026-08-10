@@ -1,8 +1,27 @@
 import type { MetricId, MetricResult } from "../metrics/metricResult";
 
+export interface PublishedReportRow {
+  repository_id?: string;
+  portfolio_id?: string;
+  report_type: string;
+  current_public_url: string | null;
+  previous_public_url: string | null;
+  current_status: string | null;
+  previous_status: string | null;
+  last_verified_status?: unknown;
+}
+
+export interface PublishedReportsRegistry {
+  assessments: PublishedReportRow[];
+  engineering_intelligence: PublishedReportRow[];
+  source?: string;
+  note?: string;
+}
+
 export interface InsightsApiClient {
   getOverview(): Promise<MetricResult[]>;
   getMetric(metricId: MetricId | string): Promise<MetricResult>;
+  getPublishedReports(): Promise<PublishedReportsRegistry>;
 }
 
 export class UnavailableInsightsApiClient implements InsightsApiClient {
@@ -12,6 +31,10 @@ export class UnavailableInsightsApiClient implements InsightsApiClient {
 
   async getMetric(metricId: MetricId | string): Promise<MetricResult> {
     return unavailableResult(metricId);
+  }
+
+  async getPublishedReports(): Promise<PublishedReportsRegistry> {
+    return { assessments: [], engineering_intelligence: [] };
   }
 }
 
@@ -46,5 +69,9 @@ export class MockInsightsApiClient implements InsightsApiClient {
       this.results.find((r) => r.metric_id === metricId) ??
       unavailableResult(metricId)
     );
+  }
+
+  async getPublishedReports(): Promise<PublishedReportsRegistry> {
+    return { assessments: [], engineering_intelligence: [] };
   }
 }

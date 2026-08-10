@@ -1,0 +1,47 @@
+{
+  "register_id": "community-report-storage-register",
+  "register_version": "1.0",
+  "schema": "community-report-storage-register:1.0",
+  "slice": "17.16",
+  "entries": [
+    {
+      "report_type": "assessment",
+      "logical_identity_type": "repository",
+      "cloud_current": "artifacts/assessments/<repository-id>/current/",
+      "cloud_previous": "artifacts/assessments/<repository-id>/previous/",
+      "public_id_status": "metadata/public/<opaque-id>.json",
+      "publish_auth": "required",
+      "public_read": "api_then_reports_domain",
+      "revocation": "status_revoked_404",
+      "retention_count": 2,
+      "storage_boundary": "codestrata-community-report-artifacts-production",
+      "validation_status": "private_sse_s3_versioned_no_website"
+    },
+    {
+      "report_type": "engineering_intelligence",
+      "logical_identity_type": "portfolio",
+      "cloud_current": "artifacts/intelligence/<portfolio-id>/current/",
+      "cloud_previous": "artifacts/intelligence/<portfolio-id>/previous/",
+      "public_id_status": "metadata/public/<opaque-id>.json",
+      "publish_auth": "required",
+      "public_read": "api_then_reports_domain",
+      "revocation": "status_revoked_404",
+      "retention_count": 2,
+      "storage_boundary": "codestrata-community-report-artifacts-production",
+      "validation_status": "private_sse_s3_versioned_no_website"
+    },
+    {
+      "report_type": "telemetry_event",
+      "logical_identity_type": "n/a",
+      "cloud_current": false,
+      "cloud_previous": false,
+      "public_id_status": "n/a",
+      "publish_auth": "n/a",
+      "public_read": false,
+      "revocation": false,
+      "retention_count": 0,
+      "storage_boundary": "codestrata-community-data-lake-production",
+      "validation_status": "events_only_no_report_artifacts"
+    }
+  ]
+}

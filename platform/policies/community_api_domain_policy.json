@@ -1,0 +1,29 @@
+{
+  "policy_id": "community-api-domain-policy",
+  "policy_version": "1.0",
+  "schema": "community-api-domain-policy:1.0",
+  "slice": "17.14",
+  "epic": 17,
+  "authority": "Public production Community API hostname and documentation boundary.",
+  "public_api_domain": "https://api.codestrata.ai",
+  "public_api_hostname": "api.codestrata.ai",
+  "region": "us-west-2",
+  "raw_execute_api_classification": "IMPLEMENTATION_DETAIL",
+  "raw_execute_api_publicly_documented": false,
+  "default_execute_api_disabled": false,
+  "execute_api_fallback_classification": "FALLBACK_IMPLEMENTATION_ENDPOINT",
+  "tls_valid": true,
+  "dns_proxied": false,
+  "dns_posture": "cloudflare_dns_only",
+  "community_clients_migrated": true,
+  "public_api_docs_live": true,
+  "public_api_docs_path": "/reference/community-api/",
+  "insights_browser_calls_api_directly": false,
+  "insights_same_origin_browser_contract": "/api/v1/",
+  "start_slice_17_14": true,
+  "start_slice_17_15": false,
+  "depends_on": [
+    "community-cloud-infrastructure-deployment-policy:1.0",
+    "community-22-repository-validation-policy:1.0"
+  ]
+}

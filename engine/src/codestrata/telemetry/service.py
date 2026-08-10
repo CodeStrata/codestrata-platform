@@ -358,8 +358,10 @@ def ensure_interactive_product_telemetry(
     Other telemetry failures become denial/default. Never persists or transmits.
     Interactive tests must pass ``automation_detected=False`` explicitly.
 
-    ``transport`` is a test-only injection seam. Normal CLI construction never
-    passes it; default remains ``UnavailableTelemetryTransport``.
+    ``transport`` is an optional injection seam (tests / explicit callers).
+    Normal CLI construction does not pass it. Unauthorized consent keeps
+    ``UnavailableTelemetryTransport``. Authorized consent resolves production
+    Community HTTP transport when ``CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL`` is set.
     """
 
     global _PRODUCT, _PROMPT_ATTEMPTED, _LAST_PROMPT_RESULT

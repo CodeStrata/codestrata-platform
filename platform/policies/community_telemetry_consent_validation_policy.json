@@ -1,0 +1,48 @@
+{
+  "policy_id": "community-telemetry-consent-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-telemetry-consent-validation-policy:1.0",
+  "slice": "17.17",
+  "epic": 17,
+  "authority": "Validate Community telemetry consent lifecycle across CLI, non-interactive, and report-publish eligibility without redesigning telemetry.",
+  "depends_on": [
+    "community-report-publishing-policy:1.0",
+    "community-data-lake-policy:1.0"
+  ],
+  "telemetry_default_posture": "disabled_by_default",
+  "consent_vocabulary": [
+    "disabled_by_default",
+    "allowed_for_session",
+    "denied_for_session",
+    "non_interactive_disabled"
+  ],
+  "explicit_opt_in_required": true,
+  "explicit_opt_out_supported": true,
+  "session_consent_persisted": false,
+  "legacy_preferences_do_not_authorize_privacy_first_runtime": true,
+  "non_interactive_never_prompts": true,
+  "non_interactive_unknown_privacy_safe": true,
+  "assessment_independent_of_telemetry": true,
+  "local_report_independent_of_telemetry": true,
+  "telemetry_failure_non_blocking": true,
+  "telemetry_opt_in_does_not_auto_publish_report": true,
+  "historical_data_not_deleted_on_opt_out": true,
+  "consent_does_not_imply_transport": false,
+  "product_default_transport": "unavailable_until_opt_in",
+  "product_http_transport_after_opt_in_with_credential": true,
+  "publish_eligibility_env": "CODESTRATA_TELEMETRY_OPT_IN",
+  "cli_consent_flags": [
+    "--telemetry-allow",
+    "--telemetry-deny"
+  ],
+  "allowed_transitions": [
+    "disabled_by_default->allowed_for_session",
+    "disabled_by_default->denied_for_session",
+    "disabled_by_default->non_interactive_disabled",
+    "allowed_for_session->denied_for_session",
+    "denied_for_session->allowed_for_session",
+    "non_interactive_disabled->allowed_for_session"
+  ],
+  "start_slice_17_17": true,
+  "start_slice_17_18": true
+}

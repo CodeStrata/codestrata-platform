@@ -16,9 +16,25 @@ SCRYPT_P = 1
 SCRYPT_DKLEN = 64
 
 
-def hash_password(password: str) -> str:
-    """Create a Secrets Manager–ready scrypt verifier JSON string."""
+def normalize_password(password: str) -> str:
+    """Apply the Insights password normalization contract.
 
+    Contract: Unicode ``str.strip()`` only — remove leading/trailing whitespace
+    and newlines. Interior characters (including spaces) are preserved.
+    Does not alter case or other characters.
+    """
+
+    return password.strip()
+
+
+def hash_password(password: str) -> str:
+    """Create a Secrets Manager–ready scrypt verifier JSON string.
+
+    Applies :func:`normalize_password` before hashing so rotation tooling and
+    login verification share one normalization contract.
+    """
+
+    password = normalize_password(password)
     salt = secrets.token_bytes(16)
     derived = hashlib.scrypt(
         password.encode("utf-8"),
@@ -44,9 +60,11 @@ def verify_password(*, submitted: str, stored_secret: str) -> bool:
 
     Supports scrypt JSON verifiers. If the secret is a raw password string,
     uses hmac.compare_digest (documented limitation — prefer scrypt).
+    Applies :func:`normalize_password` before hashing/compare.
     Never logs submitted or stored values.
     """
 
+    submitted = normalize_password(submitted)
     if not submitted or not stored_secret:
         return False
     text = stored_secret.strip()

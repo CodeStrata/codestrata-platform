@@ -128,15 +128,17 @@ def create_assessment_run_paths(
     timestamp: str | None = None,
     run_id: str | None = None,
     create_directory: bool = True,
+    stage: bool = True,
 ) -> AssessmentRunPaths:
     """Create paths for one assessment run.
 
-    Layout::
+    Slice 17.15: successful runs are promoted to::
 
-        .codestrata-artifacts/assessments/<repo>-<YYYYMMDD-HHMMSS>/
-            assessment.json
-            assessment.html
-            heads/
+        .codestrata-artifacts/assessments/<repository_id>/current/
+
+    Generation writes under temporary staging first (``stage=True``)::
+
+        .codestrata-artifacts/temporary/assessment-runs/<run_id>/
     """
 
     from codestrata.artifacts.manifest import (
@@ -149,7 +151,10 @@ def create_assessment_run_paths(
     rid = run_id or build_assessment_run_id(repository_name, stamp)
     if timestamp is not None and not re.fullmatch(r"\d{8}-\d{6}", stamp):
         raise ValueError(f"timestamp must match YYYYMMDD-HHMMSS, got {stamp!r}")
-    directory = root / ASSESSMENTS_DIRNAME / rid
+    if stage:
+        directory = root / TEMPORARY_DIRNAME / "assessment-runs" / rid
+    else:
+        directory = root / ASSESSMENTS_DIRNAME / rid
     heads = directory / "heads"
     if create_directory:
         heads.mkdir(parents=True, exist_ok=True)
@@ -170,9 +175,24 @@ def intelligence_run_directory(
     *,
     base: Path | None = None,
     create_directory: bool = True,
+    stage: bool = True,
+    portfolio_id: str | None = None,
 ) -> Path:
+    """Return intelligence output directory.
+
+    Slice 17.15: prefer temporary staging for new runs; promote to
+    ``intelligence/<portfolio_id>/current/`` after validation.
+    Legacy callers that pass a timestamped ``portfolio_run_id`` still get a
+    staging directory keyed by that run id when ``stage=True``.
+    """
+
     root = ensure_artifact_tree(base) if create_directory else artifact_root(base)
-    path = root / INTELLIGENCE_DIRNAME / portfolio_run_id
+    if stage:
+        path = root / TEMPORARY_DIRNAME / "intelligence-runs" / portfolio_run_id
+    elif portfolio_id:
+        path = root / INTELLIGENCE_DIRNAME / portfolio_id / "current"
+    else:
+        path = root / INTELLIGENCE_DIRNAME / portfolio_run_id
     if create_directory:
         path.mkdir(parents=True, exist_ok=True)
     return path

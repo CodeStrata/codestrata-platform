@@ -1,0 +1,82 @@
+{
+  "register_id": "platform-workflow-authority-register",
+  "register_version": "1.0",
+  "schema": "platform-workflow-authority-register:1.0",
+  "slice": "17.27",
+  "epic": 17,
+  "platform_repo_deployment_authority": false,
+  "export_repo_ci_authority_preserved": true,
+  "irrelevant_platform_push_failures": false,
+  "start_slice_17_25": true,
+  "start_slice_17_26": true,
+  "start_slice_17_27": true,
+  "start_transparency_documentation_epic": false,
+  "start_release_readiness_epic": false,
+  "authorities": {
+    "codestrata-platform": "monorepo_source_validation_and_pre_cutover_infra_plan_apply",
+    "codestrata-infrastructure": "infrastructure_ci_cd",
+    "codestrata-insights": "insights_ci_deploy",
+    "codestrata-docs": "docs_ci_deploy"
+  },
+  "workflows": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "classification": "ACTIVE_REQUIRED",
+      "repository_guard": "CodeStrata/codestrata-platform",
+      "push_trigger": "main|develop|release/**",
+      "deploys": false
+    },
+    {
+      "path": ".github/workflows/infrastructure-plan.yml",
+      "classification": "ACTIVE_REQUIRED",
+      "repository_guard": "CodeStrata/codestrata-platform",
+      "push_trigger": false,
+      "deploys": false,
+      "note": "monorepo_pre_cutover_plan_only"
+    },
+    {
+      "path": ".github/workflows/infrastructure-apply.yml",
+      "classification": "ACTIVE_REQUIRED",
+      "repository_guard": "CodeStrata/codestrata-platform",
+      "push_trigger": false,
+      "deploys": "workflow_dispatch_infra_apply_only"
+    },
+    {
+      "path": ".github/workflows/aws-identity-check.yml",
+      "classification": "ACTIVE_REQUIRED",
+      "repository_guard": "CodeStrata/codestrata-platform",
+      "push_trigger": false,
+      "deploys": false
+    },
+    {
+      "path": "insights/.github/workflows/ci.yml",
+      "classification": "SOURCE_EXPORT_ONLY",
+      "repository_guard": "CodeStrata/codestrata-insights",
+      "executes_in_platform": false
+    },
+    {
+      "path": "insights/.github/workflows/deploy.yml",
+      "classification": "SOURCE_EXPORT_ONLY",
+      "repository_guard": "CodeStrata/codestrata-insights",
+      "executes_in_platform": false
+    },
+    {
+      "path": "infrastructure/.github/workflows/validate.yml",
+      "classification": "SOURCE_EXPORT_ONLY",
+      "repository_guard": "CodeStrata/codestrata-infrastructure",
+      "executes_in_platform": false
+    },
+    {
+      "path": "infrastructure/.github/workflows/aws-identity-check.yml",
+      "classification": "SOURCE_EXPORT_ONLY",
+      "repository_guard": "CodeStrata/codestrata-infrastructure",
+      "executes_in_platform": false
+    }
+  ],
+  "absent_root_deploy_workflows": [
+    "platform-deploy.yml",
+    "insights-deploy.yml",
+    "docs-deploy.yml",
+    "release.yml"
+  ]
+}

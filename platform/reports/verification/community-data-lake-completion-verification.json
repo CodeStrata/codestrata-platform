@@ -1,0 +1,753 @@
+{
+  "access_status": "pass",
+  "blockers": [],
+  "checks": [
+    {
+      "category": "inventory",
+      "detail": "infrastructure/modules/community-data-lake",
+      "name": "inventory:token_exists:infrastructure_modules_community-data-lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "platform/src/codestrata_platform/community_cloud_api/data_lake",
+      "name": "inventory:token_exists:platform_src_codestrata_platform_community_cloud_api_data_lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "platform/src/codestrata_platform/community_cloud_api/data_lake/infrastructure",
+      "name": "inventory:token_exists:platform_src_codestrata_platform_community_cloud_api_data_lake_infrastructure",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "platform/src/codestrata_platform/community_cloud_api/data_lake/streams",
+      "name": "inventory:token_exists:platform_src_codestrata_platform_community_cloud_api_data_lake_streams",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "platform/verification/community_data_lake",
+      "name": "inventory:token_exists:platform_verification_community_data_lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "platform/verification/community_data_lake_completion",
+      "name": "inventory:token_exists:platform_verification_community_data_lake_completion",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "scan clean",
+      "name": "inventory:no_duplicate_runtime_outside_platform",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inventory",
+      "detail": "count=6",
+      "name": "inventory:sorted_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "clean",
+      "name": "boundary:engine_no_data_lake_import",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "clean",
+      "name": "boundary:engine_no_data_lake_tokens",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "clean",
+      "name": "boundary:cli_no_data_lake_commands",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "clean",
+      "name": "boundary:vscode:no_data_lake_tokens",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "clean",
+      "name": "boundary:cursor:no_data_lake_tokens",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "platform/",
+      "name": "boundary:public_export_excludes_platform",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "infrastructure/",
+      "name": "boundary:public_export_excludes_infrastructure",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "boundary",
+      "detail": "count=6",
+      "name": "boundary:production_six_routes_not_seven",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "lake policies 1.0",
+      "name": "versions:product_data_lake_policies_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "1.2",
+      "name": "versions:assessment_report_1_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "1.1",
+      "name": "versions:rate_limit_1_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "community_data_lake_completion,community_data_lake_integration",
+      "name": "versions:verification_namespace_1_0_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "product uses 1.0 / 1.1 / 1.2",
+      "name": "versions:product_not_verification_namespace",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "versions",
+      "detail": "distinct verification registry keys",
+      "name": "versions:integration_vs_completion_distinct",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "present",
+      "name": "storage:protocol_put_immutable_storage_object",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "present",
+      "name": "storage:protocol_put_immutable_quarantine_object",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "no list/delete/admin in Protocol",
+      "name": "storage:protocol_no_list_delete_admin",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "projected_object_authority",
+      "name": "storage:policy_projected_object_authority",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "envelope_put_authoritative",
+      "name": "storage:policy_envelope_put_not_authoritative",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "list/delete false",
+      "name": "storage:policy_no_list_delete",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "unavailable adapter",
+      "name": "storage:factory_default_unavailable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "unavailable",
+      "name": "storage:unavailable_never_stored_accepted",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "unavailable",
+      "name": "storage:unavailable_never_stored_quarantine",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "rejected",
+      "name": "storage:type_mix_rejected",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "community-data-lake-storage-policy:1.0",
+      "name": "storage:policy_validates",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "count=5",
+      "name": "scenarios:stream_matrix_five_streams",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "disabled",
+      "name": "scenarios:stream_matrix_all_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "disabled",
+      "name": "scenarios:quarantine_matrix_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "8.1-8.15",
+      "name": "scenarios:slices_completed_8_1_to_8_15",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "365 days",
+      "name": "completion:infra:retention_accepted_default_365",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "90 days",
+      "name": "completion:infra:retention_quarantine_default_90",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "7 days",
+      "name": "completion:infra:retention_multipart_default_7",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "30 days",
+      "name": "completion:infra:retention_noncurrent_default_30",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "AES256",
+      "name": "completion:infra:encryption_aes256",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "bucket_key_enabled=false",
+      "name": "completion:infra:encryption_bucket_key_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no aws_kms resource",
+      "name": "completion:infra:encryption_no_kms",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "Put/Get",
+      "name": "completion:infra:iam_put_get_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "deny delete",
+      "name": "completion:infra:iam_deny_deletes_both_prefixes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no ListBucket",
+      "name": "completion:infra:iam_no_list_bucket",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no kms",
+      "name": "completion:infra:iam_no_kms_permissions",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "unattached",
+      "name": "completion:infra:iam_writer_unattached",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "TLS required",
+      "name": "completion:infra:bucket_policy_deny_insecure_transport",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "disabled",
+      "name": "completion:infra:production_enable_ingestion_wire_false",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no s3 in lambda iam",
+      "name": "completion:infra:lambda_iam_no_s3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "exit=0",
+      "name": "completion:opentofu:fmt_check",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "init=0 validate=0",
+      "name": "completion:opentofu:validate:module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "exit=0",
+      "name": "completion:opentofu:init_backend_false:module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "init=0 validate=0",
+      "name": "completion:opentofu:validate:data_lake_module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "exit=0",
+      "name": "completion:opentofu:init_backend_false:data_lake_module",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "init=0 validate=0",
+      "name": "completion:opentofu:validate:production",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "opentofu",
+      "detail": "exit=0",
+      "name": "completion:opentofu:init_backend_false:production",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "200",
+      "name": "production:health_ok",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "count=6",
+      "name": "production:six_routes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "unwired",
+      "name": "production:wiring_no_data_lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "unwired",
+      "name": "production:app_no_storage_factory",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=503",
+      "name": "production:ingestion_503:telemetry",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=503",
+      "name": "production:ingestion_503:assessment_metadata",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=503",
+      "name": "production:ingestion_503:cli_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=503",
+      "name": "production:ingestion_503:extension_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=503",
+      "name": "production:ingestion_503:ai_usage",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "unavailable",
+      "name": "production:unavailable_factory_never_stored",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "count=6",
+      "name": "determinism:inventory_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "rows=5",
+      "name": "determinism:stream_matrix_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "stable",
+      "name": "determinism:quarantine_matrix_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "keys=34",
+      "name": "determinism:product_versions_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "keys=2",
+      "name": "determinism:verification_versions_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "integration",
+      "detail": "pass",
+      "name": "integration:sv9_runner_ok",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_4",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_5",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_6",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_7",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:integration_report:no_fragment_8",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "docs=7;claim_failures=0",
+      "name": "privacy:docs:data_lake_docs_scanned",
+      "ok": true,
+      "scenario": ""
+    }
+  ],
+  "defects": [],
+  "determinism_status": "pass",
+  "elapsed_ms": 316132.434082916,
+  "encryption_status": "pass",
+  "epic": "8",
+  "fail_closed_status": "pass",
+  "integration_check_count": 221,
+  "integration_report_reference": "community-data-lake-verification.json",
+  "intentionally_excluded": [
+    "production_ingestion_wiring",
+    "writer_iam_attachment",
+    "endpoint_to_s3_connection",
+    "analytics_pipeline",
+    "epic_9"
+  ],
+  "limitations": [
+    "no_real_aws",
+    "production_wiring_disabled",
+    "no_atomic_identity_storage_tx",
+    "no_analytics",
+    "provisional_retention",
+    "kms_deferred",
+    "no_deny_unencrypted_writes",
+    "no_exactly_once_claim",
+    "no_durable_ingestion_operational",
+    "epic_9_not_started",
+    "Slice 8.15 verifies Epic 8 boundary and completion only.",
+    "Reuses SV.9 integration verification report; does not duplicate its suite.",
+    "Production ingestion remains deliberately disabled.",
+    "Does not start Epic 9."
+  ],
+  "ok": true,
+  "opentofu_status": "pass",
+  "package_inventory": [
+    "infrastructure/modules/community-data-lake",
+    "platform/src/codestrata_platform/community_cloud_api/data_lake",
+    "platform/src/codestrata_platform/community_cloud_api/data_lake/infrastructure",
+    "platform/src/codestrata_platform/community_cloud_api/data_lake/streams",
+    "platform/verification/community_data_lake",
+    "platform/verification/community_data_lake_completion"
+  ],
+  "privacy_status": "pass",
+  "product_contract_versions": {
+    "ai_usage_partition": "1.0",
+    "ai_usage_policy": "1.0",
+    "ai_usage_schema": "1.0",
+    "assessment_metadata_partition": "1.0",
+    "assessment_metadata_policy": "1.0",
+    "assessment_metadata_schema": "1.0",
+    "assessment_report": "1.2",
+    "authentication_policy": "1.0",
+    "cli_event_partition": "1.0",
+    "cli_event_policy": "1.0",
+    "cli_event_schema": "1.0",
+    "community_cloud_api": "1.0",
+    "data_lake_access": "1.0",
+    "data_lake_encryption": "1.0",
+    "data_lake_envelope": "1.0",
+    "data_lake_envelope_constants": "1.0",
+    "data_lake_policy": "1.0",
+    "data_lake_quarantine_policy": "1.0",
+    "data_lake_quarantine_schema": "1.0",
+    "data_lake_retention": "1.0",
+    "data_lake_storage": "1.0",
+    "eir": "1.0",
+    "event_identity_policy": "1.0",
+    "extension_event_partition": "1.0",
+    "extension_event_policy": "1.0",
+    "extension_event_schema": "1.0",
+    "logging_policy": "1.0",
+    "payload_limit_policy": "1.0",
+    "rate_limit_policy": "1.1",
+    "request_validation_policy": "1.0",
+    "telemetry_partition": "1.0",
+    "telemetry_policy": "1.0",
+    "telemetry_schema": "1.0",
+    "website_export": "1.0"
+  },
+  "production_wiring_status": "disabled",
+  "quarantine_matrix": {
+    "integration_status": "pass",
+    "production_wiring_status": "disabled",
+    "quarantine_policy": "1.0",
+    "quarantine_schema": "1.0"
+  },
+  "retention_status": "pass",
+  "scenario_summary": {
+    "failed_checks": 0,
+    "total_checks": 85
+  },
+  "schema_name": "community-data-lake-completion-verification",
+  "schema_version": "1.0.0",
+  "slices_completed": [
+    "8.1",
+    "8.2",
+    "8.3",
+    "8.4",
+    "8.5",
+    "8.6",
+    "8.7",
+    "8.8",
+    "8.9",
+    "8.10",
+    "8.11",
+    "8.12",
+    "8.13",
+    "8.14",
+    "8.15"
+  ],
+  "storage_abstraction_status": "pass",
+  "stream_matrix": [
+    {
+      "envelope_schema": "1.0",
+      "integration_status": "pass",
+      "partition_policy_version": "1.0",
+      "production_wiring_status": "disabled",
+      "stream": "telemetry"
+    },
+    {
+      "envelope_schema": "1.0",
+      "integration_status": "pass",
+      "partition_policy_version": "1.0",
+      "production_wiring_status": "disabled",
+      "stream": "assessment_metadata"
+    },
+    {
+      "envelope_schema": "1.0",
+      "integration_status": "pass",
+      "partition_policy_version": "1.0",
+      "production_wiring_status": "disabled",
+      "stream": "cli_event"
+    },
+    {
+      "envelope_schema": "1.0",
+      "integration_status": "pass",
+      "partition_policy_version": "1.0",
+      "production_wiring_status": "disabled",
+      "stream": "extension_event"
+    },
+    {
+      "envelope_schema": "1.0",
+      "integration_status": "pass",
+      "partition_policy_version": "1.0",
+      "production_wiring_status": "disabled",
+      "stream": "ai_usage"
+    }
+  ],
+  "verdict": "pass",
+  "verification_contract_versions": {
+    "community_data_lake_completion": "1.0.0",
+    "community_data_lake_integration": "1.0.0"
+  }
+}

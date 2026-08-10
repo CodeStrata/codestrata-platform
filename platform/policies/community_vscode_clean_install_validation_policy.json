@@ -1,0 +1,28 @@
+{
+  "policy_id": "community-vscode-clean-install-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-vscode-clean-install-validation-policy:1.0",
+  "slice": "17.21",
+  "epic": 17,
+  "authority": "Validate Community VS Code clean install through assessment, telemetry consent, and explicit report publish without Marketplace publish.",
+  "depends_on": [
+    "community-ai-provider-validation-policy:1.0"
+  ],
+  "clean_profile_tested": true,
+  "marketplace_publish": false,
+  "engine_discovery_validated": true,
+  "assessment_from_extension": true,
+  "current_report_opened": true,
+  "telemetry_default_off": true,
+  "telemetry_opt_in_validated": true,
+  "telemetry_opt_out_validated": true,
+  "api_authority": "https://api.codestrata.ai",
+  "explicit_report_publish_validated": true,
+  "raw_s3_url_exposed": false,
+  "offline_assessment_non_blocking": true,
+  "community_status_website_deferred": true,
+  "full_22_repo_release_corpus": false,
+  "start_slice_17_21": true,
+  "start_slice_17_22": true,
+  "start_slice_17_23": false
+}

@@ -24,6 +24,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.repository == 'CodeStrata/codestrata-insights'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: production

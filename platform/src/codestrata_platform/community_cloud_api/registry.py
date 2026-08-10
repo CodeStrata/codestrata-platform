@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -26,6 +27,9 @@ if TYPE_CHECKING:
 else:
     RouteHandler = Callable[..., object]
     RequestSchemaDescriptor = object  # type: ignore[misc,assignment]
+
+_PARAM_SEGMENT_RE = re.compile(r"^\{([a-zA-Z_][a-zA-Z0-9_]*)\}$")
+_PARAM_VALUE_RE = re.compile(r"^[A-Za-z0-9._~-]+$")
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,8 +66,10 @@ class RouteSpec:
             raise ValueError("route path must start with '/'")
         if not name:
             raise ValueError("route name is required")
-        if "{" in path or "}" in path:
-            raise ValueError("parameterized paths are not registered yet")
+        for segment in path.strip("/").split("/"):
+            if "{" in segment or "}" in segment:
+                if not _PARAM_SEGMENT_RE.fullmatch(segment):
+                    raise ValueError(f"invalid path parameter segment: {segment}")
         if group not in VALID_RATE_LIMIT_GROUPS:
             raise ValueError(f"invalid rate_limit_group: {group}")
         if auth_group not in VALID_AUTH_GROUPS:
@@ -146,7 +152,32 @@ class RouteRegistry:
         self._request_schemas[key] = descriptor
 
     def get(self, *, version: str, method: str, path: str) -> RouteSpec | None:
-        return self._routes.get((version, method.upper(), path))
+        resolved = self.resolve(version=version, method=method, path=path)
+        return None if resolved is None else resolved[0]
+
+    def resolve(
+        self,
+        *,
+        version: str,
+        method: str,
+        path: str,
+    ) -> tuple[RouteSpec, dict[str, str]] | None:
+        """Exact match first, then single-segment ``{param}`` templates."""
+
+        method_u = method.upper()
+        exact = self._routes.get((version, method_u, path))
+        if exact is not None:
+            return exact, {}
+        candidates = [
+            spec
+            for (ver, meth, template), spec in self._routes.items()
+            if ver == version and meth == method_u and "{" in template
+        ]
+        for spec in sorted(candidates, key=lambda item: item.path):
+            params = _match_path_template(spec.path, path)
+            if params is not None:
+                return spec, params
+        return None
 
     def get_handler(self, spec: RouteSpec) -> RouteHandler | None:
         return self._handlers.get(spec.identity_key())
@@ -253,3 +284,22 @@ class RouteRegistry:
         ) else IngestAiUsage()
         register_ai_usage_routes(registry, service=ai_service)
         return registry
+
+
+def _match_path_template(template: str, path: str) -> dict[str, str] | None:
+    template_parts = template.strip("/").split("/") if template.strip("/") else []
+    path_parts = path.strip("/").split("/") if path.strip("/") else []
+    if len(template_parts) != len(path_parts):
+        return None
+    params: dict[str, str] = {}
+    for tmpl, actual in zip(template_parts, path_parts, strict=True):
+        match = _PARAM_SEGMENT_RE.fullmatch(tmpl)
+        if match:
+            name = match.group(1)
+            if not _PARAM_VALUE_RE.fullmatch(actual):
+                return None
+            params[name] = actual
+            continue
+        if tmpl != actual:
+            return None
+    return params

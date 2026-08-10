@@ -1,0 +1,63 @@
+{
+  "schema": "community-telemetry-consent-register:1.0",
+  "register_id": "community-telemetry-consent-register",
+  "register_version": "1.0",
+  "slice": "17.17",
+  "entries": [
+    {
+      "consent_state": "disabled_by_default",
+      "source": "default",
+      "persistence": "none_process_local",
+      "precedence": "fallback",
+      "interactive_behavior": "may_prompt_on_assess",
+      "non_interactive_behavior": "remain_disabled",
+      "transport_allowed": false,
+      "publish_eligible": false,
+      "validation_status": "required"
+    },
+    {
+      "consent_state": "allowed_for_session",
+      "source": "explicit_session_allow|interactive_prompt|cli_flag",
+      "persistence": "none_process_local",
+      "precedence": "cli_flag_over_prompt_over_default",
+      "interactive_behavior": "transmission_authorized",
+      "non_interactive_behavior": "cli_flag_only_path",
+      "transport_allowed": true,
+      "publish_eligible": true,
+      "validation_status": "required"
+    },
+    {
+      "consent_state": "denied_for_session",
+      "source": "explicit_session_deny|interactive_prompt|cli_flag",
+      "persistence": "none_process_local",
+      "precedence": "cli_flag_over_prompt_over_default",
+      "interactive_behavior": "no_transmission",
+      "non_interactive_behavior": "cli_flag_deny_honored",
+      "transport_allowed": false,
+      "publish_eligible": false,
+      "validation_status": "required"
+    },
+    {
+      "consent_state": "non_interactive_disabled",
+      "source": "non_interactive_policy",
+      "persistence": "none_process_local",
+      "precedence": "automation_tty_quiet_json",
+      "interactive_behavior": "not_applicable",
+      "non_interactive_behavior": "never_prompt_privacy_safe",
+      "transport_allowed": false,
+      "publish_eligible": false,
+      "validation_status": "required"
+    },
+    {
+      "consent_state": "legacy_preferences_enabled",
+      "source": "legacy_telemetry_json",
+      "persistence": "legacy_home_telemetry_json",
+      "precedence": "does_not_authorize_privacy_first_runtime",
+      "interactive_behavior": "legacy_cli_only",
+      "non_interactive_behavior": "legacy_only",
+      "transport_allowed": false,
+      "publish_eligible": false,
+      "validation_status": "compatibility_only"
+    }
+  ]
+}

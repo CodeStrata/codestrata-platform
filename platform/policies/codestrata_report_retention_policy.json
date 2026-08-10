@@ -1,0 +1,32 @@
+{
+  "policy_id": "codestrata-report-retention-policy",
+  "policy_version": "1.0",
+  "schema": "codestrata-report-retention-policy:1.0",
+  "slice": "17.15",
+  "epic": 17,
+  "authority": "Human-readable repository and portfolio folder identity with current/previous slot retention for assessment and engineering intelligence reports.",
+  "repository_folder_identity": "human_readable_logical_repository",
+  "portfolio_folder_identity": "human_readable_logical_portfolio",
+  "run_ids_are_metadata": true,
+  "assessment_versions_per_repository": 2,
+  "engineering_intelligence_versions_per_portfolio": 2,
+  "slots": ["current", "previous"],
+  "failed_assessment_promotes": false,
+  "failed_eir_promotes": false,
+  "rotation_atomic": true,
+  "portfolio_membership_change_preserves_identity": true,
+  "telemetry_data_lake_uses_report_retention": false,
+  "validation_artifacts_use_report_retention": false,
+  "future_cloud_reports_same_retention": true,
+  "artifact_root": ".codestrata-artifacts",
+  "assessments_layout": ".codestrata-artifacts/assessments/<repository-id>/{current,previous}/",
+  "intelligence_layout": ".codestrata-artifacts/intelligence/<portfolio-id>/{current,previous}/",
+  "repository_id_formats": ["github-<owner>-<repo>", "local-<safe-name>"],
+  "portfolio_id_example": "release-validation",
+  "start_slice_17_15": true,
+  "start_slice_17_16": true,
+  "depends_on": [
+    "community-api-domain-policy:1.0",
+    "community-22-repository-validation-policy:1.0"
+  ]
+}

@@ -207,6 +207,12 @@ variable "data_lake_bucket_name" {
   default     = ""
 }
 
+variable "report_artifacts_bucket_name" {
+  description = "Private report artifact bucket for Slice 17.16 publishing (empty when disabled)."
+  type        = string
+  default     = ""
+}
+
 variable "ingestion_wire" {
   description = "Second hard gate for Data Lake adapter wiring (Slice 17.7)."
   type        = bool
@@ -217,6 +223,23 @@ variable "community_credentials_secret_id" {
   description = "Secrets Manager secret name for Community client credential fingerprints (values out of band)."
   type        = string
   default     = "codestrata/community/client-credentials"
+}
+
+variable "enable_api_custom_domain" {
+  description = "Slice 17.14 — provision ACM + API Gateway custom domain for api.codestrata.ai."
+  type        = bool
+  default     = true
+}
+
+variable "api_custom_domain_name" {
+  description = "Public Community API hostname (exact; no wildcard)."
+  type        = string
+  default     = "api.codestrata.ai"
+
+  validation {
+    condition     = can(regex("^[a-z0-9.-]+\\.[a-z]{2,}$", var.api_custom_domain_name))
+    error_message = "api_custom_domain_name must be a lowercase DNS hostname."
+  }
 }
 
 variable "tags" {

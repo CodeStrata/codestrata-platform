@@ -1,0 +1,18 @@
+{
+  "register_id": "community-status-register",
+  "register_version": "1.1",
+  "schema": "community-status-register:1.1",
+  "slice": "17.25",
+  "endpoint": "GET /api/v1/community/status",
+  "auth": "none",
+  "engine_version_source": "github_published_release_with_candidate_fallback",
+  "package_version_consistency_check": "codestrata.__version__",
+  "github_repository_source": "github_repo_api_full_name",
+  "github_url_source": "github_repo_api_html_url",
+  "github_stars_source": "github_repo_api_stargazers_count",
+  "github_repository": "CodeStrata/codestrata-engine",
+  "github_lookup_cache_ttl_seconds": 300,
+  "browser_github_token": false,
+  "website_binding": "codestrata-site status fetch with fail-soft fallback",
+  "status": "implemented"
+}

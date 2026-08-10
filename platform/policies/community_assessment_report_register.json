@@ -1,0 +1,183 @@
+{
+  "entries": [
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "flask-20260809-185216",
+      "catalog_id": "flask",
+      "head_statuses": {
+        "ai": "not_generated",
+        "architecture": "present",
+        "cloud": "present",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-pallets-flask",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    },
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "express-20260809-185209",
+      "catalog_id": "express",
+      "head_statuses": {
+        "ai": "not_generated",
+        "architecture": "present",
+        "cloud": "not_generated",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-expressjs-express",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    },
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "juice-shop-20260809-191628",
+      "catalog_id": "juice-shop",
+      "head_statuses": {
+        "ai": "present",
+        "architecture": "present",
+        "cloud": "present",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-juice-shop-juice-shop",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    },
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "spring-petclinic-20260809-193724",
+      "catalog_id": "spring-petclinic",
+      "head_statuses": {
+        "ai": "not_generated",
+        "architecture": "present",
+        "cloud": "present",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-spring-projects-spring-petclinic",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    },
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "vite-20260809-193920",
+      "catalog_id": "vite",
+      "head_statuses": {
+        "ai": "not_generated",
+        "architecture": "present",
+        "cloud": "present",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-vitejs-vite",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    },
+    {
+      "artifact_slot": "current",
+      "assessment_run_id": "nodegoat-20260809-193053",
+      "catalog_id": "nodegoat",
+      "head_statuses": {
+        "ai": "not_generated",
+        "architecture": "present",
+        "cloud": "present",
+        "dependencies": "present",
+        "performance": "not_generated",
+        "security": "present",
+        "technical-debt": "present",
+        "testing": "present"
+      },
+      "heads": [
+        "ai",
+        "architecture",
+        "cloud",
+        "dependencies",
+        "performance",
+        "security",
+        "technical-debt",
+        "testing"
+      ],
+      "privacy_status": "clean",
+      "report_status": "present",
+      "repository_id": "github-owasp-nodegoat",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    }
+  ],
+  "portfolio_id_for_validation": "sv17-19-validation",
+  "register_id": "community-assessment-report-register",
+  "register_version": "1.0",
+  "schema": "community-assessment-report-register:1.0",
+  "slice": "17.19"
+}

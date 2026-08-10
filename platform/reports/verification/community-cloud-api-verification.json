@@ -1,0 +1,715 @@
+{
+  "checks": [
+    {
+      "category": "routes",
+      "detail": "count=6",
+      "name": "routes:count_six",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "routes",
+      "detail": "names=['ai_usage.ingest', 'assessment_metadata.ingest', 'cli_events.ingest', 'extension_events.ingest', 'health.get', 'telemetry.ingest']",
+      "name": "routes:expected_identities",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "routes",
+      "detail": "paths=[('GET', '/health'), ('POST', '/ai-usage'), ('POST', '/assessment-metadata'), ('POST', '/cli-events'), ('POST', '/extension-events'), ('POST', '/telemetry')]",
+      "name": "routes:expected_paths",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "routes",
+      "detail": "docs/openapi disabled",
+      "name": "routes:no_docs_openapi",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "routes",
+      "detail": "status=404",
+      "name": "routes:unknown_404",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "routes",
+      "detail": "status=405",
+      "name": "routes:health_post_405",
+      "ok": true,
+      "scenario": "B"
+    },
+    {
+      "category": "health",
+      "detail": "status=200",
+      "name": "health:status_ok",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "health",
+      "detail": "bodies equal",
+      "name": "health:deterministic_body",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "health",
+      "detail": "body excludes request_id",
+      "name": "health:no_request_id_in_body",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "health",
+      "detail": "no-store",
+      "name": "health:cache_control",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "health",
+      "detail": "sinks=0",
+      "name": "health:independent_of_sinks",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "health",
+      "detail": "status=429",
+      "name": "health:rate_limit_429",
+      "ok": true,
+      "scenario": "I"
+    },
+    {
+      "category": "endpoints",
+      "detail": "status=202",
+      "name": "endpoint:accept:telemetry",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "endpoints",
+      "detail": "status=202",
+      "name": "endpoint:accept:assessment_metadata",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "endpoints",
+      "detail": "status=202",
+      "name": "endpoint:accept:cli_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "endpoints",
+      "detail": "status=202",
+      "name": "endpoint:accept:extension_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "endpoints",
+      "detail": "status=202",
+      "name": "endpoint:accept:ai_usage",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:missing:telemetry",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401 code=invalid_authorization_header",
+      "name": "auth:malformed:telemetry",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:unknown_credential:telemetry",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:missing:assessment_metadata",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401 code=invalid_authorization_header",
+      "name": "auth:malformed:assessment_metadata",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:unknown_credential:assessment_metadata",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:missing:cli_events",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401 code=invalid_authorization_header",
+      "name": "auth:malformed:cli_events",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:unknown_credential:cli_events",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:missing:extension_events",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401 code=invalid_authorization_header",
+      "name": "auth:malformed:extension_events",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:unknown_credential:extension_events",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:missing:ai_usage",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401 code=invalid_authorization_header",
+      "name": "auth:malformed:ai_usage",
+      "ok": true,
+      "scenario": "D"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:unknown_credential:ai_usage",
+      "ok": true,
+      "scenario": "E"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:inactive_credential",
+      "ok": true,
+      "scenario": "F"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=401",
+      "name": "auth:revoked_credential",
+      "ok": true,
+      "scenario": "F"
+    },
+    {
+      "category": "authentication",
+      "detail": "status=503",
+      "name": "auth:verifier_unavailable",
+      "ok": true,
+      "scenario": "G"
+    },
+    {
+      "category": "authorization",
+      "detail": "status=403",
+      "name": "client_match:mismatch:telemetry",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "authorization",
+      "detail": "status=403",
+      "name": "client_match:mismatch:assessment_metadata",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "authorization",
+      "detail": "status=403",
+      "name": "client_match:mismatch:cli_events",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "authorization",
+      "detail": "status=403",
+      "name": "client_match:mismatch:extension_events",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "authorization",
+      "detail": "status=403",
+      "name": "client_match:mismatch:ai_usage",
+      "ok": true,
+      "scenario": "H"
+    },
+    {
+      "category": "rate_limit",
+      "detail": "status=202",
+      "name": "rate_limit:first_allowed",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "rate_limit",
+      "detail": "status=429",
+      "name": "rate_limit:second_exceeded",
+      "ok": true,
+      "scenario": "I"
+    },
+    {
+      "category": "rate_limit",
+      "detail": "X-Forwarded-For did not bypass",
+      "name": "rate_limit:forwarded_headers_ignored",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "rate_limit",
+      "detail": "sinks=1",
+      "name": "rate_limit:no_sink_on_exceeded",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "rate_limit",
+      "detail": "no IP echo",
+      "name": "rate_limit:no_raw_ip_in_response",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "rate_limit",
+      "detail": "status=503",
+      "name": "rate_limit:store_unavailable",
+      "ok": true,
+      "scenario": "J"
+    },
+    {
+      "category": "pipeline",
+      "detail": "status=404",
+      "name": "pipeline:unknown_route_before_auth",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "pipeline",
+      "detail": "status=405",
+      "name": "pipeline:wrong_method_405",
+      "ok": true,
+      "scenario": "B"
+    },
+    {
+      "category": "pipeline",
+      "detail": "status=401",
+      "name": "pipeline:auth_before_body",
+      "ok": true,
+      "scenario": "C"
+    },
+    {
+      "category": "pipeline",
+      "detail": "status=429",
+      "name": "pipeline:rate_limit_before_validation",
+      "ok": true,
+      "scenario": "I"
+    },
+    {
+      "category": "pipeline",
+      "detail": "status=400",
+      "name": "pipeline:validation_after_auth_when_allowed",
+      "ok": true,
+      "scenario": "M"
+    },
+    {
+      "category": "validation",
+      "detail": "status=400",
+      "name": "validation:missing_body",
+      "ok": true,
+      "scenario": "K"
+    },
+    {
+      "category": "validation",
+      "detail": "status=415",
+      "name": "validation:wrong_media_type",
+      "ok": true,
+      "scenario": "L"
+    },
+    {
+      "category": "validation",
+      "detail": "status=400",
+      "name": "validation:malformed_json",
+      "ok": true,
+      "scenario": "M"
+    },
+    {
+      "category": "validation",
+      "detail": "status=422",
+      "name": "validation:unknown_fields",
+      "ok": true,
+      "scenario": "N"
+    },
+    {
+      "category": "validation",
+      "detail": "status=422",
+      "name": "validation:strict_type",
+      "ok": true,
+      "scenario": "O"
+    },
+    {
+      "category": "validation",
+      "detail": "status=422",
+      "name": "validation:semantic",
+      "ok": true,
+      "scenario": "P"
+    },
+    {
+      "category": "validation",
+      "detail": "canonical error envelope preferred",
+      "name": "validation:no_fastapi_422_leak_shape",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "payload",
+      "detail": "status=413",
+      "name": "payload:bytes_or_string_exceeded",
+      "ok": true,
+      "scenario": "Q"
+    },
+    {
+      "category": "payload",
+      "detail": "status=422",
+      "name": "payload:depth_or_schema_before_sink",
+      "ok": true,
+      "scenario": "R"
+    },
+    {
+      "category": "retry",
+      "detail": "status=202",
+      "name": "retry:first_accepted:telemetry",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=200 sinks=2",
+      "name": "retry:exact:telemetry",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=409",
+      "name": "retry:conflict:telemetry",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "retry",
+      "detail": "status=202",
+      "name": "retry:first_accepted:assessment_metadata",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=200 sinks=2",
+      "name": "retry:exact:assessment_metadata",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=409",
+      "name": "retry:conflict:assessment_metadata",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "retry",
+      "detail": "status=202",
+      "name": "retry:first_accepted:cli_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=200 sinks=2",
+      "name": "retry:exact:cli_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=409",
+      "name": "retry:conflict:cli_events",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "retry",
+      "detail": "status=202",
+      "name": "retry:first_accepted:extension_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=200 sinks=2",
+      "name": "retry:exact:extension_events",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=409",
+      "name": "retry:conflict:extension_events",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "retry",
+      "detail": "status=202",
+      "name": "retry:first_accepted:ai_usage",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=200 sinks=2",
+      "name": "retry:exact:ai_usage",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "retry",
+      "detail": "status=409",
+      "name": "retry:conflict:ai_usage",
+      "ok": true,
+      "scenario": "U"
+    },
+    {
+      "category": "retry",
+      "detail": "status=503",
+      "name": "retry:identity_unavailable",
+      "ok": true,
+      "scenario": "T"
+    },
+    {
+      "category": "retry",
+      "detail": "status=503",
+      "name": "retry:sink_unavailable",
+      "ok": true,
+      "scenario": "V"
+    },
+    {
+      "category": "separation",
+      "detail": "status=422",
+      "name": "separation:cli_body_on_extension",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "separation",
+      "detail": "delta_telemetry=1",
+      "name": "separation:telemetry_sink_isolated",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "lines=10",
+      "name": "logging:emits_on_health_and_ingest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "no credential/header leakage",
+      "name": "logging:no_credentials",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "raw event id absent",
+      "name": "logging:no_raw_event_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "logging",
+      "detail": "types=['ai_usage_accepted', 'ai_usage_conflict', 'ai_usage_received', 'ai_usage_retry', 'assessment_metadata_accepted', 'assessment_metadata_conflict', 'assessment_metadata_received', 'assessment_metadata_retry']",
+      "name": "logging:lifecycle_signal",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "health equal",
+      "name": "determinism:health_body",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "left=202 right=202",
+      "name": "determinism:first_accept_status",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "left=200 right=200",
+      "name": "determinism:exact_retry_status",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "keys=['retry_status', 'safe_event_reference', 'schema_version', 'status']",
+      "name": "determinism:error_envelope_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "status=200",
+      "name": "foundation:health_ok",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "status=503",
+      "name": "foundation:ingestion_fail_closed",
+      "ok": true,
+      "scenario": "G"
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "no false 202",
+      "name": "foundation:no_false_accept",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "count=6",
+      "name": "foundation:six_routes_retained",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "openapi/docs disabled",
+      "name": "foundation:docs_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "deployment_foundation",
+      "detail": "handler present",
+      "name": "foundation:mangum_handler_importable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "ok",
+      "name": "safety:no_credentials_or_secrets",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "response excludes installation_id",
+      "name": "safety:no_installation_id_echo",
+      "ok": true,
+      "scenario": ""
+    }
+  ],
+  "defects": [],
+  "elapsed_ms": 126.37250008992851,
+  "limitations": [
+    "SV.7 verifies the Community Cloud API as one coherent pipeline.",
+    "Uses in-memory adapters only; no AWS, OpenTofu, Docker, or durable stores.",
+    "Does not start website export (SV.8) or Data Lake work.",
+    "Does not add endpoints, emitters, or credential issuance."
+  ],
+  "ok": true,
+  "policy_versions": {
+    "ai_usage_policy": "1.0",
+    "ai_usage_schema": "1.0",
+    "api_contract": "1.0",
+    "assessment_metadata_policy": "1.0",
+    "assessment_metadata_schema": "1.0",
+    "authentication": "1.0",
+    "cli_event_policy": "1.0",
+    "cli_event_schema": "1.0",
+    "credential_format": "1",
+    "event_identity": "1.0",
+    "extension_event_policy": "1.0",
+    "extension_event_schema": "1.0",
+    "logging": "1.0",
+    "payload_limit": "1.0",
+    "rate_limit": "1.1",
+    "telemetry_policy": "1.0",
+    "telemetry_schema": "1.0",
+    "validation": "1.0"
+  },
+  "route_inventory": [
+    "health.get",
+    "telemetry.ingest",
+    "assessment_metadata.ingest",
+    "cli_events.ingest",
+    "extension_events.ingest",
+    "ai_usage.ingest"
+  ],
+  "scenario_summary": {
+    "failed_checks": 0,
+    "total_checks": 95
+  },
+  "schema_name": "community-cloud-api-verification",
+  "schema_version": "1.0.0",
+  "verdict": "pass",
+  "verification_id": "community-cloud-api-verification",
+  "warnings": []
+}

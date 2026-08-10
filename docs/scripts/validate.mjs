@@ -43,6 +43,7 @@ const requiredFiles = [
   "reference/cli.html",
   "reference/configuration.html",
   "reference/api.html",
+  "reference/community-api/index.html",
   "reference/telemetry.html",
   "security/privacy.html",
   "troubleshooting/index.html",
@@ -88,8 +89,11 @@ const forbidden = [
   },
   { re: /\/Users\/[^\s"'<>]+/g, msg: "absolute developer filesystem path" },
   { re: /file:\/\/\//i, msg: "file:// URL" },
+  {
+    re: /[a-z0-9]+\.execute-api\.[a-z0-9-]+\.amazonaws\.com/i,
+    msg: "raw execute-api hostname must not appear in published docs",
+  },
 ];
-
 const contentRoots = [root];
 const scanExt = new Set([".md", ".html", ".ts", ".css", ".txt", ".svg", ".mjs", ".json"]);
 

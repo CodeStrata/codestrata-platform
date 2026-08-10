@@ -1,0 +1,15 @@
+{
+  "register_id": "community-published-report-validation-register",
+  "register_version": "1.0",
+  "schema": "community-published-report-validation-register:1.0",
+  "slice": "17.23",
+  "manifest_path": ".codestrata-artifacts/validation/suites/release-v0.2.0/public-report-urls.json",
+  "manifest_schema": "public-report-urls-manifest:1.1",
+  "production_routing_authority": "community report publishing backend",
+  "insights_index_source": "report artifact metadata logic index",
+  "current_previous_only": true,
+  "assessment_vs_eir_separated": true,
+  "auto_upsert_on_publish": true,
+  "retained_17_21_assessment_url": true,
+  "status": "implemented"
+}

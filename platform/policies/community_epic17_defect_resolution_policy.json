@@ -1,0 +1,29 @@
+{
+  "policy_id": "community-epic17-defect-resolution-policy",
+  "policy_version": "1.0",
+  "schema": "community-epic17-defect-resolution-policy:1.0",
+  "slice": "17.22",
+  "epic": 17,
+  "authority": "End-to-end defect closure for Epic 17 before completion verification. Feature freeze; no speculative features.",
+  "depends_on": [
+    "community-vscode-clean-install-validation-policy:1.0"
+  ],
+  "feature_freeze": true,
+  "new_features_forbidden": true,
+  "known_blockers_resolved": true,
+  "security_blockers_resolved": true,
+  "production_zero_drift": true,
+  "cross_repo_exports_clean": true,
+  "release_carry_forwards_explicit": true,
+  "timeout_seconds_wired": true,
+  "max_retries_assess_single_attempt_intentional": true,
+  "ai_usage_telemetry_disposition": "DEFER_RELEASE_ACCEPTABLE_construction_only",
+  "identity_prefix_retention": "indefinite_intentional_for_dedup",
+  "git_clone_userinfo_forbidden": true,
+  "marketplace_publish": false,
+  "full_22_repo_release_corpus": false,
+  "community_status_website_deferred": false,
+  "start_slice_17_22": true,
+  "start_slice_17_23": true,
+  "start_slice_17_24": false
+}

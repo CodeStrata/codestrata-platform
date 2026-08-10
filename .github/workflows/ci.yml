@@ -27,6 +27,7 @@ concurrency:
 jobs:
   engine-tests:
     name: engine-tests
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -51,6 +52,7 @@ jobs:
 
   platform-tests:
     name: platform-tests
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -74,6 +76,7 @@ jobs:
 
   vscode-ci:
     name: vscode-ci
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -100,6 +103,7 @@ jobs:
 
   community-export-verification:
     name: community-export-verification
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
@@ -154,6 +158,7 @@ jobs:
 
   infrastructure-export-verification:
     name: infrastructure-export-verification
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -228,6 +233,7 @@ jobs:
 
   ci-release-boundaries:
     name: ci-release-boundaries
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:

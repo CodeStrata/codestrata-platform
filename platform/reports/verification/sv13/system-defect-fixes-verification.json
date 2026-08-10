@@ -1,0 +1,167 @@
+{
+  "aggregation_id": "aggregation:016d8960799e133ee200c252",
+  "checks": [
+    {
+      "detail": "classified=3",
+      "name": "classification_complete",
+      "ok": true
+    },
+    {
+      "detail": "phrases=7 failures=[]",
+      "name": "safe_descriptive_phrases_accepted",
+      "ok": true
+    },
+    {
+      "detail": "fixtures=8 issues=[]",
+      "name": "unsafe_fixtures_rejected",
+      "ok": true
+    },
+    {
+      "detail": "included=1 rejected=0 ids_stable=True",
+      "name": "ingest_dubbo",
+      "ok": true
+    },
+    {
+      "detail": "included=1 rejected=0 ids_stable=True",
+      "name": "ingest_juice-shop",
+      "ok": true
+    },
+    {
+      "detail": "included=1 rejected=0 ids_stable=True",
+      "name": "ingest_nodegoat",
+      "ok": true
+    },
+    {
+      "detail": "ready=22/22 defects=0",
+      "name": "sv11_ei_input_ready_22",
+      "ok": true
+    },
+    {
+      "detail": "included=22 rejected=0",
+      "name": "sv12_dataset_population_22",
+      "ok": true
+    },
+    {
+      "detail": "drilldowns=22",
+      "name": "sv12_drilldowns_22",
+      "ok": true
+    },
+    {
+      "detail": "rejected_reasons=[]",
+      "name": "sv12_no_unsafe_metadata_rejections",
+      "ok": true
+    },
+    {
+      "detail": "defects=0 summary_ok=True",
+      "name": "website_export_safety",
+      "ok": true
+    },
+    {
+      "detail": "forward=dataset:3da1c591fcef727714304861 reverse=dataset:3da1c591fcef727714304861",
+      "name": "order_independent_dataset_id",
+      "ok": true
+    },
+    {
+      "detail": "forward=aggregation:016d8960799e133ee200c252 reverse=aggregation:016d8960799e133ee200c252",
+      "name": "order_independent_aggregation_id",
+      "ok": true
+    },
+    {
+      "detail": "forward=eir:1eda169bfe4b7041265b253e reverse=eir:1eda169bfe4b7041265b253e",
+      "name": "order_independent_report_id",
+      "ok": true
+    }
+  ],
+  "confirmations": {
+    "actual_secrets_still_rejected": true,
+    "all_22_pinned_assessments_retained": true,
+    "drilldowns_22_of_22": true,
+    "ei_readiness_22_of_22": true,
+    "eir_population_22_of_22": true,
+    "finding_ids_preserved_under_sanitization": true,
+    "no_commit_created": true,
+    "no_known_issues_bypass": true,
+    "no_repository_removed_or_replaced": true,
+    "no_repository_specific_allowlist": true,
+    "privacy_gate_not_disabled": true,
+    "safe_descriptive_text_accepted": true,
+    "schemas_unchanged": true,
+    "sv11_uses_platform_ingestion_authority": true,
+    "sv12_failure_reproduced_and_classified": true,
+    "sv14_not_started": true
+  },
+  "dataset_disclaimer": "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim.",
+  "dataset_id": "dataset:3da1c591fcef727714304861",
+  "eir_report_id": "eir:1eda169bfe4b7041265b253e",
+  "included_repository_ids": [
+    "aspnetcore",
+    "bagisto",
+    "bookstack",
+    "cleanarchitecture",
+    "django",
+    "doris",
+    "dubbo",
+    "eshop",
+    "express",
+    "flask",
+    "gradio",
+    "juice-shop",
+    "laravel-io",
+    "moodle",
+    "nodegoat",
+    "product-integrator-mi",
+    "slim",
+    "spring-petclinic",
+    "typescript",
+    "verademo",
+    "vite",
+    "vulnerable-app-nodejs-express"
+  ],
+  "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+  "ledger": {
+    "affected_repositories": [
+      "dubbo",
+      "juice-shop",
+      "nodegoat"
+    ],
+    "affected_rule_ids": [
+      "SEC002"
+    ],
+    "after_population": "22/22",
+    "before_population": "19/22",
+    "closure_status": "closed",
+    "defect_id": "SV.13-EI-UNSAFE-METADATA",
+    "determinism_outcome": "order-independent dataset/aggregation/report IDs verified",
+    "fix_boundary": "Engine customer-safe report projection / SEC002 evidence wording; SV.11 Platform validate_report_document adapter",
+    "notes": "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim.",
+    "original_sv12_failure": "Platform EI ingestion rejected 3/22 assessments with unsafe_metadata (Finding description PEM header markers from SEC002)",
+    "privacy_outcome": "fail-closed Platform gate retained; PEM header markers redacted; unsafe fixtures still rejected; safe descriptive phrases accepted",
+    "product_files_changed": [
+      "engine/src/codestrata/security/redaction.py",
+      "engine/src/codestrata/security/customer_safe_text.py",
+      "engine/src/codestrata/services/analyzers/security_analyzer.py",
+      "engine/src/codestrata/reporting/assessment_json.py",
+      "engine/src/codestrata/reporting/customer_universe.py",
+      "engine/verification/assessment_consistency/reporting.py",
+      "engine/verification/assessment_consistency/platform_ingestion_adapter.py",
+      "platform/verification/engineering_intelligence/ingestion.py",
+      "platform/verification/engineering_intelligence_quality/inputs.py",
+      "platform/verification/system_defect_fixes/*"
+    ],
+    "regression_tests": [
+      "platform/tests/verification/system_defect_fixes/",
+      "engine/tests/security/test_redaction.py",
+      "engine/tests/security/test_report_redaction.py"
+    ],
+    "root_cause_classification": [
+      "A_engine_unsafe_canonical_serialization",
+      "E_sv11_readiness_did_not_use_platform_ingestion_authority"
+    ],
+    "schema_outcome": "Assessment 1.2; EIR 1.0; website export 1.0; SV contracts 1.0.0"
+  },
+  "repository_count": 22,
+  "schema_name": "system-defect-fixes-verification",
+  "schema_version": "1.0.0",
+  "verdict": "PASS",
+  "website_export_id": "eir-export:ca01b398f777e20ef75ea1f2"
+}

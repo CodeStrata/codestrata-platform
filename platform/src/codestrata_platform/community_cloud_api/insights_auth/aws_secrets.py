@@ -30,7 +30,11 @@ class AwsSecretsPort:
         if not secret_id or not str(secret_id).strip():
             return None
         try:
-            response = self._sm().get_secret_value(SecretId=secret_id)
+            # Explicit AWSCURRENT — never pin AWSPENDING/legacy stages for login.
+            response = self._sm().get_secret_value(
+                SecretId=secret_id,
+                VersionStage="AWSCURRENT",
+            )
         except Exception:
             # Fail-closed — do not leak exception detail that may include ARNs/values.
             return None

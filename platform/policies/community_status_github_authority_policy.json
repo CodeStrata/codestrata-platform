@@ -1,0 +1,28 @@
+{
+  "policy_id": "community-status-github-authority-policy",
+  "policy_version": "1.0",
+  "schema": "community-status-github-authority-policy:1.0",
+  "slice": "17.25",
+  "epic": 17,
+  "depends_on": [
+    "community-status-report-registry-policy:1.0",
+    "community-insights-production-auth-policy:1.0"
+  ],
+  "community_status_repository_source": "github",
+  "community_status_stars_source": "github",
+  "community_status_release_source": "github_published_release",
+  "community_status_candidate_fallback": true,
+  "github_lookup_cached": true,
+  "github_lookup_ttl_seconds": 300,
+  "github_repository": "CodeStrata/codestrata-engine",
+  "package_version_not_public_sot": true,
+  "draft_release_forbidden": true,
+  "prerelease_forbidden": true,
+  "arbitrary_git_tag_forbidden": true,
+  "browser_github_token": false,
+  "github_pat_required": false,
+  "status_fail_soft": true,
+  "marketplace_publish": false,
+  "start_slice_17_25": true,
+  "start_slice_17_26": false
+}

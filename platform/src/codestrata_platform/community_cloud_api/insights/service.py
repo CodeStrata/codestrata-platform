@@ -234,8 +234,13 @@ def _error_result(
     completeness = "unavailable"
     lim = ["source_unavailable"]
     if exc.code == QUERY_LIMIT_EXCEEDED:
-        completeness = "partial"
-        lim = ["query_budget_reached"]
+        # reader_required is a wiring defect, not an S3 list/get budget hit.
+        if exc.detail == "reader_required":
+            completeness = "unavailable"
+            lim = ["source_unavailable", "aggregation_reader_unwired"]
+        else:
+            completeness = "partial"
+            lim = ["query_budget_reached"]
     elif exc.code == INVALID_WINDOW:
         completeness = "unavailable"
         lim = ["source_unavailable"]

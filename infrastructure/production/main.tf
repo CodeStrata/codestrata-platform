@@ -15,11 +15,14 @@ module "community_cloud_api" {
   enable_ingestion                = true
   ingestion_wire                  = true
   data_lake_bucket_name           = module.community_data_lake.bucket_name
+  report_artifacts_bucket_name    = module.community_report_artifacts.bucket_name
   authentication_mode             = "enabled_secrets_manager_verifier"
   rate_limit_mode                 = "api_gateway_plus_process_local"
   insights_secrets_backend        = "aws"
   insights_password_secret_id     = "codestrata/insights/dashboard-password"
   insights_session_secret_id      = "codestrata/insights/session-secret"
   community_credentials_secret_id = "codestrata/community/client-credentials"
+  enable_api_custom_domain        = true
+  api_custom_domain_name          = "api.codestrata.ai"
   tags                            = var.tags
 }

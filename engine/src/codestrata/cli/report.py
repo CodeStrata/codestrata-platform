@@ -30,9 +30,9 @@ report_app = typer.Typer(
     help=(
         "Report helpers for assess HTML/JSON outputs.\n\n"
         "Examples:\n"
-        "  codestrata report validate .codestrata-artifacts/assessments/<run>/assessment.json\n"
+        "  codestrata report validate .codestrata-artifacts/assessments/<repo>/current/assessment.json\n"
         "  codestrata open\n"
-        "  codestrata report open --path .codestrata-artifacts/assessments/<run>/assessment.html\n\n"
+        "  codestrata report open --path .codestrata-artifacts/assessments/<repo>/current/assessment.html\n\n"
         "Validate assessment.json schema/references where applicable, "
         "and open the customer HTML report.\n\n"
         f"Troubleshooting: {DOCS_TROUBLESHOOTING}"
@@ -42,18 +42,24 @@ report_app = typer.Typer(
 
 
 def _find_latest_html_report(search_root: Path) -> Path | None:
-    """Locate the newest assessment.html (or legacy report.html) under output."""
+    """Locate current/assessment.html preferentially, else newest HTML report."""
 
     if not search_root.is_dir():
         return None
-    modern = list(search_root.rglob("assessment.html"))
-    legacy = list(search_root.rglob("report.html"))
-    candidates = sorted(
-        modern + legacy,
+    # Slice 17.15: prefer logical current slots.
+    current_hits = sorted(
+        search_root.glob("*/current/assessment.html"),
         key=lambda path: path.stat().st_mtime,
         reverse=True,
     )
-    return candidates[0] if candidates else None
+    if current_hits:
+        return current_hits[0]
+    modern = list(search_root.rglob("assessment.html"))
+    legacy = list(search_root.rglob("report.html"))
+    candidates = [path for path in modern + legacy if path.is_file()]
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: path.stat().st_mtime)
 
 
 def open_html_report(
@@ -210,6 +216,174 @@ def register_open_command(app: typer.Typer) -> None:
         """
 
         report_open_command(path=path, output=output, no_browser=no_browser)
+
+
+@report_app.command("publish")
+def report_publish_command(
+    report_type: Annotated[
+        str,
+        typer.Option(
+            "--type",
+            help="assessment (default) or eir (portfolio Engineering Intelligence).",
+        ),
+    ] = "assessment",
+    repository_id: Annotated[
+        str | None,
+        typer.Option(
+            "--repository-id",
+            help="Logical repository id (default: latest current assessment folder).",
+        ),
+    ] = None,
+    portfolio_id: Annotated[
+        str | None,
+        typer.Option(
+            "--portfolio-id",
+            help="Logical portfolio id for EIR publish (default: release-validation).",
+        ),
+    ] = None,
+    artifacts_root: Annotated[
+        Path,
+        typer.Option("--artifacts-root", help="Local .codestrata-artifacts root."),
+    ] = Path(".codestrata-artifacts"),
+    confirm: Annotated[
+        bool,
+        typer.Option(
+            "--confirm-public-publish",
+            help="Required explicit confirmation that the report will be publicly linkable.",
+        ),
+    ] = False,
+    acknowledge_private: Annotated[
+        bool,
+        typer.Option(
+            "--acknowledge-private-repository",
+            help="Required for local-/private repository assessments before publish.",
+        ),
+    ] = False,
+) -> None:
+    """Publish the local CURRENT report to a branded public URL (explicit action).
+
+    Local assessment/EIR always remains available. Cloud publish requires telemetry
+    opt-in eligibility and never runs automatically after assess.
+    """
+
+    from codestrata.community_cloud.report_publishing import (
+        PRIVATE_REPO_WARNING,
+        ReportPublishError,
+        publish_local_assessment,
+        publish_local_eir,
+        telemetry_eligible_for_publish,
+    )
+
+    session = None
+    try:
+        import os
+
+        from codestrata.telemetry.consent import (
+            allow_session_consent,
+            deny_session_consent,
+        )
+        from codestrata.telemetry.session import TelemetrySession
+
+        opted = os.environ.get("CODESTRATA_TELEMETRY_OPT_IN", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
+        # CLI publish eligibility mirrors product telemetry opt-in for this process.
+        # Assess never auto-publishes; this flag only gates the explicit publish command.
+        session = TelemetrySession(
+            consent=allow_session_consent() if opted else deny_session_consent()
+        )
+    except Exception:  # noqa: BLE001
+        session = None
+
+    if not telemetry_eligible_for_publish(session):
+        error(
+            "Cloud publishing requires telemetry/cloud participation "
+            "(set CODESTRATA_TELEMETRY_OPT_IN=true for this process). "
+            "Local report is unchanged."
+        )
+        raise typer.Exit(code=2)
+
+    if not confirm:
+        error("Refusing to publish without --confirm-public-publish.")
+        tip(PRIVATE_REPO_WARNING)
+        raise typer.Exit(code=2)
+
+    kind = (report_type or "assessment").strip().lower()
+    logical_id = ""
+    try:
+        if kind in {"assessment", "assess"}:
+            root = artifacts_root / "assessments"
+            if repository_id:
+                current = root / repository_id / "current"
+                rid = repository_id
+            else:
+                currents = sorted(
+                    root.glob("*/current/assessment.html"),
+                    key=lambda p: p.stat().st_mtime,
+                    reverse=True,
+                )
+                if not currents:
+                    raise ReportPublishError("No local current assessment found.")
+                current = currents[0].parent
+                rid = currents[0].parent.parent.name
+            logical_id = rid
+            if rid.startswith("local-") and not acknowledge_private:
+                error(PRIVATE_REPO_WARNING)
+                tip("Re-run with --acknowledge-private-repository --confirm-public-publish")
+                raise typer.Exit(code=2)
+            result = publish_local_assessment(
+                current_dir=current,
+                logical_repository_id=rid,
+                session=session,
+                private_repository_acknowledged=acknowledge_private
+                or not rid.startswith("local-"),
+                confirm_public_publish=True,
+            )
+        elif kind in {"eir", "intelligence", "engineering_intelligence"}:
+            pid = (portfolio_id or "release-validation").strip()
+            logical_id = pid
+            current = artifacts_root / "intelligence" / pid / "current"
+            result = publish_local_eir(
+                current_dir=current,
+                portfolio_id=pid,
+                session=session,
+                confirm_public_publish=True,
+            )
+        else:
+            error("Unsupported --type. Use assessment or eir.")
+            raise typer.Exit(code=2)
+    except ReportPublishError as exc:
+        error(str(exc))
+        tip("Local report artifacts were not modified.")
+        raise typer.Exit(code=1) from exc
+    except Exception as exc:  # noqa: BLE001 - failure isolation
+        error(f"Publish failed ({type(exc).__name__}). Local report unchanged.")
+        raise typer.Exit(code=1) from exc
+
+    success("Report published.")
+    info(f"Public report: {result.public_url}")
+    try:
+        from codestrata.community_cloud.public_report_url_manifest import (
+            record_published_url,
+        )
+
+        report_kind = (
+            "assessment"
+            if kind in {"assessment", "assess"}
+            else "engineering_intelligence"
+        )
+        manifest = record_published_url(
+            report_type=report_kind,  # type: ignore[arg-type]
+            logical_id=str(logical_id).strip(),
+            public_url=result.public_url,
+            source_slice=os.environ.get("CODESTRATA_VALIDATION_SLICE"),
+        )
+        if manifest is not None:
+            tip(f"Validation evidence updated: {manifest}")
+    except Exception:  # noqa: BLE001 — never fail publish on evidence write
+        tip("Validation evidence manifest update skipped.")
 
 
 __all__ = [

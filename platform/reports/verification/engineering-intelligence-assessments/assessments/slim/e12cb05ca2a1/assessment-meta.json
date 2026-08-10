@@ -1,0 +1,8 @@
+{
+  "assessment_command": "codestrata assess --repo . --output reports --no-ai",
+  "github_repository": "slimphp/Slim",
+  "language_group": "PHP",
+  "qualified_revision": "e12cb05ca2a14e8f459d019e87a31dc915b80470",
+  "repository_id": "slim",
+  "source_tag": "4.15.2"
+}

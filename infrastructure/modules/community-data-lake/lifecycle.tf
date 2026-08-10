@@ -11,6 +11,13 @@ resource "aws_s3_bucket_lifecycle_configuration" "community_data_lake" {
   # Lifecycle configuration requires versioning to already be configured.
   depends_on = [aws_s3_bucket_versioning.community_data_lake]
 
+  # NOTE (Epic 17 / Slice 17.22): identity/ has no object-expiration rule by
+  # design. Anonymous installation identity objects are small, low-growth, and
+  # required for dedup/aggregation correctness. Indefinite retention of current
+  # identity objects is intentional and release-acceptable. Bucket-wide abort
+  # incomplete multipart + expired delete-marker rules below still apply.
+  # Do NOT apply raw/ accepted_retention_days to identity/.
+
   rule {
     id     = "accepted-retention"
     status = "Enabled"

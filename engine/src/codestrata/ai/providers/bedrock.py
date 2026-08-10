@@ -70,13 +70,13 @@ from codestrata.ai.providers.exceptions import (
     AIResponseValidationError,
 )
 from codestrata.ai.providers.models import (
-    DEFAULT_TIMEOUT_SECONDS,
     ModelInvocationOptions,
     ModelInvocationResult,
     ModelUsage,
     ModernizationModelRequest,
 )
 from codestrata.ai.providers.parsing import parse_recommendation_response
+from codestrata.ai.providers.settings_policies import provider_timeout_seconds
 from codestrata.config.settings import CodestrataSettings
 
 logger = logging.getLogger(__name__)
@@ -94,14 +94,19 @@ class BedrockAIModelProvider(AIModelProvider):
         region_name: str | None = None,
         profile_name: str | None = None,
         settings: CodestrataSettings | None = None,
-        timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+        timeout_seconds: float | None = None,
     ) -> None:
-        if timeout_seconds <= 0:
+        resolved_timeout = provider_timeout_seconds(
+            settings,
+            provider="bedrock",
+            explicit=timeout_seconds,
+        )
+        if resolved_timeout <= 0:
             raise AIProviderConfigurationError("timeout_seconds must be positive")
         self._region_name = region_name
         self._profile_name = profile_name
         self._settings = settings
-        self._timeout_seconds = timeout_seconds
+        self._timeout_seconds = resolved_timeout
         self._client = client
 
     def invoke(

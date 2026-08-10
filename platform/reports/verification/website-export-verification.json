@@ -1,0 +1,912 @@
+{
+  "artifact_inventory": [
+    "engineering-intelligence-report.json",
+    "engineering-intelligence-report.html",
+    "export-manifest.json"
+  ],
+  "checks": [
+    {
+      "category": "inputs",
+      "detail": "eir:394b8574e3bc83b0878dc031",
+      "name": "input:report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inputs",
+      "detail": "dataset:51f8613688c2fdffdd876121",
+      "name": "input:dataset_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inputs",
+      "detail": "interp-bundle:c719915c68cf94601a0e8f0b",
+      "name": "input:interp_bundle",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inputs",
+      "detail": "1.0",
+      "name": "input:schema_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inputs",
+      "detail": "count=5",
+      "name": "input:five_repositories",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "inputs",
+      "detail": "count=5",
+      "name": "input:five_drilldowns",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "inputs",
+      "detail": "public_oss_dataset",
+      "name": "input:public_oss_scope",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "inputs",
+      "detail": "unavailable",
+      "name": "input:confidence_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "inputs",
+      "detail": "count=27",
+      "name": "input:limitations_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "policy",
+      "detail": "1.0",
+      "name": "policy:schema_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "policy",
+      "detail": "False",
+      "name": "policy:external_assets_forbidden",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "policy",
+      "detail": "token stable",
+      "name": "policy:token_deterministic",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "policy",
+      "detail": "public_oss",
+      "name": "policy:public_oss_scope",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "policy",
+      "detail": "eir-export-artifacts-v1",
+      "name": "policy:artifact_template",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "1.0",
+      "name": "projection:schema",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "eir:394b8574e3bc83b0878dc031",
+      "name": "projection:source_report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "dataset:51f8613688c2fdffdd876121",
+      "name": "projection:source_dataset_id_tracked",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "interp-bundle:c719915c68cf94601a0e8f0b",
+      "name": "projection:interp_bundle",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "count=5",
+      "name": "projection:five_drilldowns",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "projection",
+      "detail": "validate_website_safe_document",
+      "name": "projection:validation_passes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "allowlisted projection",
+      "name": "projection:no_forbidden_payload_keys",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "{\"caps\": 45, \"classification\": \"Public OSS report\", \"confidence\": \"unavailable\", \"drilldowns\": 5, \"export_id\": \"eir-export:770e2eeb725c175b1e482098\", \"heads\": 9, \"limitations\": 27, \"metadata\": true, \"methodology\": true, \"observations\": 4, \"",
+      "name": "projection:summary",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "projection",
+      "detail": "stable",
+      "name": "projection:reproject_stable_export_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "eir-export:770e2eeb725c175b1e482098",
+      "name": "identity:format",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "build_export_id",
+      "name": "identity:matches_builder",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "same inputs",
+      "name": "identity:stable_rerun",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "source report id",
+      "name": "identity:changes_with_report",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "policy token",
+      "name": "identity:changes_with_policy_token",
+      "ok": true,
+      "scenario": "T"
+    },
+    {
+      "category": "identity",
+      "detail": "artifact template",
+      "name": "identity:changes_with_template",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "identity",
+      "detail": "path-free",
+      "name": "identity:no_path_influence",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "engineering-intelligence-report.json",
+      "name": "json:filename_contract",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "bytes=138469",
+      "name": "json:utf8_object",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "sort_keys+indent=2",
+      "name": "json:sorted_keys_stable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "1.0",
+      "name": "json:schema_version",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "export id present",
+      "name": "json:export_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "eir:394b8574e3bc83b0878dc031",
+      "name": "json:source_report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "5",
+      "name": "json:dataset_summary_present",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "json",
+      "detail": "5",
+      "name": "json:repo_count_reconcile",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "json",
+      "detail": "5",
+      "name": "json:drilldown_count_reconcile",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "json",
+      "detail": "path-free",
+      "name": "json:no_paths_or_file_urls",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "no maturity/health/readiness",
+      "name": "json:no_unsupported_scores",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "allow_nan=False",
+      "name": "json:no_nan",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "no script markers",
+      "name": "json:no_script_injection_fields",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "json",
+      "detail": "aliases=5",
+      "name": "json:no_uuid_repository_aliases",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "engineering-intelligence-report.html",
+      "name": "html:filename_contract",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "html5 shell",
+      "name": "html:doctype_and_shell",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "validate_html_artifact",
+      "name": "html:validation",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "no external/js/forms",
+      "name": "html:self_contained",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "html",
+      "detail": "approved CSP",
+      "name": "html:csp",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "no on*= handlers",
+      "name": "html:no_inline_handlers",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "cover,scope,orientation,summary,technology,capability,heads,patterns,observations,confidence,limitations,drilldowns,methodology,metadata",
+      "name": "html:section_order_contract",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "missing=0",
+      "name": "html:toc_labels_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "h2 order",
+      "name": "html:body_section_order",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "ids=53 hrefs=19",
+      "name": "html:anchors_unique_resolve",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "classification visible",
+      "name": "html:export_id_or_classification",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "present",
+      "name": "html:limitations_and_methodology",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "honest confidence",
+      "name": "html:no_unsupported_scores",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "print + details",
+      "name": "html:print_css",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "html",
+      "detail": "path-free",
+      "name": "html:no_paths",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "shared export id",
+      "name": "parity:export_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "eir:394b8574e3bc83b0878dc031",
+      "name": "parity:report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "5",
+      "name": "parity:dataset_summary",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "Public OSS report",
+      "name": "parity:classification",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "unavailable",
+      "name": "parity:confidence_level",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "5",
+      "name": "parity:drilldown_count",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "aliases=5",
+      "name": "parity:no_invented_aliases",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "tech=24 cap=45 pat=30 obs=4",
+      "name": "parity:section_counts_bounded",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "parity",
+      "detail": "single WebsiteSafeExportDocument",
+      "name": "parity:same_projection_bytes_source",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "export-manifest.json",
+      "name": "manifest:filename_contract",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "eir-export:770e2eeb725c175b1e482098",
+      "name": "manifest:export_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "1.0",
+      "name": "manifest:schema_version",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "['engineering-intelligence-report.html', 'engineering-intelligence-report.json']",
+      "name": "manifest:artifact_set",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "sha256 match",
+      "name": "manifest:json_digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "sha256 match",
+      "name": "manifest:html_digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "no recursive digest",
+      "name": "manifest:no_self_digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "path-free",
+      "name": "manifest:no_output_directory",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "eir:394b8574e3bc83b0878dc031",
+      "name": "manifest:source_report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "manifest",
+      "detail": "sensitive",
+      "name": "manifest:digest_changes_with_bytes",
+      "ok": true,
+      "scenario": "S"
+    },
+    {
+      "category": "accessibility",
+      "detail": "h1=1",
+      "name": "a11y:one_h1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "main",
+      "name": "a11y:main_landmark",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "nav toc",
+      "name": "a11y:toc_nav",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "skip link",
+      "name": "a11y:skip_link",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "ids=53",
+      "name": "a11y:unique_ids",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "empty=0",
+      "name": "a11y:no_empty_links",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "missing_th=0",
+      "name": "a11y:tables_have_headers",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "details/summary",
+      "name": "a11y:details_have_summary",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "text classification",
+      "name": "a11y:classification_text",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "confidence text",
+      "name": "a11y:confidence_text",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "accessibility",
+      "detail": "print CSS present",
+      "name": "a11y:print_expands_details",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "stable json",
+      "name": "determinism:json_bytes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "stable html",
+      "name": "determinism:html_bytes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "stable manifest",
+      "name": "determinism:manifest_bytes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "stable export id",
+      "name": "determinism:export_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "serialize/deserialize EIR",
+      "name": "determinism:roundtrip_report",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "ok",
+      "name": "safety:no_secret_or_path_markers",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "projection structural",
+      "name": "safety:no_evidence_graph_payload",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "Public OSS report",
+      "name": "safety:public_classification",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "safety",
+      "detail": "no installation_id",
+      "name": "safety:no_installation_style_ids_required",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "safety",
+      "detail": "honest disclaimer retained",
+      "name": "safety:disclaimer_not_benchmark",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "count=5",
+      "name": "scenario:population_stable",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "scenarios",
+      "detail": "unique drilldowns",
+      "name": "scenario:drilldowns_unique",
+      "ok": true,
+      "scenario": "A"
+    },
+    {
+      "category": "scenarios",
+      "detail": "aliases=5 class=Anonymized external report",
+      "name": "scenario:anonymized_external",
+      "ok": true,
+      "scenario": "J"
+    },
+    {
+      "category": "scenarios",
+      "detail": "aliases=5 class=Anonymized external report",
+      "name": "scenario:anonymized_or_fail_closed",
+      "ok": true,
+      "scenario": "J"
+    },
+    {
+      "category": "scenarios",
+      "detail": "reject_unsafe_text",
+      "name": "scenario:unsafe_reject:N",
+      "ok": true,
+      "scenario": "N"
+    },
+    {
+      "category": "scenarios",
+      "detail": "reject_unsafe_text",
+      "name": "scenario:unsafe_reject:O",
+      "ok": true,
+      "scenario": "O"
+    },
+    {
+      "category": "scenarios",
+      "detail": "validate_html_artifact",
+      "name": "scenario:html_unsafe_reject:L",
+      "ok": true,
+      "scenario": "L"
+    },
+    {
+      "category": "scenarios",
+      "detail": "validate_html_artifact",
+      "name": "scenario:html_unsafe_reject:M",
+      "ok": true,
+      "scenario": "M"
+    },
+    {
+      "category": "scenarios",
+      "detail": "token participates",
+      "name": "scenario:empty_policy_token_changes_identity",
+      "ok": true,
+      "scenario": "T"
+    },
+    {
+      "category": "scenarios",
+      "detail": "csp",
+      "name": "scenario:csp_constant_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "platform/demo artifacts",
+      "name": "demo:files_exist",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "digest match",
+      "name": "demo:manifest_json_digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "digest match",
+      "name": "demo:manifest_html_digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "1.0",
+      "name": "demo:schema_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "Public OSS report",
+      "name": "demo:public_classification",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "5",
+      "name": "demo:five_repositories",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "path-free",
+      "name": "demo:no_path_leak",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "demo",
+      "detail": "demo uses its own curated EIR",
+      "name": "demo:distinct_from_sv6_report_id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "writer",
+      "detail": "['engineering-intelligence-report.html', 'engineering-intelligence-report.json', 'export-manifest.json']",
+      "name": "writer:allowlisted_filenames",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "writer",
+      "detail": "sha256",
+      "name": "writer:digests_match_files",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "writer",
+      "detail": "refuses overwrite",
+      "name": "writer:no_overwrite_default",
+      "ok": true,
+      "scenario": "Q"
+    },
+    {
+      "category": "writer",
+      "detail": "overwrite=True",
+      "name": "writer:explicit_overwrite",
+      "ok": true,
+      "scenario": "Q"
+    },
+    {
+      "category": "writer",
+      "detail": "no traversal pollution",
+      "name": "writer:path_safety",
+      "ok": true,
+      "scenario": "P"
+    },
+    {
+      "category": "writer",
+      "detail": "json bytes",
+      "name": "writer:utf8_preserved",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "scenarios",
+      "detail": "artifacts unchanged",
+      "name": "scenario:partial_overwrite_blocked",
+      "ok": true,
+      "scenario": "R"
+    },
+    {
+      "category": "contract",
+      "detail": "allowlisted filenames",
+      "name": "contract:artifact_filenames",
+      "ok": true,
+      "scenario": ""
+    }
+  ],
+  "defects": [],
+  "elapsed_ms": 256.6763749346137,
+  "export_id": "eir-export:770e2eeb725c175b1e482098",
+  "export_policy_token": "website-export:v1:scope=public_oss:identity=public_when_permitted:json=eir-website-json-v1:html=eir-static-html-v1:csp=eir-website-csp-v1:schema=1.0",
+  "html_digest": "6f605028edfde6696ad11db8288c567b3a392630d9c2a23cd815850996d3f56e",
+  "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+  "json_digest": "1d0bd749c2fe55baa5aa756ebb1caf7f64ef58f1c615f7034c9ae970a6c86a24",
+  "limitations": [
+    "SV.8 verifies website-safe projection and static export of a verified EIR.",
+    "Reuses the SV.6 five-repository public OSS EngineeringIntelligenceReport.",
+    "Does not start infrastructure deployment (SV.9), 30-repo run, or SV.12 review.",
+    "Does not publish, host, or regenerate committed demo artifacts for formatting."
+  ],
+  "ok": true,
+  "repository_count": 5,
+  "scenario_summary": {
+    "failed_checks": 0,
+    "total_checks": 125
+  },
+  "schema_name": "website-export-verification",
+  "schema_version": "1.0.0",
+  "scope": "public_oss",
+  "source_dataset_id": "dataset:51f8613688c2fdffdd876121",
+  "source_report_id": "eir:394b8574e3bc83b0878dc031",
+  "verdict": "pass",
+  "verification_id": "website-export-verification",
+  "warnings": [],
+  "website_export_schema_version": "1.0"
+}

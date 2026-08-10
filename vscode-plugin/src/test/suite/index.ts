@@ -16,6 +16,7 @@ export async function run(): Promise<void> {
     "codestrata.showWelcome",
     "codestrata.checkEnvironment",
     "codestrata.openHtmlReport",
+    "codestrata.publishCurrentReport",
     "codestrata.refreshFindings",
     "codestrata.refreshRecommendations",
     "codestrata.clearResults",

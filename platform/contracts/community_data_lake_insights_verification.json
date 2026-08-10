@@ -1,0 +1,14 @@
+{
+  "schema": "community-data-lake-insights-verification",
+  "schema_version": "1.0.0",
+  "package_id": "community-data-lake-insights-verification",
+  "slice": "17.18",
+  "epic": 17,
+  "suite_id": "sv17-18",
+  "policy": "community-data-lake-insights-validation-policy:1.0",
+  "stream_register": "community-data-lake-stream-register:1.0",
+  "aggregation_register": "community-insights-aggregation-register:1.0",
+  "start_slice_17_18": true,
+  "start_slice_17_19": true,
+  "output_relative": ".codestrata-artifacts/validation/suites/sv17-18/community-data-lake-insights-verification.json"
+}

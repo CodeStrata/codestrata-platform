@@ -95,7 +95,7 @@
   "budgets": {
     "max_keys_per_page": 1000,
     "max_pages_per_query": 20,
-    "max_list_requests_per_query": 50,
+    "max_list_requests_per_query": 2000,
     "max_get_requests_per_query": 2000,
     "max_objects_per_query": 2000,
     "max_bytes_per_query": 100000000,

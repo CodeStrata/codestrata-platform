@@ -1,0 +1,47 @@
+{
+  "policy_id": "community-22-repository-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-22-repository-validation-policy:1.0",
+  "epic": 17,
+  "slice": "17.13",
+  "authority": "Community 22-repository release-validation suite under consolidated artifact root. Validates catalog-backed assessments, heads, individual reports, portfolio Engineering Intelligence Report (EIR), telemetry, and insights boundaries. Offline scaffolding and policy checks only until full suite execution is authorized. Slice 17.14 not started.",
+  "start_epic_17": true,
+  "start_slice_17_12": true,
+  "start_slice_17_13": true,
+  "start_slice_17_14": false,
+  "repository_target": 22,
+  "individual_assessment_reports": true,
+  "assessment_head_artifacts": true,
+  "portfolio_engineering_intelligence": true,
+  "portfolio_eir_count": 1,
+  "artifact_root": ".codestrata-artifacts",
+  "assessments_path": ".codestrata-artifacts/assessments",
+  "intelligence_path": ".codestrata-artifacts/intelligence",
+  "validation_path": ".codestrata-artifacts/validation",
+  "telemetry_validation_enabled": true,
+  "data_lake_report_storage": false,
+  "insights_validation": true,
+  "catalog_source": "validation/repository-catalog/catalog.json",
+  "catalog_selection": "enabled_for.release_validation",
+  "cherry_picking_forbidden": true,
+  "release_boundary": {
+    "commit_required": false,
+    "tag_allowed": false,
+    "publish_allowed": false,
+    "publish_cli_allowed": false,
+    "publish_vscode_allowed": false
+  },
+  "verification": {
+    "package": "verification/community_22_repository_validation",
+    "schema": "community-22-repository-validation-verification:1.0.0",
+    "suite_id": "sv17-13",
+    "report": ".codestrata-artifacts/validation/suites/sv17-13/community-22-repository-validation-verification.json"
+  },
+  "notes": [
+    "Exactly 22 catalog release_validation repositories; no cherry-picking.",
+    "Assessment head artifacts remain source of truth under heads/.",
+    "Portfolio EIR count is exactly one for the 22-repository dataset.",
+    "Data Lake remains telemetry-only; assessment reports are not stored in the data lake.",
+    "Slice 17.14 is not started."
+  ]
+}

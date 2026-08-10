@@ -83,9 +83,12 @@ def clone_qualified_repository(
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     revision = entry.qualified_revision
+    # Isolate from ambient credential helpers / global gitconfig userinfo.
     env = {
         "GIT_TERMINAL_PROMPT": "0",
         "GIT_LFS_SKIP_SMUDGE": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_CONFIG_SYSTEM": "/dev/null",
         "GIT_CONFIG_COUNT": "1",
         "GIT_CONFIG_KEY_0": "core.hooksPath",
         "GIT_CONFIG_VALUE_0": "/dev/null",
@@ -230,6 +233,24 @@ def clone_qualified_repository(
                 revision.revision_type,
                 revision.value,
             )
+
+    # Ensure origin never retains ambient credential userinfo from helpers.
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(destination),
+            "remote",
+            "set-url",
+            "origin",
+            entry.github_url,
+        ],
+        check=False,
+        text=True,
+        capture_output=True,
+        timeout=30,
+        env={**dict(__import__("os").environ), **env},
+    )
 
     return CloneResult(
         True,

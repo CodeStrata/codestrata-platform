@@ -59,6 +59,24 @@ import {
   type OpenHtmlAdapter,
 } from "./reportOpening";
 import {
+  PRIVATE_REPO_ACK_ACTION,
+  PRIVATE_REPO_ACK_DETAIL,
+  PRIVATE_REPO_ACK_TITLE,
+  PUBLISH_CANCEL_ACTION,
+  PUBLISH_CONFIRM_ACTION,
+  PUBLISH_CONFIRM_DETAIL,
+  PUBLISH_CONFIRM_TITLE,
+  TELEMETRY_PUBLISH_ACTION,
+  TELEMETRY_PUBLISH_DETAIL,
+  TELEMETRY_PUBLISH_TITLE,
+  artifactsRootFromOutputDirectory,
+  buildReportPublishArgs,
+  isLocalOrPrivateRepositoryId,
+  parsePublicReportUrl,
+  publishEnvWithTelemetryOptIn,
+  repositoryIdFromHtmlPath,
+} from "./reportPublishing";
+import {
   presentFailureRecovery,
   resolveRecoveryGuidance,
 } from "./failureRecovery";
@@ -1036,6 +1054,120 @@ export function activate(context: vscode.ExtensionContext): void {
         primaryExit: opened ? "success" : "failure",
         reportOpenFailed: !opened,
       });
+    }),
+    vscode.commands.registerCommand("codestrata.publishCurrentReport", async () => {
+      // Slice 17.21: explicit publish only — never auto-publish after assess.
+      const workspaceFolder = await selectWorkspaceFolder();
+      if (!workspaceFolder || !(await ensureTrusted(workspaceFolder))) {
+        void vscode.window.showWarningMessage(
+          "Open a trusted workspace folder before publishing a report."
+        );
+        return;
+      }
+      const settings = loadSettings();
+      const engine = await resolveEngine(workspaceFolder);
+      if (!engine) {
+        void vscode.window.showErrorMessage(
+          "CodeStrata Engine CLI was not found. Install Engine, then retry Publish/Share."
+        );
+        return;
+      }
+      const located = locateHtmlReport({
+        workspaceRoot: workspaceFolder,
+        outputDirectory: settings.outputDirectory,
+        sessionHtmlPath: lastArtifacts?.htmlReportPath,
+      });
+      if (located.status !== "available" || !located.htmlPath) {
+        void vscode.window.showWarningMessage(
+          "No current assessment.html found. Run Assessment first, then Publish/Share."
+        );
+        return;
+      }
+      const repositoryId = repositoryIdFromHtmlPath(located.htmlPath);
+      if (!repositoryId) {
+        void vscode.window.showErrorMessage(
+          "Could not resolve repository id from the current report path."
+        );
+        return;
+      }
+      const publicConfirm = await vscode.window.showWarningMessage(
+        PUBLISH_CONFIRM_TITLE,
+        { modal: true, detail: PUBLISH_CONFIRM_DETAIL },
+        PUBLISH_CONFIRM_ACTION,
+        PUBLISH_CANCEL_ACTION
+      );
+      if (publicConfirm !== PUBLISH_CONFIRM_ACTION) {
+        return;
+      }
+      let acknowledgePrivate = false;
+      if (isLocalOrPrivateRepositoryId(repositoryId)) {
+        const privateAck = await vscode.window.showWarningMessage(
+          PRIVATE_REPO_ACK_TITLE,
+          { modal: true, detail: PRIVATE_REPO_ACK_DETAIL },
+          PRIVATE_REPO_ACK_ACTION,
+          PUBLISH_CANCEL_ACTION
+        );
+        if (privateAck !== PRIVATE_REPO_ACK_ACTION) {
+          return;
+        }
+        acknowledgePrivate = true;
+      }
+      const telemetryAck = await vscode.window.showInformationMessage(
+        TELEMETRY_PUBLISH_TITLE,
+        { modal: true, detail: TELEMETRY_PUBLISH_DETAIL },
+        TELEMETRY_PUBLISH_ACTION,
+        PUBLISH_CANCEL_ACTION
+      );
+      if (telemetryAck !== TELEMETRY_PUBLISH_ACTION) {
+        void vscode.window.showInformationMessage(
+          "Publish cancelled. Local report is unchanged."
+        );
+        return;
+      }
+      const artifactsRoot = artifactsRootFromOutputDirectory(settings.outputDirectory);
+      const args = buildReportPublishArgs({
+        repositoryId,
+        artifactsRoot,
+        acknowledgePrivate,
+      });
+      appendOutputLine(
+        `Publishing current report (${repositoryId}) via Engine CLI…`
+      );
+      showOutput(false);
+      const publish = await runCodestrataCli({
+        executable: engine.executable,
+        args,
+        cwd: workspaceFolder,
+        env: publishEnvWithTelemetryOptIn(),
+        onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
+        onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
+      });
+      if (publish.exitCode !== 0) {
+        void vscode.window.showErrorMessage(
+          `Publish failed (exit ${publish.exitCode}). Local report is unchanged. See CodeStrata output.`
+        );
+        return;
+      }
+      const publicUrl = parsePublicReportUrl(
+        `${publish.stdout}\n${publish.stderr}`
+      );
+      if (!publicUrl) {
+        void vscode.window.showWarningMessage(
+          "Publish completed but no branded public URL was parsed. See CodeStrata output."
+        );
+        return;
+      }
+      const action = await vscode.window.showInformationMessage(
+        `Report published: ${publicUrl}`,
+        "Copy URL",
+        "Open URL"
+      );
+      if (action === "Copy URL") {
+        await vscode.env.clipboard.writeText(publicUrl);
+        void vscode.window.showInformationMessage("Public report URL copied.");
+      } else if (action === "Open URL") {
+        await vscode.env.openExternal(vscode.Uri.parse(publicUrl));
+      }
     }),
     vscode.commands.registerCommand("codestrata.refreshFindings", async () => {
       await refreshFromDisk();

@@ -55,8 +55,8 @@ Review the HTML report in VS Code or browser</pre>
 </div>
 
 <pre class="cs-terminal"><span class="c"># deterministic assessment (local)</span>
-<span class="cmd">$</span> codestrata assess --repo . --output reports --no-ai
-<span class="c">→ reports/&lt;repo&gt;/&lt;timestamp&gt;/report.html</span></pre>
+<span class="cmd">$</span> codestrata assess --repo . --no-ai
+<span class="c">→ .codestrata-artifacts/assessments/&lt;repository-id&gt;/current/assessment.html</span></pre>
 
 <div class="cs-callout" style="margin-top:1.5rem">
 Deterministic Engineering Assessments are the default. Optional AI uses <strong>your</strong> provider credentials through the Engine — the VS Code extension does not send repository source to AI providers directly. This documentation covers <strong>Community Edition</strong> only.

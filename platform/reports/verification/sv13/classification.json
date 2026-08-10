@@ -1,0 +1,44 @@
+[
+  {
+    "classification": "A_engine_unsafe_canonical_serialization",
+    "finding": {
+      "description_shape": "pem_header_marker_in_description",
+      "finding_id": "cf3fde32-3f6d-5077-8c99-fec0177b1b39",
+      "finding_index": 544,
+      "rule_id": "SEC002",
+      "title_present": true
+    },
+    "raw_unsafe_paths": [
+      "$.assessment.findings[544].description"
+    ],
+    "repository_id": "dubbo"
+  },
+  {
+    "classification": "A_engine_unsafe_canonical_serialization",
+    "finding": {
+      "description_shape": "pem_header_marker_in_description",
+      "finding_id": "cd4eced9-e444-5ae7-b54a-8940907aef77",
+      "finding_index": 0,
+      "rule_id": "SEC002",
+      "title_present": true
+    },
+    "raw_unsafe_paths": [
+      "$.assessment.findings[0].description"
+    ],
+    "repository_id": "juice-shop"
+  },
+  {
+    "classification": "A_engine_unsafe_canonical_serialization",
+    "finding": {
+      "description_shape": "pem_header_marker_in_description",
+      "finding_id": "ae9ae298-67fc-5ad2-9faf-b6c25baf1724",
+      "finding_index": 0,
+      "rule_id": "SEC002",
+      "title_present": true
+    },
+    "raw_unsafe_paths": [
+      "$.assessment.findings[0].description"
+    ],
+    "repository_id": "nodegoat"
+  }
+]

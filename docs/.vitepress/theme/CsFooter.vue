@@ -20,8 +20,10 @@ const isHome = computed(() => {
           <a class="cs-footer__brand-link" href="/">
             <strong>CodeStrata Docs</strong>
           </a>
-          Engineering decisions grounded in code. Community Edition
-          documentation for Engine, assessments, reports, and VS Code.
+          <p class="cs-footer__tagline">
+            Engineering decisions grounded in code. Community Edition
+            documentation for Engine, assessments, reports, and VS Code.
+          </p>
         </div>
         <div>
           <h4>Docs</h4>

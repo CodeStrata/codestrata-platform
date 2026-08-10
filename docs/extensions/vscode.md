@@ -14,7 +14,9 @@ recommendations, diagnostics, and HTML report access.
 
 ## Installation
 
-1. Install **CodeStrata** from the VS Code Marketplace (or Install from VSIX).
+1. Install from a **candidate VSIX** (Install from VSIX) until Marketplace
+   publication is complete. Do not treat a candidate package as a published
+   Marketplace release.
 2. Open a repository folder.
 3. On first run, the extension detects **CodeStrata Engine** or offers guided install.
 4. Optionally run **Initialize Repository** (Engine writes
@@ -58,7 +60,20 @@ After a successful assessment the extension loads public artifacts into:
 - Findings tree
 - Recommendations view
 - Editor diagnostics
-- Open HTML report command
+- Open HTML report command (opens `.codestrata-artifacts/assessments/<repository-id>/current/assessment.html`)
+
+## Publish / share current report
+
+**Publish/Share Current Report** is an **explicit** action. Assessment never
+auto-publishes. The command:
+
+1. Confirms public publish
+2. Asks for acknowledgment when the repository id looks private/local (`local-*`)
+3. Requires temporary telemetry/cloud participation for that publish only
+4. Invokes Engine `codestrata report publish --confirm-public-publish`
+5. Shows the branded URL (`https://reports.codestrata.ai/r/…`) for copy/open
+
+Local HTML/JSON reports remain authoritative on disk.
 
 ## Optional AI
 
@@ -69,7 +84,8 @@ Credentials are **not** stored in the extension.
 
 - Local Engine execution
 - No Platform requirement for Community assessment
-- See [Security](/security/) and [Privacy](/security/privacy)
+- See [Security](/security/), [Privacy](/security/privacy), and
+  [Community Cloud API](/reference/community-api/)
 
 ## Detailed reference
 

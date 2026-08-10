@@ -1,0 +1,8 @@
+{
+  "assessment_command": "codestrata assess --repo . --output reports --no-ai",
+  "github_repository": "expressjs/express",
+  "language_group": "JS/TS",
+  "qualified_revision": "dbac741a49a5a64336b70c06e85c2e2706e36336",
+  "repository_id": "express",
+  "source_tag": "v5.2.1"
+}

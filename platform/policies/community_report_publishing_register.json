@@ -1,0 +1,34 @@
+{
+  "register_id": "community-report-publishing-register",
+  "register_version": "1.0",
+  "schema": "community-report-publishing-register:1.0",
+  "slice": "17.16",
+  "entries": [
+    {
+      "report_type": "assessment",
+      "logical_identity_type": "repository",
+      "cloud_current": true,
+      "cloud_previous": true,
+      "public_id_status": "opaque_published_or_revoked",
+      "publish_auth": "community_client_credential",
+      "public_read": true,
+      "revocation": true,
+      "retention_count": 2,
+      "storage_boundary": "community-report-artifacts",
+      "validation_status": "verified"
+    },
+    {
+      "report_type": "engineering_intelligence",
+      "logical_identity_type": "portfolio",
+      "cloud_current": true,
+      "cloud_previous": true,
+      "public_id_status": "opaque_published_or_revoked",
+      "publish_auth": "community_client_credential",
+      "public_read": true,
+      "revocation": true,
+      "retention_count": 2,
+      "storage_boundary": "community-report-artifacts",
+      "validation_status": "verified"
+    }
+  ]
+}

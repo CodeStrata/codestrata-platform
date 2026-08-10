@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-epic17-defect-resolution-verification:1.0.0",
+  "title": "Community Epic 17 Defect Resolution Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic17_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-epic17-defect-resolution-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-epic17-defect-resolution-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "slice": { "const": "17.22" },
+    "suite_id": { "const": "sv17-22" },
+    "epic17_boundary": {
+      "type": "object",
+      "required": ["start_slice_17_22", "start_slice_17_23", "start_slice_17_24"],
+      "properties": {
+        "start_slice_17_22": { "const": true },
+        "start_slice_17_23": { "const": true },
+        "start_slice_17_24": { "const": false }
+      }
+    }
+  }
+}

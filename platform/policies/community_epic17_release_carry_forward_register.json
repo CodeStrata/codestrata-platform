@@ -1,0 +1,98 @@
+{
+  "register_id": "community-epic17-release-carry-forward-register",
+  "register_version": "1.1",
+  "schema": "community-epic17-release-carry-forward-register:1.0",
+  "slice": "17.27",
+  "entries": [
+    {
+      "item_id": "RCF-001",
+      "description": "Publish/finalize v0.2.0 GitHub Release",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-002",
+      "description": "Reconcile Community Status engine_version from 0.1.0 to 0.2.0 after GitHub Release publish",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-003",
+      "description": "Full 22-repository production Release corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-004",
+      "description": "Publish/check 22 Assessment URLs",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-005",
+      "description": "Publish/check release-validation EIR",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-006",
+      "description": "Populate/verify public-report-urls.json for release corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-007",
+      "description": "Validate Data Lake event coverage for full corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-008",
+      "description": "Validate Insights dashboard against full corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-009",
+      "description": "OpenAI live E2E when OPENAI_API_KEY supplied",
+      "disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "item_id": "RCF-010",
+      "description": "OpenRouter live E2E when OPENROUTER_API_KEY supplied",
+      "disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "item_id": "RCF-011",
+      "description": "Main-site favicon fix (codestrata.ai) — MUST_FIX_BEFORE_RELEASE",
+      "disposition": "MUST_FIX_BEFORE_RELEASE"
+    },
+    {
+      "item_id": "RCF-012",
+      "description": "PAT rotation if historical token may remain active",
+      "disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "item_id": "RCF-013",
+      "description": "CLI package publication",
+      "disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "item_id": "RCF-014",
+      "description": "VS Code Marketplace publication",
+      "disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "item_id": "RCF-015",
+      "description": "Final export-repo sync (community/engine, docs, insights, infrastructure, reports)",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-016",
+      "description": "Post-publish smoke after v0.2.0 publication",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-017",
+      "description": "ai_usage assess-path emission remains construction-only for v0.2.0",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "RCF-018",
+      "description": "Infrastructure export: fail-closed on owner-local terraform.tfvars — export without copying .local/tfvars",
+      "disposition": "RELEASE_PROCEDURE"
+    }
+  ]
+}

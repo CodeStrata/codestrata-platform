@@ -115,3 +115,9 @@ resource "aws_iam_role_policy_attachment" "lambda_data_lake_writer" {
   role       = local.runtime_lambda_role_name
   policy_arn = module.community_data_lake.writer_policy_arn
 }
+
+# Slice 17.16: private report artifact store (separate from Data Lake).
+resource "aws_iam_role_policy_attachment" "lambda_report_artifacts" {
+  role       = local.runtime_lambda_role_name
+  policy_arn = module.community_report_artifacts.runtime_policy_arn
+}

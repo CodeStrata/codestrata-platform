@@ -1,0 +1,46 @@
+{
+  "policy_id": "community-data-lake-insights-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-data-lake-insights-validation-policy:1.0",
+  "slice": "17.18",
+  "epic": 17,
+  "authority": "Validate production Community analytics path: opt-in HTTP transport → api.codestrata.ai → Data Lake → Insights aggregation.",
+  "depends_on": [
+    "community-telemetry-consent-validation-policy:1.0",
+    "community-data-lake-policy:1.0",
+    "community-insights-query-policy:1.0",
+    "community-report-publishing-policy:1.0"
+  ],
+  "production_http_transport_available_after_opt_in": true,
+  "live_datalake_probe_completed": true,
+  "data_lake_append_oriented": true,
+  "report_artifacts_in_data_lake": false,
+  "insights_reads_production_data_lake": true,
+  "query_budget_reached_false_for_supported_window": true,
+  "private_payload_not_exposed": true,
+  "quarantine_behavior": "http_reject_before_persist",
+  "data_lake_bucket_class": "codestrata-community-data-lake-production",
+  "report_artifacts_bucket_class": "codestrata-community-report-artifacts-production",
+  "supported_streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "probe_streams": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "ai_usage"
+  ],
+  "extension_event_requires_extension_client": true,
+  "release_epic_backlog": [
+    "full_22_repo_release_corpus_replay",
+    "public_report_urls_manifest_population",
+    "GET_/api/v1/community/status_website_metrics"
+  ],
+  "community_status_website_feature_deferred": true,
+  "start_slice_17_18": true,
+  "start_slice_17_19": true
+}

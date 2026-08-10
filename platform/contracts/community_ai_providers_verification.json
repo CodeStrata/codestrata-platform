@@ -1,0 +1,14 @@
+{
+  "schema": "community-ai-providers-verification",
+  "schema_version": "1.0.0",
+  "package_id": "community-ai-providers-verification",
+  "slice": "17.20",
+  "epic": 17,
+  "suite_id": "sv17-20",
+  "policy": "community-ai-provider-validation-policy:1.0",
+  "register": "community-ai-provider-register:1.0",
+  "start_slice_17_20": true,
+  "start_slice_17_21": true,
+  "start_slice_17_22": false,
+  "output_relative": ".codestrata-artifacts/validation/suites/sv17-20/community-ai-providers-verification.json"
+}

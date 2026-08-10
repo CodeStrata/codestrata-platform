@@ -1,0 +1,29 @@
+"""CLI entry for Slice 17.16."""
+
+from __future__ import annotations
+
+from verification.community_report_publishing.contract import monorepo_root_from_here
+from verification.community_report_publishing.determinism import reports_byte_identical
+from verification.community_report_publishing.reporting import write_report
+from verification.community_report_publishing.runner import build_report, main
+
+
+def run_with_determinism_check() -> int:
+    monorepo = monorepo_root_from_here()
+    first = build_report(monorepo)
+    second = build_report(monorepo)
+    if not reports_byte_identical(first.to_dict(), second.to_dict()):
+        raise SystemExit("determinism failure: dual build_report outputs differ")
+    path = write_report(monorepo, second)
+    rel = path.relative_to(monorepo).as_posix()
+    print(f"{second.verdict} checks={second.total_checks} failed={second.failed_checks} report={rel}")
+    print(
+        f"start_slice_17_16=true start_slice_17_17=true "
+        f"platform_modules={len(second.platform_reports.get('modules') or [])} "
+        f"routes={len(second.routes.get('routes') or [])}"
+    )
+    return 0 if second.verdict != "FAIL" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_with_determinism_check())

@@ -19,6 +19,10 @@ locals {
       CODESTRATA_DATA_LAKE_ADAPTER               = var.ingestion_wire ? "s3" : "unavailable"
       CODESTRATA_DATA_LAKE_BUCKET                = var.data_lake_bucket_name
       CODESTRATA_COMMUNITY_CREDENTIALS_SECRET_ID = var.community_credentials_secret_id
+    } : {},
+    var.report_artifacts_bucket_name != "" ? {
+      CODESTRATA_REPORT_ARTIFACTS_BUCKET = var.report_artifacts_bucket_name
+      CODESTRATA_REPORT_PUBLISHING       = "true"
     } : {}
   )
   # No secret VALUES. Identifiers and feature flags only.

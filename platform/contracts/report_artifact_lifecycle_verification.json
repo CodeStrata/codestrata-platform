@@ -1,0 +1,9 @@
+{
+  "schema": "report-artifact-lifecycle-verification",
+  "schema_version": "1.0.0",
+  "slice": "17.15",
+  "start_slice_17_15": true,
+  "start_slice_17_16": true,
+  "artifact_root": ".codestrata-artifacts",
+  "report_relative": ".codestrata-artifacts/validation/suites/sv17-15/report-artifact-lifecycle-verification.json"
+}

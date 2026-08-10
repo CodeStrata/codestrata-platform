@@ -1,0 +1,117 @@
+{
+  "register_id": "community-epic17-defect-register",
+  "register_version": "1.1",
+  "schema": "community-epic17-defect-register:1.0",
+  "slice": "17.27",
+  "entries": [
+    {
+      "defect_id": "E17-D001",
+      "source_slice": "17.20",
+      "classification": "CONFIGURATION",
+      "description": "timeout_seconds declared but not applied on assess provider construction",
+      "current_status": "RESOLVED",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D002",
+      "source_slice": "17.20",
+      "classification": "CONFIGURATION",
+      "description": "max_retries settings appear active but assess uses CR-1 single attempt",
+      "current_status": "RESOLVED",
+      "release_disposition": "RELEASE_CARRY_FORWARD"
+    },
+    {
+      "defect_id": "E17-D003",
+      "source_slice": "17.20",
+      "classification": "CONFIGURATION",
+      "description": "ai_usage telemetry construction-only on assess path",
+      "current_status": "RELEASE_CARRY_FORWARD",
+      "release_disposition": "RELEASE_CARRY_FORWARD"
+    },
+    {
+      "defect_id": "E17-D004",
+      "source_slice": "17.20",
+      "classification": "OWNER_PREREQUISITE",
+      "description": "OpenAI live E2E blocked without OPENAI_API_KEY",
+      "current_status": "OWNER_ACTION_REQUIRED",
+      "release_disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "defect_id": "E17-D005",
+      "source_slice": "17.20",
+      "classification": "OWNER_PREREQUISITE",
+      "description": "OpenRouter live E2E blocked without OPENROUTER_API_KEY",
+      "current_status": "OWNER_ACTION_REQUIRED",
+      "release_disposition": "OWNER_ACTION_REQUIRED"
+    },
+    {
+      "defect_id": "E17-D006",
+      "source_slice": "17.18",
+      "classification": "PRIVACY",
+      "description": "Data Lake identity/ prefix has no object expiration lifecycle",
+      "current_status": "RESOLVED",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D007",
+      "source_slice": "17.13+",
+      "classification": "SECURITY",
+      "description": "Temp validation clones could retain credential-bearing remote userinfo via ambient git helpers",
+      "current_status": "RESOLVED",
+      "release_disposition": "OWNER_ACTION_REQUIRED",
+      "notes": "Code fix resolved. If a historical PAT may remain active, rotate (OWNER_ACTION_REQUIRED)."
+    },
+    {
+      "defect_id": "E17-D008",
+      "source_slice": "17.21",
+      "classification": "DOCS_CONTRACT",
+      "description": "public-report-urls.json empty while live publish URL exists",
+      "current_status": "RESOLVED",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D009",
+      "source_slice": "17.17",
+      "classification": "STALE_LIMITATION",
+      "description": "product_default_http_transport_unavailable / live_datalake_probe_skipped",
+      "current_status": "RESOLVED",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D011",
+      "source_slice": "17.22",
+      "classification": "CONFIGURATION",
+      "description": "Infrastructure export dry-run fail-closed when local gitignored terraform.tfvars is present",
+      "current_status": "RELEASE_CARRY_FORWARD",
+      "release_disposition": "RELEASE_CARRY_FORWARD",
+      "notes": "Intentional fail-closed. Release procedure: export without copying owner-local tfvars."
+    },
+    {
+      "defect_id": "E17-D012",
+      "source_slice": "17.25",
+      "classification": "RELEASE_GAP",
+      "description": "Published GitHub Release still v0.1.0 while package candidate is 0.2.0",
+      "current_status": "RELEASE_CARRY_FORWARD",
+      "release_disposition": "RELEASE_CARRY_FORWARD",
+      "notes": "EXPECTED_RELEASE_READINESS_GAP — not an Epic 17 engineering defect."
+    },
+    {
+      "defect_id": "E17-D013",
+      "source_slice": "17.26",
+      "classification": "BRANDING",
+      "description": "codestrata.ai favicon / HTML favicon reference still stale",
+      "current_status": "RELEASE_CARRY_FORWARD",
+      "release_disposition": "RELEASE_CARRY_FORWARD",
+      "notes": "MUST_FIX_BEFORE_RELEASE. Do not fix inside 17.27."
+    },
+    {
+      "defect_id": "E17-D014",
+      "source_slice": "17.24",
+      "classification": "UX",
+      "description": "Insights browser login Illegal invocation / Network error",
+      "current_status": "RESOLVED",
+      "release_disposition": "RESOLVED",
+      "notes": "Fixed with uncontrolled password input + globalThis.fetch; automated auth matrix green."
+    }
+  ]
+}

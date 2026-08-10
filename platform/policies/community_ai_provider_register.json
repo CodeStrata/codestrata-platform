@@ -1,0 +1,48 @@
+{
+  "entries": [
+    {
+      "availability": "configured",
+      "credential_source_class": "aws_sdk_default_chain",
+      "e2e_status": "passed",
+      "limitations": [],
+      "model_family": "amazon_nova_family",
+      "privacy_status": "validated",
+      "provider": "bedrock",
+      "report_status": "validated",
+      "timeout_status": "bounded_single_attempt",
+      "usage_metadata_status": "provider_metadata_in_advisor"
+    },
+    {
+      "availability": "owner_credential_required",
+      "credential_source_class": "environment_api_key",
+      "e2e_status": "OWNER_CREDENTIAL_REQUIRED",
+      "limitations": [
+        "OWNER_CREDENTIAL_REQUIRED"
+      ],
+      "model_family": "gpt_family",
+      "privacy_status": "validated",
+      "provider": "openai",
+      "report_status": "validated",
+      "timeout_status": "bounded_single_attempt",
+      "usage_metadata_status": "provider_metadata_in_advisor"
+    },
+    {
+      "availability": "owner_credential_required",
+      "credential_source_class": "environment_api_key",
+      "e2e_status": "OWNER_CREDENTIAL_REQUIRED",
+      "limitations": [
+        "OWNER_CREDENTIAL_REQUIRED"
+      ],
+      "model_family": "openrouter_routed",
+      "privacy_status": "validated",
+      "provider": "openrouter",
+      "report_status": "validated",
+      "timeout_status": "bounded_single_attempt",
+      "usage_metadata_status": "provider_metadata_in_advisor"
+    }
+  ],
+  "register_id": "community-ai-provider-register",
+  "register_version": "1.0",
+  "schema": "community-ai-provider-register:1.0",
+  "slice": "17.20"
+}

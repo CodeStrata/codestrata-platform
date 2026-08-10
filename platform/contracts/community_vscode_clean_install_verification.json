@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-vscode-clean-install-verification:1.0.0",
+  "title": "Community VS Code Clean Install Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "total_checks",
+    "failed_checks",
+    "epic17_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-vscode-clean-install-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-vscode-clean-install-verification" },
+    "verdict": {
+      "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"]
+    },
+    "slice": { "const": "17.21" },
+    "suite_id": { "const": "sv17-21" },
+    "epic17_boundary": {
+      "type": "object",
+      "required": ["start_slice_17_21", "start_slice_17_22"],
+      "properties": {
+        "start_slice_17_21": { "const": true },
+        "start_slice_17_22": { "const": false }
+      }
+    }
+  }
+}

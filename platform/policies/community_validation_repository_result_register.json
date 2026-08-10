@@ -1,0 +1,30 @@
+{
+  "schema": "community-validation-repository-result-register:1.0",
+  "epic": 17,
+  "slice": "17.13",
+  "suite_id": "sv17-13",
+  "safe_fields": [
+    "repository_validation_id",
+    "language",
+    "ecosystem",
+    "assessment_status",
+    "head_status_summary",
+    "report_status",
+    "eir_eligible",
+    "telemetry_status",
+    "defect_count",
+    "limitations"
+  ],
+  "forbidden_fields": [
+    "aws_account_id",
+    "s3_uri",
+    "absolute_path",
+    "clone_url_with_credentials",
+    "pat",
+    "password",
+    "secret"
+  ],
+  "start_slice_17_13": true,
+  "start_slice_17_14": false,
+  "entries": []
+}

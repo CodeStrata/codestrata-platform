@@ -85,6 +85,14 @@ ERROR_CLIENT_NOT_AUTHORIZED = "client_not_authorized"
 ERROR_INVALID_AUTHORIZATION_HEADER = "invalid_authorization_header"
 ERROR_INTERNAL = "internal_error"
 ERROR_VERSION_NOT_SUPPORTED = "api_version_not_supported"
+ERROR_REPORT_STORE_UNAVAILABLE = "report_store_unavailable"
+ERROR_EXPLICIT_PUBLISH_REQUIRED = "explicit_publish_required"
+ERROR_PRIVATE_REPOSITORY_ACK_REQUIRED = "private_repository_ack_required"
+ERROR_UPLOAD_INTENT_EXPIRED = "upload_intent_expired"
+ERROR_ARTIFACT_MISSING = "artifact_missing"
+ERROR_ARTIFACT_TOO_LARGE = "artifact_too_large"
+ERROR_SANITIZER_REJECTED = "sanitizer_rejected"
+ERROR_FORBIDDEN = "forbidden"
 
 
 _SAFE_PUBLIC_MESSAGES: dict[str, str] = {
@@ -179,8 +187,27 @@ _SAFE_PUBLIC_MESSAGES: dict[str, str] = {
     ERROR_AUTHENTICATION_UNAVAILABLE: "Client authentication is temporarily unavailable.",
     ERROR_CLIENT_NOT_AUTHORIZED: "Client is not authorized for this API route.",
     ERROR_INVALID_AUTHORIZATION_HEADER: "Authorization header is invalid.",
+    # Insights shared-password auth (must not remap to internal_error).
+    "invalid_credentials": "Invalid password",
+    "session_expired": "Session expired",
+    "invalid_session": "Invalid session",
+    "authorization_denied": "Access denied",
+    "auth_service_unavailable": "Authentication unavailable",
+    "invalid_origin": "Invalid request origin",
+    "rate_limited": "Too many requests",
+    "internal_auth_error": "Authentication error",
     ERROR_INTERNAL: "An unexpected error occurred.",
     ERROR_VERSION_NOT_SUPPORTED: "API version is not supported.",
+    ERROR_REPORT_STORE_UNAVAILABLE: "Report publishing is temporarily unavailable.",
+    ERROR_EXPLICIT_PUBLISH_REQUIRED: "Explicit public-publish confirmation is required.",
+    ERROR_PRIVATE_REPOSITORY_ACK_REQUIRED: (
+        "Publishing creates a publicly accessible report. Anyone with the link can view it."
+    ),
+    ERROR_UPLOAD_INTENT_EXPIRED: "Upload intent expired.",
+    ERROR_ARTIFACT_MISSING: "Required report artifact is missing from staging.",
+    ERROR_ARTIFACT_TOO_LARGE: "Report artifact exceeds the maximum allowed size.",
+    ERROR_SANITIZER_REJECTED: "Report content failed publication sanitizer checks.",
+    ERROR_FORBIDDEN: "Client is not authorized for this report operation.",
 }
 
 ErrorDetails = Mapping[str, Any] | Sequence[Mapping[str, Any]]

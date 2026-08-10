@@ -1,0 +1,27 @@
+{
+  "policy_id": "community-ai-provider-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-ai-provider-validation-policy:1.0",
+  "slice": "17.20",
+  "epic": 17,
+  "authority": "Validate OpenAI, Bedrock, and OpenRouter provider abstraction without redesigning providers or assessment algorithms.",
+  "depends_on": [
+    "community-assessment-engineering-intelligence-validation-policy:1.0"
+  ],
+  "supported_providers": ["openai", "bedrock", "openrouter"],
+  "no_ai_supported": true,
+  "deterministic_assessment_provider_independent": true,
+  "provider_failure_non_blocking": true,
+  "provider_credentials_never_persisted_in_artifacts": true,
+  "prompts_responses_excluded_from_telemetry": true,
+  "ai_usage_privacy_safe": true,
+  "ai_usage_telemetry_on_assess_path": "deferred_construction_only",
+  "cross_provider_fallback": false,
+  "eir_provider_enrichment": false,
+  "settings_timeout_max_retries_wiring": "timeout_wired_max_retries_assess_single_attempt_intentional",
+  "ai_usage_telemetry_on_assess_path": "deferred_construction_only_release_acceptable",
+  "community_status_website_deferred": true,
+  "full_22_repo_release_corpus": false,
+  "start_slice_17_20": true,
+  "start_slice_17_21": true
+}

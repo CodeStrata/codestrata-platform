@@ -176,8 +176,10 @@ artifacts/models/
 .codestrata-artifacts/
 .codestrata-test-knowledge/
 
-# Generated analysis reports
-reports/
+# Generated analysis reports (never the Cloudflare reports/ delivery package,
+# and never docs/reports/ documentation pages).
+# Historical bare "reports/" rule incorrectly ignored both.
+.local-reports/
 
 # Never commit generated governance dumps (scripts write to .generated/)
 governance/reports/
@@ -195,3 +197,7 @@ export-staging/
 
 # Live OpenTofu backend config
 infrastructure/**/backend.hcl
+
+# Dependency / local operator dirs (defense-in-depth; also ignored in package trees)
+node_modules/
+.local/

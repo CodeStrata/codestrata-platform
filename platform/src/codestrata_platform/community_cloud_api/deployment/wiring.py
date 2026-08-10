@@ -64,6 +64,7 @@ def create_production_foundation_app(
         # Sinks and identity ports intentionally omitted → unavailable/fail-closed.
         # rate_limit_store omitted → process-local InMemoryRateLimitStore.
         insights_auth_service=_build_insights_auth_service(),
+        report_publishing_service=_build_report_publishing_service(active),
     )
     app.state.community_cloud_deployment_settings = active
     app.state.community_cloud_deployment_diagnostic = deployment_wiring_diagnostic(
@@ -152,6 +153,11 @@ def _create_production_ingestion_app(active: DeploymentSettings) -> FastAPI:
         event_identity_lookup=identity,
         event_identity_recorder=identity,
         insights_auth_service=_build_insights_auth_service(),
+        insights_aggregation_service=_build_insights_aggregation_service(
+            bucket_name=active.data_lake_bucket,
+            region_name=region,
+        ),
+        report_publishing_service=_build_report_publishing_service(active),
     )
     app.state.community_cloud_deployment_settings = active
     app.state.community_cloud_deployment_diagnostic = deployment_wiring_diagnostic(
@@ -162,6 +168,52 @@ def _create_production_ingestion_app(active: DeploymentSettings) -> FastAPI:
         durable_ingestion=True,
     )
     return app
+
+
+def _build_insights_aggregation_service(
+    *,
+    bucket_name: str,
+    region_name: str | None,
+):
+    """Wire privacy-safe Insights aggregation to bounded Data Lake reads."""
+
+    import boto3
+
+    from codestrata_platform.community_cloud_api.insights.service import (
+        InsightsAggregationService,
+    )
+    from codestrata_platform.community_cloud_api.insights_storage.reader import (
+        BoundedS3Reader,
+    )
+
+    client = boto3.client("s3", region_name=region_name)
+    reader = BoundedS3Reader(bucket=bucket_name, client=client)
+    return InsightsAggregationService(reader=reader)
+
+
+def _build_report_publishing_service(active: DeploymentSettings):
+    """Wire private report artifact store when bucket is configured."""
+
+    from codestrata_platform.community_cloud_api.reports.service import (
+        ReportPublishingService,
+    )
+    from codestrata_platform.community_cloud_api.reports.store import (
+        S3ReportArtifactStore,
+    )
+
+    if not active.report_publishing_enabled or not active.report_artifacts_bucket:
+        return ReportPublishingService(available=False)
+
+    import os
+
+    region = (
+        os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION") or ""
+    ).strip() or None
+    store = S3ReportArtifactStore(
+        bucket_name=active.report_artifacts_bucket,
+        region_name=region,
+    )
+    return ReportPublishingService(store=store, available=True)
 
 
 def _build_insights_auth_service():

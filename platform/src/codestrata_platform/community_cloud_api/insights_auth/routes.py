@@ -8,6 +8,7 @@ from codestrata_platform.community_cloud_api.insights_auth.handlers import (
     handle_login,
     handle_logout,
     handle_overview,
+    handle_published_reports,
     handle_session_status,
 )
 from codestrata_platform.community_cloud_api.insights_auth.request_models import (
@@ -16,6 +17,7 @@ from codestrata_platform.community_cloud_api.insights_auth.request_models import
 from codestrata_platform.community_cloud_api.insights_auth.service import InsightsAuthService
 from codestrata_platform.community_cloud_api.models import RequestContext
 from codestrata_platform.community_cloud_api.registry import RouteRegistry, RouteSpec
+from codestrata_platform.community_cloud_api.reports.service import ReportPublishingService
 from codestrata_platform.community_cloud_api.validation.models import (
     BodyPolicy,
     NO_BODY_SCHEMA,
@@ -27,11 +29,13 @@ LOGIN_PATH = "/insights/auth/login"
 LOGOUT_PATH = "/insights/auth/logout"
 SESSION_PATH = "/insights/auth/session"
 OVERVIEW_PATH = "/insights/api/overview"
+PUBLISHED_REPORTS_PATH = "/insights/api/published-reports"
 
 LOGIN_ROUTE = "insights.auth.login"
 LOGOUT_ROUTE = "insights.auth.logout"
 SESSION_ROUTE = "insights.auth.session"
 OVERVIEW_ROUTE = "insights.api.overview"
+PUBLISHED_REPORTS_ROUTE = "insights.api.published_reports"
 
 LOGIN_SCHEMA_ID = "community.insights.auth.login"
 LOGIN_SCHEMA_VERSION = "1.0"
@@ -51,6 +55,7 @@ def register_insights_auth_routes(
     *,
     auth: InsightsAuthService,
     aggregation: InsightsAggregationService | None = None,
+    report_service: ReportPublishingService | None = None,
 ) -> None:
     """Register Insights auth + narrow overview under /api/v1.
 
@@ -71,6 +76,11 @@ def register_insights_auth_routes(
 
     def _overview(context: RequestContext) -> Response:
         return handle_overview(context, auth=auth, aggregation=agg)
+
+    def _published(context: RequestContext) -> Response:
+        return handle_published_reports(
+            context, auth=auth, report_service=report_service
+        )
 
     registry.register(
         RouteSpec(
@@ -118,5 +128,17 @@ def register_insights_auth_routes(
             authentication_group="public",
         ),
         handler=_overview,
+        request_schema=NO_BODY_SCHEMA,
+    )
+    registry.register(
+        RouteSpec(
+            version=API_VERSION_V1,
+            method="GET",
+            path=PUBLISHED_REPORTS_PATH,
+            name=PUBLISHED_REPORTS_ROUTE,
+            rate_limit_group="health",
+            authentication_group="public",
+        ),
+        handler=_published,
         request_schema=NO_BODY_SCHEMA,
     )

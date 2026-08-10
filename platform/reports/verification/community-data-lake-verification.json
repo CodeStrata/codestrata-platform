@@ -1,0 +1,1633 @@
+{
+  "adapter_matrix": {
+    "fake_s3": {
+      "accepted_conflict": "conflict",
+      "accepted_exact_retry": "already_exists",
+      "accepted_first_write": "stored",
+      "invalid_type": "rejected",
+      "quarantine_first_write": "stored"
+    },
+    "in_memory": {
+      "accepted_conflict": "conflict",
+      "accepted_exact_retry": "already_exists",
+      "accepted_first_write": "stored",
+      "invalid_type": "rejected",
+      "quarantine_first_write": "stored"
+    },
+    "unavailable": {
+      "accepted_conflict": "unavailable",
+      "accepted_exact_retry": "unavailable",
+      "accepted_first_write": "unavailable",
+      "invalid_type": "rejected",
+      "quarantine_first_write": "unavailable"
+    }
+  },
+  "checks": [
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:in_memory:telemetry:first_write_stored",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:in_memory:telemetry:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:in_memory:telemetry:conflict_detected",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:in_memory:telemetry:partition_prefix",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:in_memory:telemetry:metadata_keys",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "codestrata_cli",
+      "name": "streams:in_memory:telemetry:client_type_metadata",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:in_memory:assessment_metadata:first_write_stored",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:in_memory:assessment_metadata:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:in_memory:assessment_metadata:conflict_detected",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:in_memory:assessment_metadata:partition_prefix",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-assessment-schema', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:in_memory:assessment_metadata:metadata_keys",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "1.2",
+      "name": "streams:in_memory:assessment_metadata:assessment_schema_metadata",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:in_memory:cli_event:first_write_stored",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:in_memory:cli_event:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:in_memory:cli_event:conflict_detected",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:in_memory:cli_event:partition_prefix",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:in_memory:cli_event:metadata_keys",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:in_memory:extension_event:first_write_stored",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:in_memory:extension_event:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:in_memory:extension_event:conflict_detected",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:in_memory:extension_event:partition_prefix",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:in_memory:extension_event:metadata_keys",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "vscode_extension",
+      "name": "streams:in_memory:extension_event:client_type_metadata",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:in_memory:ai_usage:first_write_stored",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:in_memory:ai_usage:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:in_memory:ai_usage:conflict_detected",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:in_memory:ai_usage:partition_prefix",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:in_memory:ai_usage:metadata_keys",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "codestrata_cli",
+      "name": "streams:in_memory:ai_usage:client_type_metadata",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:fake_s3:telemetry:first_write_stored",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:fake_s3:telemetry:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:fake_s3:telemetry:conflict_detected",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:fake_s3:telemetry:partition_prefix",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:fake_s3:telemetry:metadata_keys",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "codestrata_cli",
+      "name": "streams:fake_s3:telemetry:client_type_metadata",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "IfNoneMatch=*",
+      "name": "streams:fake_s3:telemetry:s3_if_none_match",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "AES256",
+      "name": "streams:fake_s3:telemetry:s3_sse_aes256",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "application/json",
+      "name": "streams:fake_s3:telemetry:s3_content_type",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "present",
+      "name": "streams:fake_s3:telemetry:s3_checksum_sha256",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "bytes match",
+      "name": "streams:fake_s3:telemetry:s3_body_exact",
+      "ok": true,
+      "scenario": "telemetry"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:fake_s3:assessment_metadata:first_write_stored",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:fake_s3:assessment_metadata:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:fake_s3:assessment_metadata:conflict_detected",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:fake_s3:assessment_metadata:partition_prefix",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-assessment-schema', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:fake_s3:assessment_metadata:metadata_keys",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "1.2",
+      "name": "streams:fake_s3:assessment_metadata:assessment_schema_metadata",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "IfNoneMatch=*",
+      "name": "streams:fake_s3:assessment_metadata:s3_if_none_match",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "AES256",
+      "name": "streams:fake_s3:assessment_metadata:s3_sse_aes256",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "application/json",
+      "name": "streams:fake_s3:assessment_metadata:s3_content_type",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "present",
+      "name": "streams:fake_s3:assessment_metadata:s3_checksum_sha256",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "bytes match",
+      "name": "streams:fake_s3:assessment_metadata:s3_body_exact",
+      "ok": true,
+      "scenario": "assessment_metadata"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:fake_s3:cli_event:first_write_stored",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:fake_s3:cli_event:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:fake_s3:cli_event:conflict_detected",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:fake_s3:cli_event:partition_prefix",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:fake_s3:cli_event:metadata_keys",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "IfNoneMatch=*",
+      "name": "streams:fake_s3:cli_event:s3_if_none_match",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "AES256",
+      "name": "streams:fake_s3:cli_event:s3_sse_aes256",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "application/json",
+      "name": "streams:fake_s3:cli_event:s3_content_type",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "present",
+      "name": "streams:fake_s3:cli_event:s3_checksum_sha256",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "bytes match",
+      "name": "streams:fake_s3:cli_event:s3_body_exact",
+      "ok": true,
+      "scenario": "cli_event"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:fake_s3:extension_event:first_write_stored",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:fake_s3:extension_event:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:fake_s3:extension_event:conflict_detected",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:fake_s3:extension_event:partition_prefix",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:fake_s3:extension_event:metadata_keys",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "vscode_extension",
+      "name": "streams:fake_s3:extension_event:client_type_metadata",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "IfNoneMatch=*",
+      "name": "streams:fake_s3:extension_event:s3_if_none_match",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "AES256",
+      "name": "streams:fake_s3:extension_event:s3_sse_aes256",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "application/json",
+      "name": "streams:fake_s3:extension_event:s3_content_type",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "present",
+      "name": "streams:fake_s3:extension_event:s3_checksum_sha256",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "bytes match",
+      "name": "streams:fake_s3:extension_event:s3_body_exact",
+      "ok": true,
+      "scenario": "extension_event"
+    },
+    {
+      "category": "streams",
+      "detail": "stored",
+      "name": "streams:fake_s3:ai_usage:first_write_stored",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "already_exists",
+      "name": "streams:fake_s3:ai_usage:exact_retry_already_exists",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "conflict",
+      "name": "streams:fake_s3:ai_usage:conflict_detected",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "prefix ok",
+      "name": "streams:fake_s3:ai_usage:partition_prefix",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "keys=['codestrata-client-type', 'codestrata-content-sha256', 'codestrata-envelope-schema', 'codestrata-object-id', 'codestrata-source-schema', 'codestrata-stream']",
+      "name": "streams:fake_s3:ai_usage:metadata_keys",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "codestrata_cli",
+      "name": "streams:fake_s3:ai_usage:client_type_metadata",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "IfNoneMatch=*",
+      "name": "streams:fake_s3:ai_usage:s3_if_none_match",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "AES256",
+      "name": "streams:fake_s3:ai_usage:s3_sse_aes256",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "application/json",
+      "name": "streams:fake_s3:ai_usage:s3_content_type",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "present",
+      "name": "streams:fake_s3:ai_usage:s3_checksum_sha256",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "streams",
+      "detail": "bytes match",
+      "name": "streams:fake_s3:ai_usage:s3_body_exact",
+      "ok": true,
+      "scenario": "ai_usage"
+    },
+    {
+      "category": "quarantine",
+      "detail": "stored",
+      "name": "quarantine:in_memory:first_write_stored",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "already_exists",
+      "name": "quarantine:in_memory:exact_retry_already_exists",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "prefix ok",
+      "name": "quarantine:in_memory:key_under_quarantine_prefix",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "not raw/",
+      "name": "quarantine:in_memory:no_raw_prefix",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "conflict",
+      "name": "quarantine:in_memory:conflict_detected",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "rejected",
+      "name": "quarantine:in_memory:reject_quarantine_via_accepted_method",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "rejected",
+      "name": "quarantine:in_memory:reject_accepted_via_quarantine_method",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "stored",
+      "name": "quarantine:fake_s3:first_write_stored",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "already_exists",
+      "name": "quarantine:fake_s3:exact_retry_already_exists",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "prefix ok",
+      "name": "quarantine:fake_s3:key_under_quarantine_prefix",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "not raw/",
+      "name": "quarantine:fake_s3:no_raw_prefix",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "conflict",
+      "name": "quarantine:fake_s3:conflict_detected",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "rejected",
+      "name": "quarantine:fake_s3:reject_quarantine_via_accepted_method",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "rejected",
+      "name": "quarantine:fake_s3:reject_accepted_via_quarantine_method",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "IfNoneMatch=*",
+      "name": "quarantine:fake_s3:s3_if_none_match",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "quarantine",
+      "detail": "bytes match",
+      "name": "quarantine:fake_s3:s3_body_exact",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "got=unavailable want=unavailable",
+      "name": "storage:matrix:unavailable:accepted_first_write",
+      "ok": true,
+      "scenario": "accepted_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "got=unavailable want=unavailable",
+      "name": "storage:matrix:unavailable:accepted_exact_retry",
+      "ok": true,
+      "scenario": "accepted_exact_retry"
+    },
+    {
+      "category": "storage",
+      "detail": "got=unavailable want=unavailable",
+      "name": "storage:matrix:unavailable:accepted_conflict",
+      "ok": true,
+      "scenario": "accepted_conflict"
+    },
+    {
+      "category": "storage",
+      "detail": "got=rejected want=rejected",
+      "name": "storage:matrix:unavailable:invalid_type",
+      "ok": true,
+      "scenario": "invalid_type"
+    },
+    {
+      "category": "storage",
+      "detail": "got=unavailable want=unavailable",
+      "name": "storage:matrix:unavailable:quarantine_first_write",
+      "ok": true,
+      "scenario": "quarantine_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "got=stored want=stored",
+      "name": "storage:matrix:in_memory:accepted_first_write",
+      "ok": true,
+      "scenario": "accepted_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "got=already_exists want=already_exists",
+      "name": "storage:matrix:in_memory:accepted_exact_retry",
+      "ok": true,
+      "scenario": "accepted_exact_retry"
+    },
+    {
+      "category": "storage",
+      "detail": "got=conflict want=conflict",
+      "name": "storage:matrix:in_memory:accepted_conflict",
+      "ok": true,
+      "scenario": "accepted_conflict"
+    },
+    {
+      "category": "storage",
+      "detail": "got=rejected want=rejected",
+      "name": "storage:matrix:in_memory:invalid_type",
+      "ok": true,
+      "scenario": "invalid_type"
+    },
+    {
+      "category": "storage",
+      "detail": "got=stored want=stored",
+      "name": "storage:matrix:in_memory:quarantine_first_write",
+      "ok": true,
+      "scenario": "quarantine_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "got=stored want=stored",
+      "name": "storage:matrix:fake_s3:accepted_first_write",
+      "ok": true,
+      "scenario": "accepted_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "got=already_exists want=already_exists",
+      "name": "storage:matrix:fake_s3:accepted_exact_retry",
+      "ok": true,
+      "scenario": "accepted_exact_retry"
+    },
+    {
+      "category": "storage",
+      "detail": "got=conflict want=conflict",
+      "name": "storage:matrix:fake_s3:accepted_conflict",
+      "ok": true,
+      "scenario": "accepted_conflict"
+    },
+    {
+      "category": "storage",
+      "detail": "got=rejected want=rejected",
+      "name": "storage:matrix:fake_s3:invalid_type",
+      "ok": true,
+      "scenario": "invalid_type"
+    },
+    {
+      "category": "storage",
+      "detail": "got=stored want=stored",
+      "name": "storage:matrix:fake_s3:quarantine_first_write",
+      "ok": true,
+      "scenario": "quarantine_first_write"
+    },
+    {
+      "category": "storage",
+      "detail": "UnavailableCommunityDataLakeStore",
+      "name": "storage:factory:default_unavailable",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "InMemoryCommunityDataLakeStore",
+      "name": "storage:factory:in_memory_requires_allow",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "StorageValidationError",
+      "name": "storage:factory:in_memory_without_allow_fails",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "StorageValidationError",
+      "name": "storage:factory:s3_requires_config",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "StorageValidationError",
+      "name": "storage:factory:wrong_mode_fails",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "storage",
+      "detail": "CommunityDataLakeS3Store",
+      "name": "storage:factory:s3_with_injected_client",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "365 days",
+      "name": "infra:retention_accepted_default_365",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "90 days",
+      "name": "infra:retention_quarantine_default_90",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "7 days",
+      "name": "infra:retention_multipart_default_7",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "30 days",
+      "name": "infra:retention_noncurrent_default_30",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "AES256",
+      "name": "infra:encryption_aes256",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "bucket_key_enabled=false",
+      "name": "infra:encryption_bucket_key_disabled",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no aws_kms resource",
+      "name": "infra:encryption_no_kms",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "Put/Get",
+      "name": "infra:iam_put_get_present",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "deny delete",
+      "name": "infra:iam_deny_deletes_both_prefixes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no ListBucket",
+      "name": "infra:iam_no_list_bucket",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no kms",
+      "name": "infra:iam_no_kms_permissions",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "unattached",
+      "name": "infra:iam_writer_unattached",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "TLS required",
+      "name": "infra:bucket_policy_deny_insecure_transport",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "disabled",
+      "name": "infra:production_enable_ingestion_wire_false",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "infrastructure",
+      "detail": "no s3 in lambda iam",
+      "name": "infra:lambda_iam_no_s3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_4",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_public_key_5",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_4",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_5",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_6",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_7",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:storage_result:forbidden_fragment_8",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_4",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_public_key_5",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_1",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_4",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_5",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_6",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_7",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "absent",
+      "name": "privacy:receipt:forbidden_fragment_8",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "internal key omitted",
+      "name": "privacy:receipt_public_omits_internal_key",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-client-type",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-client-ty",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-content-sha256",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-content-s",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-envelope-schema",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-envelope-",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-object-id",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-object-id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-source-schema",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-source-sc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-stream",
+      "name": "privacy:metadata:telemetry:no_event_tokens_in_codestrata-stream",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-assessment-schema",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-assessmen",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-content-sha256",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-content-s",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-envelope-schema",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-envelope-",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-object-id",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-object-id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-source-schema",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-source-sc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-stream",
+      "name": "privacy:metadata:assessment_metadata:no_event_tokens_in_codestrata-stream",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-content-sha256",
+      "name": "privacy:metadata:cli_event:no_event_tokens_in_codestrata-content-s",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-envelope-schema",
+      "name": "privacy:metadata:cli_event:no_event_tokens_in_codestrata-envelope-",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-object-id",
+      "name": "privacy:metadata:cli_event:no_event_tokens_in_codestrata-object-id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-source-schema",
+      "name": "privacy:metadata:cli_event:no_event_tokens_in_codestrata-source-sc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-stream",
+      "name": "privacy:metadata:cli_event:no_event_tokens_in_codestrata-stream",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-client-type",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-client-ty",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-content-sha256",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-content-s",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-envelope-schema",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-envelope-",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-object-id",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-object-id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-source-schema",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-source-sc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-stream",
+      "name": "privacy:metadata:extension_event:no_event_tokens_in_codestrata-stream",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-client-type",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-client-ty",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-content-sha256",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-content-s",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-envelope-schema",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-envelope-",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-object-id",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-object-id",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-source-schema",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-source-sc",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "codestrata-stream",
+      "name": "privacy:metadata:ai_usage:no_event_tokens_in_codestrata-stream",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "no event_id key",
+      "name": "privacy:quarantine:no_event_id_field",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "bounded quarantine record",
+      "name": "privacy:quarantine:diagnostic_codes_only",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "privacy",
+      "detail": "no \"payload\" key",
+      "name": "privacy:quarantine:no_raw_payload_field",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "bytes stable",
+      "name": "determinism:telemetry:bytes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "digest stable",
+      "name": "determinism:telemetry:digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "key stable",
+      "name": "determinism:telemetry:key",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "metadata stable",
+      "name": "determinism:telemetry:metadata",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "bytes stable",
+      "name": "determinism:quarantine:bytes",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "digest stable",
+      "name": "determinism:quarantine:digest",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "determinism",
+      "detail": "key stable",
+      "name": "determinism:quarantine:key",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "status=200",
+      "name": "production:health_ok",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "count=6",
+      "name": "production:six_routes_retained",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "unwired",
+      "name": "production:wiring_no_data_lake",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "production",
+      "detail": "unwired",
+      "name": "production:app_no_storage_factory",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:data_lake_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:envelope_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.2",
+      "name": "schema:assessment_report_1_2",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0.0",
+      "name": "schema:verification_1_0_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:quarantine_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:retention_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:encryption_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:access_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "1.0",
+      "name": "schema:storage_policy_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "schema",
+      "detail": "all 1.0",
+      "name": "schema:partition_policies_1_0",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "isolation",
+      "detail": "clean",
+      "name": "isolation:data_lake_domain_no_boto3",
+      "ok": true,
+      "scenario": ""
+    },
+    {
+      "category": "isolation",
+      "detail": "clean",
+      "name": "isolation:engine_no_data_lake",
+      "ok": true,
+      "scenario": ""
+    }
+  ],
+  "defects": [],
+  "elapsed_ms": 307.10920807905495,
+  "encryption_status": "pass",
+  "excluded_work": [
+    "epic_9_not_started",
+    "no_production_ingestion_enable"
+  ],
+  "iam_status": "pass",
+  "limitations": [
+    "no_real_aws_integration",
+    "production_wiring_deliberately_disabled",
+    "no_atomic_identity_storage_coordination",
+    "no_exactly_once_claim",
+    "lifecycle_time_not_simulated",
+    "SV.9 verifies Community Data Lake foundation contracts end-to-end.",
+    "Uses in-memory and strict fake-S3 adapters only; no real AWS.",
+    "Does not enable production ingestion or attach writer IAM.",
+    "Does not start Epic 9.",
+    "opentofu_cli_skipped_by_caller",
+    "OpenTofu CLI validate skipped by caller."
+  ],
+  "ok": true,
+  "opentofu_status": "skipped",
+  "policy_versions": {
+    "access": "1.0",
+    "ai_usage_partition": "1.0",
+    "assessment_metadata_partition": "1.0",
+    "cli_event_partition": "1.0",
+    "data_lake_policy": "1.0",
+    "encryption": "1.0",
+    "envelope": "1.0",
+    "extension_event_partition": "1.0",
+    "quarantine_policy": "1.0",
+    "quarantine_schema": "1.0",
+    "retention": "1.0",
+    "storage": "1.0",
+    "telemetry_partition": "1.0",
+    "verification": "1.0.0"
+  },
+  "privacy_status": "pass",
+  "production_fail_closed_status": "pass",
+  "quarantine_tested": true,
+  "retention_status": "pass",
+  "scenario_summary": {
+    "failed_checks": 0,
+    "total_checks": 221
+  },
+  "schema_name": "community-data-lake-verification",
+  "schema_version": "1.0.0",
+  "streams_tested": [
+    "telemetry",
+    "assessment_metadata",
+    "cli_event",
+    "extension_event",
+    "ai_usage"
+  ],
+  "verdict": "pass",
+  "verification_id": "community-data-lake-verification",
+  "warnings": []
+}

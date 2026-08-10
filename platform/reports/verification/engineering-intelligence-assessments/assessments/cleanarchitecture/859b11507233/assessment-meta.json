@@ -1,0 +1,8 @@
+{
+  "assessment_command": "codestrata assess --repo . --output reports --no-ai",
+  "github_repository": "ardalis/CleanArchitecture",
+  "language_group": "C#/.NET",
+  "qualified_revision": "859b115072337b3b7074007f8231d19f24966f1a",
+  "repository_id": "cleanarchitecture",
+  "source_tag": "v11.1.1"
+}

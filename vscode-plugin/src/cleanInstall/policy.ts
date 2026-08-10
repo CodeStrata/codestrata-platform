@@ -63,6 +63,7 @@ export const STABLE_COMMAND_IDS: readonly string[] = [
   "codestrata.assessWithAi",
   "codestrata.init",
   "codestrata.openHtmlReport",
+  "codestrata.publishCurrentReport",
   "codestrata.installEngine",
   "codestrata.checkEnvironment",
   "codestrata.doctor",

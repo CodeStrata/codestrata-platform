@@ -108,6 +108,7 @@ def create_community_cloud_app(
     insights_auth_service: object | None = None,
     insights_aggregation_service: object | None = None,
     insights_extra_allowed_origins: frozenset[str] | None = None,
+    report_publishing_service: object | None = None,
 ) -> FastAPI:
     """Create the Community Cloud API ASGI app.
 
@@ -232,6 +233,17 @@ def create_community_cloud_app(
         )
     )
 
+    from codestrata_platform.community_cloud_api.reports.routes import register_report_routes
+    from codestrata_platform.community_cloud_api.reports.service import (
+        ReportPublishingService,
+    )
+
+    report_service = (
+        report_publishing_service
+        if isinstance(report_publishing_service, ReportPublishingService)
+        else ReportPublishingService(available=False)
+    )
+
     active_registry = registry or RouteRegistry.foundation_v1(
         telemetry_service=telemetry_service,
         assessment_metadata_service=assessment_metadata_service,
@@ -239,11 +251,30 @@ def create_community_cloud_app(
         extension_event_service=extension_event_service,
         ai_usage_service=ai_usage_service,
     )
+    if active_registry.get(version=API_VERSION_V1, method="POST", path="/reports") is None:
+        register_report_routes(active_registry, service=report_service)
+
     if active_registry.get(version=API_VERSION_V1, method="POST", path="/insights/auth/login") is None:
         register_insights_auth_routes(
             active_registry,
             auth=insights_auth,
             aggregation=insights_agg,
+            report_service=report_service,
+        )
+
+    from codestrata_platform.community_cloud_api.community_status.routes import (
+        register_community_status_routes,
+    )
+    from codestrata_platform.community_cloud_api.community_status.service import (
+        CommunityStatusService,
+    )
+
+    if active_registry.get(
+        version=API_VERSION_V1, method="GET", path="/community/status"
+    ) is None:
+        register_community_status_routes(
+            active_registry,
+            service=CommunityStatusService(),
         )
 
     active_rate_policy = validate_rate_limit_policy(
@@ -399,13 +430,17 @@ async def _handle_request(
         )
 
     relative = _relative_path(path, version)
-    spec = registry.get(version=version, method=method, path=relative)
-    if spec is None:
+    resolved = registry.resolve(version=version, method=method, path=relative)
+    if resolved is None:
         other_methods = sorted(
             {
                 item.method
                 for item in registry.list_routes()
-                if item.version == version and item.path == relative
+                if item.version == version
+                and (
+                    item.path == relative
+                    or _match_template_for_methods(item.path, relative) is not None
+                )
             }
         )
         if other_methods:
@@ -428,6 +463,16 @@ async def _handle_request(
             ),
             error_code=ERROR_NOT_FOUND,
         )
+    spec, path_params = resolved
+    # Optional public report format hint (?format=json) without expanding route space.
+    if request.url.query:
+        from urllib.parse import parse_qs
+
+        qs = parse_qs(request.url.query, keep_blank_values=False)
+        fmt = (qs.get("format") or [None])[0]
+        if fmt in {"json", "html"}:
+            path_params = {**path_params, "format": fmt}
+    context = context.with_path_params(path_params or None)
 
     log_ctx = log_ctx.with_route_name(spec.name)
     handler = registry.get_handler(spec)
@@ -625,3 +670,9 @@ def _relative_path(path: str, version: str) -> str:
         relative = path[len(prefix) :]
         return relative if relative.startswith("/") else f"/{relative}"
     return path
+
+
+def _match_template_for_methods(template: str, path: str) -> dict[str, str] | None:
+    from codestrata_platform.community_cloud_api.registry import _match_path_template
+
+    return _match_path_template(template, path)

@@ -22,6 +22,7 @@ concurrency:
 jobs:
   oidc-identity:
     name: oidc-identity
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production

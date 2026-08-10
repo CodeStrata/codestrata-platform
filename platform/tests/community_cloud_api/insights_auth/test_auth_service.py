@@ -50,6 +50,40 @@ def test_scrypt_roundtrip() -> None:
     assert not verify_password(submitted="wrong", stored_secret=stored)
 
 
+def test_password_normalization_strips_edges() -> None:
+    stored = hash_password(TEST_PASSWORD_PLAINTEXT)
+    assert verify_password(
+        submitted=f"  {TEST_PASSWORD_PLAINTEXT}\n",
+        stored_secret=stored,
+    )
+    assert not verify_password(
+        submitted=f"x{TEST_PASSWORD_PLAINTEXT}",
+        stored_secret=stored,
+    )
+
+
+def test_session_secret_cache_ttl_refreshes() -> None:
+    from codestrata_platform.community_cloud_api.insights_auth.secrets import (
+        CachingSecretsPort,
+    )
+
+    inner = FakeSecretsPort({DEFAULT_SESSION_SECRET_ID: "v1"})
+    clock = {"t": 0.0}
+
+    port = CachingSecretsPort(
+        inner,
+        cacheable_ids=frozenset({DEFAULT_SESSION_SECRET_ID}),
+        ttl_seconds=10,
+        monotonic=lambda: clock["t"],
+    )
+    assert port.get_secret_value(DEFAULT_SESSION_SECRET_ID) == "v1"
+    inner.put(DEFAULT_SESSION_SECRET_ID, "v2")
+    clock["t"] = 5.0
+    assert port.get_secret_value(DEFAULT_SESSION_SECRET_ID) == "v1"
+    clock["t"] = 11.0
+    assert port.get_secret_value(DEFAULT_SESSION_SECRET_ID) == "v2"
+
+
 def test_raw_password_compare() -> None:
     assert verify_password(
         submitted=TEST_PASSWORD_PLAINTEXT,

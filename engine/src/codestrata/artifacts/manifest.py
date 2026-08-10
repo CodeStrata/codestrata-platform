@@ -38,6 +38,9 @@ def build_assessment_manifest(
     overall_scores: dict[str, Any] | None = None,
     findings_summary: dict[str, Any] | None = None,
     executed_at: str | None = None,
+    repository_id: str | None = None,
+    artifact_slot: str | None = None,
+    previous_assessment_run_id: str | None = None,
 ) -> dict[str, Any]:
     """Build the authoritative lightweight assessment manifest.
 
@@ -45,11 +48,14 @@ def build_assessment_manifest(
     """
 
     heads = list_completed_heads(run_directory)
-    return {
+    payload: dict[str, Any] = {
         "schema": schema_version,
         "assessment_id": assessment_id,
+        "assessment_run_id": assessment_id,
         "repository": repository,
+        "repository_name": repository,
         "executed_at": executed_at or _utc_now_iso(),
+        "created_at": executed_at or _utc_now_iso(),
         "engine_version": engine_version or ENGINE_VERSION,
         "execution_status": execution_status,
         "git": git_metadata or {},
@@ -70,6 +76,13 @@ def build_assessment_manifest(
             "local_artifact_authority": ".codestrata-artifacts",
         },
     }
+    if repository_id:
+        payload["repository_id"] = repository_id
+    if artifact_slot:
+        payload["artifact_slot"] = artifact_slot
+    if previous_assessment_run_id:
+        payload["previous_assessment_run_id"] = previous_assessment_run_id
+    return payload
 
 
 def write_assessment_manifest(path: Path, manifest: dict[str, Any]) -> Path:

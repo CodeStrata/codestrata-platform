@@ -71,8 +71,16 @@ export function AuthProvider({
           setLoginError("Authentication unavailable. Try again shortly.");
         } else if (err instanceof AuthApiError && err.code === "access_denied") {
           setLoginError("Request blocked. Refresh and try again.");
-        } else {
+        } else if (err instanceof AuthApiError && err.code === "rate_limited") {
+          setLoginError("Too many attempts. Wait briefly and try again.");
+        } else if (err instanceof AuthApiError && err.code === "invalid_credentials") {
           setLoginError("Invalid password");
+        } else if (err instanceof AuthApiError && err.code === "invalid_request") {
+          setLoginError("Enter the dashboard password.");
+        } else if (err instanceof AuthApiError && err.code === "network_error") {
+          setLoginError("Network error. Check connection and try again.");
+        } else {
+          setLoginError("Sign-in failed. Try again.");
         }
         throw new Error("login_failed");
       }

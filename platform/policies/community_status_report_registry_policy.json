@@ -1,0 +1,24 @@
+{
+  "policy_id": "community-status-report-registry-policy",
+  "policy_version": "1.0",
+  "schema": "community-status-report-registry-policy:1.0",
+  "slice": "17.23",
+  "epic": 17,
+  "authority": "Public Community Status API plus validation report URL registry and authenticated Insights Published Reports index.",
+  "depends_on": [
+    "community-epic17-defect-resolution-policy:1.0"
+  ],
+  "community_status_public_read": true,
+  "engine_version_authoritative": true,
+  "github_stars_cached": true,
+  "github_credentials_browser_exposed": false,
+  "public_report_url_manifest_validation_evidence": true,
+  "public_report_url_manifest_auto_update": true,
+  "report_registry_current_previous_only": true,
+  "insights_report_registry_authenticated": true,
+  "report_rendering_remains_reports_domain": true,
+  "marketplace_publish": false,
+  "full_22_repo_release_corpus": false,
+  "start_slice_17_23": true,
+  "start_slice_17_24": false
+}

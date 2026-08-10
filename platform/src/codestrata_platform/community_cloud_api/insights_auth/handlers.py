@@ -141,3 +141,60 @@ def handle_overview(
         request_id=context.request_id,
         extra_headers={"Cache-Control": "no-store"},
     )
+
+
+def handle_published_reports(
+    context: RequestContext,
+    *,
+    auth: InsightsAuthService,
+    report_service: object | None,
+) -> Response:
+    """Authenticated Insights index of published reports (current/previous only)."""
+
+    from codestrata_platform.community_cloud_api.reports.service import (
+        ReportPublishingService,
+    )
+
+    principal, err = auth.require_authenticated(context.cookie_header)
+    if principal is None:
+        return _auth_error(err or ERROR_AUTHENTICATION_REQUIRED, context)
+
+    if not isinstance(report_service, ReportPublishingService) or not getattr(
+        report_service, "_available", False
+    ):
+        return build_json_response(
+            {
+                "assessments": [],
+                "engineering_intelligence": [],
+                "note": "report registry unavailable",
+                "source": "report_metadata",
+            },
+            status_code=200,
+            api_version=context.api_version,
+            request_id=context.request_id,
+            extra_headers={"Cache-Control": "no-store"},
+        )
+
+    try:
+        registry = report_service.list_published_registry()
+    except Exception:  # noqa: BLE001
+        return build_error_response(
+            ERROR_INTERNAL_AUTH,
+            http_status=500,
+            api_version=context.api_version,
+            request_id=context.request_id,
+        )
+
+    payload = {
+        "assessments": registry.get("assessments") or [],
+        "engineering_intelligence": registry.get("engineering_intelligence") or [],
+        "note": "Validation evidence remains separate; rendering stays on reports.codestrata.ai",
+        "source": "report_metadata",
+    }
+    return build_json_response(
+        payload,
+        status_code=200,
+        api_version=context.api_version,
+        request_id=context.request_id,
+        extra_headers={"Cache-Control": "no-store"},
+    )

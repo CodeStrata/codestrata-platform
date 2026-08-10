@@ -23,6 +23,7 @@ concurrency:
 jobs:
   offline-validate:
     name: offline-validate
+    if: github.repository == 'CodeStrata/codestrata-platform'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -60,8 +61,9 @@ jobs:
     timeout-minutes: 20
     needs: offline-validate
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      vars.CODESTRATA_GITHUB_AWS_ROLE_ARN != ''
+      github.repository == 'CodeStrata/codestrata-platform' &&
+      (github.event_name == 'workflow_dispatch' ||
+      vars.CODESTRATA_GITHUB_AWS_ROLE_ARN != '')
     environment: production
     permissions:
       contents: read

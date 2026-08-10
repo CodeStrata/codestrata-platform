@@ -1,23 +1,50 @@
-# GitHub Actions workflows
+# GitHub Actions workflows (Slice 17.25 authority hygiene)
 
-## Active
+## Active (codestrata-platform root)
 
-| Workflow | Role |
-| -------- | ---- |
-| [`ci.yml`](ci.yml) | Validation only — Engine/Platform/VS Code/export/tofu offline validate. **Never deploys.** |
-| [`aws-identity-check.yml`](aws-identity-check.yml) | Slice 17.3 OIDC identity check (production env). **No apply.** Live run requires owner push. |
-| [`infrastructure-plan.yml`](infrastructure-plan.yml) | Slice 17.4 production plan (offline validate + optional authenticated plan). **Plan only. No apply.** Live authenticated plan awaits commit/push. |
-| [`infrastructure-apply.yml`](infrastructure-apply.yml) | Slice 17.5 production foundation apply. **`workflow_dispatch` only** (never `pull_request`). Applies a reviewed saved plan; fails closed on destroy/replace; post-apply zero-drift check. Live run awaits push + attached apply IAM. Ingestion stays OFF. |
+| Workflow | Classification | Role |
+| -------- | -------------- | ---- |
+| [`ci.yml`](ci.yml) | `ACTIVE_REQUIRED` | Validation only — Engine/Platform/VS Code/export/tofu offline validate. **Never deploys.** Repository guard: `CodeStrata/codestrata-platform`. |
+| [`aws-identity-check.yml`](aws-identity-check.yml) | `ACTIVE_REQUIRED` | OIDC identity check (`workflow_dispatch` only). **No apply.** |
+| [`infrastructure-plan.yml`](infrastructure-plan.yml) | `ACTIVE_REQUIRED` (monorepo pre-cutover) | Plan only — PR paths `infrastructure/**` + dispatch. **No apply.** Future authority: `codestrata-infrastructure`. |
+| [`infrastructure-apply.yml`](infrastructure-apply.yml) | `ACTIVE_REQUIRED` (monorepo pre-cutover) | `workflow_dispatch` only + confirm gate. Future authority: `codestrata-infrastructure`. |
+
+Normal push to `release/**` runs **only** `ci.yml` validation jobs (not deploy).
+
+## Export-source workflows (do not execute in monorepo)
+
+GitHub Actions only loads root `.github/workflows/`. Nested trees are copied into
+exported repositories by the export router:
+
+| Path | Target repo | Classification |
+| ---- | ----------- | -------------- |
+| `insights/.github/workflows/ci.yml` | `codestrata-insights` | `SOURCE_EXPORT_ONLY` |
+| `insights/.github/workflows/deploy.yml` | `codestrata-insights` | `SOURCE_EXPORT_ONLY` |
+| `infrastructure/.github/workflows/validate.yml` | `codestrata-infrastructure` | `SOURCE_EXPORT_ONLY` |
+| `infrastructure/.github/workflows/aws-identity-check.yml` | `codestrata-infrastructure` | `SOURCE_EXPORT_ONLY` |
+
+Each export-source job includes `if: github.repository == '<target>'` so a
+mis-scoped run cannot execute under the wrong repository name.
 
 ## Designed (not activated)
 
-Documented in `platform/policies/codestrata_cicd_architecture.json` and  
-`platform/docs/deployment/community-cloud-cicd-architecture.md`:
+Documented in `platform/policies/codestrata_cicd_architecture.json`:
 
 - `platform-deploy.yml`
 - `insights-deploy.yml`
 - `docs-deploy.yml`
 - `release.yml` (Epic 19)
 
-Do not add Secrets/Insights/Docs deploy workflows until their owning slices activate
-them under OIDC + protected environments. Slice 17.6 is not started.
+Do not add Secrets/Insights/Docs deploy workflows at the monorepo root — those
+authorities live in exported repos (`codestrata-insights`, `codestrata-docs`).
+
+## Authority map
+
+| Repository | CI / deploy authority |
+| ---------- | --------------------- |
+| `codestrata-platform` | Monorepo source validation (`ci.yml`); monorepo pre-cutover infra plan/apply |
+| `codestrata-infrastructure` | Infrastructure CI/CD |
+| `codestrata-insights` | Insights CI/deploy |
+| `codestrata-docs` | Docs CI/deploy |
+
+`platform_repo_deployment_authority=false` for Insights/Docs/product deploys.

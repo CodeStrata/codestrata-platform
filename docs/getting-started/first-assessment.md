@@ -12,7 +12,7 @@ Deterministic assessment is the default. It does not call AI providers.
 From a repository you want to assess:
 
 ```bash
-codestrata assess --repo . --output reports --no-ai
+codestrata assess --repo . --no-ai
 ```
 
 Useful flags:
@@ -22,9 +22,10 @@ Useful flags:
 | `--no-ai` | Deterministic only (recommended default) |
 | `--quiet` | Suppress stage progress |
 | `--json-summary` | Machine-readable completion JSON on stdout |
+| `--telemetry-allow` / `--telemetry-deny` | Process-local Community telemetry consent (optional; off by default) |
 
 ```bash
-codestrata assess --repo . --output reports --no-ai --quiet --json-summary
+codestrata assess --repo . --no-ai --quiet --json-summary
 ```
 
 ## Locate artifacts
@@ -32,23 +33,24 @@ codestrata assess --repo . --output reports --no-ai --quiet --json-summary
 Reports land under:
 
 ```text
-reports/<repository-name>/<timestamp>/
+.codestrata-artifacts/assessments/<repository-id>/current/
 ```
 
-Typical files:
+A prior successful run may remain under `previous/`. Typical files:
 
-- `report.html` — interactive Engineering Assessment
-- JSON summary and related public artifacts used by IDE extensions
+- `assessment.html` — interactive Engineering Assessment
+- `assessment.json` — machine-readable assessment artifact
+- `heads/` — per-head assessment artifacts
 
 Example (macOS):
 
 ```bash
-open "$(ls -dt reports/*/* | head -1)/report.html"
+open .codestrata-artifacts/assessments/*/current/assessment.html
 ```
 
 ## Understand findings
 
-Open `report.html` and review:
+Open `assessment.html` and review:
 
 - Executive summary
 - Findings with evidence and severity
@@ -65,7 +67,7 @@ or OpenAI) — not Platform API keys.
 ```bash
 codestrata ai
 codestrata ai doctor
-codestrata assess --repo . --output reports --with-ai
+codestrata assess --repo . --with-ai
 ```
 
 Details: [AI Providers](/ai-providers/) (Bedrock and OpenAI setup, troubleshooting).

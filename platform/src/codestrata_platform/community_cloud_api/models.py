@@ -30,6 +30,8 @@ class RequestContext:
     cookie_header: str | None = None
     origin_header: str | None = None
     referer_header: str | None = None
+    # Matched path parameters for templated routes (Slice 17.16).
+    path_params: Mapping[str, str] | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "api_version", (self.api_version or "").strip())
@@ -45,6 +47,15 @@ class RequestContext:
         object.__setattr__(self, "origin_header", origin)
         referer = (self.referer_header or "").strip() or None
         object.__setattr__(self, "referer_header", referer)
+        if self.path_params is None:
+            object.__setattr__(self, "path_params", None)
+        else:
+            cleaned = {
+                str(k): str(v)
+                for k, v in dict(self.path_params).items()
+                if str(k).strip() and str(v).strip()
+            }
+            object.__setattr__(self, "path_params", cleaned or None)
 
     def with_validated_request(self, model: Any) -> RequestContext:
         return RequestContext(
@@ -59,6 +70,7 @@ class RequestContext:
             cookie_header=self.cookie_header,
             origin_header=self.origin_header,
             referer_header=self.referer_header,
+            path_params=self.path_params,
         )
 
     def with_authenticated_client(self, principal: Any | None) -> RequestContext:
@@ -74,6 +86,23 @@ class RequestContext:
             cookie_header=self.cookie_header,
             origin_header=self.origin_header,
             referer_header=self.referer_header,
+            path_params=self.path_params,
+        )
+
+    def with_path_params(self, params: Mapping[str, str] | None) -> RequestContext:
+        return RequestContext(
+            api_version=self.api_version,
+            method=self.method,
+            path=self.path,
+            request_id=self.request_id,
+            content_type=self.content_type,
+            accepted_json=self.accepted_json,
+            validated_request=self.validated_request,
+            authenticated_client=self.authenticated_client,
+            cookie_header=self.cookie_header,
+            origin_header=self.origin_header,
+            referer_header=self.referer_header,
+            path_params=params,
         )
 
     def to_stable_dict(self) -> dict[str, Any]:

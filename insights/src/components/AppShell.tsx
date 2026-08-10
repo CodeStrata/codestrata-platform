@@ -10,6 +10,7 @@ const NAV: ReadonlyArray<{ readonly to: string; readonly label: string; readonly
   { to: "/ai", label: "AI" },
   { to: "/releases", label: "Releases" },
   { to: "/validation", label: "Validation" },
+  { to: "/published-reports", label: "Published Reports" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }): ReactNode {

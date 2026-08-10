@@ -1,0 +1,41 @@
+{
+  "affected_repositories": [
+    "dubbo",
+    "juice-shop",
+    "nodegoat"
+  ],
+  "affected_rule_ids": [
+    "SEC002"
+  ],
+  "after_population": "22/22",
+  "before_population": "19/22",
+  "closure_status": "closed",
+  "defect_id": "SV.13-EI-UNSAFE-METADATA",
+  "determinism_outcome": "order-independent dataset/aggregation/report IDs verified",
+  "fix_boundary": "Engine customer-safe report projection / SEC002 evidence wording; SV.11 Platform validate_report_document adapter",
+  "notes": "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim.",
+  "original_sv12_failure": "Platform EI ingestion rejected 3/22 assessments with unsafe_metadata (Finding description PEM header markers from SEC002)",
+  "privacy_outcome": "fail-closed Platform gate retained; PEM header markers redacted; unsafe fixtures still rejected; safe descriptive phrases accepted",
+  "product_files_changed": [
+    "engine/src/codestrata/security/redaction.py",
+    "engine/src/codestrata/security/customer_safe_text.py",
+    "engine/src/codestrata/services/analyzers/security_analyzer.py",
+    "engine/src/codestrata/reporting/assessment_json.py",
+    "engine/src/codestrata/reporting/customer_universe.py",
+    "engine/verification/assessment_consistency/reporting.py",
+    "engine/verification/assessment_consistency/platform_ingestion_adapter.py",
+    "platform/verification/engineering_intelligence/ingestion.py",
+    "platform/verification/engineering_intelligence_quality/inputs.py",
+    "platform/verification/system_defect_fixes/*"
+  ],
+  "regression_tests": [
+    "platform/tests/verification/system_defect_fixes/",
+    "engine/tests/security/test_redaction.py",
+    "engine/tests/security/test_report_redaction.py"
+  ],
+  "root_cause_classification": [
+    "A_engine_unsafe_canonical_serialization",
+    "E_sv11_readiness_did_not_use_platform_ingestion_authority"
+  ],
+  "schema_outcome": "Assessment 1.2; EIR 1.0; website export 1.0; SV contracts 1.0.0"
+}

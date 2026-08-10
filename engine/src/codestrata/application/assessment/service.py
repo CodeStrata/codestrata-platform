@@ -27,7 +27,7 @@ from codestrata.reporters.report_paths import (
     ReportPaths,
     create_report_paths,
     format_report_run_timestamp,
-    prune_excess_report_runs,
+    promote_staged_report,
 )
 from codestrata.reporting import (
     AssessmentMode,
@@ -3161,10 +3161,44 @@ class AssessmentApplicationService:
         try:
             if write_reports:
                 with benchmark_recorder.stage("report_generation"):
-                    written_paths = write_modernization_assessment_reports(
-                        report_input,
-                        report_paths,
-                    )
+                    try:
+                        written_paths = write_modernization_assessment_reports(
+                            report_input,
+                            report_paths,
+                        )
+                    except ModernizationReportValidationError as error:
+                        # AI bridge/report contract failures must not block deterministic
+                        # Assessment Reports. Drop AI assessment payload and retry once.
+                        if (
+                            assessment_result is not None
+                            and ai_status == AIExecutionStatus.SUCCEEDED
+                        ):
+                            detail = sanitize_provider_text(str(error))
+                            ai_status = AIExecutionStatus.VALIDATION_FAILED
+                            ai_failure_message = customer_failure_message(ai_status)
+                            assessment_result = None
+                            include_ai_enrichment = False
+                            warnings.append(
+                                f"{ai_failure_message} [AI_VALIDATION_FAILED] "
+                                "Deterministic HTML and JSON reports were still written. "
+                                f"Details: {detail}"
+                            )
+                            warn(warnings[-1])
+                            report_input = report_input.model_copy(
+                                update={
+                                    "assessment_result": None,
+                                    "ai_status": ai_status,
+                                    "ai_failure_message": ai_failure_message,
+                                    "ai_enrichment": None,
+                                    "warnings": tuple(warnings),
+                                }
+                            )
+                            written_paths = write_modernization_assessment_reports(
+                                report_input,
+                                report_paths,
+                            )
+                        else:
+                            raise
                 if ai_execution_document is not None:
                     written = try_write_ai_execution_artifact(
                         written_paths.run_directory,
@@ -3195,16 +3229,29 @@ class AssessmentApplicationService:
 
         if write_reports:
             try:
-                deleted = prune_excess_report_runs(
-                    written_paths.run_directory.parent,
-                    repository_slug=written_paths.repository_name,
-                )
-                if deleted:
-                    for path in deleted:
-                        active_console.print(f"Removed aged report run: {path.name}")
+                promoted = promote_staged_report(written_paths)
+                # Point subsequent result paths at promoted current/ when staged.
+                if promoted != written_paths.run_directory:
+                    written_paths = ReportPaths(
+                        directory=promoted,
+                        text_report=promoted / "report.txt",
+                        json_report=promoted / "assessment.json",
+                        html_report=promoted / "assessment.html",
+                        timestamp=written_paths.timestamp,
+                        repository_name=written_paths.repository_name,
+                        run_id=written_paths.run_id,
+                        heads_directory=promoted / "heads",
+                        repository_id=written_paths.repository_id,
+                        staging=False,
+                        artifact_root=written_paths.artifact_root,
+                    )
+                    active_console.print(
+                        f"Assessment report: assessments/"
+                        f"{written_paths.repository_id or written_paths.repository_name}/current/"
+                    )
             except Exception as error:  # noqa: BLE001 - retention must not fail assessment
                 warn(
-                    "Report retention cleanup failed; the current assessment reports were kept. "
+                    "Report lifecycle promotion failed; staged assessment reports were kept. "
                     f"Details: {sanitize_provider_text(str(error))}"
                 )
 

@@ -1,0 +1,40 @@
+{
+  "schema": "community-api-domain-register:1.0",
+  "register_id": "community-api-domain-register",
+  "register_version": "1.0",
+  "slice": "17.14",
+  "safe_fields": [
+    "public_api_hostname",
+    "public_api_base_url",
+    "region",
+    "tls_valid",
+    "dns_proxied",
+    "execute_api_retained",
+    "docs_path",
+    "limitations"
+  ],
+  "forbidden_fields": [
+    "aws_account_id",
+    "api_gateway_id",
+    "certificate_arn",
+    "s3_uri",
+    "execute_api_hostname",
+    "cloudflare_zone_id",
+    "cloudflare_api_token"
+  ],
+  "entries": [
+    {
+      "public_api_hostname": "api.codestrata.ai",
+      "public_api_base_url": "https://api.codestrata.ai",
+      "region": "us-west-2",
+      "tls_valid": true,
+      "dns_proxied": false,
+      "execute_api_retained": true,
+      "docs_path": "/reference/community-api/",
+      "limitations": [
+        "execute_api_fallback_retained_intentionally",
+        "monorepo_pre_cutover_source_authority"
+      ]
+    }
+  ]
+}

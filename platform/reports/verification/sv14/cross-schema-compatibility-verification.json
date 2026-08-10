@@ -1,0 +1,950 @@
+{
+  "checks": [
+    {
+      "category": "artifacts",
+      "detail": "catalog_count=22",
+      "name": "catalog_release_validation_22",
+      "ok": true
+    },
+    {
+      "category": "assessment",
+      "detail": "count=22",
+      "name": "assessment_artifact_count_22",
+      "ok": true
+    },
+    {
+      "category": "assessment",
+      "detail": "ASSESSMENT_JSON_SCHEMA_VERSION=1.2",
+      "name": "assessment_product_constant_1_2",
+      "ok": true
+    },
+    {
+      "category": "assessment",
+      "detail": "22/22",
+      "name": "assessment_schema_version_all_1_2",
+      "ok": true
+    },
+    {
+      "category": "assessment",
+      "detail": "22/22 after customer-safe projection",
+      "name": "assessment_platform_ingestion_safety",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "22/22",
+      "name": "assessment_finding_ids_stable_under_safe_projection",
+      "ok": true
+    },
+    {
+      "category": "assessment",
+      "detail": "22/22",
+      "name": "assessment_findings_companion_reconcile",
+      "ok": true
+    },
+    {
+      "category": "validation_record",
+      "detail": "RECORD_SCHEMA_VERSION=1.0",
+      "name": "validation_record_product_constant_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation_record",
+      "detail": "5/5 loaded",
+      "name": "validation_records_schema_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation_record",
+      "detail": "SV.14 loads historical records read-only",
+      "name": "validation_records_not_rewritten",
+      "ok": true
+    },
+    {
+      "category": "validation_summary",
+      "detail": "SUMMARY_SCHEMA_VERSION=1.0",
+      "name": "validation_summary_product_constant_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation_summary",
+      "detail": "summary_schema_version=1.0",
+      "name": "validation_summary_schema_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation_summary",
+      "detail": "disclaimer present",
+      "name": "validation_summary_has_disclaimer",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "absolute_path_scan",
+      "name": "validation_summary_no_absolute_paths",
+      "ok": true
+    },
+    {
+      "category": "ingestion",
+      "detail": "SUPPORTED_ASSESSMENT_SCHEMA_VERSION=1.2",
+      "name": "ingestion_supported_assessment_schema_1_2",
+      "ok": true
+    },
+    {
+      "category": "ingestion",
+      "detail": "included=3 rejected=0 sample=3",
+      "name": "ingestion_sample_accepted",
+      "ok": true
+    },
+    {
+      "category": "eir",
+      "detail": "EIR_SCHEMA=1.0",
+      "name": "eir_product_constant_1_0",
+      "ok": true
+    },
+    {
+      "category": "eir",
+      "detail": "schema_version=1.0",
+      "name": "eir_schema_version_1_0",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "report_id=eir:1eda169bfe4b7041265b253e drilldowns=22",
+      "name": "eir_roundtrip_identities",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "schema_version=2.0",
+      "name": "eir_future_version_rejected",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "export_schema=1.0",
+      "name": "website_export_product_constant_1_0",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "export_schema_version=1.0",
+      "name": "website_export_schema_1_0",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "from_stable_dict rejects website-safe projection",
+      "name": "website_export_not_deserialized_as_full_eir",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "hits=[]",
+      "name": "website_export_no_source_or_pem",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "no_artifact_digests",
+      "name": "website_export_manifest_digests",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "export_schema_version / report_schema_version (dataset_id omission intentional)",
+      "name": "website_export_uses_export_schema_fields",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "export_id=eir-export:ca01b398f777e20ef75ea1f2 source_report_id=eir:1eda169bfe4b7041265b253e",
+      "name": "website_export_ids_present",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "api=1.0",
+      "name": "community_api_contract_1_0",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "{'telemetry': '1.0', 'assessment_metadata': '1.0', 'cli': '1.0', 'extension': '1.0', 'ai_usage': '1.0'}",
+      "name": "community_endpoint_schemas_1_0",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "ALLOWED_ASSESSMENT_SCHEMA_VERSIONS=('1.2',)",
+      "name": "community_assessment_metadata_allows_1_2",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "rate_limit_policy=1.1 credential_format=1 auth_policy=1.0",
+      "name": "community_policy_versions_distinct",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "telemetry_vs_cli_vs_extension_vs_ai",
+      "name": "community_endpoint_schemas_not_interchangeable",
+      "ok": true
+    },
+    {
+      "category": "verification_contracts",
+      "detail": "verification reports use 1.0.0; product schemas use 1.0 / 1.2",
+      "name": "verification_vs_product_version_semantics",
+      "ok": true
+    },
+    {
+      "category": "verification_contracts",
+      "detail": "present=4/4",
+      "name": "verification_reports_present",
+      "ok": true
+    },
+    {
+      "category": "verification_contracts",
+      "detail": "4/4",
+      "name": "verification_reports_schema_1_0_0",
+      "ok": true
+    },
+    {
+      "category": "verification_contracts",
+      "detail": "4/4",
+      "name": "verification_verdict_vocabulary",
+      "ok": true
+    },
+    {
+      "category": "verification_contracts",
+      "detail": "verification reports are review-only by contract",
+      "name": "verification_not_product_runtime_input",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "sample_domain_id_prefix=finding",
+      "name": "identifier_domain_finding_prefix",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "count=22 repository=aspnetcore",
+      "name": "identifier_report_finding_ids_present",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "report_id=eir:1eda169bfe4b7041265b253e",
+      "name": "identifier_eir_report_id_prefix",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "dataset:3da1c591fcef727714304861",
+      "name": "identifier_dataset_id_prefix",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "export_id=eir-export:ca01b398f777e20ef75ea1f2",
+      "name": "identifier_export_id_prefix",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "build_dataset_id/build_report_id importable",
+      "name": "identifier_builders_callable",
+      "ok": true
+    },
+    {
+      "category": "identifier",
+      "detail": "ingestion preserves Engine finding IDs in report documents",
+      "name": "identifier_platform_does_not_require_engine_entity_regen",
+      "ok": true
+    },
+    {
+      "category": "enum",
+      "detail": "platform_ei=['high', 'limited', 'moderate', 'unavailable']",
+      "name": "enum_confidence_core_vocab",
+      "ok": true
+    },
+    {
+      "category": "enum",
+      "detail": "platform_ei=['complete', 'disabled', 'insufficient_evidence', 'partial', 'unavailable']",
+      "name": "enum_coverage_core_vocab",
+      "ok": true
+    },
+    {
+      "category": "enum",
+      "detail": "allowed=['critical', 'high', 'info', 'informational', 'low', 'medium']",
+      "name": "enum_severity_assessment_contract",
+      "ok": true
+    },
+    {
+      "category": "enum",
+      "detail": "visibility=['anonymized', 'customer_private', 'internal', 'public']",
+      "name": "enum_visibility_present",
+      "ok": true
+    },
+    {
+      "category": "enum",
+      "detail": "confidence/coverage/severity/priority/visibility/verdict remain contract-owned; no silent cross-defaulting verified via negative scenarios",
+      "name": "enum_contracts_remain_separate",
+      "ok": true
+    },
+    {
+      "category": "optional_fields",
+      "detail": "22/22",
+      "name": "optional_assessment_coverage_present",
+      "ok": true
+    },
+    {
+      "category": "optional_fields",
+      "detail": "22/22",
+      "name": "optional_assessment_head_confidence_present",
+      "ok": true
+    },
+    {
+      "category": "optional_fields",
+      "detail": "22/22 (may be empty list)",
+      "name": "optional_finding_correlations_key_present",
+      "ok": true
+    },
+    {
+      "category": "optional_fields",
+      "detail": "interpretation_policy_bundle_id=interp-bundle:c719915c68cf94601a0e8f0b",
+      "name": "optional_eir_interpretation_bundle_present",
+      "ok": true
+    },
+    {
+      "category": "optional_fields",
+      "detail": "minimal fixture retains schema_version 1.2",
+      "name": "optional_missing_fields_do_not_alter_schema_version",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "header_only \u2192 [REDACTED]",
+      "name": "privacy_engine_redacts_pem_header",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "unsafe_before=True safe_after=True",
+      "name": "privacy_customer_safe_then_platform_accepts",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "phrases=7",
+      "name": "privacy_safe_descriptive_phrases_accepted",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "fixtures=8",
+      "name": "privacy_unsafe_fixtures_rejected",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "PRIVATE_KEY_FINDING_EVIDENCE categorical",
+      "name": "privacy_sec002_categorical_evidence",
+      "ok": true
+    },
+    {
+      "category": "privacy",
+      "detail": "redacted marker stable",
+      "name": "privacy_sanitize_customer_text_stable",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "findings=22 repository=aspnetcore",
+      "name": "roundtrip_assessment_json_ids",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "report_id=eir:1eda169bfe4b7041265b253e",
+      "name": "roundtrip_eir_report_id",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "schema_version=1.0",
+      "name": "roundtrip_eir_schema_version",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "contracts=14",
+      "name": "roundtrip_registry_order_stable",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "assessment schema 2.0",
+      "name": "negative_assessment_future_2_0_rejected",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "REQUIRE_1_2_COMPLETE",
+      "name": "negative_assessment_missing_version_rejected",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "1.1 rejected by REQUIRE_1_2_COMPLETE",
+      "name": "negative_assessment_1_1_not_silently_1_2",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "ConfidenceLevel rejects unknown",
+      "name": "negative_unknown_confidence_not_defaulted",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "schema_version=9.9",
+      "name": "negative_eir_future_rejected",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "SV.12 JSON is allowlisted export projection",
+      "name": "negative_website_export_not_full_eir",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "export schema is separate allowlisted projection",
+      "name": "negative_website_export_schema_distinct",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "allowlist=('1.2',)",
+      "name": "negative_community_assessment_schema_2_0_not_allowed",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "customer-safe projection",
+      "name": "negative_pem_does_not_survive_safe_projection",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "Hardcoded credential detected.",
+      "name": "negative_safe_phrase_not_rejected",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "n=14",
+      "name": "negative_compatibility_registry_order_independent",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "schema_version=null",
+      "name": "negative_null_schema_version_rejected",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "redact_secrets",
+      "name": "negative_redact_secrets_clears_begin_fence",
+      "ok": true
+    },
+    {
+      "category": "artifacts",
+      "detail": "ready=22",
+      "name": "sv11_ei_ready_22",
+      "ok": true
+    },
+    {
+      "category": "artifacts",
+      "detail": "closure_status=closed",
+      "name": "sv13_ledger_closed",
+      "ok": true
+    },
+    {
+      "category": "general",
+      "detail": "verification-only; no product schema versions changed",
+      "name": "sv14_no_product_schema_bump",
+      "ok": true
+    }
+  ],
+  "checks_pass": 80,
+  "checks_total": 80,
+  "compatibility_failures": [],
+  "confirmations": {
+    "all_22_assessment_reports_checked": true,
+    "assessment_schema_remains_1_2": true,
+    "community_cloud_api_remains_1_0": true,
+    "compatibility_order_independent": true,
+    "eir_remains_1_0": true,
+    "engine_reports_accepted_by_platform_ingestion": true,
+    "ids_preserved_across_engine_platform": true,
+    "no_commit_created": true,
+    "no_schema_bump_without_necessity": true,
+    "privacy_redaction_aligned": true,
+    "product_and_verification_version_semantics_distinct": true,
+    "sv15_not_started": true,
+    "unsupported_future_versions_rejected": true,
+    "validation_record_summary_remain_1_0": true,
+    "verification_reports_remain_1_0_0": true,
+    "website_export_remains_1_0": true
+  },
+  "contract_registry": [
+    {
+      "additive_field_behavior": "preserve_optional_confidence_coverage_correlations",
+      "compatibility_mode": "require_1_2_complete_or_legacy_limited",
+      "contract_name": "assessment_report",
+      "identity_fields": [
+        "finding.id",
+        "recommendation.id",
+        "assessment ids"
+      ],
+      "missing_version_behavior": "reject_or_legacy_limited_by_policy",
+      "owning_layer": "engine",
+      "parser_or_validator": "codestrata.reporting.traceability.preservation.validate_canonical_assessment / Platform validate_report_document",
+      "primary_consumers": [
+        "Engine HTML",
+        "SV.4/SV.5",
+        "Epic 4 validation",
+        "Platform EI ingestion",
+        "SV.11/SV.12"
+      ],
+      "primary_producer": "Engine assessment reporting",
+      "privacy_boundary": "customer_safe_text + Platform validate_report_document",
+      "schema_version": "1.2",
+      "serializer": "codestrata.reporting.assessment_json.assessment_json_to_text",
+      "supported_input_versions": [
+        "1.2",
+        "1.0",
+        "1.1"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "subset_of_report_findings",
+      "compatibility_mode": "must_reconcile_with_report_json",
+      "contract_name": "findings_companion",
+      "identity_fields": [
+        "finding.id"
+      ],
+      "missing_version_behavior": "inherit_from_report_json",
+      "owning_layer": "engine",
+      "parser_or_validator": "reconcile with assessment.findings",
+      "primary_consumers": [
+        "SV.5",
+        "Epic 4 validation",
+        "human review"
+      ],
+      "primary_producer": "Engine assessment reporting",
+      "privacy_boundary": "customer_safe_text",
+      "schema_version": "1.2",
+      "serializer": "findings.json companion of report.json",
+      "supported_input_versions": [
+        "1.2"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "subset_of_report_recommendations",
+      "compatibility_mode": "must_reconcile_with_report_json",
+      "contract_name": "recommendations_companion",
+      "identity_fields": [
+        "recommendation.id",
+        "supporting_finding_ids"
+      ],
+      "missing_version_behavior": "inherit_from_report_json",
+      "owning_layer": "engine",
+      "parser_or_validator": "reconcile with assessment.recommendations",
+      "primary_consumers": [
+        "SV.5",
+        "Epic 4 validation",
+        "human review"
+      ],
+      "primary_producer": "Engine assessment reporting",
+      "privacy_boundary": "customer_safe_text",
+      "schema_version": "1.2",
+      "serializer": "recommendations.json companion of report.json",
+      "supported_input_versions": [
+        "1.2"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "precision_recall_fp_fn_optional",
+      "compatibility_mode": "exact_1_0",
+      "contract_name": "validation_record",
+      "identity_fields": [
+        "run_id",
+        "repository_id",
+        "fp_id",
+        "fn_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "engine_validation",
+      "parser_or_validator": "validation.recording.load_repository_validation_record",
+      "primary_consumers": [
+        "record loader",
+        "FP/FN tracking",
+        "summary generator",
+        "verification tooling"
+      ],
+      "primary_producer": "Epic 4 Slice 4.11 recorder",
+      "privacy_boundary": "no_absolute_paths_no_secrets",
+      "schema_version": "1.0",
+      "serializer": "validation.recording.write_repository_validation_record",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "pack_precision_recall_fp_fn_optional",
+      "compatibility_mode": "exact_1_0",
+      "contract_name": "validation_summary",
+      "identity_fields": [
+        "summary identity fields"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "engine_validation",
+      "parser_or_validator": "ValidationSummaryArtifact JSON load",
+      "primary_consumers": [
+        "engineering review",
+        "release verification"
+      ],
+      "primary_producer": "Epic 4 Slice 4.12 summary",
+      "privacy_boundary": "no_customer_report_consumer",
+      "schema_version": "1.0",
+      "serializer": "validation.summary_from_records.write_summary_artifacts",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "preserve_sections_bundle_drilldowns",
+      "compatibility_mode": "exact_1_0",
+      "contract_name": "engineering_intelligence_report",
+      "identity_fields": [
+        "report_id",
+        "dataset_id",
+        "interpretation_policy_bundle_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform",
+      "parser_or_validator": "from_stable_dict",
+      "primary_consumers": [
+        "stable deserializer",
+        "report quality",
+        "drill-downs",
+        "website-safe export",
+        "SV.6/SV.8/SV.12"
+      ],
+      "primary_producer": "Platform EI application pipeline",
+      "privacy_boundary": "safe_facts_no_full_assessment_embed",
+      "schema_version": "1.0",
+      "serializer": "report_to_stable_dict",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "omit_eir_internal_intentionally",
+      "compatibility_mode": "exact_1_0_allowlisted_projection",
+      "contract_name": "website_safe_eir_export",
+      "identity_fields": [
+        "export_id",
+        "source_report_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform",
+      "parser_or_validator": "export document validation (not full EIR)",
+      "primary_consumers": [
+        "static HTML",
+        "JSON artifact",
+        "manifest",
+        "OSS demo",
+        "SV.8"
+      ],
+      "primary_producer": "Platform website export",
+      "privacy_boundary": "allowlisted_projection_no_findings_evidence",
+      "schema_version": "1.0",
+      "serializer": "build_website_safe_export / serialize_website_safe_json",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "endpoint_schemas_remain_separate",
+      "compatibility_mode": "api_contract_independent_of_assessment_eir",
+      "contract_name": "community_cloud_api",
+      "identity_fields": [
+        "event_id",
+        "safe_reference"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "endpoint request validators",
+      "primary_consumers": [
+        "future Community clients",
+        "SV.7"
+      ],
+      "primary_producer": "Community Cloud API",
+      "privacy_boundary": "request_validation_privacy_first",
+      "schema_version": "1.0",
+      "serializer": "HTTP JSON responses",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "not_interchangeable_with_other_endpoints",
+      "compatibility_mode": "endpoint_specific",
+      "contract_name": "community_telemetry",
+      "identity_fields": [
+        "event_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "telemetry.validation",
+      "primary_consumers": [
+        "Community Cloud telemetry endpoint"
+      ],
+      "primary_producer": "Community clients",
+      "privacy_boundary": "telemetry_privacy_policy",
+      "schema_version": "1.0",
+      "serializer": "TelemetryIngestionRequest",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "no_report_json_upload",
+      "compatibility_mode": "informational_assessment_schema_version_only",
+      "contract_name": "community_assessment_metadata",
+      "identity_fields": [
+        "event_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "assessment_metadata validators + ALLOWED_ASSESSMENT_SCHEMA_VERSIONS",
+      "primary_consumers": [
+        "Community Cloud assessment-metadata endpoint"
+      ],
+      "primary_producer": "future Community client",
+      "privacy_boundary": "aggregate_metadata_only",
+      "schema_version": "1.0",
+      "serializer": "AssessmentMetadata request models",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject_assessment_schema_not_in_allowlist"
+    },
+    {
+      "additive_field_behavior": "not_interchangeable_with_telemetry",
+      "compatibility_mode": "endpoint_specific",
+      "contract_name": "community_cli_event",
+      "identity_fields": [
+        "event_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "cli_events.validation",
+      "primary_consumers": [
+        "Community Cloud CLI-events endpoint"
+      ],
+      "primary_producer": "Community CLI",
+      "privacy_boundary": "cli_event_privacy_policy",
+      "schema_version": "1.0",
+      "serializer": "CLI event request models",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "not_interchangeable_with_cli",
+      "compatibility_mode": "endpoint_specific",
+      "contract_name": "community_extension_event",
+      "identity_fields": [
+        "event_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "extension_events.validation",
+      "primary_consumers": [
+        "Community Cloud extension-events endpoint"
+      ],
+      "primary_producer": "Community extensions",
+      "privacy_boundary": "extension_event_privacy_policy",
+      "schema_version": "1.0",
+      "serializer": "Extension event request models",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "not_interchangeable_with_telemetry",
+      "compatibility_mode": "endpoint_specific",
+      "contract_name": "community_ai_usage",
+      "identity_fields": [
+        "event_id"
+      ],
+      "missing_version_behavior": "reject",
+      "owning_layer": "platform_community_cloud",
+      "parser_or_validator": "ai_usage.validation",
+      "primary_consumers": [
+        "Community Cloud AI-usage endpoint"
+      ],
+      "primary_producer": "Community AI clients",
+      "privacy_boundary": "ai_usage_privacy_policy",
+      "schema_version": "1.0",
+      "serializer": "AI usage request models",
+      "supported_input_versions": [
+        "1.0"
+      ],
+      "unsupported_future_version_behavior": "reject"
+    },
+    {
+      "additive_field_behavior": "safe_diagnostics_only",
+      "compatibility_mode": "verification_1_0_0_distinct_from_product_1_0",
+      "contract_name": "system_verification_reports",
+      "identity_fields": [
+        "verification_id",
+        "schema_name"
+      ],
+      "missing_version_behavior": "fail_closed_for_readers",
+      "owning_layer": "verification",
+      "parser_or_validator": "human/release review only",
+      "primary_consumers": [
+        "release verification",
+        "human review"
+      ],
+      "primary_producer": "SV packages",
+      "privacy_boundary": "no_secrets_source_absolute_paths",
+      "schema_version": "1.0.0",
+      "serializer": "verification package report writers",
+      "supported_input_versions": [
+        "1.0.0"
+      ],
+      "unsupported_future_version_behavior": "document_as_new_verification_contract"
+    }
+  ],
+  "dataset_disclaimer": "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim. Product schema 1.0 and verification schema 1.0.0 are distinct versioning namespaces.",
+  "identities": {
+    "dataset_id": "dataset:3da1c591fcef727714304861",
+    "eir_report_id": "eir:1eda169bfe4b7041265b253e",
+    "export_id": "eir-export:ca01b398f777e20ef75ea1f2"
+  },
+  "limitations": [
+    "SV.12 on-disk engineering-intelligence-report.json is the website-safe export projection (export_schema_version 1.0), not the full EIR domain document; SV.14 rebuilds full EIR from SV.10 for EIR round-trip checks.",
+    "Website export may intentionally omit dataset_id; omission is allowlisted.",
+    "Product schema 1.0 and verification schema 1.0.0 are distinct namespaces.",
+    "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim. Product schema 1.0 and verification schema 1.0.0 are distinct versioning namespaces."
+  ],
+  "producer_consumer_matrix": [
+    {
+      "consumers": [
+        "Engine report HTML",
+        "SV.4",
+        "SV.5",
+        "Epic 4 validation recording",
+        "Platform EI ingestion",
+        "SV.11 readiness",
+        "SV.12 quality review"
+      ],
+      "flow": "A_engine_assessment",
+      "producer": "Engine assessment reporting",
+      "schema": "assessment_report@1.2"
+    },
+    {
+      "consumers": [
+        "record loader",
+        "historical FP/FN tracking",
+        "summary generator",
+        "verification tooling"
+      ],
+      "flow": "B_validation_record",
+      "producer": "Epic 4 Slice 4.11 recorder",
+      "schema": "validation_record@1.0"
+    },
+    {
+      "consumers": [
+        "engineering review",
+        "release verification"
+      ],
+      "flow": "C_validation_summary",
+      "note": "not a customer report consumer",
+      "producer": "Epic 4 Slice 4.12 summary",
+      "schema": "validation_summary@1.0"
+    },
+    {
+      "consumers": [
+        "stable deserializer",
+        "report quality",
+        "repository drill-downs",
+        "website-safe export",
+        "SV.6",
+        "SV.8",
+        "SV.12"
+      ],
+      "flow": "D_engineering_intelligence_report",
+      "producer": "Platform EI application pipeline",
+      "schema": "engineering_intelligence_report@1.0"
+    },
+    {
+      "consumers": [
+        "static HTML renderer",
+        "JSON artifact",
+        "manifest writer",
+        "OSS demonstration",
+        "release artifact verification"
+      ],
+      "flow": "E_website_safe_export",
+      "producer": "Platform website export",
+      "schema": "website_safe_eir_export@1.0"
+    },
+    {
+      "consumers": [
+        "Community Cloud API"
+      ],
+      "flow": "F_community_assessment_metadata",
+      "note": "assessment_schema_version informational; no report.json upload",
+      "producer": "future Community client",
+      "schema": "community_assessment_metadata@1.0"
+    },
+    {
+      "consumers": [
+        "release verification",
+        "human review"
+      ],
+      "flow": "G_system_verification_reports",
+      "note": "never product runtime inputs",
+      "producer": "verification packages",
+      "schema": "system_verification_reports@1.0.0"
+    }
+  ],
+  "repository_count": 22,
+  "schema_name": "cross-schema-compatibility-verification",
+  "schema_version": "1.0.0",
+  "verdict": "PASS_WITH_LIMITATIONS",
+  "verification_id": "sv14-cross-schema-compatibility",
+  "warnings": []
+}

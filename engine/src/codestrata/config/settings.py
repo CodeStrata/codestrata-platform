@@ -228,6 +228,9 @@ class BedrockSettings(BaseModel):
     # Blank / omitted means unset — do not coerce to None (breaks str typing).
     answer_model: str = ""
     timeout_seconds: int = 60
+    # Assess path uses a single provider attempt (CR-1). This field remains for
+    # diagnostics / adapter configuration representation and is not applied as
+    # CodeStrata-level retries on Community assess.
     max_retries: int = 3
 
     @field_validator("model_id", "region")
@@ -253,11 +256,18 @@ class BedrockSettings(BaseModel):
         compact = str(value or "").strip()
         return compact or "amazon.titan-embed-text-v2:0"
 
-    @field_validator("timeout_seconds", "max_retries")
+    @field_validator("timeout_seconds")
     @classmethod
-    def validate_positive(cls, value: int) -> int:
+    def validate_timeout(cls, value: int) -> int:
         if value <= 0:
-            raise ValueError("must be a positive integer")
+            raise ValueError("timeout_seconds must be a positive integer")
+        return value
+
+    @field_validator("max_retries")
+    @classmethod
+    def validate_max_retries(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("max_retries must be >= 0")
         return value
 
 
@@ -292,11 +302,18 @@ class OpenAISettings(BaseModel):
             raise ValueError("embedding_dimensions must be >= 0")
         return value
 
-    @field_validator("timeout_seconds", "max_retries")
+    @field_validator("timeout_seconds")
     @classmethod
-    def validate_positive(cls, value: int) -> int:
+    def validate_timeout(cls, value: int) -> int:
         if value <= 0:
-            raise ValueError("must be a positive integer")
+            raise ValueError("timeout_seconds must be a positive integer")
+        return value
+
+    @field_validator("max_retries")
+    @classmethod
+    def validate_max_retries(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("max_retries must be >= 0")
         return value
 
 
@@ -315,6 +332,8 @@ class OpenRouterSettings(BaseModel):
     site_url: str = ""
     app_name: str = ""
     timeout_seconds: int = 60
+    # Assess path uses a single provider attempt (CR-1); not applied as
+    # CodeStrata-level retries on Community assess.
     max_retries: int = 3
 
     @field_validator("api_key_env", mode="before")
@@ -330,11 +349,18 @@ class OpenRouterSettings(BaseModel):
     def normalize_optional_strings(cls, value: object) -> str:
         return str(value or "").strip()
 
-    @field_validator("timeout_seconds", "max_retries")
+    @field_validator("timeout_seconds")
     @classmethod
-    def validate_positive(cls, value: int) -> int:
+    def validate_timeout(cls, value: int) -> int:
         if value <= 0:
-            raise ValueError("must be a positive integer")
+            raise ValueError("timeout_seconds must be a positive integer")
+        return value
+
+    @field_validator("max_retries")
+    @classmethod
+    def validate_max_retries(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("max_retries must be >= 0")
         return value
 
 

@@ -1,0 +1,20 @@
+{
+  "policy_id": "community-public-documentation-reconciliation-policy",
+  "policy_version": "1.0",
+  "schema": "community-public-documentation-reconciliation-policy:1.0",
+  "slice": "17.26",
+  "epic": 17,
+  "depends_on": [
+    "community-status-github-authority-policy:1.0"
+  ],
+  "authority": "Reconcile public Community documentation: canonical privacy authority, reports landing privacy/favicon, docs path hygiene, and Epic 17 publish fences.",
+  "start_slice_17_26": true,
+  "start_slice_17_27": false,
+  "no_cli_publish": true,
+  "no_vscode_marketplace_publish": true,
+  "no_release_tag": true,
+  "no_full_22_repository_release_corpus": true,
+  "canonical_community_privacy_url": "https://docs.codestrata.ai/security/privacy",
+  "corporate_privacy_url": "https://codestrata.ai/privacy",
+  "reports_privacy_must_point_to_community_docs": true
+}

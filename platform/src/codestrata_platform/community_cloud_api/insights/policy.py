@@ -134,6 +134,7 @@ BOUNDED_LIMITATIONS: frozenset[str] = frozenset(
         "malformed_objects_omitted",
         "query_budget_reached",
         "source_unavailable",
+        "aggregation_reader_unwired",
         "first_repeat_retention_only",
         "validation_growth_snapshots_unavailable",
         "production_ingestion_still_unwired",

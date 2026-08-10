@@ -1,0 +1,29 @@
+{
+  "policy_id": "community-report-publishing-policy",
+  "policy_version": "1.0",
+  "schema": "community-report-publishing-policy:1.0",
+  "slice": "17.16",
+  "epic": 17,
+  "authority": "Secure cloud publishing for Assessment and portfolio EIR with opaque public URLs.",
+  "local_report_always_generated": true,
+  "telemetry_opt_in_required_for_cloud_publish": true,
+  "explicit_publish_action_required": true,
+  "automatic_publish_after_assessment": false,
+  "assessment_cloud_versions_per_repository": 2,
+  "eir_cloud_versions_per_portfolio": 2,
+  "report_artifact_store_separate_from_data_lake": true,
+  "report_artifact_store_private": true,
+  "raw_s3_urls_public": false,
+  "public_report_domain": "https://reports.codestrata.ai",
+  "public_ids_opaque": true,
+  "public_read": true,
+  "publish_authenticated": true,
+  "revoke_authenticated": true,
+  "revocation_supported": true,
+  "start_slice_17_16": true,
+  "start_slice_17_17": true,
+  "depends_on": [
+    "codestrata-report-retention-policy:1.0",
+    "community-api-domain-policy:1.0"
+  ]
+}

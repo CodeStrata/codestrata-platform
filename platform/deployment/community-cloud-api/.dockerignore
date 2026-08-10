@@ -49,12 +49,16 @@ engine/docs
 engine/examples
 engine/**/__pycache__
 
-# Secrets / env
+# Secrets / env (do NOT exclude Python modules named credentials.py)
 .env
 .env.*
 **/*.pem
 **/*.key
-**/credentials*
+**/credentials.json
+**/credentials.txt
+**/credentials.env
+**/*client-credentials*
+**/*.owner-once
 **/*.tfstate*
 **/*.tfplan
 

@@ -1,0 +1,14 @@
+{
+  "schema": "community-assessment-engineering-intelligence-verification",
+  "schema_version": "1.0.0",
+  "package_id": "community-assessment-engineering-intelligence-verification",
+  "slice": "17.19",
+  "epic": 17,
+  "suite_id": "sv17-19",
+  "policy": "community-assessment-engineering-intelligence-validation-policy:1.0",
+  "assessment_register": "community-assessment-report-register:1.0",
+  "eir_register": "community-engineering-intelligence-report-register:1.0",
+  "start_slice_17_19": true,
+  "start_slice_17_20": true,
+  "output_relative": ".codestrata-artifacts/validation/suites/sv17-19/community-assessment-engineering-intelligence-verification.json"
+}

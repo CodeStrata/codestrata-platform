@@ -1,0 +1,146 @@
+{
+  "register_id": "community-insights-aggregation-register",
+  "register_version": "1.0",
+  "schema": "community-insights-aggregation-register:1.0",
+  "slice": "17.18",
+  "reader": "BoundedS3Reader",
+  "source": "production_data_lake_raw_only",
+  "max_list_requests_per_query": 2000,
+  "entries": [
+    {
+      "metric_id": "total_anonymous_installations",
+      "section": "Activity",
+      "input_streams": ["telemetry", "assessment_metadata", "cli_event", "ai_usage"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "daily_active_installations",
+      "section": "Activity",
+      "input_streams": ["telemetry", "assessment_metadata", "cli_event", "ai_usage"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "monthly_active_installations",
+      "section": "Activity",
+      "input_streams": ["telemetry", "assessment_metadata", "cli_event", "ai_usage"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "first_assessments",
+      "section": "Assessments",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "repeat_assessments",
+      "section": "Assessments",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "successful_assessments",
+      "section": "Assessments",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "failed_assessments",
+      "section": "Assessments",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "cli_version_adoption",
+      "section": "Adoption",
+      "input_streams": ["cli_event", "telemetry"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "vscode_extension_usage",
+      "section": "Adoption",
+      "input_streams": ["extension_event"],
+      "window": "rolling_30d_utc",
+      "status": "partial_without_extension_traffic",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "release_adoption",
+      "section": "Adoption",
+      "input_streams": ["cli_event", "extension_event", "telemetry"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "assessment_head_usage",
+      "section": "Coverage",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "language_ecosystem_distribution",
+      "section": "Technology",
+      "input_streams": ["assessment_metadata"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "ai_provider_adoption",
+      "section": "AI",
+      "input_streams": ["ai_usage"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "ai_model_adoption",
+      "section": "AI",
+      "input_streams": ["ai_usage"],
+      "window": "rolling_30d_utc",
+      "status": "validated",
+      "query_budget_status": "healthy",
+      "privacy_status": "aggregate_only"
+    },
+    {
+      "metric_id": "validation_dataset_growth",
+      "section": "Validation",
+      "input_streams": [],
+      "window": "external",
+      "status": "external_not_data_lake",
+      "query_budget_status": "not_applicable",
+      "privacy_status": "external"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ https://insights.codestrata.ai/api/v1/... → Platform Community Cloud API
 ```
 
 Cookie auth is host-only on `insights.codestrata.ai` with
-`Path=/api/v1/insights`, `HttpOnly`, `Secure`, `SameSite=Strict`.
+`Path=/`, `HttpOnly`, `Secure`, `SameSite=Strict`.
 
 Alternative B (`https://api.codestrata.ai/insights/...`) is deferred; it would
 require careful cross-subdomain cookie scoping and is not selected for v0.2.0.

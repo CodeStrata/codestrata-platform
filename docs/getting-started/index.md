@@ -28,7 +28,7 @@ pip / uv / pipx  →  codestrata version
                  →  codestrata doctor
                  →  codestrata init   (optional first time)
                  →  codestrata assess --no-ai
-                 →  open report.html
+                 →  open .codestrata-artifacts/assessments/<repository-id>/current/assessment.html
 ```
 
 ## Product model

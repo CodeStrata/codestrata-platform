@@ -44,6 +44,8 @@ class DeploymentSettings:
     ingestion_wire: bool = False
     data_lake_adapter: str = ""
     community_credentials_secret_id: str = DEFAULT_COMMUNITY_CREDENTIALS_SECRET_ID
+    report_artifacts_bucket: str = ""
+    report_publishing_enabled: bool = False
 
 
 def load_deployment_settings(
@@ -145,6 +147,16 @@ def load_deployment_settings(
     if rate_limit_mode != RATE_LIMIT_MODE_GATEWAY_PLUS_LOCAL:
         raise ValueError("unsupported CODESTRATA_RATE_LIMIT_MODE")
 
+    report_artifacts_bucket = (env.get("CODESTRATA_REPORT_ARTIFACTS_BUCKET") or "").strip()
+    report_publishing_enabled = _parse_bool(
+        env.get("CODESTRATA_REPORT_PUBLISHING"),
+        default=bool(report_artifacts_bucket),
+    )
+    if report_publishing_enabled and not report_artifacts_bucket:
+        raise ValueError(
+            "CODESTRATA_REPORT_PUBLISHING=true requires CODESTRATA_REPORT_ARTIFACTS_BUCKET"
+        )
+
     return DeploymentSettings(
         deployment_mode=deployment_mode,
         community_api_version=api_version,
@@ -157,6 +169,8 @@ def load_deployment_settings(
         ingestion_wire=wire_ready,
         data_lake_adapter=data_lake_adapter,
         community_credentials_secret_id=community_credentials_secret_id,
+        report_artifacts_bucket=report_artifacts_bucket,
+        report_publishing_enabled=report_publishing_enabled,
     )
 
 

@@ -1,0 +1,30 @@
+{
+  "policy_id": "community-assessment-engineering-intelligence-validation-policy",
+  "policy_version": "1.0",
+  "schema": "community-assessment-engineering-intelligence-validation-policy:1.0",
+  "slice": "17.19",
+  "epic": 17,
+  "authority": "Validate assessment and Engineering Intelligence report quality, consistency, evidence traceability, and lifecycle without redesigning algorithms.",
+  "depends_on": [
+    "codestrata-report-retention-policy:1.0",
+    "community-report-publishing-policy:1.0",
+    "community-data-lake-insights-validation-policy:1.0"
+  ],
+  "assessment_repository_level": true,
+  "assessment_heads_source_of_truth": true,
+  "assessment_manifest_lightweight": true,
+  "assessment_manifest_schema": "codestrata-assessment-manifest:1.0.0",
+  "eir_portfolio_level": true,
+  "eir_requires_multiple_repository_assessments": true,
+  "assessment_evidence_traceable": true,
+  "eir_conclusions_traceable": true,
+  "current_previous_lifecycle": true,
+  "failed_generation_does_not_promote": true,
+  "reports_excluded_from_data_lake": true,
+  "full_22_repo_release_corpus": false,
+  "representative_subset_required": true,
+  "ai_not_required_for_basic_assessment": true,
+  "community_status_website_deferred": true,
+  "start_slice_17_19": true,
+  "start_slice_17_20": true
+}

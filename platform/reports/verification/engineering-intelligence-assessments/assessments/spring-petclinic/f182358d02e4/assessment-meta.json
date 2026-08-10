@@ -1,0 +1,8 @@
+{
+  "assessment_command": "codestrata assess --repo . --output reports --no-ai",
+  "github_repository": "spring-projects/spring-petclinic",
+  "language_group": "Java",
+  "qualified_revision": "f182358d02e4a68e52bdbabf55ca7800288511e7",
+  "repository_id": "spring-petclinic",
+  "source_tag": null
+}

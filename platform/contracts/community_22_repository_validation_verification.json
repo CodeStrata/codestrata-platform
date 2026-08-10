@@ -1,0 +1,11 @@
+{
+  "schema": "community-22-repository-validation-verification:1.0.0",
+  "package": "verification/community_22_repository_validation",
+  "suite_id": "sv17-13",
+  "start_slice_17_13": true,
+  "start_slice_17_14": false,
+  "repository_target": 22,
+  "artifact_root": ".codestrata-artifacts",
+  "report": ".codestrata-artifacts/validation/suites/sv17-13/community-22-repository-validation-verification.json",
+  "manifest": ".codestrata-artifacts/validation/suites/sv17-13/manifest.json"
+}

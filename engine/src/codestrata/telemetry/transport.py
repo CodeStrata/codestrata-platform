@@ -81,6 +81,15 @@ class TelemetryTransport(Protocol):
 
 
 def configured_endpoint() -> str | None:
+    """Return explicit legacy HTTP endpoint if set.
+
+    Product transmission remains off by default. When operators explicitly set
+    ``CODESTRATA_TELEMETRY_ENDPOINT`` for production Community Cloud, use
+    ``https://api.codestrata.ai/api/v1/telemetry`` (see
+    ``codestrata.community_cloud.production_telemetry_ingest_url``). The raw
+    execute-api hostname is not the public authority.
+    """
+
     value = os.environ.get(ENDPOINT_ENV, "").strip()
     return value or None
 

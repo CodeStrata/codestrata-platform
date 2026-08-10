@@ -22,7 +22,7 @@ description: Common CodeStrata Engine and extension issues and how to resolve th
 
 ```bash
 codestrata doctor
-codestrata assess --repo . --output reports --no-ai
+codestrata assess --repo . --no-ai
 ```
 
 Inspect the Output channel (IDE) or CLI stderr.
@@ -42,17 +42,19 @@ codestrata ai doctor
 
 ## Report missing
 
-Confirm the output directory and timestamp folder under `reports/`.
+Confirm
+`.codestrata-artifacts/assessments/<repository-id>/current/`
+(and `previous/` if you expected an earlier successful run).
 
 ## Telemetry / privacy FAQ
 
 | Question | Answer |
 | --- | --- |
 | Is telemetry on by default? | No |
-| How do I enable it? | Answer **y** at the first-run prompt, or `codestrata telemetry enable` |
-| How do I disable it? | `codestrata telemetry disable` or `CODESTRATA_TELEMETRY=0` |
-| How do I inspect payloads? | `codestrata telemetry show` |
-| How do I reset the anonymous id? | `codestrata telemetry reset` |
-| Does offline telemetry block assess? | No — events queue locally |
+| How do I allow it for assess? | `codestrata assess --telemetry-allow`, or answer **y** at an eligible interactive prompt (default **N**) |
+| How do I deny it for assess? | `codestrata assess --telemetry-deny` (non-interactive runs never prompt) |
+| Do legacy enable/disable authorize assess? | No — `codestrata telemetry enable\|disable` is compatibility-only |
+| Does telemetry opt-in publish reports? | No — publish requires an explicit confirm action |
+| Does telemetry failure block assess? | No |
 
 Details: [Privacy](/security/privacy).

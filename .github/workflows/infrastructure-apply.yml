@@ -36,7 +36,9 @@ jobs:
     name: apply-production
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    if: github.event.inputs.confirm == 'APPLY-PRODUCTION'
+    if: >
+      github.repository == 'CodeStrata/codestrata-platform' &&
+      github.event.inputs.confirm == 'APPLY-PRODUCTION'
     environment: production
     permissions:
       contents: read

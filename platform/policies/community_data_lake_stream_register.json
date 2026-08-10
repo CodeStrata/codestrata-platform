@@ -1,0 +1,72 @@
+{
+  "register_id": "community-data-lake-stream-register",
+  "register_version": "1.0",
+  "schema": "community-data-lake-stream-register:1.0",
+  "slice": "17.18",
+  "entries": [
+    {
+      "stream": "telemetry",
+      "schema_version": "1.0",
+      "producer": "codestrata_cli",
+      "privacy_status": "privacy_safe_aggregates",
+      "storage_partition": "accepted_root/stream_eq_telemetry/schema_version_eq_1.0/year/month/day",
+      "retention_class": "raw_365d",
+      "aggregation_consumers": [
+        "insights_activity",
+        "insights_adoption"
+      ],
+      "validation_status": "validated"
+    },
+    {
+      "stream": "assessment_metadata",
+      "schema_version": "1.0",
+      "producer": "codestrata_cli",
+      "privacy_status": "privacy_safe_aggregates",
+      "storage_partition": "accepted_root/stream_eq_assessment_metadata/schema_version_eq_1.0/year/month/day",
+      "retention_class": "raw_365d",
+      "aggregation_consumers": [
+        "insights_assessments",
+        "insights_coverage",
+        "insights_technology"
+      ],
+      "validation_status": "validated"
+    },
+    {
+      "stream": "cli_event",
+      "schema_version": "1.0",
+      "producer": "codestrata_cli",
+      "privacy_status": "privacy_safe_aggregates",
+      "storage_partition": "accepted_root/stream_eq_cli_event/schema_version_eq_1.0/year/month/day",
+      "retention_class": "raw_365d",
+      "aggregation_consumers": [
+        "insights_activity",
+        "insights_adoption"
+      ],
+      "validation_status": "validated"
+    },
+    {
+      "stream": "extension_event",
+      "schema_version": "1.0",
+      "producer": "codestrata_vscode",
+      "privacy_status": "privacy_safe_aggregates",
+      "storage_partition": "accepted_root/stream_eq_extension_event/schema_version_eq_1.0/year/month/day",
+      "retention_class": "raw_365d",
+      "aggregation_consumers": [
+        "insights_adoption"
+      ],
+      "validation_status": "contract_only_no_fabricated_traffic"
+    },
+    {
+      "stream": "ai_usage",
+      "schema_version": "1.0",
+      "producer": "codestrata_cli",
+      "privacy_status": "privacy_safe_aggregates",
+      "storage_partition": "accepted_root/stream_eq_ai_usage/schema_version_eq_1.0/year/month/day",
+      "retention_class": "raw_365d",
+      "aggregation_consumers": [
+        "insights_ai"
+      ],
+      "validation_status": "validated"
+    }
+  ]
+}

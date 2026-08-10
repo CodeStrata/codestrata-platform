@@ -1,0 +1,8 @@
+{
+  "assessment_command": "codestrata assess --repo . --output reports --no-ai",
+  "github_repository": "pallets/flask",
+  "language_group": "Python",
+  "qualified_revision": "22d924701a6ae2e4cd01e9a15bbaf3946094af65",
+  "repository_id": "flask",
+  "source_tag": "3.1.3"
+}

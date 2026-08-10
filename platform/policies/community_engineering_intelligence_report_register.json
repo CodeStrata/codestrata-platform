@@ -1,0 +1,40 @@
+{
+  "entries": [
+    {
+      "artifact_slot": "current",
+      "membership_hash": "69c85e949fa53017",
+      "portfolio_id": "sv17-19-validation",
+      "portfolio_run_id": "portfolio-sv17-19-validation-20260810-020837",
+      "privacy_status": "clean",
+      "repository_count": 6,
+      "section_statuses": {
+        "artifact_slot": "present",
+        "assessment_head_distributions": "present",
+        "capability_comparisons": "present",
+        "classification": "present",
+        "confidence": "present",
+        "dataset_summary": "present",
+        "empty_section_notes": "present",
+        "export_limitations": "present",
+        "export_metadata": "present",
+        "export_schema_version": "present",
+        "limitations": "present",
+        "methodology": "present",
+        "modernization_observations": "present",
+        "orientation": "present",
+        "portfolio_id": "present",
+        "portfolio_name": "present",
+        "portfolio_run_id": "present",
+        "previous_portfolio_run_id": "present",
+        "recurring_patterns": "present",
+        "report_id": "present"
+      },
+      "traceability_status": "ok",
+      "validation_status": "PASS_WITH_LIMITATIONS"
+    }
+  ],
+  "register_id": "community-engineering-intelligence-report-register",
+  "register_version": "1.0",
+  "schema": "community-engineering-intelligence-report-register:1.0",
+  "slice": "17.19"
+}

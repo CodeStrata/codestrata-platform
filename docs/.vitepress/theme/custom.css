@@ -220,18 +220,40 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   color: var(--cs-teal-dark) !important;
 }
 
-/* Footer */
+.dark .VPDocAsideOutline .outline-link.active {
+  color: var(--cs-teal) !important;
+}
+
+/* Dark: code blocks need a visible edge on the night canvas. */
+.dark .vp-code-group,
+.dark div[class*="language-"] {
+  border: 1px solid var(--cs-night-line);
+}
+
+.dark .vp-code-group {
+  border-radius: var(--cs-radius);
+}
+
+.dark .vp-doc :not(pre) > code {
+  color: var(--cs-night-ink);
+  background: var(--cs-night-soft);
+  border: 1px solid var(--cs-night-line);
+}
+
+/* Footer — home uses marketing grid; inner pages use minimal bar. */
 .cs-footer {
   margin-top: 3rem;
-  border-top: 1px solid var(--cs-line);
+  /* Home: avoid double line with .cs-footer__base; separator lives on base. */
+  border-top: none;
   background: var(--cs-paper-soft);
   color: var(--cs-muted);
   font-size: var(--cs-text-sm);
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .dark .cs-footer {
   background: var(--cs-night-soft);
-  border-top-color: var(--cs-night-line);
   color: var(--cs-night-muted);
 }
 
@@ -253,11 +275,11 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
 }
 
 .dark .cs-footer__brand {
-  color: var(--cs-night-ink);
+  color: var(--cs-ink-soft);
 }
 
 .cs-footer__brand-link {
-  display: inline-block;
+  display: block;
   margin-bottom: 0.5rem;
   color: var(--cs-ink) !important;
   text-decoration: none !important;
@@ -267,6 +289,16 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
 
 .dark .cs-footer__brand-link {
   color: var(--cs-night-ink) !important;
+}
+
+.cs-footer__tagline {
+  margin: 0;
+  color: var(--cs-muted);
+  line-height: 1.55;
+}
+
+.dark .cs-footer__tagline {
+  color: var(--cs-night-muted);
 }
 
 .cs-footer h4 {
@@ -288,12 +320,24 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
 }
 
 .cs-footer a {
-  color: inherit !important;
+  color: var(--cs-ink-soft) !important;
   text-decoration: none !important;
+}
+
+.cs-footer a.cs-footer__brand-link {
+  color: var(--cs-ink) !important;
 }
 
 .cs-footer a:hover {
   color: var(--cs-teal-dark) !important;
+}
+
+.dark .cs-footer a {
+  color: var(--cs-ink-soft) !important;
+}
+
+.dark .cs-footer a.cs-footer__brand-link {
+  color: var(--cs-night-ink) !important;
 }
 
 .dark .cs-footer a:hover {
@@ -311,6 +355,21 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   font-size: var(--cs-text-sm);
 }
 
+.dark .cs-footer__base {
+  border-top-color: var(--cs-night-line);
+}
+
+/* Minimal footer: one top separator; offset past fixed sidebar on desktop. */
+.cs-footer--minimal {
+  margin-top: 1.5rem;
+  background: transparent;
+  border-top: 1px solid var(--cs-line);
+}
+
+.dark .cs-footer--minimal {
+  border-top-color: var(--cs-night-line);
+}
+
 .cs-footer--minimal .cs-footer__inner--minimal {
   display: flex;
   justify-content: space-between;
@@ -318,15 +377,34 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   flex-wrap: wrap;
   padding: 1rem 2rem 1.25rem;
   font-size: var(--cs-text-sm);
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
-.cs-footer--minimal {
-  margin-top: 1.5rem;
-  background: transparent;
+/* Match VPContent.has-sidebar left inset so footer aligns with main column. */
+@media (min-width: 960px) {
+  .cs-footer--minimal {
+    margin-left: var(--vp-sidebar-width);
+    width: calc(100% - var(--vp-sidebar-width));
+  }
 }
 
-.dark .cs-footer__base {
-  border-top-color: var(--cs-night-line);
+@media (min-width: 1440px) {
+  .cs-footer--minimal {
+    margin-left: calc(
+      (100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width)
+    );
+    width: calc(
+      100% - ((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width))
+    );
+  }
+}
+
+@media (max-width: 959px) {
+  .cs-footer--minimal {
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 @media (max-width: 960px) {
@@ -346,6 +424,12 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
 
   .cs-footer__inner {
     padding-inline: 1.25rem;
+  }
+
+  .cs-footer--minimal .cs-footer__inner--minimal {
+    padding-inline: 1.25rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .cs-cta-grid {

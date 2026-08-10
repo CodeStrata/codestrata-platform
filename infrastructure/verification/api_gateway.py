@@ -64,11 +64,25 @@ def check_api_gateway() -> list[CheckResult]:
             category="api_gateway",
         ),
         CheckResult(
-            name="apigw:no_custom_domain_waf_cors",
-            ok="aws_apigatewayv2_domain_name" not in module
-            and "aws_wafv2" not in module
-            and "cors_configuration" not in text,
-            detail="no domain/waf/cors",
+            name="apigw:custom_domain_present",
+            ok="aws_apigatewayv2_domain_name" in module
+            and "aws_acm_certificate" in module
+            and "api.codestrata.ai" in module,
+            detail="api.codestrata.ai ACM+domain",
+            category="api_gateway",
+            scenario="G",
+        ),
+        CheckResult(
+            name="apigw:no_waf_cors",
+            ok="aws_wafv2" not in module and "cors_configuration" not in text,
+            detail="no waf/cors",
+            category="api_gateway",
+        ),
+        CheckResult(
+            name="apigw:execute_api_retained",
+            ok="execute_api_endpoint_retained" in module or "FALLBACK" in module
+            or 'disable_execute_api_endpoint' not in module,
+            detail="execute-api fallback retained",
             category="api_gateway",
         ),
         CheckResult(

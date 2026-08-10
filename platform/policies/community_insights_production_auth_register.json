@@ -1,0 +1,78 @@
+{
+  "register_id": "community-insights-production-auth-register",
+  "register_version": "1.0",
+  "schema": "community-insights-production-auth-register:1.0",
+  "slice": "17.24",
+  "epic": 17,
+  "environment": "production",
+  "region": "us-west-2",
+  "password_secret_id": "codestrata/insights/dashboard-password",
+  "session_secret_id": "codestrata/insights/session-secret",
+  "password_normalization_contract": "unicode_strip_edges_only",
+  "session_secret_cache_ttl_seconds": 300,
+  "cookie_path": "/",
+  "cookie_same_site": "Strict",
+  "cookie_host_only": true,
+  "single_production_verifier_authority": true,
+  "plaintext_not_stored_in_verifier_secret": true,
+  "auth_fail_closed": true,
+  "password_verifier_not_cached": true,
+  "rotation_behavior_defined": true,
+  "production_login_e2e_required": true,
+  "owner_once_bootstrap_allowed": true,
+  "owner_password_manager_required": true,
+  "start_slice_17_24": true,
+  "start_slice_17_25": false,
+  "entries": [
+    {
+      "defect_id": "E17-D024-001",
+      "classification": "API_CONTRACT",
+      "description": "insights_auth_codes_remapped_to_internal_error",
+      "current_status": "RESOLVED",
+      "fix": "Add Insights auth public error codes to _SAFE_PUBLIC_MESSAGES in community_cloud_api/errors.py",
+      "validation": "errors.py allowlist + HTTP auth tests",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D024-002",
+      "classification": "UX",
+      "description": "frontend_invalid_password_error_conflation",
+      "current_status": "RESOLVED",
+      "fix": "AuthContext and authClient map invalid_credentials, rate_limited, unavailable, and access_denied distinctly",
+      "validation": "insights AuthContext + authClient tests",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "defect_id": "E17-D024-003",
+      "classification": "API_CONTRACT",
+      "description": "api_ui_normalization_asymmetry",
+      "current_status": "RESOLVED",
+      "fix": "normalize_password (unicode strip edges) applied in insights_auth/password.py for verify and hash",
+      "validation": "password.py + auth service tests",
+      "release_disposition": "RESOLVED"
+    },
+    {
+      "limitation_id": "E17-L024-001",
+      "classification": "OPERATOR_INPUT",
+      "description": "operator_input_confusion_sm_json_vs_plaintext",
+      "current_status": "DOCUMENTED",
+      "fix": "runtime-security-secret-rotation.md documents owner plaintext vs Secrets Manager scrypt JSON; not a verifier desync",
+      "validation": "rotation doc + register disposition",
+      "release_disposition": "OWNER_ACTION_REQUIRED"
+    }
+  ],
+  "invariants": [
+    "single_production_verifier_authority",
+    "plaintext_not_stored_in_verifier_secret",
+    "auth_fail_closed",
+    "password_normalization_unicode_strip_edges_only",
+    "password_verifier_not_cached",
+    "session_secret_cache_ttl_300_seconds",
+    "cookie_path_root",
+    "cookie_http_only_secure_samesite_strict_host_only",
+    "insights_auth_public_error_codes_not_remapped",
+    "frontend_distinguishes_auth_failure_classes",
+    "rotation_behavior_documented",
+    "start_slice_17_25_false"
+  ]
+}

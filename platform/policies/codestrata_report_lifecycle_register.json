@@ -1,0 +1,37 @@
+{
+  "schema": "codestrata-report-lifecycle-register:1.0",
+  "register_id": "codestrata-report-lifecycle-register",
+  "register_version": "1.0",
+  "slice": "17.15",
+  "safe_fields": [
+    "repository_id",
+    "portfolio_id",
+    "slot",
+    "run_id",
+    "execution_status",
+    "schema"
+  ],
+  "forbidden_fields": [
+    "aws_account_id",
+    "s3_uri",
+    "api_key",
+    "machine_id",
+    "source_code",
+    "file_path"
+  ],
+  "entries": [
+    {
+      "repository_id": "github-codestrata-codestrata-platform",
+      "portfolio_id": "release-validation",
+      "slots": ["current", "previous"],
+      "assessment_versions_per_repository": 2,
+      "engineering_intelligence_versions_per_portfolio": 2,
+      "limitations": [
+        "legacy_run_id_folder_aliases",
+        "previous_ui_deferred",
+        "cloud_deferred",
+        "monorepo_pre_cutover"
+      ]
+    }
+  ]
+}

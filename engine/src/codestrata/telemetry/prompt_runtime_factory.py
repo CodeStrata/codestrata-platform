@@ -12,6 +12,7 @@ from codestrata.telemetry.consent import TelemetrySessionConsent
 from codestrata.telemetry.disabled_service import DisabledTelemetryFacade
 from codestrata.telemetry.interactive_consent import run_interactive_consent_prompt
 from codestrata.telemetry.prompt_result import InteractiveConsentPromptResult
+from codestrata.telemetry.product_transport import resolve_product_telemetry_transport
 from codestrata.telemetry.runtime import TelemetryRuntime
 from codestrata.telemetry.runtime_factory import create_session_telemetry_runtime
 from codestrata.telemetry.transport import TelemetryTransport
@@ -37,8 +38,9 @@ def create_interactive_session_telemetry(
 ) -> tuple[DisabledTelemetryFacade, InteractiveConsentPromptResult]:
     """Prompt when eligible, otherwise apply non-interactive suppression.
 
-    Default transport remains unavailable. Never persists or transmits.
-    ``--telemetry-allow`` / ``--telemetry-deny`` take precedence when present.
+    Unauthorized consent keeps UnavailableTelemetryTransport. Authorized consent
+    uses production Community HTTP when a client credential is available.
+    Never persists consent. ``--telemetry-allow`` / ``--telemetry-deny`` win.
     """
 
     return create_command_session_telemetry_runtime(
@@ -93,9 +95,12 @@ def create_command_session_telemetry_runtime(
     if selection is not None and selection.explicit_decision_present:
         consent = selection.consent
         assert consent is not None  # explicit_decision_present guarantees consent
+        active_transport = resolve_product_telemetry_transport(
+            consent, transport=transport
+        )
         runtime = create_session_telemetry_runtime(
             consent=consent,
-            transport=transport,
+            transport=active_transport,
         )
         from codestrata.telemetry.prompt_eligibility import PromptEligibilityReason
         from codestrata.telemetry.prompt_result import default_skipped_prompt_result
@@ -107,9 +112,12 @@ def create_command_session_telemetry_runtime(
         return DisabledTelemetryFacade(runtime=runtime), result
 
     if explicit_consent is not None and explicit_consent.explicit:
+        active_transport = resolve_product_telemetry_transport(
+            explicit_consent, transport=transport
+        )
         runtime = create_session_telemetry_runtime(
             consent=explicit_consent,
-            transport=transport,
+            transport=active_transport,
         )
         from codestrata.telemetry.prompt_eligibility import PromptEligibilityReason
         from codestrata.telemetry.prompt_result import default_skipped_prompt_result
@@ -132,9 +140,12 @@ def create_command_session_telemetry_runtime(
         automation_detected=automation_detected,
         output_interactive=output_interactive,
     )
+    active_transport = resolve_product_telemetry_transport(
+        result.consent, transport=transport
+    )
     runtime: TelemetryRuntime = create_session_telemetry_runtime(
         consent=result.consent,
-        transport=transport,
+        transport=active_transport,
     )
     return DisabledTelemetryFacade(runtime=runtime), result
 

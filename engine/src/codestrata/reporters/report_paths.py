@@ -1,8 +1,9 @@
 """Utilities for creating and retaining analysis report run directories.
 
-Slice 17.12: assessment runs live under
-``.codestrata-artifacts/assessments/<repo>-<YYYYMMDD-HHMMSS>/`` with
-``assessment.html``, ``assessment.json`` (manifest), and ``heads/``.
+Slice 17.15: assessment runs stage under
+``.codestrata-artifacts/temporary/assessment-runs/<run_id>/`` then promote to
+``.codestrata-artifacts/assessments/<repository_id>/current/`` with at most one
+``previous/`` slot.
 """
 
 from __future__ import annotations
@@ -23,17 +24,22 @@ from codestrata.artifacts.layout import (
     format_run_timestamp,
     sanitize_repository_slug,
 )
+from codestrata.artifacts.lifecycle import (
+    MAX_VERSIONS,
+    discard_staging,
+    promote_assessment_run,
+)
 from codestrata.artifacts.manifest import ASSESSMENT_HTML_BASENAME, ASSESSMENT_JSON_BASENAME
+from codestrata.artifacts.repository_identity import resolve_repository_artifact_id
 from codestrata.models import AnalysisResult
 
 logger = logging.getLogger(__name__)
 
 _REPORT_RUN_DIRECTORY_PATTERN = re.compile(r"^\d{8}-\d{6}$")
 _ASSESSMENT_RUN_ID_PATTERN = re.compile(r"^[a-z0-9._-]+-\d{8}-\d{6}$")
-DEFAULT_RETAINED_RUN_COUNT = 3
+DEFAULT_RETAINED_RUN_COUNT = MAX_VERSIONS
 DEFAULT_ACTIVE_REPORT_RUNS_TO_KEEP = DEFAULT_RETAINED_RUN_COUNT
 _DEFAULT_REPORTS_TO_KEEP = DEFAULT_RETAINED_RUN_COUNT
-_UNSAFE_REPOSITORY_CHARS = re.compile(r"[^a-z0-9._-]+")
 
 LEGACY_REPORTS_DIRNAME = "reports"
 LEGACY_HTML_BASENAME = "report.html"
@@ -58,6 +64,9 @@ class ReportPaths:
     repository_name: str
     run_id: str = ""
     heads_directory: Path | None = None
+    repository_id: str = ""
+    staging: bool = False
+    artifact_root: Path | None = None
 
     @property
     def run_directory(self) -> Path:
@@ -110,13 +119,9 @@ def create_report_paths(
 ) -> ReportPaths:
     """Create report paths for one analysis or assessment run.
 
-    Layout (Slice 17.12)::
+    Slice 17.15 default layout stages under temporary then promotes to::
 
-        <output_root>/<sanitized-repository>-<YYYYMMDD-HHMMSS>/
-            assessment.html
-            assessment.json
-            heads/
-            report.txt   # legacy scan only
+        <artifact-root>/assessments/<repository_id>/current/
     """
 
     if timestamp is not None:
@@ -128,28 +133,34 @@ def create_report_paths(
         run_timestamp = format_report_run_timestamp(now)
 
     output_root = _resolve_output_root(Path(base_directory))
-    # Workspace base for artifact tree when using default assessments path.
+    repository = result.repository
+    repository_id = resolve_repository_artifact_id(
+        repository_name=repository.name,
+        source_url=getattr(repository, "source_url", None),
+        path=getattr(repository, "path", None),
+    )
+
     workspace: Path | None = None
     if output_root == DEFAULT_ASSESS_OUTPUT_DIRECTORY or output_root.as_posix().endswith(
         f"{ARTIFACT_ROOT_NAME}/{ASSESSMENTS_DIRNAME}"
     ):
-        # If relative default, create under cwd; if absolute assessments path, use parent.parent.
         if output_root.is_absolute():
             workspace = output_root.parent.parent
         else:
             workspace = Path.cwd()
         run = create_assessment_run_paths(
-            repository_name=result.repository.name,
+            repository_name=repository.name,
             base=workspace,
             timestamp=run_timestamp,
             create_directory=create_directory,
+            stage=True,
         )
-        return _from_assessment_run(run)
+        return _from_assessment_run(run, repository_id=repository_id, staging=True)
 
-    # Custom --output: still use flat <root>/<run-id>/ with new basenames.
-    repo = sanitize_repository_directory_name(result.repository.name)
+    # Custom --output: stage under <output>/.staging/<run-id>/ then promote.
+    repo = sanitize_repository_directory_name(repository.name)
     run_id = f"{repo}-{run_timestamp}"
-    run_directory = output_root / run_id
+    run_directory = output_root / ".staging" / run_id
     heads = run_directory / "heads"
     if create_directory:
         heads.mkdir(parents=True, exist_ok=True)
@@ -162,10 +173,18 @@ def create_report_paths(
         repository_name=repo,
         run_id=run_id,
         heads_directory=heads,
+        repository_id=repository_id,
+        staging=True,
+        artifact_root=output_root,
     )
 
 
-def _from_assessment_run(run: AssessmentRunPaths) -> ReportPaths:
+def _from_assessment_run(
+    run: AssessmentRunPaths,
+    *,
+    repository_id: str,
+    staging: bool,
+) -> ReportPaths:
     return ReportPaths(
         directory=run.directory,
         text_report=run.text_report,
@@ -175,7 +194,81 @@ def _from_assessment_run(run: AssessmentRunPaths) -> ReportPaths:
         repository_name=run.repository_name,
         run_id=run.run_id,
         heads_directory=run.heads_directory,
+        repository_id=repository_id,
+        staging=staging,
+        artifact_root=run.root,
     )
+
+
+def promote_staged_report(report_paths: ReportPaths) -> Path:
+    """Promote a completed staged assessment into current/previous slots."""
+
+    if not report_paths.staging:
+        return report_paths.directory
+    repository_id = report_paths.repository_id or resolve_repository_artifact_id(
+        repository_name=report_paths.repository_name
+    )
+    base = report_paths.artifact_root
+    # Default tree: artifact_root is ``.codestrata-artifacts``.
+    if base is not None and base.name == ARTIFACT_ROOT_NAME:
+        return promote_assessment_run(
+            repository_id=repository_id,
+            staging_directory=report_paths.directory,
+            base=base.parent,
+        )
+    return _promote_custom_output(report_paths, repository_id=repository_id)
+
+
+def _promote_custom_output(report_paths: ReportPaths, *, repository_id: str) -> Path:
+    """Promote into ``<output>/<repository_id>/current`` for explicit --output."""
+
+    from codestrata.artifacts.lifecycle import (
+        SLOT_CURRENT,
+        SLOT_PREVIOUS,
+        _annotate_assessment_manifest,
+        _replace_dir,
+        _rmtree_safe,
+        acquire_lifecycle_lock,
+        validate_assessment_bundle,
+    )
+
+    validate_assessment_bundle(report_paths.directory)
+    root = report_paths.artifact_root
+    assert root is not None
+    logical = root / repository_id
+    lock = acquire_lifecycle_lock(logical)
+    try:
+        current = logical / SLOT_CURRENT
+        previous = logical / SLOT_PREVIOUS
+        _annotate_assessment_manifest(
+            report_paths.directory,
+            repository_id=repository_id,
+            artifact_slot=SLOT_CURRENT,
+            previous_assessment_run_id=None,
+        )
+        if previous.exists():
+            _rmtree_safe(previous)
+        if current.exists():
+            _annotate_assessment_manifest(
+                current,
+                repository_id=repository_id,
+                artifact_slot=SLOT_PREVIOUS,
+                previous_assessment_run_id=None,
+            )
+            _replace_dir(current, previous)
+        _replace_dir(report_paths.directory, current)
+        return current
+    finally:
+        lock.release()
+
+
+def discard_staged_report(report_paths: ReportPaths) -> None:
+    if report_paths.staging and report_paths.directory.exists():
+        # Custom output staging uses .staging/ not temporary/
+        try:
+            discard_staging(report_paths.directory)
+        except Exception:
+            shutil.rmtree(report_paths.directory, ignore_errors=True)
 
 
 def is_completed_report_run(run_directory: Path) -> bool:
@@ -193,14 +286,7 @@ def is_completed_report_run(run_directory: Path) -> bool:
 
 
 def list_active_report_run_directories(repository_directory: Path) -> list[Path]:
-    """Return run directories under a parent, newest first.
-
-    Supports:
-    - legacy ``reports/<repo>/<stamp>/``
-    - Slice 17.12 ``.codestrata-artifacts/assessments/<repo>-<stamp>/`` when
-      ``repository_directory`` is the assessments root (filter by slug prefix) or
-      a legacy repo folder.
-    """
+    """Return run/slot directories under a parent, newest first."""
 
     if not repository_directory.exists():
         return []
@@ -209,10 +295,14 @@ def list_active_report_run_directories(repository_directory: Path) -> list[Path]
     for path in repository_directory.iterdir():
         if path.is_symlink() or not path.is_dir():
             continue
-        if _REPORT_RUN_DIRECTORY_PATTERN.match(path.name):
+        if path.name in {"current", "previous"}:
+            candidates.append(path)
+        elif _REPORT_RUN_DIRECTORY_PATTERN.match(path.name):
             candidates.append(path)
         elif _ASSESSMENT_RUN_ID_PATTERN.match(path.name):
             candidates.append(path)
+        elif (path / "current").is_dir():
+            candidates.append(path / "current")
     return sorted(candidates, key=lambda path: path.name, reverse=True)
 
 
@@ -233,12 +323,22 @@ def list_completed_assessment_runs(
 ) -> list[Path]:
     """List completed assessment runs under the assessments root."""
 
-    runs = list_completed_report_run_directories(assessments_root)
-    if repository_slug is None:
-        return runs
-    slug = sanitize_repository_slug(repository_slug)
-    prefix = f"{slug}-"
-    return [path for path in runs if path.name.startswith(prefix)]
+    if repository_slug is not None:
+        rid = resolve_repository_artifact_id(repository_name=repository_slug)
+        logical = assessments_root / rid
+        slots: list[Path] = []
+        for slot in ("current", "previous"):
+            candidate = logical / slot
+            if is_completed_report_run(candidate):
+                slots.append(candidate)
+        if slots:
+            return slots
+        runs = list_completed_report_run_directories(assessments_root)
+        slug = sanitize_repository_slug(repository_slug)
+        prefix = f"{slug}-"
+        return [path for path in runs if path.name.startswith(prefix)]
+
+    return list_completed_report_run_directories(assessments_root)
 
 
 def _is_safe_run_directory(repository_directory: Path, run_directory: Path) -> bool:
@@ -249,12 +349,13 @@ def _is_safe_run_directory(repository_directory: Path, run_directory: Path) -> b
         return False
     if candidate == repository_root:
         return False
-    if candidate.parent != repository_root:
+    if candidate.parent != repository_root and candidate.parent.parent != repository_root:
         return False
     if run_directory.is_symlink():
         return False
     return bool(
-        _REPORT_RUN_DIRECTORY_PATTERN.match(run_directory.name)
+        run_directory.name in {"current", "previous"}
+        or _REPORT_RUN_DIRECTORY_PATTERN.match(run_directory.name)
         or _ASSESSMENT_RUN_ID_PATTERN.match(run_directory.name)
     )
 
@@ -265,11 +366,7 @@ def retain_recent_reports(
     *,
     repository_slug: str | None = None,
 ) -> list[Path]:
-    """Keep only the newest completed report-run directories.
-
-    When ``repository_slug`` is set and ``repository_directory`` is the
-    assessments root, only runs for that slug are considered.
-    """
+    """Legacy prune helper — prefer :func:`promote_staged_report` for 17.15."""
 
     if keep < 1:
         raise ValueError("keep must be at least 1")
@@ -278,6 +375,10 @@ def retain_recent_reports(
         return []
 
     if repository_slug is not None:
+        rid = resolve_repository_artifact_id(repository_name=repository_slug)
+        logical = repository_directory / rid
+        if (logical / "current").is_dir():
+            return []
         completed = list_completed_assessment_runs(
             repository_directory, repository_slug=repository_slug
         )

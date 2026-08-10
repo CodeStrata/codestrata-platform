@@ -1,0 +1,762 @@
+{
+  "approved_volatile_fields": [
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "assessment.generated_at",
+      "normalization": "strip_volatile_fields / SV.4 normalize_report",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "execution timing / generation metadata"
+    },
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "assessment.timing",
+      "normalization": "strip_volatile_fields / SV.4 normalize_report",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "execution timing / generation metadata"
+    },
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "assessment.ai.latency_ms",
+      "normalization": "strip_volatile_fields / SV.4 normalize_report",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "execution timing / generation metadata"
+    },
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "assessment.static_analysis",
+      "normalization": "strip_volatile_fields / SV.4 normalize_report",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "execution timing / generation metadata"
+    },
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "manifest.generated_at",
+      "normalization": "strip_volatile_fields / SV.4 normalize_report",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "execution timing / generation metadata"
+    },
+    {
+      "appears_in_customer_artifacts": true,
+      "field_path": "manifest.scan_id",
+      "normalization": "LIVE_DETERMINISM_EXTRA_PATHS strip",
+      "participates_in_ids": false,
+      "producer": "Engine assessment reporting",
+      "reason": "per-run scan identifier (live acceptance extra path)"
+    },
+    {
+      "appears_in_customer_artifacts": false,
+      "field_path": "ValidationSummaryArtifact.generated_at",
+      "normalization": "canonical_dict pops generated_at",
+      "participates_in_ids": false,
+      "producer": "Epic 4 validation summary",
+      "reason": "summary generation timestamp"
+    },
+    {
+      "appears_in_customer_artifacts": false,
+      "field_path": "CommunityCloud.request_id",
+      "normalization": "ignored by event fingerprint / key",
+      "participates_in_ids": false,
+      "producer": "Community Cloud HTTP transport",
+      "reason": "transport request id; not event identity material"
+    },
+    {
+      "appears_in_customer_artifacts": false,
+      "field_path": "verification.execution_environment_labels",
+      "normalization": "excluded from fingerprints",
+      "participates_in_ids": false,
+      "producer": "System Verification runners",
+      "reason": "optional local labels; not identity"
+    }
+  ],
+  "checks": [
+    {
+      "category": "inputs",
+      "detail": "count=22",
+      "name": "catalog_release_validation_22",
+      "ok": true
+    },
+    {
+      "category": "inputs",
+      "detail": "samples=4",
+      "name": "inputs_determinism_samples_loaded",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "missing=none",
+      "name": "engine_sv10_determinism_samples_present",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "cleanarchitecture/django/bookstack/aspnetcore",
+      "name": "engine_sv10_determinism_samples_ok",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "prefix=finding",
+      "name": "engine_finding_id_builder_stable",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "prefix=recommendation",
+      "name": "engine_recommendation_id_builder_stable",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "sha256=66114b724b7f7d89\u2026",
+      "name": "engine_sample_fingerprint_stable_cleanarchitecture",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "count=17",
+      "name": "engine_sample_finding_ids_present_cleanarchitecture",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "sha256=896b318d91f73f11\u2026",
+      "name": "engine_sample_fingerprint_stable_django",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "count=202",
+      "name": "engine_sample_finding_ids_present_django",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "sha256=0ff606e1c6ea4298\u2026",
+      "name": "engine_sample_fingerprint_stable_bookstack",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "count=166",
+      "name": "engine_sample_finding_ids_present_bookstack",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "sha256=446965d888dcaad3\u2026",
+      "name": "engine_sample_fingerprint_stable_aspnetcore",
+      "ok": true
+    },
+    {
+      "category": "engine",
+      "detail": "count=22",
+      "name": "engine_sample_finding_ids_present_aspnetcore",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "sha256=adac525c977983ed\u2026 len=171618",
+      "name": "html_fingerprint_stable_cleanarchitecture",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "anchors=66 duplicates=0",
+      "name": "html_anchor_ids_unique_cleanarchitecture",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "sha256=94524855e1709387\u2026 len=836275",
+      "name": "html_fingerprint_stable_django",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "anchors=403 duplicates=0",
+      "name": "html_anchor_ids_unique_django",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "sha256=a9b68bd0a9c19997\u2026 len=693073",
+      "name": "html_fingerprint_stable_bookstack",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "anchors=393 duplicates=0",
+      "name": "html_anchor_ids_unique_bookstack",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "sha256=cc726c436873ad9f\u2026 len=217116",
+      "name": "html_fingerprint_stable_aspnetcore",
+      "ok": true
+    },
+    {
+      "category": "html",
+      "detail": "anchors=72 duplicates=0",
+      "name": "html_anchor_ids_unique_aspnetcore",
+      "ok": true
+    },
+    {
+      "category": "validation",
+      "detail": "RECORD_SCHEMA_VERSION=1.0",
+      "name": "validation_record_schema_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation",
+      "detail": "SUMMARY_SCHEMA_VERSION=1.0",
+      "name": "validation_summary_schema_1_0",
+      "ok": true
+    },
+    {
+      "category": "validation",
+      "detail": "fp_id_prefix=fp",
+      "name": "validation_fp_id_stable",
+      "ok": true
+    },
+    {
+      "category": "validation",
+      "detail": "fn_id_prefix=fn",
+      "name": "validation_fn_id_stable",
+      "ok": true
+    },
+    {
+      "category": "validation",
+      "detail": "sha256=9070ea544f1b7128\u2026",
+      "name": "validation_summary_fingerprint_stable",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "dataset=dataset:3da1c591fcef727714304861 report=eir:1eda169bfe4b7041265b253e",
+      "name": "ei_order_invariant_catalog",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "dataset=dataset:3da1c591fcef727714304861 report=eir:1eda169bfe4b7041265b253e",
+      "name": "ei_order_invariant_reverse",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "dataset=dataset:3da1c591fcef727714304861 report=eir:1eda169bfe4b7041265b253e",
+      "name": "ei_order_invariant_language",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "dataset=dataset:3da1c591fcef727714304861 report=eir:1eda169bfe4b7041265b253e",
+      "name": "ei_order_invariant_tier_proxy",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "dataset=dataset:3da1c591fcef727714304861 report=eir:1eda169bfe4b7041265b253e",
+      "name": "ei_order_invariant_shuffled",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "technology_distribution section",
+      "name": "ei_technology_distribution_present",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "capability_comparisons section",
+      "name": "ei_capability_comparisons_present",
+      "ok": true
+    },
+    {
+      "category": "intelligence",
+      "detail": "included=22 drilldowns=22",
+      "name": "ei_population_22",
+      "ok": true
+    },
+    {
+      "category": "eir",
+      "detail": "report_id=eir:1eda169bfe4b7041265b253e",
+      "name": "eir_roundtrip_report_id",
+      "ok": true
+    },
+    {
+      "category": "eir",
+      "detail": "bundle=interp-bundle:c719915c68cf94601a0e8f0b",
+      "name": "eir_roundtrip_interpretation_bundle",
+      "ok": true
+    },
+    {
+      "category": "eir",
+      "detail": "schema_version=1.0",
+      "name": "eir_schema_version_1_0",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "sha256=265134fc56ac2990\u2026",
+      "name": "website_json_bytes_identical",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "sha256=25ad4f32244277b7\u2026",
+      "name": "website_html_bytes_identical",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "sha256=3ecf193a0f1b7139\u2026",
+      "name": "website_manifest_bytes_identical",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "export_id=eir-export:ca01b398f777e20ef75ea1f2",
+      "name": "website_export_id_stable",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "two temp dirs (incl. spaces) byte-identical",
+      "name": "website_output_dir_independent",
+      "ok": true
+    },
+    {
+      "category": "website_export",
+      "detail": "sv12 json/html/manifest present",
+      "name": "website_sv12_export_present",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "fingerprint=fp:64e14eb2da550acb657a0eac13483a6d1da233d857eb38c54ce09228380498ca",
+      "name": "community_fingerprint_key_order_invariant",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "event_key=event:c514d85bb01a9b28916357ff",
+      "name": "community_event_key_stable",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "safe_ref=evt-c514d85bb01a",
+      "name": "community_safe_reference_stable",
+      "ok": true
+    },
+    {
+      "category": "community_cloud",
+      "detail": "t1=1000000 t2=1000000",
+      "name": "community_sequence_clock_stable",
+      "ok": true
+    },
+    {
+      "category": "infrastructure",
+      "detail": "verdict=pass",
+      "name": "infrastructure_verdict_stable",
+      "ok": true
+    },
+    {
+      "category": "infrastructure",
+      "detail": "ok=True",
+      "name": "infrastructure_ok_stable",
+      "ok": true
+    },
+    {
+      "category": "infrastructure",
+      "detail": "defects=0",
+      "name": "infrastructure_defects_stable",
+      "ok": true
+    },
+    {
+      "category": "infrastructure",
+      "detail": "hits=none",
+      "name": "infrastructure_no_home_path_a",
+      "ok": true
+    },
+    {
+      "category": "infrastructure",
+      "detail": "hits=none",
+      "name": "infrastructure_no_home_path_b",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "present=5",
+      "name": "verification_reports_present",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "sha256=ff086aa9dd1ccad0\u2026 file=curated-repository-validation.json",
+      "name": "verification_report_fingerprint_curated-repository-validation",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "schema_version=1.0.0",
+      "name": "verification_report_schema_curated-repository-validation",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "hits=none",
+      "name": "verification_report_no_home_path_curated-repository-validation",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "sha256=2a3966d4b638a845\u2026 file=assessment-consistency-verification.json",
+      "name": "verification_report_fingerprint_assessment-consistency-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "schema_version=1.0.0",
+      "name": "verification_report_schema_assessment-consistency-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "hits=none",
+      "name": "verification_report_no_home_path_assessment-consistency-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "sha256=287c7815549ab905\u2026 file=engineering-intelligence-quality-review.json",
+      "name": "verification_report_fingerprint_engineering-intelligence-quality-review",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "schema_version=1.0.0",
+      "name": "verification_report_schema_engineering-intelligence-quality-review",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "hits=none",
+      "name": "verification_report_no_home_path_engineering-intelligence-quality-review",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "sha256=f5fdfe748265501e\u2026 file=system-defect-fixes-verification.json",
+      "name": "verification_report_fingerprint_system-defect-fixes-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "schema_version=1.0.0",
+      "name": "verification_report_schema_system-defect-fixes-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "hits=none",
+      "name": "verification_report_no_home_path_system-defect-fixes-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "sha256=472313502563964c\u2026 file=cross-schema-compatibility-verification.json",
+      "name": "verification_report_fingerprint_cross-schema-compatibility-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "schema_version=1.0.0",
+      "name": "verification_report_schema_cross-schema-compatibility-verification",
+      "ok": true
+    },
+    {
+      "category": "verification_reports",
+      "detail": "hits=none",
+      "name": "verification_report_no_home_path_cross-schema-compatibility-verification",
+      "ok": true
+    },
+    {
+      "category": "paths",
+      "detail": "hits=none",
+      "name": "paths_no_home_or_users_in_canonical_reports",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "sha256=66114b724b7f7d89\u2026",
+      "name": "roundtrip_assessment_fingerprint",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "report_id=eir:0149f95f4446f856a935e703",
+      "name": "roundtrip_eir_subset_report_id",
+      "ok": true
+    },
+    {
+      "category": "roundtrip",
+      "detail": "digests=['e6106728ec59', 'e6106728ec59', 'e6106728ec59']",
+      "name": "roundtrip_python_hashseed_stable_json",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "stable finding id",
+      "name": "negative_finding_id_no_timestamp_drift",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "sort_keys JSON",
+      "name": "negative_dict_order_sorted_json_stable",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "fp:ebb2ba42c3805c73c790fd3b93c5937a486ca7f10409aae0e8bb4f6357d220c8",
+      "name": "negative_event_fingerprint_key_order",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "event key stable without request_id",
+      "name": "negative_event_key_ignores_request_id",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "material ID difference preserved",
+      "name": "negative_no_broad_normalization_hiding_diff",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "explicit sort used for unordered collections",
+      "name": "negative_set_requires_explicit_sort",
+      "ok": true
+    },
+    {
+      "category": "negative",
+      "detail": "injected clock + non-negative remaining",
+      "name": "negative_rate_limit_remaining_non_negative",
+      "ok": true
+    },
+    {
+      "category": "general",
+      "detail": "preserved artifacts only",
+      "name": "sv15_no_full_22_reassess",
+      "ok": true
+    },
+    {
+      "category": "general",
+      "detail": "verification-only; no ID redesign",
+      "name": "sv15_no_product_id_scheme_change",
+      "ok": true
+    }
+  ],
+  "checks_pass": 82,
+  "checks_total": 82,
+  "confirmations": {
+    "approved_volatile_fields_documented": true,
+    "canonical_ids_order_independent": true,
+    "community_event_identity_stable": true,
+    "no_broad_normalization": true,
+    "no_commit_created": true,
+    "no_full_22_reassessment": true,
+    "no_product_id_scheme_change": true,
+    "preserved_determinism_samples_reused": true,
+    "python_hashseed_stable": true,
+    "sv16_not_started": true,
+    "website_bytes_identical": true
+  },
+  "dataset_disclaimer": "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim.",
+  "defects": [],
+  "deterministic_contract_registry": [
+    {
+      "approved_volatile_fields": [
+        "assessment.generated_at",
+        "assessment.timing",
+        "assessment.ai.latency_ms",
+        "assessment.static_analysis",
+        "manifest.generated_at"
+      ],
+      "comparison_method": "strip_volatile_fields / reports_structurally_equal",
+      "contract_name": "report.json",
+      "deterministic_identity_fields": [
+        "finding.id",
+        "recommendation.id",
+        "evidence ids",
+        "correlation ids"
+      ],
+      "expected_order_behavior": "canonical sorted serialization",
+      "producer": "Engine assessment reporting",
+      "round_trip_behavior": "assessment_json_to_text \u2192 parse \u2192 validate"
+    },
+    {
+      "comparison_method": "ID sets + ordered companion reconcile",
+      "contract_name": "findings.json",
+      "deterministic_identity_fields": [
+        "finding.id"
+      ],
+      "expected_order_behavior": "stable sort by contract keys",
+      "producer": "Engine assessment reporting"
+    },
+    {
+      "comparison_method": "ID sets + ordered companion reconcile",
+      "contract_name": "recommendations.json",
+      "deterministic_identity_fields": [
+        "recommendation.id",
+        "supporting_finding_ids"
+      ],
+      "producer": "Engine assessment reporting"
+    },
+    {
+      "approved_volatile_fields": [
+        "narrow HTML timing if any"
+      ],
+      "comparison_method": "normalize_html / html_fingerprint (SV.5)",
+      "contract_name": "report.html",
+      "deterministic_identity_fields": [
+        "anchors",
+        "TOC order"
+      ],
+      "producer": "Engine HTML renderer"
+    },
+    {
+      "comparison_method": "load \u2192 stable form",
+      "contract_name": "validation_record",
+      "deterministic_identity_fields": [
+        "run_id",
+        "fp_id",
+        "fn_id"
+      ],
+      "producer": "Epic 4 recorder"
+    },
+    {
+      "comparison_method": "canonical_dict without generated_at",
+      "contract_name": "validation_summary",
+      "deterministic_identity_fields": [
+        "pack counts",
+        "metric ids"
+      ],
+      "producer": "Epic 4 summary"
+    },
+    {
+      "contract_name": "IntelligenceDataset",
+      "deterministic_identity_fields": [
+        "dataset_id"
+      ],
+      "expected_order_behavior": "order-independent across assessment inputs",
+      "producer": "Platform EI ingestion"
+    },
+    {
+      "contract_name": "CrossRepositoryAggregation",
+      "deterministic_identity_fields": [
+        "aggregation_id"
+      ],
+      "expected_order_behavior": "order-independent",
+      "producer": "Platform EI aggregation"
+    },
+    {
+      "contract_name": "EngineeringIntelligenceReport",
+      "deterministic_identity_fields": [
+        "report_id",
+        "interpretation_policy_bundle_id"
+      ],
+      "producer": "Platform EI pipeline",
+      "round_trip_behavior": "report_to_stable_dict \u2194 from_stable_dict"
+    },
+    {
+      "comparison_method": "byte-for-byte JSON/HTML/manifest",
+      "contract_name": "website_safe_export",
+      "deterministic_identity_fields": [
+        "export_id",
+        "sha256 digests"
+      ],
+      "expected_order_behavior": "no output-directory influence",
+      "producer": "Platform website export"
+    },
+    {
+      "comparison_method": "in-memory adapters + SequenceClock",
+      "contract_name": "community_cloud_responses",
+      "deterministic_identity_fields": [
+        "event key",
+        "payload fingerprint",
+        "safe event reference"
+      ],
+      "producer": "Community Cloud API"
+    },
+    {
+      "comparison_method": "repeated check_structure",
+      "contract_name": "infrastructure_verification",
+      "deterministic_identity_fields": [
+        "verdict",
+        "check vector"
+      ],
+      "producer": "SV.9 infrastructure verification"
+    },
+    {
+      "comparison_method": "stable JSON serialization fingerprints",
+      "contract_name": "system_verification_reports",
+      "deterministic_identity_fields": [
+        "schema_name",
+        "schema_version",
+        "verdict"
+      ],
+      "producer": "SV.2\u2013SV.14 packages"
+    }
+  ],
+  "fingerprints": {
+    "engine_aspnetcore": "446965d888dcaad3",
+    "engine_bookstack": "0ff606e1c6ea4298",
+    "engine_cleanarchitecture": "66114b724b7f7d89",
+    "engine_django": "896b318d91f73f11"
+  },
+  "forbidden_environment_fields": [
+    "absolute temporary paths",
+    "home directory",
+    "username",
+    "hostname",
+    "process ID",
+    "random UUIDs where deterministic IDs required",
+    "Python object addresses",
+    "local timezone in IDs",
+    "locale-dependent formatting in IDs",
+    "unordered set representation",
+    "Git clone directory name (where irrelevant)",
+    "developer checkout path",
+    "environment variable values",
+    "virtual-environment path",
+    "OpenTofu executable absolute path in verification report"
+  ],
+  "input_artifact_identities": {
+    "sv10": "engine/reports/verification/sv10",
+    "sv10_determinism_samples": "determinism-samples.json",
+    "sv12": "platform/reports/verification/sv12",
+    "sv14": "platform/reports/verification/sv14"
+  },
+  "limitations": [
+    "Full 22-repository reassessment was not performed; preserved SV.10 artifacts and SV.10 determinism samples were reused.",
+    "Locale variants are reported only when available in the environment.",
+    "Results describe only the 22 curated pinned repositories in the v0.2.0 release-validation catalog and are not a product-wide accuracy or industry benchmark claim."
+  ],
+  "repository_count": 22,
+  "schema_name": "deterministic-output-verification",
+  "schema_version": "1.0.0",
+  "verdict": "PASS_WITH_LIMITATIONS",
+  "verification_id": "sv15-deterministic-outputs",
+  "warnings": []
+}

@@ -156,6 +156,14 @@ body {
   max-width: 100%;
 }
 
+.cs-login__build {
+  margin: 1.25rem 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--cs-muted, #5f6b65);
+  font-family: var(--cs-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
 .cs-login__error {
   margin: 0;
   color: var(--cs-danger, #8b1e1e);
@@ -509,4 +517,58 @@ body {
   .cs-section__grid {
     grid-template-columns: 1fr;
   }
+}
+
+.cs-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cs-fg-muted);
+}
+
+.cs-section-note {
+  margin: 0 0 1rem;
+  color: var(--cs-fg-muted);
+  font-size: 0.95rem;
+}
+
+.cs-muted {
+  color: var(--cs-fg-muted);
+}
+
+.cs-text-link {
+  color: var(--cs-accent, #0f766e);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cs-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--cs-border);
+  border-radius: 8px;
+  background: var(--cs-surface);
+}
+
+.cs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.cs-table th,
+.cs-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--cs-border);
+  vertical-align: top;
+}
+
+.cs-table th {
+  font-weight: 600;
+  background: color-mix(in srgb, var(--cs-surface) 88%, var(--cs-border));
+}
+
+.cs-table tr:last-child td {
+  border-bottom: none;
 }

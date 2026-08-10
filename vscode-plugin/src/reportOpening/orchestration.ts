@@ -143,7 +143,9 @@ export function locateHtmlReport(
 }
 
 /**
- * Bounded discovery for Slice 17.12 flat runs:
+ * Bounded discovery for Slice 17.15 logical slots:
+ *   `<outputRoot>/<repository-id>/current/assessment.html`
+ * plus flat Slice 17.12:
  *   `<outputRoot>/<run-id>/assessment.html`
  * plus legacy nested:
  *   `<outputRoot>/<repo>/<run>/report.html`
@@ -201,6 +203,22 @@ export function findLatestHtmlRunDirectory(
     if (topStat.isSymbolicLink() || !topStat.isDirectory()) {
       continue;
     }
+    // Slice 17.15 logical repository folder with current/
+    const currentPath = path.join(topPath, "current");
+    if (
+      fs.existsSync(path.join(currentPath, "assessment.html")) ||
+      fs.existsSync(path.join(currentPath, "report.html"))
+    ) {
+      try {
+        const currentStat = fs.lstatSync(currentPath);
+        if (!currentStat.isSymbolicLink() && currentStat.isDirectory()) {
+          considerRun(currentPath, currentStat);
+          continue;
+        }
+      } catch {
+        // fall through
+      }
+    }
     // Flat Slice 17.12 run directory
     if (
       fs.existsSync(path.join(topPath, "assessment.html")) ||
@@ -218,17 +236,21 @@ export function findLatestHtmlRunDirectory(
     }
     for (const runName of runNames) {
       const runPath = path.join(topPath, runName);
-      let stat: fs.Stats;
+      let runStat: fs.Stats;
       try {
-        stat = fs.lstatSync(runPath);
+        runStat = fs.lstatSync(runPath);
       } catch {
         continue;
       }
-      if (stat.isSymbolicLink() || !stat.isDirectory()) {
+      if (runStat.isSymbolicLink() || !runStat.isDirectory()) {
         continue;
       }
-      considerRun(runPath, stat);
+      considerRun(runPath, runStat);
     }
+  }
+
+  if (candidates.length === 0) {
+    return undefined;
   }
   candidates.sort((a, b) => b.mtime - a.mtime);
   return candidates[0]?.dir;

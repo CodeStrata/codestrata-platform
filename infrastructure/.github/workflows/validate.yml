@@ -17,6 +17,7 @@ concurrency:
 jobs:
   offline-validate:
     name: offline-validate
+    if: github.repository == 'CodeStrata/codestrata-infrastructure'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:

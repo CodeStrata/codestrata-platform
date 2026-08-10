@@ -1,33 +1,26 @@
 # Privacy
 
+Canonical Community / Engine product privacy for this documentation portal:
+
+**[Security → Privacy](/security/privacy)**
+
+That page covers local assessment artifacts, privacy-first telemetry consent
+(`--telemetry-allow` / `--telemetry-deny`), assessment metadata vs published
+reports, Data Lake streams, AI provider boundaries, retention, and opt-out.
+
 ## Documentation website
 
-The CodeStrata documentation portal is a static site:
+This documentation portal is a static site:
 
 - No account or login
 - No cookies required for reading docs
 - No analytics by default
 
-## Community Engine telemetry
+## Related
 
-Anonymous telemetry for CodeStrata Engine is **disabled by default** and requires
-**explicit opt-in**. See [Security → Privacy](/security/privacy) and the Engine
-`PRIVACY.md` / `docs/telemetry.md` files.
-
-Commands:
-
-```bash
-codestrata telemetry status
-codestrata telemetry enable
-codestrata telemetry disable
-codestrata telemetry reset
-codestrata telemetry show
-```
-
-## Local tools
-
-CodeStrata Engine and IDE extensions process repositories under your control.
-This documentation site does not receive your source code.
+- Engine repository `PRIVACY.md` (points at the published page above)
+- [Telemetry](/reference/telemetry)
+- [Community Cloud API](/reference/community-api/)
 
 Do not paste secrets, private keys, or private repository URLs into public issues
 or documentation PRs.

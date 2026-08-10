@@ -253,13 +253,14 @@ def test_factory_failure_falls_back_and_assess_continues(
     assert list(home.iterdir()) == []
 
 
-def test_normal_cli_does_not_get_injected_transport(
+def test_normal_cli_without_credential_stays_unavailable(
     tmp_path: Path, monkeypatch
 ) -> None:
     home = tmp_path / "home"
     home.mkdir()
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
     monkeypatch.setenv("CI", "1")
+    monkeypatch.delenv("CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL", raising=False)
     reset_telemetry_singletons()
     repo = _mini_repo(tmp_path)
     out = tmp_path / "out"
@@ -270,6 +271,32 @@ def test_normal_cli_does_not_get_injected_transport(
     transport = get_telemetry_service().runtime.session.transport
     assert isinstance(transport, UnavailableTelemetryTransport)
     assert transport.transport_category == "unavailable"
+
+
+def test_normal_cli_opt_in_with_credential_uses_http_transport(
+    tmp_path: Path, monkeypatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
+    monkeypatch.setenv("CI", "1")
+    monkeypatch.setenv(
+        "CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL",
+        "cscc_v1_" + ("a" * 32),
+    )
+    reset_telemetry_singletons()
+    repo = _mini_repo(tmp_path)
+    out = tmp_path / "out"
+    result = _invoke_assess(repo, out, extra=["--telemetry-allow"])
+    assert result.exit_code == 0
+    from codestrata.telemetry.infrastructure.http_transport import HttpTelemetryTransport
+    from codestrata.telemetry.service import get_telemetry_service
+
+    transport = get_telemetry_service().runtime.session.transport
+    assert isinstance(transport, HttpTelemetryTransport)
+    assert transport.transport_category == "http"
+    assert "api.codestrata.ai" in transport._configuration.endpoint
+    assert transport._configuration.endpoint.endswith("/api/v1/telemetry")
 
 
 def test_artifacts_equivalent_across_telemetry_outcomes(

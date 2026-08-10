@@ -1,0 +1,581 @@
+{
+  "catalog_id": "codestrata-smoke-regression-catalog",
+  "defects": [],
+  "elapsed_ms": 119.57612494006753,
+  "limitations": [
+    "SV.6 verifies the Platform Engineering Intelligence pipeline.",
+    "Uses permanent catalog qualified pinned revisions only.",
+    "Does not start website export (SV.8), Community Cloud (SV.7), or SV.12 review.",
+    "Does not tune aggregation rules, patterns, or assessment analyzers."
+  ],
+  "ok": true,
+  "pipeline": {
+    "aggregation_checks": [
+      {
+        "category": "aggregation",
+        "detail": "records=5 included=5",
+        "name": "aggregation:one_record_per_repository",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "aggregation",
+        "detail": "aggregation:1070be418fcbd6fc244460d3",
+        "name": "aggregation:id_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "aggregation",
+        "detail": "denominators=3",
+        "name": "aggregation:zero_denominator_unavailable",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "aggregation",
+        "detail": "entity refs remain repository-scoped in aggregation facts",
+        "name": "aggregation:no_cross_repo_finding_merge",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "aggregation_id": "aggregation:1070be418fcbd6fc244460d3",
+    "capability_checks": [
+      {
+        "category": "capability",
+        "detail": "count=9",
+        "name": "capability:comparisons_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "capability",
+        "detail": "count=9",
+        "name": "capability:head_distributions_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "capability",
+        "detail": "ok",
+        "name": "capability:no_rank_maturity_health",
+        "ok": true,
+        "scenario": "N"
+      },
+      {
+        "category": "capability",
+        "detail": "no zero\u2192healthy inference",
+        "name": "capability:zero_findings_not_healthy",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "catalog_id": "codestrata-smoke-regression-catalog",
+    "dataset_checks": [
+      {
+        "category": "dataset",
+        "detail": "IntelligenceDataset present",
+        "name": "dataset:present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "refs/digests only",
+        "name": "dataset:no_embedded_findings",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "dataset:51f8613688c2fdffdd876121",
+        "name": "dataset:id_prefix",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "schemas=['1.2']",
+        "name": "dataset:assessment_schema_1_2",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "snapshots=5",
+        "name": "dataset:digest_present",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "dataset_id": "dataset:51f8613688c2fdffdd876121",
+    "determinism_checks": [
+      {
+        "category": "determinism",
+        "detail": "dataset:f5f13a3126920eee89d5bd6c",
+        "name": "determinism:dataset_id_order_invariant",
+        "ok": true,
+        "scenario": "S"
+      },
+      {
+        "category": "determinism",
+        "detail": "eir:6434d7d291c580b6a8039eee",
+        "name": "determinism:report_id_order_invariant",
+        "ok": true,
+        "scenario": "S"
+      },
+      {
+        "category": "determinism",
+        "detail": "interp-bundle:c719915c68cf94601a0e8f0b",
+        "name": "determinism:bundle_id_order_invariant",
+        "ok": true,
+        "scenario": "S"
+      },
+      {
+        "category": "determinism",
+        "detail": "round-trip equal",
+        "name": "determinism:stable_serialization_roundtrip",
+        "ok": true,
+        "scenario": "S"
+      },
+      {
+        "category": "determinism",
+        "detail": "single=1 double=1",
+        "name": "determinism:duplicate_input_population_stable",
+        "ok": true,
+        "scenario": "D"
+      },
+      {
+        "category": "determinism",
+        "detail": "eir:394b8574e3bc83b0878dc031",
+        "name": "determinism:primary_report_id_stable_prefix",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "drilldown_checks": [
+      {
+        "category": "drilldown",
+        "detail": "drilldowns=5 included=5",
+        "name": "drilldown:one_per_included_repository",
+        "ok": true,
+        "scenario": "R"
+      },
+      {
+        "category": "drilldown",
+        "detail": "drill_repos=5",
+        "name": "drilldown:repository_set_matches",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "drilldown",
+        "detail": "no evidence payloads",
+        "name": "drilldown:no_raw_evidence_payload",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "eir_schema_version": "1.0",
+    "failures": [],
+    "ingestion_checks": [
+      {
+        "category": "dataset",
+        "detail": "IntelligenceDataset present",
+        "name": "dataset:present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "refs/digests only",
+        "name": "dataset:no_embedded_findings",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "dataset:51f8613688c2fdffdd876121",
+        "name": "dataset:id_prefix",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "schemas=['1.2']",
+        "name": "dataset:assessment_schema_1_2",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "dataset",
+        "detail": "snapshots=5",
+        "name": "dataset:digest_present",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "interpretation_policy_bundle_id": "interp-bundle:c719915c68cf94601a0e8f0b",
+    "limitations": [],
+    "modernization_checks": [
+      {
+        "category": "modernization",
+        "detail": "observations=4 issues=[]",
+        "name": "modernization:requires_recs_and_two_repos",
+        "ok": true,
+        "scenario": "P"
+      },
+      {
+        "category": "modernization",
+        "detail": "ok",
+        "name": "modernization:no_roi_cost_portfolio_entities",
+        "ok": true,
+        "scenario": "P"
+      }
+    ],
+    "ok": true,
+    "pattern_checks": [
+      {
+        "category": "patterns",
+        "detail": "patterns=30 bad=0",
+        "name": "patterns:min_two_repositories",
+        "ok": true,
+        "scenario": "O"
+      },
+      {
+        "category": "patterns",
+        "detail": "patterns remain observational",
+        "name": "patterns:no_portfolio_recommendation",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "provenance_checks": [
+      {
+        "category": "provenance",
+        "detail": "orphans=0",
+        "name": "provenance:capability_repos_included",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "provenance",
+        "detail": "orphans=0",
+        "name": "provenance:pattern_repos_included",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "provenance",
+        "detail": "orphans=0",
+        "name": "provenance:modernization_repos_included",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "provenance",
+        "detail": "dataset:51f8613688c2fdffdd876121",
+        "name": "provenance:report_dataset_link",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "report_id": "eir:394b8574e3bc83b0878dc031",
+    "report_quality_checks": [
+      {
+        "category": "report_quality",
+        "detail": "1.0",
+        "name": "quality:eir_schema_1_0",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "report_quality",
+        "detail": "interp-bundle:c719915c68cf94601a0e8f0b",
+        "name": "quality:interpretation_bundle_id",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "report_quality",
+        "detail": "unavailable",
+        "name": "quality:confidence_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "report_quality",
+        "detail": "count=27",
+        "name": "quality:limitations_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "report_quality",
+        "detail": "categories=['assessment_confidence', 'assessment_coverage', 'non_temporal_dataset', 'sample_size', 'section_support', 'selection_bias', 'source_visibility']",
+        "name": "quality:non_temporal_limitation",
+        "ok": true,
+        "scenario": "Q"
+      },
+      {
+        "category": "report_quality",
+        "detail": "categories=['assessment_confidence', 'assessment_coverage', 'non_temporal_dataset', 'sample_size', 'section_support', 'selection_bias', 'source_visibility']",
+        "name": "quality:selection_bias_or_public_oss_limitation",
+        "ok": true,
+        "scenario": "Q"
+      }
+    ],
+    "repository_ids": [
+      "cleanarchitecture",
+      "express",
+      "flask",
+      "slim",
+      "spring-petclinic"
+    ],
+    "repository_inputs": [
+      {
+        "assessment_run_reference": "assessments/cleanarchitecture/859b11507233",
+        "github_repository": "ardalis/CleanArchitecture",
+        "language_group": "C#/.NET",
+        "qualified_revision": "859b115072337b3b7074007f8231d19f24966f1a",
+        "report_digest": "00e99b8fcab886860f758278d634aca18e2e712d5959bc8559865dfb90e079b2",
+        "repository_id": "cleanarchitecture",
+        "schema_version": "1.2",
+        "source": "cache",
+        "source_tag": "v11.1.1"
+      },
+      {
+        "assessment_run_reference": "assessments/express/dbac741a49a5",
+        "github_repository": "expressjs/express",
+        "language_group": "JS/TS",
+        "qualified_revision": "dbac741a49a5a64336b70c06e85c2e2706e36336",
+        "report_digest": "c66b87bf6b09ce6d57a0c63d09b83754a79df2405f0ae604866dde02da951fa4",
+        "repository_id": "express",
+        "schema_version": "1.2",
+        "source": "cache",
+        "source_tag": "v5.2.1"
+      },
+      {
+        "assessment_run_reference": "assessments/flask/22d924701a6a",
+        "github_repository": "pallets/flask",
+        "language_group": "Python",
+        "qualified_revision": "22d924701a6ae2e4cd01e9a15bbaf3946094af65",
+        "report_digest": "2cd438afe8172862429f5c17ee7fe5d1e90b2aa37360150b6b9bd9b7fc5f94b0",
+        "repository_id": "flask",
+        "schema_version": "1.2",
+        "source": "cache",
+        "source_tag": "3.1.3"
+      },
+      {
+        "assessment_run_reference": "assessments/slim/e12cb05ca2a1",
+        "github_repository": "slimphp/Slim",
+        "language_group": "PHP",
+        "qualified_revision": "e12cb05ca2a14e8f459d019e87a31dc915b80470",
+        "report_digest": "a118952e088318178baeb836604a9669b60eeffa46ab7d1cf3a5f93b8dad329d",
+        "repository_id": "slim",
+        "schema_version": "1.2",
+        "source": "cache",
+        "source_tag": "4.15.2"
+      },
+      {
+        "assessment_run_reference": "assessments/spring-petclinic/f182358d02e4",
+        "github_repository": "spring-projects/spring-petclinic",
+        "language_group": "Java",
+        "qualified_revision": "f182358d02e4a68e52bdbabf55ca7800288511e7",
+        "report_digest": "fc15291d67a4eabcfe261f56a1aab2107504b918ea00a55d2ed47d40d9b6f4f9",
+        "repository_id": "spring-petclinic",
+        "schema_version": "1.2",
+        "source": "cache",
+        "source_tag": null
+      }
+    ],
+    "repository_population": {
+      "dataset_repository_count": 5,
+      "included": 5,
+      "population_repository_count": 5
+    },
+    "safety_checks": [
+      {
+        "category": "safety",
+        "detail": "ok",
+        "name": "safety:eir_payload_clean",
+        "ok": true,
+        "scenario": "T"
+      },
+      {
+        "category": "safety",
+        "detail": "no embedded assessment recommendation bodies",
+        "name": "safety:no_full_report_embedded",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "safety",
+        "detail": "no source bodies / file URLs",
+        "name": "safety:no_source_body",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "safety",
+        "detail": "public_oss_dataset",
+        "name": "safety:no_customer_private_ids_in_public_oss",
+        "ok": true,
+        "scenario": "J"
+      }
+    ],
+    "scenario_checks": [
+      {
+        "category": "scenario",
+        "detail": "population=1 digest=a69da7d506ef",
+        "name": "scenario:D_duplicate_digest_dedupe",
+        "ok": true,
+        "scenario": "D"
+      },
+      {
+        "category": "scenario",
+        "detail": "DuplicateAssessmentConflictError",
+        "name": "scenario:E_conflicting_inputs_fail_closed",
+        "ok": true,
+        "scenario": "E"
+      },
+      {
+        "category": "ingestion",
+        "detail": "rejected=1",
+        "name": "ingestion:future_schema_rejected",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "scenario",
+        "detail": "customer_private",
+        "name": "scenario:J_private_visibility_explicit",
+        "ok": true,
+        "scenario": "J"
+      },
+      {
+        "category": "scenario",
+        "detail": "patterns=0",
+        "name": "scenario:B_single_repo_no_recurrence",
+        "ok": true,
+        "scenario": "B"
+      },
+      {
+        "category": "scenario",
+        "detail": "Java != JavaScript",
+        "name": "scenario:L_distinct:Java:JavaScript",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "Node.js != npm",
+        "name": "scenario:L_distinct:Node.js:npm",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "Spring != Spring Boot",
+        "name": "scenario:L_distinct:Spring:Spring Boot",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": ".NET != ASP.NET Core",
+        "name": "scenario:L_distinct:.NET:ASP.NET Core",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "nodejs->Node.js",
+        "name": "scenario:L_alias:nodejs",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "spring-boot->Spring Boot",
+        "name": "scenario:L_alias:spring-boot",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "js->JavaScript",
+        "name": "scenario:L_alias:js",
+        "ok": true,
+        "scenario": "L"
+      },
+      {
+        "category": "scenario",
+        "detail": "unavailable head represented",
+        "name": "scenario:F_unavailable_not_zero_findings",
+        "ok": true,
+        "scenario": "F"
+      },
+      {
+        "category": "scenario",
+        "detail": "disabled head represented",
+        "name": "scenario:G_disabled_preserved",
+        "ok": true,
+        "scenario": "G"
+      },
+      {
+        "category": "scenario",
+        "detail": "AggregationVisibilityError",
+        "name": "scenario:K_empty_or_unavailable_safe",
+        "ok": true,
+        "scenario": "K"
+      }
+    ],
+    "section_population": {
+      "assessment_head_distributions": 9,
+      "capability_comparisons": 9,
+      "dataset_limitations": 27,
+      "modernization_observations": 4,
+      "recurring_patterns": 30,
+      "repository_drilldowns": 5,
+      "technology_observations": 24
+    },
+    "technology_checks": [
+      {
+        "category": "technology",
+        "detail": "TechnologyDistribution populated",
+        "name": "technology:distribution_present",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "technology",
+        "detail": "observations=24",
+        "name": "technology:presence_vs_occurrence",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "technology",
+        "detail": "no modern/outdated absolute claims",
+        "name": "technology:no_modern_outdated_claim",
+        "ok": true,
+        "scenario": ""
+      },
+      {
+        "category": "technology",
+        "detail": "distribution is observational only",
+        "name": "technology:no_recommendations_generated",
+        "ok": true,
+        "scenario": ""
+      }
+    ],
+    "warnings": []
+  },
+  "schema_name": "engineering-intelligence-verification",
+  "schema_version": "1.0.0",
+  "verdict": "pass",
+  "verification_id": "engineering-intelligence-verification",
+  "warnings": []
+}

@@ -1,0 +1,17 @@
+{
+  "activation_status": "validated",
+  "assessment_status": "validated",
+  "engine_discovery": "validated",
+  "extension_version": "0.2.0",
+  "install_status": "validated",
+  "offline_status": "structural_validated",
+  "privacy_status": "validated",
+  "publish_status": "command_validated",
+  "register_id": "community-vscode-validation-register",
+  "register_version": "1.0",
+  "report_status": "validated",
+  "schema": "community-vscode-validation-register:1.0",
+  "slice": "17.21",
+  "telemetry_status": "default_off_validated",
+  "validation_status": "PASS_WITH_LIMITATIONS"
+}

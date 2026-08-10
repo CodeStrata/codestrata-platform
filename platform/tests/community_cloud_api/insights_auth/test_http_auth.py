@@ -55,6 +55,7 @@ def test_login_session_overview_logout() -> None:
         headers={"Origin": origin},
     )
     assert bad.status_code == 401
+    assert bad.json()["error"]["code"] == "invalid_credentials"
     assert "Invalid password" in json.dumps(bad.json())
 
     ok = client.post(

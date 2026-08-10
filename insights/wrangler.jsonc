@@ -34,6 +34,6 @@
     }
   ],
   "vars": {
-    "UPSTREAM_API_BASE": "https://4qp72fmi85.execute-api.us-west-2.amazonaws.com"
+    "UPSTREAM_API_BASE": "https://api.codestrata.ai"
   }
 }

@@ -1,0 +1,9 @@
+{
+  "schema": "community-api-domain-verification",
+  "schema_version": "1.0.0",
+  "slice": "17.14",
+  "start_slice_17_14": true,
+  "start_slice_17_15": false,
+  "public_api_base_url": "https://api.codestrata.ai",
+  "report_relative": ".codestrata-artifacts/validation/suites/sv17-14/community-api-domain-verification.json"
+}
