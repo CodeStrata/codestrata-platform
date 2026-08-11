@@ -32,6 +32,11 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
+    env:
+      NO_COLOR: "1"
+      TERM: dumb
+      FORCE_COLOR: "0"
+      COLUMNS: "120"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -174,7 +179,7 @@ jobs:
       - name: Install OpenTofu
         uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: "1.6.2"
+          tofu_version: "1.12.5"
       - name: Install verification dependencies
         run: |
           python -m pip install -U pip

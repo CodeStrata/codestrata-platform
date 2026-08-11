@@ -134,13 +134,21 @@ temp/
 # ==========================================
 # Local caches / embeddings
 # ==========================================
+#
+# Do NOT use bare "embeddings/" or "vector_store/" — those names are also
+# legitimate Python packages under platform/src and platform/tests.
+# Ignore generated caches only.
 
-vector_store/
-embeddings/
 cache/
 chroma/
 faiss_index/
 artifacts/models/
+**/.codestrata-artifacts/**/embeddings/
+**/.codestrata-artifacts/**/vector_store/
+**/artifacts/embeddings/
+**/artifacts/vector_store/
+.local/embeddings/
+.local/vector_store/
 
 # ==========================================
 # Secrets
