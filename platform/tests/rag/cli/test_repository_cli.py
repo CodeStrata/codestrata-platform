@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -11,21 +12,31 @@ from codestrata_platform.rag.cli.repository import repository_app
 from codestrata_platform.rag.domain.answering import AnswerConfidence, AnswerStatus
 
 runner = CliRunner()
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _visible_help(result) -> str:
+    """Normalize CLI help for flag assertions (strip ANSI; collapse whitespace)."""
+
+    raw = f"{result.stdout or ''}{result.stderr or ''}"
+    return re.sub(r"\s+", " ", _ANSI_RE.sub("", raw))
 
 
 def test_repository_help_lists_answer() -> None:
     result = runner.invoke(repository_app, ["--help"])
     assert result.exit_code == 0
-    assert "answer" in result.stdout.lower() or "Repository" in result.stdout
+    help_text = _visible_help(result)
+    assert "answer" in help_text.lower() or "Repository" in help_text
 
 
 def test_repository_answer_help() -> None:
     # Single-command Typer app collapses to the answer command as root.
     result = runner.invoke(repository_app, ["--help"])
     assert result.exit_code == 0
-    assert "--config" in result.stdout
-    assert "--json" in result.stdout
-    assert "Repository ID" in result.stdout or "repository" in result.stdout.lower()
+    help_text = _visible_help(result)
+    assert "--config" in help_text
+    assert "--json" in help_text
+    assert "Repository ID" in help_text or "repository" in help_text.lower()
 
 
 def test_repository_answer_json_with_mock(tmp_path: Path) -> None:

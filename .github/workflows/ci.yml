@@ -37,6 +37,7 @@ jobs:
       TERM: dumb
       FORCE_COLOR: "0"
       COLUMNS: "120"
+      PYTHONUNBUFFERED: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

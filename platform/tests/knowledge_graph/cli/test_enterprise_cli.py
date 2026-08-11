@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -9,14 +10,23 @@ from typer.testing import CliRunner
 from codestrata_platform.knowledge_graph.cli.enterprise import enterprise_app
 
 runner = CliRunner()
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def _visible_help(result) -> str:
+    """Normalize CLI help for flag assertions (strip ANSI; collapse whitespace)."""
+
+    raw = f"{result.stdout or ''}{result.stderr or ''}"
+    return re.sub(r"\s+", " ", _ANSI_RE.sub("", raw))
 
 
 def test_enterprise_help() -> None:
     result = runner.invoke(enterprise_app, ["--help"])
     assert result.exit_code == 0
-    assert "init" in result.stdout
-    assert "validate" in result.stdout
-    assert "build" in result.stdout
+    help_text = _visible_help(result)
+    assert "init" in help_text
+    assert "validate" in help_text
+    assert "build" in help_text
 
 
 def test_enterprise_init_and_validate(tmp_path: Path) -> None:

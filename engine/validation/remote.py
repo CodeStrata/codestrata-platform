@@ -8,6 +8,12 @@ from pathlib import Path
 
 from validation.models import ValidationRepository
 
+# Bounded waits so GitHub engine-tests cannot hang on a silent git clone.
+# Shallow clones of the active remotes normally finish in seconds; 90s covers
+# a slow runner without approaching the 45-minute job budget.
+NETWORK_GIT_TIMEOUT_SECONDS = 90.0
+LOCAL_GIT_TIMEOUT_SECONDS = 30.0
+
 
 class RemoteRepositoryError(RuntimeError):
     """Raised when a remote repository cannot be prepared."""
@@ -45,9 +51,12 @@ def prepare_remote_repository(
         str(dest),
     ]
     # Tags/commits may not work with --branch; fall back to fetch+checkout.
+    # Timeouts are not retried — they already mean the remote is unavailable.
     try:
         _run(clone_cmd, network_sensitive=True)
-    except RemoteRepositoryError:
+    except RemoteRepositoryError as exc:
+        if _is_timeout_error(exc):
+            raise
         dest_partial = dest
         if dest_partial.exists():
             shutil.rmtree(dest_partial)
@@ -78,14 +87,28 @@ def _run(
     command: list[str],
     *,
     network_sensitive: bool = False,
+    timeout: float | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    limit = timeout
+    if limit is None:
+        limit = (
+            NETWORK_GIT_TIMEOUT_SECONDS
+            if network_sensitive
+            else LOCAL_GIT_TIMEOUT_SECONDS
+        )
     try:
         completed = subprocess.run(
             command,
             check=False,
             capture_output=True,
             text=True,
+            timeout=limit,
         )
+    except subprocess.TimeoutExpired as exc:
+        raise RemoteRepositoryError(
+            f"command timed out after {limit:.0f}s: {' '.join(command)}. "
+            "Network appears unavailable or the remote is unreachable."
+        ) from exc
     except OSError as exc:
         hint = " (network may be unavailable)" if network_sensitive else ""
         raise RemoteRepositoryError(f"failed to execute {command[0]}{hint}: {exc}") from exc
@@ -98,6 +121,10 @@ def _run(
             f"command failed ({completed.returncode}): {' '.join(command)}. {stderr}{hint}"
         )
     return completed
+
+
+def _is_timeout_error(exc: RemoteRepositoryError) -> bool:
+    return "timed out" in str(exc).lower()
 
 
 def _looks_network_failure(message: str) -> bool:
