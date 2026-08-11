@@ -8,6 +8,9 @@ description: CodeStrata VS Code extension as a thin client of CodeStrata Engine.
 The supported Community IDE extension is the **CodeStrata VS Code Extension** —
 a **thin client** of CodeStrata Engine.
 
+Install **[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)**
+(`CodeStrataAI.codestrata-assessment`). Extension source remains private.
+
 ```text
 VS Code Extension
      ↓

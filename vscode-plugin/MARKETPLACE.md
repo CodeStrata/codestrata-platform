@@ -8,8 +8,9 @@ are covered by [`docs/marketplace-branding.md`](docs/marketplace-branding.md).
 Listing narrative is covered by
 [`docs/marketplace-documentation.md`](docs/marketplace-documentation.md).
 
-**Status:** Packaging and documentation ready for a human-approved publish.
-Do not publish until release gates pass and credentials are provided explicitly.
+**Status:** Live Visual Studio Marketplace listing
+https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment
+(`CodeStrataAI.codestrata-assessment` **0.2.1**). Community Engine/CLI remains v0.2.0.
 
 Active Community editor extension: **VS Code only**.
 
@@ -17,19 +18,20 @@ Active Community editor extension: **VS Code only**.
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Assessment |
+| VS Code | `CodeStrataAI.codestrata-assessment` | CodeStrata – Engineering Assessment |
 
-Publisher namespace: **`codestrata`** (create/claim before first publish; do not
-rename after release without explicit approval).
+Publisher ID: **`CodeStrataAI`** (existing Visual Studio Marketplace publisher;
+the VSIX manifest `publisher` field must match this ID exactly). Do not rename
+after release without explicit approval.
 
 ## Classification
 
 | Extension | Status |
 | --------- | ------ |
-| codestrata-vscode | **MARKETPLACE_READY** (packaged + docs complete; not published) |
+| codestrata-assessment | **PUBLISHED** — live listing `CodeStrataAI.codestrata-assessment` **0.2.1** |
 
-Not **PUBLISHED** or **VERIFIED_INSTALLABLE** until live Marketplace install is
-confirmed (clean install/update validation is a separate release step).
+Do **not** treat a later local VSIX rebuild as an unpublished listing overwrite.
+Marketplace versions are monotonic.
 
 ## Branding assets
 
@@ -63,7 +65,7 @@ export OVSX_TOKEN='…'        # local shell only
 ### One-time publisher setup
 
 1. Open https://marketplace.visualstudio.com/manage
-2. Create publisher ID **`codestrata`** (Name: CodeStrata)
+2. Use existing publisher ID **`CodeStrataAI`** (display name: CodeStrata)
 3. Optionally verify domain ownership for the verified badge
 4. Create Azure DevOps PAT with **Marketplace → Publish**
 
@@ -73,7 +75,8 @@ export OVSX_TOKEN='…'        # local shell only
    (`package` uses `--allow-missing-repository --no-rewrite-relative-links`
    because extension source is private; do not point listing URLs at a
    private GitHub source repository.)
-2. Upload `codestrata-vscode-0.2.0.vsix` in Marketplace manage → New extension
+2. Upload `codestrata-assessment-0.2.1.vsix` in Marketplace manage → Update
+   (Marketplace already published 0.2.0; listing versions are monotonic)
 3. Confirm README renders (listing source is `README.md`)
 4. Attach screenshots from `media/screenshot-*.png` if the upload UI requires them
 5. Review → Make Public only after human approval
@@ -84,8 +87,8 @@ export OVSX_TOKEN='…'        # local shell only
 cd vscode-plugin
 npm test
 npm run package
-npx --yes @vscode/vsce publish --packagePath ./codestrata-vscode-0.2.0.vsix -p "$VSCE_PAT"
-# Prefer: vsce login codestrata   then   vsce publish
+npx --yes @vscode/vsce publish --packagePath ./codestrata-assessment-0.2.1.vsix -p "$VSCE_PAT"
+# Prefer: vsce login CodeStrataAI   then   vsce publish
 ```
 
 Dry-run (validates package; does not upload when unsupported):
@@ -102,7 +105,7 @@ npx --yes @vscode/vsce package --no-dependencies
 3. Generate access token → store as `OVSX_TOKEN` only
 
 ```bash
-npx ovsx publish codestrata-vscode-0.2.0.vsix -p "$OVSX_TOKEN"
+npx ovsx publish codestrata-assessment-0.2.1.vsix -p "$OVSX_TOKEN"
 ```
 
 Clean install/update validation: [docs/clean-install-update.md](docs/clean-install-update.md).
@@ -115,7 +118,7 @@ Clean install/update validation: [docs/clean-install-update.md](docs/clean-insta
 - [ ] Gallery banner uses Design System canvas (`#f4f6f3` / light)
 - [ ] README / CHANGELOG / SECURITY / PRIVACY / SUPPORT / LICENSE present
 - [ ] displayName + description accurate; no Platform-only claims
-- [ ] Publisher `codestrata` created and owned
+- [ ] Publisher `CodeStrataAI` created and owned
 - [ ] Credentials only in approved secret storage
 - [ ] Human approval to publish
 - [ ] Marketplace visual assets verification PASS (sv14-6) when regenerating media

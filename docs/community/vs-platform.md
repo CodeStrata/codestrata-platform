@@ -25,6 +25,7 @@ Community assets:
 - CodeStrata Engine
 - CodeStrata Examples
 - CodeStrata VS Code Extension
+  ([Marketplace](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment))
 - CodeStrata Documentation
 
 ## Platform includes

@@ -14,7 +14,7 @@ Do not maintain divergent product claims in `MARKETPLACE.md`.
 
 ## Purpose
 
-Finalize public Marketplace narrative for extension **0.2.0** so visitors can
+Finalize public Marketplace narrative for extension **0.2.1** so visitors can
 understand product purpose, requirements, workflow, privacy, AI qualification,
 CLI compatibility, limitations, and support—aligned with verified Community
 extension behavior.
@@ -23,7 +23,7 @@ extension behavior.
 
 - displayName: **CodeStrata – Engineering Assessment**
 - Tagline: **Engineering decisions grounded in code.**
-- Version: **0.2.0**
+- Version: **0.2.1** (Community Engine/CLI remains **0.2.0**)
 - Supported editor: **VS Code** only
 
 ## Claim posture (summary)
@@ -33,7 +33,7 @@ extension behavior.
 | Standard assessment | Local Engine CLI |
 | AI assessment | Optional; Engine-owned provider flow |
 | CLI install | Guidance only — no automatic install |
-| Compatibility | Extension 0.2.0 → CLI `0.2.x` |
+| Compatibility | Extension 0.2.1 → CLI `0.2.x` |
 | Telemetry | Optional; default undecided/disabled; explicit choice persisted locally; Deny default on prompt |
 | Source locality | Extension does not upload source to Community services; AI qualified separately |
 | Cloud / Data Lake / dashboards | Not claimed (no runtime clients) |

@@ -10,6 +10,8 @@
 3. Engine Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md
 4. Engine troubleshooting: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md
 5. Extension documentation / support: https://docs.codestrata.ai/extensions/vscode
+6. Marketplace listing: https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment
+   (`CodeStrataAI.codestrata-assessment`)
 
 ## Community scope
 

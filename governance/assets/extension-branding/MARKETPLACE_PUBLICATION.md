@@ -1,7 +1,8 @@
 # Marketplace publication — CodeStrata – Engineering Assessment
 
-**Status:** Preparation complete · **Do not publish** until release gates pass and a
-human explicitly requests publish with stored credentials.
+**Status:** Live Visual Studio Marketplace listing
+https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment
+(`CodeStrataAI.codestrata-assessment` **0.2.1**). Community Engine/CLI remains v0.2.0.
 
 Active Community editor extension (Slice 12.2): **VS Code only**.
 The former Cursor extension product and its packaging surfaces were removed
@@ -11,10 +12,11 @@ The former Cursor extension product and its packaging surfaces were removed
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Assessment |
+| VS Code | `CodeStrataAI.codestrata-assessment` | CodeStrata – Engineering Assessment |
 
-Publisher namespace: **`codestrata`** (create/claim before first publish; do not
-rename after release without explicit approval).
+Publisher ID: **`CodeStrataAI`** (existing Visual Studio Marketplace publisher;
+the VSIX manifest `publisher` field must match this ID exactly). Do not rename
+after release without explicit approval.
 
 As of 2026-07-28, no published `codestrata.*` CodeStrata extensions were found on
 the Visual Studio Marketplace (name collisions with unrelated “Codex*” products
@@ -24,17 +26,15 @@ are different publishers).
 
 | Extension | Status |
 | --------- | ------ |
-| codestrata-vscode | **MARKETPLACE_READY** (packaged + gates documented; not published) |
+| codestrata-assessment | **PUBLISHED** — live listing `CodeStrataAI.codestrata-assessment` **0.2.1** |
 
-The extension is not **PUBLISHED** or **VERIFIED_INSTALLABLE** from a marketplace
-until live install is confirmed after publish.
+Do **not** treat a later local VSIX rebuild as an unpublished listing overwrite.
 
 Do **not** treat local VSIX presence as Marketplace publication.
 
-Publisher namespace `codestrata` must be created/claimed on Visual Studio
-Marketplace and Open VSX before first upload. Prefer public repository URLs under
-`github.com/CodeStrata/*` when org repos exist — do not rename extension IDs after
-publish.
+Visual Studio Marketplace publisher ID is **`CodeStrataAI`**. Open VSX namespace
+is independent and must be claimed separately before an Open VSX upload. Prefer
+public documentation URLs — do not rename extension IDs after publish.
 
 ## Branding assets
 
@@ -64,14 +64,14 @@ export OVSX_TOKEN='…'        # local shell only
 ### One-time publisher setup
 
 1. Open https://marketplace.visualstudio.com/manage
-2. Create publisher ID **`codestrata`** (Name: CodeStrata)
+2. Use existing publisher ID **`CodeStrataAI`** (display name: CodeStrata)
 3. Optionally verify domain ownership for the verified badge
 4. Create Azure DevOps PAT with **Marketplace → Publish**
 
 ### Manual VSIX upload
 
 1. `cd vscode-plugin && npm test && npm run package`
-2. Upload `codestrata-vscode-0.2.0.vsix` in Marketplace manage → New extension
+2. Upload `codestrata-assessment-0.2.0.vsix` in Marketplace manage → New extension
 3. Attach screenshots from `media/screenshot-*.png`
 4. Review README rendering → Make Public
 
@@ -81,8 +81,8 @@ export OVSX_TOKEN='…'        # local shell only
 cd vscode-plugin
 npm test
 npm run package
-npx --yes @vscode/vsce publish --packagePath ./codestrata-vscode-0.2.0.vsix -p "$VSCE_PAT"
-# Prefer: vsce login codestrata   then   vsce publish
+npx --yes @vscode/vsce publish --packagePath ./codestrata-assessment-0.2.0.vsix -p "$VSCE_PAT"
+# Prefer: vsce login CodeStrataAI   then   vsce publish
 ```
 
 Dry-run (no upload when unsupported by CLI version — still validates package):
@@ -99,7 +99,7 @@ npx --yes @vscode/vsce package --no-dependencies
 3. Generate access token → store as `OVSX_TOKEN` only
 
 ```bash
-npx ovsx publish codestrata-vscode-0.2.0.vsix -p "$OVSX_TOKEN"
+npx ovsx publish codestrata-assessment-0.2.0.vsix -p "$OVSX_TOKEN"
 ```
 
 Open VSX improves VSCodium and other open-editor discovery. Treat Open VSX as
@@ -115,7 +115,7 @@ required for broad open-editor reach alongside Visual Studio Marketplace.
       Engine/schema versions, privacy/security, troubleshooting, support, docs link,
       and Community vs Platform boundary (no Platform-only feature claims)
 - [ ] displayName + description accurate
-- [ ] Publisher `codestrata` created and owned
+- [ ] Publisher `CodeStrataAI` created and owned
 - [ ] Credentials only in approved secret storage (`VSCE_PAT` / `OVSX_TOKEN`)
 - [ ] Human approval to publish
 

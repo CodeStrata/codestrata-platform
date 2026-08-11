@@ -1,9 +1,9 @@
 {
-  "name": "codestrata-vscode",
+  "name": "codestrata-assessment",
   "displayName": "CodeStrata – Engineering Assessment",
   "description": "Engineering decisions grounded in code. Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, and Assessment Report HTML. Requires a compatible CodeStrata Engine CLI. Optional AI enrichment is Engine-owned. Portfolio Engineering Intelligence Reports (EIR) are a separate multi-repository capability.",
-  "version": "0.2.0",
-  "publisher": "codestrata",
+  "version": "0.2.1",
+  "publisher": "CodeStrataAI",
   "license": "MIT",
   "icon": "media/codestrata-icon.png",
   "galleryBanner": {
@@ -271,8 +271,8 @@
     "test:host": "npm run compile && node ./out/test/runHostTests.js",
     "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository --no-rewrite-relative-links",
     "package:dry": "npm run compile && vsce ls --no-dependencies",
-    "publish:vsce:dry": "npm run package && vsce publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
-    "publish:ovsx:dry": "npm run package && ovsx publish ./codestrata-vscode-${npm_package_version}.vsix --no-wait --help"
+    "publish:vsce:dry": "npm run package && vsce publish --packagePath ./codestrata-assessment-${npm_package_version}.vsix --dry-run",
+    "publish:ovsx:dry": "npm run package && ovsx publish ./codestrata-assessment-${npm_package_version}.vsix --no-wait --help"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

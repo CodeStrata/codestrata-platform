@@ -137,10 +137,9 @@ GitHub metadata — not contractual constants. Fail-soft when GitHub is unavaila
 | Surface | Meaning |
 | --- | --- |
 | Installed CLI (`codestrata --version`) | Package/runtime version of the local install (e.g. candidate `0.2.0`) |
-| Community Status `engine_version` | Latest **published** GitHub Release (may remain `0.1.0` until Release Readiness publishes `v0.2.0`) |
+| Community Status `engine_version` | Latest **published** GitHub Release (`v0.2.0` → `0.2.0`) |
 
-Website Community Edition version display is intentionally bound to Community
-Status — so pre-release sites may show `0.1.0` until the GitHub Release exists.
+Website Community Edition version display is bound to Community Status.
 
 ### F. Private Insights
 
@@ -250,8 +249,10 @@ Live production posture:
 - `insights.codestrata.ai`
 - Production ingestion enabled when clients opt in with credentials
 
-VS Code Marketplace publication is a separate Release Readiness concern — do not
-infer Marketplace-live from Community Cloud liveness.
+VS Code Marketplace listing is a separate product surface — do not infer it from
+Community Cloud liveness. Canonical listing:
+[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment`).
 
 ## Security posture (public level)
 

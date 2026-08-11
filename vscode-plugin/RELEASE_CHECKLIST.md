@@ -45,7 +45,7 @@
 
 ## Marketplace publication gates
 
-- [ ] Publisher `codestrata` created/owned (VS Marketplace + Open VSX namespace)
+- [ ] Publisher `CodeStrataAI` created/owned (Visual Studio Marketplace; Open VSX namespace independent)
 - [ ] `VSCE_PAT` / `OVSX_TOKEN` in approved secrets storage only
 - [ ] `npm run package` VSIX contains `media/codestrata-icon.png`
 - [ ] Screenshots reviewed (synthetic, no secrets)

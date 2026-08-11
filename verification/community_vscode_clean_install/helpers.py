@@ -55,5 +55,5 @@ def report_text_is_safe(text: str) -> bool:
 
 
 def find_vsix(plugin_dir: Path) -> Path | None:
-    matches = sorted(plugin_dir.glob("codestrata-vscode-*.vsix"))
+    matches = sorted(plugin_dir.glob("codestrata-assessment-*.vsix"))
     return matches[-1] if matches else None

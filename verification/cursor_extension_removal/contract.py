@@ -19,7 +19,7 @@ REPORT_MD = "cursor-extension-removal-verification.md"
 
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 EXPECTED_VSCODE_VERSION = "0.2.0"
-EXPECTED_VSCODE_PACKAGE_NAME = "codestrata-vscode"
+EXPECTED_VSCODE_PACKAGE_NAME = "codestrata-assessment"
 
 # Historical client vocabulary retained for schema deserialize (Slice 12.4 Approach A).
 HISTORICAL_CURSOR_CLIENT_IDS = (

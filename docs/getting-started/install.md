@@ -7,12 +7,16 @@ description: Install and verify CodeStrata Engine using supported Community mech
 
 Choose one supported path. After install, verify with `codestrata version`.
 
-## Option A — pip (user)
+## Option A — GitHub Release wheel (v0.2.0)
 
 ```bash
-python3.12 -m pip install --user 'codestrata[mcp]'
+python3.12 -m pip install --user \
+  https://github.com/CodeStrata/codestrata-engine/releases/download/v0.2.0/codestrata-0.2.0-py3-none-any.whl
 codestrata version
 ```
+
+PyPI `pip install codestrata` is not the published v0.2.0 channel until
+`codestrata==0.2.0` is on the Python Package Index.
 
 ## Option B — virtual environment
 
@@ -20,7 +24,8 @@ codestrata version
 python3.12 -m venv .venv
 source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install 'codestrata[mcp]'
+python -m pip install \
+  https://github.com/CodeStrata/codestrata-engine/releases/download/v0.2.0/codestrata-0.2.0-py3-none-any.whl
 codestrata version
 ```
 
@@ -56,5 +61,13 @@ codestrata init
 Creates local Engine configuration (for example `codestrata.toml`) for profiles
 and optional providers. You can assess with defaults in many cases; run `init`
 when you need project-local configuration.
+
+## VS Code
+
+After the Engine CLI is installed, you can also
+[Install CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment`) from Visual Studio Marketplace.
+The extension is a thin client of the CLI; it does not replace Engine install.
+Extension source is private.
 
 Next: [First Assessment](./first-assessment).

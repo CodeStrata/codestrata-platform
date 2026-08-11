@@ -23,7 +23,7 @@ from verification.vscode_epic13_completion.scenarios import (
     NEGATIVE_COMPLETION_CHECKS,
 )
 
-VSIX_NAME = "codestrata-vscode-0.2.0.vsix"
+VSIX_NAME = "codestrata-assessment-0.2.1.vsix"
 DISPLAY_NAME = "CodeStrata – Engineering Assessment"
 TAGLINE = "Engineering decisions grounded in code."
 
@@ -140,7 +140,7 @@ def check_editor_inventory(monorepo: Path) -> list[CheckResult]:
     _add(
         checks,
         "editor:vscode_active",
-        pkg.get("name") == "codestrata-vscode" and "vscode" in keywords,
+        pkg.get("name") == "codestrata-assessment" and "vscode" in keywords,
         "vscode",
         "editor_inventory",
     )

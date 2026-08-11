@@ -20,11 +20,23 @@ from verification.vscode_marketplace_docs.contract import (
     INTENDED_VSCODE_VERSION,
     MARKETPLACE_MD_RELATIVE,
     PRIVATE_URL_FRAGMENTS,
+    PUBLIC_SCREENSHOT_BASE,
     README_RELATIVE,
     REQUIRED_HEADINGS,
     TAGLINE,
 )
 from verification.vscode_marketplace_docs.models import CheckResult, Defect
+
+
+def _readme_image_src_ok(monorepo: Path, src: str) -> bool:
+    if src.startswith(PUBLIC_SCREENSHOT_BASE):
+        name = src[len(PUBLIC_SCREENSHOT_BASE) :]
+        if "/" in name or not name.endswith(".png"):
+            return False
+        return (monorepo / "vscode-plugin" / "media" / name).is_file()
+    if src.startswith("http://") or src.startswith("https://"):
+        return False
+    return (monorepo / "vscode-plugin" / src).is_file()
 
 
 def _read(monorepo: Path, relative: str) -> str:
@@ -87,16 +99,20 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
     broken_images = [
         src
         for _alt, src in images
-        if not (monorepo / "vscode-plugin" / src).is_file()
+        if not _readme_image_src_ok(monorepo, src)
     ]
     missing_alt = [src for alt, src in images if not alt.strip()]
 
     gallery_present = all(
         (monorepo / "vscode-plugin" / rel).is_file() for rel in GALLERY_ORDER
     )
-    gallery_order_readme = all(
-        readme.find(GALLERY_ORDER[i]) < readme.find(GALLERY_ORDER[i + 1])
-        for i in range(len(GALLERY_ORDER) - 1)
+    gallery_names = [Path(rel).name for rel in GALLERY_ORDER]
+    gallery_positions = [readme.find(name) for name in gallery_names]
+    gallery_order_readme = all(pos >= 0 for pos in gallery_positions) and all(
+        gallery_positions[i] < gallery_positions[i + 1]
+        for i in range(len(gallery_positions) - 1)
+    ) and all(
+        f"{PUBLIC_SCREENSHOT_BASE}{name}" in readme for name in gallery_names
     )
 
     relative_links = re.findall(r"\]\(([^)]+)\)", readme)

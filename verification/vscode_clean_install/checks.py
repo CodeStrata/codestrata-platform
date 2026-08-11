@@ -145,8 +145,8 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
 
     # Synthetic prior package (update): same ID, settings/commands subset of current
     prior_fixture = {
-        "name": "codestrata-vscode",
-        "publisher": "codestrata",
+        "name": "codestrata-assessment",
+        "publisher": "CodeStrataAI",
         "version": "0.1.0",
         "contributes": {
             "commands": [{"command": cid} for cid in STABLE_COMMAND_IDS],
@@ -236,10 +236,10 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
             ),
             CheckResult(
                 "install:id_stable",
-                pkg.get("publisher") == "codestrata"
-                and pkg.get("name") == "codestrata-vscode"
+                pkg.get("publisher") == "CodeStrataAI"
+                and pkg.get("name") == "codestrata-assessment"
                 and pkg.get("version") == INTENDED_VSCODE_VERSION,
-                "codestrata.codestrata-vscode@0.2.0",
+                "CodeStrataAI.codestrata-assessment@0.2.1",
                 "install",
             ),
             CheckResult(

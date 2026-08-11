@@ -76,6 +76,8 @@ Details: [AI Providers](/ai-providers/) (Bedrock and OpenAI setup, troubleshooti
 
 After your first CLI assessment, install the Community IDE client:
 
-- [VS Code Extension](/extensions/vscode)
+- [Install CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+  (`CodeStrataAI.codestrata-assessment`)
+- Docs: [VS Code Extension](/extensions/vscode)
 
 Continue: [Next Steps](./next-steps).

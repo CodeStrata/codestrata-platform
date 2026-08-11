@@ -14,9 +14,9 @@ recommendations, diagnostics, and HTML report access.
 
 ## Installation
 
-1. Install from a **candidate VSIX** (Install from VSIX) until Marketplace
-   publication is complete. Do not treat a candidate package as a published
-   Marketplace release.
+1. Install **[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)**
+   from Visual Studio Marketplace (`CodeStrataAI.codestrata-assessment`).
+   Extension source is private; the listing is the public distribution channel.
 2. Open a repository folder.
 3. On first run, the extension detects **CodeStrata Engine** or offers guided install.
 4. Optionally run **Initialize Repository** (Engine writes
@@ -105,8 +105,6 @@ is explicitly chosen. See [AI Providers](/ai-providers/) and
   eligible assessment commands may prompt (`[y/N]`, Enter = No). Explicit Yes
   or No is persisted locally and can be changed via Telemetry Settings
 - Community Cloud authority: `https://api.codestrata.ai`
-- Candidate VSIX is **not** a Marketplace-published release until Release
-  Readiness publishes it
 - See [Privacy](/security/privacy), [Source Locality](/security/source-locality),
   [AI Providers](/ai-providers/), [Telemetry](/reference/telemetry),
   [Data Collection](/security/data-collection),
@@ -119,5 +117,6 @@ is explicitly chosen. See [AI Providers](/ai-providers/) and
 ## Detailed reference
 
 Packaging and Marketplace listing:
-see this page and the VS Code Marketplace listing for CodeStrata.
-Extension source is not a Community public GitHub repository for v0.2.0.
+[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment`).
+Extension source is not a Community public GitHub repository.

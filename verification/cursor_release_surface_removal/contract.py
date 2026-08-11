@@ -19,8 +19,8 @@ REPORT_MD = "cursor-release-surface-removal-verification.md"
 
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 EXPECTED_VSCODE_VERSION = "0.2.0"
-EXPECTED_VSCODE_PACKAGE_NAME = "codestrata-vscode"
-ACTIVE_EDITOR_EXTENSIONS = ("codestrata-vscode",)
+EXPECTED_VSCODE_PACKAGE_NAME = "codestrata-assessment"
+ACTIVE_EDITOR_EXTENSIONS = ("codestrata-assessment",)
 
 
 def monorepo_root_from_here() -> Path:

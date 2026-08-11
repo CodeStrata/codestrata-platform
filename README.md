@@ -3,7 +3,9 @@
 Private **source of truth** monorepo for **CodeStrata** development.
 
 Current shipping Community product: **CodeStrata Engine 0.2.0** and
-**CodeStrata VS Code Extension 0.2.0**. Public Community documentation lives in
+**CodeStrata for VS Code** Marketplace listing **0.2.1**
+([`CodeStrataAI.codestrata-assessment`](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)).
+Public Community documentation lives in
 [`docs/`](docs/). This monorepo also contains private Platform, Infrastructure,
 and Insights work that is **not** part of the Community Edition surface.
 
@@ -23,7 +25,7 @@ Historical design notes: [`governance/assets/DESIGN-SYSTEM.md`](governance/asset
 | --- | --- |
 | Edition | Community Engine is MIT-licensed under `engine/` |
 | Python | 3.12+ |
-| Version | **0.2.0** |
+| Version | Engine/CLI **0.2.0** · VS Code Marketplace **0.2.1** |
 
 ---
 
@@ -103,7 +105,7 @@ export and publish intentionally. Handbook: [platform/README.md](platform/README
 | `engine/` | `CodeStrata/codestrata-engine` | **public** |
 | `examples/` | `CodeStrata/codestrata-examples` | **public** |
 | `docs/` | `CodeStrata/codestrata-docs` | **private** (publishable Community portal) |
-| `vscode-plugin/` | `CodeStrata/codestrata-vscode` | **private** → Marketplace |
+| `vscode-plugin/` | `CodeStrata/codestrata-vscode` | **private** → [Marketplace](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment) `CodeStrataAI.codestrata-assessment` |
 
 ```bash
 python scripts/verify_release.py --skip-lint --skip-tests

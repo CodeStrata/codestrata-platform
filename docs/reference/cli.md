@@ -26,9 +26,8 @@ codestrata assess --repo . --with-ai
 | `codestrata --version` / `codestrata version` | **Installed package/runtime** version (candidate may be `0.2.0`) |
 | `GET /api/v1/community/status` → `engine_version` | Latest **published** GitHub Release for `CodeStrata/codestrata-engine`, with candidate fallback per Community Status contract |
 
-These are different concepts. Before a GitHub `v0.2.0` Release exists, Status may
-still show `0.1.0` while a clean candidate install reports `0.2.0`. That is an
-expected release gap — not a CLI bug. Do not hard-code the candidate into Status.
+These are different concepts. After the published GitHub Release `v0.2.0`,
+Community Status `engine_version` is `0.2.0`. Do not hard-code Status.
 
 Artifacts default under
 `.codestrata-artifacts/assessments/<repository-id>/current/`

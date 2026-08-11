@@ -152,7 +152,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
     checks.append(
         CheckResult(
             "naming:publisher",
-            pkg.get("publisher") == "codestrata",
+            pkg.get("publisher") == "CodeStrataAI",
             str(pkg.get("publisher")),
             "product_naming",
         )

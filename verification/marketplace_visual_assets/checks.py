@@ -23,6 +23,7 @@ from verification.marketplace_visual_assets.contract import (
     POLICY_ID,
     POLICY_RELATIVE,
     POLICY_VERSION,
+    PUBLIC_SCREENSHOT_BASE,
     README_RELATIVE,
     RETIRED_ASSETS,
     SCREENSHOT_HEIGHT,
@@ -100,8 +101,8 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
     _add(
         checks,
         "policy:extension_0_2_0",
-        policy.get("extension_version") == "0.2.0" and pkg.get("version") == "0.2.0",
-        "0.2.0",
+        policy.get("extension_version") == "0.2.1" and pkg.get("version") == "0.2.1",
+        "0.2.1",
         "visual_policy",
     )
     _add(
@@ -266,7 +267,10 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
     # --- captions / alt ---
     caption_ok = all(s.get("caption") and len(s["caption"]) < 80 for s in shots)
     _add(checks, "captions:present_grounded", caption_ok, "captions", "captions")
-    alts = re.findall(r"!\[([^\]]*)\]\((media/screenshot-[^)]+)\)", readme)
+    alts = re.findall(
+        r"!\[([^\]]*)\]\((?:https://docs\.codestrata\.ai/media/vscode-marketplace/|media/)(screenshot-[^)]+)\)",
+        readme,
+    )
     _add(
         checks,
         "alt_text:functional",
@@ -436,8 +440,19 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
     # --- readme ---
     broken = [
         img
-        for img in re.findall(r"!\[[^\]]*\]\((media/[^)]+)\)", readme)
-        if not (monorepo / "vscode-plugin" / img).is_file()
+        for img in re.findall(r"!\[[^\]]*\]\(([^)]+)\)", readme)
+        if not (
+            (
+                img.startswith(PUBLIC_SCREENSHOT_BASE)
+                and "/" not in img[len(PUBLIC_SCREENSHOT_BASE) :]
+                and (monorepo / "vscode-plugin" / "media" / img[len(PUBLIC_SCREENSHOT_BASE) :]).is_file()
+            )
+            or (
+                not img.startswith("http://")
+                and not img.startswith("https://")
+                and (monorepo / "vscode-plugin" / img).is_file()
+            )
+        )
     ]
     _add(
         checks,

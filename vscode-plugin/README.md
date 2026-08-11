@@ -7,10 +7,14 @@ Run local **Engineering Assessments** with **CodeStrata Engine** from VS Code
 recommendations, and open a generated Assessment Report—
 without leaving the editor.
 
-**Version:** 0.2.0 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
+**Version:** 0.2.1 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
 `0.2.x`
 
-![CodeStrata VS Code extension showing findings for a synthetic Demo repository](media/screenshot-assessment.png)
+Install **[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)**
+(`CodeStrataAI.codestrata-assessment`). Extension source is private; public
+distribution is the Visual Studio Marketplace listing.
+
+![CodeStrata VS Code extension showing findings for a synthetic Demo repository](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-assessment.png)
 
 ## What CodeStrata Does
 
@@ -32,11 +36,11 @@ Screenshots below use synthetic fixture content.
 
 | | |
 | --- | --- |
-| Assessment | ![CodeStrata VS Code extension showing findings for a synthetic Demo repository](media/screenshot-assessment.png) |
-| Assessment report | ![CodeStrata Assessment HTML report with executive summary and evidence-backed findings](media/screenshot-report.png) |
-| Progress | ![CodeStrata assessment progress notification with Assessment complete and Open Report](media/screenshot-progress.png) |
-| Initialization | ![CodeStrata Initialize Repository guidance for a synthetic Demo workspace](media/screenshot-initialization.png) |
-| Optional AI | ![CodeStrata optional AI-assisted assessment progress in VS Code](media/screenshot-ai-assessment.png) |
+| Assessment | ![CodeStrata VS Code extension showing findings for a synthetic Demo repository](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-assessment.png) |
+| Assessment report | ![CodeStrata Assessment HTML report with executive summary and evidence-backed findings](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-report.png) |
+| Progress | ![CodeStrata assessment progress notification with Assessment complete and Open Report](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-progress.png) |
+| Initialization | ![CodeStrata Initialize Repository guidance for a synthetic Demo workspace](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-initialization.png) |
+| Optional AI | ![CodeStrata optional AI-assisted assessment progress in VS Code](https://docs.codestrata.ai/media/vscode-marketplace/screenshot-ai-assessment.png) |
 
 ## Requirements
 
@@ -50,14 +54,17 @@ modify your `PATH` or shell profile.
 
 ## Quick Start
 
-1. Install the CodeStrata Engine CLI using the [installation guidance](docs/cli-installation.md)
+1. Install this extension from Visual Studio Marketplace:
+   [CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+   (`CodeStrataAI.codestrata-assessment`).
+2. Install the CodeStrata Engine CLI using the [installation guidance](docs/cli-installation.md)
    (guidance-only from the extension; see also public Engine docs).
-2. Open your repository folder in VS Code.
-3. Run **CodeStrata: Initialize Repository** (creates or preserves Engine config).
-4. Run **CodeStrata: Run Assessment**.
-5. When prompted after success, open the HTML report—or use
+3. Open your repository folder in VS Code.
+4. Run **CodeStrata: Initialize Repository** (creates or preserves Engine config).
+5. Run **CodeStrata: Run Assessment**.
+6. When prompted after success, open the HTML report—or use
    **CodeStrata: Open HTML Report** (or choose **Open Report** when the assessment completes).
-6. Optionally run **CodeStrata: Run Assessment with AI** if Engine AI providers
+7. Optionally run **CodeStrata: Run Assessment with AI** if Engine AI providers
    are configured.
 
 ## CLI Installation
@@ -141,6 +148,7 @@ Nothing installs, retries, or remediates automatically.
 
 | Extension | Supported Engine CLI |
 | --------- | -------------------- |
+| 0.2.1 | `0.2.x` (release builds; no prerelease) |
 | 0.2.0 | `0.2.x` (release builds; no prerelease) |
 
 - Older CLI lines (for example `0.1.x`) → install a supported `0.2.x` CLI
@@ -204,11 +212,11 @@ See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
 ## Known Limitations
 
 - CLI auto-install is not supported (guidance only)
-- Extension 0.2.0 requires Engine CLI `0.2.x`
+- Extension 0.2.1 requires Engine CLI `0.2.x`
 - Progress is indeterminate (no percentage completion)
 - Optional AI depends on Engine provider configuration
-- VS Code Marketplace publication is **not** complete for this candidate; install
-  from a packaged VSIX until Marketplace release readiness publishes it
+- Public install path is Visual Studio Marketplace
+  (`CodeStrataAI.codestrata-assessment`); extension source remains private
 
 ## Commands
 
@@ -249,6 +257,7 @@ See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
 
 ## Support
 
+- Marketplace: [CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
 - Documentation: [https://docs.codestrata.ai/extensions/vscode](https://docs.codestrata.ai/extensions/vscode)
 - Privacy: [PRIVACY.md](PRIVACY.md)
 - Security: [SECURITY.md](SECURITY.md)

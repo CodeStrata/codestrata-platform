@@ -16,4 +16,3 @@ Typical flow:
 4. Compare with curated expected results where provided
 
 Public repository: [codestrata-examples](https://github.com/CodeStrata/codestrata-examples)
-(when published).

@@ -10,7 +10,7 @@ export const CLEAN_INSTALL_POLICY_ID =
   "community-vscode-clean-install-policy" as const;
 export const CLEAN_INSTALL_POLICY_VERSION = "1.0" as const;
 
-export const CLEAN_INSTALL_EXTENSION_VERSION = "0.2.0" as const;
+export const CLEAN_INSTALL_EXTENSION_VERSION = "0.2.1" as const;
 export const CLEAN_INSTALL_SUPPORTED_CLI_FAMILY = "0.2.x" as const;
 
 export type CleanInstallPolicy = {

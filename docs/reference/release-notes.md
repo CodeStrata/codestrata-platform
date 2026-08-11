@@ -12,9 +12,13 @@ portal:
 - CodeStrata Examples (public GitHub source)
 - CodeStrata Documentation (this portal)
 
-The VS Code extension is distributed on the Marketplace; its source is not a
-Community public GitHub repository for v0.2.0. Marketplace listing copy and
-`vscode-plugin/CHANGELOG.md` are the authorities for the packaged extension.
+**v0.2.0 GitHub Release:**
+[CodeStrata Community Edition v0.2.0](https://github.com/CodeStrata/codestrata-engine/releases/tag/v0.2.0)
+
+The VS Code extension is Marketplace distribution (source private). Live listing:
+[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment` **0.2.1**). Community Engine/CLI remains
+**v0.2.0**.
 
 This page is a portal entry. **Authoritative release history for this monorepo**
 is the repository-root `CHANGELOG.md` (v0.2.0 Community baseline).

@@ -56,5 +56,7 @@ https://api.codestrata.ai
 
 ## Marketplace
 
-Marketplace availability is separate from this repository’s candidate VSIX.
-Do not treat a candidate package as a published Marketplace release.
+Public distribution:
+[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment`, listing 0.2.1).
+Extension source is private. Do not treat this repository as a public source listing.

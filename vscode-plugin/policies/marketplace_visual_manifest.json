@@ -1,6 +1,6 @@
 {
   "design_system_version": "1.0",
-  "extension_version": "0.2.0",
+  "extension_version": "0.2.1",
   "fixture_identity": "CodeStrata Demo",
   "gallery_banner": {
     "art": "media/marketplace-banner.png",

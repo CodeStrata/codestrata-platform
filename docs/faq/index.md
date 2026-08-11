@@ -25,10 +25,10 @@ and uses your configured provider — see [AI Providers](/ai-providers/) and
 Assessments do not expose trustworthy percentage completion to the extension. Progress
 is shown as an indeterminate lifecycle until the Engine result is known.
 
-## Which CLI versions work with VS Code 0.2.0?
+## Which CLI versions work with the VS Code extension?
 
-Extension 0.2.0 supports Engine CLI `0.2.x` release builds (no prerelease). See
-[Compatibility](/reference/compatibility).
+Marketplace listing **0.2.1** (and the 0.2.x extension line) supports Engine CLI
+`0.2.x` release builds (no prerelease). See [Compatibility](/reference/compatibility).
 
 ## Where is Platform documentation?
 

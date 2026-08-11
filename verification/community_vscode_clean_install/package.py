@@ -186,7 +186,7 @@ def check_install(
     if evidence.is_file():
         doc = load_json(evidence)
         ok = bool(doc.get("installed")) and str(doc.get("extension_id", "")).startswith(
-            "codestrata."
+            "CodeStrataAI."
         )
         checks.append(check("install:clean_profile", ok, json.dumps(doc, sort_keys=True)[:200], "install"))
         if not ok:
@@ -195,7 +195,7 @@ def check_install(
 
     # Fallback: VSIX exists and package declares publisher
     pkg = load_json(monorepo / EXTENSION_PACKAGE_JSON)
-    ok = pkg.get("publisher") == "codestrata" and find_vsix(monorepo / "vscode-plugin") is not None
+    ok = pkg.get("publisher") == "CodeStrataAI" and find_vsix(monorepo / "vscode-plugin") is not None
     checks.append(
         check(
             "install:vsix_ready",

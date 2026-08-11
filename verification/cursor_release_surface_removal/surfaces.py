@@ -197,7 +197,7 @@ def check_release_inventory(monorepo: Path) -> tuple[list[CheckResult], list[Def
     checks.append(
         CheckResult(
             name="release_inventory:active_editor_extensions",
-            ok=list(ACTIVE_EDITOR_EXTENSIONS) == ["codestrata-vscode"],
+            ok=list(ACTIVE_EDITOR_EXTENSIONS) == ["codestrata-assessment"],
             detail=f"active={list(ACTIVE_EDITOR_EXTENSIONS)}",
             category="release_inventory",
         )

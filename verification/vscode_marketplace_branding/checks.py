@@ -21,6 +21,7 @@ from verification.vscode_marketplace_branding.contract import (
     INTENDED_VSCODE_VERSION,
     PACKAGE_NAME,
     PRIVATE_URL_FRAGMENTS,
+    PUBLIC_SCREENSHOT_BASE,
     PUBLISHER,
     VSCODE_CATEGORIES,
 )
@@ -32,6 +33,17 @@ from verification.vscode_marketplace_branding.inventory import (
     required_assets_present,
 )
 from verification.vscode_marketplace_branding.models import CheckResult, Defect
+
+
+def _readme_image_src_ok(monorepo: Path, src: str) -> bool:
+    if src.startswith(PUBLIC_SCREENSHOT_BASE):
+        name = src[len(PUBLIC_SCREENSHOT_BASE) :]
+        if "/" in name or not name.endswith(".png"):
+            return False
+        return (monorepo / "vscode-plugin" / "media" / name).is_file()
+    if src.startswith("http://") or src.startswith("https://"):
+        return False
+    return (monorepo / "vscode-plugin" / src).is_file()
 
 
 def _read(monorepo: Path, relative: str) -> str:
@@ -181,12 +193,12 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
             if unsafe:
                 screenshot_hits[rel] = unsafe
 
-    # README image paths
-    readme_images = re.findall(r"!\[[^\]]*\]\((media/[^)]+)\)", readme)
+    # README image paths (public HTTPS for Marketplace; local media files remain packaged)
+    readme_images = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", readme)
     broken_readme_images = [
         img
         for img in readme_images
-        if not (monorepo / "vscode-plugin" / img).is_file()
+        if not _readme_image_src_ok(monorepo, img)
     ]
 
     # package dry inventory expectation: icon + screenshots referenced

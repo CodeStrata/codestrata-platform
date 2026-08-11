@@ -65,5 +65,5 @@ def scan_active_surfaces(monorepo: Path) -> dict[str, Any]:
     return {
         "hits": sorted(set(hits)),
         "removed_surface_count": len(REMOVED_ACTIVE_SURFACES),
-        "active_editor_extensions": ["codestrata-vscode"],
+        "active_editor_extensions": ["codestrata-assessment"],
     }

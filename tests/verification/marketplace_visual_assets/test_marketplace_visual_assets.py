@@ -22,7 +22,7 @@ def test_policy_file_present() -> None:
     assert policy["policy_id"] == POLICY_ID
     assert policy["policy_version"] == "1.0"
     assert policy["start_slice_14_7"] is False
-    assert policy["extension_version"] == "0.2.0"
+    assert policy["extension_version"] == "0.2.1"
     assert policy["legacy_amber_allowed"] is False
     assert policy["universal_logo_authority_change_allowed"] is False
 
@@ -36,7 +36,7 @@ def test_gallery_assets_present_and_sized() -> None:
     pkg = json.loads((root / "vscode-plugin" / "package.json").read_text(encoding="utf-8"))
     assert pkg["galleryBanner"]["color"] == "#f4f6f3"
     assert pkg["galleryBanner"]["theme"] == "light"
-    assert pkg["version"] == "0.2.0"
+    assert pkg["version"] == "0.2.1"
 
 
 def test_build_and_write_report_twice_byte_identical() -> None:

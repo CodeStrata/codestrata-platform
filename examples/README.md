@@ -81,6 +81,9 @@ Curated results: [expected-results/](expected-results/).
 * [codestrata-engine](https://github.com/CodeStrata/codestrata-engine) installed
   (`codestrata` on `PATH`)
 * Network access to GitHub for the fetch step
+* Optional: [Install CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+  (`CodeStrataAI.codestrata-assessment`) to run assessments from the editor.
+  These showcases remain CLI-first.
 
 Baseline showcases use `--profile community --no-ai` (no AI credentials).
 

@@ -18,11 +18,11 @@ REPORT_MD = "vscode-clean-install-verification.md"
 
 CLEAN_POLICY_ID = "community-vscode-clean-install-policy"
 CLEAN_POLICY_VERSION = "1.0"
-INTENDED_VSCODE_VERSION = "0.2.0"
+INTENDED_VSCODE_VERSION = "0.2.1"
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 CLEAN_PACKAGE = "vscode-plugin/src/cleanInstall"
 PLUGIN_ROOT = "vscode-plugin"
-VSIX_NAME = "codestrata-vscode-0.2.0.vsix"
+VSIX_NAME = "codestrata-assessment-0.2.1.vsix"
 
 STABLE_COMMAND_IDS = (
     "codestrata.assess",

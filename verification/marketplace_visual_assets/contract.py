@@ -35,6 +35,8 @@ GALLERY_ORDER = (
     "media/screenshot-ai-assessment.png",
 )
 
+PUBLIC_SCREENSHOT_BASE = "https://docs.codestrata.ai/media/vscode-marketplace/"
+
 RETIRED_ASSETS = (
     "media/screenshot-findings.png",
     "media/screenshot-findings-light.png",

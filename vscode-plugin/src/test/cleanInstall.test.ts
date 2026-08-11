@@ -17,7 +17,7 @@ describe("clean install policy", () => {
     const a = cleanInstallPolicyToStableDict(createCleanInstallPolicy());
     const b = cleanInstallPolicyToStableDict(createCleanInstallPolicy());
     assert.equal(JSON.stringify(a), JSON.stringify(b));
-    assert.equal(a.extension_version, "0.2.0");
+    assert.equal(a.extension_version, "0.2.1");
     assert.equal(a.supported_cli_family, "0.2.x");
     assert.equal(a.marketplace_publish_required, false);
     assert.equal(a.automatic_cli_install_allowed, false);

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1 — Marketplace listing screenshot presentation
+
+- Marketplace README screenshots use public HTTPS URLs on docs.codestrata.ai
+- Community Edition Engine/CLI remains v0.2.0; this bump is listing presentation only
+
 ## 0.2.0 — Phase 10.3 Community release readiness
 
 - First-run welcome and guided **Install CodeStrata Engine** (`uv` / `pipx` / `pip --user`)

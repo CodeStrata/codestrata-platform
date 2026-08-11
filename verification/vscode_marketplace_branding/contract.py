@@ -18,14 +18,14 @@ REPORT_MD = "vscode-marketplace-branding-verification.md"
 
 BRANDING_POLICY_ID = "community-vscode-marketplace-branding-policy"
 BRANDING_POLICY_VERSION = "1.0"
-INTENDED_VSCODE_VERSION = "0.2.0"
+INTENDED_VSCODE_VERSION = "0.2.1"
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 BRANDING_PACKAGE = "vscode-plugin/src/marketplaceBranding"
 PLUGIN_ROOT = "vscode-plugin"
 
 DISPLAY_NAME = "CodeStrata – Engineering Assessment"
-PUBLISHER = "codestrata"
-PACKAGE_NAME = "codestrata-vscode"
+PUBLISHER = "CodeStrataAI"
+PACKAGE_NAME = "codestrata-assessment"
 GALLERY_COLOR = "#f4f6f3"
 GALLERY_THEME = "light"
 ICON_RELATIVE = "media/codestrata-icon.png"
@@ -39,6 +39,8 @@ GALLERY_ORDER = (
     "media/screenshot-initialization.png",
     "media/screenshot-ai-assessment.png",
 )
+
+PUBLIC_SCREENSHOT_BASE = "https://docs.codestrata.ai/media/vscode-marketplace/"
 
 VSCODE_CATEGORIES = frozenset(
     {

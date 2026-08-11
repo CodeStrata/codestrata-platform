@@ -215,8 +215,9 @@ do not prompt. Explicit Allow / No Thanks is stored in extension `globalState`
 (`codestrata.telemetryPreference`) and can be changed via **Telemetry Settings**.
 Default remains disabled until decided.
 
-Candidate VSIX packages are not Marketplace-published releases until Release
-Readiness publishes them.
+Public extension distribution:
+[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
+(`CodeStrataAI.codestrata-assessment`). Extension source remains private.
 
 ## Precedence (privacy-first)
 

@@ -3,7 +3,7 @@ import * as assert from "node:assert/strict";
 import * as vscode from "vscode";
 
 export async function run(): Promise<void> {
-  const extension = vscode.extensions.getExtension("codestrata.codestrata-vscode");
+  const extension = vscode.extensions.getExtension("CodeStrataAI.codestrata-assessment");
   assert.ok(extension, "extension not found (publisher.name in package.json)");
   await extension.activate();
   assert.equal(extension.isActive, true);

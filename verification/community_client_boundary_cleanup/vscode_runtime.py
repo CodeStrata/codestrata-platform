@@ -36,7 +36,7 @@ def check_vscode_runtime(monorepo: Path) -> tuple[list[CheckResult], list[Defect
     if pkg_path.is_file():
         pkg = json.loads(pkg_path.read_text(encoding="utf-8"))
         version_ok = str(pkg.get("version")) == EXPECTED_VSCODE_VERSION
-        name_ok = str(pkg.get("name")) == "codestrata-vscode"
+        name_ok = str(pkg.get("name")) == "codestrata-assessment"
         checks.append(
             CheckResult(
                 "vscode:version_unchanged",
@@ -58,7 +58,7 @@ def check_vscode_runtime(monorepo: Path) -> tuple[list[CheckResult], list[Defect
                 Defect(
                     "VS Code regression",
                     "vscode-plugin/package.json",
-                    f"codestrata-vscode@{EXPECTED_VSCODE_VERSION}",
+                    f"codestrata-assessment@{EXPECTED_VSCODE_VERSION}",
                     f"{pkg.get('name')}@{pkg.get('version')}",
                 )
             )

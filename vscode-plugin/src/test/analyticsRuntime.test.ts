@@ -426,7 +426,7 @@ describe("vscode analytics package and boundary", () => {
         configuration?: { properties?: Record<string, unknown> };
       };
     };
-    assert.equal(pkg.version, "0.2.0");
+    assert.equal(pkg.version, "0.2.1");
     const commands = pkg.contributes.commands.map((c) => c.command);
     assert.ok(!commands.some((c) => /analytics/i.test(c)));
     assert.ok(commands.includes("codestrata.telemetrySettings"));
