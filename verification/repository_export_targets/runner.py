@@ -64,7 +64,7 @@ def build_report(monorepo: Path) -> RepositoryExportTargetReport:
     take("exports", check_dry_run_and_exports(monorepo))
     take("compat", check_compatibility_wrappers(monorepo))
     take("boundaries", check_boundaries(monorepo))
-    take("visibility", check_visibility())
+    take("visibility", check_visibility(monorepo))
 
     limitations = [
         "legacy_export_commands_retained_as_compatibility_wrappers",
@@ -76,15 +76,24 @@ def build_report(monorepo: Path) -> RepositoryExportTargetReport:
         "no_live_publication",
         "owner_migration_deferred",
         "community_destination_is_multi_repo_staging_root",
+        "community_staging_includes_private_mirrors_not_public_source",
     ]
 
+    export_by_name = {c.name: c.ok for c in buckets.get("exports", [])}
     take(
         "scenarios",
         check_scenarios(
             selection_ok=all(c.ok for c in buckets.get("selection", [])),
-            isolation_ok=all(
-                c.ok for c in buckets.get("exports", []) if c.category == "isolation"
+            community_includes_infrastructure=not export_by_name.get(
+                "community:no_infrastructure", True
             ),
+            public_source_includes_platform=not export_by_name.get(
+                "community:no_platform_in_public_source", True
+            ),
+            infra_includes_engine=not export_by_name.get("infra:no_engine", True),
+            infra_includes_platform=not export_by_name.get("infra:no_platform", True),
+            infra_includes_vscode=not export_by_name.get("infra:no_vscode", True),
+            infra_includes_cursor=not export_by_name.get("infra:no_cursor", True),
             ownership_ok=all(
                 c.ok for c in buckets.get("exports", []) if c.category == "ownership"
             ),

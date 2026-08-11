@@ -123,6 +123,7 @@ addopts = [
 ]
 markers = [
     "docker: requires Docker Compose and a running daemon (skipped when unavailable)",
+    "historical_frozen_characterization: superseded slice/artifact characterization; not an ACTIVE 0.2.0 release gate (set CODESTRATA_RUN_HISTORICAL_FROZEN=1 to collect)",
 ]
 
 

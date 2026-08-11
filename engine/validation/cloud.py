@@ -530,7 +530,9 @@ def discover_cloud_artifact_paths(report_path: Path) -> dict[str, str]:
 
     found: dict[str, str] = {}
     parent = report_path.parent
-    assessment = parent / "cloud-assessment.json"
+    assessment = parent / "heads" / "cloud.json"
+    if not assessment.is_file():
+        assessment = parent / "cloud-assessment.json"
     evidence = parent / "repository-cloud-evidence.json"
     if assessment.is_file():
         found["cloud-assessment.json"] = str(assessment)

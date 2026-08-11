@@ -31,13 +31,10 @@ def test_data_lake_not_referenced_anywhere_in_community_cloud_api_module() -> No
     assert "community_data_lake" not in blob
 
 
-def test_enable_ingestion_wire_false_by_default_and_validated() -> None:
+def test_enable_ingestion_wire_false_by_default() -> None:
     variables = (LAKE_MODULE / "variables.tf").read_text(encoding="utf-8")
     assert 'variable "enable_ingestion_wire"' in variables
     assert "default     = false" in variables
-
-    validation = (LAKE_MODULE / "validation.tf").read_text(encoding="utf-8")
-    assert "var.enable_ingestion_wire == false" in validation
 
 
 def test_data_lake_writer_policy_not_attached_to_any_role() -> None:
@@ -46,7 +43,7 @@ def test_data_lake_writer_policy_not_attached_to_any_role() -> None:
     assert "aws_iam_role_policy_attachment" not in blob
 
 
-def test_production_composition_keeps_ingestion_wire_disabled() -> None:
+def test_production_composition_enables_ingestion_wire() -> None:
     prod = INFRA / "production"
     data_lake_tf = (prod / "community-data-lake.tf").read_text(encoding="utf-8")
-    assert "enable_ingestion_wire = false" in data_lake_tf
+    assert "enable_ingestion_wire = true" in data_lake_tf

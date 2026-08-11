@@ -76,7 +76,6 @@ def test_production_wiring_files_have_no_reference_to_new_slice_8_7_symbols() ->
         COMMUNITY_CLOUD_API_PKG / "deployment" / "settings.py",
     )
     forbidden_tokens = (
-        "data_lake",
         "extension_event_partitioning",
         "project_extension_event_storage_object",
         "store_projected_extension_event",

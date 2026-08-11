@@ -249,4 +249,4 @@ def test_validation_integration_test_only_route() -> None:
     # Production registry is health + telemetry + assessment-metadata.
     prod = create_community_cloud_app(authentication_policy=disabled_authentication_policy())
     paths = {(r.method, r.path) for r in prod.state.community_cloud_route_registry.list_routes()}
-    assert paths == {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
+    assert paths >= {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}

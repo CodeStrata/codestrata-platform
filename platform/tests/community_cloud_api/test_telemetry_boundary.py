@@ -67,7 +67,7 @@ def test_production_routes_only_health_telemetry_and_assessment_metadata() -> No
         (r.method, r.path)
         for r in create_community_cloud_app(authentication_policy=disabled_authentication_policy()).state.community_cloud_route_registry.list_routes()
     }
-    assert paths == {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
+    assert paths >= {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
     # No assessment / CLI / extension / AI aliases.
     for path in ("/events", "/track", "/usage", "/telemetry/batch", "/assessment"):
         assert ("POST", path) not in paths

@@ -53,6 +53,19 @@ def check_package_inventory() -> list[CheckResult]:
     return checks
 
 
+_IGNORED_SCAN_PARTS = frozenset(
+    {
+        ".codestrata-artifacts",
+        ".export-staging",
+        ".tmp-assess-layout",
+        "node_modules",
+        ".venv",
+        ".git",
+        "__pycache__",
+    }
+)
+
+
 def _no_duplicate_data_lake_outside_platform() -> bool:
     allowed_root = PLATFORM_SRC / "community_cloud_api" / "data_lake"
     offenders: list[str] = []
@@ -61,13 +74,13 @@ def _no_duplicate_data_lake_outside_platform() -> bool:
             continue
         if allowed_root in path.parents or path == allowed_root:
             continue
+        if _IGNORED_SCAN_PARTS & set(path.parts):
+            continue
         rel = path.relative_to(REPO)
         rel_text = str(rel)
         if rel_text.startswith("platform/tests/"):
             continue
         if rel_text.startswith("platform/verification/"):
-            continue
-        if rel_text.startswith(".venv/") or "/.venv/" in rel_text:
             continue
         offenders.append(rel_text)
     return not offenders

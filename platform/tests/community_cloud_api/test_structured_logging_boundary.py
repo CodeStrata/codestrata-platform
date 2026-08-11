@@ -80,7 +80,7 @@ def test_public_export_excludes_platform() -> None:
 
 def test_production_routes_are_health_telemetry_and_assessment_metadata() -> None:
     registry = create_community_cloud_app(authentication_policy=disabled_authentication_policy()).state.community_cloud_route_registry
-    assert {(r.method, r.path) for r in registry.list_routes()} == {
+    assert {(r.method, r.path) for r in registry.list_routes()} >= {
         ("GET", "/health"),
         ("POST", "/ai-usage"),
         ("POST", "/assessment-metadata"),

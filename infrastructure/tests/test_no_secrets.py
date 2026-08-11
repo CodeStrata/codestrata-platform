@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from infrastructure.verification.state import is_empty_s3_backend
+
 INFRA = Path(__file__).resolve().parents[1]
 
 
@@ -14,7 +16,7 @@ def test_no_env_files() -> None:
 
 def test_backend_example_only() -> None:
     assert (INFRA / "production" / "backend.tf.example").is_file()
-    assert not (INFRA / "production" / "backend.tf").exists()
+    assert is_empty_s3_backend(INFRA / "production" / "backend.tf")
 
 
 def test_scripts_refuse_hidden_credentials() -> None:

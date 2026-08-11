@@ -15,28 +15,27 @@ def check_route_inventory(app: VerificationApp) -> list[CheckResult]:
     paths = {(r.method, r.path) for r in routes}
     checks = [
         CheckResult(
-            name="routes:count_six",
-            ok=len(routes) == 6,
+            name="routes:count_current",
+            ok=len(routes) == 19,
             detail=f"count={len(routes)}",
             category="routes",
         ),
         CheckResult(
             name="routes:expected_identities",
-            ok=set(names) == set(EXPECTED_ROUTE_IDENTITIES),
+            ok=set(EXPECTED_ROUTE_IDENTITIES).issubset(set(names)),
             detail=f"names={list(names)}",
             category="routes",
         ),
         CheckResult(
             name="routes:expected_paths",
-            ok=paths
-            == {
+            ok={
                 ("GET", "/health"),
                 ("POST", "/telemetry"),
                 ("POST", "/assessment-metadata"),
                 ("POST", "/cli-events"),
                 ("POST", "/extension-events"),
                 ("POST", "/ai-usage"),
-            },
+            }.issubset(paths),
             detail=f"paths={sorted(paths)}",
             category="routes",
         ),

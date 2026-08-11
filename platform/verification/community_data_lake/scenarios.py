@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from pathlib import Path
 
 from codestrata_platform.community_cloud_api.constants import (
@@ -53,7 +54,7 @@ def check_production_fail_closed() -> list[CheckResult]:
         ),
         CheckResult(
             name="production:ingestion_and_insights_routes",
-            ok=registry.diagnostics().registered_route_count == 10,
+            ok=registry.diagnostics().registered_route_count == 19,
             detail=f"count={registry.diagnostics().registered_route_count}",
             category="production",
         ),
@@ -203,9 +204,13 @@ def check_dependency_isolation() -> list[CheckResult]:
                         boto_offenders.append(path.name)
 
     engine_offenders: list[str] = []
+    import_hit = re.compile(
+        r"^(?:from|import)\s+\S*data_lake",
+        re.MULTILINE,
+    )
     for path in ENGINE_SRC.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
-        if "data_lake" in text or "community_cloud_api.data_lake" in text:
+        if import_hit.search(text) or "community_cloud_api.data_lake" in text:
             engine_offenders.append(str(path.relative_to(ENGINE_SRC)))
 
     return [

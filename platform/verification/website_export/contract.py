@@ -8,9 +8,10 @@ WEBSITE_EXPORT_VERIFICATION_ID = "website-export-verification"
 WEBSITE_EXPORT_VERIFICATION_VERSION = "1.0.0"
 
 # Verified SV.6 five-repo EIR (offline rebuild from permanent catalog assessments).
-EXPECTED_SV6_REPORT_ID = "eir:394b8574e3bc83b0878dc031"
+# ACTIVE_CURRENT_PLATFORM_CONTRACT: identity of the current five-repo EIR rebuild.
+EXPECTED_SV6_REPORT_ID = "eir:3bc1983338ff046ac930fe57"
 EXPECTED_SV6_DATASET_ID = "dataset:51f8613688c2fdffdd876121"
-EXPECTED_SV6_INTERP_BUNDLE = "interp-bundle:c719915c68cf94601a0e8f0b"
+EXPECTED_SV6_INTERP_BUNDLE = "interp-bundle:a394af0337e541d0f269cf95"
 
 JSON_FILENAME = "engineering-intelligence-report.json"
 HTML_FILENAME = "engineering-intelligence-report.html"

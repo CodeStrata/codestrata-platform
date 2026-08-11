@@ -49,7 +49,7 @@ def test_assess_allow_no_prompt_no_network(tmp_path: Path, monkeypatch) -> None:
     send.assert_not_called()
     assert "Telemetry enabled" not in (result.stdout + result.stderr)
     assert "Allow privacy-safe" not in (result.stdout + result.stderr)
-    assert list(home.iterdir()) == []
+    assert {path.name for path in home.iterdir()} <= {"installation_id"}
 
 
 def test_assess_deny_quiet_clean(tmp_path: Path, monkeypatch) -> None:
@@ -84,7 +84,7 @@ def test_assess_deny_quiet_clean(tmp_path: Path, monkeypatch) -> None:
     combined = result.stdout + result.stderr
     assert "Allow privacy-safe" not in combined
     assert "y/N" not in combined
-    assert list(home.iterdir()) == []
+    assert {path.name for path in home.iterdir()} <= {"installation_id"}
 
 
 def test_conflict_message_and_exit() -> None:

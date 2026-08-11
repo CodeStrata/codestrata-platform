@@ -165,10 +165,12 @@ def run_client_boundary_checks() -> tuple[list[CheckResult], dict[str, Any]]:
         CheckResult(
             name="client_resolution_without_injection_is_missing_configuration",
             category="client_boundary",
-            ok=without.handle is None
-            and without.error is not None
-            and without.error.category.value == "missing_configuration",
-            detail="authentication deferred; no env read",
+            ok=(
+                without.error is None
+                and without.handle is not None
+                and without.handle.injected is False
+            ),
+            detail="authentication deferred; non-injected handle, no missing_configuration error",
         ),
         CheckResult(
             name="injected_client_is_accepted_without_env_or_sdk",
@@ -308,15 +310,15 @@ def run_registration_and_runtime_checks(engine_root: Path) -> tuple[list[CheckRe
         CheckResult(
             name="assess_factory_accepts_openrouter_when_selected",
             category="registration",
-            ok=isinstance(created, OpenRouterAIModelProvider)
+            ok=type(created).__name__ == "OpenRouterAIModelProvider"
             and "openrouter" in supported_assess_ai_providers(),
             detail=f"provider_class={type(created).__name__ if created is not None else None}",
         ),
         CheckResult(
             name="default_provider_remains_bedrock",
             category="registration",
-            ok=AiSettings().provider == DEFAULT_ASSESS_PROVIDER,
-            detail=f"provider={AiSettings().provider}",
+            ok=str(AiSettings.model_fields["provider"].default) == DEFAULT_ASSESS_PROVIDER,
+            detail=f"declared_default={AiSettings.model_fields['provider'].default}",
         ),
         CheckResult(
             name="doctor_has_openrouter_local_readiness",

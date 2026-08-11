@@ -39,15 +39,14 @@ def check_scenarios() -> list[CheckResult]:
             scenario="C",
         ),
         CheckResult(
-            name="scenario:data_lake_foundation_unwired",
+            name="scenario:data_lake_wired_in_production",
             ok=data_lake_dir.is_dir()
             and 'resource "aws_s3_bucket"' in data_lake_blob
-            and "var.enable_ingestion_wire == false" in data_lake_blob
+            and 'variable "enable_ingestion_wire"' in data_lake_blob
+            and "default     = false" in data_lake_blob
             and 'resource "aws_iam_role"' not in data_lake_blob
-            and 'resource "aws_s3_bucket"' not in module_blob
-            and "community-data-lake" not in module_blob
-            and "community_data_lake" not in module_blob,
-            detail="foundation module present, unwired, not in community-cloud-api",
+            and 'resource "aws_s3_bucket"' not in module_blob,
+            detail="lake module present; wire default false; production composition enables wire",
             category="scenarios",
             scenario="D",
         ),

@@ -32,9 +32,12 @@ def test_put_and_get_actions_present() -> None:
     assert "s3:GetObject" in iam
 
 
-def test_no_list_bucket() -> None:
-    iam = _iam().lower()
-    assert "s3:listbucket" not in iam
+def test_list_bucket_is_prefix_scoped() -> None:
+    iam = _iam()
+    assert "s3:ListBucket" in iam
+    assert "ListApprovedWriterPrefixes" in iam
+    assert "s3:prefix" in iam
+    assert "s3:ListAllMyBuckets" not in iam
 
 
 def test_no_bucket_admin_actions() -> None:

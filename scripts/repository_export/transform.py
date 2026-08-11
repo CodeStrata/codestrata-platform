@@ -90,14 +90,13 @@ def test_modules_are_hcl_only() -> None:
     assert not py
 
 
-def test_community_data_lake_foundation_unwired() -> None:
+def test_community_data_lake_module_present_with_fail_closed_default() -> None:
     module = ROOT / "modules" / "community-data-lake"
     assert module.is_dir()
     assert not (ROOT / "modules" / "data-lake").exists()
     variables = (module / "variables.tf").read_text(encoding="utf-8")
     assert "enable_ingestion_wire" in variables
-    validation = (module / "validation.tf").read_text(encoding="utf-8")
-    assert "var.enable_ingestion_wire == false" in validation
+    assert "default     = false" in variables
 '''
 
 
@@ -338,8 +337,30 @@ def generated_state() -> str:
 
 from __future__ import annotations
 
+import re
+from pathlib import Path
+
 from verification.contract import infra_root
 from verification.models import CheckResult
+
+
+def is_empty_s3_backend(path: Path) -> bool:
+    """True when backend.tf is an empty S3 backend block with no identifiers."""
+
+    if not path.is_file():
+        return False
+    stripped = re.sub(r"#.*", "", path.read_text(encoding="utf-8"))
+    if not re.search(
+        r'terraform\\s*\\{\\s*backend\\s+"s3"\\s*\\{\\s*\\}\\s*\\}',
+        stripped,
+        re.DOTALL,
+    ):
+        return False
+    lowered = stripped.lower()
+    return not any(
+        token in lowered
+        for token in ("bucket", "key", "access_key", "secret", "profile", "dynamodb")
+    )
 
 
 def check_state() -> list[CheckResult]:
@@ -412,15 +433,19 @@ def check_state() -> list[CheckResult]:
             category="state",
         ),
         CheckResult(
-            name="state:no_backend_tf_committed",
-            ok=not (root / "production" / "backend.tf").exists(),
-            detail="example only",
+            name="state:backend_tf_empty_s3",
+            ok=is_empty_s3_backend(root / "production" / "backend.tf"),
+            detail="empty s3 backend (no bucket/key/credentials)",
             category="state",
         ),
         CheckResult(
-            name="state:no_live_backend_tf",
-            ok=not any(root.rglob("backend.tf")),
-            detail="no live backend.tf",
+            name="state:no_populated_backend_tf",
+            ok=all(
+                is_empty_s3_backend(path)
+                for path in root.rglob("backend.tf")
+                if path.is_file()
+            ),
+            detail="no populated backend.tf",
             category="state",
         ),
     ]

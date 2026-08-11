@@ -144,7 +144,9 @@ def test_iam_still_put_and_get_only_no_list_bucket() -> None:
     iam = (MODULE / "iam.tf").read_text(encoding="utf-8")
     assert "s3:PutObject" in iam
     assert "s3:GetObject" in iam
-    assert "s3:listbucket" not in iam.lower()
+    assert "s3:ListBucket" in iam
+    assert "ListApprovedWriterPrefixes" in iam
+    assert "s3:prefix" in iam
     assert "s3:listallmybuckets" not in iam.lower()
 
 

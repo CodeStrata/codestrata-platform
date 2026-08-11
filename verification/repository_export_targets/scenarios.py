@@ -15,7 +15,12 @@ from verification.repository_export_targets.models import CheckResult, Defect
 def check_scenarios(
     *,
     selection_ok: bool,
-    isolation_ok: bool,
+    community_includes_infrastructure: bool,
+    public_source_includes_platform: bool,
+    infra_includes_engine: bool,
+    infra_includes_platform: bool,
+    infra_includes_vscode: bool,
+    infra_includes_cursor: bool,
     ownership_ok: bool,
     dry_run_ok: bool,
     community_ok: bool,
@@ -27,6 +32,7 @@ def check_scenarios(
 ) -> tuple[list[CheckResult], list[Defect]]:
     script = (monorepo / AUTHORITATIVE_COMMAND).read_text(encoding="utf-8")
     pem = (monorepo / "public-export-manifest.yaml").read_text(encoding="utf-8")
+    # Each scenario is independently True when the *bad* condition is present.
     cases: list[tuple[str, str, bool]] = [
         ("A", "target omitted", "required=True" not in script or "--target" not in script),
         ("B", "destination omitted", "--destination" not in script),
@@ -34,13 +40,17 @@ def check_scenarios(
         ("D", "alias target accepted", "public" in script.split("choices")[0] if False else False),
         ("E", "multiple targets accepted", "nargs=" in script and "+" in script),
         ("F", "target inferred from destination", "infer" in script.lower()),
-        ("G", "Community export includes Infrastructure", not isolation_ok),
-        ("H", "Community export includes Platform", not isolation_ok),
+        ("G", "Community export includes Infrastructure", community_includes_infrastructure),
+        (
+            "H",
+            "Public source includes Platform runtime",
+            public_source_includes_platform,
+        ),
         ("I", "Community export includes Cursor", "codestrata-cursor" in pem.split("exports:")[1][:500] if "exports:" in pem else False),
-        ("J", "Infrastructure export includes Engine", not isolation_ok),
-        ("K", "Infrastructure export includes Platform runtime", not isolation_ok),
-        ("L", "Infrastructure export includes VS Code", not isolation_ok),
-        ("M", "Infrastructure export includes Cursor", not isolation_ok),
+        ("J", "Infrastructure export includes Engine", infra_includes_engine),
+        ("K", "Infrastructure export includes Platform runtime", infra_includes_platform),
+        ("L", "Infrastructure export includes VS Code", infra_includes_vscode),
+        ("M", "Infrastructure export includes Cursor", infra_includes_cursor),
         (
             "N",
             "Community manifest used for Infrastructure",

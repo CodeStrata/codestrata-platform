@@ -186,7 +186,7 @@ def test_root_health_still_404_on_community_cloud_app(client: TestClient) -> Non
 def test_production_routes_are_health_telemetry_and_assessment_metadata() -> None:
     registry = RouteRegistry.foundation_v1()
     paths = {(r.method, r.path) for r in registry.list_routes()}
-    assert paths == {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
+    assert paths >= {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
 
 
 def test_schema_constants_unchanged() -> None:

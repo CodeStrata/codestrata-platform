@@ -12,6 +12,10 @@ def main() -> int:
         f"verdict={report.verdict} "
         f"checks={report.total_checks} failed={report.failed_checks}"
     )
+    if report.failed_checks:
+        for check in report.checks:
+            if not check.ok:
+                print(f"  FAIL {check.name}: {check.detail}")
     return 0 if report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"} else 1
 
 

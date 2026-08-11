@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from infrastructure.verification.state import is_empty_s3_backend
+
 INFRA = Path(__file__).resolve().parents[1]
 REPO = INFRA.parent
 
@@ -98,7 +100,7 @@ def test_production_root_files() -> None:
         "community-data-lake.tf",
     ):
         assert (prod / name).is_file(), name
-    assert not (prod / "backend.tf").exists()
+    assert is_empty_s3_backend(prod / "backend.tf")
     assert not (prod / "terraform.tfvars").exists()
 
 

@@ -1,4 +1,11 @@
-"""Load assessment report.json into ActualAssessmentResult."""
+"""Load the shipped 0.2.0 assessment artifact contract into ActualAssessmentResult.
+
+ACTIVE_0_2_0_RELEASE_GATE: on-disk ``assessment.json`` is the lightweight
+manifest. Companion evidence is ``findings.json``, ``recommendations.json``,
+``heads/*.json``, and ``graphs/repository-manifest.json``. This harness merges
+those persisted sidecars only — it does not synthesize priority_actions,
+roadmap, schema_version 1.2, or categorized technology inventory.
+"""
 
 from __future__ import annotations
 
@@ -40,11 +47,126 @@ from validation.modernization import (
 )
 
 
+_HEAD_ID_TO_ASSESSMENT_KEY = {
+    "architecture": "architecture",
+    "security": "security",
+    "technical-debt": "technical_debt",
+    "cloud": "cloud",
+    "ai": "ai_readiness",
+    "dependencies": "dependency",
+    "testing": "testing",
+    "performance": "performance",
+}
+
+
 def load_report_document(report_path: Path) -> dict[str, Any]:
     payload = json.loads(report_path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
-        raise ValueError(f"report.json must be an object: {report_path}")
+        raise ValueError(f"assessment JSON must be an object: {report_path}")
     return payload
+
+
+def _load_json_object(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else None
+
+
+def persisted_layout_for_document(document: dict[str, Any]) -> str:
+    schema = str(document.get("schema") or "")
+    if schema.startswith("codestrata-assessment-manifest"):
+        return "manifest_0_2_0"
+    return "full_report_json"
+
+
+def merge_persisted_sidecars(
+    document: dict[str, Any],
+    report_path: Path,
+) -> dict[str, Any]:
+    """Attach companion artifacts that 0.2.0 actually writes next to the manifest.
+
+    Does **not** synthesize priority_actions, roadmap, schema_version 1.2, or
+    categorized technology inventory — those are not persisted in assessment.json.
+    """
+
+    if persisted_layout_for_document(document) != "manifest_0_2_0":
+        return document
+
+    from codestrata.artifacts.heads import ASSESSMENT_HEAD_SPECS
+
+    parent = report_path.parent
+    findings_doc = _load_json_object(parent / "findings.json") or {}
+    recs_doc = _load_json_object(parent / "recommendations.json") or {}
+    findings = findings_doc.get("findings") if isinstance(findings_doc.get("findings"), list) else []
+    recommendations = (
+        recs_doc.get("recommendations")
+        if isinstance(recs_doc.get("recommendations"), list)
+        else []
+    )
+
+    technologies: list[dict[str, str]] = []
+    seen: set[str] = set()
+    repo_manifest = _load_json_object(parent / "graphs" / "repository-manifest.json") or {}
+    for row in repo_manifest.get("files") or []:
+        if not isinstance(row, dict):
+            continue
+        language = row.get("language")
+        if isinstance(language, str) and language.strip() and language not in seen:
+            seen.add(language)
+            technologies.append({"name": language, "category": "language"})
+
+    status = document.get("execution_status") or "completed"
+    assessment: dict[str, Any] = {
+        "status": status,
+        "summary": {
+            "finding_count": findings_doc.get("finding_count", len(findings)),
+            "recommendation_count": recs_doc.get("recommendation_count", len(recommendations)),
+            "ai_executed": False,
+            "status": status,
+        },
+        "findings": findings,
+        "recommendations": recommendations,
+        "technologies": technologies,
+        "ai": {"executed": False},
+    }
+    for spec in ASSESSMENT_HEAD_SPECS:
+        head_doc = _load_json_object(parent / "heads" / spec.heads_basename)
+        if head_doc is None:
+            continue
+        key = _HEAD_ID_TO_ASSESSMENT_KEY.get(spec.head_id, spec.head_id.replace("-", "_"))
+        assessment[key] = head_doc
+
+    merged = {
+        **document,
+        "status": status,
+        "findings": findings,
+        "recommendations": recommendations,
+        "technologies": technologies,
+        "assessment": assessment,
+    }
+    return merged
+
+
+def locate_persisted_assessment(artifact_dir: str | Path) -> Path:
+    """Return shipped ``assessment.json``, or legacy ``report.json`` if present."""
+
+    root = Path(artifact_dir)
+    current = sorted(path for path in root.rglob("assessment.json") if path.is_file())
+    if current:
+        return current[0]
+    legacy = sorted(path for path in root.rglob("report.json") if path.is_file())
+    if legacy:
+        return legacy[0]
+    raise FileNotFoundError(f"no assessment.json under {artifact_dir}")
+
+
+def load_emitted_assessment(artifact_dir: str | Path) -> tuple[Path, dict[str, Any]]:
+    """Load persisted 0.2.0 assessment.json and merge companion sidecars."""
+
+    path = locate_persisted_assessment(artifact_dir)
+    document = merge_persisted_sidecars(load_report_document(path), path)
+    return path, document
 
 
 def actual_from_report(
@@ -263,6 +385,7 @@ def actual_from_report(
         assessment_duration_ms=assessment_duration_ms,
         ai_executed=effective_ai,
         report_document=strip_volatile_fields(document),
+        persisted_layout=persisted_layout_for_document(document),
     )
 
 
@@ -310,11 +433,12 @@ def run_real_assessment(
 
     report_path = Path(result.json_report_path)
     if not report_path.is_file():
-        raise FileNotFoundError(f"report.json not produced at {report_path}")
+        raise FileNotFoundError(f"assessment.json not produced at {report_path}")
 
-    document = load_report_document(report_path)
+    document = merge_persisted_sidecars(load_report_document(report_path), report_path)
     artifact_paths = {
-        "report.json": str(report_path),
+        "assessment.json": str(report_path),
+        "assessment.html": str(result.html_report_path),
         "html": str(result.html_report_path),
     }
     if result.findings_artifact_path:

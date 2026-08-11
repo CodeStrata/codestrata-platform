@@ -14,7 +14,7 @@ class _FakeSM:
         self.values = values
         self.calls: list[str] = []
 
-    def get_secret_value(self, SecretId: str):  # noqa: N803
+    def get_secret_value(self, SecretId: str, VersionStage: str | None = None):  # noqa: N803
         self.calls.append(SecretId)
         if SecretId not in self.values:
             raise RuntimeError("ResourceNotFoundException")

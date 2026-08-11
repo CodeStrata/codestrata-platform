@@ -79,7 +79,6 @@ def test_production_wiring_files_have_no_reference_to_new_slice_8_4_symbols() ->
         COMMUNITY_CLOUD_API_PKG / "deployment" / "settings.py",
     )
     forbidden_tokens = (
-        "data_lake",
         "assessment_metadata_partitioning",
         "StreamPartitionPolicy",
         "project_assessment_metadata_storage_object",

@@ -29,16 +29,17 @@ def test_quarantine_modules_exist() -> None:
 
 
 def test_app_and_wiring_do_not_import_quarantine() -> None:
-    for path in (APP_PY, DEPLOYMENT_WIRING):
-        if not path.is_file():
-            continue
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ImportFrom) and node.module:
-                assert "quarantine" not in node.module
-                assert "data_lake" not in node.module or "infrastructure" not in (
-                    node.module or ""
-                )
+    app_tree = ast.parse(APP_PY.read_text(encoding="utf-8"), filename=str(APP_PY))
+    for node in ast.walk(app_tree):
+        if isinstance(node, ast.ImportFrom) and node.module:
+            assert "quarantine" not in node.module
+            assert "data_lake" not in node.module
+    wiring_tree = ast.parse(
+        DEPLOYMENT_WIRING.read_text(encoding="utf-8"), filename=str(DEPLOYMENT_WIRING)
+    )
+    for node in ast.walk(wiring_tree):
+        if isinstance(node, ast.ImportFrom) and node.module:
+            assert "quarantine" not in node.module
 
 
 def test_quarantine_domain_modules_do_not_import_boto3() -> None:

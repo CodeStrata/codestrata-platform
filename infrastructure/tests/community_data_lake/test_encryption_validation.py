@@ -22,5 +22,6 @@ def test_encryption_validation_error_message_mentions_future_kms() -> None:
     assert "future" in validation.lower() or "SSE-KMS" in validation
 
 
-def test_enable_ingestion_wire_still_false_alongside_encryption() -> None:
-    assert "var.enable_ingestion_wire == false" in _validation()
+def test_encryption_validation_does_not_force_ingestion_wire_off() -> None:
+    assert "var.enable_ingestion_wire == false" not in _validation()
+    assert 'var.encryption_mode == "sse_s3"' in _validation()

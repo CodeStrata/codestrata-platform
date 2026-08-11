@@ -38,16 +38,16 @@ def harness():
 
 def test_production_route_count_and_registry(harness) -> None:
     registry = harness.client.app.state.community_cloud_route_registry
-    assert registry.diagnostics().registered_route_count == 6
+    assert registry.diagnostics().registered_route_count == 19
     paths = {(r.method, r.path) for r in registry.list_routes()}
-    assert paths == {
+    assert {
         ("GET", "/health"),
         ("POST", "/telemetry"),
         ("POST", "/assessment-metadata"),
         ("POST", "/cli-events"),
         ("POST", "/extension-events"),
         ("POST", "/ai-usage"),
-    }
+    }.issubset(paths)
     assert harness.client.app.docs_url is None
     assert harness.client.app.openapi_url is None
 

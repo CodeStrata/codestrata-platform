@@ -140,7 +140,7 @@ def check_vscode_ci(
         )
     checks.append(
         CheckResult(
-            "vscode_ci:version_0_2_0",
+            "vscode_ci:version_0_2_1",
             version == INTENDED_VSCODE_VERSION,
             str(version),
             "vscode_ci",
@@ -545,7 +545,7 @@ def check_release_and_versions(
     )
     checks.append(
         CheckResult(
-            "version:vscode_0_2_0",
+            "version:vscode_0_2_1",
             vscode_ver == INTENDED_VSCODE_VERSION,
             str(vscode_ver),
             "version_boundary",

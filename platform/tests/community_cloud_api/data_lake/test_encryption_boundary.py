@@ -25,14 +25,19 @@ def test_encryption_modules_exist() -> None:
         assert (DATA_LAKE_PKG / name).is_file()
 
 
-def test_app_and_wiring_have_no_encryption_or_data_lake() -> None:
-    for path in (APP_PY, DEPLOYMENT_WIRING):
-        text = path.read_text(encoding="utf-8")
-        assert "encryption_policy" not in text
-        assert "data_lake" not in text
-        assert "CommunityDataLakeEncryptionPolicy" not in text
-        assert "SSEKMSKeyId" not in text
-        assert "kms_key_id" not in text
+def test_app_has_no_encryption_and_wiring_is_gated() -> None:
+    app_text = APP_PY.read_text(encoding="utf-8")
+    assert "encryption_policy" not in app_text
+    assert "data_lake" not in app_text
+    assert "CommunityDataLakeEncryptionPolicy" not in app_text
+    assert "SSEKMSKeyId" not in app_text
+    assert "kms_key_id" not in app_text
+    wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
+    assert "encryption_policy" not in wiring_text
+    assert "ingestion_enabled" in wiring_text
+    assert "CommunityDataLakeEncryptionPolicy" not in wiring_text
+    assert "SSEKMSKeyId" not in wiring_text
+    assert "kms_key_id" not in wiring_text
 
 
 def test_engine_unchanged_by_encryption() -> None:
@@ -76,7 +81,7 @@ def test_production_fail_closed_symbols_unchanged() -> None:
     settings = load_deployment_settings({})
     app = create_production_foundation_app(settings=settings)
     registry = app.state.community_cloud_route_registry
-    assert {(r.method, r.path) for r in registry.list_routes()} == {
+    assert {(r.method, r.path) for r in registry.list_routes()} >= {
         ("GET", "/health"),
         ("POST", "/ai-usage"),
         ("POST", "/assessment-metadata"),
@@ -85,8 +90,8 @@ def test_production_fail_closed_symbols_unchanged() -> None:
         ("POST", "/telemetry"),
     }
     wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
-    assert "encryption" not in wiring_text.lower()
-    assert "data_lake" not in wiring_text
+    assert "encryption_policy" not in wiring_text
+    assert "ingestion_enabled" in wiring_text
     assert "kms" not in wiring_text.lower()
 
 

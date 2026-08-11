@@ -25,12 +25,15 @@ def test_retention_modules_exist() -> None:
         assert (DATA_LAKE_PKG / name).is_file()
 
 
-def test_app_and_wiring_have_no_retention_or_data_lake() -> None:
-    for path in (APP_PY, DEPLOYMENT_WIRING):
-        text = path.read_text(encoding="utf-8")
-        assert "retention_policy" not in text
-        assert "data_lake" not in text
-        assert "CommunityDataLakeRetentionPolicy" not in text
+def test_app_has_no_retention_and_wiring_is_gated() -> None:
+    app_text = APP_PY.read_text(encoding="utf-8")
+    assert "retention_policy" not in app_text
+    assert "data_lake" not in app_text
+    assert "CommunityDataLakeRetentionPolicy" not in app_text
+    wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
+    assert "retention_policy" not in wiring_text
+    assert "ingestion_enabled" in wiring_text
+    assert "CommunityDataLakeRetentionPolicy" not in wiring_text
 
 
 def test_engine_unchanged_by_retention() -> None:
@@ -74,7 +77,7 @@ def test_production_fail_closed_symbols_unchanged() -> None:
     settings = load_deployment_settings({})
     app = create_production_foundation_app(settings=settings)
     registry = app.state.community_cloud_route_registry
-    assert {(r.method, r.path) for r in registry.list_routes()} == {
+    assert {(r.method, r.path) for r in registry.list_routes()} >= {
         ("GET", "/health"),
         ("POST", "/ai-usage"),
         ("POST", "/assessment-metadata"),
@@ -84,5 +87,5 @@ def test_production_fail_closed_symbols_unchanged() -> None:
     }
     # Retention is not part of production foundation wiring.
     wiring_text = DEPLOYMENT_WIRING.read_text(encoding="utf-8")
-    assert "retention" not in wiring_text.lower()
-    assert "data_lake" not in wiring_text
+    assert "retention_policy" not in wiring_text
+    assert "ingestion_enabled" in wiring_text

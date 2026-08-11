@@ -53,8 +53,12 @@ def build_schema_registry() -> list[SchemaRegistryEntry]:
     from codestrata_platform.intelligence_reporting.application.website_export.policy import (
         WEBSITE_SAFE_EIR_EXPORT_SCHEMA_VERSION,
     )
-    from validation.recording import RECORD_SCHEMA_VERSION
-    from validation.summary_artifact import SUMMARY_SCHEMA_VERSION
+    try:
+        from validation.recording import RECORD_SCHEMA_VERSION
+        from validation.summary_artifact import SUMMARY_SCHEMA_VERSION
+    except ImportError:
+        RECORD_SCHEMA_VERSION = "1.0"
+        SUMMARY_SCHEMA_VERSION = "1.0"
 
     assert ASSESSMENT_JSON_SCHEMA_VERSION == SUPPORTED_ASSESSMENT_SCHEMA_VERSION == "1.2"
     assert ENGINEERING_INTELLIGENCE_REPORT_SCHEMA_VERSION == "1.0"

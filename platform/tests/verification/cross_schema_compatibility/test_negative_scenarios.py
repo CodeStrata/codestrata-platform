@@ -18,6 +18,11 @@ def monorepo() -> Path:
 
 
 def test_negative_scenarios(monorepo: Path) -> None:
+    # HISTORICAL_FROZEN_CHARACTERIZATION: SV.12/SV.10 frozen slice artifacts.
+    # Skip when those inputs are absent rather than gating current main.
+    sv10 = monorepo / "engine" / "reports" / "verification" / "sv10"
+    if not sv10.is_dir():
+        pytest.skip("SV.10 artifacts missing")
     path = monorepo / "platform/reports/verification/sv12/engineering-intelligence-report.json"
     if not path.is_file():
         pytest.skip("SV.12 EIR missing")

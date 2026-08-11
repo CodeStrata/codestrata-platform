@@ -67,11 +67,17 @@ def check_structure() -> list[CheckResult]:
             name="structure:known_modules_only",
             ok=list((root / "modules").iterdir())
             and all(
-                p.name in {"community-cloud-api", "community-data-lake"}
+                p.name
+                in {
+                    "community-cloud-api",
+                    "community-data-lake",
+                    "community-report-artifacts",
+                    "community-insights-auth",
+                }
                 for p in (root / "modules").iterdir()
                 if p.is_dir()
             ),
-            detail="community-cloud-api, community-data-lake",
+            detail="community-cloud-api, community-data-lake, community-report-artifacts, community-insights-auth",
             category="structure",
         ),
         CheckResult(

@@ -29,6 +29,12 @@ TARGET_MANIFEST_SCHEMAS = {
     "insights": "insights-repository-export-manifest:1.0.0",
 }
 
+# Community staging may include private mirrors. Presence there is not public source.
+PUBLIC_SOURCE_EXPORTS = frozenset({"codestrata-engine", "codestrata-examples"})
+PRIVATE_COMMUNITY_MIRRORS = frozenset(
+    {"codestrata-vscode", "codestrata-platform", "codestrata-docs"}
+)
+
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 
 

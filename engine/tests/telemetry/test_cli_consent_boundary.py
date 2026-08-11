@@ -89,6 +89,7 @@ def test_A_conflict_cli_exits_before_assessment(tmp_path: Path) -> None:
     )
     assert result.exit_code == 2
     assert TELEMETRY_FLAG_CONFLICT_MESSAGE in (result.stdout + result.stderr)
+    assert not out.exists() or not any(out.rglob("assessment.json"))
     assert not out.exists() or not any(out.rglob("report.json"))
 
 

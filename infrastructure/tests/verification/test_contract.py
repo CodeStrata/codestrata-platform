@@ -17,6 +17,6 @@ def test_contract_constants() -> None:
         == "platform-deployment-foundation-verification"
     )
     assert PLATFORM_DEPLOYMENT_FOUNDATION_VERIFICATION_VERSION == "1.0.0"
-    assert DEPLOYMENT_MODE == "production_foundation"
-    assert AUTHENTICATION_MODE == "enabled_verifier_unavailable"
+    assert DEPLOYMENT_MODE == "production_ingestion"
+    assert AUTHENTICATION_MODE == "enabled_secrets_manager_verifier"
     assert REQUIRED_OPENTOFU == ">= 1.6.0"

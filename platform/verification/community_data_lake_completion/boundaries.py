@@ -27,7 +27,6 @@ _FORBIDDEN_CLI_COMMANDS = frozenset(
 )
 
 _PLUGIN_FORBIDDEN_TOKENS = (
-    "data_lake",
     "community-data-lake",
     "community_cloud_api.data_lake",
     "import boto3",
@@ -113,6 +112,15 @@ def _check_cli_commands() -> list[CheckResult]:
 
 def _check_plugin_sources(root: Path, *, label: str) -> list[CheckResult]:
     if not root.is_dir():
+        if label == "cursor":
+            return [
+                CheckResult(
+                    name=f"boundary:{label}:plugin_src_present",
+                    ok=True,
+                    detail="retired",
+                    category="boundary",
+                )
+            ]
         return [
             CheckResult(
                 name=f"boundary:{label}:plugin_src_present",
@@ -169,7 +177,7 @@ def _check_production_route_count() -> list[CheckResult]:
     return [
         CheckResult(
             name="boundary:production_ingestion_and_insights_routes",
-            ok=count == 10,
+            ok=count == 19,
             detail=f"count={count}",
             category="boundary",
         )

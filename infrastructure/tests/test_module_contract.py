@@ -16,10 +16,10 @@ def _read(*parts: str) -> str:
 def test_production_uses_module_and_label() -> None:
     main = _read("production", "main.tf")
     assert 'module "community_cloud_api"' in main
-    assert 'environment_name         = "production"' in main
-    assert 'deployment_mode          = "production_foundation"' in main
-    assert "enable_ingestion         = false" in main
-    assert 'authentication_mode      = "enabled_verifier_unavailable"' in main
+    assert 'environment_name                = "production"' in main
+    assert 'deployment_mode                 = "production_ingestion"' in main
+    assert "enable_ingestion                = true" in main
+    assert 'authentication_mode             = "enabled_secrets_manager_verifier"' in main
 
 
 def test_outputs_are_safe() -> None:
@@ -121,7 +121,7 @@ def test_configuration_fail_closed() -> None:
     assert "CODESTRATA_DEPLOYMENT_MODE" in config
     assert "CODESTRATA_AUTHENTICATION_ENABLED" in config
     assert "CODESTRATA_INGESTION_ENABLED" in config
-    assert "No secrets" in config
+    assert "No secret VALUES" in config
 
 
 def test_iam_least_privilege() -> None:

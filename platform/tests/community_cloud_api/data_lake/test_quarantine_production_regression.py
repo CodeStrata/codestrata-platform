@@ -21,9 +21,9 @@ def test_enable_ingestion_wire_remains_false_in_module_defaults() -> None:
     assert "default     = false" in variables
 
 
-def test_production_composition_keeps_ingestion_wire_disabled() -> None:
+def test_production_composition_enables_ingestion_wire() -> None:
     blob = (PROD / "community-data-lake.tf").read_text(encoding="utf-8")
-    assert "enable_ingestion_wire = false" in blob
+    assert "enable_ingestion_wire = true" in blob
 
 
 def test_quarantine_writer_policy_still_unattached() -> None:

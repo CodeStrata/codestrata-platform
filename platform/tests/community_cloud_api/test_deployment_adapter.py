@@ -45,7 +45,7 @@ def test_load_settings_rejects_auth_disabled() -> None:
 def test_production_app_health_and_route_count() -> None:
     app = create_production_foundation_app(settings=load_deployment_settings({}))
     registry = app.state.community_cloud_route_registry
-    assert registry.diagnostics().registered_route_count == 10
+    assert registry.diagnostics().registered_route_count == 19
     assert app.docs_url is None
     assert app.openapi_url is None
 
@@ -94,7 +94,7 @@ def test_lambda_handler_import_and_app() -> None:
     app = lambda_handler.get_app()
     assert (
         app.state.community_cloud_route_registry.diagnostics().registered_route_count
-        == 10
+        == 19
     )
     pytest.importorskip("mangum")
     handler = lambda_handler.get_handler()

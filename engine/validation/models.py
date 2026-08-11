@@ -332,6 +332,9 @@ class ActualAssessmentResult(BaseModel):
     assessment_duration_ms: float | None = None
     ai_executed: bool = False
     report_document: dict[str, Any] = Field(default_factory=dict)
+    # ACTIVE_0_2_0_RELEASE_GATE: "manifest_0_2_0" means on-disk assessment.json
+    # is the lightweight manifest (not legacy full report.json).
+    persisted_layout: str = "full_report_json"
 
 
 class ComparisonMismatch(BaseModel):

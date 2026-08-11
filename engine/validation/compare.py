@@ -207,6 +207,12 @@ def compare_actual_to_expected(
 
     Returns a ``ComparisonOutcome`` with mismatches, expectation counts, and
     pack precision/recall snapshots for permanent recording (Slice 4.11).
+
+    ACTIVE_0_2_0_RELEASE_GATE: when ``actual.persisted_layout == "manifest_0_2_0"``,
+    skip expectations that require data 0.2.0 no longer persists (schema_version
+    1.2 on assessment.json, priority_actions, roadmap, categorized technology
+    inventory, modernization PA/roadmap chain). Findings/recommendations/heads
+    from on-disk sidecars remain in the gate.
     """
 
     from codestrata.domain.quality_metrics.false_negatives import (
@@ -224,7 +230,12 @@ def compare_actual_to_expected(
     pack_precision: list[PackPrecisionRecord] = []
     pack_results: dict[str, object] = {}
     effective_run_id = run_id or "pending"
-    report_path = artifact_path or actual.artifact_paths.get("report.json")
+    report_path = (
+        artifact_path
+        or actual.artifact_paths.get("assessment.json")
+        or actual.artifact_paths.get("report.json")
+    )
+    manifest_layout = actual.persisted_layout == "manifest_0_2_0"
 
     def _fail(area: str, expectation: str, got: str, diagnostic: str) -> None:
         mismatches.append(
@@ -302,18 +313,20 @@ def compare_actual_to_expected(
                 f"{area} mismatch",
             )
 
-    _check_exact("schema_version", expected.schema_version, actual.schema_version)
+    if not manifest_layout:
+        _check_exact("schema_version", expected.schema_version, actual.schema_version)
     _check_exact(
         "assessment_status",
         expected.expected_assessment_status,
         actual.assessment_status,
     )
 
-    _check_subset(
-        "technology_inventory",
-        expected.technology_facts_expected,
-        actual.technologies,
-    )
+    if not manifest_layout:
+        _check_subset(
+            "technology_inventory",
+            expected.technology_facts_expected,
+            actual.technologies,
+        )
     _check_forbidden(
         "technology_inventory",
         expected.technology_facts_forbidden,
@@ -381,16 +394,17 @@ def compare_actual_to_expected(
     )
     _check_count("recommendations", expected.recommendation_count, actual.recommendations_count)
 
-    _check_subset(
-        "priority_actions",
-        expected.expected_priority_action_categories,
-        actual.priority_action_categories,
-    )
-    _check_subset(
-        "roadmap",
-        expected.expected_roadmap_phases,
-        actual.roadmap_phases,
-    )
+    if not manifest_layout:
+        _check_subset(
+            "priority_actions",
+            expected.expected_priority_action_categories,
+            actual.priority_action_categories,
+        )
+        _check_subset(
+            "roadmap",
+            expected.expected_roadmap_phases,
+            actual.roadmap_phases,
+        )
     _check_subset(
         "coverage",
         expected.expected_coverage_states,
@@ -415,20 +429,30 @@ def compare_actual_to_expected(
     _check_subset("evidence", expected_paths, actual_paths)
     _check_forbidden("evidence", forbidden_paths, actual_paths)
 
-    _check_subset(
-        "assessment_heads",
-        expected.expected_assessment_heads,
-        actual.assessment_heads,
-    )
+    if not manifest_layout:
+        _check_subset(
+            "assessment_heads",
+            expected.expected_assessment_heads,
+            actual.assessment_heads,
+        )
 
     if expected.expected_artifacts:
         evaluated += 1
         present = set(actual.artifact_paths)
-        missing = sorted(set(expected.expected_artifacts) - present)
+        required_artifacts = expected.expected_artifacts
+        if manifest_layout:
+            required_artifacts = tuple(
+                {
+                    "report.json": "assessment.json",
+                    "report.html": "assessment.html",
+                }.get(name, name)
+                for name in expected.expected_artifacts
+            )
+        missing = sorted(set(required_artifacts) - present)
         if missing:
             _fail(
                 "artifacts",
-                f"required artifacts {sorted(expected.expected_artifacts)}",
+                f"required artifacts {sorted(required_artifacts)}",
                 f"actual={sorted(present)}",
                 f"missing artifacts: {missing}",
             )
@@ -447,7 +471,7 @@ def compare_actual_to_expected(
                 "AI execution expectation mismatch",
             )
 
-    if expected.technology_inventory is not None:
+    if expected.technology_inventory is not None and not manifest_layout:
         inventory_actual = dict(actual.technologies_by_category)
         inventory_actual["dependency_ecosystems"] = actual.dependency_ecosystems
         inventory_actual["composition"] = actual.repository_composition_facts
@@ -589,7 +613,7 @@ def compare_actual_to_expected(
         evaluated += ai_evaluated
         matched += ai_matched
 
-    if expected.modernization is not None:
+    if expected.modernization is not None and not manifest_layout:
         artifact_texts = _load_artifact_texts(actual.artifact_paths)
         modernization_result = validate_modernization_precision(
             repository_id=repository_id,

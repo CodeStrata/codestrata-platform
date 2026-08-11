@@ -86,9 +86,14 @@ def check_infrastructure_static() -> list[CheckResult]:
             category="infrastructure",
         ),
         CheckResult(
-            name="infra:iam_no_list_bucket",
-            ok="s3:ListBucket" not in iam and "s3:listbucket" not in iam.lower(),
-            detail="no ListBucket",
+            name="infra:iam_list_bucket_prefix_scoped",
+            ok=(
+                "s3:ListBucket" in iam
+                and "ListApprovedWriterPrefixes" in iam
+                and "s3:prefix" in iam
+                and "s3:listallmybuckets" not in iam.lower()
+            ),
+            detail="prefix-scoped ListBucket",
             category="infrastructure",
         ),
         CheckResult(
@@ -112,9 +117,9 @@ def check_infrastructure_static() -> list[CheckResult]:
             category="infrastructure",
         ),
         CheckResult(
-            name="infra:production_enable_ingestion_wire_false",
-            ok="enable_ingestion_wire = false" in prod_lake,
-            detail="disabled",
+            name="infra:production_enable_ingestion_wire_true",
+            ok="enable_ingestion_wire = true" in prod_lake,
+            detail="enabled",
             category="infrastructure",
         ),
         CheckResult(

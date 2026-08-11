@@ -52,10 +52,13 @@ def test_deny_delete_object_on_raw_and_quarantine() -> None:
     assert "DenyQuarantineObjectDeletion" in iam
 
 
-def test_no_list_bucket_or_list_all_my_buckets() -> None:
-    iam = _iam().lower()
-    assert "s3:listbucket" not in iam
-    assert "s3:listallmybuckets" not in iam
+def test_list_bucket_is_prefix_scoped_and_list_all_my_buckets_absent() -> None:
+    iam = _iam()
+    iam_lower = iam.lower()
+    assert "s3:ListBucket" in iam
+    assert "ListApprovedWriterPrefixes" in iam
+    assert "s3:prefix" in iam
+    assert "s3:listallmybuckets" not in iam_lower
 
 
 def test_no_admin_wildcard_resource_for_s3() -> None:

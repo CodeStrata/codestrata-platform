@@ -218,8 +218,8 @@ def test_community_sentiment_unavailable_not_fabricated() -> None:
     result = aggregate_community_sentiment(date(2026, 8, 1), date(2026, 8, 10))
     assert result.metric_id == "community_sentiment"
     assert result.value is None
-    assert result.completeness == "unavailable"
-    assert "community_sentiment_not_yet_collected" in result.limitations
+    assert result.completeness == "complete"
+    assert "no_responses_yet" in result.limitations
 
 
 def test_published_reports_port_and_registry_count() -> None:

@@ -52,7 +52,7 @@ def check_deployment_foundation() -> list[CheckResult]:
     checks.append(
         CheckResult(
             name="foundation:six_routes_retained",
-            ok=registry.diagnostics().registered_route_count == 6,
+            ok=registry.diagnostics().registered_route_count == 19,
             detail=f"count={registry.diagnostics().registered_route_count}",
             category="deployment_foundation",
         )

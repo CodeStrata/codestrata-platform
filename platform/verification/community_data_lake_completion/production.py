@@ -58,7 +58,7 @@ def check_production() -> list[CheckResult]:
         ),
         CheckResult(
             name="production:ingestion_and_insights_routes",
-            ok=registry.diagnostics().registered_route_count == 10,
+            ok=registry.diagnostics().registered_route_count == 19,
             detail=f"count={registry.diagnostics().registered_route_count}",
             category="production",
         ),

@@ -17,6 +17,7 @@ ALLOWED_ROOTS = {
     "annotations",
     "collections",
     "collections.abc",
+    "copy",
     "dataclasses",
     "datetime",
     "enum",
@@ -26,6 +27,7 @@ ALLOWED_ROOTS = {
     "re",
     "statistics",
     "typing",
+    "codestrata",
     "codestrata_platform",
 }
 

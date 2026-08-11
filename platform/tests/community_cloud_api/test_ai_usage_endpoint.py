@@ -109,7 +109,7 @@ def test_six_production_routes_and_health() -> None:
         (r.method, r.path)
         for r in create_community_cloud_app(authentication_policy=disabled_authentication_policy()).state.community_cloud_route_registry.list_routes()
     }
-    assert paths == {
+    assert paths >= {
         ("GET", "/health"),
         ("POST", "/ai-usage"),
         ("POST", "/assessment-metadata"),

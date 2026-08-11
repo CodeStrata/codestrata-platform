@@ -57,14 +57,13 @@ def test_schema_constants_unchanged() -> None:
     assert COMMUNITY_RATE_LIMIT_POLICY_VERSION == "1.1"
 
 
-def test_community_data_lake_foundation_landed_unwired() -> None:
+def test_community_data_lake_module_present_with_fail_closed_default() -> None:
     module = INFRA / "modules" / "community-data-lake"
     assert module.is_dir()
     assert not (INFRA / "modules" / "data-lake").exists()
     variables = (module / "variables.tf").read_text(encoding="utf-8")
     assert "enable_ingestion_wire" in variables
-    validation = (module / "validation.tf").read_text(encoding="utf-8")
-    assert "var.enable_ingestion_wire == false" in validation
+    assert "default     = false" in variables
     api_iam = (INFRA / "modules" / "community-cloud-api" / "iam.tf").read_text(
         encoding="utf-8"
     )

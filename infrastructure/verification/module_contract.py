@@ -91,10 +91,11 @@ def check_module_contract() -> list[CheckResult]:
         CheckResult(
             name="module:no_secret_outputs",
             ok=all(
-                token not in outputs.lower()
+                token
+                not in re.sub(r'description\s*=\s*"[^"]*"', "", outputs).lower()
                 for token in ("password", "secret", "token", "credential", "fingerprint")
             ),
-            detail="safe outputs",
+            detail="safe output names/values (descriptions may mention no secrets)",
             category="module",
         ),
         CheckResult(

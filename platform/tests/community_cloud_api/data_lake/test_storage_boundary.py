@@ -103,18 +103,18 @@ def test_data_lake_storage_error_carries_category_and_safe_code() -> None:
     assert str(error) == "storage_access_denied"
 
 
-def test_infrastructure_package_not_referenced_by_production_wiring_files() -> None:
+def test_infrastructure_package_not_referenced_by_app_or_registry() -> None:
     targets = (
         COMMUNITY_CLOUD_API_PKG / "app.py",
         COMMUNITY_CLOUD_API_PKG / "registry.py",
-        COMMUNITY_CLOUD_API_PKG / "deployment" / "wiring.py",
-        COMMUNITY_CLOUD_API_PKG / "deployment" / "settings.py",
     )
     offenders = []
     for target in targets:
         text = target.read_text(encoding="utf-8")
         if "data_lake" in text or "boto3" in text or "S3Store" in text:
             offenders.append(str(target.relative_to(REPO_ROOT)))
+    wiring = COMMUNITY_CLOUD_API_PKG / "deployment" / "wiring.py"
+    assert "ingestion_enabled" in wiring.read_text(encoding="utf-8")
     assert offenders == []
 
 

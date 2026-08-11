@@ -62,8 +62,6 @@ def test_community_cloud_api_module_unaffected_by_retention() -> None:
     assert "community-data-lake" not in blob
 
 
-def test_enable_ingestion_wire_still_false() -> None:
+def test_enable_ingestion_wire_defaults_false() -> None:
     variables = (LAKE_MODULE / "variables.tf").read_text(encoding="utf-8")
-    validation = (LAKE_MODULE / "validation.tf").read_text(encoding="utf-8")
     assert "default     = false" in variables
-    assert "var.enable_ingestion_wire == false" in validation

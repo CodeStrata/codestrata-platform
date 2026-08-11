@@ -549,7 +549,9 @@ def discover_ai_readiness_artifact_paths(report_path: Path) -> dict[str, str]:
 
     found: dict[str, str] = {}
     parent = report_path.parent
-    assessment = parent / "ai-readiness-assessment.json"
+    assessment = parent / "heads" / "ai.json"
+    if not assessment.is_file():
+        assessment = parent / "ai-readiness-assessment.json"
     evidence = parent / "repository-ai-readiness-evidence.json"
     if assessment.is_file():
         found["ai-readiness-assessment.json"] = str(assessment)

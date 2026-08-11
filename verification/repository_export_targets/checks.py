@@ -11,6 +11,8 @@ from pathlib import Path
 
 from verification.repository_export_targets.contract import (
     AUTHORITATIVE_COMMAND,
+    PRIVATE_COMMUNITY_MIRRORS,
+    PUBLIC_SOURCE_EXPORTS,
     SUPPORTED_TARGETS,
     TARGET_MANIFEST_SCHEMAS,
     TARGET_VISIBILITY,
@@ -246,12 +248,33 @@ def check_dry_run_and_exports(monorepo: Path) -> tuple[list[CheckResult], list[D
         )
         checks.append(
             CheckResult(
-                "infra:no_engine_platform",
-                not (ia / "engine").exists()
-                and not (ia / "platform").exists()
-                and not (ia / "vscode-plugin").exists()
-                and not (ia / "cursor-plugin").exists(),
-                "product trees absent",
+                "infra:no_engine",
+                not (ia / "engine").exists(),
+                "engine tree absent",
+                "isolation",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "infra:no_platform",
+                not (ia / "platform").exists(),
+                "platform tree absent",
+                "isolation",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "infra:no_vscode",
+                not (ia / "vscode-plugin").exists() and not (ia / "codestrata-vscode").exists(),
+                "vscode tree absent",
+                "isolation",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "infra:no_cursor",
+                not (ia / "cursor-plugin").exists() and not (ia / "codestrata-cursor").exists(),
+                "cursor tree absent",
                 "isolation",
             )
         )
@@ -281,18 +304,21 @@ def check_dry_run_and_exports(monorepo: Path) -> tuple[list[CheckResult], list[D
                 "community",
             )
         )
-        expected_repos = {
-            "codestrata-engine",
-            "codestrata-examples",
-            "codestrata-vscode",
-            "codestrata-docs",
-        }
+        expected_repos = PUBLIC_SOURCE_EXPORTS | PRIVATE_COMMUNITY_MIRRORS
         repos_a = {p.name for p in ca.iterdir() if p.is_dir()}
         checks.append(
             CheckResult(
                 "community:repo_set",
                 expected_repos <= repos_a,
                 f"count={len(repos_a)}",
+                "community",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "community:public_source_engine_examples",
+                PUBLIC_SOURCE_EXPORTS <= repos_a,
+                "engine+examples present",
                 "community",
             )
         )
@@ -315,17 +341,37 @@ def check_dry_run_and_exports(monorepo: Path) -> tuple[list[CheckResult], list[D
                 "isolation",
             )
         )
+        def _has_platform_runtime(repo_name: str) -> bool:
+            root = ca / repo_name
+            return (
+                (root / "platform" / "src").exists()
+                or (root / "platform" / "deployment").exists()
+                or (root / "src" / "codestrata_platform").exists()
+            )
+
         checks.append(
             CheckResult(
-                "community:no_platform_runtime",
-                not any(
-                    (ca / name / "platform" / "src").exists()
-                    or (ca / name / "platform" / "deployment").exists()
-                    or (ca / name / "src" / "codestrata_platform").exists()
-                    for name in repos_a
-                ),
-                "no platform runtime package",
+                "community:no_platform_in_public_source",
+                not any(_has_platform_runtime(name) for name in PUBLIC_SOURCE_EXPORTS),
+                "engine/examples have no platform runtime",
                 "isolation",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "community:private_platform_mirror_allowed",
+                (ca / "codestrata-platform").is_dir()
+                and _has_platform_runtime("codestrata-platform"),
+                "private platform mirror may contain runtime",
+                "community",
+            )
+        )
+        checks.append(
+            CheckResult(
+                "community:vscode_is_private_mirror",
+                (ca / "codestrata-vscode").is_dir(),
+                "vscode staged as private mirror, not public source",
+                "community",
             )
         )
         # Deterministic engine README presence
@@ -602,7 +648,13 @@ def check_boundaries(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
     return checks, defects
 
 
-def check_visibility() -> tuple[list[CheckResult], list[Defect]]:
+def check_visibility(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
+    import yaml
+
+    pem = yaml.safe_load((monorepo / "public-export-manifest.yaml").read_text(encoding="utf-8"))
+    exports = {str(e.get("name")): str(e.get("visibility") or "") for e in pem.get("exports") or []}
+    public_names = {name for name, vis in exports.items() if vis == "public"}
+    private_mirrors = {name for name in PRIVATE_COMMUNITY_MIRRORS if exports.get(name) == "private"}
     checks = [
         CheckResult(
             "visibility:map",
@@ -610,6 +662,24 @@ def check_visibility() -> tuple[list[CheckResult], list[Defect]]:
             and TARGET_VISIBILITY["infrastructure"] == "private",
             "documented",
             "visibility",
-        )
+        ),
+        CheckResult(
+            "visibility:public_source_engine_examples_only",
+            public_names == set(PUBLIC_SOURCE_EXPORTS),
+            f"public={sorted(public_names)}",
+            "visibility",
+        ),
+        CheckResult(
+            "visibility:vscode_platform_docs_private",
+            private_mirrors == set(PRIVATE_COMMUNITY_MIRRORS),
+            f"private_mirrors={sorted(private_mirrors)}",
+            "visibility",
+        ),
+        CheckResult(
+            "visibility:vscode_not_public_source",
+            exports.get("codestrata-vscode") == "private",
+            str(exports.get("codestrata-vscode")),
+            "visibility",
+        ),
     ]
     return checks, []

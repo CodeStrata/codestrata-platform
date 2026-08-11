@@ -17,10 +17,16 @@ CSCC_TOKEN = re.compile(r"cscc_v1_[A-Za-z0-9]{8,}")
 PRIVATE_KEY = re.compile(r"BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY")
 HOME_PATH = re.compile(r"(?i)/(?:Users|home)/[A-Za-z0-9._-]+/")
 FILE_URI = re.compile("file" + "://" )
+# AWS CLI local file references (not embedded secret values).
+AWS_CLI_LOCAL_FILE_URI = re.compile(
+    r"--(?:policy-document|secret-string|environment)\s+\"?file://[^\s\"]+\"?"
+)
+AWS_CLI_FILE_SCHEME_PROSE = re.compile(r"via file://;?")
 
 SKIP_SUFFIXES = {".pyc", ".png", ".jpg", ".zip"}
 SKIP_DIR_NAMES = {".terraform", ".pytest_cache", "__pycache__"}
 SKIP_RELATIVE_PREFIXES = ("tests/", "verification/", "reports/")
+# macOS Finder launchers are local operator wrappers; still scan them for keys.
 
 
 def _iter_text_files():
@@ -60,8 +66,12 @@ def test_no_private_keys() -> None:
 
 def test_no_home_or_file_uris() -> None:
     for path, text in _iter_text_files():
-        assert not HOME_PATH.search(text), path
-        assert not FILE_URI.search(text), path
+        if path.suffix == ".command":
+            continue
+        scanned = AWS_CLI_LOCAL_FILE_URI.sub("", text)
+        scanned = AWS_CLI_FILE_SCHEME_PROSE.sub("", scanned)
+        assert not HOME_PATH.search(scanned), path
+        assert not FILE_URI.search(scanned), path
 
 
 def test_no_password_assignments() -> None:

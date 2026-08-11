@@ -26,25 +26,27 @@ def test_community_cloud_api_foundation_iam_has_no_s3_permissions() -> None:
     assert "s3:" not in iam
 
 
-def test_production_enable_ingestion_wire_false() -> None:
+def test_production_enable_ingestion_wire_true() -> None:
     text = (PRODUCTION / "community-data-lake.tf").read_text(encoding="utf-8")
-    assert "enable_ingestion_wire = false" in text
+    assert "enable_ingestion_wire = true" in text
 
 
-def test_no_data_lake_env_vars_in_community_cloud_api_module() -> None:
+def test_data_lake_env_vars_gated_on_enable_ingestion() -> None:
+    config = (API_MODULE / "configuration.tf").read_text(encoding="utf-8")
+    assert "CODESTRATA_DATA_LAKE_ADAPTER" in config
+    assert "CODESTRATA_DATA_LAKE_BUCKET" in config
+    assert "var.enable_ingestion" in config
     blob = _blob(API_MODULE)
-    assert "DATA_LAKE" not in blob
     assert "community-data-lake" not in blob
     assert "community_data_lake" not in blob
 
 
-def test_production_runtime_security_reader_without_writer_attachment() -> None:
+def test_production_runtime_security_attaches_writer_for_ingestion() -> None:
     text = (PRODUCTION / "runtime-security.tf").read_text(encoding="utf-8")
+    main = (PRODUCTION / "main.tf").read_text(encoding="utf-8")
     assert "codestrata-community-insights-production-reader" in text
     assert "codestrata-community-insights-production-secrets" in text
     assert "aws_iam_role_policy_attachment" in text
-    assert "writer" not in text.lower() or "NOT attached" in text or "not attached" in text.lower()
-    assert "aws_iam_role_policy_attachment" in text
-    # Writer policy name must not be attached in this file.
-    assert "codestrata-community-data-lake-production-writer" not in text
-    assert "enable_ingestion" not in text or "false" in (PRODUCTION / "main.tf").read_text(encoding="utf-8")
+    assert "lambda_data_lake_writer" in text
+    assert "module.community_data_lake.writer_policy_arn" in text
+    assert "enable_ingestion                = true" in main

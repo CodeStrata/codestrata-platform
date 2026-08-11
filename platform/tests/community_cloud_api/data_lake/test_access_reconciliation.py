@@ -56,10 +56,13 @@ def test_deny_delete_on_both_prefixes() -> None:
     assert "s3:DeleteObjectVersion" in iam
 
 
-def test_no_list_bucket_or_list_all_my_buckets_in_iam() -> None:
-    iam = _read(MODULE, "iam.tf").lower()
-    assert "s3:listbucket" not in iam
-    assert "s3:listallmybuckets" not in iam
+def test_list_bucket_is_prefix_scoped_and_list_all_my_buckets_absent() -> None:
+    iam = _read(MODULE, "iam.tf")
+    iam_lower = iam.lower()
+    assert "s3:ListBucket" in iam
+    assert "ListApprovedWriterPrefixes" in iam
+    assert "s3:prefix" in iam
+    assert "s3:listallmybuckets" not in iam_lower
 
 
 def test_no_kms_in_iam() -> None:
@@ -81,9 +84,9 @@ def test_s3_store_uses_put_object_and_head_object_only() -> None:
     assert "delete_object" not in source
 
 
-def test_production_enable_ingestion_wire_false() -> None:
+def test_production_enable_ingestion_wire_true() -> None:
     text = _read(PRODUCTION, "community-data-lake.tf")
-    assert "enable_ingestion_wire = false" in text
+    assert "enable_ingestion_wire = true" in text
 
 
 def test_community_cloud_api_has_no_s3_or_data_lake() -> None:
@@ -124,11 +127,12 @@ def test_platform_allowed_actions_match_iam_put_get() -> None:
         assert action in iam
 
 
-def test_no_data_lake_env_vars_in_community_cloud_api_lambda() -> None:
+def test_data_lake_env_vars_are_gated_by_enable_ingestion() -> None:
     lambda_tf = _read(API_MODULE, "lambda.tf")
     assert "DATA_LAKE" not in lambda_tf
     config = _read(API_MODULE, "configuration.tf")
-    assert "DATA_LAKE" not in config
+    assert "CODESTRATA_DATA_LAKE_BUCKET" in config
+    assert "var.enable_ingestion ?" in config
 
 
 def test_writer_policy_name_output_present() -> None:

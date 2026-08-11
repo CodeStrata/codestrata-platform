@@ -47,7 +47,7 @@ jobs:
           python -m pip install -e "./engine[dev]"
       - name: Engine unit tests (focused)
         working-directory: engine
-        run: python -m pytest tests -q --tb=line -x -q --maxfail=5
+        run: python -m pytest tests -q --tb=line -x -q --maxfail=5 --import-mode=importlib
         continue-on-error: false
 
   platform-tests:
@@ -64,11 +64,13 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: |
+            engine/pyproject.toml
             platform/pyproject.toml
             pyproject.toml
       - name: Install Platform test dependencies
         run: |
           python -m pip install -U pip
+          python -m pip install -e "./engine[dev]"
           python -m pip install -e "./platform[dev]"
       - name: Platform unit tests (focused)
         working-directory: platform

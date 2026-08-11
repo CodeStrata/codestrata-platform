@@ -397,7 +397,9 @@ def discover_dependency_artifact_paths(report_path: Path) -> dict[str, str]:
 
     found: dict[str, str] = {}
     parent = report_path.parent
-    assessment = parent / "dependency-assessment.json"
+    assessment = parent / "heads" / "dependencies.json"
+    if not assessment.is_file():
+        assessment = parent / "dependency-assessment.json"
     evidence = parent / "dependency-evidence.json"
     if assessment.is_file():
         found["dependency-assessment.json"] = str(assessment)

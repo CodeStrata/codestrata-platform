@@ -96,6 +96,12 @@ def test_vscode_and_cursor_extensions_unchanged() -> None:
         if not root.exists():
             continue
         for path in list(root.rglob("*.ts")) + list(root.rglob("*.js")):
+            if not path.is_file() or "node_modules" in path.parts:
+                continue
+            if "out" in path.parts or "dist" in path.parts:
+                continue
+            if path.name in {"publicApiAuthority.ts", "publicApiAuthority.js"}:
+                continue
             text = path.read_text(encoding="utf-8")
             for needle in needles:
                 assert needle not in text, f"{path}:{needle}"
@@ -138,7 +144,7 @@ def test_deployment_adapter_still_fail_closed_for_ingestion() -> None:
     blocked = client.post("/api/v1/telemetry", json=valid_telemetry_body())
     assert blocked.status_code == 503
     assert blocked.json()["error"]["code"] == ERROR_AUTHENTICATION_UNAVAILABLE
-    assert app.state.community_cloud_route_registry.diagnostics().registered_route_count == 6
+    assert app.state.community_cloud_route_registry.diagnostics().registered_route_count == 19
 
 
 def test_schema_and_policy_versions_unchanged() -> None:

@@ -13,8 +13,8 @@ PLATFORM_DEPLOYMENT_FOUNDATION_VERIFICATION_VERSION = "1.0.0"
 MODULE_NAME = "community-cloud-api"
 DATA_LAKE_MODULE_NAME = "community-data-lake"
 ENVIRONMENT_NAME = "production"
-DEPLOYMENT_MODE = "production_foundation"
-AUTHENTICATION_MODE = "enabled_verifier_unavailable"
+DEPLOYMENT_MODE = "production_ingestion"
+AUTHENTICATION_MODE = "enabled_secrets_manager_verifier"
 RATE_LIMIT_MODE = "api_gateway_plus_process_local"
 REQUIRED_OPENTOFU = ">= 1.6.0"
 AWS_PROVIDER_CONSTRAINT = ">= 5.0.0, < 6.0.0"
@@ -156,8 +156,8 @@ class DeploymentVerificationContract:
         "Does not run tofu apply, terraform apply, Docker build/push, or AWS deploy.",
         "OpenTofu CLI validation is reported honestly when tofu is unavailable.",
         "Does not start SV.10 or the 30-repository run.",
-        "Community Data Lake foundation (Slice 8.1) exists but is unwired: "
-        "no ingestion, no analytics layer.",
+        "Production composition is production_ingestion with enable_ingestion=true "
+        "and enable_ingestion_wire=true. Module defaults remain fail-closed.",
     )
 
 

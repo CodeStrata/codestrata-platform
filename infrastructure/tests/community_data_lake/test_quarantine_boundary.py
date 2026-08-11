@@ -20,11 +20,9 @@ def test_community_cloud_api_still_unaware_of_data_lake() -> None:
     assert "quarantine" not in blob.lower() or "s3:" not in blob.lower()
 
 
-def test_enable_ingestion_wire_still_false() -> None:
+def test_enable_ingestion_wire_defaults_false() -> None:
     variables = (LAKE_MODULE / "variables.tf").read_text(encoding="utf-8")
     assert "default     = false" in variables
-    validation = (LAKE_MODULE / "validation.tf").read_text(encoding="utf-8")
-    assert "var.enable_ingestion_wire == false" in validation
 
 
 def test_quarantine_prefix_unchanged() -> None:

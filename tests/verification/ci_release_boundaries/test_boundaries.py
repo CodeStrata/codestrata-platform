@@ -5,10 +5,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from verification.ci_release_boundaries.contract import (
+    REPORT_JSON,
     REQUIRED_CI_JOBS,
     SCHEMA_NAME,
     SCHEMA_VERSION,
     SUPPORTED_EXPORT_TARGETS,
+    SV129_OUTPUT_RELATIVE,
 )
 from verification.ci_release_boundaries.runner import build_report, run
 from verification.ci_release_boundaries.workflow_inventory import (
@@ -118,7 +120,7 @@ def test_runner_writes_report() -> None:
     r2 = run(ROOT)
     assert r1.verdict == r2.verdict
     assert r1.failed_checks == r2.failed_checks
-    path = ROOT / "reports/verification/sv12-9/ci-release-boundary-verification.json"
+    path = ROOT / SV129_OUTPUT_RELATIVE / REPORT_JSON
     assert path.is_file()
     blob = path.read_text(encoding="utf-8")
     assert "/Users/" not in blob

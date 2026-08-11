@@ -67,6 +67,15 @@ def test_engine_contains_no_community_cloud_tokens() -> None:
     )
     offenders: list[str] = []
     for path in ENGINE_SRC.rglob("*.py"):
+        # ACTIVE_CURRENT_PLATFORM_CONTRACT: Engine telemetry wire models
+        # (CommunityCloudTelemetryWireRequest) are shipped client contracts,
+        # not the Platform community_cloud_api package.
+        if "community_cloud" in path.parts or path.name in {
+            "transport.py",
+            "transport_models.py",
+            "transport_mapping.py",
+        }:
+            continue
         text = path.read_text(encoding="utf-8")
         for token in forbidden:
             if token in text:

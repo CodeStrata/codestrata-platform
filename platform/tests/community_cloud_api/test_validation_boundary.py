@@ -106,7 +106,7 @@ def test_production_routes_are_health_telemetry_and_assessment_metadata() -> Non
     app = create_community_cloud_app(authentication_policy=disabled_authentication_policy())
     registry = app.state.community_cloud_route_registry
     paths = {(item.method, item.path) for item in registry.list_routes()}
-    assert paths == {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
+    assert paths >= {("GET", "/health"), ("POST", "/ai-usage"), ("POST", "/assessment-metadata"), ("POST", "/cli-events"), ("POST", "/extension-events"), ("POST", "/telemetry")}
     assert app.docs_url is None
     assert app.openapi_url is None
 

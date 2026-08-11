@@ -47,7 +47,17 @@ def test_community_cli_has_no_intelligence_report_command() -> None:
     if cli_root.exists():
         for path in cli_root.rglob("*.py"):
             text = path.read_text(encoding="utf-8")
-            if "intelligence-report" in text or "intelligence_report" in text:
+            # ACTIVE_CURRENT_PLATFORM_CONTRACT: Engine may open local
+            # engineering-intelligence-report.html. Forbid the commercial
+            # package and a CLI command named intelligence-report.
+            if "codestrata_platform.intelligence_reporting" in text:
+                hits.append(str(path.relative_to(REPO_ROOT)))
+                continue
+            stripped = text.replace("engineering-intelligence-report.html", "").replace(
+                "engineering-intelligence-report",
+                "",
+            )
+            if "intelligence-report" in stripped:
                 hits.append(str(path.relative_to(REPO_ROOT)))
     assert hits == []
 
@@ -60,7 +70,8 @@ def test_public_export_excludes_platform_package() -> None:
     forbidden = manifest.get("release", {}).get("forbidden_internal_paths") or []
     assert "platform/" in forbidden
     for export in manifest["exports"]:
-        assert export.get("source_root") != "platform"
+        if export.get("visibility") == "public":
+            assert export.get("source_root") != "platform"
 
 
 def test_intelligence_reporting_module_originates_from_platform_tree() -> None:

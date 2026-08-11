@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from infrastructure.verification.contract import (
     AUTHENTICATION_MODE,
     DEPLOYMENT_MODE,
@@ -10,6 +12,7 @@ from infrastructure.verification.contract import (
     infra_root,
 )
 from infrastructure.verification.models import CheckResult
+from infrastructure.verification.state import is_empty_s3_backend
 
 
 def check_production_root() -> list[CheckResult]:
@@ -19,8 +22,12 @@ def check_production_root() -> list[CheckResult]:
     return [
         CheckResult(
             name="production:environment_name",
-            ok=f'environment_name         = "{ENVIRONMENT_NAME}"' in main
-            or f'environment_name = "{ENVIRONMENT_NAME}"' in main,
+            ok=bool(
+                re.search(
+                    rf'environment_name\s*=\s*"{re.escape(ENVIRONMENT_NAME)}"',
+                    main,
+                )
+            ),
             detail=ENVIRONMENT_NAME,
             category="production",
         ),
@@ -52,24 +59,23 @@ def check_production_root() -> list[CheckResult]:
             category="production",
         ),
         CheckResult(
-            name="production:ingestion_disabled",
-            ok="enable_ingestion         = false" in main
-            or "enable_ingestion = false" in main,
-            detail="enable_ingestion=false",
+            name="production:ingestion_enabled",
+            ok=bool(re.search(r"enable_ingestion\s*=\s*true", main)),
+            detail="enable_ingestion=true",
             category="production",
         ),
         CheckResult(
-            name="production:data_lake_ingestion_wire_disabled",
-            ok="enable_ingestion_wire = false" in data_lake,
-            detail="enable_ingestion_wire=false",
+            name="production:data_lake_ingestion_wire_enabled",
+            ok=bool(re.search(r"enable_ingestion_wire\s*=\s*true", data_lake)),
+            detail="enable_ingestion_wire=true",
             category="production",
             scenario="D",
         ),
         CheckResult(
-            name="production:backend_example_only",
+            name="production:backend_empty_s3",
             ok=(root / "backend.tf.example").is_file()
-            and not (root / "backend.tf").exists(),
-            detail="backend.tf.example",
+            and is_empty_s3_backend(root / "backend.tf"),
+            detail="empty s3 backend (no bucket/key/credentials)",
             category="production",
         ),
         CheckResult(
