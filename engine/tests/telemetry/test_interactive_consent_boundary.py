@@ -22,6 +22,13 @@ TELEMETRY_ROOT = (
 )
 
 
+@pytest.fixture(autouse=True)
+def _isolate_codestrata_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep persisted consent out of the developer/runner ~/.codestrata."""
+
+    monkeypatch.setenv("CODESTRATA_HOME", str(tmp_path))
+
+
 def test_Q_consent_cannot_bypass_privacy() -> None:
     with pytest.raises(TelemetryRuntimeError):
         project_from_mapping(

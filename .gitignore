@@ -157,6 +157,7 @@ artifacts/models/
 *.pem
 *.key
 *.crt
+!engine/validation/fixtures/security-hygiene/secrets/test-only.pem
 
 # ==========================================
 # Ruff
