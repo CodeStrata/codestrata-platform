@@ -47,7 +47,9 @@ def test_allow_and_deny_distinct() -> None:
 def test_consent_policy_defaults() -> None:
     policy = default_session_consent_policy()
     assert policy.policy_token == COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_URN
-    assert policy.persistence_allowed is False
+    assert policy.policy_version == "2.0"
+    assert policy.persistence_allowed is True
+    assert policy.prior_consent_reuse_allowed is True
     assert policy.consent_implies_transport is False
 
 
@@ -134,6 +136,8 @@ def test_N_malformed_cli_flag_combinations_rejected() -> None:
         )
 
 
-def test_policy_rejects_persistence() -> None:
+def test_policy_rejects_disabled_persistence() -> None:
     with pytest.raises(SessionConsentPolicyError):
-        CommunityTelemetrySessionConsentPolicy(persistence_allowed=True)
+        CommunityTelemetrySessionConsentPolicy(persistence_allowed=False)
+    with pytest.raises(SessionConsentPolicyError):
+        CommunityTelemetrySessionConsentPolicy(prior_consent_reuse_allowed=False)

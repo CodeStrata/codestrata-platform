@@ -1,0 +1,30 @@
+{
+  "register_id": "community-consent-inventory-register",
+  "register_version": "1.0",
+  "schema": "community-consent-inventory-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "community_telemetry_consent_register+engine_consent_policy+vscode_consent",
+  "default_posture": "disabled_by_default",
+  "opt_in_mechanism": ["--telemetry-allow", "interactive_prompt_when_applicable", "vscode_command_scoped_allow"],
+  "opt_out_mechanism": ["--telemetry-deny", "interactive_deny", "vscode_command_scoped_deny", "default_remain_off"],
+  "interactive_behavior": "may_prompt_on_assess_when_tty_and_policy_allows",
+  "non_interactive_behavior": "never_prompt_remain_disabled_unless_cli_flag",
+  "persistence_behavior": "session_consent_not_persisted_for_privacy_first_runtime",
+  "precedence": "cli_flag_over_prompt_over_default",
+  "session_process_scope": "process_or_command_local",
+  "legacy_preferences": "compatibility_only_do_not_authorize_privacy_first_runtime",
+  "telemetry_opt_in_equals_report_publication": false,
+  "report_publish_requires": [
+    "explicit_publish_or_share_confirmation",
+    "packaged_or_override_community_client_credential",
+    "private_local_acknowledgement_when_local_star_id_noninteractive"
+  ],
+  "report_publish_does_not_require": [
+    "telemetry_opt_in",
+    "CODESTRATA_TELEMETRY_OPT_IN",
+    "aws_account",
+    "secrets_manager_user_access"
+  ],
+  "entries_ref": "platform/policies/community_telemetry_consent_register.json"
+}

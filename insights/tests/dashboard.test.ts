@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { formatCount, formatShare, groupLabel } from "../src/dashboard/format";
-import { humanizeLimitations, METRIC_DISPLAY_NAMES } from "../src/dashboard/labels";
-import { SYNTHETIC_MOCK_RESULTS } from "../src/api/syntheticMocks";
+import {
+  humanizeLimitations,
+  METRIC_DISPLAY_NAMES,
+  V02_OVERVIEW_METRIC_IDS,
+} from "../src/dashboard/labels";
+import {
+  assertSyntheticCoversV02Overview,
+  SYNTHETIC_MOCK_RESULTS,
+} from "../src/api/syntheticMocks";
 
 describe("dashboard presentation helpers", () => {
   it("formats counts and shares without recomputation", () => {
@@ -22,14 +29,15 @@ describe("dashboard presentation helpers", () => {
     ]);
   });
 
-  it("uses anonymous installations and AI model family labels", () => {
-    expect(METRIC_DISPLAY_NAMES.total_anonymous_installations).toBe("Anonymous installations");
-    expect(METRIC_DISPLAY_NAMES.ai_model_adoption).toBe("AI model family adoption");
-    expect(METRIC_DISPLAY_NAMES.validation_dataset_growth).toBe("Validation dataset size");
-    expect(METRIC_DISPLAY_NAMES.total_anonymous_installations).not.toMatch(/users|customers|people/i);
+  it("exposes exactly nine v0.2.0 overview metrics", () => {
+    expect(V02_OVERVIEW_METRIC_IDS).toHaveLength(9);
+    expect(METRIC_DISPLAY_NAMES.total_assessments).toBe("Total Assessments");
+    expect(METRIC_DISPLAY_NAMES.github_stars).toBe("GitHub Stars");
+    expect(METRIC_DISPLAY_NAMES.community_sentiment).toBe("Community Sentiment");
   });
 
-  it("synthetic fixtures stay aggregate-only", () => {
+  it("synthetic fixtures stay aggregate-only and cover the nine metrics", () => {
+    assertSyntheticCoversV02Overview();
     const blob = JSON.stringify(SYNTHETIC_MOCK_RESULTS);
     for (const bad of [
       "installation_id",

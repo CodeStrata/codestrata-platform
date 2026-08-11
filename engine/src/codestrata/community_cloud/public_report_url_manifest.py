@@ -1,7 +1,12 @@
-"""Local validation-evidence manifest for published report URLs.
+"""Local export/snapshot of the private Community validation registry.
 
 Not production routing state. Only written when an explicit manifest path is
 configured or discovered under a monorepo validation suite directory.
+
+Authoritative production copy lives in the private AWS Community report
+artifact store (``metadata/validation/entries/``). This file is release-run
+evidence only and can be regenerated from Insights / API without changing
+opaque public report URLs.
 """
 
 from __future__ import annotations
@@ -42,12 +47,20 @@ def resolve_manifest_path(*, start: Path | None = None) -> Path | None:
 def _empty() -> dict[str, Any]:
     return {
         "schema": SCHEMA,
-        "purpose": "Release Epic validation evidence — not production state",
+        "purpose": (
+            "Local export/snapshot of the private Community validation registry "
+            "for deterministic release evidence — not the authoritative production "
+            "copy and not production routing state"
+        ),
+        "authoritative_registry": "private_community_validation_registry",
         "assessments": [],
         "engineering_intelligence": [],
         "note": (
-            "Append/update capable for Release Epic; cloud lifecycle remains backend authority."
+            "Append/update capable for Release Epic; cloud private validation "
+            "registry + report lifecycle remain backend authority. Temporary "
+            "internal Community validation tooling."
         ),
+        "temporary": True,
     }
 
 

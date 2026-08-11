@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   FORBIDDEN_METRIC_RESULT_KEYS,
-  SUPPRESSED_GROUP_KEY,
   type MetricResult,
 } from "../src/metrics/metricResult";
 import { UnavailableInsightsApiClient } from "../src/api/insightsApi";
 import { SYNTHETIC_MOCK_RESULTS } from "../src/api/syntheticMocks";
 import { isUnavailableNotZero } from "../src/states/uiState";
+import { V02_OVERVIEW_METRIC_IDS } from "../src/dashboard/labels";
 
 describe("MetricResult contract", () => {
   it("matches required fields", () => {
@@ -29,29 +29,30 @@ describe("MetricResult contract", () => {
     }
   });
 
-  it("uses other_suppressed without leaking hidden categories", () => {
-    const cli = SYNTHETIC_MOCK_RESULTS.find((r) => r.metric_id === "cli_version_adoption");
-    expect(cli).toBeDefined();
-    const groups = cli!.groups;
-    expect(groups.some((g) => g.key === SUPPRESSED_GROUP_KEY && g.suppressed)).toBe(
-      true,
-    );
-    expect(groups.every((g) => g.key !== "installation_id")).toBe(true);
+  it("covers the nine v0.2.0 overview metrics", () => {
+    const ids = new Set(SYNTHETIC_MOCK_RESULTS.map((r) => r.metric_id));
+    for (const id of V02_OVERVIEW_METRIC_IDS) {
+      expect(ids.has(id)).toBe(true);
+    }
   });
 });
 
 describe("API boundary", () => {
   it("production-style client returns unavailable, not zero", async () => {
     const client = new UnavailableInsightsApiClient();
-    const metric = await client.getMetric("total_anonymous_installations");
+    const metric = await client.getMetric("total_assessments");
     expect(metric.completeness).toBe("unavailable");
     expect(metric.value).toBeNull();
     expect(isUnavailableNotZero("unavailable")).toBe(true);
   });
 
-  it("zero is distinct from unavailable", () => {
-    const zero = SYNTHETIC_MOCK_RESULTS[0];
-    expect(zero.value).toBe(0);
-    expect(zero.completeness).toBe("complete");
+  it("zero-response sentiment is distinct from a zero score", () => {
+    const sentiment = SYNTHETIC_MOCK_RESULTS.find(
+      (r) => r.metric_id === "community_sentiment",
+    );
+    expect(sentiment?.value).toBeNull();
+    expect(sentiment?.completeness).toBe("complete");
+    expect(sentiment?.denominator).toBe(0);
+    expect(sentiment?.limitations).toContain("no_responses_yet");
   });
 });

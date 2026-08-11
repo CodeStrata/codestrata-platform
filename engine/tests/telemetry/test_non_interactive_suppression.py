@@ -318,7 +318,10 @@ def test_no_filesystem_on_suppression(tmp_path: Path, monkeypatch) -> None:
     assert telemetry.runtime.session.decision is TelemetryDecision.NON_INTERACTIVE_DISABLED
 
 
-def test_factory_alias() -> None:
+def test_factory_alias(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     a, ra = create_interactive_session_telemetry(
         command="assess",
         stdin_interactive=False,

@@ -1,4 +1,4 @@
-"""Engine client for Community report publishing (Slice 17.16)."""
+"""Engine client for Community report publishing (Slice 17.16 / 18.7 journey fix)."""
 
 from __future__ import annotations
 
@@ -13,13 +13,20 @@ from typing import Any
 from urllib.parse import urlparse
 
 from codestrata.community_cloud.public_api_authority import resolve_public_community_api_base
+from codestrata.community_cloud.public_client_credential import (
+    packaged_public_community_client_credential,
+)
 from codestrata.telemetry.event_identity import TelemetryTransportCredential
-from codestrata.telemetry.session import TelemetrySession
 
 PUBLIC_REPORTS_BASE_URL = "https://reports.codestrata.ai"
 CREDENTIAL_ENV = "CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL"
 PRIVATE_REPO_WARNING = (
-    "Publishing creates a publicly accessible report. Anyone with the link can view it."
+    "This report appears to come from a private/local repository. "
+    "Anyone with the resulting link can view it."
+)
+PUBLIC_PUBLISH_WARNING = (
+    "This will publish your current Assessment Report. "
+    "Anyone with the resulting link can view it."
 )
 
 
@@ -33,6 +40,7 @@ class ReportPublishResult:
     public_url: str
     report_type: str
     status: str = "published"
+    local_html_path: str = ""
 
     def to_stable_dict(self) -> dict[str, str]:
         return {
@@ -40,22 +48,87 @@ class ReportPublishResult:
             "public_url": self.public_url,
             "report_type": self.report_type,
             "status": self.status,
+            "local_html_path": self.local_html_path,
         }
 
 
-def telemetry_eligible_for_publish(session: TelemetrySession | None) -> bool:
-    if session is None:
-        return False
-    return bool(session.transmission_authorized)
+def telemetry_eligible_for_publish(session: object | None = None) -> bool:
+    """Compatibility shim.
+
+    Report publication is authorized by explicit publish confirmation, not
+    telemetry session consent. Always returns True for callers that still check.
+    """
+
+    _ = session
+    return True
 
 
 def resolve_community_credential() -> TelemetryTransportCredential:
+    """Resolve Community client credential for publish/telemetry transport.
+
+    Order:
+    1. ``CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL`` env override (operator/CI)
+    2. Packaged public Community client credential (normal Community users)
+    """
+
     raw = (os.environ.get(CREDENTIAL_ENV) or "").strip()
     if not raw:
+        raw = packaged_public_community_client_credential().strip()
+    if not raw:
         raise ReportPublishError(
-            f"Missing {CREDENTIAL_ENV}. Cloud publishing requires Community client credentials."
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
         )
-    return TelemetryTransportCredential(raw)
+    try:
+        return TelemetryTransportCredential(raw)
+    except Exception as exc:  # noqa: BLE001
+        raise ReportPublishError(
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
+        ) from exc
+
+
+def user_facing_publish_error(exc: BaseException) -> str:
+    """Map internal failures to Community-user messaging (no env/AWS guidance)."""
+
+    text = str(exc).strip()
+    lowered = text.lower()
+    if isinstance(exc, ReportPublishError):
+        if text.startswith("Publish completed but"):
+            return text
+        if "not found" in lowered or "no local" in lowered:
+            return "No current report found. Run `codestrata assess --repo .` first."
+        if "unavailable" in lowered or "api" in lowered:
+            return (
+                "Publishing failed. Local report remains unchanged. "
+                "Community publishing may be temporarily unavailable."
+            )
+        if "credential" in lowered or CREDENTIAL_ENV.lower() in lowered:
+            return (
+                "Community publishing is temporarily unavailable. "
+                "Local report remains unchanged."
+            )
+        if "confirm" in lowered:
+            return text
+        if "private" in lowered or "local-" in lowered:
+            return text
+        # Never leak credential env var names or AWS guidance.
+        if CREDENTIAL_ENV in text or "aws" in lowered or "secret" in lowered:
+            return (
+                "Community publishing is temporarily unavailable. "
+                "Local report remains unchanged."
+            )
+        return text or "Publishing failed. Local report remains unchanged."
+    return "Publishing failed. Local report remains unchanged."
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """Prefer certifi CA bundle when available (common on macOS Python builds)."""
+
+    try:
+        import certifi
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:  # noqa: BLE001
+        return ssl.create_default_context()
 
 
 def _api_url(path: str) -> str:
@@ -80,7 +153,7 @@ def _request_json(
     request = urllib.request.Request(url, data=data, method=method, headers=headers)
     opener = urllib.request.build_opener(
         urllib.request.ProxyHandler({}),
-        urllib.request.HTTPSHandler(context=ssl.create_default_context()),
+        urllib.request.HTTPSHandler(context=_ssl_context()),
     )
     try:
         with opener.open(request, timeout=30) as response:
@@ -90,27 +163,159 @@ def _request_json(
         raw = exc.read(1_000_000)
         status = int(exc.code)
     except Exception as exc:  # noqa: BLE001
-        raise ReportPublishError(f"publish API unavailable: {type(exc).__name__}") from exc
+        raise ReportPublishError(
+            "Publishing failed. Local report remains unchanged."
+        ) from exc
     try:
         payload = json.loads(raw.decode("utf-8")) if raw else {}
     except json.JSONDecodeError as exc:
-        raise ReportPublishError("invalid publish API response") from exc
+        raise ReportPublishError(
+            "Publishing failed. Local report remains unchanged."
+        ) from exc
     if not isinstance(payload, dict):
-        raise ReportPublishError("invalid publish API response")
+        raise ReportPublishError("Publishing failed. Local report remains unchanged.")
     return status, payload
 
 
+_PUBLIC_ID_HEADER = "X-CodeStrata-Public-Id"
+_VERIFY_BODY_SCAN_BYTES = 65_536
+
+
+def verify_public_report_get(
+    public_url: str,
+    *,
+    expected_public_id: str,
+    timeout_seconds: float = 30.0,
+) -> int:
+    """Independently GET a branded public report URL (no Authorization).
+
+    Prevents the false-positive where publish POST returns a URL that is not
+    actually routable / readable as a report (JSON API error envelopes).
+
+    Identity proof prefers ``X-CodeStrata-Public-Id`` (works for oversized HTML
+    served via Worker-followed presign without chrome meta). Falls back to a
+    bounded scan of the first ~64 KiB for ``codestrata-public-id`` meta.
+
+    Returns the HTTP status on success (always 200 when no exception).
+    """
+
+    url = (public_url or "").strip()
+    expected = (expected_public_id or "").strip()
+    if not expected:
+        raise ReportPublishError(
+            "Publish completed but the opaque report id was missing. "
+            "Local report remains unchanged."
+        )
+    expected_url = f"{PUBLIC_REPORTS_BASE_URL}/r/{expected}"
+    if url != expected_url:
+        raise ReportPublishError(
+            "Publish completed but the public report URL is not the branded "
+            "reports.codestrata.ai/r/<id> link for the returned opaque id."
+        )
+    if "Authorization=" in url or "cscc_v1_" in url:
+        raise ReportPublishError(
+            "Publish completed but the public report URL must not embed credentials."
+        )
+
+    request = urllib.request.Request(
+        url,
+        method="GET",
+        headers={
+            "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+            "User-Agent": "CodeStrata-public-report-verify/1.0",
+        },
+    )
+    opener = urllib.request.build_opener(
+        urllib.request.ProxyHandler({}),
+        urllib.request.HTTPSHandler(context=_ssl_context()),
+    )
+    try:
+        with opener.open(request, timeout=timeout_seconds) as response:
+            status = int(getattr(response, "status", 200))
+            content_type = str(response.headers.get("Content-Type") or "")
+            header_id = str(response.headers.get(_PUBLIC_ID_HEADER) or "").strip()
+            body = response.read(_VERIFY_BODY_SCAN_BYTES)
+    except urllib.error.HTTPError as exc:
+        raise ReportPublishError(
+            "Publish completed but the public report URL did not return a readable "
+            f"report (HTTP {int(exc.code)}). Local report remains unchanged."
+        ) from exc
+    except Exception as exc:  # noqa: BLE001
+        raise ReportPublishError(
+            "Publish completed but the public report URL could not be verified. "
+            "Local report remains unchanged."
+        ) from exc
+
+    if status != 200:
+        raise ReportPublishError(
+            "Publish completed but the public report URL did not return HTTP 200. "
+            "Local report remains unchanged."
+        )
+    if "text/html" not in content_type.lower():
+        raise ReportPublishError(
+            "Publish completed but the public report URL did not return HTML "
+            f"(content-type={content_type!r}). Local report remains unchanged."
+        )
+    text = body.decode("utf-8", errors="replace")
+    if '"code":"not_found"' in text or "Endpoint not found" in text or "Report not found" in text:
+        raise ReportPublishError(
+            "Publish completed but the public report URL returned an API error "
+            "envelope instead of a report. Local report remains unchanged."
+        )
+    if header_id == expected:
+        return status
+    # Chrome wrapper uses meta name="codestrata-public-id" near document start.
+    if f'codestrata-public-id" content="{expected}"' in text:
+        return status
+    if f'content="{expected}"' in text and "codestrata-public-id" in text:
+        return status
+    raise ReportPublishError(
+        "Publish completed but the retrieved report identity did not match "
+        "the published opaque id. Local report remains unchanged."
+    )
+
+
+def confirm_public_report_verification(
+    *,
+    public_id: str,
+    credential: TelemetryTransportCredential,
+    http_status: int = 200,
+    verification_status: str = "verified",
+) -> None:
+    """Record independent GET verification into the private validation registry.
+
+    Soft-fails: publish already succeeded; registry write must not undo local
+    success or block the operator. Temporary Community validation tooling only.
+    """
+
+    pid = (public_id or "").strip()
+    if not pid:
+        return
+    try:
+        status, _payload = _request_json(
+            method="POST",
+            url=_api_url(f"/api/v1/reports/{pid}/verification"),
+            credential=credential,
+            body={
+                "schema_version": "1.0",
+                "verification_status": verification_status,
+                "http_status": int(http_status),
+            },
+        )
+        _ = status
+    except Exception:  # noqa: BLE001 — never fail publish on registry confirm
+        return
+
+
 def _put_bytes(url: str, body: bytes, *, content_type: str) -> None:
-    # Staging upload only — never treat as public report URL.
     host = (urlparse(url).hostname or "").lower()
     if host.endswith("codestrata.ai") and host.startswith("reports."):
-        raise ReportPublishError("refusing to PUT to public reports host")
+        raise ReportPublishError("Publishing failed. Local report remains unchanged.")
 
     class _PutRedirectHandler(urllib.request.HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: ANN001
             if code not in {301, 302, 303, 307, 308}:
                 return None
-            # S3 may 307 from path-style to virtual-hosted endpoints on PUT.
             method = req.get_method()
             data = req.data
             headers_out = {
@@ -138,36 +343,36 @@ def _put_bytes(url: str, body: bytes, *, content_type: str) -> None:
     opener = urllib.request.build_opener(
         urllib.request.ProxyHandler({}),
         _PutRedirectHandler(),
-        urllib.request.HTTPSHandler(context=ssl.create_default_context()),
+        urllib.request.HTTPSHandler(context=_ssl_context()),
     )
     try:
         with opener.open(request, timeout=120) as response:
             _ = response.read(1024)
             status = int(getattr(response, "status", 200))
     except urllib.error.HTTPError as exc:
-        raise ReportPublishError(f"artifact upload failed ({exc.code})") from exc
+        raise ReportPublishError(
+            "Publishing failed. Local report remains unchanged."
+        ) from exc
     except Exception as exc:  # noqa: BLE001
-        raise ReportPublishError(f"artifact upload unavailable: {type(exc).__name__}") from exc
+        raise ReportPublishError(
+            "Publishing failed. Local report remains unchanged."
+        ) from exc
     if status >= 300:
-        raise ReportPublishError(f"artifact upload failed ({status})")
+        raise ReportPublishError("Publishing failed. Local report remains unchanged.")
 
 
 def publish_local_assessment(
     *,
     current_dir: Path,
     logical_repository_id: str,
-    session: TelemetrySession | None,
+    session: object | None = None,
     private_repository_acknowledged: bool,
     confirm_public_publish: bool,
     credential: TelemetryTransportCredential | None = None,
 ) -> ReportPublishResult:
     """Upload local CURRENT assessment HTML+JSON and return branded public URL."""
 
-    if not telemetry_eligible_for_publish(session):
-        raise ReportPublishError(
-            "Cloud publishing requires telemetry/cloud participation "
-            "(telemetry opt-in). Local report remains available."
-        )
+    _ = session  # publish is independent of telemetry consent
     if not confirm_public_publish:
         raise ReportPublishError("Explicit publish confirmation is required.")
     if logical_repository_id.startswith("local-") and not private_repository_acknowledged:
@@ -176,7 +381,7 @@ def publish_local_assessment(
     html_path = current_dir / "assessment.html"
     json_path = current_dir / "assessment.json"
     if not html_path.is_file() or not json_path.is_file():
-        raise ReportPublishError("Local current assessment.html/json not found.")
+        raise ReportPublishError("No current report found. Run `codestrata assess --repo .` first.")
 
     active_cred = credential or resolve_community_credential()
     status, intent = _request_json(
@@ -195,12 +400,14 @@ def publish_local_assessment(
     )
     if status >= 300:
         raise ReportPublishError(
-            f"upload intent refused ({status}): {intent.get('error') or intent.get('code') or 'error'}"
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
         )
     upload_id = str(intent.get("upload_id") or "")
     puts = intent.get("puts") or []
     if not upload_id or not isinstance(puts, list):
-        raise ReportPublishError("invalid upload intent response")
+        raise ReportPublishError(
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
+        )
 
     local_files = {
         "assessment.html": html_path.read_bytes(),
@@ -213,10 +420,9 @@ def publish_local_assessment(
         url = str(item.get("upload_url") or "")
         ctype = str(item.get("content_type") or "application/octet-stream")
         if name not in local_files or not url:
-            raise ReportPublishError("incomplete upload intent")
-        # Never return staging URL as public share link.
-        if "s3.amazonaws.com" in url or "amazonaws.com" in url:
-            pass  # expected for private staging PUT
+            raise ReportPublishError(
+                "Community publishing is temporarily unavailable. Local report remains unchanged."
+            )
         _put_bytes(url, local_files[name], content_type=ctype)
 
     status, published = _request_json(
@@ -232,18 +438,31 @@ def publish_local_assessment(
     )
     if status >= 300:
         raise ReportPublishError(
-            f"publish refused ({status}): {published.get('error') or published.get('code') or 'error'}"
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
         )
     public_url = str(published.get("public_url") or "")
     public_id = str(published.get("public_id") or "")
     if not public_url.startswith(PUBLIC_REPORTS_BASE_URL + "/r/"):
-        raise ReportPublishError("publish response missing branded public URL")
+        raise ReportPublishError(
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
+        )
     if "s3.amazonaws.com" in public_url or "amazonaws.com" in public_url:
-        raise ReportPublishError("refusing raw S3 public URL")
+        # Never return/accept raw S3 public share links.
+        raise ReportPublishError(
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
+        )
+    verify_status = verify_public_report_get(public_url, expected_public_id=public_id)
+    confirm_public_report_verification(
+        public_id=public_id,
+        credential=active_cred,
+        http_status=verify_status,
+        verification_status="verified",
+    )
     return ReportPublishResult(
         public_id=public_id,
         public_url=public_url,
         report_type="assessment",
+        local_html_path=str(html_path),
     )
 
 
@@ -251,22 +470,18 @@ def publish_local_eir(
     *,
     current_dir: Path,
     portfolio_id: str,
-    session: TelemetrySession | None,
+    session: object | None = None,
     confirm_public_publish: bool,
     credential: TelemetryTransportCredential | None = None,
 ) -> ReportPublishResult:
-    if not telemetry_eligible_for_publish(session):
-        raise ReportPublishError(
-            "Cloud publishing requires telemetry/cloud participation "
-            "(telemetry opt-in). Local report remains available."
-        )
+    _ = session
     if not confirm_public_publish:
         raise ReportPublishError("Explicit publish confirmation is required.")
 
     html_path = current_dir / "engineering-intelligence-report.html"
     json_path = current_dir / "engineering-intelligence-report.json"
     if not html_path.is_file() or not json_path.is_file():
-        raise ReportPublishError("Local current EIR html/json not found.")
+        raise ReportPublishError("No current EIR found. Generate an Engineering Intelligence report first.")
 
     active_cred = credential or resolve_community_credential()
     status, intent = _request_json(
@@ -288,7 +503,7 @@ def publish_local_eir(
     )
     if status >= 300:
         raise ReportPublishError(
-            f"upload intent refused ({status}): {intent.get('error') or intent.get('code') or 'error'}"
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
         )
     upload_id = str(intent.get("upload_id") or "")
     puts = intent.get("puts") or []
@@ -317,27 +532,41 @@ def publish_local_eir(
     )
     if status >= 300:
         raise ReportPublishError(
-            f"publish refused ({status}): {published.get('error') or published.get('code') or 'error'}"
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
         )
     public_url = str(published.get("public_url") or "")
     public_id = str(published.get("public_id") or "")
     if not public_url.startswith(PUBLIC_REPORTS_BASE_URL + "/r/"):
-        raise ReportPublishError("publish response missing branded public URL")
+        raise ReportPublishError(
+            "Community publishing is temporarily unavailable. Local report remains unchanged."
+        )
+    verify_status = verify_public_report_get(public_url, expected_public_id=public_id)
+    confirm_public_report_verification(
+        public_id=public_id,
+        credential=active_cred,
+        http_status=verify_status,
+        verification_status="verified",
+    )
     return ReportPublishResult(
         public_id=public_id,
         public_url=public_url,
         report_type="engineering_intelligence",
+        local_html_path=str(html_path),
     )
 
 
 __all__ = [
     "CREDENTIAL_ENV",
     "PRIVATE_REPO_WARNING",
+    "PUBLIC_PUBLISH_WARNING",
     "PUBLIC_REPORTS_BASE_URL",
     "ReportPublishError",
     "ReportPublishResult",
+    "confirm_public_report_verification",
     "publish_local_assessment",
     "publish_local_eir",
     "resolve_community_credential",
     "telemetry_eligible_for_publish",
+    "user_facing_publish_error",
+    "verify_public_report_get",
 ]

@@ -1,7 +1,7 @@
-"""Independent per-session telemetry consent policy (Slice 9.3).
+"""Independent per-session telemetry consent policy (Slice 19.4).
 
-Engine-local product-policy contract. Independent from runtime policy 1.0,
-privacy-safe event schema 1.0, legacy TelemetryService schema 1.0.0, and
+Engine-local product-policy contract. Explicit Yes/No may be persisted locally
+under CODESTRATA_HOME; default remains disabled/undecided. Independent from
 Community Cloud / Data Lake contracts.
 """
 
@@ -13,24 +13,22 @@ from typing import Any
 COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_ID = (
     "community-telemetry-session-consent-policy"
 )
-COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_VERSION = "1.0"
+COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_VERSION = "2.0"
 COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_URN = (
     f"{COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_ID}:"
     f"{COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_VERSION}"
 )
 
-_REVIEW_STATUS = "process_local_explicit_session_consent_only"
+_REVIEW_STATUS = "explicit_local_preference_with_session_runtime"
 
 _LIMITATIONS: tuple[str, ...] = (
-    "process_local_only",
-    "no_persistence",
-    "no_prior_consent_reuse",
-    "no_installation_identity",
-    "no_interactive_prompt_in_slice_9_3",
-    "no_cli_flags_in_slice_9_3",
+    "default_disabled",
+    "explicit_opt_in_required",
+    "local_preference_persistence",
+    "no_default_yes",
+    "no_installation_identity_required",
     "consent_does_not_imply_transport",
-    "default_transport_unavailable",
-    "legacy_preferences_separate",
+    "no_source_code_or_repository_identity",
 )
 
 
@@ -46,11 +44,11 @@ class CommunityTelemetrySessionConsentPolicy:
     policy_version: str = COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_VERSION
     scope: str = "session"
     process_local: bool = True
-    persistence_allowed: bool = False
-    prior_consent_reuse_allowed: bool = False
+    persistence_allowed: bool = True
+    prior_consent_reuse_allowed: bool = True
     installation_identity_required: bool = False
-    interactive_prompt_enabled: bool = False
-    cli_flag_enabled: bool = False
+    interactive_prompt_enabled: bool = True
+    cli_flag_enabled: bool = True
     consent_implies_transport: bool = False
     review_status: str = _REVIEW_STATUS
     limitations: tuple[str, ...] = _LIMITATIONS
@@ -72,20 +70,14 @@ class CommunityTelemetrySessionConsentPolicy:
             raise SessionConsentPolicyError("consent scope must be session")
         if not self.process_local:
             raise SessionConsentPolicyError("process_local must be true")
-        if self.persistence_allowed:
-            raise SessionConsentPolicyError("persistence_allowed must be false")
-        if self.prior_consent_reuse_allowed:
-            raise SessionConsentPolicyError("prior_consent_reuse_allowed must be false")
+        if not self.persistence_allowed:
+            raise SessionConsentPolicyError("persistence_allowed must be true")
+        if not self.prior_consent_reuse_allowed:
+            raise SessionConsentPolicyError("prior_consent_reuse_allowed must be true")
         if self.installation_identity_required:
             raise SessionConsentPolicyError(
                 "installation_identity_required must be false"
             )
-        if self.interactive_prompt_enabled:
-            raise SessionConsentPolicyError(
-                "interactive_prompt_enabled must be false in Slice 9.3"
-            )
-        if self.cli_flag_enabled:
-            raise SessionConsentPolicyError("cli_flag_enabled must be false in Slice 9.3")
         if self.consent_implies_transport:
             raise SessionConsentPolicyError("consent_implies_transport must be false")
         if self.review_status != _REVIEW_STATUS:

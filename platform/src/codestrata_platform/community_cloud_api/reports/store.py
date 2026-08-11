@@ -36,6 +36,14 @@ class ReportArtifactStore(Protocol):
         expires_in: int = PRESIGN_TTL_SECONDS,
     ) -> str: ...
 
+    def create_presigned_get(
+        self,
+        key: str,
+        *,
+        expires_in: int = PRESIGN_TTL_SECONDS,
+        response_content_type: str | None = None,
+    ) -> str: ...
+
 
 @dataclass
 class InMemoryReportArtifactStore:
@@ -84,6 +92,16 @@ class InMemoryReportArtifactStore:
         _ = (content_type, expires_in)
         # Test-only URL — never a public product URL and never returned as share link.
         return f"{self.presign_base}/{key}?exp={int(time.time()) + expires_in}"
+
+    def create_presigned_get(
+        self,
+        key: str,
+        *,
+        expires_in: int = PRESIGN_TTL_SECONDS,
+        response_content_type: str | None = None,
+    ) -> str:
+        _ = (expires_in, response_content_type)
+        return f"{self.presign_base}/get/{key}?exp={int(time.time()) + expires_in}"
 
 
 class S3ReportArtifactStore:
@@ -195,6 +213,25 @@ class S3ReportArtifactStore:
                 "Key": key,
                 "ContentType": content_type,
             },
+            ExpiresIn=expires_in,
+        )
+
+    def create_presigned_get(
+        self,
+        key: str,
+        *,
+        expires_in: int = PRESIGN_TTL_SECONDS,
+        response_content_type: str | None = None,
+    ) -> str:
+        params: dict[str, str] = {
+            "Bucket": self._bucket,
+            "Key": key,
+        }
+        if response_content_type:
+            params["ResponseContentType"] = response_content_type
+        return self._client.generate_presigned_url(
+            "get_object",
+            Params=params,
             ExpiresIn=expires_in,
         )
 

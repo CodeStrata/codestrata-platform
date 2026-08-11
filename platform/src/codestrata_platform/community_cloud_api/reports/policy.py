@@ -50,7 +50,9 @@ class CommunityReportPublishingPolicy:
     policy_id: str = COMMUNITY_REPORT_PUBLISHING_POLICY_ID
     policy_version: str = COMMUNITY_REPORT_PUBLISHING_POLICY_URN
     local_report_always_generated: bool = True
-    telemetry_opt_in_required_for_cloud_publish: bool = True
+    telemetry_opt_in_required_for_cloud_publish: bool = False
+    publish_authorization_separate_from_telemetry: bool = True
+    packaged_public_community_client_allowed: bool = True
     explicit_publish_action_required: bool = True
     automatic_publish_after_assessment: bool = False
     assessment_cloud_versions_per_repository: int = MAX_CLOUD_VERSIONS
@@ -74,8 +76,15 @@ class CommunityReportPublishingPolicy:
             raise ValueError("unsupported report publishing policy version")
         if not self.local_report_always_generated:
             raise ValueError("local_report_always_generated must be true")
-        if not self.telemetry_opt_in_required_for_cloud_publish:
-            raise ValueError("telemetry_opt_in_required_for_cloud_publish must be true")
+        if self.telemetry_opt_in_required_for_cloud_publish:
+            raise ValueError(
+                "telemetry_opt_in_required_for_cloud_publish must be false "
+                "(publish authorization is separate from telemetry)"
+            )
+        if not self.publish_authorization_separate_from_telemetry:
+            raise ValueError("publish_authorization_separate_from_telemetry must be true")
+        if not self.packaged_public_community_client_allowed:
+            raise ValueError("packaged_public_community_client_allowed must be true")
         if not self.explicit_publish_action_required:
             raise ValueError("explicit_publish_action_required must be true")
         if self.automatic_publish_after_assessment:
@@ -125,6 +134,12 @@ class CommunityReportPublishingPolicy:
             "start_slice_17_17": self.start_slice_17_17,
             "telemetry_opt_in_required_for_cloud_publish": (
                 self.telemetry_opt_in_required_for_cloud_publish
+            ),
+            "publish_authorization_separate_from_telemetry": (
+                self.publish_authorization_separate_from_telemetry
+            ),
+            "packaged_public_community_client_allowed": (
+                self.packaged_public_community_client_allowed
             ),
         }
 

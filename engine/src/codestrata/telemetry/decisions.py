@@ -25,6 +25,7 @@ class TelemetryDecisionSource(StrEnum):
     INTERACTIVE_PROMPT = "interactive_prompt"
     CLI_FLAG = "cli_flag"
     NON_INTERACTIVE_POLICY = "non_interactive_policy"
+    PERSISTED_PREFERENCE = "persisted_preference"
 
 
 # Decisions actively constructible in Slice 9.3–9.5.

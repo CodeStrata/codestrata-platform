@@ -80,7 +80,7 @@ codestrata-platform/
 | `infrastructure/` | Private serverless deployment (OpenTofu) + SV.9 verification (`infrastructure/verification/`); extractable to `codestrata-infrastructure` via `scripts/export_repository.py --target infrastructure` (Epic 12 complete; owner cutover deferred) |
 | `examples/` | Showcase manifests, fetch/run scripts, attribution, curated results |
 | `test-fixtures/` | Deterministic language fixtures for tests and Engine smoke |
-| `vscode-plugin/` | Community VS Code extension (private mirror) |
+| `vscode-plugin/` | Community VS Code extension (private source; public Marketplace package) |
 | `scripts/` | Release verification, export, security, packaging smoke, showcase wrappers |
 | **This handbook** | Ecosystem operations (export, release, ownership) |
 

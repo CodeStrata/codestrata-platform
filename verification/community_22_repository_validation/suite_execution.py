@@ -162,22 +162,65 @@ def _assessment_env(*, home: Path, venv_dir: Path, telemetry_endpoint: str | Non
     return env
 
 
-def _find_new_run(assessments_root: Path, *, before: set[str], slug_hint: str) -> Path | None:
+def _github_logical_id(github_repository: str) -> str:
+    """Map catalog ``owner/repo`` to ``github-<owner>-<repo>`` logical folder id."""
+
+    from codestrata.artifacts.repository_identity import build_github_repository_artifact_id
+
+    owner, _, repo = github_repository.partition("/")
+    return build_github_repository_artifact_id(owner, repo)
+
+
+def _find_new_run(
+    assessments_root: Path,
+    *,
+    before: set[str],
+    slug_hint: str,
+    github_repository: str | None = None,
+) -> Path | None:
+    """Locate the assessment artifact directory produced by this run.
+
+    Supports:
+    - legacy dated runs: ``<slug>-YYYYMMDD-HHMMSS/``
+    - current logical layout: ``github-<owner>-<repo>/current/`` (Slice 17.15+)
+    """
+
     if not assessments_root.is_dir():
         return None
+
+    # Prefer logical github-* /current when catalog identity is known.
+    if github_repository:
+        logical = assessments_root / _github_logical_id(github_repository) / "current"
+        if (logical / "assessment.json").is_file() and (logical / "assessment.html").is_file():
+            return logical
+
     slug = slug_hint.strip().lower().replace("/", "-")
     prefix = f"{slug}-"
     candidates: list[Path] = []
     for child in assessments_root.iterdir():
         if not child.is_dir() or child.name in before:
             continue
+        # Newly created logical folder (not in before).
+        current = child / "current"
+        if (
+            child.name.startswith(("github-", "local-"))
+            and (current / "assessment.json").is_file()
+            and (current / "assessment.html").is_file()
+        ):
+            candidates.append(current)
+            continue
         if not child.name.startswith(prefix):
             continue
         if (child / "assessment.json").is_file() and (child / "assessment.html").is_file():
             candidates.append(child)
     if not candidates:
+        # Fallback: existing logical current updated in place (mtime refreshed).
+        if github_repository:
+            logical = assessments_root / _github_logical_id(github_repository) / "current"
+            if (logical / "assessment.json").is_file() and (logical / "assessment.html").is_file():
+                return logical
         return None
-    return sorted(candidates, key=lambda p: p.name, reverse=True)[0]
+    return sorted(candidates, key=lambda p: p.stat().st_mtime, reverse=True)[0]
 
 
 def _validate_run_artifacts(run_dir: Path) -> tuple[str, str, list[str]]:
@@ -390,7 +433,12 @@ def execute_one_repository(
             encoding="utf-8",
         )
 
-        run_dir = _find_new_run(assessments_root, before=before, slug_hint=repo.repository_id)
+        run_dir = _find_new_run(
+            assessments_root,
+            before=before,
+            slug_hint=repo.repository_id,
+            github_repository=repo.github_repository,
+        )
         if run_dir is None:
             result.assessment_status = "artifact_missing"
             result.report_status = "missing"
@@ -400,8 +448,14 @@ def execute_one_repository(
             result.limitations.append("assessment_run_directory_not_found_for_slug")
             return result
 
-        result.assessment_run_id = run_dir.name
-        result.assessment_artifact_ref = f"{ASSESSMENTS_RELATIVE}/{run_dir.name}"
+        # run_dir may be ``.../<logical>/current`` or a legacy dated run folder.
+        if run_dir.name == "current":
+            logical_id = run_dir.parent.name
+            result.assessment_run_id = logical_id
+            result.assessment_artifact_ref = f"{ASSESSMENTS_RELATIVE}/{logical_id}/current"
+        else:
+            result.assessment_run_id = run_dir.name
+            result.assessment_artifact_ref = f"{ASSESSMENTS_RELATIVE}/{run_dir.name}"
         status, head_summary, art_limits = _validate_run_artifacts(run_dir)
         result.head_status_summary = head_summary
         result.limitations.extend(art_limits)

@@ -34,6 +34,10 @@ def test_D_E_F_G_H_no_persistence_identity_queue_http(
     before = {p.name: p.read_bytes() for p in home.iterdir()}
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
     monkeypatch.setenv("CODESTRATA_TELEMETRY_ENDPOINT", "https://example.invalid/t")
+    monkeypatch.setattr(
+        "codestrata.telemetry.product_transport.try_create_production_http_transport",
+        lambda: None,
+    )
     reset_telemetry_singletons()
 
     with patch("codestrata.telemetry.transport.send_payload") as send:
@@ -46,11 +50,12 @@ def test_D_E_F_G_H_no_persistence_identity_queue_http(
             send.assert_not_called()
             load.assert_not_called()
 
-    assert {p.name: p.read_bytes() for p in home.iterdir()} == before
+    # Pre-seeded installation_id + telemetry.json must remain; no queue/http side effects.
+    assert (home / "installation_id").read_text(encoding="utf-8").startswith("55555555")
+    assert (home / "telemetry.json").read_bytes() == before["telemetry.json"]
     assert not (home / "queue").exists()
     assert telemetry.runtime.session.counters.transport_sent == 0
     assert telemetry.runtime.session.counters.transport_unavailable >= 1
-    assert (home / "installation_id").read_text(encoding="utf-8").startswith("55555555")
 
 
 def test_I_deny_does_not_invoke_transport() -> None:
@@ -67,7 +72,11 @@ def test_I_deny_does_not_invoke_transport() -> None:
     assert facade.runtime.session.counters.transmission_attempts == 0
 
 
-def test_allow_unavailable_not_sent() -> None:
+def test_allow_unavailable_not_sent(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "codestrata.telemetry.product_transport.try_create_production_http_transport",
+        lambda: None,
+    )
     facade, result = create_command_session_telemetry_runtime(
         command="assess",
         telemetry_allow=True,
@@ -97,7 +106,7 @@ def test_allow_capture_receives_privacy_safe_only() -> None:
     assert "argv" not in payload
 
 
-def test_W_legacy_enable_does_not_authorize_without_flag(
+def test_W_legacy_enable_authorizes_via_persisted_preference(
     tmp_path: Path, monkeypatch
 ) -> None:
     home = tmp_path / "home"
@@ -111,4 +120,6 @@ def test_W_legacy_enable_does_not_authorize_without_flag(
         stdin_interactive=False,
         automation_detected=True,
     )
-    assert telemetry.runtime.session.decision is TelemetryDecision.NON_INTERACTIVE_DISABLED
+    assert telemetry.runtime.session.decision is TelemetryDecision.ALLOWED_FOR_SESSION
+    assert telemetry.runtime.session.decision_source.value == "persisted_preference"
+    assert telemetry.runtime.session.consent.persisted is True

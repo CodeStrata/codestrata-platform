@@ -22,5 +22,5 @@ Findings · Recommendations · Reports
 | --------- | ---- |
 | VS Code | [VS Code Extension](./vscode) |
 
-The extension does not duplicate Engineering Intelligence or call Platform APIs
+The extension does not duplicate portfolio Engineering Intelligence (EIR) or call Platform APIs
 for Community assessment.

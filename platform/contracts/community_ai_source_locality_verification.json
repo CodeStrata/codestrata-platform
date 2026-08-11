@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-ai-source-locality-verification:1.0.0",
+  "title": "Community AI Source Locality Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic18_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-ai-source-locality-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-ai-source-locality-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "slice": { "const": "18.4" },
+    "suite_id": { "const": "sv18-4" },
+    "epic18_boundary": {
+      "type": "object",
+      "required": ["start_slice_18_4", "start_slice_18_5"],
+      "properties": {
+        "start_slice_18_4": { "const": true },
+        "start_slice_18_5": { "const": false }
+      }
+    }
+  }
+}

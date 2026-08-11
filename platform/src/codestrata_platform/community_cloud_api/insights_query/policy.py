@@ -44,10 +44,11 @@ METRIC_STREAMS: dict[str, tuple[str, ...]] = {
         "extension_event",
         "ai_usage",
     ),
-    "first_assessments": ("assessment_metadata",),
-    "repeat_assessments": ("assessment_metadata",),
-    "successful_assessments": ("assessment_metadata",),
-    "failed_assessments": ("assessment_metadata",),
+    "first_assessments": ("telemetry", "assessment_metadata"),
+    "repeat_assessments": ("telemetry", "assessment_metadata"),
+    "successful_assessments": ("telemetry", "assessment_metadata"),
+    "failed_assessments": ("telemetry", "assessment_metadata"),
+    "total_assessments": ("telemetry", "assessment_metadata"),
     "cli_version_adoption": ("cli_event",),
     "assessment_head_usage": ("assessment_metadata",),
     "language_ecosystem_distribution": ("assessment_metadata",),
@@ -65,7 +66,15 @@ LIFETIME_METRICS: frozenset[str] = frozenset(
     }
 )
 
-EXTERNAL_METRICS: frozenset[str] = frozenset({"validation_dataset_growth"})
+EXTERNAL_METRICS: frozenset[str] = frozenset(
+    {
+        "validation_dataset_growth",
+        "github_stars",
+        "github_forks",
+        "published_reports",
+        "community_sentiment",
+    }
+)
 
 
 def default_query_budgets() -> QueryBudgets:

@@ -311,7 +311,7 @@ def test_complete_report_rendering(tmp_path: Path) -> None:
     assert "Internal use only" in html
     for section in (
         "Leadership Verdict",
-        "Engineering Intelligence Summary",
+        "Assessment Overview",
         "Technology Inventory",
         "Assessment Results",
         "Priority Actions",
@@ -340,7 +340,7 @@ def test_minimal_valid_report(tmp_path: Path) -> None:
     assert "CodeStrata" in html
     assert "sample-app" in html
     assert "Leadership Verdict" in html
-    assert "Engineering Intelligence Summary" in html
+    assert "Assessment Overview" in html
     assert "Should I care?" in html
 
 
@@ -352,7 +352,7 @@ def test_deterministic_report_without_ai(tmp_path: Path) -> None:
     )
     html = ModernizationHTMLReportRenderer().render(report_input)
     assert "Leadership Verdict" in html
-    assert "Engineering Intelligence Summary" in html
+    assert "Assessment Overview" in html
     assert 'id="ai-enrichment"' not in html
     assert "Priority Actions" in html
     assert "Assessment Results" in html

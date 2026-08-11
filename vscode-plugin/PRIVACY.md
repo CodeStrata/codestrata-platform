@@ -37,8 +37,22 @@ Anonymous product telemetry is **disabled by default**. Eligible assessment
 commands may prompt once for **command-local** consent (default Deny; not
 saved). Telemetry opt-in does **not** publish reports.
 
-See https://docs.codestrata.ai/security/privacy and
-https://docs.codestrata.ai/reference/telemetry.
+See https://docs.codestrata.ai/security/privacy,
+https://docs.codestrata.ai/security/source-locality,
+https://docs.codestrata.ai/architecture/community-cloud,
+https://docs.codestrata.ai/ai-providers/,
+https://docs.codestrata.ai/reference/telemetry,
+https://docs.codestrata.ai/security/data-collection, and
+https://docs.codestrata.ai/security/retention-and-deletion.
+
+Telemetry opt-out does **not** revoke an already published public report.
+Local reports under `.codestrata-artifacts/` remain user-controlled.
+AI enrichment (if used) goes to the configured provider via the Engine — not
+through the VS Code extension as a source-upload path.
+
+Community Cloud production authority for ingest:
+
+https://api.codestrata.ai
 
 ## Marketplace
 

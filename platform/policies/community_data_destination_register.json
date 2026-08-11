@@ -1,0 +1,58 @@
+{
+  "register_id": "community-data-destination-register",
+  "register_version": "1.0",
+  "schema": "community-data-destination-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "runtime_artifacts+infrastructure_modules",
+  "entries": [
+    {
+      "destination_id": "local_artifacts",
+      "path_or_name": ".codestrata-artifacts/",
+      "purpose": "Local Assessment and EIR products with current/previous slots",
+      "data_types": ["assessment_manifest", "assessment_html", "heads_json", "eir_html_json", "temporary_runs"],
+      "retention": "current_plus_previous_product_visible",
+      "visibility": "local_filesystem_user_controlled",
+      "access_model": "local_user",
+      "public": false,
+      "encryption_private_posture": "host_filesystem",
+      "orientation": "current_previous"
+    },
+    {
+      "destination_id": "report_artifact_store",
+      "path_or_name": "codestrata-community-report-artifacts-production",
+      "purpose": "Private storage for explicitly published Assessment/EIR artifacts",
+      "data_types": ["published_assessment", "published_eir", "staging_uploads", "metadata"],
+      "retention": "application_enforced_current_previous_plus_staging_2d",
+      "visibility": "private_bucket_public_via_opaque_reports_domain_only",
+      "access_model": "authenticated_publish_revoke_public_get_by_opaque_id",
+      "public": false,
+      "encryption_private_posture": "private_s3_encrypted",
+      "orientation": "current_previous"
+    },
+    {
+      "destination_id": "community_data_lake",
+      "path_or_name": "codestrata-community-data-lake-production",
+      "purpose": "Append-oriented privacy-safe event streams for Insights",
+      "data_types": ["telemetry", "assessment_metadata", "cli_event", "extension_event", "ai_usage", "quarantine", "identity"],
+      "retention": "raw_365d_quarantine_90d_identity_indefinite",
+      "visibility": "private",
+      "access_model": "ingestion_write_insights_read",
+      "public": false,
+      "encryption_private_posture": "private_s3_encrypted",
+      "orientation": "append_oriented_not_current_previous"
+    },
+    {
+      "destination_id": "secrets_manager",
+      "path_or_name": "AWS Secrets Manager",
+      "purpose": "Community client credentials, Insights password verifier, session secrets",
+      "data_types": ["credentials", "password_verifier", "session_hmac_material"],
+      "retention": "operator_rotation_lifecycle",
+      "visibility": "private",
+      "access_model": "aws_iam_runtime_roles",
+      "public": false,
+      "encryption_private_posture": "aws_secrets_manager",
+      "orientation": "secret_versioned"
+    }
+  ]
+}

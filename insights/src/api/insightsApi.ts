@@ -9,6 +9,9 @@ export interface PublishedReportRow {
   current_status: string | null;
   previous_status: string | null;
   last_verified_status?: unknown;
+  verification_status?: string | null;
+  published_at?: string | null;
+  public_report_id?: string | null;
 }
 
 export interface PublishedReportsRegistry {
@@ -18,10 +21,38 @@ export interface PublishedReportsRegistry {
   note?: string;
 }
 
+export interface ValidationReportRow {
+  public_report_id: string;
+  public_url: string | null;
+  report_type: string;
+  display_identity?: string | null;
+  logical_identity_key?: string | null;
+  logical_identity_type?: string | null;
+  published_at?: string | null;
+  verification_status?: string | null;
+  verified_http_status?: number | null;
+  verified_at?: string | null;
+  temporary?: boolean;
+}
+
+export interface ValidationReportsPage {
+  items: ValidationReportRow[];
+  next_cursor: string | null;
+  limit: number;
+  temporary?: boolean;
+  purpose?: string;
+  note?: string;
+  source?: string;
+}
+
 export interface InsightsApiClient {
   getOverview(): Promise<MetricResult[]>;
   getMetric(metricId: MetricId | string): Promise<MetricResult>;
   getPublishedReports(): Promise<PublishedReportsRegistry>;
+  getValidationReports(opts?: {
+    limit?: number;
+    cursor?: string;
+  }): Promise<ValidationReportsPage>;
 }
 
 export class UnavailableInsightsApiClient implements InsightsApiClient {
@@ -35,6 +66,10 @@ export class UnavailableInsightsApiClient implements InsightsApiClient {
 
   async getPublishedReports(): Promise<PublishedReportsRegistry> {
     return { assessments: [], engineering_intelligence: [] };
+  }
+
+  async getValidationReports(): Promise<ValidationReportsPage> {
+    return { items: [], next_cursor: null, limit: 50, temporary: true };
   }
 }
 
@@ -73,5 +108,9 @@ export class MockInsightsApiClient implements InsightsApiClient {
 
   async getPublishedReports(): Promise<PublishedReportsRegistry> {
     return { assessments: [], engineering_intelligence: [] };
+  }
+
+  async getValidationReports(): Promise<ValidationReportsPage> {
+    return { items: [], next_cursor: null, limit: 50, temporary: true };
   }
 }

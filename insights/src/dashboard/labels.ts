@@ -16,6 +16,13 @@ export const LIMITATION_COPY: Record<string, string> = {
     "Production analytics ingestion is not enabled.",
   no_live_dashboard_data_claim:
     "This dashboard does not claim live production telemetry.",
+  github_public_api: "Loaded from the public GitHub API.",
+  report_artifact_store_registry: "Counted from published report registry slots.",
+  community_sentiment_not_yet_collected:
+    "No voluntary Yes/No responses yet.",
+  no_responses_yet: "No voluntary Yes/No responses yet.",
+  voluntary_feedback_only: "Based only on explicit Yes/No feedback responses.",
+  explicit_yes_no_only: "Explicit Yes/No feedback only — no AI sentiment inference.",
 };
 
 export function humanizeLimitations(codes: string[]): string[] {
@@ -27,14 +34,33 @@ export function humanizeLimitations(codes: string[]): string[] {
   return out;
 }
 
+/** v0.2.0 Insights dashboard — nine metrics only. */
+export const V02_OVERVIEW_METRIC_IDS = [
+  "github_stars",
+  "github_forks",
+  "community_sentiment",
+  "total_assessments",
+  "first_assessments",
+  "repeat_assessments",
+  "successful_assessments",
+  "failed_assessments",
+  "published_reports",
+] as const;
+
 export const METRIC_DISPLAY_NAMES: Record<string, string> = {
+  github_stars: "GitHub Stars",
+  github_forks: "GitHub Forks",
+  community_sentiment: "Community Sentiment",
+  total_assessments: "Total Assessments",
+  first_assessments: "First Assessments",
+  repeat_assessments: "Repeat Assessments",
+  successful_assessments: "Successful Assessments",
+  failed_assessments: "Failed Assessments",
+  published_reports: "Published Reports",
+  // retained labels for older API responses / tests
   total_anonymous_installations: "Anonymous installations",
   daily_active_installations: "Daily active installations",
   monthly_active_installations: "30-day active installations",
-  first_assessments: "First assessments",
-  repeat_assessments: "Repeat assessments",
-  successful_assessments: "Successful assessments",
-  failed_assessments: "Failed assessments",
   cli_version_adoption: "CLI version adoption",
   assessment_head_usage: "Assessment-head usage",
   language_ecosystem_distribution: "Language and ecosystem distribution",

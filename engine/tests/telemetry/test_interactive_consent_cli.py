@@ -67,7 +67,10 @@ def test_assess_simulated_interactive_yes_no_network(tmp_path: Path, monkeypatch
     reset_telemetry_singletons()
     from codestrata.telemetry.service import ensure_interactive_product_telemetry
 
-    with patch("codestrata.telemetry.transport.send_payload") as send:
+    with patch(
+        "codestrata.telemetry.product_transport.try_create_production_http_transport",
+        return_value=None,
+    ), patch("codestrata.telemetry.transport.send_payload") as send:
         telemetry = ensure_interactive_product_telemetry(
             command="assess",
             stdin_interactive=True,
@@ -82,6 +85,9 @@ def test_assess_simulated_interactive_yes_no_network(tmp_path: Path, monkeypatch
             duration_ms=1.0,
         )
         send.assert_not_called()
-    assert list(home.iterdir()) == []
+    leftover = {p.name for p in home.iterdir()}
+    assert "telemetry.json" in leftover
+    assert leftover <= {"telemetry.json", "installation_id"}
     assert telemetry.runtime.session.counters.transport_sent == 0
-    assert telemetry.runtime.session.counters.transport_unavailable >= 1
+    assert telemetry.runtime.session.counters.transmission_attempts >= 1
+    assert telemetry.runtime.session.consent.persisted is True

@@ -33,7 +33,7 @@ def test_F_allowed_does_not_generate_installation_id(tmp_path: Path, monkeypatch
     assert "installation_id" not in diagnostics
     assert '"installation_id"' not in runtime.diagnostics().to_stable_json()
     # Limitation codes may mention identity policy; that is not an ID value.
-    assert "no_installation_identity" in diagnostics["limitation_codes"]
+    assert "no_installation_identity_required" in diagnostics["limitation_codes"]
     assert diagnostics["persisted"] is False
     assert diagnostics["prior_consent_reused"] is False
 
@@ -50,7 +50,7 @@ def test_X_cli_help_includes_preview_without_assess_flags() -> None:
 
 
 def test_Y_no_platform_datalake_imports() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):

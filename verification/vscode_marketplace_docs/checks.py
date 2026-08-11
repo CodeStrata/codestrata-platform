@@ -114,7 +114,6 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
 
     public_link_needles = (
         "https://docs.codestrata.ai/extensions/vscode",
-        "https://github.com/CodeStrata/codestrata-vscode/issues",
         "https://codestrata.ai",
         "PRIVACY.md",
         "SECURITY.md",
@@ -230,7 +229,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
             CheckResult(
                 "report:local_html",
                 "Open HTML Report" in readme
-                and "report.html" in readme
+                and "assessment.html" in readme
                 and "does **not** change the assessment result" in readme,
                 "report documented",
                 "report",
@@ -262,9 +261,10 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
             ),
             CheckResult(
                 "telemetry:not_operational",
-                "not operational" in readme_lower
-                and "transport unavailable" in readme_lower,
-                "no operational transmission claim",
+                "default assessment does not transmit" in readme_lower
+                and "telemetry opt-in is **not** report-publish authorization"
+                in readme_lower,
+                "no default operational transmission claim",
                 "telemetry",
             ),
             CheckResult(

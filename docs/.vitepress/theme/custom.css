@@ -240,9 +240,25 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   border: 1px solid var(--cs-night-line);
 }
 
+/*
+ * Layout: pin CsFooter to the bottom of the viewport when content is short.
+ * VitePress .Layout is a column flex container; margin-top:auto consumes
+ * remaining space so the footer boundary sits after content, not mid-page.
+ * Do not use hard-coded pixel offsets.
+ */
+.Layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.Layout .VPContent {
+  flex: 1 0 auto;
+}
+
 /* Footer — home uses marketing grid; inner pages use minimal bar. */
 .cs-footer {
-  margin-top: 3rem;
+  margin-top: auto;
   /* Home: avoid double line with .cs-footer__base; separator lives on base. */
   border-top: none;
   background: var(--cs-paper-soft);
@@ -250,6 +266,7 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   font-size: var(--cs-text-sm);
   box-sizing: border-box;
   max-width: 100%;
+  width: 100%;
 }
 
 .dark .cs-footer {
@@ -361,9 +378,14 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
 
 /* Minimal footer: one top separator; offset past fixed sidebar on desktop. */
 .cs-footer--minimal {
-  margin-top: 1.5rem;
+  margin-top: auto;
   background: transparent;
   border-top: 1px solid var(--cs-line);
+}
+
+/* Hide stock VitePress footer if a theme.footer remnant is ever reintroduced. */
+.VPFooter {
+  display: none !important;
 }
 
 .dark .cs-footer--minimal {
@@ -442,7 +464,12 @@ html:not(.dark) .VPNavBarTitle .logo-dark {
   }
 }
 
-/* Local search chrome */
+/* Search omitted for v0.2.0 — hide empty VitePress search shell. */
+.VPNavBarSearch {
+  display: none !important;
+}
+
+/* Local search chrome (kept for post-v0.2.0 if search returns) */
 .VPLocalSearchBox {
   --vp-c-brand-1: var(--cs-teal-dark);
 }

@@ -10,10 +10,10 @@ produces findings, recommendations, and reports grounded in evidence.
 
 ## Default path
 
-Deterministic Engineering Intelligence:
+Deterministic Engineering Assessment:
 
 ```bash
-codestrata assess --repo . --output reports --no-ai
+codestrata assess --repo . --no-ai
 ```
 
 Rules and evidence run locally. No AI provider is required.
@@ -21,7 +21,7 @@ Rules and evidence run locally. No AI provider is required.
 ## Optional AI
 
 ```bash
-codestrata assess --repo . --output reports --with-ai
+codestrata assess --repo . --with-ai
 ```
 
 Requires Engine-configured provider credentials. See

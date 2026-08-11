@@ -1,0 +1,55 @@
+{
+  "register_id": "community-source-locality-register",
+  "register_version": "1.0",
+  "schema": "community-source-locality-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "runtime_boundaries",
+  "entries": [
+    {
+      "surface": "Assessment",
+      "stays_local": "assessment.json assessment.html heads/*.json under .codestrata-artifacts",
+      "leaves_machine": "optional assessment_metadata aggregates only when consent+credential; optional explicit publish package",
+      "when": "after assessment completes and only if user opted in / explicitly published",
+      "why": "local credibility by default; optional community aggregates or sharing",
+      "consent_or_action": "telemetry consent for metadata stream; explicit Publish/Share for report bodies",
+      "destination": "Data Lake for metadata; Report Artifact Store + reports.codestrata.ai for publish"
+    },
+    {
+      "surface": "Telemetry",
+      "stays_local": "default_all_product_telemetry",
+      "leaves_machine": "privacy-safe telemetry/cli/extension/ai_usage events when allowed",
+      "when": "explicit opt-in session/command and credential present",
+      "why": "optional product improvement analytics",
+      "consent_or_action": "explicit telemetry allow",
+      "destination": "api.codestrata.ai → Community Data Lake"
+    },
+    {
+      "surface": "AI enrichment",
+      "stays_local": "No-AI path keeps enrichment local-absent; keys never stored in artifacts",
+      "leaves_machine": "provider prompts/context go directly to chosen provider when configured",
+      "when": "user configures provider and assessment enrichment runs",
+      "why": "optional enrichment",
+      "consent_or_action": "provider configuration/credentials; distinct from telemetry consent",
+      "destination": "Bedrock/OpenAI/OpenRouter provider endpoints — NOT CodeStrata telemetry"
+    },
+    {
+      "surface": "Report publishing",
+      "stays_local": "local report always generated regardless of publish",
+      "leaves_machine": "selected Assessment/EIR artifacts on explicit publish",
+      "when": "user confirms Publish/Share after eligibility gates",
+      "why": "optional sharing",
+      "consent_or_action": "telemetry eligibility gate + explicit publish confirmation",
+      "destination": "Report Artifact Store; public opaque URL on reports.codestrata.ai"
+    },
+    {
+      "surface": "Insights",
+      "stays_local": "n/a_operator_dashboard",
+      "leaves_machine": "reads already-ingested Data Lake aggregates; no new customer source upload from Insights UI",
+      "when": "authenticated operator session",
+      "why": "operator visibility into community aggregates",
+      "consent_or_action": "Insights password/session — not end-user telemetry consent",
+      "destination": "Insights SPA reads production Data Lake via private API"
+    }
+  ]
+}

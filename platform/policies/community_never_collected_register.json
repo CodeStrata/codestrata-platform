@@ -1,0 +1,80 @@
+{
+  "register_id": "community-never-collected-register",
+  "register_version": "1.0",
+  "schema": "community-never-collected-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "runtime_models+privacy_validators+report_publishing_boundary",
+  "entries": [
+    {
+      "category": "repository_source_code",
+      "guaranteed": true,
+      "runtime_basis": "ingestion models reject free-form content; assessment_metadata aggregates only"
+    },
+    {
+      "category": "file_contents",
+      "guaranteed": true,
+      "runtime_basis": "no file-body fields on Community ingestion schemas"
+    },
+    {
+      "category": "full_assessment_html",
+      "guaranteed": true,
+      "runtime_basis": "telemetry/assessment_metadata exclude report bodies; publish uses separate Report Artifact Store"
+    },
+    {
+      "category": "full_assessment_json",
+      "guaranteed": true,
+      "runtime_basis": "assessment.json is local lightweight manifest; not a Data Lake object"
+    },
+    {
+      "category": "full_heads_json",
+      "guaranteed": true,
+      "runtime_basis": "heads/*.json remain local modular artifacts; not telemetry payloads"
+    },
+    {
+      "category": "complete_findings_evidence",
+      "guaranteed": true,
+      "runtime_basis": "assessment_metadata contract excludes findings/evidence payloads"
+    },
+    {
+      "category": "engineering_intelligence_html_json",
+      "guaranteed": true,
+      "runtime_basis": "EIR bodies are local/published report artifacts; not Data Lake streams"
+    },
+    {
+      "category": "local_absolute_paths",
+      "guaranteed": true,
+      "runtime_basis": "label validators reject path separators and file: URLs in telemetry properties"
+    },
+    {
+      "category": "credentials_api_keys",
+      "guaranteed": true,
+      "runtime_basis": "secret-like value rejection in telemetry sanitization; credentials never persisted in assessment artifacts"
+    },
+    {
+      "category": "git_credential_userinfo",
+      "guaranteed": true,
+      "runtime_basis": "clone helper isolates git config and scrubs credential-bearing remotes"
+    },
+    {
+      "category": "ai_prompts",
+      "guaranteed": true,
+      "runtime_basis": "ai_usage schema is metadata-only; providers receive prompts only on direct provider calls, not via CodeStrata telemetry"
+    },
+    {
+      "category": "ai_responses",
+      "guaranteed": true,
+      "runtime_basis": "ai_usage schema excludes response bodies from Community telemetry"
+    },
+    {
+      "category": "raw_machine_identifiers",
+      "guaranteed": true,
+      "runtime_basis": "anonymous installation id is random UUID v4; never derived from machine properties"
+    },
+    {
+      "category": "raw_s3_object_paths",
+      "guaranteed": true,
+      "runtime_basis": "public report URLs are opaque; raw S3 URLs not public"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ from codestrata_platform.community_cloud_api.insights_auth.handlers import (
     handle_overview,
     handle_published_reports,
     handle_session_status,
+    handle_validation_reports,
 )
 from codestrata_platform.community_cloud_api.insights_auth.request_models import (
     InsightsLoginRequest,
@@ -30,12 +31,14 @@ LOGOUT_PATH = "/insights/auth/logout"
 SESSION_PATH = "/insights/auth/session"
 OVERVIEW_PATH = "/insights/api/overview"
 PUBLISHED_REPORTS_PATH = "/insights/api/published-reports"
+VALIDATION_REPORTS_PATH = "/insights/api/validation-reports"
 
 LOGIN_ROUTE = "insights.auth.login"
 LOGOUT_ROUTE = "insights.auth.logout"
 SESSION_ROUTE = "insights.auth.session"
 OVERVIEW_ROUTE = "insights.api.overview"
 PUBLISHED_REPORTS_ROUTE = "insights.api.published_reports"
+VALIDATION_REPORTS_ROUTE = "insights.api.validation_reports"
 
 LOGIN_SCHEMA_ID = "community.insights.auth.login"
 LOGIN_SCHEMA_VERSION = "1.0"
@@ -79,6 +82,11 @@ def register_insights_auth_routes(
 
     def _published(context: RequestContext) -> Response:
         return handle_published_reports(
+            context, auth=auth, report_service=report_service
+        )
+
+    def _validation(context: RequestContext) -> Response:
+        return handle_validation_reports(
             context, auth=auth, report_service=report_service
         )
 
@@ -140,5 +148,17 @@ def register_insights_auth_routes(
             authentication_group="public",
         ),
         handler=_published,
+        request_schema=NO_BODY_SCHEMA,
+    )
+    registry.register(
+        RouteSpec(
+            version=API_VERSION_V1,
+            method="GET",
+            path=VALIDATION_REPORTS_PATH,
+            name=VALIDATION_REPORTS_ROUTE,
+            rate_limit_group="health",
+            authentication_group="public",
+        ),
+        handler=_validation,
         request_schema=NO_BODY_SCHEMA,
     )

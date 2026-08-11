@@ -22,7 +22,7 @@ class AssessmentHead(StrEnum):
     MODERNIZATION_ASSESSMENT = "modernization_assessment"
 
 
-# Display order for Assessment Results subsections (excludes Engineering Intelligence Summary).
+# Display order for Assessment Results subsections (excludes Assessment Overview).
 ASSESSMENT_RESULT_HEADS: tuple[AssessmentHead, ...] = (
     AssessmentHead.TECHNOLOGY_INVENTORY,
     AssessmentHead.ARCHITECTURE_INTELLIGENCE,
@@ -35,7 +35,8 @@ ASSESSMENT_RESULT_HEADS: tuple[AssessmentHead, ...] = (
 )
 
 _TITLES: dict[AssessmentHead, str] = {
-    AssessmentHead.ENGINEERING_INTELLIGENCE: "Engineering Intelligence Summary",
+    # Display rename (Slice 19.1): unique cross-head synthesis; schema id unchanged.
+    AssessmentHead.ENGINEERING_INTELLIGENCE: "Assessment Overview",
     AssessmentHead.TECHNOLOGY_INVENTORY: "Technology Inventory",
     AssessmentHead.ARCHITECTURE_INTELLIGENCE: "Architecture Intelligence",
     AssessmentHead.TECHNICAL_DEBT_INTELLIGENCE: "Technical Debt Intelligence",

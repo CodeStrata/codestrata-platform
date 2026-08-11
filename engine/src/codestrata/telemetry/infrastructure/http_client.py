@@ -47,11 +47,19 @@ class StdlibTelemetryHttpClient:
 
     def __init__(self, *, max_body_bytes: int = 8192) -> None:
         self._max_body_bytes = max_body_bytes
+        # Prefer certifi CA bundle — macOS/Python.org builds often lack system
+        # trust roots for ssl.create_default_context() alone.
+        try:
+            import certifi
+
+            context = ssl.create_default_context(cafile=certifi.where())
+        except Exception:  # noqa: BLE001 — fall back to platform defaults
+            context = ssl.create_default_context()
         # Empty ProxyHandler disables environment proxy discovery.
         self._opener = urllib.request.build_opener(
             urllib.request.ProxyHandler({}),
             _RejectRedirectHandler(),
-            urllib.request.HTTPSHandler(context=ssl.create_default_context()),
+            urllib.request.HTTPSHandler(context=context),
         )
 
     def post_json(

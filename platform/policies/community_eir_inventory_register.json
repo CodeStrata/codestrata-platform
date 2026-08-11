@@ -1,0 +1,19 @@
+{
+  "register_id": "community-eir-inventory-register",
+  "register_version": "1.0",
+  "schema": "community-eir-inventory-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "engineering_intelligence_policies+artifacts_lifecycle",
+  "portfolio_level": true,
+  "created_for_every_single_repository_assessment": false,
+  "inputs": "completed_assessments_only",
+  "hidden_rescan": false,
+  "portfolio_identity": "human_readable_logical_portfolio_id",
+  "membership_behavior": "traceable_membership_change_preserves_identity",
+  "lifecycle": "current_plus_previous",
+  "local_default": true,
+  "public_publishing": "explicit_publish_only_same_report_publishing_contract",
+  "data_lake_relationship": "EIR_bodies_not_data_lake_objects_metadata_streams_separate",
+  "layout": ".codestrata-artifacts/intelligence/<portfolio-id>/{current,previous}/"
+}

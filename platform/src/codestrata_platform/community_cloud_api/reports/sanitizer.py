@@ -18,7 +18,9 @@ _SECRET_PATTERNS: tuple[re.Pattern[str], ...] = (
 )
 
 _PATH_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"(?i)/(Users|home)/[^\s\"']+"),
+    # Home-directory style only (lowercase username segment). Avoids false
+    # positives like repository paths "/Users/Models/User.php".
+    re.compile(r"/(?:Users|home)/[a-z][a-z0-9._-]{0,63}/[^\s\"']+"),
     re.compile(r"(?i)[A-Z]:\\\\Users\\\\[^\s\"']+"),
     re.compile(r"(?i)file:///"),
 )

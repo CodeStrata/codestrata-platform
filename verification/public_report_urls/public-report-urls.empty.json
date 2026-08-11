@@ -1,0 +1,7 @@
+{
+  "schema": "public-report-urls-manifest:1.1",
+  "purpose": "Release Epic validation evidence — not production state",
+  "assessments": [],
+  "engineering_intelligence": [],
+  "note": "Tracked empty scaffold for Epic 19. Runtime corpus writes go to .codestrata-artifacts/validation/suites/release-v0.2.0/public-report-urls.json (gitignored). Opaque reports.codestrata.ai/r/<id> URLs only — no index on reports host."
+}

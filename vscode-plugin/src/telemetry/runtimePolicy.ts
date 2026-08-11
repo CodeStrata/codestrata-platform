@@ -1,11 +1,11 @@
 /**
- * Community VS Code telemetry runtime policy (Slice 9.13).
- * Independently versioned from Engine runtime policy.
+ * Community VS Code telemetry runtime policy (Slice 19.4).
+ * Explicit local preference may be persisted; default remains disabled.
  */
 
 export const COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_ID =
   "community-vscode-telemetry-runtime-policy";
-export const COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_VERSION = "1.0";
+export const COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_VERSION = "2.0";
 export const COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_URN = `${COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_ID}:${COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_VERSION}`;
 
 export const VSCODE_TELEMETRY_EVENT_SCHEMA_NAME =
@@ -15,8 +15,8 @@ export const VSCODE_TELEMETRY_EVENT_SCHEMA_VERSION = "1.0";
 const LIMITATIONS = [
   "disabled_by_default",
   "command_scoped_consent",
-  "no_persisted_consent",
-  "no_prior_consent_reuse",
+  "local_preference_persistence",
+  "no_default_yes",
   "no_installation_identity",
   "no_workspace_repository_document_collection",
   "no_path_collection",
@@ -43,8 +43,7 @@ export type VsCodeTelemetryRuntimePolicy = {
   readonly eventSchemaVersion: string;
   readonly disabledByDefault: true;
   readonly commandScopedConsent: true;
-  readonly noPersistedConsent: true;
-  readonly noPriorConsentReuse: true;
+  readonly localPreferencePersistence: true;
   readonly noInstallationIdentity: true;
   readonly unavailableTransport: true;
   readonly failSilentIsolation: true;
@@ -62,8 +61,7 @@ export function defaultVsCodeTelemetryRuntimePolicy(): VsCodeTelemetryRuntimePol
     eventSchemaVersion: VSCODE_TELEMETRY_EVENT_SCHEMA_VERSION,
     disabledByDefault: true,
     commandScopedConsent: true,
-    noPersistedConsent: true,
-    noPriorConsentReuse: true,
+    localPreferencePersistence: true,
     noInstallationIdentity: true,
     unavailableTransport: true,
     failSilentIsolation: true,
@@ -83,9 +81,8 @@ export function policyToStableDict(
     eventSchemaVersion: policy.eventSchemaVersion,
     failSilentIsolation: policy.failSilentIsolation,
     limitations: [...policy.limitations],
+    localPreferencePersistence: policy.localPreferencePersistence,
     noInstallationIdentity: policy.noInstallationIdentity,
-    noPersistedConsent: policy.noPersistedConsent,
-    noPriorConsentReuse: policy.noPriorConsentReuse,
     noQueue: policy.noQueue,
     noRetry: policy.noRetry,
     policyId: policy.policyId,

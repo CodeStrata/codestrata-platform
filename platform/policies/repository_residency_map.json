@@ -1,6 +1,7 @@
 {
   "schema": "codestrata-repository-residency-map:1.0",
   "slice": "16.7",
+  "correction_slice": "19.8A",
   "source_authority": "monorepo_pre_cutover",
   "cutover_performed": false,
   "remote_repositories_created": false,
@@ -27,7 +28,7 @@
       "export_target": null,
       "runtime_owner": "platform",
       "status": "CORRECT_RESIDENCY",
-      "notes_code": "Private backend; never public Community export"
+      "notes_code": "PRIVATE_NOT_COMMUNITY_SOURCE (Slice 19.8A). Slice 19.8 five-public/platform-export intent is superseded. GitHub CodeStrata/codestrata-platform remains private engineering SoT; do not overwrite with platform/-only tree."
     },
     {
       "component": "infrastructure",
@@ -39,7 +40,7 @@
       "export_target": "infrastructure",
       "runtime_owner": "infrastructure",
       "status": "EXPORT_TO_FUTURE_REPOSITORY",
-      "notes_code": "IaC only; Approach A standalone export"
+      "notes_code": "PRIVATE_NOT_COMMUNITY_SOURCE (Slice 19.8A). Slice 19.8 public-IaC intent is superseded. Private export may continue; do not make the GitHub repository public."
     },
     {
       "component": "insights",
@@ -71,11 +72,11 @@
       "current_authority": "monorepo",
       "future_repository": "codestrata-vscode",
       "visibility": "public_marketplace",
-      "distribution_mode": "source_package",
+      "distribution_mode": "marketplace_package_private_source",
       "export_target": "community",
       "runtime_owner": "vscode",
       "status": "CORRECT_RESIDENCY",
-      "notes_code": "Extension runtime; CLI remains Engine-owned"
+      "notes_code": "PRIVATE_NOT_COMMUNITY_SOURCE (Slice 19.8A). Public distribution is the Marketplace VSIX; GitHub source remains private. CLI remains Engine-owned."
     },
     {
       "component": "design-system",

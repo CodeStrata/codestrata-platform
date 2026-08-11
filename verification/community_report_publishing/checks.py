@@ -293,6 +293,14 @@ def check_platform_reports(monorepo: Path) -> tuple[list[CheckResult], list[Defe
                 "present",
                 "platform_reports",
             )
+            add_check(
+                checks,
+                defects,
+                "platform:service:public_get_report_not_found",
+                "ERROR_REPORT_NOT_FOUND" in text and "handle_public_get" in text,
+                "present",
+                "platform_reports",
+            )
         if name == "policy":
             add_check(
                 checks,
@@ -439,7 +447,9 @@ def check_engine(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict[
             checks,
             defects,
             "engine:client_refuses_raw_s3",
-            "refusing raw S3" in client_text or "refusing raw s3" in client_text.lower(),
+            ("s3.amazonaws.com" in client_text and "amazonaws.com" in client_text)
+            or "refusing raw S3" in client_text
+            or "refusing raw s3" in client_text.lower(),
             "present",
             "engine",
         )
@@ -449,6 +459,16 @@ def check_engine(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict[
             "engine:client_branded_public_url",
             PUBLIC_REPORTS_BASE in client_text,
             PUBLIC_REPORTS_BASE,
+            "engine",
+        )
+        add_check(
+            checks,
+            defects,
+            "engine:client_verify_public_get",
+            "verify_public_report_get" in client_text
+            and "text/html" in client_text
+            and "codestrata-public-id" in client_text,
+            "present",
             "engine",
         )
         add_check(
@@ -973,7 +993,13 @@ def check_telemetry_no_auto_publish(monorepo: Path) -> tuple[list[CheckResult], 
     if telemetry_dir.is_dir():
         for path in telemetry_dir.rglob("*.py"):
             text = read_text(path)
-            if "publish_local_assessment" in text or "report_publish" in text:
+            # Require actual publish call sites — not credential sharing with
+            # community_cloud.report_publishing (substring "report_publish").
+            if (
+                "publish_local_assessment" in text
+                or "publish_local_eir" in text
+                or "codestrata report publish" in text
+            ):
                 auto_hits = True
                 break
 

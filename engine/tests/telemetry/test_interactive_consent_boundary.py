@@ -39,8 +39,10 @@ def test_R_S_prompt_text_has_no_repo_or_raw_event() -> None:
     blob = (PROMPT_INTRO + PROMPT_QUESTION).lower()
     for needle in ("/users/", "argv", "endpoint", "stack trace", "repository/"):
         assert needle not in blob
-    assert "installation identity" in blob
-    assert "not saved" in blob
+    assert "help improve codestrata" in blob
+    assert "anonymous usage and assessment metadata" in blob
+    assert "no source code" in blob
+    assert "share anonymous telemetry?" in blob
     assert "[y/n]" in blob
     assert "[Y/n]" not in (PROMPT_INTRO + PROMPT_QUESTION)
 
@@ -71,7 +73,12 @@ def test_V_answer_not_stored_in_result() -> None:
     assert "secret" not in result.to_stable_json()
 
 
-def test_Y_allowed_unavailable_not_sent() -> None:
+def test_Y_allowed_unavailable_not_sent(monkeypatch) -> None:
+    # Keep unit test isolated from any local Community client credential.
+    monkeypatch.setattr(
+        "codestrata.telemetry.product_transport.try_create_production_http_transport",
+        lambda: None,
+    )
     facade, result = create_interactive_session_telemetry(
         command="assess",
         stdin_interactive=True,
@@ -108,7 +115,7 @@ def test_Z_prompt_result_deterministic_ordering() -> None:
 
 
 def test_no_platform_datalake_imports() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):

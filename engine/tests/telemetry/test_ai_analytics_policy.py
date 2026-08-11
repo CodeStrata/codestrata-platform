@@ -21,7 +21,7 @@ def test_default_policy_tokens() -> None:
     assert policy.transmission_enabled is False
     assert policy.token_usage_bucket_allowed is False
     assert policy.tool_rag_graph_allowed is False
-    assert "openrouter_not_supported" in policy.limitations
+    assert "openrouter_family_only_no_endpoints_or_keys" in policy.limitations
     assert "ai_provider_platform_redesign_deferred" in policy.limitations
     assert "vscode_analytics_deferred_to_slice_10_7" in policy.limitations
 

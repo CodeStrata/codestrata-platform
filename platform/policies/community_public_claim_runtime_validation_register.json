@@ -1,0 +1,960 @@
+{
+  "register_id": "community-public-claim-runtime-validation-register",
+  "register_version": "1.0",
+  "schema": "community-public-claim-runtime-validation-register:1.0",
+  "slice": "18.7",
+  "epic": 18,
+  "authority": "Aggregated from Slices 18.1\u201318.6 claim/topic/contradiction registers plus Slice 18.7 runtime validation",
+  "claim_count": 70,
+  "status_vocabulary": [
+    "SUPPORTED",
+    "SUPPORTED_WITH_QUALIFICATION",
+    "STALE",
+    "UNSUPPORTED",
+    "CONTRADICTORY",
+    "EXPECTED_RELEASE_GAP"
+  ],
+  "release_disposition_vocabulary": [
+    "NONE",
+    "RELEASE_BLOCKER",
+    "MUST_FIX_BEFORE_RELEASE",
+    "DOCUMENTATION_FIX_NOW",
+    "EXPECTED_RELEASE_GAP",
+    "POST_RELEASE_ACCEPTABLE",
+    "RELEASE_CARRY_FORWARD"
+  ],
+  "entries": [
+    {
+      "claim_id": "C18-2-001",
+      "category": "TELEMETRY",
+      "public_location": "docs/reference/telemetry.md",
+      "claim": "Telemetry is disabled by default",
+      "evidence": {
+        "register_18_1": "community_consent_inventory_register.default_posture",
+        "runtime_evidence": "engine telemetry consent_policy + vscode consent disabled_by_default",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-002",
+      "category": "TELEMETRY",
+      "public_location": "docs/reference/telemetry.md",
+      "claim": "Explicit opt-in required for product transmission",
+      "evidence": {
+        "register_18_1": "community_consent_inventory_register.opt_in_mechanism",
+        "runtime_evidence": "--telemetry-allow / interactive allow / vscode command allow",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-003",
+      "category": "NEVER_COLLECTED",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "Telemetry does not contain source code",
+      "evidence": {
+        "register_18_1": "community_never_collected_register.repository_source_code",
+        "runtime_evidence": "ingestion models + sanitizers",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-004",
+      "category": "TELEMETRY",
+      "public_location": "docs/reference/telemetry.md",
+      "claim": "Telemetry opt-in is not publish authorization",
+      "evidence": {
+        "register_18_1": "community_consent_inventory_register.telemetry_opt_in_equals_report_publication=false",
+        "runtime_evidence": "report publishing explicit confirm gate",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-005",
+      "category": "TELEMETRY",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "Only telemetry stream is ACTIVE after opt-in on current assess path",
+      "evidence": {
+        "register_18_1": "community_telemetry_stream_inventory_register.telemetry.producer_live_or_deferred=live",
+        "runtime_evidence": "product_transport + stream inventory",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-006",
+      "category": "OPT-OUT",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "Opt-out stops future telemetry and does not auto-erase historical lake events",
+      "evidence": {
+        "register_18_1": "community_opt_out_deletion_register",
+        "runtime_evidence": "consent deny + retention policies",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-007",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/reference/telemetry.md",
+      "claim": "Production authority is api.codestrata.ai",
+      "evidence": {
+        "register_18_1": "community_api_transparency_register.public_api_base_url",
+        "runtime_evidence": "public_api_authority.py",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-008",
+      "category": "DATA_COLLECTION",
+      "public_location": "docs/security/collected-fields.md",
+      "claim": "137 collected fields are publicly traceable",
+      "evidence": {
+        "register_18_1": "community_telemetry_field_register",
+        "runtime_evidence": "pydantic request models",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-009",
+      "category": "DATA_LAKE",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "Data Lake is not the Report Artifact Store",
+      "evidence": {
+        "register_18_1": "community_data_destination_register",
+        "runtime_evidence": "infra modules + publishing policy",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-2-010",
+      "category": "NEVER_COLLECTED",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "AI prompts are not collected through telemetry",
+      "evidence": {
+        "register_18_1": "community_never_collected_register.ai_prompts",
+        "runtime_evidence": "ai_usage schema metadata-only",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-telemetry-data-transparency-claim-register"
+    },
+    {
+      "claim_id": "C18-3-001",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Local Assessment retention is current + previous only",
+      "evidence": {
+        "register_18_1": "community_retention_register.local_assessment_reports",
+        "runtime_evidence": "codestrata-report-retention-policy:1.0",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-002",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Local EIR retention is current + previous only",
+      "evidence": {
+        "register_18_1": "community_retention_register.local_eir",
+        "runtime_evidence": "codestrata-report-retention-policy:1.0",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-003",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Published Assessment/EIR retention is application-enforced current + previous",
+      "evidence": {
+        "register_18_1": "community_retention_register.published_assessment_reports",
+        "runtime_evidence": "community-report-publishing-policy + reports service rotation",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-004",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Data Lake raw retention is about 365 days",
+      "evidence": {
+        "register_18_1": "community_retention_register.data_lake_raw",
+        "runtime_evidence": "infrastructure/modules/community-data-lake/variables.tf accepted_retention_days default 365",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-005",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Data Lake quarantine retention is about 90 days",
+      "evidence": {
+        "register_18_1": "community_retention_register.data_lake_quarantine",
+        "runtime_evidence": "infrastructure/modules/community-data-lake/variables.tf quarantine_retention_days default 90",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-006",
+      "category": "RETENTION",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Identity prefix retention is indefinite by intentional design",
+      "evidence": {
+        "register_18_1": "community_retention_register.identity_prefix",
+        "runtime_evidence": "lifecycle.tf identity/ no object-expiration + Epic 17.22 notes",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-007",
+      "category": "OPT-OUT",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Opt-out stops future telemetry only and does not auto-delete historical lake events",
+      "evidence": {
+        "register_18_1": "community_opt_out_deletion_register.historical_telemetry_auto_erase_on_opt_out=false",
+        "runtime_evidence": "privacy-first consent + retention policies",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-008",
+      "category": "OPT-OUT",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "Report revoke is authenticated DELETE and returns public 404; no CLI revoke in current Engine",
+      "evidence": {
+        "register_18_1": "community_opt_out_deletion_register.report_revoke",
+        "runtime_evidence": "reports/service.py handle_revoke + engine cli/report.py publish-only",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-009",
+      "category": "OPT-OUT",
+      "public_location": "docs/security/retention-and-deletion.md",
+      "claim": "No self-service historical Data Lake or identity deletion workflow",
+      "evidence": {
+        "register_18_1": "community_opt_out_deletion_register.data_lake_user_self_service_deletion=false",
+        "runtime_evidence": "opt-out deletion register forbidden promises",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-3-010",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "docs/security/privacy.md",
+      "claim": "Telemetry consent is separate from public report publish authorization",
+      "evidence": {
+        "register_18_1": "community_report_publishing_inventory_register.telemetry_opt_in_alone_insufficient",
+        "runtime_evidence": "report publish --confirm-public-publish gate",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-privacy-retention-optout-claim-register"
+    },
+    {
+      "claim_id": "C18-4-001",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "AI is optional; default assess path is --no-ai deterministic",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.no_ai",
+        "runtime_evidence": "engine/src/codestrata/cli/assess.py --with-ai/--no-ai default False",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-002",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "AI enrichment sends compact assessment-derived context including finding/recommendation summaries and may include bounded evidence path/excerpt clips; not full source trees",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.context_sent",
+        "runtime_evidence": "engine/src/codestrata/ai/enrichment/context.py build_ai_enrichment_context",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-003",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "Bedrock live E2E proven; OpenAI/OpenRouter OWNER_CREDENTIAL_REQUIRED",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.e2e_status",
+        "runtime_evidence": "Epic 17.20 / community_ai_providers verification evidence",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-004",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "Assess AI path uses single attempt (CR-1); timeout_seconds wired",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.retry_behavior",
+        "runtime_evidence": "provider executor DEFAULT_RETRY_POLICY maximum_attempts=1",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-005",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "Provider failure is non-blocking for deterministic assessment/reports",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.failure_behavior",
+        "runtime_evidence": "application/assessment/service.py AI fail-soft",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-006",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "AI prompts/responses are not Community telemetry; ai_usage assess emission deferred",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register.usage_metadata",
+        "runtime_evidence": "stream inventory ai_usage deferred_assess_path_construction_only",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-007",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "Deterministic finding identity is provider-independent (no-AI vs Bedrock ID sets)",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register + Epic 17.20 equivalence",
+        "runtime_evidence": "verification/community_ai_providers/equivalence.py",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-008",
+      "category": "EIR",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "EIR does not use AI-provider enrichment in validated v0.2.0 path",
+      "evidence": {
+        "register_18_1": "community_source_locality_register + AI validation policy eir_provider_enrichment=false",
+        "runtime_evidence": "community_ai_provider_validation_policy.json",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-009",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/reference/community-api/index.md",
+      "claim": "Community API ai_usage is not an AI provider proxy",
+      "evidence": {
+        "register_18_1": "community_api_transparency_register + source locality AI destination",
+        "runtime_evidence": "Engine providers call Bedrock/OpenAI/OpenRouter directly",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-4-010",
+      "category": "SOURCE_LOCALITY",
+      "public_location": "docs/security/source-locality.md",
+      "claim": "Source-locality matrix distinguishes Assessment/Telemetry/AI/Publish/Insights",
+      "evidence": {
+        "register_18_1": "community_source_locality_register",
+        "runtime_evidence": "runtime_boundaries + docs/security/source-locality.md",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-ai-source-locality-claim-register"
+    },
+    {
+      "claim_id": "C18-5-001",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "https://api.codestrata.ai is the only public Community API authority; execute-api is not the product contract",
+      "evidence": {
+        "register_18_1": "community_api_transparency_register.public_api_base_url",
+        "runtime_evidence": "infrastructure/modules/community-cloud-api custom domain + RouteRegistry",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-002",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "Sixteen runtime Community API routes are documented in public/ingestion/report/Insights groups",
+      "evidence": {
+        "register_18_1": "community_api_route_register + community_api_transparency_register",
+        "runtime_evidence": "platform/policies/community_api_route_register.json route_count=16",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-003",
+      "category": "TELEMETRY",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "Active assess-path telemetry producer is POST /api/v1/telemetry only; other streams not emitted / contract-only / deferred",
+      "evidence": {
+        "register_18_1": "community_telemetry_stream_inventory_register",
+        "runtime_evidence": "Engine assess path + 18.2 telemetry transparency",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-004",
+      "category": "DATA_LAKE",
+      "public_location": "docs/architecture/data-lake.md",
+      "claim": "Community Data Lake is a private append-oriented analytics store distinct from Report Artifact Store",
+      "evidence": {
+        "register_18_1": "community_data_destination_register",
+        "runtime_evidence": "infrastructure modules community-data-lake vs report artifacts",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-005",
+      "category": "NEVER_COLLECTED",
+      "public_location": "docs/architecture/data-lake.md",
+      "claim": "Report bodies, source code, prompts/responses, and credentials do not belong in the Data Lake",
+      "evidence": {
+        "register_18_1": "community_never_collected_register + destination register",
+        "runtime_evidence": "ingestion privacy gates + 18.1/18.2 inventories",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-006",
+      "category": "DATA_LAKE",
+      "public_location": "docs/architecture/data-lake.md",
+      "claim": "Invalid events may be rejected before persistence; quarantine is a storage class not a claim that every reject is archived",
+      "evidence": {
+        "register_18_1": "community_retention_register quarantine",
+        "runtime_evidence": "Community Cloud ingestion validation behavior",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-007",
+      "category": "INSIGHTS",
+      "public_location": "docs/architecture/insights.md",
+      "claim": "Insights reads bounded Data Lake aggregates via authenticated private APIs; does not browse report HTML",
+      "evidence": {
+        "register_18_1": "community_insights_inventory_register",
+        "runtime_evidence": "BoundedS3Reader + insights private routes",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-008",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "Published reports are served from Report Artifact Store via reports.codestrata.ai/r/<opaque-id> with no directory",
+      "evidence": {
+        "register_18_1": "community_report_publishing_inventory_register",
+        "runtime_evidence": "Epic 17 report publishing verification + reports domain",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-009",
+      "category": "VERSION",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "GET /api/v1/community/status is public Community metadata with GitHub published-release SoT and candidate fallback",
+      "evidence": {
+        "register_18_1": "community_api_transparency_register community.status",
+        "runtime_evidence": "Community Status handler + GitHub release lookup",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-010",
+      "category": "COMMUNITY_CLOUD",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "Component failures isolate: telemetry/AI/publish/Insights/GitHub status do not fail local assessment guarantees beyond tested fail-soft behavior",
+      "evidence": {
+        "register_18_1": "community_source_locality_register + Epic 17 evidence",
+        "runtime_evidence": "Engine assess fail-soft paths + Community Status degrade",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-011",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "T18-C001 route register staleness resolved by reconciling community_api_route_register to runtime inventory",
+      "evidence": {
+        "register_18_1": "community_transparency_contradiction_register T18-C001",
+        "runtime_evidence": "community_api_route_register.json register_version 1.1 slice 18.5",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-5-012",
+      "category": "SECURITY",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "Security posture documents TLS, private stores, bounded IAM, Secrets Manager, auth-gated ingestion without publishing secrets",
+      "evidence": {
+        "register_18_1": "community_data_destination_register + IaC modules",
+        "runtime_evidence": "OpenTofu community-cloud-api / data-lake / report modules",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-cloud-architecture-claim-register"
+    },
+    {
+      "claim_id": "C18-6-001",
+      "category": "VERSION",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Installed CLI reports package/runtime version via codestrata --version and codestrata version",
+      "evidence": {
+        "register_18_1": "community_client_identity_register + package metadata",
+        "runtime_evidence": "engine/src/codestrata/package_metadata.py get_package_version; __version__=0.2.0",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-002",
+      "category": "ASSESSMENT",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Default assessment is deterministic (--no-ai); AI is optional via --with-ai",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register",
+        "runtime_evidence": "engine/src/codestrata/cli/assess.py with_ai default False",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-003",
+      "category": "ASSESSMENT",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Canonical artifacts live under .codestrata-artifacts/assessments/<repository-id>/{current,previous}/",
+      "evidence": {
+        "register_18_1": "community_assessment_artifact_inventory_register",
+        "runtime_evidence": "engine/src/codestrata/reporters/report_paths.py DEFAULT_ASSESS_OUTPUT_DIRECTORY",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-004",
+      "category": "TELEMETRY",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Telemetry is optional and disabled by default",
+      "evidence": {
+        "register_18_1": "community_consent_inventory_register",
+        "runtime_evidence": "assess telemetry flags default False; privacy-first consent",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-005",
+      "category": "TELEMETRY",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Telemetry consent via --telemetry-allow/--telemetry-deny is process-local and not persisted",
+      "evidence": {
+        "register_18_1": "community_consent_inventory_register",
+        "runtime_evidence": "engine/src/codestrata/telemetry/cli_consent_policy.py",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-006",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "AI is optional; OpenAI/OpenRouter live E2E not claimed as proven without owner credentials",
+      "evidence": {
+        "register_18_1": "community_ai_provider_data_flow_register",
+        "runtime_evidence": "docs/ai-providers + Epic 17.20 Bedrock live",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-007",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Public report publishing is explicit and separate from telemetry consent",
+      "evidence": {
+        "register_18_1": "community_report_publishing_inventory_register",
+        "runtime_evidence": "codestrata report publish --confirm-public-publish",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-008",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "docs/reference/cli.md",
+      "claim": "Successful publish returns https://reports.codestrata.ai/r/<opaque-id>",
+      "evidence": {
+        "register_18_1": "community_report_publishing_inventory_register",
+        "runtime_evidence": "Epic 17 report publishing + reports domain",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-009",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/architecture/community-cloud.md",
+      "claim": "https://api.codestrata.ai is the public Community API authority",
+      "evidence": {
+        "register_18_1": "community_api_transparency_register",
+        "runtime_evidence": "Slice 18.5 architecture docs",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-010",
+      "category": "VS_CODE",
+      "public_location": "docs/extensions/vscode.md",
+      "claim": "VS Code Marketplace is not claimed live; candidate VSIX install path documented",
+      "evidence": {
+        "register_18_1": "community_public_document_register",
+        "runtime_evidence": "docs/extensions/vscode.md + vscode-plugin/README.md",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-6-012",
+      "category": "PRODUCT",
+      "public_location": "docs/reports/engineering-intelligence.md",
+      "claim": "Single-repository Engine experience is Engineering Assessment; Engineering Intelligence is portfolio/EIR only",
+      "evidence": {
+        "register_18_1": "community_product_terminology_register",
+        "runtime_evidence": "engine/src/codestrata/cli/landing.py PRODUCT_CATEGORY; vscode-plugin package.json displayName",
+        "prior_slice_validation": "PASS"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE",
+      "source_claim_register": "community-public-surface-reconciliation-claim-register"
+    },
+    {
+      "claim_id": "C18-7-001",
+      "category": "PRODUCT",
+      "public_location": "engine/src/codestrata/cli/landing.py",
+      "claim": "Bare CLI product category is Engineering Assessment (single-repository), not Engineering Intelligence",
+      "evidence": {
+        "runtime_evidence": "PRODUCT_CATEGORY = Engineering Assessment"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-002",
+      "category": "VERSION",
+      "public_location": "codestrata --version / landing footer",
+      "claim": "Installed candidate Engine reports 0.2.0",
+      "evidence": {
+        "runtime_evidence": "engine/pyproject.toml version 0.2.0; get_package_version"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-003",
+      "category": "VERSION",
+      "public_location": "GET /api/v1/community/status",
+      "claim": "Community Status binds to latest published GitHub release (currently 0.1.0 until v0.2.0 release)",
+      "evidence": {
+        "runtime_evidence": "Community Status GitHub SoT; T18-C002"
+      },
+      "status": "EXPECTED_RELEASE_GAP",
+      "release_disposition": "EXPECTED_RELEASE_GAP"
+    },
+    {
+      "claim_id": "C18-7-004",
+      "category": "ASSESSMENT",
+      "public_location": "docs/reference/cli.md + engine artifacts",
+      "claim": "Eight modular heads/*.json artifacts are defined by ASSESSMENT_HEAD_SPECS; assessment.json is lightweight manifest; current/previous lifecycle",
+      "evidence": {
+        "runtime_evidence": "engine/src/codestrata/artifacts/heads.py ASSESSMENT_HEAD_SPECS length 8"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-005",
+      "category": "EIR",
+      "public_location": "docs/reports/engineering-intelligence.md",
+      "claim": "EIR is portfolio-level, consumes completed assessments, does not secretly rescan, no AI enrichment in validated v0.2.0 path",
+      "evidence": {
+        "runtime_evidence": "community_eir_inventory_register + C18-4-008"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-006",
+      "category": "TELEMETRY",
+      "public_location": "docs/security/data-collection.md",
+      "claim": "Producer honesty: only telemetry ACTIVE; assessment_metadata/cli_event not emitted by current assess path; extension_event contract-only; ai_usage deferred",
+      "evidence": {
+        "runtime_evidence": "community_telemetry_stream_inventory_register + data-collection.md status table"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-007",
+      "category": "DATA_COLLECTION",
+      "public_location": "docs/security/collected-fields.md",
+      "claim": "Published collected-field documentation matches authoritative field register count exactly",
+      "evidence": {
+        "runtime_evidence": "community_telemetry_field_register field_count=137; collected-fields.md"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-008",
+      "category": "SOURCE_LOCALITY",
+      "public_location": "docs/security/source-locality.md",
+      "claim": "Outbound paths A\u2013E (deterministic assessment, telemetry, AI, publish, Insights) documented independently",
+      "evidence": {
+        "runtime_evidence": "community_source_locality_register entries"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-009",
+      "category": "VS_CODE",
+      "public_location": "vscode-plugin/README.md + package.json",
+      "claim": "VS Code candidate copy: telemetry default off, local report path, Publish/Share, Marketplace not claimed published",
+      "evidence": {
+        "runtime_evidence": "vscode package.json + README marketplace unpublished"
+      },
+      "status": "SUPPORTED_WITH_QUALIFICATION",
+      "release_disposition": "POST_RELEASE_ACCEPTABLE"
+    },
+    {
+      "claim_id": "C18-7-010",
+      "category": "SECURITY",
+      "public_location": "https://codestrata.ai favicon",
+      "claim": "Main-site favicon/brand assets match canonical Community brand",
+      "evidence": {
+        "runtime_evidence": "Slice 19.5 live redeploy: HTML /favicon.svg + /favicon-32x32.png; assets HTTP 200; T18-C003 resolved"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-011",
+      "category": "CLI",
+      "public_location": "engine/src/codestrata/cli/landing.py",
+      "claim": "Welcome uses high-contrast ANSI palette; no forced background; NO_COLOR readable; Engine 0.2.0 footer",
+      "evidence": {
+        "runtime_evidence": "LandingPalette bright_* styles; Slice 18.6 contrast fix"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-012",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "reports/public/index.html",
+      "claim": "Reports landing distinguishes Assessment vs EIR, links Community Privacy, no public directory",
+      "evidence": {
+        "runtime_evidence": "reports/public/index.html + report publishing inventory"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-013",
+      "category": "AI",
+      "public_location": "docs/ai-providers/index.md",
+      "claim": "OpenAI/OpenRouter live E2E require owner credentials (not claimed proven without them)",
+      "evidence": {
+        "runtime_evidence": "community_ai_provider_data_flow_register e2e_status OWNER_CREDENTIAL_REQUIRED",
+        "slice_19_7a": "env keys present but OpenAI/OpenRouter live assess --with-ai auth failed; Bedrock live-pass; qualification retained"
+      },
+      "status": "SUPPORTED_WITH_QUALIFICATION",
+      "release_disposition": "POST_RELEASE_ACCEPTABLE"
+    },
+    {
+      "claim_id": "C18-7-014",
+      "category": "PRODUCT",
+      "public_location": "README.md + docs + landing",
+      "claim": "Public surfaces agree Engineering Assessment=single-repo; Engineering Intelligence=portfolio/EIR",
+      "evidence": {
+        "runtime_evidence": "community_product_terminology_register + reconciled README/docs"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-015",
+      "category": "COMMUNITY_API",
+      "public_location": "docs/reference/community-api/index.md",
+      "claim": "Docs route inventory matches runtime registry (16 routes); private Insights not public Community API",
+      "evidence": {
+        "runtime_evidence": "community_api_route_register route_count=16 vs transparency register"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-016",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "codestrata report publish",
+      "claim": "Normal Community interactive publish requires one confirmation and packaged public client auth; no telemetry env or AWS credential required",
+      "evidence": {
+        "runtime_evidence": "engine report.py interactive confirm + public_client_credential.py + report_publishing policy telemetry_opt_in_required=false"
+      },
+      "status": "SUPPORTED",
+      "release_disposition": "NONE"
+    },
+    {
+      "claim_id": "C18-7-017",
+      "category": "REPORT_PUBLISHING",
+      "public_location": "https://reports.codestrata.ai/r/<opaque-id>",
+      "claim": "Freshly published public report URL independently GETs as HTTP 200 text/html Assessment/EIR (not API JSON error); publish POST alone is not proof",
+      "evidence": {
+        "runtime_evidence": "Fresh clean-user publish 2026-08-10 returned https://reports.codestrata.ai/r/jHOUs4Nc8HAAPup2reH4Wo4_aTP62o-B; independent GET HTTP 200 text/html with matching codestrata-public-id; verify_public_report_get enforced in Engine publish path; Worker /r/<id>→API GET; T18-C007",
+        "prior_false_positive": "Earlier Slice 18.7 proof treated publish public_url as sufficient; retired ids and 'Endpoint not found' messaging looked like routing failure"
+      },
+      "status": "SUPPORTED_WITH_QUALIFICATION",
+      "release_disposition": "POST_RELEASE_ACCEPTABLE",
+      "qualification": "Live current/previous public GET proven. report_not_found message improvement requires Community Cloud API redeploy (no AWS credentials in this environment). Live missing-report JSON may still say Endpoint not found until that deploy."
+    }
+  ]
+}

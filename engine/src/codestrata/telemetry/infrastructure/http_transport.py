@@ -123,11 +123,19 @@ class HttpTelemetryTransport:
             )
 
         event_id = self._configuration.event_id_factory()
+        installation_id: str | None = None
+        try:
+            from codestrata.telemetry.identity import ensure_installation_id
+
+            installation_id, _created = ensure_installation_id()
+        except Exception:  # noqa: BLE001 — optional identity never blocks transport
+            installation_id = None
         try:
             wire = map_privacy_safe_event_to_cloud_request(
                 event,
                 event_id=event_id,
                 client_version_fallback=self._configuration.client_version,
+                installation_id=installation_id,
             )
         except TransportMappingError:
             self._diagnostics.record(TransportFailureCategory.VALIDATION_REJECTED.value)

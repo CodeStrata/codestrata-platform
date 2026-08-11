@@ -109,7 +109,7 @@ codestrata config validate --config codestrata.toml
 codestrata config validate --config codestrata.toml --profile bedrock --strict
 
 # Assess with an explicit profile
-codestrata assess --config codestrata.toml --profile local --output reports
+codestrata assess --config codestrata.toml --profile local --no-ai
 ```
 
 ## Validation behavior

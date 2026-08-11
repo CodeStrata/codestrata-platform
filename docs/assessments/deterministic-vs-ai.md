@@ -1,6 +1,6 @@
 ---
 title: Deterministic vs AI
-description: Distinguish deterministic Engineering Intelligence from optional AI enhancement.
+description: Distinguish deterministic Engineering Assessment from optional AI enrichment.
 ---
 
 # Deterministic vs AI

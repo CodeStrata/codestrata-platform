@@ -1,0 +1,65 @@
+{
+  "register_id": "community-documentation-authority-register",
+  "register_version": "1.0",
+  "schema": "community-documentation-authority-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "principle": "one_canonical_source_exported_or_rendered_elsewhere",
+  "runtime_over_docs": true,
+  "entries": [
+    {
+      "document": "Community Privacy",
+      "canonical_source": "docs/security/privacy.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/security/privacy", "engine/PRIVACY.md pointer", "reports landing Privacy link"],
+      "forbidden": "independent conflicting privacy copies"
+    },
+    {
+      "document": "Telemetry Policy",
+      "canonical_source": "docs/reference/telemetry.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/reference/telemetry", "engine/PRIVACY.md links", "vscode-plugin/PRIVACY.md links"],
+      "forbidden": "Marketplace/README inventing alternate consent model"
+    },
+    {
+      "document": "Data Collection Policy",
+      "canonical_source": "docs/security/data-collection.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/security/data-collection", "docs/security/collected-fields.md generated from field register"],
+      "forbidden": "hand-maintained field lists diverging from pydantic models"
+    },
+    {
+      "document": "Retention and Deletion",
+      "canonical_source": "docs/security/retention-and-deletion.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/security/retention-and-deletion", "engine/PRIVACY.md links", "vscode-plugin/PRIVACY.md links"],
+      "forbidden": "inventing self-service historical lake or identity deletion APIs"
+    },
+    {
+      "document": "Community API reference",
+      "canonical_source": "runtime RouteRegistry + community_api_transparency_register",
+      "exports_or_mirrors": ["docs/reference/community-api/index.md"],
+      "forbidden": "docs-only routes not in registry"
+    },
+    {
+      "document": "AI provider boundary",
+      "canonical_source": "community_ai_provider_data_flow_register + docs/ai-providers/index.md",
+      "exports_or_mirrors": ["privacy AI section", "docs/security/source-locality.md"],
+      "forbidden": "claiming all providers live-proven or that AI never leaves machine when enrichment enabled"
+    },
+    {
+      "document": "Source Locality",
+      "canonical_source": "docs/security/source-locality.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/security/source-locality", "engine/PRIVACY.md links", "vscode-plugin/PRIVACY.md links"],
+      "forbidden": "vague nothing-leaves-machine claims without mode qualification"
+    },
+    {
+      "document": "Community Cloud Architecture",
+      "canonical_source": "docs/architecture/community-cloud.md",
+      "exports_or_mirrors": ["docs.codestrata.ai/architecture/community-cloud", "docs/architecture/data-lake.md", "docs/architecture/insights.md"],
+      "forbidden": "conflating Data Lake with Report Artifact Store or presenting execute-api as public authority"
+    },
+    {
+      "document": "Product terminology (Assessment vs Intelligence)",
+      "canonical_source": "platform/policies/community_product_terminology_register.json",
+      "exports_or_mirrors": ["engine/src/codestrata/cli/landing.py PRODUCT_CATEGORY", "docs/getting-started/index.md", "vscode-plugin displayName"],
+      "forbidden": "labeling single-repository Engine CLI experience as Engineering Intelligence"
+    }
+  ]
+}

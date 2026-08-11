@@ -92,11 +92,19 @@ export function parsePublicReportUrl(combinedOutput: string): string | undefined
   return url;
 }
 
+export function publishEnvForReportPublish(
+  baseEnv: NodeJS.ProcessEnv = process.env
+): NodeJS.ProcessEnv {
+  // Publish uses the Engine packaged public Community client credential.
+  // Do not set CODESTRATA_TELEMETRY_OPT_IN — publishing is separate from telemetry.
+  const env = { ...baseEnv };
+  delete env.CODESTRATA_TELEMETRY_OPT_IN;
+  return env;
+}
+
+/** @deprecated Use publishEnvForReportPublish — telemetry opt-in is not required. */
 export function publishEnvWithTelemetryOptIn(
   baseEnv: NodeJS.ProcessEnv = process.env
 ): NodeJS.ProcessEnv {
-  return {
-    ...baseEnv,
-    CODESTRATA_TELEMETRY_OPT_IN: "true",
-  };
+  return publishEnvForReportPublish(baseEnv);
 }

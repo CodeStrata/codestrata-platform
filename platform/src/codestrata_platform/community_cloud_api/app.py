@@ -464,14 +464,23 @@ async def _handle_request(
             error_code=ERROR_NOT_FOUND,
         )
     spec, path_params = resolved
-    # Optional public report format hint (?format=json) without expanding route space.
+    # Optional query hints without expanding route space (format, pagination).
     if request.url.query:
         from urllib.parse import parse_qs
 
         qs = parse_qs(request.url.query, keep_blank_values=False)
+        extras: dict[str, str] = {}
         fmt = (qs.get("format") or [None])[0]
         if fmt in {"json", "html"}:
-            path_params = {**path_params, "format": fmt}
+            extras["format"] = fmt
+        limit = (qs.get("limit") or [None])[0]
+        if limit is not None and str(limit).strip():
+            extras["limit"] = str(limit).strip()
+        cursor = (qs.get("cursor") or [None])[0]
+        if cursor is not None and str(cursor).strip():
+            extras["cursor"] = str(cursor).strip()
+        if extras:
+            path_params = {**path_params, **extras}
     context = context.with_path_params(path_params or None)
 
     log_ctx = log_ctx.with_route_name(spec.name)

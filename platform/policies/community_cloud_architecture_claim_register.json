@@ -1,0 +1,105 @@
+{
+  "register_id": "community-cloud-architecture-claim-register",
+  "register_version": "1.0",
+  "schema": "community-cloud-architecture-claim-register:1.0",
+  "slice": "18.5",
+  "epic": 18,
+  "entries": [
+    {
+      "claim_id": "C18-5-001",
+      "public_claim": "https://api.codestrata.ai is the only public Community API authority; execute-api is not the product contract",
+      "register_18_1": "community_api_transparency_register.public_api_base_url",
+      "runtime_evidence": "infrastructure/modules/community-cloud-api custom domain + RouteRegistry",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-002",
+      "public_claim": "Sixteen runtime Community API routes are documented in public/ingestion/report/Insights groups",
+      "register_18_1": "community_api_route_register + community_api_transparency_register",
+      "runtime_evidence": "platform/policies/community_api_route_register.json route_count=16",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-003",
+      "public_claim": "Active assess-path telemetry producer is POST /api/v1/telemetry only; other streams not emitted / contract-only / deferred",
+      "register_18_1": "community_telemetry_stream_inventory_register",
+      "runtime_evidence": "Engine assess path + 18.2 telemetry transparency",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-004",
+      "public_claim": "Community Data Lake is a private append-oriented analytics store distinct from Report Artifact Store",
+      "register_18_1": "community_data_destination_register",
+      "runtime_evidence": "infrastructure modules community-data-lake vs report artifacts",
+      "public_document": "docs/architecture/data-lake.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-005",
+      "public_claim": "Report bodies, source code, prompts/responses, and credentials do not belong in the Data Lake",
+      "register_18_1": "community_never_collected_register + destination register",
+      "runtime_evidence": "ingestion privacy gates + 18.1/18.2 inventories",
+      "public_document": "docs/architecture/data-lake.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-006",
+      "public_claim": "Invalid events may be rejected before persistence; quarantine is a storage class not a claim that every reject is archived",
+      "register_18_1": "community_retention_register quarantine",
+      "runtime_evidence": "Community Cloud ingestion validation behavior",
+      "public_document": "docs/architecture/data-lake.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-007",
+      "public_claim": "Insights reads bounded Data Lake aggregates via authenticated private APIs; does not browse report HTML",
+      "register_18_1": "community_insights_inventory_register",
+      "runtime_evidence": "BoundedS3Reader + insights private routes",
+      "public_document": "docs/architecture/insights.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-008",
+      "public_claim": "Published reports are served from Report Artifact Store via reports.codestrata.ai/r/<opaque-id> with no directory",
+      "register_18_1": "community_report_publishing_inventory_register",
+      "runtime_evidence": "Epic 17 report publishing verification + reports domain",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-009",
+      "public_claim": "GET /api/v1/community/status is public Community metadata with GitHub published-release SoT and candidate fallback",
+      "register_18_1": "community_api_transparency_register community.status",
+      "runtime_evidence": "Community Status handler + GitHub release lookup",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-010",
+      "public_claim": "Component failures isolate: telemetry/AI/publish/Insights/GitHub status do not fail local assessment guarantees beyond tested fail-soft behavior",
+      "register_18_1": "community_source_locality_register + Epic 17 evidence",
+      "runtime_evidence": "Engine assess fail-soft paths + Community Status degrade",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-011",
+      "public_claim": "T18-C001 route register staleness resolved by reconciling community_api_route_register to runtime inventory",
+      "register_18_1": "community_transparency_contradiction_register T18-C001",
+      "runtime_evidence": "community_api_route_register.json register_version 1.1 slice 18.5",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-5-012",
+      "public_claim": "Security posture documents TLS, private stores, bounded IAM, Secrets Manager, auth-gated ingestion without publishing secrets",
+      "register_18_1": "community_data_destination_register + IaC modules",
+      "runtime_evidence": "OpenTofu community-cloud-api / data-lake / report modules",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    }
+  ]
+}

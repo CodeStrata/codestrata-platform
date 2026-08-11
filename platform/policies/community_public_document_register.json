@@ -1,0 +1,76 @@
+{
+  "register_id": "community-public-document-register",
+  "register_version": "1.0",
+  "schema": "community-public-document-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "docs_tree+engine_docs+live_surfaces",
+  "entries": [
+    {
+      "surface": "docs.codestrata.ai",
+      "path": "docs/",
+      "status": "PARTIAL",
+      "notes": "Canonical product docs live; formal Transparency Epic prose still pending"
+    },
+    {
+      "surface": "engine README",
+      "path": "engine/README.md",
+      "status": "PARTIAL",
+      "notes": "Needs Epic 18 reconciliation against runtime inventories"
+    },
+    {
+      "surface": "engine PRIVACY",
+      "path": "engine/PRIVACY.md",
+      "status": "PARTIAL",
+      "notes": "Points toward community privacy; formal reconciliation remaining"
+    },
+    {
+      "surface": "SECURITY",
+      "path": "SECURITY.md",
+      "status": "PARTIAL",
+      "notes": "Security reporting surface; transparency cross-links pending"
+    },
+    {
+      "surface": "VS Code docs/Marketplace candidate",
+      "path": "docs/extensions/vscode.md",
+      "status": "PARTIAL",
+      "notes": "Candidate VSIX wording present; Marketplace not published"
+    },
+    {
+      "surface": "CLI help",
+      "path": "docs/reference/cli.md",
+      "status": "PARTIAL",
+      "notes": "Legacy telemetry commands documented as compatibility-only"
+    },
+    {
+      "surface": "Community API reference",
+      "path": "docs/reference/community-api/index.md",
+      "status": "PARTIAL",
+      "notes": "Observable contracts; must stay aligned to runtime registry"
+    },
+    {
+      "surface": "Telemetry reference",
+      "path": "docs/reference/telemetry.md",
+      "status": "PARTIAL",
+      "notes": "Consent lifecycle documented; stream producer liveness must stay precise"
+    },
+    {
+      "surface": "Privacy page",
+      "path": "docs/security/privacy.md",
+      "status": "COMPLETE",
+      "notes": "Canonical Community privacy authority after 17.26"
+    },
+    {
+      "surface": "AI providers docs",
+      "path": "docs/ai-providers/index.md",
+      "status": "PARTIAL",
+      "notes": "Must keep Bedrock live vs OpenAI/OpenRouter owner-key distinction"
+    },
+    {
+      "surface": "Reports landing",
+      "path": "reports/public/index.html",
+      "status": "COMPLETE",
+      "notes": "Privacy link to canonical docs; branding reconciled in 17.26"
+    }
+  ]
+}

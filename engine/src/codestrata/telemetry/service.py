@@ -355,7 +355,8 @@ def ensure_interactive_product_telemetry(
     """Ensure process telemetry, prompting at most once for eligible commands.
 
     CLI flag conflicts raise ``CliTelemetryConsentConflict`` (not fail-silent).
-    Other telemetry failures become denial/default. Never persists or transmits.
+    Other telemetry failures become denial/default. Explicit Yes/No may be
+    persisted locally under ``CODESTRATA_HOME``.
     Interactive tests must pass ``automation_detected=False`` explicitly.
 
     ``transport`` is an optional injection seam (tests / explicit callers).

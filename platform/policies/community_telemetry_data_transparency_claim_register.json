@@ -1,0 +1,79 @@
+{
+  "register_id": "community-telemetry-data-transparency-claim-register",
+  "register_version": "1.0",
+  "schema": "community-telemetry-data-transparency-claim-register:1.0",
+  "slice": "18.2",
+  "epic": 18,
+  "entries": [
+    {
+      "claim_id": "C18-2-001",
+      "public_claim": "Telemetry is disabled by default",
+      "register_18_1": "community_consent_inventory_register.default_posture",
+      "runtime_evidence": "engine telemetry consent_policy + vscode consent disabled_by_default",
+      "public_document": "docs/reference/telemetry.md"
+    },
+    {
+      "claim_id": "C18-2-002",
+      "public_claim": "Explicit opt-in required for product transmission",
+      "register_18_1": "community_consent_inventory_register.opt_in_mechanism",
+      "runtime_evidence": "--telemetry-allow / interactive allow / vscode command allow",
+      "public_document": "docs/reference/telemetry.md"
+    },
+    {
+      "claim_id": "C18-2-003",
+      "public_claim": "Telemetry does not contain source code",
+      "register_18_1": "community_never_collected_register.repository_source_code",
+      "runtime_evidence": "ingestion models + sanitizers",
+      "public_document": "docs/security/data-collection.md"
+    },
+    {
+      "claim_id": "C18-2-004",
+      "public_claim": "Telemetry opt-in is not publish authorization",
+      "register_18_1": "community_consent_inventory_register.telemetry_opt_in_equals_report_publication=false",
+      "runtime_evidence": "report publishing explicit confirm gate",
+      "public_document": "docs/reference/telemetry.md"
+    },
+    {
+      "claim_id": "C18-2-005",
+      "public_claim": "Only telemetry stream is ACTIVE after opt-in on current assess path",
+      "register_18_1": "community_telemetry_stream_inventory_register.telemetry.producer_live_or_deferred=live",
+      "runtime_evidence": "product_transport + stream inventory",
+      "public_document": "docs/security/data-collection.md"
+    },
+    {
+      "claim_id": "C18-2-006",
+      "public_claim": "Opt-out stops future telemetry and does not auto-erase historical lake events",
+      "register_18_1": "community_opt_out_deletion_register",
+      "runtime_evidence": "consent deny + retention policies",
+      "public_document": "docs/security/data-collection.md"
+    },
+    {
+      "claim_id": "C18-2-007",
+      "public_claim": "Production authority is api.codestrata.ai",
+      "register_18_1": "community_api_transparency_register.public_api_base_url",
+      "runtime_evidence": "public_api_authority.py",
+      "public_document": "docs/reference/telemetry.md"
+    },
+    {
+      "claim_id": "C18-2-008",
+      "public_claim": "137 collected fields are publicly traceable",
+      "register_18_1": "community_telemetry_field_register",
+      "runtime_evidence": "pydantic request models",
+      "public_document": "docs/security/collected-fields.md"
+    },
+    {
+      "claim_id": "C18-2-009",
+      "public_claim": "Data Lake is not the Report Artifact Store",
+      "register_18_1": "community_data_destination_register",
+      "runtime_evidence": "infra modules + publishing policy",
+      "public_document": "docs/security/data-collection.md"
+    },
+    {
+      "claim_id": "C18-2-010",
+      "public_claim": "AI prompts are not collected through telemetry",
+      "register_18_1": "community_never_collected_register.ai_prompts",
+      "runtime_evidence": "ai_usage schema metadata-only",
+      "public_document": "docs/security/data-collection.md"
+    }
+  ]
+}

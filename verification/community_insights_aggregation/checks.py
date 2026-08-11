@@ -140,6 +140,7 @@ def check_policy(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
 def check_registry_runtime(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
     checks: list[CheckResult] = []
     defects: list[Defect] = []
+    policy = load_json(monorepo, POLICY_RELATIVE)
     _add(
         checks,
         defects,
@@ -159,9 +160,23 @@ def check_registry_runtime(monorepo: Path) -> tuple[list[CheckResult], list[Defe
     _add(
         checks,
         defects,
-        "registry:count_15",
-        len(SUPPORTED_METRICS) == 15,
+        "registry:count_supported",
+        len(SUPPORTED_METRICS) == len(policy.get("supported_metrics") or []),
         str(len(SUPPORTED_METRICS)),
+        "registry",
+    )
+    _add(
+        checks,
+        defects,
+        "registry:includes_v02_overview",
+        {
+            "total_assessments",
+            "github_stars",
+            "github_forks",
+            "community_sentiment",
+            "published_reports",
+        }.issubset(SUPPORTED_METRICS),
+        "v0.2.0 overview metrics present",
         "registry",
     )
     try:

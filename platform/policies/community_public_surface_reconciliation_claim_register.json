@@ -1,0 +1,97 @@
+{
+  "register_id": "community-public-surface-reconciliation-claim-register",
+  "register_version": "1.0",
+  "schema": "community-public-surface-reconciliation-claim-register:1.0",
+  "slice": "18.6",
+  "epic": 18,
+  "entries": [
+    {
+      "claim_id": "C18-6-001",
+      "public_claim": "Installed CLI reports package/runtime version via codestrata --version and codestrata version",
+      "register_18_1": "community_client_identity_register + package metadata",
+      "runtime_evidence": "engine/src/codestrata/package_metadata.py get_package_version; __version__=0.2.0",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-002",
+      "public_claim": "Default assessment is deterministic (--no-ai); AI is optional via --with-ai",
+      "register_18_1": "community_ai_provider_data_flow_register",
+      "runtime_evidence": "engine/src/codestrata/cli/assess.py with_ai default False",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-003",
+      "public_claim": "Canonical artifacts live under .codestrata-artifacts/assessments/<repository-id>/{current,previous}/",
+      "register_18_1": "community_assessment_artifact_inventory_register",
+      "runtime_evidence": "engine/src/codestrata/reporters/report_paths.py DEFAULT_ASSESS_OUTPUT_DIRECTORY",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-004",
+      "public_claim": "Telemetry is optional and disabled by default",
+      "register_18_1": "community_consent_inventory_register",
+      "runtime_evidence": "assess telemetry flags default False; privacy-first consent",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-005",
+      "public_claim": "Telemetry consent via --telemetry-allow/--telemetry-deny is process-local and not persisted",
+      "register_18_1": "community_consent_inventory_register",
+      "runtime_evidence": "engine/src/codestrata/telemetry/cli_consent_policy.py",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-006",
+      "public_claim": "AI is optional; OpenAI/OpenRouter live E2E not claimed as proven without owner credentials",
+      "register_18_1": "community_ai_provider_data_flow_register",
+      "runtime_evidence": "docs/ai-providers + Epic 17.20 Bedrock live",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-007",
+      "public_claim": "Public report publishing is explicit and separate from telemetry consent",
+      "register_18_1": "community_report_publishing_inventory_register",
+      "runtime_evidence": "codestrata report publish --confirm-public-publish",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-008",
+      "public_claim": "Successful publish returns https://reports.codestrata.ai/r/<opaque-id>",
+      "register_18_1": "community_report_publishing_inventory_register",
+      "runtime_evidence": "Epic 17 report publishing + reports domain",
+      "public_document": "docs/reference/cli.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-009",
+      "public_claim": "https://api.codestrata.ai is the public Community API authority",
+      "register_18_1": "community_api_transparency_register",
+      "runtime_evidence": "Slice 18.5 architecture docs",
+      "public_document": "docs/architecture/community-cloud.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-010",
+      "public_claim": "VS Code Marketplace is not claimed live; candidate VSIX install path documented",
+      "register_18_1": "community_public_document_register",
+      "runtime_evidence": "docs/extensions/vscode.md + vscode-plugin/README.md",
+      "public_document": "docs/extensions/vscode.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-6-012",
+      "public_claim": "Single-repository Engine experience is Engineering Assessment; Engineering Intelligence is portfolio/EIR only",
+      "register_18_1": "community_product_terminology_register",
+      "runtime_evidence": "engine/src/codestrata/cli/landing.py PRODUCT_CATEGORY; vscode-plugin package.json displayName",
+      "public_document": "docs/reports/engineering-intelligence.md",
+      "validation_status": "PASS"
+    }
+  ]
+}

@@ -1,14 +1,14 @@
-"""Interactive per-process telemetry consent prompt (Slice 9.4).
+"""Interactive telemetry consent prompt (Slice 19.4).
 
-Asks once whether this command may attempt privacy-safe telemetry. Default is No.
-Never persists, never reuses legacy consent, never creates installation identity,
-and never transmits (transport remains unavailable).
+Asks once when preference is undecided. Explicit Yes/No is persisted locally.
+Default Enter = No. Never prompts in CI/non-interactive contexts.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable
 from enum import StrEnum
+from pathlib import Path
 from typing import TextIO
 
 from codestrata.telemetry.consent import (
@@ -17,6 +17,7 @@ from codestrata.telemetry.consent import (
     default_session_consent,
     deny_session_consent_from_interactive_prompt,
 )
+from codestrata.telemetry.persisted_consent import persist_preference
 from codestrata.telemetry.prompt_eligibility import (
     PromptEligibilityReason,
     evaluate_prompt_eligibility,
@@ -31,17 +32,11 @@ from codestrata.telemetry.prompt_result import (
 )
 
 PROMPT_INTRO = """\
-Optional privacy-safe telemetry
--------------------------------
-Telemetry is disabled by default. If you allow it, consent applies only to this
-command/process and is not saved. No installation identity is created. Source
-code, repository names, paths, findings, prompts, credentials, and personal
-identifiers are not collected. Telemetry failures cannot block this command.
-Transport is not operational in this release — allowing only prepares a
-privacy-filtered session decision.
+Help improve CodeStrata by sharing anonymous usage and assessment metadata.
+No source code, repository names, file paths, findings, or credentials are sent.
 """
 
-PROMPT_QUESTION = "Allow privacy-safe telemetry for this command only? [y/N]: "
+PROMPT_QUESTION = "Share anonymous telemetry? [y/N]: "
 
 ALLOW_ANSWERS: frozenset[str] = frozenset({"y", "yes"})
 DENY_ANSWERS: frozenset[str] = frozenset({"n", "no", ""})
@@ -70,6 +65,14 @@ def _read_line(input_func: Callable[[str], str], prompt: str) -> str:
     return input_func(prompt)
 
 
+def _persist_answer(enabled: bool, *, path: Path | None) -> None:
+    try:
+        persist_preference(enabled, path=path)
+    except Exception:
+        # Preference write failures must never block assessment.
+        return
+
+
 def run_interactive_consent_prompt(
     *,
     command: str,
@@ -84,6 +87,8 @@ def run_interactive_consent_prompt(
     input_func: Callable[[str], str] | None = None,
     echo_func: Callable[[str], None] | None = None,
     stream: TextIO | None = None,
+    preference_path: Path | None = None,
+    persist: bool = True,
 ) -> InteractiveConsentPromptResult:
     """Evaluate eligibility and optionally prompt once. Never raises to callers."""
 
@@ -133,7 +138,9 @@ def run_interactive_consent_prompt(
         echo("")
         raw = _read_line(reader, PROMPT_QUESTION)
     except EOFError:
-        consent = deny_session_consent_from_interactive_prompt()
+        consent = deny_session_consent_from_interactive_prompt(persisted=persist)
+        if persist:
+            _persist_answer(False, path=preference_path)
         return InteractiveConsentPromptResult(
             eligibility=True,
             eligibility_reason=PromptEligibilityReason.ELIGIBLE.value,
@@ -147,7 +154,9 @@ def run_interactive_consent_prompt(
         )
     except KeyboardInterrupt:
         # Telemetry is optional: treat interrupt as denial and continue product work.
-        consent = deny_session_consent_from_interactive_prompt()
+        consent = deny_session_consent_from_interactive_prompt(persisted=persist)
+        if persist:
+            _persist_answer(False, path=preference_path)
         return InteractiveConsentPromptResult(
             eligibility=True,
             eligibility_reason=PromptEligibilityReason.ELIGIBLE.value,
@@ -176,10 +185,14 @@ def run_interactive_consent_prompt(
     answer = parse_prompt_answer(raw)
     # One attempt only: invalid → deny (no indefinite retry).
     if answer is PromptAnswer.ALLOW:
-        consent = allow_session_consent_from_interactive_prompt()
+        consent = allow_session_consent_from_interactive_prompt(persisted=persist)
+        if persist:
+            _persist_answer(True, path=preference_path)
         outcome = "allowed"
     else:
-        consent = deny_session_consent_from_interactive_prompt()
+        consent = deny_session_consent_from_interactive_prompt(persisted=persist)
+        if persist:
+            _persist_answer(False, path=preference_path)
         outcome = "denied" if answer is PromptAnswer.DENY else "invalid_denied"
 
     return InteractiveConsentPromptResult(

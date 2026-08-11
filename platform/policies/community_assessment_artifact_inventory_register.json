@@ -1,0 +1,44 @@
+{
+  "register_id": "community-assessment-artifact-inventory-register",
+  "register_version": "1.0",
+  "schema": "community-assessment-artifact-inventory-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "engine/artifacts/layout.py+manifest.py+lifecycle.py",
+  "entries": [
+    {
+      "artifact": "assessment.json",
+      "role": "lightweight_manifest",
+      "contents_class": "manifest_metadata_pointers_not_merged_heads",
+      "local_cloud_behavior": "local_by_default",
+      "telemetry_relationship": "not_uploaded_as_telemetry; assessment_metadata may summarize aggregates separately",
+      "publish_relationship": "may_be_included_in_explicit_publish_package_not_auto",
+      "retention": "current_plus_previous",
+      "privacy_sensitivity": "local_sensitive_may_reference_repo_identity"
+    },
+    {
+      "artifact": "assessment.html",
+      "role": "human_readable_assessment_report",
+      "contents_class": "rendered_report",
+      "local_cloud_behavior": "local_by_default",
+      "telemetry_relationship": "never_telemetry_payload",
+      "publish_relationship": "explicit_publish_only",
+      "retention": "current_plus_previous",
+      "privacy_sensitivity": "high_local_report"
+    },
+    {
+      "artifact": "heads/*.json",
+      "role": "detailed_modular_assessment_heads",
+      "contents_class": "head_source_of_truth",
+      "local_cloud_behavior": "local_by_default",
+      "telemetry_relationship": "never_full_heads_in_telemetry",
+      "publish_relationship": "may_publish_with_explicit_action",
+      "retention": "current_plus_previous",
+      "privacy_sensitivity": "high_local_detailed"
+    }
+  ],
+  "important": [
+    "assessment.json is a lightweight manifest, not a giant merged report",
+    "heads/*.json are the detailed modular assessment artifacts"
+  ]
+}

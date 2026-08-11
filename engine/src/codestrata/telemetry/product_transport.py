@@ -10,15 +10,9 @@ Never reads CODESTRATA_TELEMETRY_ENDPOINT. Fail-soft on missing/invalid credenti
 
 from __future__ import annotations
 
-import os
-
 from codestrata.community_cloud.public_api_authority import production_telemetry_ingest_url
-from codestrata.community_cloud.report_publishing import CREDENTIAL_ENV
 from codestrata.telemetry.consent import TelemetrySessionConsent
-from codestrata.telemetry.event_identity import (
-    TelemetryTransportCredential,
-    TransportCredentialError,
-)
+from codestrata.telemetry.event_identity import TransportCredentialError
 from codestrata.telemetry.infrastructure.unavailable_transport import (
     UnavailableTelemetryTransport,
 )
@@ -31,13 +25,12 @@ from codestrata.telemetry.transport_factory import create_http_telemetry_transpo
 
 
 def try_create_production_http_transport() -> TelemetryTransport | None:
-    """Build HTTP transport for production ingest when credential is present."""
+    """Build HTTP transport for production ingest when a Community client is available."""
 
-    raw = (os.environ.get(CREDENTIAL_ENV) or "").strip()
-    if not raw:
-        return None
+    from codestrata.community_cloud.report_publishing import resolve_community_credential
+
     try:
-        credential = TelemetryTransportCredential(raw)
+        credential = resolve_community_credential()
         configuration = TelemetryTransportConfiguration(
             endpoint=production_telemetry_ingest_url(),
             credential=credential,
@@ -58,8 +51,8 @@ def resolve_product_telemetry_transport(
 
     Explicit ``transport`` injection (tests) always wins. Unauthorized consent
     stays unavailable. Authorized consent uses production HTTP when a valid
-    Community client credential is in the environment; otherwise unavailable
-    (best-effort — no anonymous ingestion).
+    Community client credential is available (env override or packaged public
+    client); otherwise unavailable (best-effort — no anonymous ingestion).
     """
 
     if transport is not None:

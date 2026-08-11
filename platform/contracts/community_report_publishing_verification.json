@@ -6,7 +6,7 @@
   "start_slice_17_16": true,
   "start_slice_17_17": true,
   "local_report_always_generated": true,
-  "telemetry_opt_in_required_for_cloud_publish": true,
+  "telemetry_opt_in_required_for_cloud_publish": false,
   "explicit_publish_action_required": true,
   "automatic_publish_after_assessment": false,
   "assessment_cloud_versions_per_repository": 2,

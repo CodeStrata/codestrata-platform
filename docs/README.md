@@ -10,6 +10,14 @@ Public **Community Edition** documentation portal for CodeStrata.
 Active navigation is Community-only. Historical Platform / commercial pages may
 remain on disk for archive but are excluded from publish (`srcExclude`).
 
+Architecture transparency pages:
+
+- [Community Cloud](./architecture/community-cloud)
+- [Data Lake](./architecture/data-lake)
+- [Insights](./architecture/insights)
+- [Source Locality](./security/source-locality)
+- [Community Cloud API](./reference/community-api/)
+
 ## Local development
 
 Requires **Node.js 22+** (Wrangler 4.x / Cloudflare static-assets toolchain).

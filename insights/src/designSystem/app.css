@@ -269,7 +269,7 @@ body {
 
 .cs-section__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -332,10 +332,24 @@ body {
 }
 
 .cs-badge--complete,
-.cs-badge--status-ok {
+.cs-badge--status-ok,
+.cs-badge--status-verified,
+.cs-badge--status-published {
   background: var(--cs-teal-soft);
   border-color: var(--cs-teal);
   color: var(--cs-teal-dark);
+}
+
+.cs-badge--status-published-pending-verification {
+  background: var(--cs-blue-soft);
+  border-color: var(--cs-blue);
+  color: var(--cs-blue);
+}
+
+.cs-badge--status-verification-failed {
+  background: var(--cs-rust-soft);
+  border-color: var(--cs-rust);
+  color: var(--cs-rust);
 }
 
 .cs-state {

@@ -7,10 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2026-08-04
+## [0.2.0] - 2026-08-11
+
+Community Edition cut. Publication (GitHub Release, CLI registry, Marketplace)
+is a separate step and is not implied by this changelog.
 
 ### Added
 
+* Deterministic multi-head Engineering Assessment with Assessment Overview
+* Community report publishing with opaque public report URLs
+* Privacy-first telemetry consent and Community Sentiment
+* Insights and Community Cloud
+* VS Code extension as Marketplace distribution (source private)
+* Documentation and data-collection transparency pages
+* Provider platform (Bedrock live E2E passed; OpenAI/OpenRouter supported with
+  qualification — owner live E2E not completed)
 * System Verification SV.1–SV.16 release-artifact evidence for the curated
   22-repository public OSS release-validation dataset
 * Platform Engineering Intelligence, website-safe export, Community Cloud API

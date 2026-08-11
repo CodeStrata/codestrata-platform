@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from codestrata.telemetry.interactive_consent import run_interactive_consent_prompt
@@ -93,7 +94,10 @@ def test_runtime_construction_failure_fail_closed() -> None:
     assert result.attempts == 0
 
 
-def test_command_session_factory_suppressed() -> None:
+def test_command_session_factory_suppressed(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     facade, result = create_command_session_telemetry_runtime(
         command="assess",
         stdin_interactive=False,

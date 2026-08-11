@@ -47,50 +47,62 @@ Portfolio Engineering Intelligence artifacts use a parallel layout:
 .codestrata-artifacts/intelligence/<portfolio_id>/previous/
 ```
 
-**Source locality:** local artifacts stay on disk you control. Writing
-`assessment.json` / `assessment.html` does **not** automatically become
-Community Cloud telemetry, Data Lake events, or a public published report.
-IDE extensions invoke the Engine locally and do not store AI provider
-credentials in the extension for Community assessment flows.
+**Ownership:** local artifacts are under your filesystem control. Product-visible
+retention is **current + previous** only. Failed generations do not promote.
+Deleting local files is user-controlled and does **not** automatically erase
+historical Community Data Lake events or revoke a public report.
+
+**Source locality:** writing `assessment.json` / `assessment.html` does **not**
+automatically become Community Cloud telemetry, Data Lake events, or a public
+published report. IDE extensions invoke the Engine locally and do not store AI
+provider credentials in the extension for Community assessment flows.
+
+Canonical retention detail: [Retention and Deletion](/security/retention-and-deletion).
+
 
 ## Telemetry
 
 Anonymous product telemetry is **disabled by default**. Transmission requires
-**explicit process/command consent**. Consent authorizes privacy-safe
-transmission *eligibility*; it is **not** permission to publish reports.
+**explicit consent**. Consent authorizes privacy-safe transmission *eligibility*;
+it is **not** permission to publish reports, and it is **not** required for
+voluntary public-report Yes/No feedback.
 
 ### Privacy-first product consent (authoritative for `assess`)
 
 | Topic | Detail |
 | --- | --- |
 | Default | `disabled_by_default` — transmission unauthorized |
-| Opt in (interactive) | Eligible interactive assess may prompt once; default **No** (`[y/N]`) |
-| Opt in (explicit) | `codestrata assess --telemetry-allow` |
-| Opt out (explicit) | `codestrata assess --telemetry-deny` |
+| Opt in (interactive) | When preference is undecided, eligible interactive assess may prompt; default **No** (`[y/N]`) |
+| Opt in (explicit) | `codestrata telemetry enable` or `codestrata assess --telemetry-allow` |
+| Opt out (explicit) | `codestrata telemetry disable` or `codestrata assess --telemetry-deny` |
 | Non-interactive / CI | Never prompts; decision is `non_interactive_disabled` |
-| Persistence | **Not persisted** — process/command local only |
+| Persistence | Explicit Yes/No is stored locally under `CODESTRATA_HOME` and is not re-asked |
 
-After explicit opt-in (`--telemetry-allow` or interactive Yes), the CLI may
-resolve the production Community HTTP transport to `https://api.codestrata.ai`
-when `CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL` is set. Without a credential,
-transport stays unavailable (no anonymous ingestion). Disabled, denied, and
-non-interactive sessions never open HTTP transport.
+After explicit opt-in (`telemetry enable`, interactive Yes, or `--telemetry-allow`),
+the CLI may resolve the production Community HTTP transport to
+`https://api.codestrata.ai` when `CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL` is set.
+Without a credential, transport stays unavailable (no anonymous ingestion).
+Disabled, denied, and non-interactive sessions never open HTTP transport.
 
 Telemetry failures must not fail assessment or remove local reports.
 
-### Legacy preference CLI (compatibility only)
+### Preference CLI
 
-| Topic | Detail |
+| Topic | Command |
 | --- | --- |
-| Opt in | `codestrata telemetry enable` |
-| Opt out | `codestrata telemetry disable` or `CODESTRATA_TELEMETRY=0` |
-| Inspect | `codestrata telemetry show` / `codestrata telemetry status` |
-| Reset id | `codestrata telemetry reset` |
+| Status | `codestrata telemetry status` → Enabled / Disabled / Not configured |
+| Enable | `codestrata telemetry enable` |
+| Disable | `codestrata telemetry disable` |
+| Process override | `codestrata assess --telemetry-allow` / `--telemetry-deny` |
 
-Legacy `~/.codestrata/telemetry.json` preferences and
-`codestrata telemetry enable|disable` are **compatibility-only**. They do
-**not** authorize the privacy-first assess runtime.
+See [Telemetry](/reference/telemetry).
 
+### Voluntary report feedback (separate from telemetry)
+
+Public reports may collect optional **Was this report useful? Yes/No** feedback.
+Clicking Yes or No is consent for that feedback event only. No free text, no
+login, no repository identity. Insights **Community Sentiment** aggregates only
+explicit Yes/No responses. No response does not count as negative.
 ### Collected when transmission is authorized and transport is wired
 
 Bounded anonymous product signals only (for example version, OS/Python bands,
@@ -123,11 +135,18 @@ collect:
 
 - Source code or repository file contents
 - Full `assessment.html` or full `assessment.json`
+- Detailed `heads/*.json` payloads as telemetry bodies
 - Findings, evidence, recommendations, or EIR content bodies
-- Absolute filesystem paths
+- Absolute filesystem paths (where validators prohibit them)
 - Credentials, secrets, tokens, or API keys
-- Git user identity (name/email) or similar personal identity fields
-- AI prompts or AI responses
+- Git credential userinfo / similar personal identity fields
+- AI prompts or AI responses **through telemetry**
+
+AI enrichment (when enabled) is a **separate** provider path — see
+[AI Providers](/ai-providers/). “Not collected by telemetry” does not mean
+“never sent to an AI provider.”
+
+Full Data Collection page: [Data Collection](/security/data-collection).
 
 **`installation_id` nuance:** the privacy-first assess runtime does **not**
 generate or require an installation id for normal product transmission. Some
@@ -172,9 +191,14 @@ Published reports:
 - Are viewable by **anyone with the URL** (no public directory / listing)
 - Live in a **private Report Artifact Store**, separate from the Community Data Lake
 - Follow **current / previous** retention per repository (assessment) or portfolio (EIR)
-- Support authenticated **revoke** (public GET becomes unavailable; local artifacts are untouched)
+- Support authenticated **revoke** via
+  `DELETE /api/v1/reports/<public-id>` (public GET becomes **404**; local
+  artifacts are untouched). There is no Engine CLI `report revoke` command in
+  the current surface — see [Community Cloud API](/reference/community-api/)
+  and [Retention and Deletion](/security/retention-and-deletion)
 
 Local reports remain authoritative on disk whether or not you publish.
+
 
 ## AI providers
 
@@ -182,44 +206,65 @@ AI enrichment is **optional**. Deterministic assessment (`--no-ai`) is the
 default and does not call providers.
 
 With `--with-ai`, the Engine may send a **compact enrichment context** to **your**
-configured provider (Bedrock, OpenAI, or OpenRouter), including:
+configured provider (Bedrock, OpenAI, or OpenRouter). That path is **not**
+Community telemetry and does **not** upload full repository source trees.
+Bounded evidence path/excerpt clips may be included in the compact context.
 
-- Repository metadata (display name / identity / file count)
-- Compact finding and recommendation summaries
-- Evidence refs / path clips (bounded)
-- Dependency / technology names and related compact summaries
+Provider prompts/responses are **not** mirrored into Community telemetry.
+Assess-path `ai_usage` emission remains deferred/construction-only in v0.2.0.
 
-This is **not** “never sends anything derived from the repository.” It does
-**not** upload full repository source trees. Do not interpret compact summaries
-as omitting findings from the provider payload.
+Canonical detail:
 
-Provider prompts and responses stay with that provider session and are **not**
-mirrored into Community telemetry / Data Lake events. Optional `ai_usage`
-analytics remain **construction-only / deferred** on the assess emission path —
-not a second live telemetry transport.
-
-Details: [AI Providers](/ai-providers/).
+- [AI Providers](/ai-providers/)
+- [Source Locality](/security/source-locality)
 
 ## Retention (separate systems)
 
+Canonical detail: [Retention and Deletion](/security/retention-and-deletion).
+
 | System | Retention posture |
 | --- | --- |
-| Local assessment / intelligence artifacts | **2 versions** (`current` + `previous`) per logical identity |
-| Community Data Lake `raw/` | About **365 days** (provisional / review-required default) |
-| Community Data Lake `quarantine/` | About **90 days** (provisional / review-required default) |
-| Report Artifact Store (published) | Application-enforced **current + previous** (mirrors local product retention) |
+| Local assessment / intelligence artifacts | **current + previous** per logical identity |
+| Community Data Lake `raw/` | About **365 days** (configured Data Lake lifecycle default) |
+| Community Data Lake `quarantine/` | About **90 days** (where quarantine objects exist) |
+| Community Data Lake `identity/` | **Indefinite** by current intentional design (dedup / aggregation) |
+| Report Artifact Store (published) | Application-enforced **current + previous** |
+
+The Data Lake is **not** a current/previous product model. Local reports are
+**not** retained for 365 days by product policy — only current + previous.
 
 Opting out of telemetry does **not** erase historical Data Lake events and does
 **not** automatically revoke already-published reports.
 
 ## Opt-out and deletion
 
-- `--telemetry-deny`, legacy disable, or leaving telemetry off stops **future**
-  product transmission for that process/command posture.
+Canonical detail: [Retention and Deletion](/security/retention-and-deletion).
+
+- `--telemetry-deny`, interactive No, or `codestrata telemetry disable` stops
+  **future** product transmission (explicit No is stored locally; process flags
+  override without rewriting preference when used).
 - Opt-out does **not** auto-delete historical Community Data Lake events.
 - Opt-out does **not** auto-revoke published report URLs.
-- Revoke published reports with the authenticated report revoke API / CLI flow
-  when you intend to withdraw a public link.
+- Opt-out does **not** erase Data Lake identity objects (no self-service identity
+  deletion API today).
+- Revoke a published report with authenticated
+  `DELETE https://api.codestrata.ai/api/v1/reports/<public-id>` when you intend
+  to withdraw a public link.
+- Delete local artifacts yourself under `.codestrata-artifacts/` when you intend
+  local removal.
+
+## Document map
+
+| Concern | Canonical page |
+| --- | --- |
+| Overall privacy commitments | This page |
+| What stays local vs leaves | [Source Locality](/security/source-locality) |
+| Exact collected streams/fields | [Data Collection](/security/data-collection) / [Collected Fields](/security/collected-fields) |
+| Consent / transport | [Telemetry](/reference/telemetry) |
+| Retention / opt-out / revoke / deletion capabilities | [Retention and Deletion](/security/retention-and-deletion) |
+| AI provider data flow | [AI Providers](/ai-providers/) |
+| Community Cloud architecture | [Community Cloud](/architecture/community-cloud) |
+| Data Lake / Insights | [Data Lake](/architecture/data-lake) · [Insights](/architecture/insights) |
 
 ## Contact
 

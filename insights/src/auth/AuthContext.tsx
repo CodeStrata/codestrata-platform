@@ -13,6 +13,7 @@ import {
   AuthApiError,
   type InsightsAuthClient,
 } from "../api/authClient";
+import { clearOverviewCache } from "../api/sessionOverviewCache";
 
 export type SessionState = "loading" | "authenticated" | "unauthenticated";
 
@@ -25,6 +26,11 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+function endAuthenticatedSession(): void {
+  // Never retain prior-session dashboard metrics across auth boundaries.
+  clearOverviewCache();
+}
 
 export function AuthProvider({
   children,
@@ -48,10 +54,18 @@ export function AuthProvider({
       try {
         const session = await client.getSession();
         if (!cancelled) {
-          setState(session.authenticated ? "authenticated" : "unauthenticated");
+          if (session.authenticated) {
+            setState("authenticated");
+          } else {
+            endAuthenticatedSession();
+            setState("unauthenticated");
+          }
         }
       } catch {
-        if (!cancelled) setState("unauthenticated");
+        if (!cancelled) {
+          endAuthenticatedSession();
+          setState("unauthenticated");
+        }
       }
     })();
     return () => {
@@ -64,8 +78,11 @@ export function AuthProvider({
       setLoginError(null);
       try {
         await client.login(password);
+        // New session — do not reuse any pre-login cache (should already be empty).
+        clearOverviewCache();
         setState("authenticated");
       } catch (err) {
+        endAuthenticatedSession();
         setState("unauthenticated");
         if (err instanceof AuthApiError && err.code === "unavailable") {
           setLoginError("Authentication unavailable. Try again shortly.");
@@ -92,6 +109,7 @@ export function AuthProvider({
     try {
       await client.logout();
     } finally {
+      endAuthenticatedSession();
       setState("unauthenticated");
       setLoginError(null);
     }

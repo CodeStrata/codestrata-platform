@@ -14,7 +14,7 @@ is prepared for extraction as **`codestrata-docs`**.
 | Markdown | First-class; MDX not required for this foundation |
 | Navigation | Config-driven nav + sidebar |
 | Local dev / preview | `npm run dev` / `npm run preview` |
-| Search readiness | Built-in local search provider |
+| Search readiness | Omitted for v0.2.0 (Cloudflare cannot serve `@localSearchIndex*` chunks) |
 | Syntax highlighting | Shiki (bundled) |
 | Dark / light | Built-in theme toggle |
 | Deployment | Static files only; no backend |
@@ -74,8 +74,9 @@ docs/
 | `vscode-plugin/` | Extension repository documentation |
 | `governance/` | Internal architecture, standards, playbooks (not a runtime dependency) |
 
-The public portal may **adapt** or **link** to public GitHub mirrors. It must not
-depend on private Platform implementation details or import from `governance/`
+The public portal may **adapt** or **link** to Community public GitHub sources
+(Engine and Examples). It must not depend on private Platform, Infrastructure,
+or VS Code source implementation details, and must not import from `governance/`
 or `platform/` at build time.
 
 ## Design system mapping
@@ -104,12 +105,17 @@ VitePress bridge: `.vitepress/theme/tokens.css`.
 
 ## Search readiness
 
-- Local search via `themeConfig.search.provider: 'local'`
+- **v0.2.0:** search UI omitted (`themeConfig.search` not set). VitePress local
+  MiniSearch emits `@localSearchIndex*` filenames that Cloudflare Static Assets
+  cannot serve (`@` → `%40` 307/404), which previously left a non-functional Search
+  control.
+- `scripts/validate.mjs` fails the build if Search UI / index chunks reappear
+  without a Cloudflare-safe path.
 - Stable clean URLs (`cleanUrls: true`)
 - Page `title` / `description` frontmatter
 - Sitemap hostname documented as `https://docs.codestrata.ai` for production builds
-- Future options (undecided): Algolia DocSearch, Pagefind, or host-native search —
-  any paid provider requires explicit review; not required for this phase
+- Post-v0.2.0 backlog (optional): Cloudflare-safe local search asset naming, or
+  Pagefind/Algolia only with explicit review — not required for this release
 
 ## SEO and metadata
 

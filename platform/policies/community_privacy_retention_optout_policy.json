@@ -1,0 +1,32 @@
+{
+  "policy_id": "community-privacy-retention-optout-policy",
+  "policy_version": "1.0",
+  "schema": "community-privacy-retention-optout-policy:1.0",
+  "slice": "18.3",
+  "epic": 18,
+  "depends_on": [
+    "community-transparency-inventory-policy:1.0",
+    "community-telemetry-data-transparency-policy:1.0"
+  ],
+  "authority": "Publish canonical Privacy + Retention/Deletion documentation from Slice 18.1 inventories and 18.2 telemetry docs. No runtime redesign. No deletion features added. Slice 18.4 not started.",
+  "local_artifact_retention_documented": true,
+  "report_retention_documented": true,
+  "data_lake_retention_documented": true,
+  "identity_retention_documented": true,
+  "opt_out_scope_documented": true,
+  "historical_telemetry_not_auto_deleted_documented": true,
+  "report_revoke_documented": true,
+  "local_delete_user_controlled": true,
+  "self_service_historical_deletion_not_claimed": true,
+  "telemetry_consent_separate_from_publish": true,
+  "third_party_ai_retention_not_speculated": true,
+  "t18_c005_resolved": true,
+  "start_slice_18_3": true,
+  "start_slice_18_4": false,
+  "no_cli_publish": true,
+  "no_vscode_marketplace_publish": true,
+  "no_release_tag": true,
+  "no_full_22_repository_release_corpus": true,
+  "no_runtime_redesign": true,
+  "no_deletion_feature_added": true
+}

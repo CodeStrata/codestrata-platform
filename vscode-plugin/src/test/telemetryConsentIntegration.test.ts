@@ -30,7 +30,7 @@ import {
 import { RECOVERY_ACTION_LABELS } from "../failureRecovery";
 
 describe("telemetry integration policy", () => {
-  it("serializes deterministically and references runtime 1.0", () => {
+  it("serializes deterministically and references runtime 2.0", () => {
     const a = telemetryIntegrationPolicyToStableDict(
       createTelemetryIntegrationPolicy()
     );
@@ -40,14 +40,14 @@ describe("telemetry integration policy", () => {
     assert.equal(JSON.stringify(a), JSON.stringify(b));
     assert.equal(a.policy_id, TELEMETRY_INTEGRATION_POLICY_ID);
     assert.equal(a.policy_version, TELEMETRY_INTEGRATION_POLICY_VERSION);
-    assert.equal(a.telemetry_runtime_policy_version, "1.0");
+    assert.equal(a.telemetry_runtime_policy_version, "2.0");
     assert.equal(
       COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_URN,
-      "community-vscode-telemetry-runtime-policy:1.0"
+      "community-vscode-telemetry-runtime-policy:2.0"
     );
-    assert.ok(TELEMETRY_RUNTIME_POLICY_REF.includes("1.0"));
-    assert.equal(a.persistence_allowed, false);
-    assert.equal(a.prior_consent_reuse_allowed, false);
+    assert.ok(TELEMETRY_RUNTIME_POLICY_REF.includes("2.0"));
+    assert.equal(a.persistence_allowed, true);
+    assert.equal(a.prior_consent_reuse_allowed, true);
     assert.equal(a.machine_identity_allowed, false);
     assert.equal(a.activation_eligible, false);
     assert.equal(a.recovery_eligible, false);
@@ -184,11 +184,25 @@ describe("readiness ordering", () => {
 });
 
 describe("fresh consent", () => {
-  it("forbids reuse and persistence", () => {
+  it("allows explicit local preference reuse while forbidding identity reuse", () => {
     assert.doesNotThrow(() =>
       assertFreshConsentDecision({
         priorConsentReused: false,
         persisted: false,
+      })
+    );
+    assert.doesNotThrow(() =>
+      assertFreshConsentDecision({
+        priorConsentReused: true,
+        persisted: true,
+        source: "persisted_preference",
+      })
+    );
+    assert.doesNotThrow(() =>
+      assertFreshConsentDecision({
+        priorConsentReused: false,
+        persisted: true,
+        source: "interactive_prompt",
       })
     );
     assert.throws(

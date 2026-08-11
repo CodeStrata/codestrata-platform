@@ -34,3 +34,11 @@ You should receive an acknowledgment within **7 days**.
 - No credential collection
 - No analytics by default
 - No secrets in the repository
+
+Community product architecture transparency (API, Data Lake, Insights, reports)
+lives on the published docs site:
+
+- https://docs.codestrata.ai/architecture/community-cloud
+- https://docs.codestrata.ai/architecture/data-lake
+- https://docs.codestrata.ai/architecture/insights
+- https://docs.codestrata.ai/security/source-locality

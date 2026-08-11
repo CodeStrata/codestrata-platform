@@ -1,4 +1,4 @@
-/** Report publish/share surface (Slice 17.21). */
+/** Report publish/share surface (Slice 17.21 / 18.7 journey fix). */
 
 export {
   PRIVATE_REPO_ACK_ACTION,
@@ -10,9 +10,6 @@ export {
   PUBLISH_CONFIRM_TITLE,
   REPORT_PUBLISH_COMMAND_ID,
   REPORT_PUBLISH_POLICY,
-  TELEMETRY_PUBLISH_ACTION,
-  TELEMETRY_PUBLISH_DETAIL,
-  TELEMETRY_PUBLISH_TITLE,
 } from "./policy";
 
 export {
@@ -20,6 +17,7 @@ export {
   buildReportPublishArgs,
   isLocalOrPrivateRepositoryId,
   parsePublicReportUrl,
+  publishEnvForReportPublish,
   publishEnvWithTelemetryOptIn,
   repositoryIdFromHtmlPath,
   type PublishArgsInput,

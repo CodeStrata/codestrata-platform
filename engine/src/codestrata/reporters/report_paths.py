@@ -48,6 +48,53 @@ LEGACY_JSON_BASENAME = "report.json"
 DEFAULT_ASSESS_OUTPUT_DIRECTORY = Path(f"{ARTIFACT_ROOT_NAME}/{ASSESSMENTS_DIRNAME}")
 
 
+def _git_origin_url(path: Path | str | None) -> str | None:
+    """Best-effort read of ``remote.origin.url`` for GitHub identity resolution."""
+
+    if path is None:
+        return None
+    root = Path(path)
+    git_config = root / ".git" / "config"
+    # Detached worktrees / plain .git files are uncommon here; handle directories only.
+    if not git_config.is_file():
+        # Some clones use .git as a file pointing elsewhere — fall back to git CLI.
+        try:
+            import subprocess
+
+            proc = subprocess.run(
+                ["git", "-C", str(root), "config", "--get", "remote.origin.url"],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=15,
+                env={
+                    "PATH": __import__("os").environ.get("PATH", ""),
+                    "GIT_TERMINAL_PROMPT": "0",
+                    "GIT_CONFIG_GLOBAL": "/dev/null",
+                    "GIT_CONFIG_SYSTEM": "/dev/null",
+                },
+            )
+            url = (proc.stdout or "").strip()
+            return url or None
+        except Exception:  # noqa: BLE001
+            return None
+    try:
+        text = git_config.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    # Minimal parse: [remote "origin"] ... url = ...
+    in_origin = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("[") and stripped.endswith("]"):
+            in_origin = stripped.lower() == '[remote "origin"]'
+            continue
+        if in_origin and stripped.lower().startswith("url"):
+            _, _, value = stripped.partition("=")
+            url = value.strip()
+            return url or None
+    return None
+
 class ReportRetentionError(RuntimeError):
     """Raised when an older report run cannot be pruned safely."""
 
@@ -134,10 +181,12 @@ def create_report_paths(
 
     output_root = _resolve_output_root(Path(base_directory))
     repository = result.repository
+    repo_path = getattr(repository, "path", None)
     repository_id = resolve_repository_artifact_id(
         repository_name=repository.name,
         source_url=getattr(repository, "source_url", None),
-        path=getattr(repository, "path", None),
+        remote=_git_origin_url(repo_path),
+        path=repo_path,
     )
 
     workspace: Path | None = None

@@ -1,8 +1,9 @@
-"""Construct process telemetry for a CLI command session (Slices 9.4–9.6)."""
+"""Construct process telemetry for a CLI command session (Slices 9.4–9.6 / 19.4)."""
 
 from __future__ import annotations
 
 from collections.abc import Callable
+from pathlib import Path
 
 from codestrata.telemetry.cli_consent import (
     CliTelemetryConsentSelection,
@@ -11,6 +12,7 @@ from codestrata.telemetry.cli_consent import (
 from codestrata.telemetry.consent import TelemetrySessionConsent
 from codestrata.telemetry.disabled_service import DisabledTelemetryFacade
 from codestrata.telemetry.interactive_consent import run_interactive_consent_prompt
+from codestrata.telemetry.persisted_consent import consent_from_persisted_preference
 from codestrata.telemetry.prompt_result import InteractiveConsentPromptResult
 from codestrata.telemetry.product_transport import resolve_product_telemetry_transport
 from codestrata.telemetry.runtime import TelemetryRuntime
@@ -35,12 +37,14 @@ def create_interactive_session_telemetry(
     telemetry_allow: bool = False,
     telemetry_deny: bool = False,
     cli_selection: CliTelemetryConsentSelection | None = None,
+    preference_path: Path | None = None,
 ) -> tuple[DisabledTelemetryFacade, InteractiveConsentPromptResult]:
-    """Prompt when eligible, otherwise apply non-interactive suppression.
+    """Prompt when undecided and eligible; reuse local preference when decided.
 
     Unauthorized consent keeps UnavailableTelemetryTransport. Authorized consent
     uses production Community HTTP when a client credential is available.
-    Never persists consent. ``--telemetry-allow`` / ``--telemetry-deny`` win.
+    Explicit Yes/No is persisted locally. ``--telemetry-allow`` / ``--telemetry-deny``
+    win for the current process without changing stored preference.
     """
 
     return create_command_session_telemetry_runtime(
@@ -60,6 +64,7 @@ def create_interactive_session_telemetry(
         telemetry_allow=telemetry_allow,
         telemetry_deny=telemetry_deny,
         cli_selection=cli_selection,
+        preference_path=preference_path,
     )
 
 
@@ -80,10 +85,12 @@ def create_command_session_telemetry_runtime(
     telemetry_allow: bool = False,
     telemetry_deny: bool = False,
     cli_selection: CliTelemetryConsentSelection | None = None,
+    preference_path: Path | None = None,
 ) -> tuple[DisabledTelemetryFacade, InteractiveConsentPromptResult]:
     """Authoritative command-session telemetry construction (one runtime).
 
     Raises ``CliTelemetryConsentConflict`` when both CLI flags are set.
+    Precedence: CLI flags → explicit_consent → persisted preference → prompt.
     """
 
     selection = cli_selection
@@ -128,6 +135,24 @@ def create_command_session_telemetry_runtime(
         )
         return DisabledTelemetryFacade(runtime=runtime), result
 
+    persisted = consent_from_persisted_preference(path=preference_path)
+    if persisted is not None:
+        active_transport = resolve_product_telemetry_transport(
+            persisted, transport=transport
+        )
+        runtime = create_session_telemetry_runtime(
+            consent=persisted,
+            transport=active_transport,
+        )
+        from codestrata.telemetry.prompt_eligibility import PromptEligibilityReason
+        from codestrata.telemetry.prompt_result import default_skipped_prompt_result
+
+        result = default_skipped_prompt_result(
+            reason=PromptEligibilityReason.DECISION_ALREADY_EXPLICIT,
+            consent=persisted,
+        )
+        return DisabledTelemetryFacade(runtime=runtime), result
+
     result = run_interactive_consent_prompt(
         command=command,
         quiet=quiet,
@@ -139,6 +164,8 @@ def create_command_session_telemetry_runtime(
         stdin_interactive=stdin_interactive,
         automation_detected=automation_detected,
         output_interactive=output_interactive,
+        preference_path=preference_path,
+        persist=True,
     )
     active_transport = resolve_product_telemetry_transport(
         result.consent, transport=transport

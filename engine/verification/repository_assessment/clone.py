@@ -183,12 +183,14 @@ def clone_qualified_repository(
             )
 
     checkout_target = revision.value if revision.revision_type == "commit" else "FETCH_HEAD"
+    # Large repos (e.g. moodle) can exceed a hard 60s checkout; bound by clone timeout.
+    checkout_timeout_s = max(60, int(timeout_s))
     checkout = subprocess.run(
         ["git", "-C", str(destination), "checkout", "--detach", checkout_target],
         check=False,
         text=True,
         capture_output=True,
-        timeout=60,
+        timeout=checkout_timeout_s,
         env={**dict(__import__("os").environ), **env},
     )
     if checkout.returncode != 0 and checkout_target != "FETCH_HEAD":
@@ -197,7 +199,7 @@ def clone_qualified_repository(
             check=False,
             text=True,
             capture_output=True,
-            timeout=60,
+            timeout=checkout_timeout_s,
             env={**dict(__import__("os").environ), **env},
         )
     if checkout.returncode != 0:

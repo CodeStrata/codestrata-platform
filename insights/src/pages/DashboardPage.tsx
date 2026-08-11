@@ -2,70 +2,162 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { InsightsApiClient } from "../api/insightsApi";
 import { AuthApiError } from "../api/authClient";
 import type { MetricResult } from "../metrics/metricResult";
-import {
-  DistributionMetric,
-  HeadlineMetricCard,
-  Section,
-} from "../components/MetricCard";
-import { METRIC_DISPLAY_NAMES } from "../dashboard/labels";
+import { HeadlineMetricCard, Section } from "../components/MetricCard";
+import { SentimentMetricCard } from "../components/SentimentMetricCard";
+import { METRIC_DISPLAY_NAMES, V02_OVERVIEW_METRIC_IDS } from "../dashboard/labels";
 import { useAuth } from "../auth/AuthContext";
+import {
+  clearOverviewCache,
+  isOverviewCacheFresh,
+  loadOverviewWithSessionCache,
+  peekOverviewCache,
+} from "../api/sessionOverviewCache";
 
 function byId(results: MetricResult[], id: string): MetricResult | undefined {
   return results.find((r) => r.metric_id === id);
 }
 
+function formatRefreshedAt(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString(undefined, {
+      dateStyle: "medium",
+      timeStyle: "medium",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+function applyEntry(
+  entry: { metrics: MetricResult[]; fetchedAt: number },
+  setResults: (m: MetricResult[]) => void,
+  setLastRefreshedAt: (iso: string) => void,
+): void {
+  setResults(entry.metrics);
+  setLastRefreshedAt(new Date(entry.fetchedAt).toISOString());
+}
+
 export function DashboardPage({
   client,
-  focusSection,
 }: {
   client: InsightsApiClient;
   focusSection?: string;
 }): ReactNode {
   const { logout } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => peekOverviewCache() == null);
   const [refreshing, setRefreshing] = useState(false);
-  const [results, setResults] = useState<MetricResult[]>([]);
+  const [results, setResults] = useState<MetricResult[]>(
+    () => peekOverviewCache()?.metrics ?? [],
+  );
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [fetchedLabel, setFetchedLabel] = useState<string | null>(null);
+  const [lastRefreshedAt, setLastRefreshedAt] = useState<string | null>(() => {
+    const cached = peekOverviewCache();
+    return cached ? new Date(cached.fetchedAt).toISOString() : null;
+  });
+  const [staleNotice, setStaleNotice] = useState(false);
+
+  const handleAuthFailure = useCallback(async () => {
+    clearOverviewCache();
+    setResults([]);
+    setLastRefreshedAt(null);
+    setStaleNotice(false);
+    await logout();
+  }, [logout]);
+
+  const applyBackground = useCallback(
+    async (background: Promise<{ metrics: MetricResult[]; fetchedAt: number }>) => {
+      try {
+        const next = await background;
+        applyEntry(next, setResults, setLastRefreshedAt);
+        setLoadError(null);
+        setStaleNotice(false);
+      } catch (err) {
+        if (err instanceof AuthApiError && err.code === "unauthenticated") {
+          await handleAuthFailure();
+          return;
+        }
+        // Keep cached metrics; Last refreshed stays truthful for the last success.
+        setStaleNotice(true);
+        if (err instanceof AuthApiError && err.code === "access_denied") {
+          setLoadError("Access denied. Showing last successful dashboard data.");
+        } else {
+          setLoadError(
+            "Could not refresh metrics. Showing last successful dashboard data.",
+          );
+        }
+      }
+    },
+    [handleAuthFailure],
+  );
 
   const load = useCallback(
     async (mode: "initial" | "refresh") => {
+      const force = mode === "refresh";
+      const cached = peekOverviewCache();
+
+      if (mode === "initial" && cached) {
+        applyEntry(cached, setResults, setLastRefreshedAt);
+        setLoading(false);
+        if (isOverviewCacheFresh(cached)) {
+          setLoadError(null);
+          setStaleNotice(false);
+          return;
+        }
+        // Stale cache: keep UI populated and revalidate silently (no Refresh spinner).
+        setLoadError(null);
+        const { background } = await loadOverviewWithSessionCache(
+          () => client.getOverview(),
+          { force: false },
+        );
+        if (background) void applyBackground(background);
+        return;
+      }
+
       if (mode === "initial") setLoading(true);
       else setRefreshing(true);
       setLoadError(null);
+      setStaleNotice(false);
       try {
-        const overview = await client.getOverview();
-        setResults(overview);
-        setFetchedLabel("Fetched on last refresh");
+        const { entry, background } = await loadOverviewWithSessionCache(
+          () => client.getOverview(),
+          { force },
+        );
+        applyEntry(entry, setResults, setLastRefreshedAt);
+        if (background) void applyBackground(background);
       } catch (err) {
         if (err instanceof AuthApiError && err.code === "unauthenticated") {
-          await logout();
+          await handleAuthFailure();
           return;
         }
-        if (err instanceof AuthApiError && err.code === "access_denied") {
+        const stillHaveCache = peekOverviewCache();
+        if (stillHaveCache) {
+          applyEntry(stillHaveCache, setResults, setLastRefreshedAt);
+          setStaleNotice(true);
+          if (err instanceof AuthApiError && err.code === "access_denied") {
+            setLoadError("Access denied. Showing last successful dashboard data.");
+          } else {
+            setLoadError(
+              "Could not refresh metrics. Showing last successful dashboard data.",
+            );
+          }
+        } else if (err instanceof AuthApiError && err.code === "access_denied") {
           setLoadError("Access denied.");
+          if (mode === "initial") setResults([]);
         } else {
           setLoadError("Insights metrics are temporarily unavailable.");
+          if (mode === "initial") setResults([]);
         }
-        // Keep prior results on refresh failure.
-        if (mode === "initial") setResults([]);
       } finally {
         setLoading(false);
         setRefreshing(false);
       }
     },
-    [client, logout],
+    [applyBackground, client, handleAuthFailure],
   );
 
   useEffect(() => {
     void load("initial");
   }, [load]);
-
-  useEffect(() => {
-    if (!focusSection) return;
-    const el = document.getElementById(focusSection);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [focusSection, results, loading]);
 
   return (
     <div className="cs-page">
@@ -73,11 +165,8 @@ export function DashboardPage({
         <p className="cs-header__eyebrow">Internal only</p>
         <h1>CodeStrata Community Insights</h1>
         <p>
-          Aggregate Community Edition adoption metrics. Values come from the Platform
-          aggregation service — this UI does not compute metric semantics.
-        </p>
-        <p className="cs-muted">
-          Updated on dashboard refresh, subject to ingestion availability.
+          v0.2.0 Community adoption metrics from the Platform aggregation
+          service. This UI does not invent or recompute metric values.
         </p>
         <div className="cs-page-header__actions">
           <button
@@ -85,41 +174,54 @@ export function DashboardPage({
             className="cs-button"
             disabled={loading || refreshing}
             onClick={() => void load("refresh")}
+            data-testid="refresh-dashboard"
           >
-            {refreshing ? "Refreshing…" : "Refresh dashboard"}
+            {refreshing ? "Refreshing…" : "Refresh Dashboard"}
           </button>
-          {fetchedLabel ? <span className="cs-muted">{fetchedLabel}</span> : null}
+          {lastRefreshedAt ? (
+            <span className="cs-muted" data-testid="last-refreshed">
+              Last refreshed: {formatRefreshedAt(lastRefreshedAt)}
+              {staleNotice ? " (cached)" : ""}
+            </span>
+          ) : null}
         </div>
         {loadError ? (
           <div className="cs-state cs-state--error" role="alert">
-            <strong>Dashboard unavailable</strong>
+            <strong>
+              {results.length > 0 ? "Refresh unavailable" : "Dashboard unavailable"}
+            </strong>
             <span>{loadError}</span>
-            <button type="button" className="cs-button" onClick={() => void load("initial")}>
+            <button type="button" className="cs-button" onClick={() => void load("refresh")}>
               Retry
             </button>
           </div>
         ) : null}
       </header>
 
-      <Section id="activity" title="Community Activity">
+      <Section id="community-pulse" title="Community pulse">
         <HeadlineMetricCard
-          title={METRIC_DISPLAY_NAMES.total_anonymous_installations}
+          title={METRIC_DISPLAY_NAMES.github_stars}
           loading={loading}
-          result={byId(results, "total_anonymous_installations")}
+          result={byId(results, "github_stars")}
         />
         <HeadlineMetricCard
-          title={METRIC_DISPLAY_NAMES.daily_active_installations}
+          title={METRIC_DISPLAY_NAMES.github_forks}
           loading={loading}
-          result={byId(results, "daily_active_installations")}
+          result={byId(results, "github_forks")}
         />
-        <HeadlineMetricCard
-          title={METRIC_DISPLAY_NAMES.monthly_active_installations}
+        <SentimentMetricCard
+          title={METRIC_DISPLAY_NAMES.community_sentiment}
           loading={loading}
-          result={byId(results, "monthly_active_installations")}
+          result={byId(results, "community_sentiment")}
         />
       </Section>
 
       <Section id="assessments" title="Assessments">
+        <HeadlineMetricCard
+          title={METRIC_DISPLAY_NAMES.total_assessments}
+          loading={loading}
+          result={byId(results, "total_assessments")}
+        />
         <HeadlineMetricCard
           title={METRIC_DISPLAY_NAMES.first_assessments}
           loading={loading}
@@ -130,6 +232,9 @@ export function DashboardPage({
           loading={loading}
           result={byId(results, "repeat_assessments")}
         />
+      </Section>
+
+      <Section id="reliability" title="Reliability & publishing">
         <HeadlineMetricCard
           title={METRIC_DISPLAY_NAMES.successful_assessments}
           loading={loading}
@@ -140,88 +245,16 @@ export function DashboardPage({
           loading={loading}
           result={byId(results, "failed_assessments")}
         />
-      </Section>
-
-      <Section id="adoption" title="Adoption">
-        <DistributionMetric
-          title={METRIC_DISPLAY_NAMES.cli_version_adoption}
-          description="CLI version distribution from server-returned groups and shares."
-          loading={loading}
-          result={byId(results, "cli_version_adoption")}
-        />
-        <DistributionMetric
-          title={METRIC_DISPLAY_NAMES.vscode_extension_usage}
-          description="VS Code extension usage distribution from server-returned groups."
-          loading={loading}
-          result={byId(results, "vscode_extension_usage")}
-        />
-        <DistributionMetric
-          title="CLI release adoption"
-          description="CLI release versions only — not merged with VS Code."
-          loading={loading}
-          result={byId(results, "release_adoption")}
-          dimensionFilter="cli_client_version"
-        />
-        <DistributionMetric
-          title="VS Code extension release adoption"
-          description="VS Code extension release versions only — not merged with CLI."
-          loading={loading}
-          result={byId(results, "release_adoption")}
-          dimensionFilter="vscode_client_version"
-        />
-      </Section>
-
-      <Section id="coverage" title="Assessment Coverage">
-        <DistributionMetric
-          title={METRIC_DISPLAY_NAMES.assessment_head_usage}
-          description="Assessment heads present in completed or partial assessments."
-          loading={loading}
-          result={byId(results, "assessment_head_usage")}
-        />
-      </Section>
-
-      <Section id="technology" title="Technology">
-        <DistributionMetric
-          title="Primary language distribution"
-          description="Normalized primary-language categories. Not package ecosystems."
-          loading={loading}
-          result={byId(results, "language_ecosystem_distribution")}
-          dimensionFilter="primary_language"
-        />
-        <DistributionMetric
-          title="Package ecosystem distribution"
-          description="Normalized package ecosystems. Separate from primary language."
-          loading={loading}
-          result={byId(results, "language_ecosystem_distribution")}
-          dimensionFilter="package_ecosystem"
-        />
-      </Section>
-
-      <Section id="ai" title="AI Adoption">
-        <DistributionMetric
-          title={METRIC_DISPLAY_NAMES.ai_provider_adoption}
-          description="Provider-family adoption shares from the aggregation service."
-          loading={loading}
-          result={byId(results, "ai_provider_adoption")}
-        />
-        <DistributionMetric
-          title={METRIC_DISPLAY_NAMES.ai_model_adoption}
-          description="AI model family adoption only — exact model IDs are never shown."
-          loading={loading}
-          result={byId(results, "ai_model_adoption")}
-        />
-      </Section>
-
-      <Section id="validation" title="Validation Dataset">
         <HeadlineMetricCard
-          title={METRIC_DISPLAY_NAMES.validation_dataset_growth}
+          title={METRIC_DISPLAY_NAMES.published_reports}
           loading={loading}
-          result={byId(results, "validation_dataset_growth")}
+          result={byId(results, "published_reports")}
         />
-        <p className="cs-muted">
-          Historical growth tracking is not available yet. Current catalog size only.
-        </p>
       </Section>
+
+      <p className="cs-muted cs-sr-only">
+        Overview metric order: {V02_OVERVIEW_METRIC_IDS.join(", ")}
+      </p>
     </div>
   );
 }
@@ -229,7 +262,6 @@ export function DashboardPage({
 export function PlaceholderSectionPage({
   note,
   client,
-  focusSection,
 }: {
   title: string;
   note: string;
@@ -239,7 +271,7 @@ export function PlaceholderSectionPage({
   return (
     <>
       <p className="cs-sr-only">{note}</p>
-      <DashboardPage client={client} focusSection={focusSection} />
+      <DashboardPage client={client} />
     </>
   );
 }

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-public-claim-runtime-validation-verification:1.0.0",
+  "title": "Community Public Claim Runtime Validation Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic18_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": {
+      "const": "community-public-claim-runtime-validation-verification"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "package_id": {
+      "const": "community-public-claim-runtime-validation-verification"
+    },
+    "verdict": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_LIMITATIONS",
+        "FAIL"
+      ]
+    },
+    "slice": {
+      "const": "18.7"
+    },
+    "suite_id": {
+      "const": "sv18-7"
+    },
+    "epic18_boundary": {
+      "type": "object",
+      "required": [
+        "start_slice_18_7",
+        "start_slice_18_8"
+      ],
+      "properties": {
+        "start_slice_18_7": {
+          "const": true
+        },
+        "start_slice_18_8": {
+          "const": false
+        }
+      }
+    }
+  }
+}

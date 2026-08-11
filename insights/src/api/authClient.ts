@@ -1,7 +1,12 @@
 /** Auth and Insights API transport — credentials via HttpOnly cookie only. */
 
 import type { MetricId, MetricResult } from "../metrics/metricResult";
-import { unavailableResult, type InsightsApiClient, type PublishedReportsRegistry } from "./insightsApi";
+import {
+  unavailableResult,
+  type InsightsApiClient,
+  type PublishedReportsRegistry,
+  type ValidationReportsPage,
+} from "./insightsApi";
 
 export type AuthApiErrorCode =
   | "unauthenticated"
@@ -163,10 +168,15 @@ export class HttpInsightsApiClient implements InsightsApiClient {
   }
 
   async getOverview(): Promise<MetricResult[]> {
-    const res = await this.fetchFn(joinUrl(this.config.apiBaseUrl, "/insights/api/overview"), {
+    const url = joinUrl(this.config.apiBaseUrl, "/insights/api/overview");
+    const res = await this.fetchFn(`${url}?_=${Date.now()}`, {
       method: "GET",
       credentials: "include",
-      headers: { Accept: "application/json" },
+      cache: "no-store",
+      headers: {
+        Accept: "application/json",
+        "Cache-Control": "no-cache",
+      },
     });
     if (res.status === 401) {
       throw new AuthApiError("unauthenticated", 401, "Authentication required");
@@ -212,6 +222,42 @@ export class HttpInsightsApiClient implements InsightsApiClient {
         : [],
       source: body?.source,
       note: body?.note,
+    };
+  }
+
+  async getValidationReports(opts?: {
+    limit?: number;
+    cursor?: string;
+  }): Promise<ValidationReportsPage> {
+    const params = new URLSearchParams();
+    if (opts?.limit != null) params.set("limit", String(opts.limit));
+    if (opts?.cursor) params.set("cursor", opts.cursor);
+    const qs = params.toString();
+    const path =
+      "/insights/api/validation-reports" + (qs ? `?${qs}` : "");
+    const res = await this.fetchFn(joinUrl(this.config.apiBaseUrl, path), {
+      method: "GET",
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    });
+    if (res.status === 401) {
+      throw new AuthApiError("unauthenticated", 401, "Authentication required");
+    }
+    if (res.status === 403) {
+      throw new AuthApiError("access_denied", 403, "Access denied");
+    }
+    if (!res.ok) {
+      throw new AuthApiError(mapStatus(res.status), res.status, "Validation reports unavailable");
+    }
+    const body = (await parseJson(res)) as ValidationReportsPage | null;
+    return {
+      items: Array.isArray(body?.items) ? body!.items : [],
+      next_cursor: body?.next_cursor ?? null,
+      limit: typeof body?.limit === "number" ? body.limit : opts?.limit ?? 50,
+      temporary: body?.temporary ?? true,
+      purpose: body?.purpose,
+      note: body?.note,
+      source: body?.source,
     };
   }
 }

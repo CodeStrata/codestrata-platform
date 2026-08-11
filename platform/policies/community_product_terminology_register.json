@@ -1,0 +1,35 @@
+{
+  "register_id": "community-product-terminology-register",
+  "register_version": "1.0",
+  "schema": "community-product-terminology-register:1.0",
+  "slice": "18.6",
+  "epic": 18,
+  "authority": "documentation_and_product_language_only",
+  "runtime_dependency": false,
+  "principle": "Engineering Assessment is single-repository; Engineering Intelligence is portfolio/multi-repository (EIR). Do not use Engineering Intelligence as the name of the Community Engine CLI assessment experience.",
+  "terms": {
+    "engineering_assessment": {
+      "display": "Engineering Assessment",
+      "aliases": ["Assessment", "CodeStrata Engineering Assessment"],
+      "scope": "single_repository",
+      "output": "assessment_report",
+      "output_display": "Assessment Report"
+    },
+    "engineering_intelligence": {
+      "display": "Engineering Intelligence",
+      "aliases": ["Engineering Intelligence Report", "EIR"],
+      "scope": "portfolio_multi_repository",
+      "output": "engineering_intelligence_report",
+      "output_display": "Engineering Intelligence Report (EIR)"
+    }
+  },
+  "forbidden_equivalences": [
+    "Engineering Assessment == Engineering Intelligence",
+    "single-repository Engine CLI experience labeled Engineering Intelligence"
+  ],
+  "retained_correct_usages": [
+    "Portfolio EIR documentation and verification",
+    "Assessment head schema identity engineering_intelligence (display title: Assessment Overview; not portfolio EIR)",
+    "Platform Canonical Engineering Intelligence Model (internal)"
+  ]
+}

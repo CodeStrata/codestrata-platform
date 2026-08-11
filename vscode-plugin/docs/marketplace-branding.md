@@ -30,7 +30,7 @@ Marketplace gallery assets are maintained under Slice **14.6**
 | Field | Value |
 | --- | --- |
 | Product | CodeStrata |
-| Marketplace displayName | CodeStrata – Engineering Intelligence |
+| Marketplace displayName | CodeStrata – Engineering Assessment |
 | Publisher | `codestrata` |
 | Package name | `codestrata-vscode` |
 | Version | 0.2.0 |

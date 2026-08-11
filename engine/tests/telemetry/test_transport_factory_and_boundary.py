@@ -91,9 +91,18 @@ def test_no_persistence(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None
     runtime.record(sample_runtime_event())
     assert client.calls
     leftover = [p for p in home.rglob("*") if p.is_file()]
-    assert leftover == []
+    # Anonymous installation identity may be persisted for Insights first/repeat.
+    # No queue, credentials, or event payloads may be written.
+    allowed = {
+        home / ".codestrata" / "installation_id",
+    }
+    unexpected = [p for p in leftover if p.resolve() not in {a.resolve() for a in allowed}]
+    assert unexpected == []
     temp_files = [p for p in (tmp_path / "tmp").rglob("*") if p.is_file()]
     assert temp_files == []
+    body = __import__("json").loads(client.calls[0]["body"])
+    assert "installation_id" in body
+    assert isinstance(body["installation_id"], str)
 
 
 def test_preview_does_not_invoke_http() -> None:

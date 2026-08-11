@@ -48,11 +48,16 @@ def map_privacy_safe_event_to_cloud_request(
     *,
     event_id: str,
     client_version_fallback: str = "0.2.0",
+    installation_id: str | None = None,
 ) -> CommunityCloudTelemetryWireRequest:
     """Map a gated privacy-safe event into the Engine-owned cloud wire DTO.
 
     Rejects anything that is not a ``PrivacySafeTelemetryEvent``. Does not accept
     raw runtime events, dicts, bytes, or preview wrappers.
+
+    ``installation_id`` is attached at transport time only (optional privacy-safe
+    UUID). It is intentionally not part of the PrivacySafeTelemetryEvent
+    projection allowlist.
     """
 
     if type(event) is not PrivacySafeTelemetryEvent:
@@ -81,6 +86,7 @@ def map_privacy_safe_event_to_cloud_request(
         client_version=version,
         client_platform=platform,
         properties=properties or None,
+        installation_id=installation_id,
     )
 
 

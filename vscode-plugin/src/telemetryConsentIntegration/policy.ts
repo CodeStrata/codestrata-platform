@@ -1,32 +1,32 @@
 /**
- * Community VS Code telemetry consent integration policy (Slice 13.9).
+ * Community VS Code telemetry consent integration policy (Slice 19.4).
  * policy_id = community-vscode-telemetry-integration-policy
- * policy_version = 1.0
+ * policy_version = 2.0
  *
- * Describes how Epic 13 Community workflow uses the Slice 9.13 telemetry runtime.
- * Does not replace community-vscode-telemetry-runtime-policy:1.0.
+ * Describes how Community workflow uses the telemetry runtime with local
+ * preference persistence. Does not replace community-vscode-telemetry-runtime-policy:2.0.
  */
 
 export const TELEMETRY_INTEGRATION_POLICY_ID =
   "community-vscode-telemetry-integration-policy" as const;
-export const TELEMETRY_INTEGRATION_POLICY_VERSION = "1.0" as const;
+export const TELEMETRY_INTEGRATION_POLICY_VERSION = "2.0" as const;
 
-/** Runtime policy this integration attaches to (unchanged). */
+/** Runtime policy this integration attaches to. */
 export const TELEMETRY_RUNTIME_POLICY_REF =
-  "community-vscode-telemetry-runtime-policy:1.0" as const;
+  "community-vscode-telemetry-runtime-policy:2.0" as const;
 
 export type TelemetryIntegrationPolicy = {
   readonly policy_id: typeof TELEMETRY_INTEGRATION_POLICY_ID;
   readonly policy_version: typeof TELEMETRY_INTEGRATION_POLICY_VERSION;
-  readonly telemetry_runtime_policy_version: "1.0";
+  readonly telemetry_runtime_policy_version: "2.0";
   readonly eligible_operations: readonly [
     "run_assessment",
     "run_assessment_with_ai",
   ];
   readonly consent_scope: "command";
   readonly default_decision: "deny";
-  readonly persistence_allowed: false;
-  readonly prior_consent_reuse_allowed: false;
+  readonly persistence_allowed: true;
+  readonly prior_consent_reuse_allowed: true;
   readonly installation_identity_allowed: false;
   readonly machine_identity_allowed: false;
   readonly non_interactive_prompt_allowed: false;
@@ -44,11 +44,11 @@ export type TelemetryIntegrationPolicy = {
 
 export const DEFAULT_TELEMETRY_INTEGRATION_LIMITATIONS: readonly string[] = [
   "transport_remains_unavailable",
-  "no_production_telemetry_collection",
-  "no_full_extension_host_ui_automation",
+  "local_preference_persistence",
+  "no_default_yes",
+  "no_installation_identity",
   "source_locality_verified_in_13_10",
   "marketplace_complete_via_13_12_13_13",
-  "worktree_uncommitted",
 ] as const;
 
 export function createTelemetryIntegrationPolicy(
@@ -57,12 +57,12 @@ export function createTelemetryIntegrationPolicy(
   return {
     policy_id: TELEMETRY_INTEGRATION_POLICY_ID,
     policy_version: TELEMETRY_INTEGRATION_POLICY_VERSION,
-    telemetry_runtime_policy_version: "1.0",
+    telemetry_runtime_policy_version: "2.0",
     eligible_operations: ["run_assessment", "run_assessment_with_ai"],
     consent_scope: "command",
     default_decision: "deny",
-    persistence_allowed: false,
-    prior_consent_reuse_allowed: false,
+    persistence_allowed: true,
+    prior_consent_reuse_allowed: true,
     installation_identity_allowed: false,
     machine_identity_allowed: false,
     non_interactive_prompt_allowed: false,

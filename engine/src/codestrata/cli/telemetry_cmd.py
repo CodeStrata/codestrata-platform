@@ -1,10 +1,8 @@
 """CLI for anonymous Community telemetry preference and status commands.
 
-``codestrata telemetry status`` reports the privacy-first runtime posture
-(side-effect-free). ``codestrata telemetry preview`` shows an illustrative
-privacy-safe event (local only; no transmission). Legacy preference controls
-(enable/disable/reset/show) remain available separately and do not authorize
-the privacy-first runtime.
+``codestrata telemetry status`` reports whether anonymous telemetry is Enabled,
+Disabled, or Not configured. ``enable`` / ``disable`` persist an explicit local
+preference under CODESTRATA_HOME. Never collects source code or repository identity.
 """
 
 from __future__ import annotations
@@ -15,12 +13,15 @@ from typing import Annotated
 import typer
 
 from codestrata.telemetry.constants import EventName
+from codestrata.telemetry.persisted_consent import (
+    TelemetryPreferenceState,
+    persist_preference,
+    preference_state,
+)
 from codestrata.telemetry.preview_builder import build_privacy_first_telemetry_preview
 from codestrata.telemetry.preview_formatting import format_privacy_first_telemetry_preview
 from codestrata.telemetry.preview_policy import PreviewPolicyError
 from codestrata.telemetry.service import get_legacy_telemetry_service
-from codestrata.telemetry.status import build_privacy_first_telemetry_status
-from codestrata.telemetry.status_formatting import format_privacy_first_telemetry_status
 
 telemetry_app = typer.Typer(
     name="telemetry",
@@ -28,17 +29,12 @@ telemetry_app = typer.Typer(
         "Anonymous Community telemetry (disabled by default).\n\n"
         "Examples:\n"
         "  codestrata telemetry status\n"
-        "  codestrata telemetry preview\n"
         "  codestrata telemetry enable\n"
         "  codestrata telemetry disable\n"
-        "  codestrata telemetry reset\n"
-        "  codestrata telemetry show\n\n"
-        "``status`` and ``preview`` are privacy-first runtime transparency "
-        "commands. Legacy preference commands manage separate local opt-in "
-        "state and do not authorize the privacy-first runtime for normal "
-        "assess/report commands.\n\n"
-        "Never collects source code, repository names, findings, prompts, or "
-        "credentials. See PRIVACY.md and https://docs.codestrata.ai/security/privacy"
+        "  codestrata telemetry preview\n\n"
+        "Preference is stored locally under CODESTRATA_HOME. Never collects "
+        "source code, repository names, findings, prompts, or credentials. "
+        "See PRIVACY.md and https://docs.codestrata.ai/security/privacy"
     ),
     no_args_is_help=True,
 )
@@ -48,16 +44,36 @@ def _echo_json(payload: object) -> None:
     typer.echo(json.dumps(payload, indent=2, sort_keys=True))
 
 
+def _format_preference_status(state: TelemetryPreferenceState) -> str:
+    if state is TelemetryPreferenceState.ENABLED:
+        label = "Enabled"
+    elif state is TelemetryPreferenceState.DISABLED:
+        label = "Disabled"
+    else:
+        label = "Not configured"
+    return "\n".join(
+        [
+            "Anonymous Community telemetry",
+            "-----------------------------",
+            f"Preference: {label}",
+            "Default: Disabled (no silent telemetry)",
+            "Scope: Local preference under CODESTRATA_HOME",
+            (
+                "Contents: Anonymous usage and assessment metadata only — "
+                "no source code, repository names, file paths, findings, "
+                "or credentials."
+            ),
+            "Change later: `codestrata telemetry enable|disable`",
+            "",
+        ]
+    )
+
+
 @telemetry_app.command("status")
 def telemetry_status() -> None:
-    """Show privacy-first telemetry posture (no side effects).
+    """Show local telemetry preference (Enabled / Disabled / Not configured)."""
 
-    Does not read preferences, installation identity, queues, or endpoints.
-    Does not prompt, transmit, or mutate files.
-    """
-
-    status = build_privacy_first_telemetry_status()
-    typer.echo(format_privacy_first_telemetry_status(status), nl=False)
+    typer.echo(_format_preference_status(preference_state()), nl=False)
 
 
 @telemetry_app.command("preview")
@@ -74,12 +90,7 @@ def telemetry_preview(
         ),
     ] = None,
 ) -> None:
-    """Show an illustrative privacy-safe telemetry event (local only).
-
-    Displays exactly what the privacy-first runtime would pass to a future
-    transport. Uses fixed illustrative categorical values. Does not transmit,
-    save consent, use installation identity, or inspect repositories.
-    """
+    """Show an illustrative privacy-safe telemetry event (local only)."""
 
     try:
         preview = build_privacy_first_telemetry_preview(event_name=event)
@@ -91,25 +102,22 @@ def telemetry_preview(
 
 @telemetry_app.command("enable")
 def telemetry_enable() -> None:
-    """Enable legacy anonymous telemetry preference (does not enable runtime)."""
+    """Persist explicit opt-in for anonymous Community telemetry."""
 
-    status = get_legacy_telemetry_service().enable(emit_events=False)
-    typer.echo("Legacy anonymous telemetry preference enabled.")
+    persist_preference(True)
+    typer.echo("Anonymous telemetry preference: Enabled.")
     typer.echo(
-        "Note: the privacy-first runtime remains disabled for normal CLI "
-        "commands. Process-local assess consent flags do not persist; "
-        "see `codestrata telemetry status`."
+        "No source code, repository names, file paths, findings, or credentials "
+        "are sent."
     )
-    _echo_json(status)
 
 
 @telemetry_app.command("disable")
 def telemetry_disable() -> None:
-    """Disable anonymous telemetry preference (legacy compatibility only)."""
+    """Persist explicit opt-out for anonymous Community telemetry."""
 
-    status = get_legacy_telemetry_service().disable(emit_events=False)
-    typer.echo("Legacy anonymous telemetry preference disabled.")
-    _echo_json(status)
+    persist_preference(False)
+    typer.echo("Anonymous telemetry preference: Disabled.")
 
 
 @telemetry_app.command("reset")
@@ -118,8 +126,8 @@ def telemetry_reset() -> None:
 
     status = get_legacy_telemetry_service().reset()
     typer.echo(
-        "Legacy telemetry identity and preferences reset. "
-        "Legacy preference telemetry is disabled."
+        "Telemetry identity and preferences reset. "
+        "Preference is Not configured (telemetry remains disabled)."
     )
     _echo_json(status)
 

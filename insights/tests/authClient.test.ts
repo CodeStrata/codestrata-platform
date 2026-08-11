@@ -10,8 +10,11 @@ describe("authenticated API client", () => {
     });
     await expect(client.getOverview()).rejects.toMatchObject({ code: "unauthenticated" });
     expect(fetchImpl).toHaveBeenCalledWith(
-      "/api/v1/insights/api/overview",
-      expect.objectContaining({ credentials: "include" }),
+      expect.stringMatching(/^\/api\/v1\/insights\/api\/overview\?_=\d+$/),
+      expect.objectContaining({
+        credentials: "include",
+        cache: "no-store",
+      }),
     );
   });
 

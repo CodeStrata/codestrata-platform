@@ -92,8 +92,16 @@ export default defineConfig({
           { text: "AI Providers", link: "/ai-providers/" },
           { text: "Community API", link: "/reference/api" },
           { text: "Community Cloud API", link: "/reference/community-api/" },
+          { text: "Architecture", link: "/architecture/" },
+          { text: "Community Cloud", link: "/architecture/community-cloud" },
+          { text: "Data Lake", link: "/architecture/data-lake" },
+          { text: "Insights", link: "/architecture/insights" },
           { text: "Telemetry", link: "/reference/telemetry" },
+          { text: "Data Collection", link: "/security/data-collection" },
+          { text: "Collected Fields", link: "/security/collected-fields" },
           { text: "Privacy", link: "/security/privacy" },
+          { text: "Source Locality", link: "/security/source-locality" },
+          { text: "Retention & Deletion", link: "/security/retention-and-deletion" },
           { text: "Release Notes", link: "/reference/release-notes" },
         ],
       },
@@ -166,8 +174,16 @@ export default defineConfig({
             { text: "AI Providers", link: "/ai-providers/" },
             { text: "Community API", link: "/reference/api" },
             { text: "Community Cloud API", link: "/reference/community-api/" },
+            { text: "Architecture", link: "/architecture/" },
+            { text: "Community Cloud", link: "/architecture/community-cloud" },
+            { text: "Data Lake", link: "/architecture/data-lake" },
+            { text: "Insights", link: "/architecture/insights" },
             { text: "Telemetry", link: "/reference/telemetry" },
+            { text: "Data Collection", link: "/security/data-collection" },
+            { text: "Collected Fields", link: "/security/collected-fields" },
             { text: "Privacy", link: "/security/privacy" },
+            { text: "Source Locality", link: "/security/source-locality" },
+            { text: "Retention & Deletion", link: "/security/retention-and-deletion" },
             { text: "Security", link: "/security/" },
             { text: "MCP", link: "/reference/mcp" },
             { text: "Compatibility", link: "/reference/compatibility" },
@@ -187,8 +203,13 @@ export default defineConfig({
           text: "Trust & Community",
           items: [
             { text: "Privacy", link: "/security/privacy" },
-            { text: "Security", link: "/security/" },
+            { text: "Source Locality", link: "/security/source-locality" },
+            { text: "Data Collection", link: "/security/data-collection" },
+            { text: "Retention & Deletion", link: "/security/retention-and-deletion" },
             { text: "Telemetry", link: "/reference/telemetry" },
+            { text: "AI Providers", link: "/ai-providers/" },
+            { text: "Architecture", link: "/architecture/community-cloud" },
+            { text: "Security", link: "/security/" },
             {
               text: "GitHub",
               link: "https://github.com/CodeStrata/codestrata-engine",
@@ -201,13 +222,15 @@ export default defineConfig({
     socialLinks: [
       { icon: "github", link: "https://github.com/CodeStrata/codestrata-engine" },
     ],
-    footer: {
-      message: "",
-      copyright: "",
-    },
-    search: {
-      provider: "local",
-    },
+    // Intentionally omit theme.footer — empty footer still mounts VitePress
+    // VPFooter (full-width border mid-layout). CsFooter owns the footer via
+    // the layout-bottom slot.
+    //
+    // Docs search: REMOVED FOR v0.2.0. VitePress local MiniSearch emits
+    // `@localSearchIndex*` chunk filenames; Cloudflare Static Assets 307-redirects
+    // `@` → `%40` and fails to serve the index, leaving a visible non-functional
+    // Search control. Omit search entirely until a Cloudflare-safe asset path
+    // exists (no Algolia / no new service for this release).
     outline: [2, 3],
   },
   sitemap: {

@@ -88,6 +88,16 @@ def normalize_event(envelope: dict[str, Any]) -> dict[str, Any] | None:
         if et not in APPROVED_TELEMETRY_TYPES:
             return None
         event["event_type"] = et
+        props = payload.get("properties") if isinstance(payload.get("properties"), dict) else {}
+        feature = props.get("feature")
+        outcome = props.get("outcome")
+        operation = props.get("operation")
+        if isinstance(feature, str) and feature.strip():
+            event["feature"] = feature.strip()[:64]
+        if isinstance(outcome, str) and outcome.strip():
+            event["outcome"] = outcome.strip()[:32]
+        if isinstance(operation, str) and operation.strip():
+            event["operation"] = operation.strip()[:64]
         return event
 
     if stream in {"cli_event", "extension_event"}:

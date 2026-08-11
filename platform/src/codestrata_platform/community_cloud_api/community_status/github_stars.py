@@ -48,6 +48,7 @@ class CachedGitHubMetadata:
     fetched_at: float
     source: str  # live | cache | unavailable
     release_lookup_ok: bool
+    forks: int | None = None
 
 
 # Backward-compatible name used by existing imports/tests.
@@ -104,6 +105,7 @@ class GitHubMetadataCache:
         if self._cached is not None and (now - self._cached.fetched_at) < self._ttl:
             return CachedGitHubMetadata(
                 stars=self._cached.stars,
+                forks=self._cached.forks,
                 github_repository=self._cached.github_repository,
                 github_url=self._cached.github_url,
                 release_version=self._cached.release_version,
@@ -119,6 +121,8 @@ class GitHubMetadataCache:
             stars = repo.get("stargazers_count")
             if not isinstance(stars, int) or stars < 0:
                 raise ValueError("invalid stargazers_count")
+            forks_raw = repo.get("forks_count")
+            forks = forks_raw if isinstance(forks_raw, int) and forks_raw >= 0 else None
             full_name = str(repo.get("full_name") or "").strip() or GITHUB_REPOSITORY
             html_url = str(repo.get("html_url") or "").strip() or GITHUB_URL
 
@@ -141,6 +145,7 @@ class GitHubMetadataCache:
 
             self._cached = CachedGitHubMetadata(
                 stars=stars,
+                forks=forks,
                 github_repository=full_name,
                 github_url=html_url,
                 release_version=release_version,
@@ -153,6 +158,7 @@ class GitHubMetadataCache:
             if self._cached is not None:
                 return CachedGitHubMetadata(
                     stars=self._cached.stars,
+                    forks=self._cached.forks,
                     github_repository=self._cached.github_repository,
                     github_url=self._cached.github_url,
                     release_version=self._cached.release_version,
@@ -162,6 +168,7 @@ class GitHubMetadataCache:
                 )
             return CachedGitHubMetadata(
                 stars=None,
+                forks=None,
                 github_repository=GITHUB_REPOSITORY,
                 github_url=GITHUB_URL,
                 release_version=None,

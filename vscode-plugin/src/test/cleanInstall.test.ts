@@ -27,11 +27,14 @@ describe("clean install policy", () => {
     assert.ok(!blob.includes("/Users/"));
   });
 
-  it("lists stable settings and forbids consent/identity keys", () => {
+  it("lists stable settings and forbids installation identity keys", () => {
     assert.ok(STABLE_SETTING_KEYS.includes("codestrata.engine.executable"));
     assert.ok(STABLE_COMMAND_IDS.includes("codestrata.assess"));
     assert.ok(
-      FORBIDDEN_PERSISTED_STATE_KEYS.some((k) => k.includes("telemetryConsent"))
+      FORBIDDEN_PERSISTED_STATE_KEYS.some((k) => k.includes("installationId"))
+    );
+    assert.ok(
+      !FORBIDDEN_PERSISTED_STATE_KEYS.includes("codestrata.telemetryPreference")
     );
   });
 });

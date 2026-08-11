@@ -13,14 +13,15 @@ telemetry, Data Lake, published reports, AI providers, retention, opt-out).
 | Topic | Detail |
 | --- | --- |
 | Default | `disabled_by_default` — transmission unauthorized |
-| Opt in (interactive) | Eligible interactive assess may prompt once; default **No** (`[y/N]`) |
-| Opt in (explicit) | `codestrata assess --telemetry-allow` |
-| Opt out (explicit) | `codestrata assess --telemetry-deny` |
+| Opt in (interactive) | Eligible interactive assess may prompt when preference is undecided; default **No** (`[y/N]`) |
+| Opt in (explicit) | `codestrata telemetry enable` or `codestrata assess --telemetry-allow` |
+| Opt out (explicit) | `codestrata telemetry disable` or `codestrata assess --telemetry-deny` |
 | Non-interactive / CI | Never prompts; decision is `non_interactive_disabled` |
-| Persistence | **Not persisted** — process/command local only |
+| Persistence | Explicit Yes/No is stored locally under `CODESTRATA_HOME`; undecided remains disabled |
 
 Consent authorizes privacy-safe transmission eligibility. It is **not**
-permission to publish reports. After explicit opt-in, production Community HTTP
+permission to publish reports, and it is **not** required for voluntary
+public-report Yes/No feedback. After explicit opt-in, production Community HTTP
 transport targets `https://api.codestrata.ai` when
 `CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL` is set; otherwise transport stays
 unavailable. Disabled / denied / non-interactive sessions never open HTTP
@@ -63,8 +64,17 @@ secrets or private repository details.
 
 ## Related documentation
 
-- https://docs.codestrata.ai/security/privacy (canonical)
-- `docs/telemetry.md` (Engine)
+- https://docs.codestrata.ai/architecture/community-cloud (Community Cloud architecture)
+- https://docs.codestrata.ai/architecture/data-lake (Data Lake)
+- https://docs.codestrata.ai/architecture/insights (Insights)
+- https://docs.codestrata.ai/security/source-locality (what stays local vs leaves)
+- https://docs.codestrata.ai/ai-providers/ (optional AI enrichment data flow)
+- https://docs.codestrata.ai/reference/telemetry (canonical Telemetry)
+- https://docs.codestrata.ai/security/data-collection (canonical Data Collection)
+- https://docs.codestrata.ai/security/collected-fields (field inventory)
+- https://docs.codestrata.ai/security/retention-and-deletion (retention / opt-out / revoke)
+- https://docs.codestrata.ai/security/privacy (canonical Community Privacy)
+- `docs/telemetry.md` (Engine-local notes)
 - `docs/ai-provider-security-boundaries.md` (Epic 11 provider privacy / failure isolation)
 - Telemetry JSON Schema: `schemas/telemetry/codestrata.io/v1.0/TelemetryEvent.json`
 

@@ -14,7 +14,7 @@ export const MARKETPLACE_BRANDING_POLICY_VERSION = "1.0" as const;
 
 export const MARKETPLACE_PRODUCT_NAME = "CodeStrata" as const;
 export const MARKETPLACE_DISPLAY_NAME =
-  "CodeStrata – Engineering Intelligence" as const;
+  "CodeStrata – Engineering Assessment" as const;
 export const MARKETPLACE_PUBLISHER_NAME = "codestrata" as const;
 export const MARKETPLACE_EXTENSION_VERSION = "0.2.0" as const;
 export const MARKETPLACE_TAGLINE =

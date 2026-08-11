@@ -198,3 +198,69 @@ def handle_published_reports(
         request_id=context.request_id,
         extra_headers={"Cache-Control": "no-store"},
     )
+
+
+def handle_validation_reports(
+    context: RequestContext,
+    *,
+    auth: InsightsAuthService,
+    report_service: object | None,
+) -> Response:
+    """Authenticated paginated private Community validation report registry."""
+
+    from codestrata_platform.community_cloud_api.reports.service import (
+        ReportPublishingService,
+    )
+
+    principal, err = auth.require_authenticated(context.cookie_header)
+    if principal is None:
+        return _auth_error(err or ERROR_AUTHENTICATION_REQUIRED, context)
+
+    if not isinstance(report_service, ReportPublishingService) or not getattr(
+        report_service, "_available", False
+    ):
+        return build_json_response(
+            {
+                "items": [],
+                "next_cursor": None,
+                "limit": 50,
+                "temporary": True,
+                "purpose": "temporary_community_validation",
+                "note": "validation registry unavailable",
+                "source": "private_validation_registry",
+            },
+            status_code=200,
+            api_version=context.api_version,
+            request_id=context.request_id,
+            extra_headers={"Cache-Control": "no-store"},
+        )
+
+    params = context.path_params or {}
+    limit_raw = params.get("limit")
+    cursor = params.get("cursor")
+    try:
+        limit = int(limit_raw) if limit_raw is not None else 50
+    except (TypeError, ValueError):
+        limit = 50
+
+    try:
+        page = report_service.list_validation_registry(limit=limit, cursor=cursor)
+    except Exception:  # noqa: BLE001
+        return build_error_response(
+            ERROR_INTERNAL_AUTH,
+            http_status=500,
+            api_version=context.api_version,
+            request_id=context.request_id,
+        )
+
+    payload = {
+        **page,
+        "source": "private_validation_registry",
+    }
+    return build_json_response(
+        payload,
+        status_code=200,
+        api_version=context.api_version,
+        request_id=context.request_id,
+        extra_headers={"Cache-Control": "no-store"},
+    )

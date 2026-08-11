@@ -141,6 +141,7 @@ def _create_production_ingestion_app(active: DeploymentSettings) -> FastAPI:
         }
     )
 
+    report_publishing_service = _build_report_publishing_service(active)
     app = create_community_cloud_app(
         authentication_policy=default_authentication_policy(),
         credential_verifier=verifier,
@@ -156,8 +157,9 @@ def _create_production_ingestion_app(active: DeploymentSettings) -> FastAPI:
         insights_aggregation_service=_build_insights_aggregation_service(
             bucket_name=active.data_lake_bucket,
             region_name=region,
+            report_service=report_publishing_service,
         ),
-        report_publishing_service=_build_report_publishing_service(active),
+        report_publishing_service=report_publishing_service,
     )
     app.state.community_cloud_deployment_settings = active
     app.state.community_cloud_deployment_diagnostic = deployment_wiring_diagnostic(
@@ -174,21 +176,49 @@ def _build_insights_aggregation_service(
     *,
     bucket_name: str,
     region_name: str | None,
+    report_service: object | None = None,
 ):
     """Wire privacy-safe Insights aggregation to bounded Data Lake reads."""
 
     import boto3
 
+    from codestrata_platform.community_cloud_api.insights.external_metrics import (
+        count_published_from_registry,
+    )
     from codestrata_platform.community_cloud_api.insights.service import (
         InsightsAggregationService,
     )
     from codestrata_platform.community_cloud_api.insights_storage.reader import (
         BoundedS3Reader,
     )
+    from codestrata_platform.community_cloud_api.reports.service import (
+        ReportPublishingService,
+    )
 
     client = boto3.client("s3", region_name=region_name)
     reader = BoundedS3Reader(bucket=bucket_name, client=client)
-    return InsightsAggregationService(reader=reader)
+
+    published_port = None
+    sentiment_port = None
+    if isinstance(report_service, ReportPublishingService):
+
+        class _PublishedPort:
+            def count_published_reports(self) -> int:
+                registry = report_service.list_published_registry()
+                return count_published_from_registry(registry)
+
+        class _SentimentPort:
+            def community_sentiment_summary(self) -> dict:
+                return report_service.community_sentiment_summary()
+
+        published_port = _PublishedPort()
+        sentiment_port = _SentimentPort()
+
+    return InsightsAggregationService(
+        reader=reader,
+        published_reports_port=published_port,
+        community_sentiment_port=sentiment_port,
+    )
 
 
 def _build_report_publishing_service(active: DeploymentSettings):

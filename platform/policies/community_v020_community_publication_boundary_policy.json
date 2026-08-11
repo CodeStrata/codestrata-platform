@@ -1,0 +1,50 @@
+{
+  "policy_id": "community-v020-community-publication-boundary-policy",
+  "policy_version": "1.0",
+  "schema": "community-v020-community-publication-boundary-policy:1.0",
+  "slice": "19.8A",
+  "epic": 19,
+  "product_version": "0.2.0",
+  "authority": "Authoritative v0.2.0 Community publication boundary. Supersedes Slice 19.7/19.8 five-public-repository intent for release.",
+  "supersedes": [
+    "community-v020-public-repository-publication-inventory-register:19.8 five-public intent",
+    "community-public-repository-no-cicd-policy:1.0 five-repo public forbid-set"
+  ],
+  "historical_record_preserved": true,
+  "community_public_source_repositories": [
+    "codestrata-engine",
+    "codestrata-examples"
+  ],
+  "private_not_community_source": [
+    "codestrata-platform",
+    "codestrata-infrastructure",
+    "codestrata-vscode"
+  ],
+  "distribution": {
+    "cli_package": "public (PyPI deferred to later release slice; source is public engine)",
+    "vscode_marketplace": "public package distribution from private source",
+    "github_release_tag": "not_created_in_19_8a"
+  },
+  "forbidden_actions_in_19_8a": [
+    "make_private_repository_public",
+    "rename_private_platform_monorepo",
+    "create_new_public_mirrors_for_platform_infrastructure_vscode",
+    "cli_publish",
+    "vscode_marketplace_publish",
+    "v0.2.0_tag",
+    "github_release"
+  ],
+  "publication_status": {
+    "codestrata-engine": "PUBLIC_COMMUNITY_SOURCE",
+    "codestrata-examples": "PUBLIC_COMMUNITY_SOURCE",
+    "codestrata-platform": "PRIVATE_NOT_COMMUNITY_SOURCE",
+    "codestrata-infrastructure": "PRIVATE_NOT_COMMUNITY_SOURCE",
+    "codestrata-vscode": "PRIVATE_NOT_COMMUNITY_SOURCE"
+  },
+  "no_cicd_applies_to": [
+    "codestrata-engine",
+    "codestrata-examples"
+  ],
+  "private_workflows_may_remain": true,
+  "do_not_restore_removed_private_workflows_without_owner_requirement": true
+}

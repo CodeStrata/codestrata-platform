@@ -1,0 +1,205 @@
+{
+  "register_id": "community-transparency-topic-register",
+  "register_version": "1.0",
+  "schema": "community-transparency-topic-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "entries": [
+    {
+      "topic": "Telemetry Policy",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": [
+        "community_telemetry_consent_*",
+        "engine telemetry runtime",
+        "community_telemetry_stream_inventory_register"
+      ],
+      "target_public_locations": ["docs/reference/telemetry.md", "docs/security/privacy.md"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Privacy Policy",
+      "current_status": "SUBSTANTIALLY_COMPLETE_CANONICAL_DOCS",
+      "authoritative_sources": ["docs/security/privacy.md", "never_collected_register"],
+      "target_public_locations": ["https://docs.codestrata.ai/security/privacy"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Data Collection Policy",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_telemetry_field_register", "stream_inventory"],
+      "target_public_locations": ["docs Data Collection page TBD"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Every Collected Field",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_telemetry_field_register"],
+      "target_public_locations": ["docs field tables TBD"],
+      "planned_epic18_slice": "18.2",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Everything Never Collected",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_never_collected_register"],
+      "target_public_locations": ["docs/security/privacy.md", "never-collected page TBD"],
+      "planned_epic18_slice": "18.2",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Consent Behavior",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_consent_inventory_register"],
+      "target_public_locations": ["docs/reference/telemetry.md", "privacy"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Non-Interactive Behavior",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["consent register non_interactive_disabled"],
+      "target_public_locations": ["telemetry docs", "CLI docs"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Anonymous/Client Identity",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_client_identity_register"],
+      "target_public_locations": ["privacy", "telemetry docs"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Data Retention",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_retention_register"],
+      "target_public_locations": ["privacy retention section"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Deletion & Opt-Out",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_opt_out_deletion_register"],
+      "target_public_locations": ["privacy opt-out"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "AI Provider Data Flow",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_ai_provider_data_flow_register"],
+      "target_public_locations": ["docs/ai-providers/index.md"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "What Is Sent to AI Providers",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["ai provider data flow register"],
+      "target_public_locations": ["ai-providers docs", "privacy"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Community Cloud Architecture",
+      "current_status": "INVENTORIED_SOURCE_PARTIAL_PUBLIC",
+      "authoritative_sources": ["api transparency register", "infra modules"],
+      "target_public_locations": ["architecture docs TBD"],
+      "planned_epic18_slice": "18.3+",
+      "release_blocker_if_missing": false
+    },
+    {
+      "topic": "Community Data Lake Architecture",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["data destination register", "stream inventory"],
+      "target_public_locations": ["privacy", "architecture TBD"],
+      "planned_epic18_slice": "18.3+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Insights Aggregation and Privacy",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_insights_inventory_register"],
+      "target_public_locations": ["docs Insights privacy notes TBD"],
+      "planned_epic18_slice": "18.3+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Community API Data Flow",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_api_transparency_register"],
+      "target_public_locations": ["docs/reference/community-api/index.md"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Source-Locality Boundaries",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["community_source_locality_register"],
+      "target_public_locations": ["privacy", "trust page TBD"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Production Telemetry Availability",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["stream inventory", "product_transport"],
+      "target_public_locations": ["telemetry docs"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "README reconciliation",
+      "current_status": "PENDING_PROSE",
+      "authoritative_sources": ["engine/README.md"],
+      "target_public_locations": ["engine README"],
+      "planned_epic18_slice": "18.4+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "SECURITY reconciliation",
+      "current_status": "PENDING_PROSE",
+      "authoritative_sources": ["SECURITY.md"],
+      "target_public_locations": ["SECURITY.md"],
+      "planned_epic18_slice": "18.4+",
+      "release_blocker_if_missing": false
+    },
+    {
+      "topic": "CLI help reconciliation",
+      "current_status": "PENDING_PROSE",
+      "authoritative_sources": ["docs/reference/cli.md"],
+      "target_public_locations": ["CLI docs/help"],
+      "planned_epic18_slice": "18.4+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "VS Code Marketplace content",
+      "current_status": "CANDIDATE_NOT_PUBLISHED",
+      "authoritative_sources": ["docs/extensions/vscode.md", "vscode MARKETPLACE.md"],
+      "target_public_locations": ["Marketplace listing TBD"],
+      "planned_epic18_slice": "Release Readiness",
+      "release_blocker_if_missing": false
+    },
+    {
+      "topic": "Community Docs reconciliation",
+      "current_status": "IN_PROGRESS_VIA_INVENTORY",
+      "authoritative_sources": ["public document register"],
+      "target_public_locations": ["docs.codestrata.ai"],
+      "planned_epic18_slice": "18.2+",
+      "release_blocker_if_missing": true
+    },
+    {
+      "topic": "Public Claims vs Runtime",
+      "current_status": "INVENTORIED",
+      "authoritative_sources": ["contradiction register", "runtime registries"],
+      "target_public_locations": ["verification continuous"],
+      "planned_epic18_slice": "18.1-18.n",
+      "release_blocker_if_missing": true
+    }
+  ]
+}

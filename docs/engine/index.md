@@ -11,7 +11,7 @@ produces Engineering Assessments, and does not require commercial Platform servi
 ## What it does
 
 - Assess a local repository or GitHub URL
-- Apply deterministic Engineering Intelligence (rules + evidence)
+- Apply deterministic Engineering Assessment (rules + evidence)
 - Emit HTML and JSON reports
 - Optionally enrich with AI using your provider credentials
 - Optionally expose MCP tools when the `mcp` extra is installed

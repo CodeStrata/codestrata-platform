@@ -7,7 +7,8 @@ Current shipping Community product: **CodeStrata Engine 0.2.0** and
 [`docs/`](docs/). This monorepo also contains private Platform, Infrastructure,
 and Insights work that is **not** part of the Community Edition surface.
 
-> The Engine produces structured Engineering Intelligence.  
+> The Engine produces single-repository **Engineering Assessments**.  
+> Portfolio **Engineering Intelligence Reports (EIR)** aggregate completed assessments.  
 > The Platform (private) stores, connects, retrieves, and reasons over that
 > intelligence for organizational products — it is not required for Community
 > local assessment.
@@ -42,8 +43,8 @@ source .venv/bin/activate
 pip install -e "./engine[dev,mcp]"
 codestrata init
 codestrata doctor
-codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
-# open reports/sample-js-app/<timestamp>/report.html
+codestrata assess --repo test-fixtures/sample-js-app --no-ai
+# open .codestrata-artifacts/assessments/<repository-id>/current/assessment.html
 ```
 
 ---
@@ -53,12 +54,12 @@ codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
 | Capability | CodeStrata Engine (Community) | CodeStrata Platform (private) |
 | ---------- | ----------------------------- | ----------------------------- |
 | Local / GitHub assess, Engineering Assessment reports | Shipped | Consumes Engine |
-| Deterministic Engineering Intelligence | Shipped | Consumes / stores |
+| Deterministic Engineering Assessment (no-AI default) | Shipped | Consumes / stores |
 | Optional customer-configured AI | Shipped (`--with-ai`) | Provider utilities |
 | Local MCP / local knowledge | Shipped | Adds Platform MCP surfaces |
 | Engineering Knowledge Graph | Not included | Platform-only |
 | Repository Retrieval / Answering | Not included | Platform-only |
-| Portfolio / Executive Intelligence | Not included | Platform-only |
+| Portfolio Engineering Intelligence (EIR) | Community local EIR layout | Platform-only commercial |
 | CodeStrata VS Code Extension | `vscode-plugin/` | — |
 
 **Dependency rule:** Platform → Engine only. Engine must never import Platform.

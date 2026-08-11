@@ -66,14 +66,11 @@ import {
   PUBLISH_CONFIRM_ACTION,
   PUBLISH_CONFIRM_DETAIL,
   PUBLISH_CONFIRM_TITLE,
-  TELEMETRY_PUBLISH_ACTION,
-  TELEMETRY_PUBLISH_DETAIL,
-  TELEMETRY_PUBLISH_TITLE,
   artifactsRootFromOutputDirectory,
   buildReportPublishArgs,
   isLocalOrPrivateRepositoryId,
   parsePublicReportUrl,
-  publishEnvWithTelemetryOptIn,
+  publishEnvForReportPublish,
   repositoryIdFromHtmlPath,
 } from "./reportPublishing";
 import {
@@ -174,11 +171,12 @@ function isTelemetryInteractive(): boolean {
 
 function createTelemetryPromptUi(): TelemetryPromptUi {
   return {
-    async showConsentPrompt(message, allow, deny) {
+    async showConsentPrompt(message, allow, deny, learnMore) {
       const choice = await vscode.window.showInformationMessage(
         message,
         allow,
-        deny
+        deny,
+        learnMore
       );
       if (choice === allow) {
         return "Allow";
@@ -186,7 +184,15 @@ function createTelemetryPromptUi(): TelemetryPromptUi {
       if (choice === deny) {
         return "Deny";
       }
+      if (choice === learnMore) {
+        return "LearnMore";
+      }
       return undefined;
+    },
+    async openLearnMore() {
+      await vscode.env.openExternal(
+        vscode.Uri.parse("https://docs.codestrata.ai/security/privacy")
+      );
     },
   };
 }
@@ -605,10 +611,15 @@ export function activate(context: vscode.ExtensionContext): void {
         commandId,
         interactive: isTelemetryInteractive(),
         ui: createTelemetryPromptUi(),
+        preferenceStore: {
+          get: (key) => context.globalState.get(key),
+          update: (key, value) => context.globalState.update(key, value),
+        },
       });
       assertFreshConsentDecision({
         priorConsentReused: promptResult.consent.priorConsentReused,
         persisted: promptResult.consent.persisted,
+        source: promptResult.consent.source,
       });
       const integrationPolicy = createTelemetryIntegrationPolicy();
       void integrationDiagnosticsToStableDict(
@@ -1090,40 +1101,26 @@ export function activate(context: vscode.ExtensionContext): void {
         );
         return;
       }
-      const publicConfirm = await vscode.window.showWarningMessage(
-        PUBLISH_CONFIRM_TITLE,
-        { modal: true, detail: PUBLISH_CONFIRM_DETAIL },
-        PUBLISH_CONFIRM_ACTION,
+      const isPrivate = isLocalOrPrivateRepositoryId(repositoryId);
+      const confirm = await vscode.window.showWarningMessage(
+        isPrivate ? PRIVATE_REPO_ACK_TITLE : PUBLISH_CONFIRM_TITLE,
+        {
+          modal: true,
+          detail: isPrivate ? PRIVATE_REPO_ACK_DETAIL : PUBLISH_CONFIRM_DETAIL,
+        },
+        isPrivate ? PRIVATE_REPO_ACK_ACTION : PUBLISH_CONFIRM_ACTION,
         PUBLISH_CANCEL_ACTION
       );
-      if (publicConfirm !== PUBLISH_CONFIRM_ACTION) {
-        return;
-      }
-      let acknowledgePrivate = false;
-      if (isLocalOrPrivateRepositoryId(repositoryId)) {
-        const privateAck = await vscode.window.showWarningMessage(
-          PRIVATE_REPO_ACK_TITLE,
-          { modal: true, detail: PRIVATE_REPO_ACK_DETAIL },
-          PRIVATE_REPO_ACK_ACTION,
-          PUBLISH_CANCEL_ACTION
-        );
-        if (privateAck !== PRIVATE_REPO_ACK_ACTION) {
-          return;
-        }
-        acknowledgePrivate = true;
-      }
-      const telemetryAck = await vscode.window.showInformationMessage(
-        TELEMETRY_PUBLISH_TITLE,
-        { modal: true, detail: TELEMETRY_PUBLISH_DETAIL },
-        TELEMETRY_PUBLISH_ACTION,
-        PUBLISH_CANCEL_ACTION
-      );
-      if (telemetryAck !== TELEMETRY_PUBLISH_ACTION) {
+      const accepted = isPrivate
+        ? confirm === PRIVATE_REPO_ACK_ACTION
+        : confirm === PUBLISH_CONFIRM_ACTION;
+      if (!accepted) {
         void vscode.window.showInformationMessage(
-          "Publish cancelled. Local report is unchanged."
+          "Publish cancelled. Local report remains unchanged."
         );
         return;
       }
+      const acknowledgePrivate = isPrivate;
       const artifactsRoot = artifactsRootFromOutputDirectory(settings.outputDirectory);
       const args = buildReportPublishArgs({
         repositoryId,
@@ -1138,7 +1135,7 @@ export function activate(context: vscode.ExtensionContext): void {
         executable: engine.executable,
         args,
         cwd: workspaceFolder,
-        env: publishEnvWithTelemetryOptIn(),
+        env: publishEnvForReportPublish(),
         onStdout: (chunk) => appendOutput(redactSecrets(chunk)),
         onStderr: (chunk) => appendOutput(redactSecrets(chunk)),
       });
@@ -1191,6 +1188,54 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
     vscode.commands.registerCommand("codestrata.openDocumentation", async () => {
       await vscode.env.openExternal(vscode.Uri.parse(ENGINE_DOCS_QUICK_START));
+    }),
+    vscode.commands.registerCommand("codestrata.telemetrySettings", async () => {
+      const {
+        preferenceLabel,
+        readPreferenceState,
+        writePreferenceState,
+        TELEMETRY_PREFERENCE_STATE_KEY,
+      } = await import("./telemetry");
+      const current = readPreferenceState((key) => context.globalState.get(key));
+      const choice = await vscode.window.showQuickPick(
+        [
+          {
+            label: "Allow Anonymous Telemetry",
+            description: current === "enabled" ? "Current" : undefined,
+            value: "enabled" as const,
+          },
+          {
+            label: "Disable Telemetry",
+            description: current === "disabled" ? "Current" : undefined,
+            value: "disabled" as const,
+          },
+          {
+            label: "Learn More",
+            value: "learn" as const,
+          },
+        ],
+        {
+          title: `CodeStrata Telemetry — ${preferenceLabel(current)}`,
+          placeHolder:
+            "Anonymous usage metadata only. No source code or repository identity.",
+        }
+      );
+      if (!choice) {
+        return;
+      }
+      if (choice.value === "learn") {
+        await vscode.env.openExternal(
+          vscode.Uri.parse("https://docs.codestrata.ai/security/privacy")
+        );
+        return;
+      }
+      await writePreferenceState(
+        (key, value) => context.globalState.update(key, value),
+        choice.value
+      );
+      void vscode.window.showInformationMessage(
+        `CodeStrata telemetry preference: ${preferenceLabel(choice.value)}. (${TELEMETRY_PREFERENCE_STATE_KEY})`
+      );
     }),
     vscode.commands.registerCommand("codestrata.init", async () => {
       const folderCount = vscode.workspace.workspaceFolders?.length ?? 0;
@@ -1430,7 +1475,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   appendOutputLine(
-    `CodeStrata – Engineering Intelligence activated (Community). Supported report schema: ${SUPPORTED_SCHEMA_DOC}.`
+    `CodeStrata – Engineering Assessment activated (Community). Supported report schema: ${SUPPORTED_SCHEMA_DOC}.`
   );
   void refreshFromDisk(true);
   void maybeRunFirstRun(onboardingDeps);

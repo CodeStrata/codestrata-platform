@@ -58,16 +58,19 @@ def test_cli_preview_help() -> None:
     assert result.exit_code == 0
     text = (result.stdout + result.stderr).lower()
     assert "does not transmit" in text or "local only" in text or "illustrative" in text
-    assert "installation" in text or "consent" in text
+    assert "privacy-safe" in text or "event" in text
 
 
-def test_status_reports_preview_available() -> None:
+def test_status_reports_preview_available(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     result = CliRunner().invoke(app, ["telemetry", "status"])
     assert result.exit_code == 0
-    assert "Preview command: Available" in result.stdout
-    assert "codestrata telemetry preview" in result.stdout
-    assert "CLI preview command is not yet available" not in result.stdout
+    assert "Anonymous Community telemetry" in result.stdout
+    assert "Preference: Not configured" in result.stdout
+    assert "Change later: `codestrata telemetry enable|disable`" in result.stdout
 
 
 def test_preview_does_not_use_legacy(tmp_path: Path, monkeypatch) -> None:
@@ -84,7 +87,12 @@ def test_preview_does_not_use_legacy(tmp_path: Path, monkeypatch) -> None:
     assert list(home.iterdir()) == []
 
 
-def test_preview_then_interactive_assess_still_eligible() -> None:
+def test_preview_then_interactive_assess_still_eligible(
+    tmp_path: Path, monkeypatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     CliRunner().invoke(app, ["telemetry", "preview"])
     telemetry = ensure_interactive_product_telemetry(
@@ -98,7 +106,10 @@ def test_preview_then_interactive_assess_still_eligible() -> None:
     assert telemetry.runtime.session.decision is TelemetryDecision.DENIED_FOR_SESSION
 
 
-def test_preview_then_allow_flag() -> None:
+def test_preview_then_allow_flag(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     CliRunner().invoke(app, ["telemetry", "preview"])
     telemetry = ensure_interactive_product_telemetry(
@@ -108,7 +119,10 @@ def test_preview_then_allow_flag() -> None:
     assert telemetry.runtime.session.decision is TelemetryDecision.ALLOWED_FOR_SESSION
 
 
-def test_preview_then_non_interactive() -> None:
+def test_preview_then_non_interactive(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     CliRunner().invoke(app, ["telemetry", "preview"])
     telemetry = ensure_interactive_product_telemetry(
@@ -128,7 +142,7 @@ def test_legacy_show_remains() -> None:
 
 
 def test_no_platform_imports_in_preview_modules() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.glob("preview*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):

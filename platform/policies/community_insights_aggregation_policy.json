@@ -41,10 +41,15 @@
     "total_anonymous_installations",
     "daily_active_installations",
     "monthly_active_installations",
+    "total_assessments",
     "first_assessments",
     "repeat_assessments",
     "successful_assessments",
     "failed_assessments",
+    "published_reports",
+    "github_stars",
+    "github_forks",
+    "community_sentiment",
     "cli_version_adoption",
     "assessment_head_usage",
     "language_ecosystem_distribution",
@@ -74,32 +79,45 @@
     "first_repeat_retention_only",
     "validation_growth_snapshots_unavailable",
     "production_ingestion_still_unwired",
-    "no_live_dashboard_data_claim"
+    "no_live_dashboard_data_claim",
+    "github_public_api",
+    "report_artifact_store_registry",
+    "community_sentiment_not_yet_collected",
+    "voluntary_feedback_only"
   ],
   "overview_groups": {
-    "activity": [
+    "community_pulse": [
+      "github_stars",
+      "github_forks",
+      "community_sentiment"
+    ],
+    "assessment": [
+      "total_assessments",
+      "first_assessments",
+      "repeat_assessments"
+    ],
+    "reliability": [
+      "successful_assessments",
+      "failed_assessments",
+      "published_reports"
+    ],
+    "activity_legacy": [
       "total_anonymous_installations",
       "daily_active_installations",
       "monthly_active_installations"
     ],
-    "assessment": [
-      "first_assessments",
-      "repeat_assessments",
-      "successful_assessments",
-      "failed_assessments"
-    ],
-    "adoption": [
+    "adoption_legacy": [
       "cli_version_adoption",
       "release_adoption",
       "ai_provider_adoption",
       "ai_model_adoption",
       "vscode_extension_usage"
     ],
-    "technology": [
+    "technology_legacy": [
       "assessment_head_usage",
       "language_ecosystem_distribution"
     ],
-    "validation": [
+    "validation_legacy": [
       "validation_dataset_growth"
     ]
   },

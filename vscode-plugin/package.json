@@ -1,7 +1,7 @@
 {
   "name": "codestrata-vscode",
-  "displayName": "CodeStrata – Engineering Intelligence",
-  "description": "Engineering decisions grounded in code. Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, and HTML reports. Requires a compatible CodeStrata Engine CLI. Optional AI enrichment is Engine-owned.",
+  "displayName": "CodeStrata – Engineering Assessment",
+  "description": "Engineering decisions grounded in code. Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, and Assessment Report HTML. Requires a compatible CodeStrata Engine CLI. Optional AI enrichment is Engine-owned. Portfolio Engineering Intelligence Reports (EIR) are a separate multi-repository capability.",
   "version": "0.2.0",
   "publisher": "codestrata",
   "license": "MIT",
@@ -10,13 +10,9 @@
     "color": "#f4f6f3",
     "theme": "light"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CodeStrata/codestrata-vscode"
-  },
   "homepage": "https://docs.codestrata.ai/extensions/vscode",
   "bugs": {
-    "url": "https://github.com/CodeStrata/codestrata-vscode/issues"
+    "url": "https://docs.codestrata.ai/extensions/vscode"
   },
   "qna": "marketplace",
   "funding": {
@@ -138,6 +134,11 @@
       {
         "command": "codestrata.openFindingLocation",
         "title": "Open Finding Location",
+        "category": "CodeStrata"
+      },
+      {
+        "command": "codestrata.telemetrySettings",
+        "title": "Telemetry Settings",
         "category": "CodeStrata"
       }
     ],
@@ -268,7 +269,7 @@
     "lint": "tsc -p ./ --noEmit",
     "test": "npm run compile && node --test ./out/test/extensionCore.test.js ./out/test/telemetryRuntime.test.js ./out/test/analyticsRuntime.test.js ./out/test/communityWorkflow.test.js ./out/test/cliDiscovery.test.js ./out/test/cliInstallation.test.js ./out/test/repositoryInitialization.test.js ./out/test/assessmentExecution.test.js ./out/test/assessmentProgress.test.js ./out/test/reportOpening.test.js ./out/test/failureRecovery.test.js ./out/test/telemetryConsentIntegration.test.js ./out/test/sourceLocality.test.js ./out/test/cliCompatibility.test.js ./out/test/marketplaceBranding.test.js ./out/test/marketplaceDocs.test.js ./out/test/cleanInstall.test.js",
     "test:host": "npm run compile && node ./out/test/runHostTests.js",
-    "package": "npm run compile && vsce package --no-dependencies",
+    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository --no-rewrite-relative-links",
     "package:dry": "npm run compile && vsce ls --no-dependencies",
     "publish:vsce:dry": "npm run package && vsce publish --packagePath ./codestrata-vscode-${npm_package_version}.vsix --dry-run",
     "publish:ovsx:dry": "npm run package && ovsx publish ./codestrata-vscode-${npm_package_version}.vsix --no-wait --help"

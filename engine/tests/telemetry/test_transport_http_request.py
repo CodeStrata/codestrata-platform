@@ -35,8 +35,12 @@ def test_accepted_and_headers() -> None:
     assert headers["Authorization"] == "Bearer [redacted]"
     body = json.loads(call["body"])
     assert body["event_id"] == FIXED_EVENT_ID
-    assert "installation_id" not in body
+    # Slice 19.1: optional privacy-safe anonymous installation_id for Insights
+    # first/repeat. Must be UUID-shaped when present; never a secret.
+    iid = body.get("installation_id")
+    assert isinstance(iid, str) and len(iid) >= 32
     assert TEST_TOKEN.encode() not in call["body"]
+    assert iid.encode() not in TEST_TOKEN.encode()
 
 
 def test_already_accepted() -> None:

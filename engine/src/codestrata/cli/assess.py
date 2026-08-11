@@ -73,7 +73,10 @@ def register_assess_command(app: typer.Typer) -> None:
             typer.Option(
                 "--output",
                 "-o",
-                help="Directory where timestamped assessment reports are written.",
+                help=(
+                    "Assessment output root (default: .codestrata-artifacts/assessments). "
+                    "Canonical layout: <root>/<repository-id>/current|previous/."
+                ),
             ),
         ] = DEFAULT_ASSESS_OUTPUT_DIRECTORY,
         with_ai: Annotated[
@@ -84,7 +87,7 @@ def register_assess_command(app: typer.Typer) -> None:
                     "Enable optional AI enrichment (Modernization Advisor) using your "
                     "configured provider (Bedrock, OpenAI, or OpenRouter). Default is "
                     "--no-ai (deterministic only; no cloud credentials required). "
-                    "Example: codestrata assess --repo . --output reports --with-ai. "
+                    "Example: codestrata assess --repo . --with-ai. "
                     "Check setup with: codestrata ai / codestrata ai doctor. "
                     "Docs: https://docs.codestrata.ai/ai-providers/"
                 ),
@@ -251,7 +254,7 @@ def register_assess_command(app: typer.Typer) -> None:
 
         Community golden path (deterministic, no AI required):
 
-            codestrata assess --repo . --output reports --no-ai
+            codestrata assess --repo . --no-ai
 
         AI is optional. When unavailable, assessment still completes and reports
         are written; AI enhancements are skipped with a clear status message.

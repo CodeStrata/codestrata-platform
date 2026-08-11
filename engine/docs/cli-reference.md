@@ -42,10 +42,10 @@ hint.
 ### Assess (canonical)
 
 ```bash
-codestrata assess --config codestrata.toml --output reports
-codestrata assess --repo test-fixtures/sample-js-app --output reports --no-ai
-codestrata assess --config codestrata.toml --profile local --output reports
-codestrata assess --config codestrata.toml --output reports --with-ai
+codestrata assess --config codestrata.toml --no-ai
+codestrata assess --repo test-fixtures/sample-js-app --no-ai --no-ai
+codestrata assess --config codestrata.toml --profile local --no-ai
+codestrata assess --config codestrata.toml --no-ai --with-ai
 ```
 
 Important options:

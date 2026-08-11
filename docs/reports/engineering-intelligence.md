@@ -1,27 +1,39 @@
 ---
 title: Engineering Intelligence Reports
-description: Community Edition notes on Engineering Intelligence report artifacts produced from assessments.
+description: Portfolio / multi-repository Engineering Intelligence Reports (EIR) versus single-repository Engineering Assessments.
 ---
 
 # Engineering Intelligence Reports
 
-Community Edition assessments produce inspectable artifacts. Beyond the HTML
-assessment report, Engine and Community tooling may emit structured Engineering
-Intelligence views derived from assessment outcomes.
+**Engineering Intelligence** is the portfolio / multi-repository layer.
 
-## What Community covers
+| Layer | Scope | Primary output |
+| ---- | ----- | -------------- |
+| **Engineering Assessment** | Single repository | Assessment Report (`assessment.html` / JSON) |
+| **Engineering Intelligence** | Portfolio / multiple repositories | Engineering Intelligence Report (**EIR**) |
 
-- Local, Engine-generated assessment outputs
-- Findings, recommendations, and evidence boundaries you can challenge
-- HTML and JSON artifacts under
-  `.codestrata-artifacts/assessments/<repository-id>/{current,previous}/`
-  and portfolio intelligence under
-  `.codestrata-artifacts/intelligence/<portfolio-id>/{current,previous}/`
+An Engineering Assessment does **not** automatically create an EIR. EIR generation
+is a separate portfolio workflow that aggregates existing assessment outcomes —
+it does not perform a hidden repository rescan.
 
-Community Assessment HTML and related Engineering Intelligence summary sections
-in the local report share the CodeStrata visual design system (light-first teal
-language). Commercial multi-repository Engineering Intelligence Report packages
-remain Platform-only and are not documented here as a Community product.
+## Community layout
+
+```text
+.codestrata-artifacts/
+  assessments/<repository-id>/{current,previous}/   # Engineering Assessment
+  intelligence/<portfolio-id>/{current,previous}/   # Engineering Intelligence (EIR)
+```
+
+Assessment HTML may include an **Assessment Overview** display head
+(schema identity `engineering_intelligence` retained). That head summarizes
+cross-head assessment signals and is **not** a portfolio EIR package. On-disk modular assessment
+artifacts under `heads/*.json` are the eight completed module files defined by
+the Engine artifact layout — do not conflate the HTML display vocabulary with
+those eight filenames.
+
+Commercial multi-repository Engineering Intelligence Report packages beyond the
+Community artifact layout remain Platform-only and are not documented here as a
+Community SaaS product.
 
 ## What this page is not
 
@@ -35,3 +47,4 @@ Community Edition documentation scope.
 - [Findings & Recommendations](/reports/findings)
 - [JSON Reports](/reference/json-reports)
 - [Running Assessments](/assessments/)
+- [Source Locality](/security/source-locality)

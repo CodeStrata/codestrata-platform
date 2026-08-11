@@ -15,6 +15,32 @@ them directly with the documented request and response contracts on this page.
 The raw AWS `execute-api` hostname is an implementation detail and is **not** the
 public API contract.
 
+## Route groups (v0.2.0)
+
+Derived from the runtime route inventory (18 routes). Architecture overview:
+[Community Cloud Architecture](/architecture/community-cloud).
+
+| Group | Routes | Auth |
+| --- | --- | --- |
+| Public Community | `GET /health`, `GET /community/status`, `GET /reports/{public_id}` | None |
+| Authenticated ingestion | `POST /telemetry`, `/assessment-metadata`, `/cli-events`, `/extension-events`, `/ai-usage` | Community client credential + consent |
+| Report publishing | `POST /reports/upload-intents`, `POST /reports`, `POST /reports/{public_id}/verification`, `DELETE /reports/{public_id}` | Community client credential + eligibility/confirm |
+| Private Insights | `/insights/auth/*`, `/insights/api/*` (incl. validation-reports) | Insights operator session — **not** public Community API |
+
+### Producer honesty (ingestion)
+
+| Stream endpoint | Current assess-path status |
+| --- | --- |
+| `POST /api/v1/telemetry` | **ACTIVE** after explicit opt-in + credential |
+| `POST /api/v1/assessment-metadata` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
+| `POST /api/v1/cli-events` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
+| `POST /api/v1/extension-events` | **CONTRACT_ONLY** |
+| `POST /api/v1/ai-usage` | **DEFERRED** (not an AI provider proxy) |
+
+Ingestion / publish failures do **not** fail local assessment. Payloads go to the
+Community Data Lake (ingestion) or Report Artifact Store (publish) — never treat
+the lake as report storage.
+
 ## Transparency
 
 Community Cloud ingestion endpoints accept only privacy-safe metadata. CodeStrata
@@ -57,7 +83,7 @@ Never embed long-lived secrets in public repositories. Health is public.
 ```json
 {
   "api_version": "v1",
-  "application_version": "0.1.0",
+  "application_version": "0.2.0",
   "schema_version": "1.0",
   "service": "codestrata-community-cloud-api",
   "status": "ok"
@@ -207,6 +233,13 @@ plus Community authentication headers required by the current client contract.
 
 **Does not include:** prompts, responses, API keys, exact model IDs where prohibited.
 
+**Not an AI proxy:** This Community Cloud route does **not** forward prompts to
+Bedrock, OpenAI, or OpenRouter. Provider enrichment calls go **directly** from
+the Engine to the configured provider. In v0.2.0, assess-path emission of
+`ai_usage` remains **construction-only / deferred** — capacity exists; do not
+assume every `--with-ai` run posts here. See [AI Providers](/ai-providers/) and
+[Source Locality](/security/source-locality).
+
 ### Report publishing (Slice 17.16)
 
 Report publishing is **explicit**. Telemetry opt-in is a prerequisite for
@@ -287,6 +320,22 @@ and temporary PUT URLs (not public report URLs).
 Cloud retention mirrors local lifecycle: current + previous only per repository
 (assessment) or portfolio (EIR). A third publish revokes the oldest public id.
 
+#### Verification confirm (temporary validation registry)
+
+| Field | Value |
+| --- | --- |
+| Method | `POST` |
+| URL | `https://api.codestrata.ai/api/v1/reports/<public-id>/verification` |
+| Auth | Community client credentials |
+
+After an independent public GET of `https://reports.codestrata.ai/r/<id>`
+succeeds, the Engine confirms verification so the **private** validation
+registry can mark the entry verified. This registry is temporary internal
+Community validation tooling — not public, not enumerable on
+`reports.codestrata.ai`, and removable without changing opaque URL contracts.
+Authenticated Insights operators browse it via
+`GET /api/v1/insights/api/validation-reports`.
+
 #### Public fetch
 
 | Field | Value |
@@ -301,6 +350,22 @@ Also available via branded shell:
 
 Optional: `?format=json` for JSON download. Cache is bounded so revoke can take
 effect (`Cache-Control: private, max-age=60, must-revalidate`).
+
+Oversized HTML may be delivered via a temporary presigned redirect. Responses
+still carry `X-CodeStrata-Public-Id` so clients can prove identity without
+downloading the entire document.
+
+#### Voluntary report feedback (not telemetry)
+
+| Field | Value |
+| --- | --- |
+| Method | `POST` |
+| URL | `https://api.codestrata.ai/api/v1/reports/<public-id>/feedback` |
+| Auth | none (published reports only) |
+
+Body: `{ "useful": true }` or `{ "useful": false }`. Separate from telemetry
+consent. No free text, repository paths, or source content. Also reachable via
+the branded shell at `https://reports.codestrata.ai/r/<public-id>/feedback`.
 
 #### Revoke
 

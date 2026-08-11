@@ -86,6 +86,7 @@ ERROR_INVALID_AUTHORIZATION_HEADER = "invalid_authorization_header"
 ERROR_INTERNAL = "internal_error"
 ERROR_VERSION_NOT_SUPPORTED = "api_version_not_supported"
 ERROR_REPORT_STORE_UNAVAILABLE = "report_store_unavailable"
+ERROR_REPORT_NOT_FOUND = "report_not_found"
 ERROR_EXPLICIT_PUBLISH_REQUIRED = "explicit_publish_required"
 ERROR_PRIVATE_REPOSITORY_ACK_REQUIRED = "private_repository_ack_required"
 ERROR_UPLOAD_INTENT_EXPIRED = "upload_intent_expired"
@@ -199,6 +200,7 @@ _SAFE_PUBLIC_MESSAGES: dict[str, str] = {
     ERROR_INTERNAL: "An unexpected error occurred.",
     ERROR_VERSION_NOT_SUPPORTED: "API version is not supported.",
     ERROR_REPORT_STORE_UNAVAILABLE: "Report publishing is temporarily unavailable.",
+    ERROR_REPORT_NOT_FOUND: "Report not found.",
     ERROR_EXPLICIT_PUBLISH_REQUIRED: "Explicit public-publish confirmation is required.",
     ERROR_PRIVATE_REPOSITORY_ACK_REQUIRED: (
         "Publishing creates a publicly accessible report. Anyone with the link can view it."

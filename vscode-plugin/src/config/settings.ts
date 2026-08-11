@@ -1,6 +1,6 @@
 /**
  * Extension settings — thin VS Code wrappers over Engine CLI flags.
- * Does not invent a parallel configuration model for Engineering Intelligence.
+ * Does not invent a parallel configuration model for Assessment / EIR.
  */
 
 export type FindingsGroupBy = "domain" | "severity" | "file" | "rule";

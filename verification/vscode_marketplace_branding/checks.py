@@ -277,11 +277,11 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
             CheckResult(
                 "metadata:links_public",
                 "github.com/CodeStrata/codestrata-vscode"
-                in str(pkg.get("repository", {}))
+                not in json.dumps(pkg)
                 and "docs.codestrata.ai/extensions/vscode"
                 in str(pkg.get("homepage", ""))
                 and not private_hits,
-                "public community links",
+                "public docs/homepage links; private GitHub source omitted",
                 "link_inventory",
             ),
             CheckResult(

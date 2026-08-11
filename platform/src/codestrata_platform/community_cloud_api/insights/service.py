@@ -31,6 +31,12 @@ from codestrata_platform.community_cloud_api.insights.registry import (
     get_aggregator,
     is_external_metric,
 )
+from codestrata_platform.community_cloud_api.insights.external_metrics import (
+    aggregate_community_sentiment,
+    aggregate_github_forks,
+    aggregate_github_stars,
+    aggregate_published_reports,
+)
 from codestrata_platform.community_cloud_api.insights.validation_dataset import (
     ValidationCatalogPort,
     aggregate_validation_dataset,
@@ -38,6 +44,7 @@ from codestrata_platform.community_cloud_api.insights.validation_dataset import 
 from codestrata_platform.community_cloud_api.insights_query.errors import InsightsQueryPlanError
 from codestrata_platform.community_cloud_api.insights_query.models import DateWindow, QueryPlan
 from codestrata_platform.community_cloud_api.insights_query.planner import plan_metric_query
+from codestrata_platform.community_cloud_api.insights_query.policy import EXTERNAL_METRICS
 from codestrata_platform.community_cloud_api.insights_storage.reader import (
     BoundedS3Reader,
     ReaderResult,
@@ -50,15 +57,21 @@ class InsightsAggregationService:
         *,
         reader: BoundedS3Reader | None = None,
         validation_catalog: ValidationCatalogPort | None = None,
+        published_reports_port: object | None = None,
+        community_sentiment_port: object | None = None,
     ) -> None:
         self._reader = reader
         self._validation_catalog = validation_catalog
+        self._published_reports_port = published_reports_port
+        self._community_sentiment_port = community_sentiment_port
 
     def aggregate_metric(self, request: MetricRequest) -> MetricResult:
         return aggregate_metric(
             request,
             reader=self._reader,
             validation_catalog=self._validation_catalog,
+            published_reports_port=self._published_reports_port,
+            community_sentiment_port=self._community_sentiment_port,
         )
 
     def aggregate_dashboard_overview(
@@ -68,6 +81,8 @@ class InsightsAggregationService:
             request,
             reader=self._reader,
             validation_catalog=self._validation_catalog,
+            published_reports_port=self._published_reports_port,
+            community_sentiment_port=self._community_sentiment_port,
         )
 
 
@@ -76,6 +91,8 @@ def aggregate_metric(
     *,
     reader: BoundedS3Reader | None = None,
     validation_catalog: ValidationCatalogPort | None = None,
+    published_reports_port: object | None = None,
+    community_sentiment_port: object | None = None,
     preloaded: AggregationContext | None = None,
 ) -> MetricResult:
     metric_id = request.metric_id
@@ -84,24 +101,51 @@ def aggregate_metric(
     if request.end_date_utc < request.start_date_utc:
         raise InsightsAggregationError(INVALID_WINDOW, "end_before_start")
 
-    if is_external_metric(metric_id):
-        if validation_catalog is None:
-            return MetricResult(
-                metric_id=metric_id,
-                status="error",
-                window=MetricWindow(
-                    request.start_date_utc, request.end_date_utc, "external"
-                ),
-                value=None,
-                completeness="unavailable",
-                limitations=finalize_limitations(
-                    ["source_unavailable", "validation_growth_snapshots_unavailable"]
-                ),
+    if metric_id in EXTERNAL_METRICS or is_external_metric(metric_id):
+        if metric_id == "validation_dataset_growth":
+            if validation_catalog is None:
+                return MetricResult(
+                    metric_id=metric_id,
+                    status="error",
+                    window=MetricWindow(
+                        request.start_date_utc, request.end_date_utc, "external"
+                    ),
+                    value=None,
+                    completeness="unavailable",
+                    limitations=finalize_limitations(
+                        ["source_unavailable", "validation_growth_snapshots_unavailable"]
+                    ),
+                )
+            return aggregate_validation_dataset(
+                validation_catalog,
+                start=request.start_date_utc,
+                end=request.end_date_utc,
             )
-        return aggregate_validation_dataset(
-            validation_catalog,
-            start=request.start_date_utc,
-            end=request.end_date_utc,
+        if metric_id == "github_stars":
+            return aggregate_github_stars(request.start_date_utc, request.end_date_utc)
+        if metric_id == "github_forks":
+            return aggregate_github_forks(request.start_date_utc, request.end_date_utc)
+        if metric_id == "published_reports":
+            return aggregate_published_reports(
+                request.start_date_utc,
+                request.end_date_utc,
+                port=published_reports_port,  # type: ignore[arg-type]
+            )
+        if metric_id == "community_sentiment":
+            return aggregate_community_sentiment(
+                request.start_date_utc,
+                request.end_date_utc,
+                port=community_sentiment_port,  # type: ignore[arg-type]
+            )
+        return MetricResult(
+            metric_id=metric_id,
+            status="error",
+            window=MetricWindow(
+                request.start_date_utc, request.end_date_utc, "external"
+            ),
+            value=None,
+            completeness="unavailable",
+            limitations=finalize_limitations(["source_unavailable"]),
         )
 
     try:
@@ -123,6 +167,8 @@ def aggregate_dashboard_overview(
     *,
     reader: BoundedS3Reader | None = None,
     validation_catalog: ValidationCatalogPort | None = None,
+    published_reports_port: object | None = None,
+    community_sentiment_port: object | None = None,
 ) -> tuple[MetricResult, ...]:
     """Per-metric isolation; reuse S3 reads when planner prefixes match."""
 
@@ -147,9 +193,14 @@ def aggregate_dashboard_overview(
                 )
             )
             continue
-        if is_external_metric(mid):
+        if mid in EXTERNAL_METRICS or is_external_metric(mid):
             ordered.append(
-                aggregate_metric(req, validation_catalog=validation_catalog)
+                aggregate_metric(
+                    req,
+                    validation_catalog=validation_catalog,
+                    published_reports_port=published_reports_port,
+                    community_sentiment_port=community_sentiment_port,
+                )
             )
             continue
         try:

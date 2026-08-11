@@ -14,6 +14,7 @@ from codestrata.telemetry.analytics.errors import AnalyticsError, AnalyticsError
         ("openai", "openai"),
         ("bedrock", "aws_bedrock"),
         ("aws_bedrock", "aws_bedrock"),
+        ("openrouter", "openrouter"),
         ("unavailable", "unavailable"),
     ],
 )
@@ -23,7 +24,7 @@ def test_map_known_providers(raw: str, expected: str) -> None:
 
 @pytest.mark.parametrize(
     "raw",
-    ["openrouter", "anthropic", "custom-provider", "AzureOpenAI"],
+    ["anthropic", "custom-provider", "AzureOpenAI"],
 )
 def test_unknown_provider_rejected(raw: str) -> None:
     with pytest.raises(AnalyticsError) as exc:

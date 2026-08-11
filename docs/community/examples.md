@@ -12,7 +12,7 @@ Typical flow:
 
 1. Install CodeStrata Engine
 2. Fetch or clone an example from the examples repository
-3. Run `codestrata assess --repo <path> --output reports --no-ai`
+3. Run `codestrata assess --repo <path> --no-ai`
 4. Compare with curated expected results where provided
 
 Public repository: [codestrata-examples](https://github.com/CodeStrata/codestrata-examples)

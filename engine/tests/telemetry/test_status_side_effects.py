@@ -1,4 +1,4 @@
-"""Side-effect-free and legacy-isolation status tests (Slice 9.7)."""
+"""Side-effect-free and preference-aware status tests (Slice 9.7 / 19.4)."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from codestrata.telemetry.service import (
 from codestrata.telemetry.status import build_privacy_first_telemetry_status
 
 
-def test_A_B_C_D_E_status_ignores_legacy_enabled(
+def test_A_B_C_D_E_status_reports_persisted_preference(
     tmp_path: Path, monkeypatch
 ) -> None:
     home = tmp_path / "home"
@@ -52,28 +52,25 @@ def test_A_B_C_D_E_status_ignores_legacy_enabled(
 
     with patch("codestrata.telemetry.service.get_legacy_telemetry_service") as legacy:
         with patch("codestrata.telemetry.transport.send_payload") as send:
-            with patch("codestrata.telemetry.preferences.load_preferences") as load:
-                with patch("codestrata.telemetry.identity.read_installation_id") as read_id:
-                    with patch(
-                        "codestrata.telemetry.identity.ensure_installation_id"
-                    ) as ensure_id:
-                        runner = CliRunner()
-                        result = runner.invoke(app, ["telemetry", "status"])
-                        legacy.assert_not_called()
-                        send.assert_not_called()
-                        load.assert_not_called()
-                        read_id.assert_not_called()
-                        ensure_id.assert_not_called()
+            with patch("codestrata.telemetry.identity.read_installation_id") as read_id:
+                with patch(
+                    "codestrata.telemetry.identity.ensure_installation_id"
+                ) as ensure_id:
+                    runner = CliRunner()
+                    result = runner.invoke(app, ["telemetry", "status"])
+                    legacy.assert_not_called()
+                    send.assert_not_called()
+                    read_id.assert_not_called()
+                    ensure_id.assert_not_called()
 
     assert result.exit_code == 0
     out = result.stdout
+    assert "Preference: Enabled" in out
     assert "Default: Disabled" in out
     assert "55555555" not in out
     assert "super-secret" not in out
     assert "example.invalid" not in out
-    assert "Telemetry enabled" not in out
     assert "enabled by default: yes" not in out.lower()
-    assert "Installation identity: Not used" in out
     assert "queue_depth" not in out
     assert "endpoint_configured" not in out
     after = {
@@ -84,7 +81,7 @@ def test_A_B_C_D_E_status_ignores_legacy_enabled(
     assert after == before
 
 
-def test_P_Q_malformed_legacy_and_unwritable_home(
+def test_P_Q_malformed_preference_is_treated_as_undecided(
     tmp_path: Path, monkeypatch
 ) -> None:
     home = tmp_path / "home"
@@ -92,23 +89,22 @@ def test_P_Q_malformed_legacy_and_unwritable_home(
     (home / "telemetry.json").write_text("{not-json", encoding="utf-8")
     (home / "installation_id").write_text("not-a-uuid\n", encoding="utf-8")
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
-    # Make home appear problematic; status must not touch it.
-    home.chmod(0o000)
-    try:
-        runner = CliRunner()
-        with patch(
-            "codestrata.telemetry.service.TelemetryService",
-            side_effect=RuntimeError("legacy boom"),
-        ):
-            result = runner.invoke(app, ["telemetry", "status"])
-        assert result.exit_code == 0
-        assert "Default: Disabled" in result.stdout
-        assert "Transport: Unavailable" in result.stdout
-    finally:
-        home.chmod(0o700)
+    reset_telemetry_singletons()
+    runner = CliRunner()
+    with patch(
+        "codestrata.telemetry.service.TelemetryService",
+        side_effect=RuntimeError("legacy boom"),
+    ):
+        result = runner.invoke(app, ["telemetry", "status"])
+    assert result.exit_code == 0
+    assert "Preference: Not configured" in result.stdout
+    assert "Default: Disabled" in result.stdout
 
 
-def test_H_I_J_no_prompt_no_stdin_no_transmit() -> None:
+def test_H_I_J_no_prompt_no_stdin_no_transmit(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     with patch(
         "codestrata.telemetry.interactive_consent.run_interactive_consent_prompt",
@@ -122,7 +118,12 @@ def test_H_I_J_no_prompt_no_stdin_no_transmit() -> None:
     assert "Allow privacy-safe" not in result.stdout
 
 
-def test_R_S_status_does_not_consume_prompt_guard() -> None:
+def test_R_S_status_does_not_consume_prompt_guard(
+    tmp_path: Path, monkeypatch
+) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     CliRunner().invoke(app, ["telemetry", "status"])
     assert get_last_interactive_prompt_result() is None

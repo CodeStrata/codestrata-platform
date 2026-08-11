@@ -40,7 +40,7 @@ def test_U_default_transport_never_sent() -> None:
 
 
 def test_W_X_no_platform_datalake_imports() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):

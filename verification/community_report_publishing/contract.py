@@ -76,7 +76,7 @@ SLICE_17_17_PACKAGE_CANDIDATES = (
 
 POLICY_REQUIRED_VALUES: dict[str, object] = {
     "local_report_always_generated": True,
-    "telemetry_opt_in_required_for_cloud_publish": True,
+    "telemetry_opt_in_required_for_cloud_publish": False,
     "explicit_publish_action_required": True,
     "automatic_publish_after_assessment": False,
     "assessment_cloud_versions_per_repository": 2,

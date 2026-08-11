@@ -10,9 +10,13 @@ import {
   buildReportPublishArgs,
   isLocalOrPrivateRepositoryId,
   parsePublicReportUrl,
+  publishEnvForReportPublish,
   repositoryIdFromHtmlPath,
 } from "../reportPublishing/orchestration";
-import { REPORT_PUBLISH_COMMAND_ID } from "../reportPublishing/policy";
+import {
+  REPORT_PUBLISH_COMMAND_ID,
+  REPORT_PUBLISH_POLICY,
+} from "../reportPublishing/policy";
 
 describe("reportPublishing", () => {
   it("exposes stable command id", () => {
@@ -76,5 +80,15 @@ describe("reportPublishing", () => {
       parsePublicReportUrl("https://bucket.s3.amazonaws.com/secret"),
       undefined
     );
+  });
+
+  it("does not require telemetry opt-in env for publish", () => {
+    assert.equal(REPORT_PUBLISH_POLICY.requires_telemetry_opt_in_env, false);
+    const env = publishEnvForReportPublish({
+      CODESTRATA_TELEMETRY_OPT_IN: "true",
+      PATH: "/usr/bin",
+    });
+    assert.equal(env.CODESTRATA_TELEMETRY_OPT_IN, undefined);
+    assert.equal(env.PATH, "/usr/bin");
   });
 });

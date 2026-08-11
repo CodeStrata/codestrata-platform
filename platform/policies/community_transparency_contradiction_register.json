@@ -1,0 +1,118 @@
+{
+  "register_id": "community-transparency-contradiction-register",
+  "register_version": "1.0",
+  "schema": "community-transparency-contradiction-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "entries": [
+    {
+      "contradiction_id": "T18-C001",
+      "classification": "RESOLVED",
+      "claim_surface": "platform/policies/community_api_route_register.json",
+      "runtime_authority": "RouteRegistry + community_api_transparency_register",
+      "summary": "API route register from 17.14 omitted reports routes and community status relative to live runtime registry.",
+      "disposition": "RESOLVED in Slice 18.5 — community_api_route_register reconciled to 16 runtime routes from community_api_transparency_register; public Docs architecture + Community API pages document route groups.",
+      "resolved_in_slice": "18.5",
+      "evidence": [
+        "platform/policies/community_api_route_register.json",
+        "platform/policies/community_api_transparency_register.json",
+        "docs/architecture/community-cloud.md",
+        "docs/reference/community-api/index.md"
+      ],
+      "still_present_after_17_26": false
+    },
+    {
+      "contradiction_id": "T18-C002",
+      "classification": "EXPECTED_RELEASE_GAP",
+      "claim_surface": "GET /api/v1/community/status engine_version",
+      "runtime_authority": "published GitHub release vs package 0.2.0",
+      "summary": "Live Community Status may show GitHub release 0.1.0 while package candidate is 0.2.0.",
+      "disposition": "EXPECTED_RELEASE_GAP confirmed in Slice 18.7 — installed CLI reports package/runtime version; Community Status continues GitHub published-release SoT with candidate fallback. Do not resolve until v0.2.0 GitHub Release is published in Release Readiness.",
+      "reviewed_in_slice": "18.7",
+      "still_present_after_17_26": true
+    },
+    {
+      "contradiction_id": "T18-C003",
+      "classification": "RESOLVED",
+      "claim_surface": "https://codestrata.ai favicon references",
+      "runtime_authority": "public brand consistency expectation",
+      "summary": "Main-site favicon/HTML reference was stale relative to docs/insights/reports brand assets.",
+      "disposition": "RESOLVED in Slice 19.5 — codestrata-site redeployed; live HTML uses /favicon.svg and /favicon-32x32.png; assets return HTTP 200.",
+      "resolved_in_slice": "19.5",
+      "evidence": [
+        "https://codestrata.ai/ (link rel=icon href=/favicon.svg)",
+        "https://codestrata.ai/favicon.svg HTTP 200",
+        "https://codestrata.ai/favicon-32x32.png HTTP 200"
+      ],
+      "still_present_after_17_26": false
+    },
+    {
+      "contradiction_id": "T18-C004",
+      "classification": "RESOLVED",
+      "claim_surface": "docs/security/privacy.md legacy telemetry enable table row",
+      "runtime_authority": "privacy-first consent policy",
+      "summary": "Privacy page listed legacy `codestrata telemetry enable` near opt-in language; risk of misreading as privacy-first authorization.",
+      "disposition": "RESOLVED in Slice 18.2 — legacy section retitled and explicit that enable/disable are compatibility-only; privacy-first path documented as --telemetry-allow/--telemetry-deny.",
+      "resolved_in_slice": "18.2",
+      "evidence": [
+        "docs/security/privacy.md#legacy-preference-cli-compatibility-only--not-privacy-first-opt-in",
+        "docs/reference/telemetry.md",
+        "docs/security/data-collection.md"
+      ],
+      "still_present_after_17_26": false
+    },
+    {
+      "contradiction_id": "T18-C005",
+      "classification": "RESOLVED",
+      "claim_surface": "docs/security/privacy.md opt-out revoke wording claimed CLI revoke flow",
+      "runtime_authority": "reports service handle_revoke + engine CLI report.py (publish only)",
+      "summary": "Privacy page said revoke via authenticated API / CLI flow, but Engine currently exposes publish CLI only; revoke is authenticated DELETE /api/v1/reports/{public_id}.",
+      "disposition": "RESOLVED in Slice 18.3 — docs state API revoke + explicit absence of CLI report revoke; Retention and Deletion page is canonical.",
+      "resolved_in_slice": "18.3",
+      "evidence": [
+        "docs/security/privacy.md",
+        "docs/security/retention-and-deletion.md",
+        "docs/reference/community-api/index.md",
+        "platform/src/codestrata_platform/community_cloud_api/reports/service.py"
+      ],
+      "still_present_after_17_26": false
+    },
+    {
+      "contradiction_id": "T18-C006",
+      "classification": "RESOLVED",
+      "claim_surface": "CLI Share Report / codestrata report publish journey",
+      "runtime_authority": "engine report publish + packaged public Community client",
+      "summary": "Slice 18.7 discovered CLI advertised Share Report while normal Community users required undocumented CODESTRATA_TELEMETRY_OPT_IN, CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL, and multi-flag confirmation — contradicting public UX.",
+      "disposition": "RESOLVED in Slice 18.7 journey fix — publish no longer requires telemetry env; packaged public Community client authenticates CLI/VS Code; interactive one-confirmation flow; CI uses explicit flags.",
+      "resolved_in_slice": "18.7",
+      "evidence": [
+        "engine/src/codestrata/cli/report.py",
+        "engine/src/codestrata/community_cloud/report_publishing.py",
+        "engine/src/codestrata/community_cloud/public_client_credential.py",
+        "platform/policies/community_report_publishing_policy.json"
+      ],
+      "still_present_after_17_26": false
+    },
+    {
+      "contradiction_id": "T18-C007",
+      "classification": "RESOLVED",
+      "claim_surface": "published public report URL resolves successfully",
+      "runtime_authority": "reports Worker /r/<id> → GET /api/v1/reports/<id> + current+previous retention",
+      "summary": "Slice 18.7 publish journey treated POST public_url return as proof of browser GET success. A later GET of an earlier URL returned Community Cloud JSON 404 with message 'Endpoint not found.', which looked like routing failure but matched retired/revoked report lookup after current+previous rotation (and conflated missing-report with missing-endpoint messaging).",
+      "disposition": "RESOLVED in Slice 18.7 public GET proof — distinguish report_not_found from endpoint not_found; Engine verify_public_report_get requires independent HTTP 200 text/html with matching codestrata-public-id after publish; document retired URLs as intentionally disposable; do not mark URL-resolution SUPPORTED from publish POST alone.",
+      "resolved_in_slice": "18.7",
+      "evidence": [
+        "platform/src/codestrata_platform/community_cloud_api/reports/service.py",
+        "platform/src/codestrata_platform/community_cloud_api/errors.py",
+        "engine/src/codestrata/community_cloud/report_publishing.py",
+        "reports/workers/delivery.ts",
+        "docs/security/retention-and-deletion.md"
+      ],
+      "still_present_after_17_26": false
+    }
+  ],
+  "excluded_as_already_fixed_in_17_26": [
+    "stale reports/<repo>/<timestamp>/report.html paths in product docs",
+    "reports landing privacy pointing away from canonical community privacy"
+  ]
+}

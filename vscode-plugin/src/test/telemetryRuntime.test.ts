@@ -40,7 +40,7 @@ describe("vscode telemetry runtime policy", () => {
     assert.equal(policy.policyToken, COMMUNITY_VSCODE_TELEMETRY_RUNTIME_POLICY_URN);
     assert.equal(policy.disabledByDefault, true);
     assert.equal(policy.unavailableTransport, true);
-    assert.equal(policy.noPersistedConsent, true);
+    assert.equal(policy.localPreferencePersistence, true);
     assert.equal(policy.noInstallationIdentity, true);
     const dict = policyToStableDict(policy);
     assert.deepEqual(Object.keys(dict), [...Object.keys(dict)].sort());
@@ -52,7 +52,7 @@ describe("vscode telemetry runtime policy", () => {
 });
 
 describe("vscode telemetry consent", () => {
-  it("never marks consent as persisted", () => {
+  it("defaults remain non-persisted until an explicit preference", () => {
     for (const consent of [
       defaultConsent(),
       allowForSession(),
@@ -86,9 +86,17 @@ describe("vscode telemetry prompt policy", () => {
   });
 
   it("defaults to deny on dismiss and prompt failure", async () => {
+    const store: Record<string, string> = {};
+    const preferenceStore = {
+      get: (key: string) => store[key],
+      update: async (key: string, value: string) => {
+        store[key] = value;
+      },
+    };
     const dismissed = await runTelemetryConsentPrompt({
       commandId: "codestrata.assess",
       interactive: true,
+      preferenceStore,
       ui: {
         async showConsentPrompt() {
           return undefined;
@@ -97,6 +105,7 @@ describe("vscode telemetry prompt policy", () => {
     });
     assert.equal(dismissed.consent.decision, "denied_for_session");
     assert.equal(dismissed.prompted, true);
+    assert.equal(store["codestrata.telemetryPreference"], "disabled");
 
     const failed = await runTelemetryConsentPrompt({
       commandId: "codestrata.assess",
@@ -116,6 +125,63 @@ describe("vscode telemetry prompt policy", () => {
     });
     assert.equal(suppressed.consent.decision, "non_interactive_disabled");
     assert.equal(suppressed.prompted, false);
+  });
+
+  it("persists Allow and skips re-prompt; Learn More does not enable", async () => {
+    const store: Record<string, string> = {};
+    const preferenceStore = {
+      get: (key: string) => store[key],
+      update: async (key: string, value: string) => {
+        store[key] = value;
+      },
+    };
+    let learnOpened = false;
+    const allowed = await runTelemetryConsentPrompt({
+      commandId: "codestrata.assess",
+      interactive: true,
+      preferenceStore,
+      ui: {
+        async showConsentPrompt() {
+          return "Allow";
+        },
+      },
+    });
+    assert.equal(allowed.consent.decision, "allowed_for_session");
+    assert.equal(allowed.consent.persisted, true);
+    assert.equal(store["codestrata.telemetryPreference"], "enabled");
+
+    const reused = await runTelemetryConsentPrompt({
+      commandId: "codestrata.assess",
+      interactive: true,
+      preferenceStore,
+      ui: {
+        async showConsentPrompt() {
+          throw new Error("must not prompt again");
+        },
+      },
+    });
+    assert.equal(reused.prompted, false);
+    assert.equal(reused.reason, "persisted_preference");
+    assert.equal(reused.consent.decision, "allowed_for_session");
+
+    store["codestrata.telemetryPreference"] = undefined as unknown as string;
+    delete store["codestrata.telemetryPreference"];
+    const learn = await runTelemetryConsentPrompt({
+      commandId: "codestrata.assess",
+      interactive: true,
+      preferenceStore,
+      ui: {
+        async showConsentPrompt() {
+          return "LearnMore";
+        },
+        async openLearnMore() {
+          learnOpened = true;
+        },
+      },
+    });
+    assert.equal(learnOpened, true);
+    assert.equal(learn.consent.decision, "denied_for_session");
+    assert.equal(store["codestrata.telemetryPreference"], "disabled");
   });
 });
 

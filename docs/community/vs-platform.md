@@ -12,7 +12,7 @@ reason across repositories.
 ## Community includes
 
 - Local repository assessment
-- Deterministic Engineering Intelligence
+- Deterministic Engineering Assessment
 - Local reports (HTML + JSON)
 - CLI
 - API and MCP where publicly supported by Engine

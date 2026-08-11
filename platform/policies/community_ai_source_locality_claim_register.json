@@ -1,0 +1,89 @@
+{
+  "register_id": "community-ai-source-locality-claim-register",
+  "register_version": "1.0",
+  "schema": "community-ai-source-locality-claim-register:1.0",
+  "slice": "18.4",
+  "epic": 18,
+  "entries": [
+    {
+      "claim_id": "C18-4-001",
+      "public_claim": "AI is optional; default assess path is --no-ai deterministic",
+      "register_18_1": "community_ai_provider_data_flow_register.no_ai",
+      "runtime_evidence": "engine/src/codestrata/cli/assess.py --with-ai/--no-ai default False",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-002",
+      "public_claim": "AI enrichment sends compact assessment-derived context including finding/recommendation summaries and may include bounded evidence path/excerpt clips; not full source trees",
+      "register_18_1": "community_ai_provider_data_flow_register.context_sent",
+      "runtime_evidence": "engine/src/codestrata/ai/enrichment/context.py build_ai_enrichment_context",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-003",
+      "public_claim": "Bedrock live E2E proven; OpenAI/OpenRouter OWNER_CREDENTIAL_REQUIRED",
+      "register_18_1": "community_ai_provider_data_flow_register.e2e_status",
+      "runtime_evidence": "Epic 17.20 / community_ai_providers verification evidence",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-004",
+      "public_claim": "Assess AI path uses single attempt (CR-1); timeout_seconds wired",
+      "register_18_1": "community_ai_provider_data_flow_register.retry_behavior",
+      "runtime_evidence": "provider executor DEFAULT_RETRY_POLICY maximum_attempts=1",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-005",
+      "public_claim": "Provider failure is non-blocking for deterministic assessment/reports",
+      "register_18_1": "community_ai_provider_data_flow_register.failure_behavior",
+      "runtime_evidence": "application/assessment/service.py AI fail-soft",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-006",
+      "public_claim": "AI prompts/responses are not Community telemetry; ai_usage assess emission deferred",
+      "register_18_1": "community_ai_provider_data_flow_register.usage_metadata",
+      "runtime_evidence": "stream inventory ai_usage deferred_assess_path_construction_only",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-007",
+      "public_claim": "Deterministic finding identity is provider-independent (no-AI vs Bedrock ID sets)",
+      "register_18_1": "community_ai_provider_data_flow_register + Epic 17.20 equivalence",
+      "runtime_evidence": "verification/community_ai_providers/equivalence.py",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-008",
+      "public_claim": "EIR does not use AI-provider enrichment in validated v0.2.0 path",
+      "register_18_1": "community_source_locality_register + AI validation policy eir_provider_enrichment=false",
+      "runtime_evidence": "community_ai_provider_validation_policy.json",
+      "public_document": "docs/ai-providers/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-009",
+      "public_claim": "Community API ai_usage is not an AI provider proxy",
+      "register_18_1": "community_api_transparency_register + source locality AI destination",
+      "runtime_evidence": "Engine providers call Bedrock/OpenAI/OpenRouter directly",
+      "public_document": "docs/reference/community-api/index.md",
+      "validation_status": "PASS"
+    },
+    {
+      "claim_id": "C18-4-010",
+      "public_claim": "Source-locality matrix distinguishes Assessment/Telemetry/AI/Publish/Insights",
+      "register_18_1": "community_source_locality_register",
+      "runtime_evidence": "runtime_boundaries + docs/security/source-locality.md",
+      "public_document": "docs/security/source-locality.md",
+      "validation_status": "PASS"
+    }
+  ]
+}

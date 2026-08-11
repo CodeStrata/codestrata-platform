@@ -4,7 +4,8 @@
 
 | Version | Supported |
 | ------- | --------- |
-| 0.1.x   | Yes |
+| 0.2.x   | Yes |
+| 0.1.x   | Best-effort until superseded |
 
 Older pre-release branches are unsupported unless noted in a GitHub Security
 Advisory.
@@ -52,3 +53,4 @@ versions, then coordinate disclosure with you.
 * [Security architecture](docs/security/architecture.md)
 * [AI provider security boundaries](docs/ai-provider-security-boundaries.md)
 * [MCP security](docs/mcp/security.md)
+* Public Community Cloud architecture: https://docs.codestrata.ai/architecture/community-cloud

@@ -5,7 +5,7 @@ from __future__ import annotations
 import time
 from typing import Any, Callable
 
-from starlette.responses import Response
+from starlette.responses import RedirectResponse, Response
 
 from codestrata_platform.community_cloud_api.errors import (
     ERROR_ARTIFACT_MISSING,
@@ -16,6 +16,7 @@ from codestrata_platform.community_cloud_api.errors import (
     ERROR_INVALID_REQUEST_SCHEMA,
     ERROR_NOT_FOUND,
     ERROR_PRIVATE_REPOSITORY_ACK_REQUIRED,
+    ERROR_REPORT_NOT_FOUND,
     ERROR_REPORT_STORE_UNAVAILABLE,
     ERROR_SANITIZER_REJECTED,
     ERROR_UPLOAD_INTENT_EXPIRED,
@@ -25,6 +26,13 @@ from codestrata_platform.community_cloud_api.reports.ids import (
     generate_public_report_id,
     generate_upload_id,
     validate_public_report_id,
+)
+from codestrata_platform.community_cloud_api.reports.feedback import (
+    FEEDBACK_SUMMARY_KEY,
+    ReportFeedbackRequest,
+    apply_feedback_vote,
+    empty_feedback_summary,
+    feedback_vote_key,
 )
 from codestrata_platform.community_cloud_api.reports.models import (
     ReportPublishRequest,
@@ -51,6 +59,15 @@ from codestrata_platform.community_cloud_api.reports.sanitizer import sanitize_r
 from codestrata_platform.community_cloud_api.reports.store import (
     InMemoryReportArtifactStore,
     ReportArtifactStore,
+)
+from codestrata_platform.community_cloud_api.reports.validation_registry import (
+    VALIDATION_ENTRIES_PREFIX,
+    VERIFICATION_FAILED,
+    VERIFICATION_PENDING,
+    VERIFICATION_VERIFIED,
+    build_validation_entry,
+    sanitize_list_limit,
+    validation_entry_key,
 )
 from codestrata_platform.community_cloud_api.serialization import (
     build_error_response,
@@ -123,26 +140,108 @@ def _chrome_html(
         "Not stored in the Community Data Lake."
         "</div></header>"
     )
-    # If the artifact is a full HTML document, inject banner after <body>.
+    feedback = _feedback_chrome_html(public_id=public_id)
+    # If the artifact is a full HTML document, inject banner after <body>
+    # and feedback before </body>.
     lower = inner_html.lower()
     body_idx = lower.find("<body")
     if body_idx >= 0:
         gt = inner_html.find(">", body_idx)
         if gt >= 0:
-            return (
+            injected = (
                 inner_html[: gt + 1]
                 + "".join(meta_bits)
                 + banner
                 + inner_html[gt + 1 :]
             )
+            close_idx = injected.lower().rfind("</body>")
+            if close_idx >= 0:
+                return injected[:close_idx] + feedback + injected[close_idx:]
+            return injected + feedback
     return (
         "<!doctype html><html><head><meta charset='utf-8'>"
         + "".join(meta_bits)
         + f"<title>CodeStrata {label}</title></head><body>"
         + banner
         + inner_html
+        + feedback
         + "</body></html>"
     )
+
+
+def _feedback_chrome_html(*, public_id: str) -> str:
+    """Optional Yes/No usefulness control — failures never block report viewing."""
+
+    pid = public_id.replace("\\", "\\\\").replace("'", "\\'")
+    return f"""
+<footer id="cs-report-feedback" data-public-id="{public_id}" style="font-family:system-ui,sans-serif;padding:20px 16px;border-top:1px solid #d0d7de;margin-top:24px;background:#fafbfc;">
+  <div id="cs-feedback-prompt">
+    <p style="margin:0 0 10px;font-size:14px;">Was this report useful?</p>
+    <button type="button" data-useful="yes" style="margin-right:8px;padding:6px 14px;cursor:pointer;">Yes</button>
+    <button type="button" data-useful="no" style="padding:6px 14px;cursor:pointer;">No</button>
+    <p id="cs-feedback-error" style="display:none;margin:10px 0 0;font-size:12px;color:#cf222e;"></p>
+  </div>
+  <p id="cs-feedback-thanks" style="display:none;margin:0;font-size:14px;">Thanks for the feedback.</p>
+</footer>
+<script>
+(function () {{
+  var root = document.getElementById("cs-report-feedback");
+  if (!root) return;
+  var publicId = root.getAttribute("data-public-id") || "{pid}";
+  var prompt = document.getElementById("cs-feedback-prompt");
+  var thanks = document.getElementById("cs-feedback-thanks");
+  var err = document.getElementById("cs-feedback-error");
+  var tokenKey = "cs_feedback_respondent";
+  var voteKey = "cs_feedback_vote_" + publicId;
+  function ensureToken() {{
+    try {{
+      var t = localStorage.getItem(tokenKey);
+      if (t && t.length >= 16) return t;
+      t = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "").slice(0, 8)
+        : ("cs" + String(Date.now()) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+      localStorage.setItem(tokenKey, t.slice(0, 64));
+      return localStorage.getItem(tokenKey);
+    }} catch (e) {{ return null; }}
+  }}
+  function showThanks() {{
+    if (prompt) prompt.style.display = "none";
+    if (thanks) thanks.style.display = "block";
+    if (err) err.style.display = "none";
+  }}
+  function showError(msg) {{
+    if (!err) return;
+    err.textContent = msg || "Could not save feedback. Try again.";
+    err.style.display = "block";
+  }}
+  try {{
+    var prior = localStorage.getItem(voteKey);
+    if (prior === "yes" || prior === "no") showThanks();
+  }} catch (e) {{}}
+  root.addEventListener("click", function (ev) {{
+    var btn = ev.target && ev.target.closest ? ev.target.closest("button[data-useful]") : null;
+    if (!btn) return;
+    var useful = btn.getAttribute("data-useful");
+    if (useful !== "yes" && useful !== "no") return;
+    var token = ensureToken();
+    if (!token) {{ showError("Feedback unavailable in this browser."); return; }}
+    btn.disabled = true;
+    fetch("/r/" + encodeURIComponent(publicId) + "/feedback", {{
+      method: "POST",
+      headers: {{ "Content-Type": "application/json", "Accept": "application/json" }},
+      body: JSON.stringify({{ schema_version: "1.0", useful: useful, respondent_token: token }})
+    }}).then(function (res) {{
+      if (!res.ok) throw new Error("http_" + res.status);
+      try {{ localStorage.setItem(voteKey, useful); }} catch (e) {{}}
+      showThanks();
+    }}).catch(function () {{
+      btn.disabled = false;
+      showError("Could not save feedback. Try again.");
+    }});
+  }});
+}})();
+</script>
+"""
 
 
 def _owner_ref(principal: object) -> str:
@@ -432,7 +531,7 @@ class ReportPublishingService:
         if not self._available:
             # Fail closed as not found for public callers (no store leakage).
             return build_error_response(
-                ERROR_NOT_FOUND,
+                ERROR_REPORT_NOT_FOUND,
                 http_status=404,
                 api_version=context.api_version,
                 request_id=context.request_id,
@@ -442,7 +541,7 @@ class ReportPublishingService:
             public_id = validate_public_report_id(public_id)
         except ValueError:
             return build_error_response(
-                ERROR_NOT_FOUND,
+                ERROR_REPORT_NOT_FOUND,
                 http_status=404,
                 api_version=context.api_version,
                 request_id=context.request_id,
@@ -450,7 +549,7 @@ class ReportPublishingService:
         record = self._store.get_json(_public_meta_key(public_id))
         if record is None or record.get("status") != STATUS_PUBLISHED:
             return build_error_response(
-                ERROR_NOT_FOUND,
+                ERROR_REPORT_NOT_FOUND,
                 http_status=404,
                 api_version=context.api_version,
                 request_id=context.request_id,
@@ -470,7 +569,7 @@ class ReportPublishingService:
             body = self._store.get_bytes(f"{prefix}{json_name}")
             if body is None:
                 return build_error_response(
-                    ERROR_NOT_FOUND,
+                    ERROR_REPORT_NOT_FOUND,
                     http_status=404,
                     api_version=context.api_version,
                     request_id=context.request_id,
@@ -489,11 +588,42 @@ class ReportPublishingService:
             body = self._store.get_bytes(f"{prefix}{html_name}")
             if body is None:
                 return build_error_response(
-                    ERROR_NOT_FOUND,
+                    ERROR_REPORT_NOT_FOUND,
                     http_status=404,
                     api_version=context.api_version,
                     request_id=context.request_id,
                 )
+            # Lambda sync responses are capped near 6 MiB. Oversized HTML is
+            # served via short-lived GetObject URL; the Worker follows it
+            # server-side so the browser address bar stays on reports.codestrata.ai.
+            max_inline = 5_000_000
+            if len(body) > max_inline and hasattr(self._store, "create_presigned_get"):
+                try:
+                    signed = self._store.create_presigned_get(
+                        f"{prefix}{html_name}",
+                        expires_in=120,
+                        response_content_type="text/html; charset=utf-8",
+                    )
+                except Exception:  # noqa: BLE001
+                    signed = None
+                if signed:
+                    response = RedirectResponse(url=signed, status_code=307)
+                    max_age = int(self._policy.cache_max_age_seconds)
+                    response.headers["Cache-Control"] = (
+                        f"private, max-age={max_age}, must-revalidate"
+                    )
+                    response.headers["X-Robots-Tag"] = "noindex"
+                    response.headers["X-CodeStrata-Report-Delivery"] = "presigned_get"
+                    if context.request_id:
+                        response.headers["X-Request-Id"] = context.request_id
+                    meta = public_safe_metadata(record)
+                    response.headers["X-CodeStrata-Report-Type"] = str(
+                        meta.get("report_type") or ""
+                    )
+                    # Stable identity for independent publish verification without
+                    # downloading multi-MB HTML (chrome is skipped on this path).
+                    response.headers["X-CodeStrata-Public-Id"] = public_id
+                    return response
             chrome = _chrome_html(
                 inner_html=body.decode("utf-8", errors="replace"),
                 report_type=str(record.get("report_type")),
@@ -515,6 +645,7 @@ class ReportPublishingService:
         # Never expose bucket/key.
         meta = public_safe_metadata(record)
         response.headers["X-CodeStrata-Report-Type"] = str(meta.get("report_type") or "")
+        response.headers["X-CodeStrata-Public-Id"] = public_id
         return response
 
     def handle_revoke(self, context: RequestContext) -> Response:
@@ -693,12 +824,33 @@ class ReportPublishingService:
             "generated_at": generated_at,
             "engine_version": engine_version,
             "artifacts": sorted(artifacts.keys()),
+            "published_at": generated_at,
+            "verification_status": VERIFICATION_PENDING,
         }
         self._store.put_json(_public_meta_key(public_id), record)
         logic["current_public_id"] = public_id
         logic["report_type"] = report_type
         logic["logical_identity_key"] = logical_key
         self._store.put_json(logic_path, logic)
+
+        # Private temporary validation registry (Insights-only; not public).
+        identity_type = (
+            LOGICAL_REPOSITORY
+            if report_type == REPORT_TYPE_ASSESSMENT
+            else LOGICAL_PORTFOLIO
+        )
+        self._store.put_json(
+            validation_entry_key(public_id),
+            build_validation_entry(
+                public_id=public_id,
+                public_url=public_report_url(public_id),
+                report_type=report_type,
+                logical_identity_key=logical_key,
+                logical_identity_type=identity_type,
+                published_at=generated_at,
+                verification_status=VERIFICATION_PENDING,
+            ),
+        )
 
     def _revoke_public_id(self, public_id: str, *, delete_artifacts: bool) -> None:
         record = self._store.get_json(_public_meta_key(public_id))
@@ -719,6 +871,7 @@ class ReportPublishingService:
         if not self._available:
             return {"assessments": [], "engineering_intelligence": []}
 
+        verification_by_id = self._verification_index()
         assessments: list[dict[str, Any]] = []
         eirs: list[dict[str, Any]] = []
         for key in self._store.list_keys("metadata/logic/"):
@@ -737,10 +890,14 @@ class ReportPublishingService:
             previous_status, previous_url = self._safe_slot(previous_id)
             if current_id is None and previous_id is None:
                 continue
+            current_verify = verification_by_id.get(str(current_id or "")) or {}
             entry: dict[str, Any] = {
                 "current_public_url": current_url,
                 "current_status": current_status,
-                "last_verified_status": None,
+                "last_verified_status": current_verify.get("verified_http_status"),
+                "verification_status": current_verify.get("verification_status"),
+                "published_at": current_verify.get("published_at"),
+                "public_report_id": current_id,
                 "previous_public_url": previous_url,
                 "previous_status": previous_status,
             }
@@ -758,6 +915,285 @@ class ReportPublishingService:
         return {
             "assessments": assessments,
             "engineering_intelligence": eirs,
+        }
+
+    def list_validation_registry(
+        self,
+        *,
+        limit: int = 50,
+        cursor: str | None = None,
+    ) -> dict[str, Any]:
+        """Paginated private validation registry for authenticated Insights."""
+
+        if not self._available:
+            return {
+                "items": [],
+                "next_cursor": None,
+                "limit": sanitize_list_limit(limit),
+                "temporary": True,
+                "purpose": "temporary_community_validation",
+            }
+
+        capped = sanitize_list_limit(limit)
+        keys = [
+            k
+            for k in self._store.list_keys(VALIDATION_ENTRIES_PREFIX)
+            if k.endswith(".json")
+        ]
+        # Newest published_at first; fall back to key order.
+        entries: list[dict[str, Any]] = []
+        for key in keys:
+            row = self._store.get_json(key)
+            if isinstance(row, dict) and row.get("public_report_id"):
+                entries.append(row)
+        entries.sort(
+            key=lambda e: (
+                str(e.get("published_at") or ""),
+                str(e.get("public_report_id") or ""),
+            ),
+            reverse=True,
+        )
+
+        start = 0
+        if cursor:
+            for idx, row in enumerate(entries):
+                if str(row.get("public_report_id")) == cursor:
+                    start = idx + 1
+                    break
+        page = entries[start : start + capped]
+        next_cursor = None
+        if start + capped < len(entries) and page:
+            next_cursor = str(page[-1].get("public_report_id") or "") or None
+
+        # Strip internal-only fields that must never leave the private API? Keep
+        # display-safe fields only (no artifact prefixes / owner refs).
+        safe_items: list[dict[str, Any]] = []
+        for row in page:
+            safe_items.append(
+                {
+                    "public_report_id": row.get("public_report_id"),
+                    "public_url": row.get("public_url"),
+                    "report_type": row.get("report_type"),
+                    "display_identity": row.get("display_identity")
+                    or row.get("logical_identity_key"),
+                    "logical_identity_key": row.get("logical_identity_key"),
+                    "logical_identity_type": row.get("logical_identity_type"),
+                    "published_at": row.get("published_at"),
+                    "verification_status": row.get("verification_status"),
+                    "verified_http_status": row.get("verified_http_status"),
+                    "verified_at": row.get("verified_at"),
+                    "temporary": True,
+                }
+            )
+        return {
+            "items": safe_items,
+            "next_cursor": next_cursor,
+            "limit": capped,
+            "temporary": True,
+            "purpose": "temporary_community_validation",
+            "note": (
+                "Internal Community validation tooling only. Opaque public URLs; "
+                "not a permanent product surface."
+            ),
+        }
+
+    def handle_verification(self, context: RequestContext) -> Response:
+        """Community-authenticated confirmation after independent public GET verify."""
+
+        if not self._available:
+            return self._unavailable(context)
+        if context.authenticated_client is None:
+            return build_error_response(
+                ERROR_AUTHENTICATION_REQUIRED,
+                http_status=401,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+        public_id = (context.path_params or {}).get("public_id") or ""
+        try:
+            public_id = validate_public_report_id(public_id)
+        except ValueError:
+            return build_error_response(
+                ERROR_NOT_FOUND,
+                http_status=404,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+
+        from codestrata_platform.community_cloud_api.reports.models import (
+            ReportVerificationRequest,
+        )
+
+        req = context.validated_request
+        if not isinstance(req, ReportVerificationRequest):
+            return build_error_response(
+                ERROR_INVALID_REQUEST_SCHEMA,
+                http_status=422,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+        status = req.verification_status
+        http_code = req.http_status
+
+        public_meta = self._store.get_json(_public_meta_key(public_id))
+        if public_meta is None:
+            return build_error_response(
+                ERROR_NOT_FOUND,
+                http_status=404,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+
+        verified_at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(self._clock()))
+        public_meta = dict(public_meta)
+        public_meta["verification_status"] = status
+        public_meta["verified_http_status"] = http_code
+        public_meta["verified_at"] = verified_at if status == VERIFICATION_VERIFIED else None
+        self._store.put_json(_public_meta_key(public_id), public_meta)
+
+        entry = self._store.get_json(validation_entry_key(public_id))
+        if not isinstance(entry, dict):
+            entry = build_validation_entry(
+                public_id=public_id,
+                public_url=public_report_url(public_id),
+                report_type=str(public_meta.get("report_type") or REPORT_TYPE_ASSESSMENT),
+                logical_identity_key=str(public_meta.get("logical_identity_key") or ""),
+                logical_identity_type=str(
+                    public_meta.get("logical_identity_type") or LOGICAL_REPOSITORY
+                ),
+                published_at=str(public_meta.get("published_at") or verified_at),
+                verification_status=status,
+                verified_http_status=http_code,
+                verified_at=verified_at if status == VERIFICATION_VERIFIED else None,
+            )
+        else:
+            entry = dict(entry)
+            entry["verification_status"] = status
+            entry["verified_http_status"] = http_code
+            entry["verified_at"] = verified_at if status == VERIFICATION_VERIFIED else None
+            if status == VERIFICATION_FAILED:
+                entry["verified_at"] = None
+        self._store.put_json(validation_entry_key(public_id), entry)
+
+        return build_json_response(
+            {
+                "api_version": context.api_version,
+                "public_id": public_id,
+                "verification_status": status,
+                "verified_http_status": http_code,
+                "verified_at": entry.get("verified_at"),
+                "temporary": True,
+            },
+            status_code=200,
+            api_version=context.api_version,
+            request_id=context.request_id,
+        )
+
+    def _verification_index(self) -> dict[str, dict[str, Any]]:
+        out: dict[str, dict[str, Any]] = {}
+        for key in self._store.list_keys(VALIDATION_ENTRIES_PREFIX):
+            if not key.endswith(".json"):
+                continue
+            row = self._store.get_json(key)
+            if isinstance(row, dict) and row.get("public_report_id"):
+                out[str(row["public_report_id"])] = row
+        return out
+
+    def handle_feedback(self, context: RequestContext) -> Response:
+        """Public voluntary Yes/No feedback — independent of telemetry consent."""
+
+        if not self._available:
+            return self._unavailable(context)
+        public_id = (context.path_params or {}).get("public_id") or ""
+        try:
+            public_id = validate_public_report_id(public_id)
+        except ValueError:
+            return build_error_response(
+                ERROR_REPORT_NOT_FOUND,
+                http_status=404,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+        req = context.validated_request
+        if not isinstance(req, ReportFeedbackRequest):
+            return build_error_response(
+                ERROR_INVALID_REQUEST_SCHEMA,
+                http_status=422,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+        record = self._store.get_json(_public_meta_key(public_id))
+        if record is None or str(record.get("status") or "") != STATUS_PUBLISHED:
+            return build_error_response(
+                ERROR_REPORT_NOT_FOUND,
+                http_status=404,
+                api_version=context.api_version,
+                request_id=context.request_id,
+            )
+
+        vote_key = feedback_vote_key(
+            public_id=public_id, respondent_token=req.respondent_token
+        )
+        prior = self._store.get_json(vote_key)
+        prior_useful = None
+        if isinstance(prior, dict):
+            maybe = str(prior.get("useful") or "").strip().lower()
+            if maybe in {"yes", "no"}:
+                prior_useful = maybe
+
+        summary = self._store.get_json(FEEDBACK_SUMMARY_KEY) or empty_feedback_summary()
+        if not isinstance(summary, dict):
+            summary = empty_feedback_summary()
+        next_summary, outcome = apply_feedback_vote(
+            summary=summary,
+            prior_useful=prior_useful,
+            new_useful=req.useful,
+        )
+        if outcome != "unchanged":
+            self._store.put_json(
+                vote_key,
+                {
+                    "schema_version": "1.0",
+                    "useful": req.useful,
+                    "updated_at": next_summary.get("updated_at"),
+                },
+            )
+            self._store.put_json(FEEDBACK_SUMMARY_KEY, next_summary)
+
+        return build_json_response(
+            {
+                "accepted": True,
+                "useful": req.useful,
+                "outcome": outcome,
+            },
+            status_code=200,
+            api_version=context.api_version,
+            request_id=context.request_id,
+            extra_headers={
+                "Cache-Control": "no-store",
+                "Access-Control-Allow-Origin": "https://reports.codestrata.ai",
+                "Vary": "Origin",
+                "Access-Control-Allow-Methods": "POST,OPTIONS",
+                "Access-Control-Allow-Headers": "Accept,Content-Type",
+            },
+        )
+
+    def community_sentiment_summary(self) -> dict[str, Any]:
+        """Aggregate Yes/No feedback counts for Insights (no respondent identities)."""
+
+        if not self._available:
+            return empty_feedback_summary()
+        summary = self._store.get_json(FEEDBACK_SUMMARY_KEY)
+        if not isinstance(summary, dict):
+            return empty_feedback_summary()
+        positive = int(summary.get("positive_responses") or 0)
+        negative = int(summary.get("negative_responses") or 0)
+        return {
+            "schema_version": "1.0",
+            "positive_responses": max(0, positive),
+            "negative_responses": max(0, negative),
+            "total_responses": max(0, positive) + max(0, negative),
+            "updated_at": summary.get("updated_at"),
         }
 
     def _safe_slot(

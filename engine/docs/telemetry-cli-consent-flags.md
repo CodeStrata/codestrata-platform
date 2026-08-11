@@ -11,8 +11,8 @@
 | `--telemetry-deny` | Explicitly deny telemetry for this command/process |
 
 ```bash
-codestrata assess --repo . --output reports --no-ai --telemetry-deny
-codestrata assess --repo . --output reports --no-ai --telemetry-allow
+codestrata assess --repo . --no-ai --telemetry-deny
+codestrata assess --repo . --no-ai --telemetry-allow
 ```
 
 Both flags:

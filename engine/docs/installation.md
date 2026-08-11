@@ -81,15 +81,15 @@ python -m verification.repository_assessment --local-only
 Canonical customer command:
 
 ```bash
-codestrata assess --repo . --output reports --no-ai
+codestrata assess --repo . --no-ai --no-ai
 ```
 
 Optional process-local telemetry consent (not saved; no transmission in this
 release):
 
 ```bash
-codestrata assess --repo . --output reports --no-ai --telemetry-deny
-codestrata assess --repo . --output reports --no-ai --telemetry-allow
+codestrata assess --repo . --no-ai --no-ai --telemetry-deny
+codestrata assess --repo . --no-ai --no-ai --telemetry-allow
 ```
 
 See [telemetry-cli-consent-flags.md](telemetry-cli-consent-flags.md).

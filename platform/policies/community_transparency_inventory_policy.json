@@ -1,0 +1,27 @@
+{
+  "policy_id": "community-transparency-inventory-policy",
+  "policy_version": "1.0",
+  "schema": "community-transparency-inventory-policy:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "depends_on": [
+    "community-epic17-completion-policy:1.0"
+  ],
+  "authority": "Build authoritative Transparency inventories from runtime/contracts/infrastructure. Documentation is not authority when it conflicts with runtime. No Slice 18.2 prose publication in this slice.",
+  "runtime_is_documentation_source_of_truth": true,
+  "all_collected_fields_inventory_required": true,
+  "never_collected_claims_runtime_validated": true,
+  "consent_inventory_required": true,
+  "retention_matrix_required": true,
+  "ai_provider_flow_inventory_required": true,
+  "api_inventory_required": true,
+  "source_locality_inventory_required": true,
+  "public_doc_authority_defined": true,
+  "start_slice_18_1": true,
+  "start_slice_18_2": false,
+  "no_cli_publish": true,
+  "no_vscode_marketplace_publish": true,
+  "no_release_tag": true,
+  "no_full_22_repository_release_corpus": true,
+  "no_runtime_redesign": true
+}

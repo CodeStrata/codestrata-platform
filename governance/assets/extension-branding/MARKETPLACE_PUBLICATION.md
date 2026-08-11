@@ -1,4 +1,4 @@
-# Marketplace publication — CodeStrata – Engineering Intelligence
+# Marketplace publication — CodeStrata – Engineering Assessment
 
 **Status:** Preparation complete · **Do not publish** until release gates pass and a
 human explicitly requests publish with stored credentials.
@@ -11,7 +11,7 @@ The former Cursor extension product and its packaging surfaces were removed
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Intelligence |
+| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Assessment |
 
 Publisher namespace: **`codestrata`** (create/claim before first publish; do not
 rename after release without explicit approval).

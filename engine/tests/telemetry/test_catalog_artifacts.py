@@ -94,13 +94,17 @@ def test_side_effect_free_build(tmp_path: Path, monkeypatch) -> None:
         home.chmod(0o700)
 
 
-def test_status_reports_catalog_available() -> None:
+def test_status_reports_catalog_available(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     result = CliRunner().invoke(app, ["telemetry", "status"])
     assert result.exit_code == 0
-    assert "Public event catalog: Available" in result.stdout
-    assert "telemetry-event-catalog" in result.stdout
-    assert "Public event catalog is not yet available" not in result.stdout
+    assert "Anonymous Community telemetry" in result.stdout
+    assert "Preference: Not configured" in result.stdout
+    assert "Default: Disabled" in result.stdout
+    assert "no source code" in result.stdout.lower()
 
 
 def test_no_catalog_or_send_cli_commands() -> None:
@@ -112,7 +116,7 @@ def test_no_catalog_or_send_cli_commands() -> None:
 
 
 def test_no_platform_imports_in_catalog_modules() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.glob("catalog*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):

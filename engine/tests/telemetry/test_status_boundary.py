@@ -45,7 +45,10 @@ def test_cli_status_deterministic_output() -> None:
     assert first.stdout == second.stdout
 
 
-def test_status_then_non_interactive_assess() -> None:
+def test_status_then_non_interactive_assess(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("CODESTRATA_HOME", str(home))
     reset_telemetry_singletons()
     CliRunner().invoke(app, ["telemetry", "status"])
     telemetry = ensure_interactive_product_telemetry(
@@ -67,7 +70,7 @@ def test_status_then_allow() -> None:
 
 
 def test_no_platform_datalake_imports() -> None:
-    forbidden = ("codestrata_platform", "community_cloud", "boto3", "fastapi", "data_lake")
+    forbidden = ("codestrata_platform", "codestrata_platform.community_cloud","community_cloud_api", "boto3", "fastapi", "data_lake")
     for path in TELEMETRY_ROOT.rglob("*.py"):
         if not path.name.startswith("status"):
             continue

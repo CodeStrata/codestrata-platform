@@ -1,0 +1,69 @@
+{
+  "register_id": "community-retention-register",
+  "register_version": "1.0",
+  "schema": "community-retention-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "codestrata_report_retention_policy+data_lake_lifecycle_tf+report_artifacts_lifecycle",
+  "entries": [
+    {
+      "class": "local_assessment_reports",
+      "duration_or_semantics": "current_plus_previous",
+      "source": "codestrata-report-retention-policy:1.0"
+    },
+    {
+      "class": "local_eir",
+      "duration_or_semantics": "current_plus_previous",
+      "source": "codestrata-report-retention-policy:1.0"
+    },
+    {
+      "class": "published_assessment_reports",
+      "duration_or_semantics": "current_plus_previous_application_enforced",
+      "source": "community-report-publishing-policy:1.0"
+    },
+    {
+      "class": "published_eir",
+      "duration_or_semantics": "current_plus_previous_application_enforced",
+      "source": "community-report-publishing-policy:1.0"
+    },
+    {
+      "class": "data_lake_raw",
+      "duration_or_semantics": "365_days",
+      "source": "infrastructure/modules/community-data-lake/lifecycle.tf"
+    },
+    {
+      "class": "data_lake_quarantine",
+      "duration_or_semantics": "90_days",
+      "source": "infrastructure/modules/community-data-lake/lifecycle.tf"
+    },
+    {
+      "class": "identity_prefix",
+      "duration_or_semantics": "indefinite_intentional_for_anonymous_dedup",
+      "source": "lifecycle.tf+epic17_defect_resolution"
+    },
+    {
+      "class": "secrets_manager",
+      "duration_or_semantics": "operator_rotation_lifecycle",
+      "source": "runtime_security_docs"
+    },
+    {
+      "class": "validation_artifacts",
+      "duration_or_semantics": "separate_validation_suite_policy_not_product_current_previous",
+      "source": "codestrata-report-retention-policy:1.0 validation_artifacts_use_report_retention=false"
+    },
+    {
+      "class": "public_report_urls",
+      "duration_or_semantics": "while_published_until_revoke_or_superseded_by_current_previous_rotation",
+      "source": "report_publishing_runtime"
+    },
+    {
+      "class": "report_artifact_staging",
+      "duration_or_semantics": "2_days",
+      "source": "infrastructure/modules/community-report-artifacts/lifecycle.tf"
+    }
+  ],
+  "notes": [
+    "Data Lake is append-oriented and is NOT a current/previous product slot model.",
+    "Assessment/EIR product-visible versions are exactly current + previous."
+  ]
+}

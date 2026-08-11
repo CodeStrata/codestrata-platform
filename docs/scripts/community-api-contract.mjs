@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Schema-driven Community API docs contract checks (Slice 17.14).
+ * Schema-driven Community API docs contract checks (Slice 17.14 / reconciled 18.5).
  *
  * Validates docs/reference/community-api/index.md against
  * platform/policies/community_api_route_register.json without inventing routes.
@@ -32,24 +32,47 @@ if (register.public_api_base_url !== PUBLIC_BASE) {
 
 const classifications = new Set([
   "PUBLIC_COMMUNITY",
+  "AUTHENTICATED_COMMUNITY_INGESTION",
+  "AUTHENTICATED_REPORT_PUBLISHING",
   "PRIVATE_INSIGHTS",
   "INTERNAL_OPERATIONAL",
   "DEPRECATED",
 ]);
 
+const DOCUMENTED_COMMUNITY = new Set([
+  "PUBLIC_COMMUNITY",
+  "AUTHENTICATED_COMMUNITY_INGESTION",
+  "AUTHENTICATED_REPORT_PUBLISHING",
+]);
+
+function docsContainUrl(publicPath) {
+  const canonical = `${PUBLIC_BASE}${publicPath}`;
+  if (docs.includes(canonical)) return true;
+  // Accept angle-bracket placeholder docs form for path params.
+  const angled = canonical.replaceAll("{public_id}", "<public-id>");
+  return docs.includes(angled);
+}
+
 const publicRoutes = [];
+const documentedCommunity = [];
 for (const route of register.routes || []) {
   if (!classifications.has(route.classification)) {
     errors.push(`unclassified route: ${route.route_id}`);
   }
   if (route.community_visible) {
-    publicRoutes.push(route);
-    if (route.classification !== "PUBLIC_COMMUNITY") {
-      errors.push(`community_visible but not PUBLIC_COMMUNITY: ${route.route_id}`);
+    documentedCommunity.push(route);
+    if (!DOCUMENTED_COMMUNITY.has(route.classification)) {
+      errors.push(
+        `community_visible with unexpected classification: ${route.route_id} (${route.classification})`,
+      );
     }
-    const url = `${PUBLIC_BASE}${route.public_path}`;
-    if (!docs.includes(url)) {
-      errors.push(`docs missing canonical URL for ${route.route_id}: ${url}`);
+    if (route.classification === "PUBLIC_COMMUNITY") {
+      publicRoutes.push(route);
+    }
+    if (!docsContainUrl(route.public_path)) {
+      errors.push(
+        `docs missing canonical URL for ${route.route_id}: ${PUBLIC_BASE}${route.public_path}`,
+      );
     }
     if (!docs.includes(route.method)) {
       errors.push(`docs missing method for ${route.route_id}`);
@@ -84,8 +107,13 @@ if (!docs.includes("Developers can inspect CodeStrata network requests")) {
   errors.push("docs missing transparency inspection statement");
 }
 
-if (publicRoutes.length < 6) {
-  errors.push(`expected >=6 public community routes, got ${publicRoutes.length}`);
+if (publicRoutes.length < 3) {
+  errors.push(`expected >=3 public community routes, got ${publicRoutes.length}`);
+}
+if (documentedCommunity.length < 6) {
+  errors.push(
+    `expected >=6 community-documented routes, got ${documentedCommunity.length}`,
+  );
 }
 
 if (errors.length) {
@@ -95,5 +123,5 @@ if (errors.length) {
 }
 
 console.log(
-  `OK community-api-contract public_routes=${publicRoutes.length} private_excluded=ok`,
+  `OK community-api-contract public_routes=${publicRoutes.length} documented_community=${documentedCommunity.length} private_excluded=ok`,
 );

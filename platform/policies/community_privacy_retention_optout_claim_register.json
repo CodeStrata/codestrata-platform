@@ -1,0 +1,79 @@
+{
+  "register_id": "community-privacy-retention-optout-claim-register",
+  "register_version": "1.0",
+  "schema": "community-privacy-retention-optout-claim-register:1.0",
+  "slice": "18.3",
+  "epic": 18,
+  "entries": [
+    {
+      "claim_id": "C18-3-001",
+      "public_claim": "Local Assessment retention is current + previous only",
+      "register_18_1": "community_retention_register.local_assessment_reports",
+      "runtime_evidence": "codestrata-report-retention-policy:1.0",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-002",
+      "public_claim": "Local EIR retention is current + previous only",
+      "register_18_1": "community_retention_register.local_eir",
+      "runtime_evidence": "codestrata-report-retention-policy:1.0",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-003",
+      "public_claim": "Published Assessment/EIR retention is application-enforced current + previous",
+      "register_18_1": "community_retention_register.published_assessment_reports",
+      "runtime_evidence": "community-report-publishing-policy + reports service rotation",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-004",
+      "public_claim": "Data Lake raw retention is about 365 days",
+      "register_18_1": "community_retention_register.data_lake_raw",
+      "runtime_evidence": "infrastructure/modules/community-data-lake/variables.tf accepted_retention_days default 365",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-005",
+      "public_claim": "Data Lake quarantine retention is about 90 days",
+      "register_18_1": "community_retention_register.data_lake_quarantine",
+      "runtime_evidence": "infrastructure/modules/community-data-lake/variables.tf quarantine_retention_days default 90",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-006",
+      "public_claim": "Identity prefix retention is indefinite by intentional design",
+      "register_18_1": "community_retention_register.identity_prefix",
+      "runtime_evidence": "lifecycle.tf identity/ no object-expiration + Epic 17.22 notes",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-007",
+      "public_claim": "Opt-out stops future telemetry only and does not auto-delete historical lake events",
+      "register_18_1": "community_opt_out_deletion_register.historical_telemetry_auto_erase_on_opt_out=false",
+      "runtime_evidence": "privacy-first consent + retention policies",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-008",
+      "public_claim": "Report revoke is authenticated DELETE and returns public 404; no CLI revoke in current Engine",
+      "register_18_1": "community_opt_out_deletion_register.report_revoke",
+      "runtime_evidence": "reports/service.py handle_revoke + engine cli/report.py publish-only",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-009",
+      "public_claim": "No self-service historical Data Lake or identity deletion workflow",
+      "register_18_1": "community_opt_out_deletion_register.data_lake_user_self_service_deletion=false",
+      "runtime_evidence": "opt-out deletion register forbidden promises",
+      "public_document": "docs/security/retention-and-deletion.md"
+    },
+    {
+      "claim_id": "C18-3-010",
+      "public_claim": "Telemetry consent is separate from public report publish authorization",
+      "register_18_1": "community_report_publishing_inventory_register.telemetry_opt_in_alone_insufficient",
+      "runtime_evidence": "report publish --confirm-public-publish gate",
+      "public_document": "docs/security/privacy.md"
+    }
+  ]
+}

@@ -24,7 +24,7 @@ from verification.vscode_epic13_completion.scenarios import (
 )
 
 VSIX_NAME = "codestrata-vscode-0.2.0.vsix"
-DISPLAY_NAME = "CodeStrata – Engineering Intelligence"
+DISPLAY_NAME = "CodeStrata – Engineering Assessment"
 TAGLINE = "Engineering decisions grounded in code."
 
 STALE_DOC_PATTERNS = (

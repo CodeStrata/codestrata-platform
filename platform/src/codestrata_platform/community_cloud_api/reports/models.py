@@ -22,7 +22,7 @@ from codestrata_platform.community_cloud_api.validation.models import (
     CommunityApiRequestModel,
 )
 
-_LOGICAL_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{1,120}$")
+_LOGICAL_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,120}$")
 _ARTIFACT_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{1,120}$")
 
 
@@ -59,6 +59,8 @@ class ReportUploadIntentRequest(CommunityApiRequestModel):
         text = (value or "").strip()
         if not _LOGICAL_ID_RE.fullmatch(text):
             raise ValueError("invalid logical_identity_key")
+        if ".." in text:
+            raise ValueError("invalid logical_identity_key")
         return text
 
     @field_validator("artifacts")
@@ -91,6 +93,27 @@ class ReportPublishRequest(CommunityApiRequestModel):
         text = (value or "").strip()
         if not re.fullmatch(r"^[A-Za-z0-9_-]{16,64}$", text):
             raise ValueError("invalid upload_id")
+        return text
+
+
+class ReportVerificationRequest(CommunityApiRequestModel):
+    """Confirm independent public GET verification for the private validation registry."""
+
+    schema_version: Literal["1.0"] = "1.0"
+    verification_status: str = "verified"
+    http_status: int | None = 200
+
+    @field_validator("verification_status")
+    @classmethod
+    def _status(cls, value: str) -> str:
+        text = (value or "").strip()
+        allowed = {
+            "verified",
+            "published_pending_verification",
+            "verification_failed",
+        }
+        if text not in allowed:
+            raise ValueError("unsupported verification_status")
         return text
 
 
@@ -137,6 +160,7 @@ __all__ = [
     "ReportPublishRequest",
     "ReportRevokeRequest",
     "ReportUploadIntentRequest",
+    "ReportVerificationRequest",
     "allowed_artifacts_for",
     "public_safe_metadata",
     "validate_artifact_set",

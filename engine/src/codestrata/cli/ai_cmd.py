@@ -44,7 +44,7 @@ ai_app = typer.Typer(
         "  codestrata ai\n"
         "  codestrata ai --provider bedrock|openai|openrouter\n"
         "  codestrata ai doctor\n"
-        "  codestrata assess --repo . --output reports --with-ai"
+        "  codestrata assess --repo . --with-ai"
     ),
     no_args_is_help=False,
     invoke_without_command=True,
@@ -127,7 +127,7 @@ def _print_onboarding(settings: CodestrataSettings) -> None:
     typer.echo("  codestrata ai --provider openrouter")
     typer.echo("")
     tip("Validate configuration: codestrata ai doctor")
-    tip("Then run: codestrata assess --repo . --output reports --with-ai")
+    tip("Then run: codestrata assess --repo . --with-ai")
     typer.echo("")
     typer.echo(f"Docs: {DOCS_AI_PROVIDERS}")
     _print_friendly_fallback()
@@ -154,7 +154,7 @@ def _print_bedrock_guide() -> None:
     typer.echo("     pip install 'codestrata[bedrock]'")
     typer.echo("")
     tip("Validate: codestrata ai doctor")
-    tip("Assess with AI: codestrata assess --repo . --output reports --with-ai")
+    tip("Assess with AI: codestrata assess --repo . --with-ai")
     _print_friendly_fallback()
 
 
@@ -178,7 +178,7 @@ def _print_openai_guide() -> None:
     typer.echo("  pip install 'codestrata[openai]'")
     typer.echo("")
     tip("Validate: codestrata ai doctor")
-    tip("Assess with AI: codestrata assess --repo . --output reports --with-ai")
+    tip("Assess with AI: codestrata assess --repo . --with-ai")
     _print_friendly_fallback()
 
 
@@ -206,7 +206,7 @@ def _print_openrouter_guide() -> None:
     typer.echo("     pip install 'codestrata[openai]'")
     typer.echo("")
     tip("Validate: codestrata ai doctor")
-    tip("Assess with AI: codestrata assess --repo . --output reports --with-ai")
+    tip("Assess with AI: codestrata assess --repo . --with-ai")
     _print_friendly_fallback()
 
 
@@ -271,7 +271,7 @@ def _print_doctor(settings: CodestrataSettings) -> int:
         tip("Fix the active provider configuration, then re-run: codestrata ai doctor")
         return 1
 
-    tip("Ready for: codestrata assess --repo . --output reports --with-ai")
+    tip("Ready for: codestrata assess --repo . --with-ai")
     return 0
 
 

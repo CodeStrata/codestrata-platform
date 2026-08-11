@@ -1,4 +1,4 @@
-"""Independent interactive telemetry consent prompt policy (Slice 9.4)."""
+"""Independent interactive telemetry consent prompt policy (Slice 19.4)."""
 
 from __future__ import annotations
 
@@ -8,30 +8,29 @@ from typing import Any
 COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_ID = (
     "community-telemetry-interactive-consent-policy"
 )
-COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_VERSION = "1.0"
+COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_VERSION = "2.0"
 COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_URN = (
     f"{COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_ID}:"
     f"{COMMUNITY_TELEMETRY_INTERACTIVE_CONSENT_POLICY_VERSION}"
 )
 
-_REVIEW_STATUS = "interactive_session_prompt_default_deny"
+_REVIEW_STATUS = "interactive_prompt_persist_explicit_local_preference"
 
 _LIMITATIONS: tuple[str, ...] = (
     "one_prompt_maximum_per_process",
-    "current_session_scope_only",
+    "skip_when_preference_decided",
     "default_answer_deny",
     "empty_answer_denied",
     "invalid_answer_denied",
     "interruption_denied",
     "eof_denied",
-    "no_persistence",
-    "no_prior_consent_reuse",
+    "local_preference_persistence",
     "no_installation_identity",
     "no_transmission_guarantee",
-    "transport_unavailable_by_default",
     "help_version_excluded",
     "telemetry_inspection_excluded",
     "non_interactive_policy_enforced",
+    "no_source_code_or_repository_identity",
 )
 
 ELIGIBLE_COMMANDS: frozenset[str] = frozenset({"assess"})
@@ -74,8 +73,8 @@ class CommunityTelemetryInteractiveConsentPolicy:
     invalid_answer_denied: bool = True
     interruption_denied: bool = True
     eof_denied: bool = True
-    persistence_allowed: bool = False
-    prior_consent_reuse_allowed: bool = False
+    persistence_allowed: bool = True
+    prior_consent_reuse_allowed: bool = True
     installation_identity_required: bool = False
     transmission_guaranteed: bool = False
     max_prompt_attempts: int = MAX_PROMPT_ATTEMPTS
@@ -103,10 +102,12 @@ class CommunityTelemetryInteractiveConsentPolicy:
             )
         if not self.default_answer_deny:
             raise InteractiveConsentPolicyError("default_answer_deny must be true")
-        if self.persistence_allowed:
-            raise InteractiveConsentPolicyError("persistence_allowed must be false")
-        if self.prior_consent_reuse_allowed:
-            raise InteractiveConsentPolicyError("prior_consent_reuse_allowed must be false")
+        if not self.persistence_allowed:
+            raise InteractiveConsentPolicyError("persistence_allowed must be true")
+        if not self.prior_consent_reuse_allowed:
+            raise InteractiveConsentPolicyError(
+                "prior_consent_reuse_allowed must be true"
+            )
         if self.installation_identity_required:
             raise InteractiveConsentPolicyError(
                 "installation_identity_required must be false"

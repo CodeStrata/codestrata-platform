@@ -5,10 +5,15 @@
 
 export {
   allowForSession,
+  consentFromPreference,
   consentToStableDict,
   defaultConsent,
   denyForSession,
   nonInteractiveDisabledConsent,
+  readPreferenceState,
+  TELEMETRY_PREFERENCE_STATE_KEY,
+  writePreferenceState,
+  type TelemetryPreferenceState,
   type VsCodeTelemetryConsent,
   type VsCodeTelemetryDecision,
   type VsCodeTelemetryDecisionSource,
@@ -50,8 +55,13 @@ export {
   isEligibleTelemetryCommand,
 } from "./promptPolicy";
 export {
+  TELEMETRY_ALLOW_LABEL,
   TELEMETRY_CONSENT_MESSAGE,
+  TELEMETRY_DENY_LABEL,
+  TELEMETRY_LEARN_MORE_LABEL,
+  preferenceLabel,
   runTelemetryConsentPrompt,
+  type TelemetryPreferenceStore,
   type TelemetryPromptResult,
   type TelemetryPromptUi,
 } from "./prompt";

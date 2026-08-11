@@ -48,7 +48,7 @@ class CloudWireValidationError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class CommunityCloudTelemetryWireRequest:
-    """Strict cloud request envelope — installation_id / occurred_at omitted."""
+    """Strict cloud request envelope — occurred_at omitted; installation_id optional."""
 
     event_id: str
     event_type: str
@@ -56,6 +56,7 @@ class CommunityCloudTelemetryWireRequest:
     client_version: str
     client_platform: str
     properties: dict[str, Any] | None = None
+    installation_id: str | None = None
     schema_version: str = COMMUNITY_CLOUD_TELEMETRY_SCHEMA_VERSION
 
     def __post_init__(self) -> None:
@@ -72,6 +73,15 @@ class CommunityCloudTelemetryWireRequest:
             raise CloudWireValidationError("invalid client_version")
         if not platform or len(platform) > 64 or "/" in platform or "\\" in platform:
             raise CloudWireValidationError("invalid client_platform")
+        iid = self.installation_id
+        if iid is not None:
+            text = str(iid).strip()
+            if not text or len(text) > 64:
+                raise CloudWireValidationError("invalid installation_id")
+            # UUID v4 shape only — never path/email shaped identities.
+            if "/" in text or "\\" in text or "@" in text or " " in text:
+                raise CloudWireValidationError("invalid installation_id")
+            object.__setattr__(self, "installation_id", text)
         props = self.properties
         if props is not None:
             if not isinstance(props, dict):
@@ -95,6 +105,8 @@ class CommunityCloudTelemetryWireRequest:
             "event_type": self.event_type,
             "schema_version": self.schema_version,
         }
+        if self.installation_id:
+            payload["installation_id"] = self.installation_id
         if self.properties:
             payload["properties"] = {
                 key: self.properties[key] for key in sorted(self.properties)

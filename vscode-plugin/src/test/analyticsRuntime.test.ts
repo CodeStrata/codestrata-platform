@@ -416,7 +416,7 @@ describe("vscode analytics no network", () => {
 });
 
 describe("vscode analytics package and boundary", () => {
-  it("does not add analytics settings or commands to package.json", () => {
+  it("does not add analytics settings or telemetry endpoint settings to package.json", () => {
     const pkg = JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "../../package.json"), "utf8")
     ) as {
@@ -429,7 +429,7 @@ describe("vscode analytics package and boundary", () => {
     assert.equal(pkg.version, "0.2.0");
     const commands = pkg.contributes.commands.map((c) => c.command);
     assert.ok(!commands.some((c) => /analytics/i.test(c)));
-    assert.ok(!commands.some((c) => /telemetry/i.test(c)));
+    assert.ok(commands.includes("codestrata.telemetrySettings"));
     const props = Object.keys(pkg.contributes.configuration?.properties ?? {});
     assert.ok(!props.some((p) => /analytics/i.test(p)));
     assert.ok(!props.some((p) => /telemetry/i.test(p)));

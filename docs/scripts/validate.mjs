@@ -57,6 +57,36 @@ for (const rel of requiredFiles) {
   }
 }
 
+// Docs search REMOVED FOR v0.2.0 (Cloudflare cannot serve VitePress
+// `@localSearchIndex*` chunks). VitePress still emits an empty
+// `.VPNavBarSearch` shell when themeConfig.search is unset — that is OK.
+// Fail only if a functional Search control / index would ship.
+{
+  const homeHtml = path.join(dist, "index.html");
+  if (fs.existsSync(homeHtml)) {
+    const home = fs.readFileSync(homeHtml, "utf8");
+    const functionalSearch =
+      home.includes('id="local-search"') ||
+      home.includes("DocSearch-Button") ||
+      home.includes("VPLocalSearchBox") ||
+      /VPNavBarSearch[\s\S]{0,400}Search/.test(home);
+    if (functionalSearch) {
+      errors.push(
+        "docs search UI present but search is intentionally omitted for v0.2.0 — remove themeConfig.search",
+      );
+    }
+  }
+  const chunksDir = path.join(dist, "assets", "chunks");
+  if (fs.existsSync(chunksDir)) {
+    const chunkNames = fs.readdirSync(chunksDir);
+    if (chunkNames.some((n) => n.includes("localSearchIndex"))) {
+      errors.push(
+        "localSearchIndex chunks present but search is omitted for v0.2.0 — remove themeConfig.search",
+      );
+    }
+  }
+}
+
 // Commercial / Platform must not be in active published routes
 for (const rel of ["platform/index.html", "community/vs-platform.html"]) {
   if (fs.existsSync(path.join(dist, rel))) {

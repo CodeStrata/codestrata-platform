@@ -23,7 +23,7 @@ ASSESSMENT_SCHEMA_VERSION = "1.2"
 BRANDING_PACKAGE = "vscode-plugin/src/marketplaceBranding"
 PLUGIN_ROOT = "vscode-plugin"
 
-DISPLAY_NAME = "CodeStrata – Engineering Intelligence"
+DISPLAY_NAME = "CodeStrata – Engineering Assessment"
 PUBLISHER = "codestrata"
 PACKAGE_NAME = "codestrata-vscode"
 GALLERY_COLOR = "#f4f6f3"

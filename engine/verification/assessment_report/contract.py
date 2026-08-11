@@ -17,7 +17,7 @@ REQUIRED_ARTIFACTS: tuple[str, ...] = (
 EXPECTED_SECTION_ORDER: tuple[tuple[str, str], ...] = (
     ("leadership-verdict", "Leadership Verdict"),
     ("executive-summary", "Executive Summary"),
-    ("engineering-intelligence-summary", "Engineering Intelligence Summary"),
+    ("engineering-intelligence-summary", "Assessment Overview"),
     ("key-takeaways", "Key Takeaways"),
     ("priority-actions", "Priority Actions"),
     ("engineering-risks", "Engineering Risks"),

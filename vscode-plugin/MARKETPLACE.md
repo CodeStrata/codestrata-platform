@@ -1,4 +1,4 @@
-# Marketplace publication guide — CodeStrata – Engineering Intelligence
+# Marketplace publication guide — CodeStrata – Engineering Assessment
 
 **Role:** Publishing and packaging checklist only.  
 **Authoritative Marketplace listing copy:** [`README.md`](README.md)
@@ -17,7 +17,7 @@ Active Community editor extension: **VS Code only**.
 
 | Extension | Identifier | displayName |
 | --------- | ---------- | ----------- |
-| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Intelligence |
+| VS Code | `codestrata.codestrata-vscode` | CodeStrata – Engineering Assessment |
 
 Publisher namespace: **`codestrata`** (create/claim before first publish; do not
 rename after release without explicit approval).
@@ -70,6 +70,9 @@ export OVSX_TOKEN='…'        # local shell only
 ### Manual VSIX upload
 
 1. `cd vscode-plugin && npm test && npm run package`
+   (`package` uses `--allow-missing-repository --no-rewrite-relative-links`
+   because extension source is private; do not point listing URLs at a
+   private GitHub source repository.)
 2. Upload `codestrata-vscode-0.2.0.vsix` in Marketplace manage → New extension
 3. Confirm README renders (listing source is `README.md`)
 4. Attach screenshots from `media/screenshot-*.png` if the upload UI requires them

@@ -51,8 +51,17 @@ Guided install uses supported mechanisms (`uv tool`, `pipx`, or `pip --user`).
 
 ## First assessment
 
-Use **Run Engineering Assessment** (deterministic / `--no-ai` by default).
+Use **Run Assessment** (deterministic / `--no-ai` by default).
 
+When telemetry preference is undecided, the extension shows a native prompt:
+
+- **Allow Anonymous Telemetry** — persists Yes
+- **No Thanks** — persists No
+- **Learn More** — opens privacy docs; does **not** enable telemetry
+
+After an explicit choice, the prompt is not repeated. Change later via
+**CodeStrata: Telemetry Settings**. Assessment continues whether you allow or
+decline.
 ## Findings, recommendations, diagnostics, reports
 
 After a successful assessment the extension loads public artifacts into:
@@ -67,28 +76,48 @@ After a successful assessment the extension loads public artifacts into:
 **Publish/Share Current Report** is an **explicit** action. Assessment never
 auto-publishes. The command:
 
-1. Confirms public publish
-2. Asks for acknowledgment when the repository id looks private/local (`local-*`)
-3. Requires temporary telemetry/cloud participation for that publish only
-4. Invokes Engine `codestrata report publish --confirm-public-publish`
-5. Shows the branded URL (`https://reports.codestrata.ai/r/…`) for copy/open
+1. Shows one public-sharing confirmation (includes private/local warning when
+   the repository id looks like `local-*`)
+2. Invokes Engine `codestrata report publish --confirm-public-publish`
+   (adds `--acknowledge-private-repository` when needed)
+3. Shows the branded URL (`https://reports.codestrata.ai/r/…`) for copy/open
 
-Local HTML/JSON reports remain authoritative on disk.
+Publishing does **not** enable telemetry and does not require a temporary
+telemetry environment variable. Local HTML/JSON reports remain authoritative on
+disk. No AWS account or Secrets Manager access is required.
 
 ## Optional AI
 
-**Run Engineering Assessment with AI** uses Engine provider configuration.
-Credentials are **not** stored in the extension.
+**Run Engineering Assessment with AI** uses Engine provider configuration
+(`[ai].provider` / environment credentials). Credentials are **not** stored in
+the extension. There is **no** separate VS Code provider-selection control panel
+in the current Community candidate surface — AI support is through the Engine.
+
+Default assessment remains local/deterministic unless an AI-enhanced Engine path
+is explicitly chosen. See [AI Providers](/ai-providers/) and
+[Source Locality](/security/source-locality).
 
 ## Privacy and security
 
 - Local Engine execution
 - No Platform requirement for Community assessment
-- See [Security](/security/), [Privacy](/security/privacy), and
-  [Community Cloud API](/reference/community-api/)
+- Telemetry default is **not configured / disabled** until the user chooses;
+  eligible assessment commands may prompt (`[y/N]`, Enter = No). Explicit Yes
+  or No is persisted locally and can be changed via Telemetry Settings
+- Community Cloud authority: `https://api.codestrata.ai`
+- Candidate VSIX is **not** a Marketplace-published release until Release
+  Readiness publishes it
+- See [Privacy](/security/privacy), [Source Locality](/security/source-locality),
+  [AI Providers](/ai-providers/), [Telemetry](/reference/telemetry),
+  [Data Collection](/security/data-collection),
+  [Retention and Deletion](/security/retention-and-deletion),
+  [Security](/security/), and [Community Cloud API](/reference/community-api/)
+- Telemetry opt-out / deny does **not** revoke an already published public
+  report; revoke is a separate authenticated API action
+- Local reports under `.codestrata-artifacts/` remain user-controlled
 
 ## Detailed reference
 
-Repository and packaging docs:
-[codestrata-vscode](https://github.com/CodeStrata/codestrata-vscode)
-(public mirror when published).
+Packaging and Marketplace listing:
+see this page and the VS Code Marketplace listing for CodeStrata.
+Extension source is not a Community public GitHub repository for v0.2.0.

@@ -1,0 +1,29 @@
+{
+  "register_id": "community-report-publishing-inventory-register",
+  "register_version": "1.0",
+  "schema": "community-report-publishing-inventory-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "community_report_publishing_policy+reports_routes+engine_report_publishing",
+  "separate_from_telemetry": true,
+  "eligibility": [
+    "explicit_publish_confirmation",
+    "packaged_or_override_community_client_credential"
+  ],
+  "telemetry_opt_in_required_for_cloud_publish": false,
+  "packaged_public_community_client": true,
+  "explicit_publish_confirmation": true,
+  "private_local_repo_warning": true,
+  "authentication": "community_ingestion_credential_for_publish_and_revoke",
+  "upload_intents": "POST /api/v1/reports/upload-intents",
+  "finalize_publish": "POST /api/v1/reports",
+  "public_read": "GET /api/v1/reports/{public_id}",
+  "revoke": "DELETE /api/v1/reports/{public_id}",
+  "opaque_public_ids": true,
+  "current_previous": true,
+  "third_version_retirement": true,
+  "report_artifact_storage": "codestrata-community-report-artifacts-production",
+  "public_domain": "https://reports.codestrata.ai",
+  "automatic_publish_after_assessment": false,
+  "telemetry_opt_in_alone_insufficient": true
+}

@@ -1,15 +1,50 @@
 {
   "register_id": "community-published-report-validation-register",
-  "register_version": "1.0",
-  "schema": "community-published-report-validation-register:1.0",
-  "slice": "17.23",
-  "manifest_path": ".codestrata-artifacts/validation/suites/release-v0.2.0/public-report-urls.json",
-  "manifest_schema": "public-report-urls-manifest:1.1",
+  "register_version": "1.1",
+  "schema": "community-published-report-validation-register:1.1",
+  "slice": "19.x",
+  "epic": 19,
+  "temporary": true,
+  "purpose": "Temporary internal Community validation tooling during Community growth — not a permanent product capability",
+  "authoritative_production_registry": {
+    "store": "community_report_artifacts",
+    "prefix": "metadata/validation/entries/",
+    "entry_schema": "community-validation-report-entry:1.0",
+    "public_exposure": false,
+    "enumerable_on_reports_domain": false,
+    "opaque_public_url_contract_unchanged": true
+  },
+  "local_manifest": {
+    "path": ".codestrata-artifacts/validation/suites/release-v0.2.0/public-report-urls.json",
+    "schema": "public-report-urls-manifest:1.1",
+    "role": "local_export_snapshot_for_release_evidence",
+    "not_sole_durable_copy": true
+  },
+  "record_when": [
+    "community_report_publish_succeeds",
+    "independent_public_get_verification_succeeds"
+  ],
+  "preserved_fields": [
+    "public_report_id",
+    "public_url",
+    "report_type",
+    "published_at",
+    "verification_status",
+    "logical_identity_key_when_permitted_as_display_identity"
+  ],
+  "insights": {
+    "route": "GET /api/v1/insights/api/validation-reports",
+    "page": "/published-reports",
+    "label": "Validation Reports",
+    "pagination": "cursor_limit_default_50_max_200",
+    "authenticated_only": true
+  },
+  "verification_confirm_route": "POST /api/v1/reports/{public_id}/verification",
   "production_routing_authority": "community report publishing backend",
-  "insights_index_source": "report artifact metadata logic index",
-  "current_previous_only": true,
+  "insights_index_source": "private validation registry + report artifact metadata",
+  "current_previous_lifecycle_separate": true,
   "assessment_vs_eir_separated": true,
   "auto_upsert_on_publish": true,
-  "retained_17_21_assessment_url": true,
+  "removable_without_changing_public_url_contract": true,
   "status": "implemented"
 }

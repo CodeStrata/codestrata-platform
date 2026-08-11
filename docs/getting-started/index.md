@@ -38,8 +38,8 @@ pip / uv / pipx  →  codestrata version
 | **CodeStrata** | Product family |
 | **CodeStrata Engine** | Community assessment engine (this journey) |
 | **CodeStrata Platform** | Commercial organizational product |
-| **Engineering Intelligence** | Capability delivered by assessments |
-| **Engineering Assessment** | The report and findings you produce |
+| **Engineering Assessment** | Single-repository analysis and Assessment Report |
+| **Engineering Intelligence** | Portfolio / multi-repository layer; Engineering Intelligence Report (EIR) |
 | **Community Edition** | Community distribution of Engine and clients |
 
 Continue with [Prerequisites](./prerequisites).

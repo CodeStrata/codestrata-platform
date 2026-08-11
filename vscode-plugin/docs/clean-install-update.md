@@ -20,7 +20,8 @@ This is release-readiness validation — not a new product feature.
 5. Use **Install CodeStrata Engine** guidance if CLI is missing (no auto-install).
 6. With Engine CLI `0.2.x` available: **Initialize Repository** → **Run Assessment**
    → **Open HTML Report**.
-7. Confirm telemetry consent is command-local and not restored after reinstall.
+7. Confirm telemetry prompt default is Deny; explicit Allow / No Thanks persists
+   and can be changed via **Telemetry Settings**.
 8. Update over a prior package (or synthetic prior fixture) and confirm command
    IDs / stable settings remain.
 
@@ -37,7 +38,7 @@ This is release-readiness validation — not a new product feature.
 | State | Clean install | Update | Notes |
 | --- | --- | --- | --- |
 | Onboarding (`firstRunCompleted` / `welcomeDismissed`) | May persist | Product-owned | Not telemetry consent |
-| Telemetry consent | Never persisted | Never restored | Command-local only |
+| Telemetry preference | Undecided until explicit Allow / No Thanks; then persisted in extension `globalState` | Survives update when present | Change via Telemetry Settings |
 | Installation / machine identity | Forbidden | Forbidden | Not used |
 | `codestrata.engine.executable` | User-owned | Survives update | Explicit setting |
 

@@ -1,0 +1,49 @@
+{
+  "register_id": "community-opt-out-deletion-register",
+  "register_version": "1.0",
+  "schema": "community-opt-out-deletion-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "runtime_consent+report_revoke+retention_policies",
+  "entries": [
+    {
+      "capability": "telemetry_opt_out",
+      "implemented": true,
+      "semantics": "session_or_flag_deny_stops_further_transmission"
+    },
+    {
+      "capability": "historical_telemetry_auto_erase_on_opt_out",
+      "implemented": false,
+      "semantics": "opt_out_does_not_erase_historical_data_lake_events"
+    },
+    {
+      "capability": "report_revoke",
+      "implemented": true,
+      "semantics": "authenticated_DELETE_public_id"
+    },
+    {
+      "capability": "local_report_deletion_user_control",
+      "implemented": true,
+      "semantics": "user_controls_local_filesystem_under_.codestrata-artifacts"
+    },
+    {
+      "capability": "data_lake_user_self_service_deletion",
+      "implemented": false,
+      "semantics": "no_end_user_self_service_lake_wipe_in_v0_2_0"
+    },
+    {
+      "capability": "identity_prefix_user_deletion",
+      "implemented": false,
+      "semantics": "identity_prefix_indefinite_no_user_deletion_api"
+    },
+    {
+      "capability": "secrets_rotation_deletion",
+      "implemented": true,
+      "semantics": "operator_aws_secrets_manager_rotation_procedures"
+    }
+  ],
+  "forbidden_public_promises": [
+    "do_not_promise_historical_lake_erase_on_opt_out",
+    "do_not_promise_identity_prefix_self_service_deletion"
+  ]
+}

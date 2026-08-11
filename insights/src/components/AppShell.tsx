@@ -4,13 +4,7 @@ import { useAuth } from "../auth/AuthContext";
 
 const NAV: ReadonlyArray<{ readonly to: string; readonly label: string; readonly end?: boolean }> = [
   { to: "/", label: "Overview", end: true },
-  { to: "/adoption", label: "Adoption" },
-  { to: "/assessments", label: "Assessments" },
-  { to: "/technology", label: "Technology" },
-  { to: "/ai", label: "AI" },
-  { to: "/releases", label: "Releases" },
-  { to: "/validation", label: "Validation" },
-  { to: "/published-reports", label: "Published Reports" },
+  { to: "/published-reports", label: "Validation Reports" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }): ReactNode {
@@ -59,9 +53,8 @@ export function AppShell({ children }: { children: ReactNode }): ReactNode {
       </div>
       <footer className="cs-footer" role="contentinfo">
         <p>
-          Internal adoption analytics for CodeStrata Community Edition. Not a commercial
-          Platform product surface. Shared-password access. Production analytics ingestion
-          is disabled. Metrics are aggregate-only.
+          Internal adoption analytics for CodeStrata Community Edition. Aggregate-only
+          metrics. Shared-password access. Not a commercial Platform product surface.
         </p>
       </footer>
     </div>

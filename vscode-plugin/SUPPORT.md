@@ -9,7 +9,7 @@
 2. **CodeStrata: CodeStrata Doctor**
 3. Engine Quick Start: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/quick-start.md
 4. Engine troubleshooting: https://github.com/CodeStrata/codestrata-engine/blob/main/docs/troubleshooting.md
-5. Extension issues: https://github.com/CodeStrata/codestrata-vscode/issues
+5. Extension documentation / support: https://docs.codestrata.ai/extensions/vscode
 
 ## Community scope
 

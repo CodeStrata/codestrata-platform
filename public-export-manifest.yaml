@@ -9,8 +9,10 @@
 #   visibility: public | private
 #   destination_repository: legacy alias of repository (kept for compatibility)
 #
-# Public (Community): codestrata-engine, codestrata-examples
-# Private mirrors: codestrata-vscode, codestrata-docs
+# Slice 19.8A Community public-source boundary:
+#   PUBLIC:  codestrata-engine, codestrata-examples
+#   PRIVATE: codestrata-vscode, codestrata-platform, codestrata-docs
+#            (vscode Marketplace package is public distribution, not public source)
 # (codestrata-cursor export retired in Slice 12.2 — product source removed in 12.1)
 #
 # Phase 14.2+: this file is the authoritative Community release boundary.
@@ -170,6 +172,10 @@ exports:
       - ".DS_Store"
       - "**/.DS_Store"
       - "reports/**"
+      - ".tmp-assess/**"
+      - "**/.tmp-assess/**"
+      - ".github/workflows/**"
+      - "**/.github/workflows/**"
       # Maintainer-only / leftover implementer documentation (not Community journeys).
       - "docs/COMMUNITY_EDITION_CHECKLIST.md"
       - "docs/assessment-framework/**"
@@ -248,6 +254,10 @@ exports:
         - "docs/analysis-intelligence/evidence.md"
         - "docs/analysis-intelligence/suppression.md"
         - "**/reports/**"
+        - ".tmp-assess/**"
+        - "**/.tmp-assess/**"
+        - ".github/workflows/**"
+        - "**/.github/workflows/**"
       commands:
         - "python -m pip install -e '.[dev]'"
         - "codestrata version"
@@ -274,6 +284,8 @@ exports:
       - "**/sample-*-app/**"
       - "**/sample-reports/**"
       - "**/fixtures/**"
+      - ".github/workflows/**"
+      - "**/.github/workflows/**"
     validation:
       require_files:
         - LICENSE
@@ -303,7 +315,7 @@ exports:
         - "**/sample-reports/**"
         - "fixtures/**"
   - name: codestrata-vscode
-    description: CodeStrata VS Code Extension (Community Engine client; private mirror)
+    description: CodeStrata VS Code Extension (Community Engine client; private source, Marketplace distribution)
     source_root: vscode-plugin
     owner: CodeStrata
     repository: codestrata-vscode
@@ -323,6 +335,10 @@ exports:
       - "**/.vscode-test/**"
       - "PLACEHOLDER.md"
       - ".vscode/**"
+      - ".codestrata-artifacts/**"
+      - "**/.codestrata-artifacts/**"
+      - ".github/workflows/**"
+      - "**/.github/workflows/**"
     validation:
       require_files:
         - README.md
@@ -345,10 +361,58 @@ exports:
         - "out/**"
         - ".vscode-test/**"
         - ".vscode/**"
+        - ".github/workflows/**"
+        - "**/.github/workflows/**"
       commands:
         - "npm install"
         - "npm test"
         - "npm run package:dry"
+
+  - name: codestrata-platform
+    description: CodeStrata Platform (private engineering/product implementation; not Community public source)
+    source_root: platform
+    owner: CodeStrata
+    repository: codestrata-platform
+    destination_repository: codestrata-platform
+    visibility: private
+    destination_layout: flat
+    include:
+      - "**"
+    exclude:
+      - ".DS_Store"
+      - "**/.DS_Store"
+      - "**/__pycache__/**"
+      - "**/*.pyc"
+      - "**/.pytest_cache/**"
+      - "**/.mypy_cache/**"
+      - "**/.ruff_cache/**"
+      - "**/.venv/**"
+      - "**/venv/**"
+      - "**/.codestrata/**"
+      - "**/.codestrata-artifacts/**"
+      - "reports/**"
+      - "**/reports/**"
+      - ".github/workflows/**"
+      - "**/.github/workflows/**"
+      - "**/.local/**"
+      - "**/.env"
+      - "**/.env.*"
+      - "demo/fixtures/**"
+    validation:
+      require_files:
+        - README.md
+        - pyproject.toml
+        - src/codestrata_platform/__init__.py
+      forbid_globs:
+        - ".github/workflows/**"
+        - "**/.github/workflows/**"
+        - "**/.local/**"
+        - "**/.env"
+        - "**/.env.*"
+        - "**/terraform.tfstate*"
+        - "**/*.tfvars"
+      commands:
+        - "python -m pip install -e '.[dev]'"
 
   - name: codestrata-docs
     description: CodeStrata documentation portal source (private mirror; docs.codestrata.ai)

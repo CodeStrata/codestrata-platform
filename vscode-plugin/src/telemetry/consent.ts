@@ -1,6 +1,6 @@
 /**
- * Command-scoped VS Code telemetry consent (Slice 9.13).
- * Never persisted to globalState, workspaceState, settings, or secretStorage.
+ * VS Code telemetry consent (Slice 19.4).
+ * Explicit Yes/No may be persisted in globalState; default remains undecided/disabled.
  */
 
 export type VsCodeTelemetryDecision =
@@ -13,18 +13,23 @@ export type VsCodeTelemetryDecisionSource =
   | "default"
   | "interactive_prompt"
   | "explicit_command_option"
-  | "non_interactive_policy";
+  | "non_interactive_policy"
+  | "persisted_preference";
 
 export type VsCodeTelemetryConsent = {
   readonly decision: VsCodeTelemetryDecision;
   readonly source: VsCodeTelemetryDecisionSource;
   readonly explicit: boolean;
-  readonly persisted: false;
-  readonly priorConsentReused: false;
+  readonly persisted: boolean;
+  readonly priorConsentReused: boolean;
   readonly transmissionAuthorized: boolean;
   readonly scope: "command";
-  readonly policyVersion: "1.0";
+  readonly policyVersion: "2.0";
 };
+
+export type TelemetryPreferenceState = "undecided" | "enabled" | "disabled";
+
+export const TELEMETRY_PREFERENCE_STATE_KEY = "codestrata.telemetryPreference";
 
 export function defaultConsent(): VsCodeTelemetryConsent {
   return {
@@ -35,37 +40,39 @@ export function defaultConsent(): VsCodeTelemetryConsent {
     priorConsentReused: false,
     transmissionAuthorized: false,
     scope: "command",
-    policyVersion: "1.0",
+    policyVersion: "2.0",
   };
 }
 
 export function allowForSession(
-  source: VsCodeTelemetryDecisionSource = "interactive_prompt"
+  source: VsCodeTelemetryDecisionSource = "interactive_prompt",
+  options?: { persisted?: boolean; priorConsentReused?: boolean }
 ): VsCodeTelemetryConsent {
   return {
     decision: "allowed_for_session",
     source,
     explicit: true,
-    persisted: false,
-    priorConsentReused: false,
+    persisted: options?.persisted === true,
+    priorConsentReused: options?.priorConsentReused === true,
     transmissionAuthorized: true,
     scope: "command",
-    policyVersion: "1.0",
+    policyVersion: "2.0",
   };
 }
 
 export function denyForSession(
-  source: VsCodeTelemetryDecisionSource = "interactive_prompt"
+  source: VsCodeTelemetryDecisionSource = "interactive_prompt",
+  options?: { persisted?: boolean; priorConsentReused?: boolean }
 ): VsCodeTelemetryConsent {
   return {
     decision: "denied_for_session",
     source,
     explicit: true,
-    persisted: false,
-    priorConsentReused: false,
+    persisted: options?.persisted === true,
+    priorConsentReused: options?.priorConsentReused === true,
     transmissionAuthorized: false,
     scope: "command",
-    policyVersion: "1.0",
+    policyVersion: "2.0",
   };
 }
 
@@ -78,8 +85,46 @@ export function nonInteractiveDisabledConsent(): VsCodeTelemetryConsent {
     priorConsentReused: false,
     transmissionAuthorized: false,
     scope: "command",
-    policyVersion: "1.0",
+    policyVersion: "2.0",
   };
+}
+
+export function consentFromPreference(
+  state: TelemetryPreferenceState
+): VsCodeTelemetryConsent | null {
+  if (state === "undecided") {
+    return null;
+  }
+  if (state === "enabled") {
+    return allowForSession("persisted_preference", {
+      persisted: true,
+      priorConsentReused: true,
+    });
+  }
+  return denyForSession("persisted_preference", {
+    persisted: true,
+    priorConsentReused: true,
+  });
+}
+
+export function readPreferenceState(
+  get: (key: string) => unknown
+): TelemetryPreferenceState {
+  const raw = get(TELEMETRY_PREFERENCE_STATE_KEY);
+  if (raw === "enabled" || raw === true) {
+    return "enabled";
+  }
+  if (raw === "disabled" || raw === false) {
+    return "disabled";
+  }
+  return "undecided";
+}
+
+export async function writePreferenceState(
+  update: (key: string, value: string) => Thenable<void>,
+  state: "enabled" | "disabled"
+): Promise<void> {
+  await update(TELEMETRY_PREFERENCE_STATE_KEY, state);
 }
 
 export function consentToStableDict(

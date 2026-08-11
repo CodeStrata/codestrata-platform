@@ -44,21 +44,23 @@ export function assertConsentMayProceed(options: {
   }
 }
 
-/** Fresh decision per command — prior consent objects must not be reused. */
+/** Explicit local preference may be reused; identity tracking remains forbidden. */
 export function assertFreshConsentDecision(options: {
   readonly priorConsentReused: boolean;
   readonly persisted: boolean;
+  readonly source?: string;
 }): void {
-  if (options.priorConsentReused) {
+  const fromPreference = options.source === "persisted_preference";
+  if (options.priorConsentReused && !fromPreference) {
     throw new TelemetryConsentIntegrationError(
       "consent_reuse_forbidden",
       "Prior consent must not be reused across commands."
     );
   }
-  if (options.persisted) {
+  if (options.persisted && !fromPreference && options.source !== "interactive_prompt") {
     throw new TelemetryConsentIntegrationError(
       "consent_persistence_forbidden",
-      "Consent must not be persisted."
+      "Consent persistence is limited to explicit local preference."
     );
   }
 }

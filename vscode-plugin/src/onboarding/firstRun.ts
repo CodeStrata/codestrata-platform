@@ -1,5 +1,5 @@
 /**
- * First-run Community onboarding for CodeStrata – Engineering Intelligence.
+ * First-run Community onboarding for CodeStrata – Engineering Assessment.
  *
  * Slice 13.2: activation must not probe until Get Started.
  * Slice 13.3: installation is guidance-only (no automatic package-manager run).

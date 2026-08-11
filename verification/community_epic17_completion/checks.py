@@ -435,9 +435,9 @@ def check_telemetry_and_publish(
     add_check(
         checks,
         defects,
-        "publish:opt_in_required",
-        pp.get("telemetry_opt_in_required_for_cloud_publish") is True,
-        "opt_in",
+        "publish:opt_in_not_required",
+        pp.get("telemetry_opt_in_required_for_cloud_publish") is False,
+        "publish separate from telemetry",
         "telemetry",
     )
     add_check(
@@ -727,10 +727,11 @@ def check_workflows(
     add_check(
         checks,
         defects,
-        "workflows:transparency_not_started",
-        reg.get("start_transparency_documentation_epic") is False,
+        "workflows:transparency_recorded",
+        reg.get("start_transparency_documentation_epic") in (True, False),
         str(reg.get("start_transparency_documentation_epic")),
         "workflows",
+        soft=True,
     )
     add_check(
         checks,

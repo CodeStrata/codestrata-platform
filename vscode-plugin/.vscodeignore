@@ -22,4 +22,6 @@ scripts/**
 **/*.test.js.map
 runHostTests.js
 .codestrata-export-snapshot.json
+.codestrata-artifacts/**
+**/.codestrata-artifacts/**
 

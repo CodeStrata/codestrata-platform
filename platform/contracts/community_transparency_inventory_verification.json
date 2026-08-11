@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-transparency-inventory-verification:1.0.0",
+  "title": "Community Transparency Inventory Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic18_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-transparency-inventory-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-transparency-inventory-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "slice": { "const": "18.1" },
+    "suite_id": { "const": "sv18-1" },
+    "epic18_boundary": {
+      "type": "object",
+      "required": ["start_slice_18_1", "start_slice_18_2"],
+      "properties": {
+        "start_slice_18_1": { "const": true },
+        "start_slice_18_2": { "const": false }
+      }
+    }
+  }
+}

@@ -69,16 +69,14 @@ export const STABLE_COMMAND_IDS: readonly string[] = [
   "codestrata.doctor",
 ] as const;
 
-/** Allowed onboarding globalState keys (not telemetry consent). */
+/** Allowed onboarding + explicit telemetry preference globalState keys. */
 export const ALLOWED_ONBOARDING_STATE_KEYS: readonly string[] = [
   "codestrata.firstRunCompleted",
   "codestrata.welcomeDismissed",
+  "codestrata.telemetryPreference",
 ] as const;
 
 export const FORBIDDEN_PERSISTED_STATE_KEYS: readonly string[] = [
-  "codestrata.telemetryConsent",
-  "codestrata.telemetry.consent",
-  "codestrata.analyticsConsent",
   "codestrata.installationId",
   "codestrata.machineId",
 ] as const;

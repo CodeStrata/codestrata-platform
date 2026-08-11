@@ -1,8 +1,8 @@
-"""Immutable per-session telemetry consent model (Slice 9.3).
+"""Immutable per-session telemetry consent model (Slice 19.4).
 
-Consent is an affirmative, purpose-specific, current-process decision.
-It is never persisted, never read from disk, and never inferred from legacy
-preferences, installation identity, queues, endpoints, or prior processes.
+Consent is an affirmative, purpose-specific decision. Explicit Yes/No may be
+persisted locally under CODESTRATA_HOME and reused on later sessions. Default
+remains disabled/undecided. Never inferred from queues, endpoints, or identity.
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ class SessionConsentError(ValueError):
 
 @dataclass(frozen=True, slots=True)
 class TelemetrySessionConsent:
-    """Frozen process-local consent — no identity, paths, or timestamps."""
+    """Frozen session consent — no identity, paths, or timestamps."""
 
     decision: TelemetryDecision
     source: TelemetryDecisionSource
@@ -46,14 +46,25 @@ class TelemetrySessionConsent:
     def validate(self) -> None:
         if self.scope != "session":
             raise SessionConsentError("consent scope must be session")
-        if self.persisted:
-            raise SessionConsentError("persisted must be false")
-        if self.prior_consent_reused:
-            raise SessionConsentError("prior_consent_reused must be false")
         if self.installation_identity_required:
             raise SessionConsentError("installation_identity_required must be false")
         if self.policy_version != COMMUNITY_TELEMETRY_SESSION_CONSENT_POLICY_VERSION:
             raise SessionConsentError("unsupported consent policy_version")
+        if self.persisted and self.source is not TelemetryDecisionSource.PERSISTED_PREFERENCE:
+            if self.source is not TelemetryDecisionSource.INTERACTIVE_PROMPT:
+                raise SessionConsentError(
+                    "persisted requires persisted_preference or interactive_prompt"
+                )
+        if self.prior_consent_reused and self.source is not (
+            TelemetryDecisionSource.PERSISTED_PREFERENCE
+        ):
+            raise SessionConsentError(
+                "prior_consent_reused requires source=persisted_preference"
+            )
+        if self.prior_consent_reused and not self.persisted:
+            raise SessionConsentError(
+                "prior_consent_reused requires persisted=true"
+            )
 
         decision = self.decision
         source = self.source
@@ -71,6 +82,10 @@ class TelemetrySessionConsent:
                 raise SessionConsentError(
                     "disabled_by_default requires transmission_authorized=false"
                 )
+            if self.persisted or self.prior_consent_reused:
+                raise SessionConsentError(
+                    "disabled_by_default must not be persisted or reused"
+                )
             return
 
         if decision is TelemetryDecision.ALLOWED_FOR_SESSION:
@@ -78,10 +93,11 @@ class TelemetrySessionConsent:
                 TelemetryDecisionSource.EXPLICIT_SESSION_ALLOW,
                 TelemetryDecisionSource.INTERACTIVE_PROMPT,
                 TelemetryDecisionSource.CLI_FLAG,
+                TelemetryDecisionSource.PERSISTED_PREFERENCE,
             }:
                 raise SessionConsentError(
                     "allowed_for_session requires explicit_session_allow, "
-                    "interactive_prompt, or cli_flag"
+                    "interactive_prompt, cli_flag, or persisted_preference"
                 )
             if not self.explicit:
                 raise SessionConsentError("allowed_for_session requires explicit=true")
@@ -96,10 +112,11 @@ class TelemetrySessionConsent:
                 TelemetryDecisionSource.EXPLICIT_SESSION_DENY,
                 TelemetryDecisionSource.INTERACTIVE_PROMPT,
                 TelemetryDecisionSource.CLI_FLAG,
+                TelemetryDecisionSource.PERSISTED_PREFERENCE,
             }:
                 raise SessionConsentError(
                     "denied_for_session requires explicit_session_deny, "
-                    "interactive_prompt, or cli_flag"
+                    "interactive_prompt, cli_flag, or persisted_preference"
                 )
             if not self.explicit:
                 raise SessionConsentError("denied_for_session requires explicit=true")
@@ -121,6 +138,10 @@ class TelemetrySessionConsent:
             if self.transmission_authorized:
                 raise SessionConsentError(
                     "non_interactive_disabled requires transmission_authorized=false"
+                )
+            if self.persisted or self.prior_consent_reused:
+                raise SessionConsentError(
+                    "non_interactive_disabled must not be persisted or reused"
                 )
             return
 
@@ -187,28 +208,34 @@ def deny_session_consent() -> TelemetrySessionConsent:
     )
 
 
-def allow_session_consent_from_interactive_prompt() -> TelemetrySessionConsent:
-    """Allow from interactive prompt — process-local only."""
+def allow_session_consent_from_interactive_prompt(
+    *,
+    persisted: bool = True,
+) -> TelemetrySessionConsent:
+    """Allow from interactive prompt — persisted locally when policy allows."""
 
     return TelemetrySessionConsent(
         decision=TelemetryDecision.ALLOWED_FOR_SESSION,
         source=TelemetryDecisionSource.INTERACTIVE_PROMPT,
         explicit=True,
-        persisted=False,
+        persisted=persisted,
         prior_consent_reused=False,
         installation_identity_required=False,
         transmission_authorized=True,
     )
 
 
-def deny_session_consent_from_interactive_prompt() -> TelemetrySessionConsent:
-    """Deny from interactive prompt — process-local only."""
+def deny_session_consent_from_interactive_prompt(
+    *,
+    persisted: bool = True,
+) -> TelemetrySessionConsent:
+    """Deny from interactive prompt — persisted locally when policy allows."""
 
     return TelemetrySessionConsent(
         decision=TelemetryDecision.DENIED_FOR_SESSION,
         source=TelemetryDecisionSource.INTERACTIVE_PROMPT,
         explicit=True,
-        persisted=False,
+        persisted=persisted,
         prior_consent_reused=False,
         installation_identity_required=False,
         transmission_authorized=False,

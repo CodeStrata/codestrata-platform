@@ -20,6 +20,12 @@ This documentation portal is a static site:
 
 - Engine repository `PRIVACY.md` (points at the published page above)
 - [Telemetry](/reference/telemetry)
+- [Data Collection](/security/data-collection)
+- [Collected Fields](/security/collected-fields)
+- [Privacy](/security/privacy)
+- [Source Locality](/security/source-locality)
+- [Retention and Deletion](/security/retention-and-deletion)
+- [AI Providers](/ai-providers/)
 - [Community Cloud API](/reference/community-api/)
 
 Do not paste secrets, private keys, or private repository URLs into public issues

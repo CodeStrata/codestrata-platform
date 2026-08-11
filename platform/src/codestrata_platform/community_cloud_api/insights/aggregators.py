@@ -39,10 +39,7 @@ def _window(metric_id: str, start: date, end: date) -> MetricWindow:
 
 
 def _base_limitations(ctx: AggregationContext) -> list[str]:
-    lim: list[str] = [
-        "production_ingestion_still_unwired",
-        "no_live_dashboard_data_claim",
-    ]
+    lim: list[str] = []
     if ctx.diagnostics.budget_reached:
         lim.append("query_budget_reached")
     if ctx.diagnostics.malformed_objects or ctx.diagnostics.unsupported_schema_objects:
@@ -50,6 +47,58 @@ def _base_limitations(ctx: AggregationContext) -> list[str]:
     if ctx.missing_installation_id_count:
         lim.append("optional_identity_undercount")
     return lim
+
+
+def _is_assess_terminal_event(ev: dict[str, Any]) -> bool:
+    """Terminal assessment attempt from telemetry or assessment_metadata."""
+
+    stream = ev.get("stream")
+    if stream == "assessment_metadata":
+        return not _is_cancelled(ev)
+    if stream != "telemetry":
+        return False
+    feature = str(ev.get("feature") or "").lower()
+    if feature not in {"assess", "assessment"}:
+        return False
+    et = ev.get("event_type")
+    if et == "feature_completed":
+        return True
+    if et == "operation_failed":
+        return True
+    return False
+
+
+def _is_assess_success_event(ev: dict[str, Any]) -> bool:
+    if ev.get("stream") == "assessment_metadata":
+        return _is_success(ev) and not _is_cancelled(ev)
+    if not _is_assess_terminal_event(ev):
+        return False
+    if ev.get("event_type") == "feature_completed":
+        return True
+    if ev.get("outcome") == "succeeded":
+        return True
+    return False
+
+
+def _is_assess_failed_event(ev: dict[str, Any]) -> bool:
+    if ev.get("stream") == "assessment_metadata":
+        return _is_failed(ev)
+    if not _is_assess_terminal_event(ev):
+        return False
+    if ev.get("event_type") == "operation_failed":
+        return True
+    if ev.get("outcome") == "failed":
+        return True
+    return False
+
+
+def _assessment_events(ctx: AggregationContext) -> list[dict[str, Any]]:
+    return [
+        e
+        for e in ctx.events
+        if e.get("stream") in {"assessment_metadata", "telemetry"}
+        and _is_assess_terminal_event(e)
+    ]
 
 
 def _event_sort_key(event: dict[str, Any]) -> tuple[str, str]:
@@ -164,12 +213,7 @@ def aggregate_first_assessments(
 ) -> MetricResult:
     by_install: dict[str, dict[str, Any]] = {}
     missing = 0
-    for ev in sorted(
-        (e for e in ctx.events if e.get("stream") == "assessment_metadata"),
-        key=_event_sort_key,
-    ):
-        if _is_cancelled(ev):
-            continue
+    for ev in sorted(_assessment_events(ctx), key=_event_sort_key):
         iid = ev.get("installation_id")
         if not iid:
             missing += 1
@@ -199,12 +243,7 @@ def aggregate_repeat_assessments(
 ) -> MetricResult:
     by_install: dict[str, list[dict[str, Any]]] = defaultdict(list)
     missing = 0
-    for ev in sorted(
-        (e for e in ctx.events if e.get("stream") == "assessment_metadata"),
-        key=_event_sort_key,
-    ):
-        if _is_cancelled(ev):
-            continue
+    for ev in sorted(_assessment_events(ctx), key=_event_sort_key):
         iid = ev.get("installation_id")
         if not iid:
             missing += 1
@@ -232,14 +271,7 @@ def aggregate_repeat_assessments(
 
 
 def aggregate_successful(ctx: AggregationContext, start: date, end: date) -> MetricResult:
-    count = 0
-    for ev in ctx.events:
-        if ev.get("stream") != "assessment_metadata":
-            continue
-        if _is_cancelled(ev):
-            continue
-        if _is_success(ev):
-            count += 1
+    count = sum(1 for ev in _assessment_events(ctx) if _is_assess_success_event(ev))
     lim = _base_limitations(ctx)
     completeness = resolve_completeness(
         diagnostics=ctx.diagnostics, missing_identity=False
@@ -255,14 +287,7 @@ def aggregate_successful(ctx: AggregationContext, start: date, end: date) -> Met
 
 
 def aggregate_failed(ctx: AggregationContext, start: date, end: date) -> MetricResult:
-    count = 0
-    for ev in ctx.events:
-        if ev.get("stream") != "assessment_metadata":
-            continue
-        if _is_cancelled(ev):
-            continue
-        if _is_failed(ev):
-            count += 1
+    count = sum(1 for ev in _assessment_events(ctx) if _is_assess_failed_event(ev))
     lim = _base_limitations(ctx)
     completeness = resolve_completeness(
         diagnostics=ctx.diagnostics, missing_identity=False
@@ -271,6 +296,26 @@ def aggregate_failed(ctx: AggregationContext, start: date, end: date) -> MetricR
         metric_id="failed_assessments",
         status="ok",
         window=_window("failed_assessments", start, end),
+        value=count,
+        completeness=completeness,
+        limitations=finalize_limitations(lim),
+    )
+
+
+def aggregate_total_assessments(
+    ctx: AggregationContext, start: date, end: date
+) -> MetricResult:
+    """Total terminal assessment attempts (successful + failed)."""
+
+    count = len(_assessment_events(ctx))
+    lim = _base_limitations(ctx)
+    completeness = resolve_completeness(
+        diagnostics=ctx.diagnostics, missing_identity=False
+    )
+    return MetricResult(
+        metric_id="total_assessments",
+        status="ok",
+        window=_window("total_assessments", start, end),
         value=count,
         completeness=completeness,
         limitations=finalize_limitations(lim),
@@ -575,6 +620,7 @@ AGGREGATORS: dict[str, Aggregator] = {
     "total_anonymous_installations": aggregate_total_installations,
     "daily_active_installations": aggregate_daily_active,
     "monthly_active_installations": aggregate_monthly_active,
+    "total_assessments": aggregate_total_assessments,
     "first_assessments": aggregate_first_assessments,
     "repeat_assessments": aggregate_repeat_assessments,
     "successful_assessments": aggregate_successful,

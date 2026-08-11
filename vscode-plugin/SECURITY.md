@@ -12,10 +12,10 @@
 Please **do not** open a public GitHub issue for security vulnerabilities, and
 **do not disclose publicly** before coordinated release of a fix or advisory.
 
-Report privately via GitHub Security Advisories on
-[codestrata-vscode](https://github.com/CodeStrata/codestrata-vscode), or via the
-security contact listed on the repository profile (no personal emails are
-published in this file).
+Report privately via the security contact on
+[https://codestrata.ai](https://codestrata.ai) or the process described in
+[https://docs.codestrata.ai/security/](https://docs.codestrata.ai/security/)
+(no personal emails are published in this file). Do not open a public issue.
 
 Include a description, reproduction steps, affected versions/commits, and any
 coordinated disclosure timing preferences.

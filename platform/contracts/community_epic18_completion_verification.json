@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codestrata.ai/schemas/community-epic18-completion-verification.json",
+  "title": "Community Epic 18 Completion Verification",
+  "description": "Slice 18.8 Transparency Documentation Epic completion evidence schema",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "epic",
+    "slice",
+    "suite_id",
+    "verdict",
+    "epic_verdict",
+    "claim_inventory",
+    "contradiction_closure",
+    "slice_matrix",
+    "limitations",
+    "release_carry_forwards",
+    "epic19_gate",
+    "freeze_confirmations"
+  ],
+  "properties": {
+    "schema": { "const": "community-epic18-completion-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "type": "string" },
+    "package_version": { "type": "string" },
+    "epic": { "const": 18 },
+    "slice": { "const": "18.8" },
+    "suite_id": { "const": "sv18-8" },
+    "verdict": {
+      "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"]
+    },
+    "epic_verdict": {
+      "enum": [
+        "EPIC_COMPLETE",
+        "EPIC_COMPLETE_WITH_DOCUMENTED_LIMITATIONS",
+        "EPIC_BLOCKED"
+      ]
+    },
+    "epic19_gate": {
+      "enum": [
+        "EPIC_19_RELEASE_READINESS_MAY_START",
+        "EPIC_19_RELEASE_READINESS_MUST_NOT_START"
+      ]
+    },
+    "claim_inventory": { "type": "object" },
+    "contradiction_closure": { "type": "object" },
+    "slice_matrix": { "type": "object" },
+    "limitations": { "type": "array" },
+    "release_carry_forwards": { "type": "array" },
+    "freeze_confirmations": { "type": "object" }
+  }
+}

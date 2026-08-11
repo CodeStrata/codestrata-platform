@@ -294,7 +294,7 @@ def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> No
     assert "engineering-risks" in outline_ids
     assert "priority-actions" in outline_ids
     assert "assessment-scope" not in outline_ids
-    # Ordering: Leadership → Executive Summary → Engineering Intelligence Summary
+    # Ordering: Leadership → Executive Summary → Assessment Overview
     ordered = [entry.section_id for entry in document.outline]
     assert ordered.index("leadership-verdict") < ordered.index("executive-summary")
     assert ordered.index("executive-summary") < ordered.index(
@@ -320,7 +320,7 @@ def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> No
     assert "Leadership Verdict" in html
     assert "Executive Summary" in html
     assert "Key Takeaways" in html
-    assert "Engineering Intelligence Summary" in html
+    assert "Assessment Overview" in html
     assert "Should I care?" in html
     assert 'id="executive-summary"' in html
     assert 'id="engineering-intelligence-summary"' in html
@@ -551,7 +551,7 @@ def test_java_and_javascript_samples(tmp_path: Path, kind: str) -> None:
         report_artifacts=(ReportArtifactInput(label="Findings", relative_path="findings.json"),),
     )
     html = HtmlReportRenderer().render(build_html_report_view_model(report_input))
-    assert "Engineering Intelligence Summary" in html
+    assert "Assessment Overview" in html
     assert "Leadership Verdict" in html
     assert "Assessment Results" in html
     assert "Priority Actions" in html

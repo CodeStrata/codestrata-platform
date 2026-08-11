@@ -1,0 +1,119 @@
+{
+  "register_id": "community-epic18-release-carry-forward-register",
+  "register_version": "1.0",
+  "schema": "community-epic18-release-carry-forward-register:1.0",
+  "slice": "18.8",
+  "epic": 18,
+  "authority": "Explicit Epic 19 Release Readiness deferrals from Epic 18 Transparency Documentation closure",
+  "entries": [
+    {
+      "item_id": "E18-RCF-001",
+      "description": "Pre-release artifact/version/security audit",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-002",
+      "description": "Fix remaining public favicon/branding issue and live cutover (T18-C003)",
+      "disposition": "RESOLVED_IN_SLICE_19_5",
+      "related_contradiction": "T18-C003"
+    },
+    {
+      "item_id": "E18-RCF-003",
+      "description": "Owner-only OpenAI/OpenRouter validation if credentials available",
+      "disposition": "SUPPORTED_WITH_QUALIFICATION",
+      "slice_19_7_result": "OWNER_CREDENTIAL_UNAVAILABLE",
+      "slice_19_7a_result": "OWNER_E2E_ATTEMPTED_PARTIAL",
+      "qualification": "Slice 19.7A: OPENAI_API_KEY and OPENROUTER_API_KEY were present in the Cursor process, but live provider auth failed (OpenAI invalid_api_key 401; OpenRouter 401). Bedrock live E2E succeeded via AWS_PROFILE=codestrata_infra / amazon.nova-lite-v1:0 / us-west-2. Owner-E2E qualification retained until OpenAI and OpenRouter both live-pass. Public contract remains honest: OpenAI/OpenRouter not claimed live-proven."
+    },
+    {
+      "item_id": "E18-RCF-004",
+      "description": "Final export/sync of public/private repos",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-005",
+      "description": "Full 22-repository production corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-006",
+      "description": "Publish/check 22 Assessment URLs",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-007",
+      "description": "Publish/check release-validation EIR",
+      "disposition": "RESOLVED_IN_SLICE_19_7",
+      "public_url": "https://reports.codestrata.ai/r/zox7aBgr3k_m88mPhwoaaNUboYXrg0kt",
+      "verification": "independent_GET_200_html_public_id_match"
+    },
+    {
+      "item_id": "E18-RCF-008",
+      "description": "Validate Data Lake corpus coverage",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-009",
+      "description": "Validate Insights dashboard against corpus",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-010",
+      "description": "Populate/verify public-report-urls.json",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-011",
+      "description": "Validate clean CLI package/install",
+      "disposition": "RESOLVED_IN_SLICE_19_6"
+    },
+    {
+      "item_id": "E18-RCF-012",
+      "description": "Validate final VSIX/Marketplace package",
+      "disposition": "RESOLVED_IN_SLICE_19_6",
+      "note": "VSIX package validated; Marketplace publish still deferred"
+    },
+    {
+      "item_id": "E18-RCF-013",
+      "description": "Release commit + tag + GitHub Release",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-014",
+      "description": "Publish CLI",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-015",
+      "description": "Publish VS Code extension / Marketplace",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-016",
+      "description": "Publish/update docs",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-017",
+      "description": "Verify Community Status becomes 0.2.0 (T18-C002)",
+      "disposition": "DEFER_RELEASE_EPIC",
+      "related_contradiction": "T18-C002"
+    },
+    {
+      "item_id": "E18-RCF-018",
+      "description": "Post-publish telemetry + Insights smoke",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-019",
+      "description": "Final release evidence",
+      "disposition": "DEFER_RELEASE_EPIC"
+    },
+    {
+      "item_id": "E18-RCF-020",
+      "description": "Redeploy Community Cloud API so missing/retired reports return report_not_found / Report not found. (code fixed locally; live still Endpoint not found.)",
+      "disposition": "QUALIFIED_DEPLOYMENT_GAP",
+      "related_contradiction": "T18-C007"
+    }
+  ]
+}

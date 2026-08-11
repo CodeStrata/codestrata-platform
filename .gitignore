@@ -201,3 +201,6 @@ infrastructure/**/backend.hcl
 # Dependency / local operator dirs (defense-in-depth; also ignored in package trees)
 node_modules/
 .local/
+
+# Engine generated assessment scratch
+engine/.tmp-assess/

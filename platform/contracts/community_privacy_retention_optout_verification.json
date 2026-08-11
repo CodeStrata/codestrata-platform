@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "community-privacy-retention-optout-verification:1.0.0",
+  "title": "Community Privacy Retention Opt-Out Verification",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "package_id",
+    "verdict",
+    "slice",
+    "suite_id",
+    "epic18_boundary"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "community-privacy-retention-optout-verification" },
+    "schema_version": { "const": "1.0.0" },
+    "package_id": { "const": "community-privacy-retention-optout-verification" },
+    "verdict": { "enum": ["PASS", "PASS_WITH_LIMITATIONS", "FAIL"] },
+    "slice": { "const": "18.3" },
+    "suite_id": { "const": "sv18-3" },
+    "epic18_boundary": {
+      "type": "object",
+      "required": ["start_slice_18_3", "start_slice_18_4"],
+      "properties": {
+        "start_slice_18_3": { "const": true },
+        "start_slice_18_4": { "const": false }
+      }
+    }
+  }
+}

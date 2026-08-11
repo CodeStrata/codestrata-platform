@@ -1,0 +1,128 @@
+{
+  "register_id": "community-public-repository-no-cicd-register",
+  "register_version": "1.1",
+  "schema": "community-public-repository-no-cicd-register:1.1",
+  "slice": "19.8A",
+  "epic": 19,
+  "policy_id": "community-public-repository-no-cicd-policy",
+  "policy_version": "1.1",
+  "product_version": "0.2.0",
+  "authority": "CI/CD inventory after Slice 19.8A boundary correction. NO-CI/CD forbid-set applies only to Community public-source repositories (engine, examples). Historical Slice 19.7 five-repo public inventory is preserved as recorded_then_superseded.",
+  "historical_slice_19_7_inventory": "preserved_below_with_19_8a_disposition_fields",
+  "repositories": [
+    {
+      "public_repository": "codestrata-engine",
+      "source_path": "engine/",
+      "github_exists": true,
+      "workflow_count": 0,
+      "workflows": [],
+      "workflow_purposes": {},
+      "ci_badges": [],
+      "dot_github_classifications": [
+        {
+          "path": "ISSUE_TEMPLATE/bug_report.yml",
+          "disposition": "NON_CI_GITHUB_METADATA_KEEP"
+        },
+        {
+          "path": "ISSUE_TEMPLATE/feature_request.yml",
+          "disposition": "NON_CI_GITHUB_METADATA_KEEP"
+        },
+        {
+          "path": "PULL_REQUEST_TEMPLATE.md",
+          "disposition": "NON_CI_GITHUB_METADATA_KEEP"
+        },
+        {
+          "path": "RELEASE_NOTES_TEMPLATE.md",
+          "disposition": "NON_CI_GITHUB_METADATA_KEEP"
+        }
+      ],
+      "notes": "Fixture-only workflows under engine/validation/fixtures/** are assessment fixtures, not product CI; exclude from public export as today.",
+      "planned_19_8_disposition": "Keep NON_CI metadata; ensure no workflows exported; fixture .github remains excluded.",
+      "slice_19_8a_disposition": "PUBLIC_COMMUNITY_SOURCE — NO-CI/CD remains required"
+    },
+    {
+      "public_repository": "codestrata-platform",
+      "source_path": "platform/ (intended) / monorepo root (current engineering authority)",
+      "github_exists": true,
+      "workflow_count": 4,
+      "workflows": [
+        "ci.yml",
+        "aws-identity-check.yml",
+        "infrastructure-plan.yml",
+        "infrastructure-apply.yml"
+      ],
+      "workflow_purposes": {
+        "ci.yml": "Monorepo validation (pytest/package/export checks); ACTIVE_REQUIRED private engineering",
+        "aws-identity-check.yml": "OIDC/AWS identity verification; workflow_dispatch",
+        "infrastructure-plan.yml": "OpenTofu plan on infrastructure changes",
+        "infrastructure-apply.yml": "Owner-dispatch OpenTofu apply with protected environment"
+      },
+      "ci_badges": [],
+      "dot_github_classifications": [
+        {
+          "path": "workflows/*",
+          "disposition": "CI_CD_REMOVE"
+        },
+        {
+          "path": "workflows/README.md",
+          "disposition": "CI_CD_REMOVE"
+        }
+      ],
+      "policy_tension": "Slice 19.7/19.8 recorded a possible public platform export. Slice 19.8A supersedes: platform remains PRIVATE_NOT_COMMUNITY_SOURCE.",
+      "planned_19_8_disposition": "If published publicly: CI_CD_REMOVE all workflows from exported surface. Private monorepo may retain ACTIVE_REQUIRED workflows until cutover.",
+      "slice_19_8a_disposition": "PRIVATE_NOT_COMMUNITY_SOURCE — private monorepo workflows may remain; do not treat as public exposure"
+    },
+    {
+      "public_repository": "codestrata-examples",
+      "source_path": "examples/",
+      "github_exists": false,
+      "workflow_count": 0,
+      "workflows": [],
+      "workflow_purposes": {},
+      "ci_badges": [],
+      "dot_github_classifications": [],
+      "planned_19_8_disposition": "No workflows present; keep clean; do not introduce Actions during export.",
+      "slice_19_8a_disposition": "PUBLIC_COMMUNITY_SOURCE — NO-CI/CD remains required"
+    },
+    {
+      "public_repository": "codestrata-infrastructure",
+      "source_path": "infrastructure/",
+      "github_exists": true,
+      "workflow_count": 2,
+      "workflows": [
+        "validate.yml",
+        "aws-identity-check.yml"
+      ],
+      "workflow_purposes": {
+        "validate.yml": "SOURCE_EXPORT_ONLY tofu validate; guarded for codestrata-infrastructure",
+        "aws-identity-check.yml": "SOURCE_EXPORT_ONLY identity check; workflow_dispatch"
+      },
+      "ci_badges": [],
+      "dot_github_classifications": [
+        {
+          "path": "workflows/validate.yml",
+          "disposition": "CI_CD_REMOVE"
+        },
+        {
+          "path": "workflows/aws-identity-check.yml",
+          "disposition": "CI_CD_REMOVE"
+        }
+      ],
+      "policy_tension": "Slice 19.8 sanitized private infra and pushed zero-workflow history under a then-intended public flip. Slice 19.8A supersedes: remain PRIVATE; do not restore workflows unless owner requires.",
+      "planned_19_8_disposition": "CI_CD_REMOVE workflows from public export; owner-controlled deploy remains outside public Actions.",
+      "slice_19_8a_disposition": "PRIVATE_NOT_COMMUNITY_SOURCE — zero workflows currently present is acceptable; not a Community public repo"
+    },
+    {
+      "public_repository": "codestrata-vscode",
+      "source_path": "vscode-plugin/",
+      "github_exists": false,
+      "workflow_count": 0,
+      "workflows": [],
+      "workflow_purposes": {},
+      "ci_badges": [],
+      "dot_github_classifications": [],
+      "planned_19_8_disposition": "No workflows present; keep clean; Marketplace publish remains owner-controlled outside Actions.",
+      "slice_19_8a_disposition": "PRIVATE_NOT_COMMUNITY_SOURCE — Marketplace package is public distribution; source remains private"
+    }
+  ]
+}

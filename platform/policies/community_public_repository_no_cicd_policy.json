@@ -1,0 +1,65 @@
+{
+  "policy_id": "community-public-repository-no-cicd-policy",
+  "policy_version": "1.1",
+  "schema": "community-public-repository-no-cicd-policy:1.1",
+  "slice": "19.8A",
+  "epic": 19,
+  "authority": "v0.2.0 Community public-source NO-CI/CD boundary after Slice 19.8A correction. Applies only to Community public-source repositories.",
+  "product_version": "0.2.0",
+  "supersedes_policy_version": "1.0",
+  "historical_1_0_five_repo_forbid_set": "RECORDED_AND_SUPERSEDED",
+  "applies_to_public_repositories": [
+    "codestrata-engine",
+    "codestrata-examples"
+  ],
+  "does_not_apply_to_private_repositories": [
+    "codestrata-platform",
+    "codestrata-infrastructure",
+    "codestrata-vscode"
+  ],
+  "active_cicd_forbidden": true,
+  "github_actions_workflows_forbidden": true,
+  "forbidden_path_globs": [
+    ".github/workflows/**",
+    "**/.github/workflows/**"
+  ],
+  "forbidden_surface_classes": [
+    "ci_badges",
+    "release_workflows",
+    "package_publishing_workflows",
+    "deployment_workflows",
+    "cloudflare_deployment_workflows",
+    "aws_deployment_workflows",
+    "marketplace_publishing_workflows",
+    "pypi_publishing_workflows",
+    "automated_release_tag_workflows"
+  ],
+  "classification_required_before_publication": true,
+  "classification_labels": [
+    "CI_CD_REMOVE",
+    "NON_CI_GITHUB_METADATA_KEEP",
+    "STALE_REMOVE",
+    "REVIEW_REQUIRED"
+  ],
+  "non_ci_github_metadata_may_remain": [
+    "issue_templates",
+    "pull_request_templates",
+    "CODEOWNERS",
+    "GitHub_security_configuration"
+  ],
+  "do_not_blindly_delete_all_dot_github": true,
+  "absence_of_cicd_is_intentional": true,
+  "reasons": [
+    "release_and_deployment_remain_explicitly_owner_controlled",
+    "avoid_accidental_public_deployment_or_publishing",
+    "avoid_publishing_internal_operational_assumptions",
+    "reduce_release_surface_while_community_workflow_stabilizes"
+  ],
+  "private_repository_workflows_may_remain": true,
+  "private_repository_note": "CI/CD on private platform/infrastructure/vscode is not public exposure. Accidental or dangerous deployment automation should still be classified, but private workflows are not forbidden merely for Community publication. Do not restore removed private workflows without explicit owner requirement.",
+  "private_monorepo_engineering_workflows_may_remain": true,
+  "sanitation_authority": "slice_19_8a_boundary_correction",
+  "no_cli_publish": true,
+  "no_vscode_marketplace_publish": true,
+  "no_release_tag": true
+}

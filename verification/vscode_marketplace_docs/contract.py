@@ -25,7 +25,7 @@ DOCS_PACKAGE = "vscode-plugin/src/marketplaceDocs"
 README_RELATIVE = "vscode-plugin/README.md"
 MARKETPLACE_MD_RELATIVE = "vscode-plugin/MARKETPLACE.md"
 
-DISPLAY_NAME = "CodeStrata – Engineering Intelligence"
+DISPLAY_NAME = "CodeStrata – Engineering Assessment"
 TAGLINE = "Engineering decisions grounded in code."
 
 REQUIRED_HEADINGS = (

@@ -7,7 +7,7 @@ Thank you for contributing to the **CodeStrata VS Code Extension** (Community Ed
 This extension is a **thin client** of **CodeStrata Engine**. Contributions should:
 
 - Use public Engine CLI contracts and public report JSON only
-- Avoid duplicating Engineering Intelligence
+- Avoid duplicating portfolio Engineering Intelligence (EIR)
 - Avoid CodeStrata Platform API dependencies
 - Preserve Community Edition naming (never “CodeStrata AI” or “Enterprise Edition” as product names)
 

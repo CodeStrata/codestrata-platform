@@ -1,0 +1,35 @@
+{
+  "register_id": "community-insights-inventory-register",
+  "register_version": "1.0",
+  "schema": "community-insights-inventory-register:1.0",
+  "slice": "18.1",
+  "epic": 18,
+  "authority": "insights_aggregation+community_insights_policies",
+  "data_source": "production_community_data_lake",
+  "reader": "BoundedS3Reader_or_current_insights_reader",
+  "metric_families": [
+    "activity",
+    "adoption",
+    "assessments",
+    "coverage",
+    "technology",
+    "ai"
+  ],
+  "time_windows": "policy_supported_windows",
+  "aggregation_privacy": "aggregates_only",
+  "raw_installation_id_in_ui": false,
+  "report_content_in_ui": false,
+  "query_budget_behavior": "query_budget_reached_false_for_supported_window_when_within_budget",
+  "authenticated_access": true,
+  "published_reports_page_boundary": "lists_published_report_metadata_not_raw_lake_events_or_full_local_artifacts",
+  "validation_reports_page_boundary": "temporary_private_validation_corpus_paginated_metadata_only_opaque_links",
+  "private_routes": [
+    "POST /api/v1/insights/auth/login",
+    "POST /api/v1/insights/auth/logout",
+    "GET /api/v1/insights/auth/session",
+    "GET /api/v1/insights/api/overview",
+    "GET /api/v1/insights/api/published-reports",
+    "GET /api/v1/insights/api/validation-reports"
+  ],
+  "not_public_community_api": true
+}
