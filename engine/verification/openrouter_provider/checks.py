@@ -157,20 +157,33 @@ def run_capability_checks() -> tuple[list[CheckResult], dict[str, Any]]:
 def run_client_boundary_checks() -> tuple[list[CheckResult], dict[str, Any]]:
     from codestrata.ai.provider_adapters.openrouter.client import resolve_client
     from codestrata.ai.provider_adapters.openrouter.configuration import build_runtime_configuration
+    from codestrata.ai.provider_contracts.errors import ErrorCategory
 
     inputs = build_runtime_configuration().client_inputs
-    without = resolve_client(inputs)
-    with_client = resolve_client(inputs, injected_client=Client())
+
+    def _no_environment(_name: str) -> None:
+        return None
+
+    def _env_must_not_be_read(name: str) -> None:
+        raise AssertionError(f"injected client must not read the environment ({name})")
+
+    # Deterministic: never read ambient OPENROUTER_API_KEY (CI has none; developer shells often do).
+    without = resolve_client(inputs, environment_reader=_no_environment)
+    with_client = resolve_client(
+        inputs,
+        injected_client=Client(),
+        environment_reader=_env_must_not_be_read,
+    )
     checks = [
         CheckResult(
             name="client_resolution_without_injection_is_missing_configuration",
             category="client_boundary",
             ok=(
-                without.error is None
-                and without.handle is not None
-                and without.handle.injected is False
+                without.handle is None
+                and without.error is not None
+                and without.error.category is ErrorCategory.MISSING_CONFIGURATION
             ),
-            detail="authentication deferred; non-injected handle, no missing_configuration error",
+            detail="missing API key → MISSING_CONFIGURATION at the client boundary",
         ),
         CheckResult(
             name="injected_client_is_accepted_without_env_or_sdk",
