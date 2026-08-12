@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -10,7 +11,7 @@ from pydantic import ValidationError
 
 from validation.actual import load_emitted_assessment, run_real_assessment
 from validation.inventory import FactClassification, compute_precision_recall
-from validation.models import ExpectedResults, ValidationVerdict
+from validation.models import ExpectedResults, RepositorySourceType, ValidationVerdict
 from validation.modernization import (
     ModernizationExpectation,
     ModernizationPriorityActionActual,
@@ -26,9 +27,11 @@ from validation.modernization import (
     validate_modernization_precision,
 )
 from validation.paths import VALIDATION_ROOT
-from validation.registry import load_all_repositories, resolve_expected_results
+from validation.registry import filter_repositories, load_all_repositories, resolve_expected_results
 from validation.runner import run_validation_suite
 from validation.summary import build_validation_summary
+
+_REMOTE_VALIDATION_ENV = "CODESTRATA_RUN_REMOTE_VALIDATION"
 
 
 def test_contradictory_modernization_expectations_rejected() -> None:
@@ -337,16 +340,22 @@ def test_modernization_repeat_run_determinism(tmp_path: Path) -> None:
     ) == sorted(item.action_id or "" for item in second.modernization_priority_actions)
 
 
-def test_six_repository_modernization_suite(tmp_path_factory) -> None:
-    definitions = [item for item in load_all_repositories() if item.enabled]
-    output_root = tmp_path_factory.mktemp("mod-suite")
+def _run_modernization_precision_suite(
+    *,
+    definitions: list,
+    output_root: Path,
+    include_remote: bool,
+    local_only: bool,
+) -> None:
+    """Shared precision assertions for local or remote modernization suites."""
+
     results = run_validation_suite(
         definitions,
         output_root=output_root,
         records_root=output_root / "_records",
         keep_results=True,
-        local_only=False,
-        include_remote=True,
+        local_only=local_only,
+        include_remote=include_remote,
     )
     summary = build_validation_summary(results)
     assert summary.failed == 0, [
@@ -402,3 +411,44 @@ def test_six_repository_modernization_suite(tmp_path_factory) -> None:
     aggregate = aggregate_modernization_results(mod_results)
     assert aggregate.false_positives == 0
     assert aggregate.precision == 1.0 or aggregate.precision is None
+
+
+def test_local_repository_modernization_suite(tmp_path_factory) -> None:
+    """Deterministic release-gate modernization precision (committed fixtures only)."""
+
+    definitions = filter_repositories(
+        [item for item in load_all_repositories() if item.enabled],
+        local_only=True,
+        include_remote=False,
+    )
+    assert definitions
+    assert all(item.source_type is RepositorySourceType.LOCAL for item in definitions)
+    output_root = tmp_path_factory.mktemp("mod-suite-local")
+    _run_modernization_precision_suite(
+        definitions=list(definitions),
+        output_root=output_root,
+        include_remote=False,
+        local_only=True,
+    )
+
+
+@pytest.mark.remote_validation
+@pytest.mark.skipif(
+    os.environ.get(_REMOTE_VALIDATION_ENV) != "1",
+    reason=(
+        f"live remote modernization validation requires {_REMOTE_VALIDATION_ENV}=1 "
+        "(not part of the deterministic Engine CI gate)"
+    ),
+)
+def test_remote_repository_modernization_suite(tmp_path_factory) -> None:
+    """Opt-in live remote modernization precision (network + pinned public remotes)."""
+
+    definitions = [item for item in load_all_repositories() if item.enabled]
+    assert any(item.source_type is RepositorySourceType.REMOTE for item in definitions)
+    output_root = tmp_path_factory.mktemp("mod-suite-remote")
+    _run_modernization_precision_suite(
+        definitions=definitions,
+        output_root=output_root,
+        include_remote=True,
+        local_only=False,
+    )

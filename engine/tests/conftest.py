@@ -8,6 +8,12 @@ HISTORICAL_FROZEN_CHARACTERIZATION suites remain in-tree and are collected when
 ``CODESTRATA_RUN_HISTORICAL_FROZEN=1``. They characterize superseded contracts
 (Epic 11 frozen slice reports; SV.5/SV.11 report.json layout) and must not gate
 the shipped 0.2.0 artifact contract.
+
+REMOTE_VALIDATION
+-----------------
+Live pinned-public-remote validation is opt-in via ``CODESTRATA_RUN_REMOTE_VALIDATION=1``
+(and ``@pytest.mark.remote_validation``). Default Engine CI stays deterministic and
+does not clone or assess external repositories.
 """
 
 from __future__ import annotations
