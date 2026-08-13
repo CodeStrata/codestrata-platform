@@ -18,7 +18,8 @@ COMMUNITY_ASSESSMENT_METADATA_EMISSION_POLICY_URN = (
     f"{COMMUNITY_ASSESSMENT_METADATA_EMISSION_POLICY_VERSION}"
 )
 
-# Wire schema for POST /api/v1/assessment-metadata (Platform Slice 20.7).
+# Wire schema for Community assessment_metadata POST (Platform Slice 20.7).
+# Public path literals live only in community_cloud.public_api_authority.
 ASSESSMENT_METADATA_WIRE_SCHEMA_VERSION = "1.1"
 # Engine report contract version accepted by Platform amd allowlist.
 ASSESSMENT_REPORT_SCHEMA_VERSION = "1.2"

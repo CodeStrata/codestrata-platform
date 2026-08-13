@@ -1,6 +1,8 @@
-"""HTTP transport for POST /api/v1/assessment-metadata (Slice 20.8).
+"""HTTP transport for Community assessment_metadata POST (Slice 20.8).
 
 Reuses StdlibTelemetryHttpClient / FakeTelemetryHttpClient. Never logs bodies.
+Endpoint authority is ``codestrata.community_cloud.public_api_authority`` —
+this module must not redefine public path literals.
 """
 
 from __future__ import annotations
@@ -11,7 +13,7 @@ from typing import Any, Mapping, Protocol
 
 from codestrata.community_cloud.public_api_authority import (
     PUBLIC_ASSESSMENT_METADATA_URL,
-    resolve_public_community_api_base,
+    production_assessment_metadata_url,
 )
 from codestrata.community_cloud.report_publishing import resolve_community_credential
 from codestrata.package_metadata import get_package_version
@@ -30,10 +32,6 @@ from codestrata.telemetry.infrastructure.http_client import (
     TelemetryHttpConnectionError,
     TelemetryHttpTimeout,
 )
-
-
-def production_assessment_metadata_url() -> str:
-    return f"{resolve_public_community_api_base()}/api/v1/assessment-metadata"
 
 
 @dataclass(frozen=True, slots=True)
