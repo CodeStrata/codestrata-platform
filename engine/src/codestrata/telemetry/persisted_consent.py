@@ -122,6 +122,23 @@ def consent_from_persisted_preference(
     )
 
 
+def consent_status_payload(*, path: Path | None = None) -> dict[str, object]:
+    """Machine-stable consent-v2 status (no identifying fields).
+
+    Consumed by VS Code (Slice 20.10) and CLI ``telemetry status --json``.
+    """
+
+    caps = resolve_consent_capabilities(path=path)
+    return {
+        "assessment_metadata_allowed": caps.assessment_metadata_allowed,
+        "lifecycle_allowed": caps.lifecycle_allowed,
+        "schema_version": "1",
+        "should_prompt_v2_upgrade": caps.should_prompt_v2_upgrade,
+        "state": caps.state.value,
+        "v2_upgrade_declined": caps.v2_upgrade_declined,
+    }
+
+
 def format_consent_status(*, path: Path | None = None) -> str:
     caps = resolve_consent_capabilities(path=path)
     label = status_label(caps.state)
@@ -173,6 +190,7 @@ __all__ = [
     "assessment_metadata_policy_for_session",
     "consent_capabilities",
     "consent_from_persisted_preference",
+    "consent_status_payload",
     "decline_v2_upgrade",
     "format_consent_status",
     "persist_disabled",

@@ -111,10 +111,18 @@ import { extractEvidenceLine, resolveWorkspaceRelativePath } from "./workspace/p
 import {
   createIsolationSession,
   defaultUnavailableTransport,
+  preferenceLabelFromEngineState,
+  resolveCanonicalConsentForAssessment,
   runCommandWithTelemetryIsolation,
-  runTelemetryConsentPrompt,
   type TelemetryPromptUi,
 } from "./telemetry";
+import {
+  engineConsentFailureMessage,
+  queryEngineConsentStatus,
+  runEngineTelemetryDisable,
+  runEngineTelemetryEnable,
+  type EngineConsentCliRunner,
+} from "./engine/telemetryConsentContract";
 import {
   assertConsentMayProceed,
   assertFreshConsentDecision,
@@ -596,7 +604,7 @@ export function activate(context: vscode.ExtensionContext): void {
           ? context.extension.packageJSON.version
           : "0.2.0";
 
-      // Slice 13.9: consent only after workspace + init + compatible CLI (+ AI confirm).
+      // Slice 13.9 / 20.10: consent after readiness; Engine CODESTRATA_HOME is authority.
       assertConsentMayProceed({
         commandId,
         readiness: {
@@ -607,13 +615,33 @@ export function activate(context: vscode.ExtensionContext): void {
         },
       });
       session.transitionTo("awaiting_consent");
-      const promptResult = await runTelemetryConsentPrompt({
+      const engineConsentClient: EngineConsentCliRunner = {
+        run: async (args) => {
+          const result = await runCodestrataCli({
+            executable: engine.executable,
+            args: [...args],
+            cwd: workspaceFolder,
+            // Same process env as assess so CODESTRATA_HOME matches.
+            env: process.env,
+          });
+          return {
+            exitCode: result.exitCode,
+            stdout: result.stdout,
+            stderr: result.stderr,
+          };
+        },
+      };
+      const promptResult = await resolveCanonicalConsentForAssessment({
         commandId,
         interactive: isTelemetryInteractive(),
+        engineClient: engineConsentClient,
         ui: createTelemetryPromptUi(),
         preferenceStore: {
           get: (key) => context.globalState.get(key),
           update: (key, value) => context.globalState.update(key, value),
+        },
+        onUserMessage: (message) => {
+          void vscode.window.showWarningMessage(message);
         },
       });
       assertFreshConsentDecision({
@@ -1190,24 +1218,51 @@ export function activate(context: vscode.ExtensionContext): void {
       await vscode.env.openExternal(vscode.Uri.parse(ENGINE_DOCS_QUICK_START));
     }),
     vscode.commands.registerCommand("codestrata.telemetrySettings", async () => {
-      const {
-        preferenceLabel,
-        readPreferenceState,
-        writePreferenceState,
-        TELEMETRY_PREFERENCE_STATE_KEY,
-      } = await import("./telemetry");
-      const current = readPreferenceState((key) => context.globalState.get(key));
+      const folder =
+        vscode.workspace.workspaceFolders?.[0]?.uri.fsPath ?? process.cwd();
+      const engine = await resolveEngine(folder, { silentMissing: true });
+      if (!engine) {
+        void vscode.window.showWarningMessage(
+          "CodeStrata Engine CLI is required to manage Community telemetry preference."
+        );
+        return;
+      }
+      const client: EngineConsentCliRunner = {
+        run: async (args) => {
+          const result = await runCodestrataCli({
+            executable: engine.executable,
+            args: [...args],
+            cwd: folder,
+            env: process.env,
+          });
+          return {
+            exitCode: result.exitCode,
+            stdout: result.stdout,
+            stderr: result.stderr,
+          };
+        },
+      };
+      const statusResult = await queryEngineConsentStatus(client);
+      const currentLabel = statusResult.ok
+        ? preferenceLabelFromEngineState(statusResult.status.state)
+        : "Unknown";
       const choice = await vscode.window.showQuickPick(
         [
           {
-            label: "Allow Anonymous Telemetry",
-            description: current === "enabled" ? "Current" : undefined,
-            value: "enabled" as const,
+            label: "Enable Community Telemetry (v2)",
+            description:
+              statusResult.ok && statusResult.status.state === "v2_yes"
+                ? "Current"
+                : undefined,
+            value: "enable" as const,
           },
           {
-            label: "Disable Telemetry",
-            description: current === "disabled" ? "Current" : undefined,
-            value: "disabled" as const,
+            label: "Disable Community Telemetry",
+            description:
+              statusResult.ok && statusResult.status.state === "disabled"
+                ? "Current"
+                : undefined,
+            value: "disable" as const,
           },
           {
             label: "Learn More",
@@ -1215,9 +1270,9 @@ export function activate(context: vscode.ExtensionContext): void {
           },
         ],
         {
-          title: `CodeStrata Telemetry — ${preferenceLabel(current)}`,
+          title: `CodeStrata Telemetry — ${currentLabel}`,
           placeHolder:
-            "Anonymous usage metadata only. No source code or repository identity.",
+            "Anonymous usage and privacy-safe assessment insights. Does not publish reports.",
         }
       );
       if (!choice) {
@@ -1229,12 +1284,36 @@ export function activate(context: vscode.ExtensionContext): void {
         );
         return;
       }
-      await writePreferenceState(
-        (key, value) => context.globalState.update(key, value),
-        choice.value
+      if (choice.value === "enable") {
+        const enabled = await runEngineTelemetryEnable(client);
+        if (!enabled.ok) {
+          void vscode.window.showWarningMessage(
+            engineConsentFailureMessage("enable")
+          );
+          return;
+        }
+        await context.globalState.update(
+          "codestrata.telemetryPreference",
+          "enabled"
+        );
+        void vscode.window.showInformationMessage(
+          "CodeStrata telemetry preference: Enabled (v2)."
+        );
+        return;
+      }
+      const disabled = await runEngineTelemetryDisable(client);
+      if (!disabled.ok) {
+        void vscode.window.showWarningMessage(
+          engineConsentFailureMessage("disable")
+        );
+        return;
+      }
+      await context.globalState.update(
+        "codestrata.telemetryPreference",
+        "disabled"
       );
       void vscode.window.showInformationMessage(
-        `CodeStrata telemetry preference: ${preferenceLabel(choice.value)}. (${TELEMETRY_PREFERENCE_STATE_KEY})`
+        "CodeStrata telemetry preference: Disabled."
       );
     }),
     vscode.commands.registerCommand("codestrata.init", async () => {

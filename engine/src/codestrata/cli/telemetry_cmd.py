@@ -3,6 +3,7 @@
 ``codestrata telemetry status`` reports consent-v2 preference state.
 ``enable`` persists V2_YES (usage + privacy-safe assessment insights).
 ``disable`` persists DISABLED. Preference lives under CODESTRATA_HOME.
+``decline-upgrade`` retains V1_YES and stops v2-upgrade nagging (Slice 20.10).
 """
 
 from __future__ import annotations
@@ -14,6 +15,8 @@ import typer
 
 from codestrata.telemetry.constants import EventName
 from codestrata.telemetry.persisted_consent import (
+    consent_status_payload,
+    decline_v2_upgrade,
     format_consent_status,
     persist_disabled,
     persist_v2_yes,
@@ -29,8 +32,10 @@ telemetry_app = typer.Typer(
         "Anonymous Community telemetry (disabled by default).\n\n"
         "Examples:\n"
         "  codestrata telemetry status\n"
+        "  codestrata telemetry status --json\n"
         "  codestrata telemetry enable\n"
         "  codestrata telemetry disable\n"
+        "  codestrata telemetry decline-upgrade\n"
         "  codestrata telemetry preview\n\n"
         "Preference is stored locally under CODESTRATA_HOME. Never collects "
         "source code, repository names, findings, prompts, or credentials. "
@@ -47,9 +52,20 @@ def _echo_json(payload: object) -> None:
 
 
 @telemetry_app.command("status")
-def telemetry_status() -> None:
+def telemetry_status(
+    as_json: Annotated[
+        bool,
+        typer.Option(
+            "--json",
+            help="Emit machine-stable consent-v2 status JSON (no identifying fields).",
+        ),
+    ] = False,
+) -> None:
     """Show local telemetry preference (undecided / v1 / v2 / disabled)."""
 
+    if as_json:
+        _echo_json(consent_status_payload())
+        return
     typer.echo(format_consent_status(), nl=False)
 
 
@@ -96,6 +112,20 @@ def telemetry_disable() -> None:
 
     persist_disabled()
     typer.echo("Anonymous telemetry preference: Disabled.")
+
+
+@telemetry_app.command("decline-upgrade")
+def telemetry_decline_upgrade() -> None:
+    """Keep legacy v1 lifecycle consent; decline broader v2 assessment insights."""
+
+    state = decline_v2_upgrade()
+    typer.echo(
+        "Anonymous telemetry preference: Enabled (legacy v1 — lifecycle only)."
+    )
+    typer.echo(
+        "Assessment insights remain off. "
+        f"State: {state.value}."
+    )
 
 
 @telemetry_app.command("reset")
