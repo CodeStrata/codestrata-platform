@@ -18,7 +18,7 @@ from codestrata_platform.community_cloud_api.insights.policy import (
 )
 
 SUPPORTED_ENVELOPE_SCHEMA = "1.0"
-SUPPORTED_PAYLOAD_SCHEMA = "1.0"
+SUPPORTED_PAYLOAD_SCHEMAS = frozenset({"1.0", "1.1"})
 ALLOWED_STREAMS = frozenset(
     {
         "telemetry",
@@ -56,7 +56,7 @@ def normalize_event(envelope: dict[str, Any]) -> dict[str, Any] | None:
     payload = envelope.get("payload")
     if not isinstance(payload, dict):
         return None
-    if str(payload.get("schema_version") or "") != SUPPORTED_PAYLOAD_SCHEMA:
+    if str(payload.get("schema_version") or "") not in SUPPORTED_PAYLOAD_SCHEMAS:
         return None
 
     acceptance = envelope.get("acceptance") if isinstance(envelope.get("acceptance"), dict) else {}
@@ -140,6 +140,9 @@ def normalize_event(envelope: dict[str, Any]) -> dict[str, Any] | None:
         event["executed_heads"] = heads
         event["primary_language"] = lang
         event["package_ecosystem"] = eco
+        assessment_id = payload.get("assessment_id")
+        if isinstance(assessment_id, str) and assessment_id.strip():
+            event["assessment_id"] = assessment_id.strip()[:64]
         return event
 
     if stream == "ai_usage":

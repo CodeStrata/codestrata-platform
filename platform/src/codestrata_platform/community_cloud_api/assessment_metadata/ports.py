@@ -12,6 +12,8 @@ from codestrata_platform.community_cloud_api.assessment_metadata.models import (
     AssessmentArtifactMetadata,
     AssessmentExecutionMetadata,
     AssessmentMetadataBlock,
+    FindingAggregateRow,
+    HeadConfidenceRow,
     RepositoryMetadata,
 )
 from codestrata_platform.community_cloud_api.telemetry.models import TelemetryClient
@@ -31,20 +33,29 @@ class ValidatedAssessmentMetadataEvent:
     artifacts: AssessmentArtifactMetadata
     identity_policy_version: str
     metadata_policy_version: str
+    # Additive assessment_metadata 1.1 (empty / None on 1.0).
+    assessment_id: str | None = None
+    finding_aggregates: tuple[FindingAggregateRow, ...] = ()
+    head_confidence: tuple[HeadConfidenceRow, ...] = ()
 
     def to_stable_dict(self) -> dict[str, Any]:
-        return {
+        payload: dict[str, Any] = {
             "artifacts": self.artifacts.to_stable_dict(),
             "assessment": self.assessment.to_stable_dict(),
             "client": self.client.to_stable_dict(),
             "event_key": self.event_key,
             "execution": self.execution.to_stable_dict(),
+            "finding_aggregates": [row.to_stable_dict() for row in self.finding_aggregates],
+            "head_confidence": [row.to_stable_dict() for row in self.head_confidence],
             "identity_policy_version": self.identity_policy_version,
             "metadata_policy_version": self.metadata_policy_version,
             "repository": self.repository.to_stable_dict(),
             "safe_event_reference": self.safe_event_reference,
             "schema_version": self.schema_version,
         }
+        if self.assessment_id is not None:
+            payload["assessment_id"] = self.assessment_id
+        return {key: payload[key] for key in sorted(payload)}
 
 
 @dataclass(frozen=True, slots=True)

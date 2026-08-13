@@ -106,9 +106,12 @@ ASSESSMENT_METADATA_PARTITION_POLICY_URN = (
 ASSESSMENT_SCHEMA_METADATA_KEY = "codestrata-assessment-schema"
 
 _SUPPORTED_ENVELOPE_SCHEMA_VERSIONS = frozenset({"1.0"})
-_SUPPORTED_SOURCE_SCHEMA_VERSIONS = frozenset({"1.0"})
-_SUPPORTED_SOURCE_POLICY_IDS = frozenset({"community-assessment-metadata-policy:1.0"})
-
+_SUPPORTED_SOURCE_SCHEMA_VERSIONS = frozenset({"1.0", "1.1"})
+_SUPPORTED_SOURCE_POLICY_IDS = frozenset(
+    {
+        "community-assessment-metadata-policy:1.0",
+    }
+)
 # Field names that must never become a partition path dimension for this
 # stream — enforced structurally by ``stream_partitions`` against the parsed
 # Hive dimension names of any candidate key, independent of (and in addition

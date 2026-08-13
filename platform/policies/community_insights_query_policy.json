@@ -227,29 +227,31 @@
     },
     "first_assessments": {
       "streams": [
+        "telemetry",
         "assessment_metadata"
       ],
       "min_window": "lifetime_retention_window",
       "max_window": "lifetime_retention_window",
       "dedup": true,
-      "cross_stream": false,
+      "cross_stream": true,
       "future_checkpoint": true,
       "direct_s3_suitable": true
     },
     "repeat_assessments": {
       "streams": [
+        "telemetry",
         "assessment_metadata"
       ],
       "min_window": "lifetime_retention_window",
       "max_window": "lifetime_retention_window",
       "dedup": true,
-      "cross_stream": false,
+      "cross_stream": true,
       "future_checkpoint": true,
       "direct_s3_suitable": true
     },
     "successful_assessments": {
       "streams": [
-        "assessment_metadata"
+        "telemetry"
       ],
       "min_window": "single_day",
       "max_window": "rolling_31_days",
@@ -260,7 +262,18 @@
     },
     "failed_assessments": {
       "streams": [
-        "assessment_metadata"
+        "telemetry"
+      ],
+      "min_window": "single_day",
+      "max_window": "rolling_31_days",
+      "dedup": false,
+      "cross_stream": false,
+      "future_checkpoint": false,
+      "direct_s3_suitable": true
+    },
+    "total_assessments": {
+      "streams": [
+        "telemetry"
       ],
       "min_window": "single_day",
       "max_window": "rolling_31_days",

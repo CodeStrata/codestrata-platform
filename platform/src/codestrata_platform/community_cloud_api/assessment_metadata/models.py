@@ -10,16 +10,19 @@ from pydantic import Field, StrictBool, StrictInt, StrictStr, field_validator
 from codestrata_platform.community_cloud_api.assessment_metadata.enums import (
     AssessmentDurationBucket,
     AssessmentExecutionResult,
+    AssessmentFailureCategory,
     AssessmentHead,
+    AssessmentHeadConfidenceLevel,
     AssessmentMode,
     AssessmentStatus,
     CountBucket,
+    FindingAggregateCategory,
+    FindingAggregateSeverity,
     PackageEcosystem,
     PrimaryLanguage,
     RepositoryShape,
 )
 from codestrata_platform.community_cloud_api.assessment_metadata.policy import (
-    COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION,
     default_assessment_metadata_policy,
 )
 from codestrata_platform.community_cloud_api.telemetry.models import TelemetryClient
@@ -39,6 +42,16 @@ from codestrata_platform.community_cloud_api.validation.schema import (
 
 _SCHEMA_VERSION_RE = re.compile(r"^\d+\.\d+$")
 _NonNegCount = Annotated[StrictInt, Field(ge=0, le=1_000_000)]
+_PositiveCount = Annotated[StrictInt, Field(ge=1, le=1_000_000)]
+# Opaque UUID (canonical 8-4-4-4-12 hex) — never repo-timestamp path ids.
+_ASSESSMENT_ID_RE = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+)
+# Shared Rule Platform + legacy codestrata-rule-* only (Epic 20.4).
+_SHARED_RULE_ID_RE = re.compile(r"^[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_-]*)+$")
+_LEGACY_RULE_ID_RE = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)+$")
+_MAX_FINDING_AGGREGATES = 500
+_MAX_HEAD_CONFIDENCE = 16
 
 
 class AssessmentMetadataBlock(CommunityApiRequestModel):
@@ -175,6 +188,8 @@ class AssessmentExecutionMetadata(CommunityApiRequestModel):
     offline_mode: StrictBool
     client_version: ApiClientVersion
     platform: ApiPlatformName
+    # Additive assessment_metadata 1.1 (optional on 1.0 payloads).
+    failure_category: StrictStr | None = Field(default=None, min_length=1, max_length=32)
 
     @field_validator("duration_bucket")
     @classmethod
@@ -192,6 +207,80 @@ class AssessmentExecutionMetadata(CommunityApiRequestModel):
             raise ValueError("invalid_enum")
         return text
 
+    @field_validator("failure_category")
+    @classmethod
+    def _failure_category(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        text = value.strip()
+        if text not in {item.value for item in AssessmentFailureCategory}:
+            raise ValueError("invalid_enum")
+        return text
+
+
+class FindingAggregateRow(CommunityApiRequestModel):
+    """One privacy-safe finding aggregate row (assessment_metadata 1.1)."""
+
+    rule_id: StrictStr = Field(min_length=1, max_length=128)
+    severity: StrictStr = Field(min_length=1, max_length=32)
+    category: StrictStr = Field(min_length=1, max_length=32)
+    count: _PositiveCount
+
+    @field_validator("rule_id")
+    @classmethod
+    def _rule_id(cls, value: str) -> str:
+        text = value.strip().lower()
+        if reject_control_characters(text) or any(ch.isspace() for ch in text):
+            raise ValueError("unsafe_value")
+        if text.startswith("pmd.") or text.startswith("provider:"):
+            raise ValueError("invalid_enum")
+        if not (
+            _SHARED_RULE_ID_RE.fullmatch(text) or _LEGACY_RULE_ID_RE.fullmatch(text)
+        ):
+            raise ValueError("invalid_format")
+        if contains_secret_like_value(text):
+            raise ValueError("unsafe_value")
+        return text
+
+    @field_validator("severity")
+    @classmethod
+    def _severity(cls, value: str) -> str:
+        text = value.strip()
+        if text not in {item.value for item in FindingAggregateSeverity}:
+            raise ValueError("invalid_enum")
+        return text
+
+    @field_validator("category")
+    @classmethod
+    def _category(cls, value: str) -> str:
+        text = value.strip()
+        if text not in {item.value for item in FindingAggregateCategory}:
+            raise ValueError("invalid_enum")
+        return text
+
+
+class HeadConfidenceRow(CommunityApiRequestModel):
+    """Per-head confidence (assessment_metadata 1.1)."""
+
+    head: StrictStr = Field(min_length=1, max_length=32)
+    confidence_level: StrictStr = Field(min_length=1, max_length=32)
+
+    @field_validator("head")
+    @classmethod
+    def _head(cls, value: str) -> str:
+        text = value.strip()
+        if text not in {item.value for item in AssessmentHead}:
+            raise ValueError("invalid_enum")
+        return text
+
+    @field_validator("confidence_level")
+    @classmethod
+    def _level(cls, value: str) -> str:
+        text = value.strip()
+        if text not in {item.value for item in AssessmentHeadConfidenceLevel}:
+            raise ValueError("invalid_enum")
+        return text
+
 
 class AssessmentArtifactMetadata(CommunityApiRequestModel):
     """Artifact generation flags only — no paths, digests, or contents."""
@@ -204,16 +293,61 @@ class AssessmentArtifactMetadata(CommunityApiRequestModel):
 
 
 class AssessmentMetadataRequest(CommunityApiRequestModel):
-    """Privacy-first assessment metadata envelope."""
+    """Privacy-first assessment metadata envelope (1.0 and additive 1.1)."""
 
-    schema_version: Literal["1.0"]  # type: ignore[valid-type]
+    schema_version: Literal["1.0", "1.1"]  # type: ignore[valid-type]
     event_id: ApiEventId
     client: TelemetryClient
     installation_id: ApiInstallationId | None = None
+    # Required when schema_version == "1.1"; omitted on legacy 1.0 clients.
+    assessment_id: StrictStr | None = Field(default=None, min_length=1, max_length=64)
     assessment: AssessmentMetadataBlock
     repository: RepositoryMetadata
     execution: AssessmentExecutionMetadata
     artifacts: AssessmentArtifactMetadata
+    finding_aggregates: list[FindingAggregateRow] = Field(default_factory=list)
+    head_confidence: list[HeadConfidenceRow] = Field(default_factory=list)
+
+    @field_validator("assessment_id")
+    @classmethod
+    def _assessment_id(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        text = value.strip().lower()
+        if reject_control_characters(text) or any(ch.isspace() for ch in text):
+            raise ValueError("unsafe_value")
+        if not _ASSESSMENT_ID_RE.fullmatch(text):
+            raise ValueError("invalid_format")
+        if contains_secret_like_value(text):
+            raise ValueError("unsafe_value")
+        return text
+
+    @field_validator("finding_aggregates")
+    @classmethod
+    def _finding_aggregates(
+        cls, value: list[FindingAggregateRow]
+    ) -> list[FindingAggregateRow]:
+        if len(value) > _MAX_FINDING_AGGREGATES:
+            raise ValueError("too_long")
+        # Deterministic order for stable fingerprints.
+        return sorted(
+            value,
+            key=lambda row: (row.rule_id, row.severity, row.category, row.count),
+        )
+
+    @field_validator("head_confidence")
+    @classmethod
+    def _head_confidence(cls, value: list[HeadConfidenceRow]) -> list[HeadConfidenceRow]:
+        if len(value) > _MAX_HEAD_CONFIDENCE:
+            raise ValueError("too_long")
+        seen: set[str] = set()
+        cleaned: list[HeadConfidenceRow] = []
+        for row in sorted(value, key=lambda item: item.head):
+            if row.head in seen:
+                continue
+            seen.add(row.head)
+            cleaned.append(row)
+        return cleaned
 
     def fingerprint_payload(self) -> dict[str, Any]:
         """Material for payload fingerprinting.
@@ -225,4 +359,4 @@ class AssessmentMetadataRequest(CommunityApiRequestModel):
         return self.to_stable_dict()
 
     def schema_version_value(self) -> str:
-        return COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION
+        return str(self.schema_version)

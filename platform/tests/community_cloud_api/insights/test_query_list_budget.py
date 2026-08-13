@@ -15,5 +15,6 @@ def test_list_budget_covers_multistream_bounded_window() -> None:
         metric="total_anonymous_installations",
         window=DateWindow(start_date=start, end_date=end),
     )
-    assert len(plan.prefixes) == 155  # 31 days × 5 streams
+    # 31 days × (4 streams @ schema 1.0 + assessment_metadata @ 1.0+1.1)
+    assert len(plan.prefixes) == 186
     assert plan.budgets.max_list_requests_per_query >= len(plan.prefixes)

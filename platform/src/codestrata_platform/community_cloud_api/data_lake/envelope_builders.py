@@ -98,13 +98,25 @@ def build_data_lake_envelope(
     accepted_at = format_accepted_at(clock.now_utc())
     partition_date = partition_date_from_accepted_at(accepted_at)
 
+    source_schema_version = descriptor.schema_version
+    supported = descriptor.supported_schema_versions or frozenset({descriptor.schema_version})
+    request_schema = getattr(request, "schema_version_value", None)
+    if callable(request_schema):
+        candidate = str(request_schema())
+        if candidate in supported:
+            source_schema_version = candidate
+        elif candidate:
+            raise EnvelopeBuildError(
+                EnvelopeErrorCode.UNSUPPORTED_SOURCE_SCHEMA, "request_schema_unsupported"
+            )
+
     try:
         envelope = DataLakeEnvelope(
             envelope_schema_version=active_policy.envelope_schema_version,
             event_stream=descriptor.event_stream.value,
             source_contract=SourceContract(
                 schema_name=descriptor.schema_name,
-                schema_version=descriptor.schema_version,
+                schema_version=source_schema_version,
                 policy_id=descriptor.policy_id,
             ),
             identity=EnvelopeIdentity(

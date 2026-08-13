@@ -136,6 +136,40 @@ def test_total_and_not_event_count() -> None:
 def test_cancelled_not_failed_and_success() -> None:
     day = "2026-08-01"
     objects = {
+        _key("telemetry", day, "ok"): _envelope(
+            stream="telemetry",
+            day=day,
+            payload={
+                "schema_version": "1.0",
+                "event_id": "t1",
+                "installation_id": "i1",
+                "client": {"name": "cli", "version": "0.2.0"},
+                "event_type": "feature_completed",
+                "properties": {
+                    "feature": "assess",
+                    "operation": "run",
+                    "outcome": "succeeded",
+                },
+                "occurred_at": f"{day}T12:00:00Z",
+            },
+        ),
+        _key("telemetry", day, "fail"): _envelope(
+            stream="telemetry",
+            day=day,
+            payload={
+                "schema_version": "1.0",
+                "event_id": "t2",
+                "installation_id": "i2",
+                "client": {"name": "cli", "version": "0.2.0"},
+                "event_type": "operation_failed",
+                "properties": {
+                    "feature": "assess",
+                    "operation": "run",
+                    "outcome": "failed",
+                },
+                "occurred_at": f"{day}T12:01:00Z",
+            },
+        ),
         _key("assessment_metadata", day, "ok"): _envelope(
             stream="assessment_metadata",
             day=day,

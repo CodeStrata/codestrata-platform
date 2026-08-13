@@ -23,6 +23,7 @@ from codestrata_platform.community_cloud_api.assessment_metadata.models import (
 from codestrata_platform.community_cloud_api.assessment_metadata.policy import (
     COMMUNITY_ASSESSMENT_METADATA_POLICY_URN,
     COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION,
+    COMMUNITY_ASSESSMENT_METADATA_SUPPORTED_SCHEMA_VERSIONS,
 )
 from codestrata_platform.community_cloud_api.cli_events.enums import CLI_CLIENT_NAME
 from codestrata_platform.community_cloud_api.cli_events.models import CliEventRequest
@@ -96,6 +97,7 @@ _REGISTRY: dict[EventStream, SourceContractDescriptor] = {
         allowed_client_types=_TELEMETRY_ALLOWED_CLIENTS,
         project_payload=assessment_metadata_stream.project_payload,
         client_type_extractor=assessment_metadata_stream.client_type_from_request,
+        supported_schema_versions=COMMUNITY_ASSESSMENT_METADATA_SUPPORTED_SCHEMA_VERSIONS,
     ),
     EventStream.CLI_EVENT: SourceContractDescriptor(
         event_stream=EventStream.CLI_EVENT,

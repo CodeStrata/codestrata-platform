@@ -114,5 +114,51 @@ class AssessmentMetadataSinkStatus(str, Enum):
     REJECTED = "rejected"
 
 
+class FindingAggregateSeverity(str, Enum):
+    """Bounded finding severities for assessment_metadata 1.1 aggregates."""
+
+    INFORMATIONAL = "informational"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class FindingAggregateCategory(str, Enum):
+    """Bounded finding categories for assessment_metadata 1.1 aggregates."""
+
+    ARCHITECTURE = "architecture"
+    DEPENDENCY = "dependency"
+    MAINTAINABILITY = "maintainability"
+    TECHNICAL_DEBT = "technical_debt"
+    TESTING = "testing"
+    DOCUMENTATION = "documentation"
+    BUILD = "build"
+    GOVERNANCE = "governance"
+    SECURITY = "security"
+    CLOUD = "cloud"
+    AI_READINESS = "ai_readiness"
+    PERFORMANCE = "performance"
+    MODERNIZATION = "modernization"
+    UNKNOWN = "unknown"
+
+
+class AssessmentHeadConfidenceLevel(str, Enum):
+    HIGH = "high"
+    MODERATE = "moderate"
+    LIMITED = "limited"
+    UNAVAILABLE = "unavailable"
+
+
+class AssessmentFailureCategory(str, Enum):
+    """Aligned with Engine telemetry FailureCategory (Epic 20)."""
+
+    VALIDATION = "validation"
+    TIMEOUT = "timeout"
+    UNAVAILABLE = "unavailable"
+    INTERNAL = "internal"
+    UNKNOWN = "unknown"
+
+
 # Fixed identity event type for this endpoint (not client-supplied).
 ASSESSMENT_METADATA_EVENT_TYPE = "assessment_metadata_submitted"

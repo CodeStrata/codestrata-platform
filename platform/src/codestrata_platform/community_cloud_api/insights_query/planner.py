@@ -143,10 +143,15 @@ def plan_metric_query(
     *,
     metric: str,
     window: DateWindow,
-    schema_versions: tuple[str, ...] = ("1.0",),
+    schema_versions: tuple[str, ...] | None = None,
     budgets: QueryBudgets | None = None,
 ) -> QueryPlan:
-    """Plan prefixes for a known Insights metric family."""
+    """Plan prefixes for a known Insights metric family.
+
+    When ``schema_versions`` is omitted, each stream uses the versions it
+    actually stores: ``assessment_metadata`` plans ``1.0`` and ``1.1``;
+    every other stream remains ``1.0`` only.
+    """
 
     if metric in EXTERNAL_METRICS:
         raise InsightsQueryPlanError(
@@ -155,10 +160,46 @@ def plan_metric_query(
     streams = METRIC_STREAMS.get(metric)
     if streams is None:
         raise InsightsQueryPlanError("unsupported_stream", "unknown_metric")
-    return plan_prefixes(
-        streams=streams,
-        schema_versions=schema_versions,
-        window=window,
-        budgets=budgets,
+    if schema_versions is not None:
+        return plan_prefixes(
+            streams=streams,
+            schema_versions=schema_versions,
+            window=window,
+            budgets=budgets,
+            metric=metric,
+        )
+
+    span_limit = (
+        MAX_DATE_SPAN_DAYS_LIFETIME
+        if metric in LIFETIME_METRICS
+        else MAX_DATE_SPAN_DAYS_DEFAULT
+    )
+    _validate_window(window, max_span_days=span_limit)
+    _validate_streams(streams)
+    active_budgets = budgets or default_query_budgets()
+    days = _iter_days(window.start_date, window.end_date)
+    prefixes: list[str] = []
+    used_versions: set[str] = set()
+    for stream in streams:
+        versions = (
+            tuple(sorted(SUPPORTED_SCHEMA_VERSIONS))
+            if stream == "assessment_metadata"
+            else ("1.0",)
+        )
+        _validate_schema_versions(versions)
+        used_versions.update(versions)
+        for ver in versions:
+            for day in days:
+                prefixes.append(_day_prefix(stream, ver, day))
+    ordered = tuple(sorted(set(prefixes)))
+    return QueryPlan(
+        streams=tuple(streams),
+        schema_versions=tuple(sorted(used_versions)),
+        prefixes=ordered,
+        start_date=window.start_date.isoformat(),
+        end_date=window.end_date.isoformat(),
+        budgets=active_budgets,
+        quarantine_excluded=True,
+        completeness_default="complete",
         metric=metric,
     )
