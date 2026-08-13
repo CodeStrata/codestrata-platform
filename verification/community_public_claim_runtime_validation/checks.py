@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+import sys
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -601,10 +602,10 @@ def check_terminology_cli_vscode(
         "packaged client resolution",
         "report_publishing",
     )
-    # CLI smoke via python -m
+    # CLI smoke via the active interpreter (portable: local venv, CI runner, any pytest env).
     proc = subprocess.run(
         [
-            str(monorepo / ".venv/bin/python"),
+            sys.executable,
             "-c",
             "from codestrata.package_metadata import get_package_version; print(get_package_version())",
         ],
