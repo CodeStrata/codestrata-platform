@@ -52,7 +52,9 @@ def test_build_report_runs() -> None:
     assert report.epic17_boundary.get("start_slice_17_17") is True
     assert report.epic17_boundary.get("start_slice_17_18") is True
     assert report.epic17_boundary.get("start_slice_17_19") is False
-    assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS", "FAIL"}
+    # Hard gate: FAIL must break CI (Slice 20.12B). Soft live probes may yield
+    # PASS_WITH_LIMITATIONS only.
+    assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
     for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
         assert letter in report.scenario_results
 
@@ -77,4 +79,4 @@ def test_run_writes_artifact() -> None:
     report = run(root)
     path = root / ".codestrata-artifacts/validation/suites/sv17-17/community-telemetry-consent-verification.json"
     assert path.is_file()
-    assert report.verdict != "FAIL" or report.failed_checks >= 0
+    assert report.verdict != "FAIL"
