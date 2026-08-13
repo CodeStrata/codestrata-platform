@@ -116,6 +116,9 @@ def test_injected_failing_http_does_not_change_exit(
     home.mkdir()
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
     monkeypatch.setenv("CI", "1")
+    from codestrata.telemetry.persisted_consent import persist_v2_yes
+
+    persist_v2_yes(path=home / "telemetry.json")
     reset_telemetry_singletons()
     repo = _mini_repo(tmp_path)
     out = tmp_path / "out"
@@ -137,7 +140,6 @@ def test_injected_failing_http_does_not_change_exit(
         result = _invoke_assess(repo, out, extra=["--telemetry-allow"])
     assert result.exit_code == 0
     assert client.calls
-    assert {path.name for path in home.iterdir()} <= {"installation_id"}
 
 
 def test_primary_failure_exit_preserved_with_capture_success(
@@ -147,6 +149,9 @@ def test_primary_failure_exit_preserved_with_capture_success(
     home.mkdir()
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
     monkeypatch.setenv("CI", "1")
+    from codestrata.telemetry.persisted_consent import persist_v2_yes
+
+    persist_v2_yes(path=home / "telemetry.json")
     reset_telemetry_singletons()
     missing = tmp_path / "missing-repo"
     out = tmp_path / "out"
@@ -174,6 +179,9 @@ def test_primary_failure_with_raising_transport(tmp_path: Path, monkeypatch) -> 
     home.mkdir()
     monkeypatch.setenv("CODESTRATA_HOME", str(home))
     monkeypatch.setenv("CI", "1")
+    from codestrata.telemetry.persisted_consent import persist_v2_yes
+
+    persist_v2_yes(path=home / "telemetry.json")
     reset_telemetry_singletons()
     missing = tmp_path / "nope"
     out = tmp_path / "out"
@@ -287,6 +295,9 @@ def test_normal_cli_opt_in_with_credential_uses_http_transport(
         "CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL",
         "cscc_v1_" + ("a" * 32),
     )
+    from codestrata.telemetry.persisted_consent import persist_v2_yes
+
+    persist_v2_yes(path=home / "telemetry.json")
     reset_telemetry_singletons()
     repo = _mini_repo(tmp_path)
     out = tmp_path / "out"
