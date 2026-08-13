@@ -4,9 +4,10 @@ Canonical Community / Engine product privacy for this documentation portal:
 
 **[Security → Privacy](/security/privacy)**
 
-That page covers local assessment artifacts, privacy-first telemetry consent
-(`--telemetry-allow` / `--telemetry-deny`), assessment metadata vs published
+That page covers local assessment artifacts, Engine-owned telemetry consent
+(v1 lifecycle / v2 assessment insights), assessment metadata vs published
 reports, Data Lake streams, AI provider boundaries, retention, and opt-out.
+`--telemetry-allow` is a session bridge only — not durable consent.
 
 ## Documentation website
 

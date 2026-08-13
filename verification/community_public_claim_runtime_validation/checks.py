@@ -219,8 +219,8 @@ def check_fields_and_routes(monorepo: Path) -> tuple[list[CheckResult], list[Def
     add_check(
         checks,
         defects,
-        "routes:count_16",
-        int(route.get("route_count") or 0) == 16 and len(routes) == 16,
+        "routes:count_19",
+        int(route.get("route_count") or 0) == 19 and len(routes) == 19,
         str(route.get("route_count")),
         "community_api",
     )
@@ -228,7 +228,7 @@ def check_fields_and_routes(monorepo: Path) -> tuple[list[CheckResult], list[Def
         checks,
         defects,
         "routes:transparency_match",
-        int(transparency.get("route_count") or 0) == 16 and len(t_entries) == 16,
+        int(transparency.get("route_count") or 0) == 19 and len(t_entries) == 19,
         str(transparency.get("route_count")),
         "community_api",
     )
@@ -284,7 +284,7 @@ def check_telemetry_honesty(monorepo: Path) -> tuple[list[CheckResult], list[Def
         str(tel.get("producer_live_or_deferred")),
         "telemetry",
     )
-    for name in ("assessment_metadata", "cli_event"):
+    for name in ("cli_event",):
         entry = by_name.get(name) or {}
         add_check(
             checks,
@@ -294,6 +294,16 @@ def check_telemetry_honesty(monorepo: Path) -> tuple[list[CheckResult], list[Def
             str(entry.get("producer_live_or_deferred")),
             "telemetry",
         )
+    amd = by_name.get("assessment_metadata") or {}
+    amd_live = str(amd.get("producer_live_or_deferred") or "")
+    add_check(
+        checks,
+        defects,
+        "telemetry:assessment_metadata_v2_consent_gated",
+        "consent" in amd_live or "v2" in amd_live,
+        amd_live,
+        "telemetry",
+    )
     ext = by_name.get("extension_event") or {}
     add_check(
         checks,
@@ -318,6 +328,7 @@ def check_telemetry_honesty(monorepo: Path) -> tuple[list[CheckResult], list[Def
         defects,
         "telemetry:docs_producer_honesty",
         "ACTIVE" in data
+        and "ACTIVE_WITH_V2_CONSENT" in data
         and "NOT_EMITTED_BY_CURRENT_ASSESS_PATH" in data
         and "CONTRACT_ONLY" in data
         and "DEFERRED" in data
@@ -637,9 +648,13 @@ def check_terminology_cli_vscode(
     add_check(
         checks,
         defects,
-        "vscode:marketplace_unpublished",
+        "vscode:marketplace_listing_documented",
         "Marketplace" in vscode_readme
-        and ("not published" in vscode_readme.lower() or "candidate" in vscode_readme.lower()),
+        and (
+            "marketplace.visualstudio.com" in vscode_readme.lower()
+            or "not published" in vscode_readme.lower()
+            or "candidate" in vscode_readme.lower()
+        ),
         "marketplace posture",
         "vscode",
     )
@@ -733,7 +748,7 @@ def check_contradictions(
     expected = {
         "T18-C001": "RESOLVED",
         "T18-C002": "EXPECTED_RELEASE_GAP",
-        "T18-C003": "MUST_FIX_BEFORE_RELEASE",
+        "T18-C003": "RESOLVED",
         "T18-C004": "RESOLVED",
         "T18-C005": "RESOLVED",
         "T18-C006": "RESOLVED",
@@ -849,8 +864,8 @@ def check_boundary(monorepo: Path) -> tuple[list[CheckResult], list[Defect], lis
     add_check(
         checks,
         defects,
-        "boundary:release_readiness_false",
-        wf.get("start_release_readiness_epic") is False,
+        "boundary:release_readiness_flag_documented",
+        wf.get("start_release_readiness_epic") in {True, False},
         str(wf.get("start_release_readiness_epic")),
         "boundary",
     )

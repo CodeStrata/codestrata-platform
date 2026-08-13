@@ -87,7 +87,7 @@ flowchart TD
 
 ## Community API route groups
 
-Derived from the runtime route inventory (16 routes). Details and examples:
+Derived from the runtime route inventory (19 routes). Details and examples:
 [Community Cloud API](/reference/community-api/).
 
 ### A. Public Community
@@ -102,8 +102,8 @@ Derived from the runtime route inventory (16 routes). Details and examples:
 
 | Method | Path | Destination | Current producer honesty |
 | --- | --- | --- | --- |
-| `POST` | `/api/v1/telemetry` | Data Lake `raw/` | **ACTIVE** after opt-in + credential |
-| `POST` | `/api/v1/assessment-metadata` | Data Lake `raw/` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
+| `POST` | `/api/v1/telemetry` | Data Lake `raw/` | **ACTIVE** after lifecycle-allowed consent + credential |
+| `POST` | `/api/v1/assessment-metadata` | Data Lake `raw/` | **ACTIVE_WITH_V2_CONSENT** (schemas 1.0 + 1.1) |
 | `POST` | `/api/v1/cli-events` | Data Lake `raw/` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
 | `POST` | `/api/v1/extension-events` | Data Lake `raw/` | **CONTRACT_ONLY** |
 | `POST` | `/api/v1/ai-usage` | Data Lake `raw/` | **DEFERRED** on assess path |

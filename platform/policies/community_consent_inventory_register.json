@@ -1,19 +1,35 @@
 {
   "register_id": "community-consent-inventory-register",
-  "register_version": "1.0",
+  "register_version": "1.1",
   "schema": "community-consent-inventory-register:1.0",
-  "slice": "18.1",
-  "epic": 18,
-  "authority": "community_telemetry_consent_register+engine_consent_policy+vscode_consent",
+  "slice": "20.12",
+  "epic": 20,
+  "authority": "community_telemetry_consent_register+engine_persisted_consent+vscode_canonical_consent",
   "default_posture": "disabled_by_default",
-  "opt_in_mechanism": ["--telemetry-allow", "interactive_prompt_when_applicable", "vscode_command_scoped_allow"],
-  "opt_out_mechanism": ["--telemetry-deny", "interactive_deny", "vscode_command_scoped_deny", "default_remain_off"],
-  "interactive_behavior": "may_prompt_on_assess_when_tty_and_policy_allows",
-  "non_interactive_behavior": "never_prompt_remain_disabled_unless_cli_flag",
-  "persistence_behavior": "session_consent_not_persisted_for_privacy_first_runtime",
-  "precedence": "cli_flag_over_prompt_over_default",
-  "session_process_scope": "process_or_command_local",
-  "legacy_preferences": "compatibility_only_do_not_authorize_privacy_first_runtime",
+  "opt_in_mechanism": [
+    "codestrata_telemetry_enable_v2",
+    "interactive_prompt_when_undecided",
+    "vscode_allow_persists_engine_v2",
+    "legacy_v1_upgrade_prompt_for_assessment_intelligence"
+  ],
+  "opt_out_mechanism": [
+    "codestrata_telemetry_disable",
+    "interactive_deny",
+    "vscode_no_thanks",
+    "default_remain_off",
+    "--telemetry-deny_session"
+  ],
+  "session_bridge": {
+    "--telemetry-allow": "session_frontend_bridge_only_does_not_create_or_override_consent",
+    "--telemetry-deny": "process_local_deny_not_persisted"
+  },
+  "interactive_behavior": "may_prompt_on_assess_when_tty_and_undecided",
+  "non_interactive_behavior": "never_prompt; durable_v2_may_emit_without_prompt; undecided_or_disabled_remain_off",
+  "persistence_behavior": "engine_owned_durable_preference_under_CODESTRATA_HOME_shared_cli_vscode",
+  "precedence": "cli_flag_over_durable_preference_over_prompt_over_default",
+  "session_process_scope": "flags_are_process_local; durable_consent_is_engine_owned",
+  "legacy_preferences": "v1_lifecycle_only_never_silently_expanded_to_v2",
+  "v2_scope": "lifecycle_usage_telemetry_plus_assessment_metadata_1_1",
   "telemetry_opt_in_equals_report_publication": false,
   "report_publish_requires": [
     "explicit_publish_or_share_confirmation",

@@ -50,12 +50,12 @@
       "contradiction_id": "T18-C004",
       "classification": "RESOLVED",
       "claim_surface": "docs/security/privacy.md legacy telemetry enable table row",
-      "runtime_authority": "privacy-first consent policy",
-      "summary": "Privacy page listed legacy `codestrata telemetry enable` near opt-in language; risk of misreading as privacy-first authorization.",
-      "disposition": "RESOLVED in Slice 18.2 — legacy section retitled and explicit that enable/disable are compatibility-only; privacy-first path documented as --telemetry-allow/--telemetry-deny.",
-      "resolved_in_slice": "18.2",
+      "runtime_authority": "engine persisted_consent v1/v2 + privacy-first session bridge",
+      "summary": "Historical docs risked conflating legacy enable/disable with privacy-first session flags; Epic 20 made durable enable/disable the v2 privacy-first path.",
+      "disposition": "RESOLVED in Slice 20.12 — enable/disable are durable Engine consent (v2 / Disabled); --telemetry-allow is session bridge only and cannot invent Yes or override Disabled; legacy v1 is never silently expanded to assessment intelligence.",
+      "resolved_in_slice": "20.12",
       "evidence": [
-        "docs/security/privacy.md#legacy-preference-cli-compatibility-only--not-privacy-first-opt-in",
+        "docs/security/privacy.md",
         "docs/reference/telemetry.md",
         "docs/security/data-collection.md"
       ],

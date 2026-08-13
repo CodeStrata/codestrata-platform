@@ -19,22 +19,22 @@
       "retention_class": "raw_365d",
       "insights_consumers": ["insights_activity", "insights_adoption"],
       "producer_live_or_deferred": "live",
-      "notes": "Default transport unavailable until session allow + credential."
+      "notes": "Default transport unavailable until durable lifecycle-allowed consent + credential."
     },
     {
       "stream_name": "assessment_metadata",
       "producer": "codestrata_cli",
-      "active_producer_status": "api_and_datalake_capacity_live_client_emission_consent_gated",
+      "active_producer_status": "live_after_durable_v2_consent_with_community_credential",
       "consent_requirement": true,
       "authentication_requirement": true,
       "api_endpoint": "POST /api/v1/assessment-metadata",
-      "schema_version": "1.0",
+      "schema_version": "1.0+1.1",
       "schema_id": "community.assessment-metadata.ingest",
       "data_lake_destination": "codestrata-community-data-lake-production/raw/stream=assessment_metadata/...",
       "retention_class": "raw_365d",
       "insights_consumers": ["insights_assessments", "insights_coverage", "insights_technology"],
-      "producer_live_or_deferred": "capacity_live_producer_consent_gated",
-      "notes": "Does not carry full assessment.json or heads."
+      "producer_live_or_deferred": "live_with_v2_consent",
+      "notes": "ACTIVE_WITH_V2_CONSENT after durable v2 Yes + credential. Schemas 1.0+1.1. Aggregates only — no findings prose, source, paths, graph, or report IDs."
     },
     {
       "stream_name": "cli_event",

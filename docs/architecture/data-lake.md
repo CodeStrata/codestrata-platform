@@ -53,10 +53,15 @@ Privacy-safe Community event streams / metadata, including capacity for:
 - `ai_usage`
 - quarantine / identity classes as designed
 
-**Producer honesty (v0.2.0 assess path):** only product **`telemetry`** is
-classified **ACTIVE** after explicit opt-in + credential. Other streams may have
-API/lake capacity without current assess emission. See
+**Producer honesty (v0.2.1 assess path):** product **`telemetry`** is **ACTIVE**
+after lifecycle-allowed consent + credential; **`assessment_metadata`** is
+**ACTIVE_WITH_V2_CONSENT** (schemas 1.0 + 1.1). Other streams may have API/lake
+capacity without current assess emission. See
 [Data Collection](/security/data-collection).
+
+Lake objects are **derived metadata**, not source repositories. Accepted amd
+records use server `accepted_at` / day partition — clients do not need to send
+execution timestamps for assessment intelligence.
 
 ## What does NOT belong here
 

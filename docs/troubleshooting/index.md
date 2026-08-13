@@ -51,9 +51,11 @@ Confirm
 | Question | Answer |
 | --- | --- |
 | Is telemetry on by default? | No |
-| How do I allow it for assess? | `codestrata assess --telemetry-allow`, or answer **y** at an eligible interactive prompt (default **N**) |
-| How do I deny it for assess? | `codestrata assess --telemetry-deny` (non-interactive runs never prompt) |
-| Do legacy enable/disable authorize assess? | No — `codestrata telemetry enable\|disable` is compatibility-only |
+| How do I enable Community insights? | `codestrata telemetry enable` (v2), or answer **y** at an eligible interactive prompt (default **N**) |
+| How do I check status? | `codestrata telemetry status` or `status --json` |
+| Does `--telemetry-allow` create consent? | **No** — session bridge only; cannot invent Yes or override Disabled |
+| Do quiet/CI assessments prompt? | **No** — with durable v2 they may emit approved streams; undecided/disabled stay off |
+| How do I deny / turn off collection? | `codestrata telemetry disable`, or `--telemetry-deny` for a session |
 | Does telemetry opt-in publish reports? | No — publish requires an explicit confirm action |
 | Does telemetry failure block assess? | No |
 

@@ -72,28 +72,37 @@ voluntary public-report Yes/No feedback.
 | Topic | Detail |
 | --- | --- |
 | Default | `disabled_by_default` — transmission unauthorized |
-| Opt in (interactive) | When preference is undecided, eligible interactive assess may prompt; default **No** (`[y/N]`) |
-| Opt in (explicit) | `codestrata telemetry enable` or `codestrata assess --telemetry-allow` |
-| Opt out (explicit) | `codestrata telemetry disable` or `codestrata assess --telemetry-deny` |
-| Non-interactive / CI | Never prompts; decision is `non_interactive_disabled` |
-| Persistence | Explicit Yes/No is stored locally under `CODESTRATA_HOME` and is not re-asked |
+| Opt in (interactive) | When preference is undecided, eligible interactive assess may prompt; default **No** (`[y/N]`). Yes persists **v2** (usage + assessment insights). |
+| Opt in (explicit) | `codestrata telemetry enable` → **v2 Yes** |
+| Opt out (explicit) | `codestrata telemetry disable` |
+| Session bridge | `codestrata assess --telemetry-allow` is **not** consent — it cannot invent Yes or override Disabled |
+| Non-interactive / CI | Never prompts; undecided/disabled stay off; durable v2 may emit without prompting |
+| Persistence | Engine-owned preference under `CODESTRATA_HOME` (shared by CLI and VS Code) |
 
-After explicit opt-in (`telemetry enable`, interactive Yes, or `--telemetry-allow`),
-the CLI may resolve the production Community HTTP transport to
-`https://api.codestrata.ai` when `CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL` is set.
-Without a credential, transport stays unavailable (no anonymous ingestion).
-Disabled, denied, and non-interactive sessions never open HTTP transport.
+After durable **v2 Yes**, production Community HTTP transport targets
+`https://api.codestrata.ai` when `CODESTRATA_COMMUNITY_CLIENT_CREDENTIAL` is set;
+otherwise transport stays unavailable. Disabled / undecided sessions never open
+HTTP transport for Community collection.
 
-Telemetry failures must not fail assessment or remove local reports.
+**Legacy v1:** users who previously enabled lifecycle-only telemetry keep that
+scope until they accept a one-time upgrade prompt (or run `telemetry enable`).
+Decline keeps lifecycle on and assessment intelligence off — never a silent v2
+upgrade.
+
+Consent authorizes privacy-safe transmission eligibility. It is **not**
+permission to publish reports.
+
+Telemetry / assessment-intelligence failures must not fail assessment or remove
+local reports.
 
 ### Preference CLI
 
 | Topic | Command |
 | --- | --- |
-| Status | `codestrata telemetry status` → Enabled / Disabled / Not configured |
-| Enable | `codestrata telemetry enable` |
+| Status | `codestrata telemetry status` / `status --json` |
+| Enable | `codestrata telemetry enable` → **v2 Yes** |
 | Disable | `codestrata telemetry disable` |
-| Process override | `codestrata assess --telemetry-allow` / `--telemetry-deny` |
+| Session bridge | `codestrata assess --telemetry-allow` / `--telemetry-deny` (not consent) |
 
 See [Telemetry](/reference/telemetry).
 
@@ -103,25 +112,26 @@ Public reports may collect optional **Was this report useful? Yes/No** feedback.
 Clicking Yes or No is consent for that feedback event only. No free text, no
 login, no repository identity. Insights **Community Sentiment** aggregates only
 explicit Yes/No responses. No response does not count as negative.
+
 ### Collected when transmission is authorized and transport is wired
 
-Bounded anonymous product signals only (for example version, OS/Python bands,
-command name, domain/language categories, size/duration bands, AI enabled/used
-flags, success/failure, timestamps). See [Telemetry](/reference/telemetry) and
+Bounded privacy-preserving product signals (usage lifecycle) and, with **v2**
+consent, privacy-safe derived assessment intelligence. See
+[Telemetry](/reference/telemetry) and
 [Community Cloud API](/reference/community-api/).
 
 ## Assessment metadata
 
-When consent and authentication allow it, Community Cloud may accept
-**privacy-safe assessment metadata** — bounded counts and closed enums — via
-`POST /api/v1/assessment-metadata`.
+With **durable v2 consent** and authentication, Community Cloud may accept
+**privacy-safe assessment intelligence** — bounded aggregates and closed enums —
+via `POST /api/v1/assessment-metadata` (schemas **1.0** and **1.1**).
 
 Distinguish these surfaces carefully:
 
 | Artifact | Where it lives | Contents (summary) |
 | --- | --- | --- |
 | Local `assessment.json` / `assessment.html` | `.codestrata-artifacts/…` on disk | Full local assessment report artifacts |
-| `assessment_metadata` | Community Data Lake stream (consent-gated) | Privacy-safe aggregates / enums — **not** full `assessment.json` |
+| `assessment_metadata` | Community Data Lake stream (v2 consent-gated) | Privacy-safe aggregates / enums — **not** full `assessment.json` or finding prose |
 | Published reports | Report Artifact Store + `reports.codestrata.ai` | Explicitly published HTML/JSON for opaque public URLs |
 | EIR | Local `intelligence/<portfolio_id>/…` and/or published portfolio reports | Engineering Intelligence report packages — separate from telemetry |
 
@@ -130,17 +140,21 @@ public report publish.
 
 ## Never collected through Community telemetry
 
-Community product telemetry and related Community ingest streams do **not**
+Community product telemetry and assessment-intelligence streams do **not**
 collect:
 
 - Source code or repository file contents
+- Source snippets / evidence excerpts
 - Full `assessment.html` or full `assessment.json`
 - Detailed `heads/*.json` payloads as telemetry bodies
-- Findings, evidence, recommendations, or EIR content bodies
-- Absolute filesystem paths (where validators prohibit them)
+- Finding titles, descriptions, recommendation prose, or EIR content bodies
+- File paths, repository name/URL/remote
 - Credentials, secrets, tokens, or API keys
 - Git credential userinfo / similar personal identity fields
-- AI prompts or AI responses **through telemetry**
+- Graph nodes/edges/symbols
+- Stack traces / exception strings
+- Report ID / report URL
+- AI prompts or AI responses **through Community telemetry**
 
 AI enrichment (when enabled) is a **separate** provider path — see
 [AI Providers](/ai-providers/). “Not collected by telemetry” does not mean
@@ -148,11 +162,11 @@ AI enrichment (when enabled) is a **separate** provider path — see
 
 Full Data Collection page: [Data Collection](/security/data-collection).
 
-**`installation_id` nuance:** the privacy-first assess runtime does **not**
-generate or require an installation id for normal product transmission. Some
-Community API stream contracts may accept an `installation_id` when present
-(for analytics deduplication). Presence on a wire example does not mean the
-assess runtime invents one by default.
+**Installation identifier:** CodeStrata may use a **random (pseudonymous)
+installation UUID** so Insights can distinguish first vs repeat assessments. It
+is not derived from machine, user, or repository identity. Prefer
+“pseudonymous installation identifier” — do not claim absolute anonymity.
+Insights must not show raw installation IDs in the UI.
 
 Observable request/response contracts (including fields intentionally not
 transmitted) are documented at [Community Cloud API](/reference/community-api/).
@@ -169,10 +183,14 @@ The Community Data Lake accepts privacy-safe event streams, including:
 - `extension_event`
 - `ai_usage`
 
-**Runtime wiring today:** the Engine product HTTP path for opt-in **telemetry**
-ingest is the live-wired Community product transmission path. Other streams
-have API/Data Lake contract and capacity; their Engine/client producers may be
-deferred or unavailable on the assess path.
+**Runtime wiring today:** with lifecycle-allowed consent, product **`telemetry`**
+is live-wired; with **v2** consent, **`assessment_metadata`** (1.0/1.1) is also
+live-wired. `cli_event` / `extension_event` / `ai_usage` retain API/Data Lake
+capacity but are not emitted by the current assess path (contract-only /
+deferred as documented on [Data Collection](/security/data-collection)).
+
+One assessment that emits both lifecycle telemetry and assessment metadata is
+counted **once** in Insights Total/Successful/Failed authorities.
 
 The Data Lake is **not** the Report Artifact Store. It does **not** store
 `assessment.html`, full `assessment.json`, EIR report bodies, or public report

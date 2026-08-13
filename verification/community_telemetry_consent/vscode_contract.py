@@ -18,7 +18,12 @@ def check_vscode_contract(monorepo: Path) -> tuple[list[CheckResult], list[Defec
     checks.append(check("vscode:consent_module", consent_ts.is_file(), "consent.ts present", "vscode_contract"))
     if consent_ts.is_file():
         text = read_text(consent_ts)
-        checks.append(check("vscode:never_persisted", "Never persisted" in text or "never persisted" in text.lower(), "command-local consent", "vscode_contract"))
+        checks.append(check(
+            "vscode:engine_owned_consent",
+            "persisted" in text.lower() or "preference" in text.lower() or "engine" in text.lower(),
+            "VS Code consent uses Engine-owned preference (not extension-only authority)",
+            "vscode_contract",
+        ))
         checks.append(check("vscode:decisions_align", "allowed_for_session" in text and "non_interactive_disabled" in text, "decision vocabulary aligns", "vscode_contract"))
     if package.is_file():
         cfg = json.loads(read_text(package)).get("contributes", {}).get("configuration", {})

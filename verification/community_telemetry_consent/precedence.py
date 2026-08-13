@@ -31,19 +31,20 @@ def check_precedence(monorepo: Path) -> tuple[list[CheckResult], list[Defect], d
         "precedence",
     ))
     checks.append(check(
-        "precedence:publish_opt_in_env",
-        contains(report, "CODESTRATA_TELEMETRY_OPT_IN"),
-        "report publish uses CODESTRATA_TELEMETRY_OPT_IN eligibility",
+        "precedence:publish_independent_of_telemetry_env",
+        not contains(report, "CODESTRATA_TELEMETRY_OPT_IN"),
+        "report publish does not gate on CODESTRATA_TELEMETRY_OPT_IN",
         "precedence",
     ))
 
     summary = {
         "order": [
             "cli_flag_allow_or_deny",
+            "durable_engine_preference",
             "interactive_prompt_if_eligible",
             "non_interactive_disabled_or_default",
         ],
-        "publish_eligibility_env": "CODESTRATA_TELEMETRY_OPT_IN",
+        "publish_eligibility_env": None,
         "assess_env_equivalent": False,
         "ambiguous_sources": False,
     }

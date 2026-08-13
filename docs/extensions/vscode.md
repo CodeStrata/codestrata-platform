@@ -53,15 +53,17 @@ Guided install uses supported mechanisms (`uv tool`, `pipx`, or `pip --user`).
 
 Use **Run Assessment** (deterministic / `--no-ai` by default).
 
-When telemetry preference is undecided, the extension shows a native prompt:
+When Engine consent is undecided, the extension shows a native prompt
+(semantically equivalent to the CLI):
 
-- **Allow Anonymous Telemetry** — persists Yes
-- **No Thanks** — persists No
+- **Allow** — persists **v2** Yes (usage metrics + privacy-safe assessment insights)
+- **No Thanks** — persists Disabled (no Community collection)
 - **Learn More** — opens privacy docs; does **not** enable telemetry
 
-After an explicit choice, the prompt is not repeated. Change later via
-**CodeStrata: Telemetry Settings**. Assessment continues whether you allow or
-decline.
+CLI and VS Code share the same Engine-owned consent preference. After an
+explicit choice, the prompt is not repeated for that preference. Change later
+via **CodeStrata: Telemetry Settings** or `codestrata telemetry enable|disable`.
+Assessment continues whether you allow or decline.
 ## Findings, recommendations, diagnostics, reports
 
 After a successful assessment the extension loads public artifacts into:
@@ -102,8 +104,9 @@ is explicitly chosen. See [AI Providers](/ai-providers/) and
 - Local Engine execution
 - No Platform requirement for Community assessment
 - Telemetry default is **not configured / disabled** until the user chooses;
-  eligible assessment commands may prompt (`[y/N]`, Enter = No). Explicit Yes
-  or No is persisted locally and can be changed via Telemetry Settings
+  eligible assessment commands may prompt (default Deny). Explicit Allow or
+  No Thanks is persisted through the **Engine** (shared with CLI) and can be
+  changed via Telemetry Settings or CLI `telemetry enable|disable`
 - Community Cloud authority: `https://api.codestrata.ai`
 - See [Privacy](/security/privacy), [Source Locality](/security/source-locality),
   [AI Providers](/ai-providers/), [Telemetry](/reference/telemetry),

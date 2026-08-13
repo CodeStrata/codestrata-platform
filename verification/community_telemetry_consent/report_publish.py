@@ -113,4 +113,4 @@ def check_report_publish(monorepo: Path) -> tuple[list[CheckResult], list[Defect
                 detail=item.detail,
             )
         )
-    return checks, defects, {"report_publish_checks": len(checks)}
+    return checks, defects, {"report_publish_checks": len(checks), "auto_publish": False}

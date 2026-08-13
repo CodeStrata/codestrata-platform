@@ -270,16 +270,23 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
                 "telemetry:posture",
                 "default" in readme_lower
                 and "deny" in readme_lower
-                and "not persisted" in readme_lower
-                or ("not saved" in readme_lower and "deny" in readme_lower),
+                and (
+                    "engine" in readme_lower
+                    or "share" in readme_lower
+                    or "same" in readme_lower
+                ),
                 "telemetry posture",
                 "telemetry",
             ),
             CheckResult(
                 "telemetry:not_operational",
                 "default assessment does not transmit" in readme_lower
-                and "telemetry opt-in is **not** report-publish authorization"
-                in readme_lower,
+                and (
+                    "not** report-publish" in readme_lower
+                    or "not report-publish" in readme_lower
+                    or "insights consent is **not** report-publish" in readme_lower
+                    or "consent is **not** report-publish" in readme_lower
+                ),
                 "no default operational transmission claim",
                 "telemetry",
             ),
@@ -430,11 +437,12 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect]]:
         ]
     )
 
-    # Fix telemetry check operator precedence - rewrite as clearer
+    # Epic 20: Engine-owned durable consent shared with CLI (not command-local-only).
     telemetry_ok = (
         "deny" in readme_lower
-        and ("not saved" in readme_lower or "not persisted" in readme_lower)
-        and "command-local" in readme_lower
+        and "engine" in readme_lower
+        and ("share" in readme_lower or "same" in readme_lower)
+        and "default assessment does not transmit" in readme_lower
     )
     for i, c in enumerate(checks):
         if c.name == "telemetry:posture":
