@@ -34,6 +34,10 @@ from codestrata_platform.community_cloud_api.reports.feedback import (
     empty_feedback_summary,
     feedback_vote_key,
 )
+from codestrata_platform.community_cloud_api.reports.feedback_chrome import (
+    apply_published_feedback_csp,
+    feedback_chrome_html,
+)
 from codestrata_platform.community_cloud_api.reports.models import (
     ReportPublishRequest,
     ReportUploadIntentRequest,
@@ -140,7 +144,7 @@ def _chrome_html(
         "Not stored in the Community Data Lake."
         "</div></header>"
     )
-    feedback = _feedback_chrome_html(public_id=public_id)
+    feedback, script_nonce = feedback_chrome_html(public_id=public_id)
     # If the artifact is a full HTML document, inject banner after <body>
     # and feedback before </body>.
     lower = inner_html.lower()
@@ -156,9 +160,11 @@ def _chrome_html(
             )
             close_idx = injected.lower().rfind("</body>")
             if close_idx >= 0:
-                return injected[:close_idx] + feedback + injected[close_idx:]
-            return injected + feedback
-    return (
+                assembled = injected[:close_idx] + feedback + injected[close_idx:]
+            else:
+                assembled = injected + feedback
+            return apply_published_feedback_csp(assembled, nonce=script_nonce)
+    assembled = (
         "<!doctype html><html><head><meta charset='utf-8'>"
         + "".join(meta_bits)
         + f"<title>CodeStrata {label}</title></head><body>"
@@ -167,81 +173,7 @@ def _chrome_html(
         + feedback
         + "</body></html>"
     )
-
-
-def _feedback_chrome_html(*, public_id: str) -> str:
-    """Optional Yes/No usefulness control — failures never block report viewing."""
-
-    pid = public_id.replace("\\", "\\\\").replace("'", "\\'")
-    return f"""
-<footer id="cs-report-feedback" data-public-id="{public_id}" style="font-family:system-ui,sans-serif;padding:20px 16px;border-top:1px solid #d0d7de;margin-top:24px;background:#fafbfc;">
-  <div id="cs-feedback-prompt">
-    <p style="margin:0 0 10px;font-size:14px;">Was this report useful?</p>
-    <button type="button" data-useful="yes" style="margin-right:8px;padding:6px 14px;cursor:pointer;">Yes</button>
-    <button type="button" data-useful="no" style="padding:6px 14px;cursor:pointer;">No</button>
-    <p id="cs-feedback-error" style="display:none;margin:10px 0 0;font-size:12px;color:#cf222e;"></p>
-  </div>
-  <p id="cs-feedback-thanks" style="display:none;margin:0;font-size:14px;">Thanks for the feedback.</p>
-</footer>
-<script>
-(function () {{
-  var root = document.getElementById("cs-report-feedback");
-  if (!root) return;
-  var publicId = root.getAttribute("data-public-id") || "{pid}";
-  var prompt = document.getElementById("cs-feedback-prompt");
-  var thanks = document.getElementById("cs-feedback-thanks");
-  var err = document.getElementById("cs-feedback-error");
-  var tokenKey = "cs_feedback_respondent";
-  var voteKey = "cs_feedback_vote_" + publicId;
-  function ensureToken() {{
-    try {{
-      var t = localStorage.getItem(tokenKey);
-      if (t && t.length >= 16) return t;
-      t = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "").slice(0, 8)
-        : ("cs" + String(Date.now()) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
-      localStorage.setItem(tokenKey, t.slice(0, 64));
-      return localStorage.getItem(tokenKey);
-    }} catch (e) {{ return null; }}
-  }}
-  function showThanks() {{
-    if (prompt) prompt.style.display = "none";
-    if (thanks) thanks.style.display = "block";
-    if (err) err.style.display = "none";
-  }}
-  function showError(msg) {{
-    if (!err) return;
-    err.textContent = msg || "Could not save feedback. Try again.";
-    err.style.display = "block";
-  }}
-  try {{
-    var prior = localStorage.getItem(voteKey);
-    if (prior === "yes" || prior === "no") showThanks();
-  }} catch (e) {{}}
-  root.addEventListener("click", function (ev) {{
-    var btn = ev.target && ev.target.closest ? ev.target.closest("button[data-useful]") : null;
-    if (!btn) return;
-    var useful = btn.getAttribute("data-useful");
-    if (useful !== "yes" && useful !== "no") return;
-    var token = ensureToken();
-    if (!token) {{ showError("Feedback unavailable in this browser."); return; }}
-    btn.disabled = true;
-    fetch("/r/" + encodeURIComponent(publicId) + "/feedback", {{
-      method: "POST",
-      headers: {{ "Content-Type": "application/json", "Accept": "application/json" }},
-      body: JSON.stringify({{ schema_version: "1.0", useful: useful, respondent_token: token }})
-    }}).then(function (res) {{
-      if (!res.ok) throw new Error("http_" + res.status);
-      try {{ localStorage.setItem(voteKey, useful); }} catch (e) {{}}
-      showThanks();
-    }}).catch(function () {{
-      btn.disabled = false;
-      showError("Could not save feedback. Try again.");
-    }});
-  }});
-}})();
-</script>
-"""
+    return apply_published_feedback_csp(assembled, nonce=script_nonce)
 
 
 def _owner_ref(principal: object) -> str:
