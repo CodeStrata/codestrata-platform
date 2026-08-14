@@ -273,6 +273,9 @@ class IngestAssessmentMetadata:
             artifacts=request.artifacts,
             identity_policy_version=self.identity_policy.policy_version,
             metadata_policy_version=self.metadata_policy.policy_version,
+            assessment_id=request.assessment_id,
+            finding_aggregates=tuple(request.finding_aggregates),
+            head_confidence=tuple(request.head_confidence),
         )
 
         try:

@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
 
+from verification.community_public_claim_runtime_validation import checks as checks_mod
 from verification.community_public_claim_runtime_validation.contract import (
     CONTRACT_RELATIVE,
     POLICY_RELATIVE,
@@ -79,3 +84,38 @@ def test_runner_import() -> None:
     from verification.community_public_claim_runtime_validation.runner import main
 
     assert callable(main)
+
+
+def test_cli_smoke_uses_active_interpreter_not_repo_venv(
+    monkeypatch: Any,
+) -> None:
+    """Slice 20.12C: public-claim checks must not require <repo>/.venv/bin/python."""
+    checks_src = Path(checks_mod.__file__).read_text(encoding="utf-8")
+    assert ".venv/bin/python" not in checks_src
+    assert ".venv\\\\Scripts" not in checks_src
+    assert "sys.executable" in checks_src
+
+    captured: list[list[str]] = []
+    real_run = subprocess.run
+
+    def _capture(cmd: Any, *args: Any, **kwargs: Any) -> Any:
+        if (
+            isinstance(cmd, (list, tuple))
+            and len(cmd) >= 3
+            and cmd[1] == "-c"
+            and "get_package_version" in str(cmd[2])
+        ):
+            captured.append([str(x) for x in cmd])
+        return real_run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(checks_mod.subprocess, "run", _capture)
+    root = monorepo_root_from_here()
+    report = build_report(root)
+    assert report.verdict in {"PASS", "PASS_WITH_LIMITATIONS"}
+    assert captured, "expected package-version CLI smoke subprocess"
+    assert captured[0][0] == sys.executable
+    # Must not hard-wire the monorepo .venv path when it is not the active interpreter.
+    constructed_venv = str(root / ".venv" / "bin" / "python")
+    if sys.executable != constructed_venv:
+        assert captured[0][0] != constructed_venv
+

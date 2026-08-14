@@ -11,9 +11,8 @@ from typing import Any
 class QueryBudgets:
     max_keys_per_page: int = 1000
     max_pages_per_query: int = 20
-    # Worst case day prefixes: MAX_DATE_SPAN_DAYS_LIFETIME (365) × 5 streams × 1 schema.
-    # Prior default (50) was below a normal 31-day × multi-stream overview plan (~155 lists),
-    # which forced query_budget_reached with almost no objects present.
+    # Worst case month prefixes: 12 months × 5 streams × 2 schemas (amd).
+    # Prior day-prefix plans (~186 lists for 31d multi-stream) timed out Lambda overview.
     max_list_requests_per_query: int = 2000
     max_get_requests_per_query: int = 2000
     max_objects_per_query: int = 2000

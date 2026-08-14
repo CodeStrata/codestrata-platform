@@ -15,7 +15,7 @@ variable "lambda_image_uri" {
 
 variable "lambda_memory_size" {
   type    = number
-  default = 512
+  default = 1024
 }
 
 variable "lambda_timeout_seconds" {

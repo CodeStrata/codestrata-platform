@@ -11,7 +11,7 @@ export const MARKETPLACE_DOCS_POLICY_ID =
   "community-vscode-marketplace-documentation-policy" as const;
 export const MARKETPLACE_DOCS_POLICY_VERSION = "1.0" as const;
 
-export const MARKETPLACE_DOCS_EXTENSION_VERSION = "0.2.1" as const;
+export const MARKETPLACE_DOCS_EXTENSION_VERSION = "0.2.2" as const;
 export const MARKETPLACE_DOCS_BRANDING_POLICY_VERSION = "1.0" as const;
 export const MARKETPLACE_LISTING_AUTHORITY = "readme" as const;
 

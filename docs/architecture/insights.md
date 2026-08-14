@@ -92,6 +92,10 @@ Insights does **not** expose:
 - Raw object-store keys
 - Credentials
 
+Insights does **not** query Report Artifact Store HTML/JSON bodies as an event
+browser. Published-report metadata indexes (when present) are separate from Data
+Lake stream queries.
+
 The **Validation Reports** Insights page (route `/published-reports`) is a
 **temporary internal** metadata index over the private Community validation
 registry — successfully published reports that passed independent public GET

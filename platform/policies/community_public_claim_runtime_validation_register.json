@@ -42,10 +42,10 @@
       "claim_id": "C18-2-002",
       "category": "TELEMETRY",
       "public_location": "docs/reference/telemetry.md",
-      "claim": "Explicit opt-in required for product transmission",
+      "claim": "Explicit durable opt-in required for product transmission (enable / interactive Yes / VS Code Allow); --telemetry-allow is session bridge only",
       "evidence": {
         "register_18_1": "community_consent_inventory_register.opt_in_mechanism",
-        "runtime_evidence": "--telemetry-allow / interactive allow / vscode command allow",
+        "runtime_evidence": "persisted_consent V2_YES + interactive allow + vscode Allow; --telemetry-allow does not invent consent",
         "prior_slice_validation": "PASS"
       },
       "status": "SUPPORTED",
@@ -84,10 +84,10 @@
       "claim_id": "C18-2-005",
       "category": "TELEMETRY",
       "public_location": "docs/security/data-collection.md",
-      "claim": "Only telemetry stream is ACTIVE after opt-in on current assess path",
+      "claim": "telemetry ACTIVE after lifecycle-allowed consent; assessment_metadata ACTIVE_WITH_V2_CONSENT; other streams not live-emitted on current assess path",
       "evidence": {
-        "register_18_1": "community_telemetry_stream_inventory_register.telemetry.producer_live_or_deferred=live",
-        "runtime_evidence": "product_transport + stream inventory",
+        "register_18_1": "community_telemetry_stream_inventory_register",
+        "runtime_evidence": "product_transport + amd emitter + stream inventory",
         "prior_slice_validation": "PASS"
       },
       "status": "SUPPORTED",

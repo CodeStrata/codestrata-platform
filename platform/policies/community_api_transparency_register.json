@@ -291,6 +291,23 @@
       "storage_destination": "community_report_artifacts"
     },
     {
+      "authentication_group": "public",
+      "authority": "runtime_route_registry",
+      "classification": "PUBLIC_COMMUNITY",
+      "consent_dependency": false,
+      "failure_effect_on_local_assessment": "none_local_assessment_independent",
+      "method": "POST",
+      "path": "/api/v1/reports/{public_id}/feedback",
+      "private_insights_api": false,
+      "public_community_api": true,
+      "purpose": "Voluntary Yes/No usefulness feedback for a published public report",
+      "rate_limit_group": "health",
+      "request_model": "runtime_schema_if_post_body",
+      "response_model": "runtime_response",
+      "route_id": "reports.feedback",
+      "storage_destination": "community_report_artifacts"
+    },
+    {
       "authentication_group": "community_ingestion",
       "authority": "runtime_route_registry",
       "classification": "AUTHENTICATED_COMMUNITY_INGESTION",
@@ -312,7 +329,7 @@
   "public_api_base_url": "https://api.codestrata.ai",
   "register_id": "community-api-transparency-register",
   "register_version": "1.0",
-  "route_count": 18,
+  "route_count": 19,
   "schema": "community-api-transparency-register:1.0",
   "slice": "18.1"
 }

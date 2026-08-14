@@ -6,8 +6,8 @@ Visual assets policy: `codestrata-marketplace-visual-assets-policy:1.0`
 ## Purpose
 
 Finalize VS Code Marketplace packaging visuals and short-form metadata for
-extension **0.2.1**. Runtime assessment behavior is unchanged. Community Edition
-Engine/CLI remains **0.2.0**.
+extension **0.2.2**. Runtime assessment behavior is unchanged. Community Edition
+Engine/CLI remains **0.2.1**.
 
 ## Visual reference
 
@@ -34,7 +34,7 @@ Marketplace gallery assets are maintained under Slice **14.6**
 | Marketplace displayName | CodeStrata – Engineering Assessment |
 | Publisher | `CodeStrataAI` |
 | Package name | `codestrata-assessment` |
-| Version | 0.2.1 |
+| Version | 0.2.2 |
 | Tagline | Engineering decisions grounded in code. |
 
 ## Icon

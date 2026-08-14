@@ -182,9 +182,6 @@ def _build_insights_aggregation_service(
 
     import boto3
 
-    from codestrata_platform.community_cloud_api.insights.external_metrics import (
-        count_published_from_registry,
-    )
     from codestrata_platform.community_cloud_api.insights.service import (
         InsightsAggregationService,
     )
@@ -195,7 +192,19 @@ def _build_insights_aggregation_service(
         ReportPublishingService,
     )
 
-    client = boto3.client("s3", region_name=region_name)
+    from botocore.config import Config
+
+    # Bound SDK waits so overview cannot burn the full Lambda timeout on hung S3 calls.
+    client = boto3.client(
+        "s3",
+        region_name=region_name,
+        config=Config(
+            connect_timeout=2,
+            read_timeout=5,
+            retries={"max_attempts": 2, "mode": "standard"},
+            max_pool_connections=32,
+        ),
+    )
     reader = BoundedS3Reader(bucket=bucket_name, client=client)
 
     published_port = None
@@ -204,8 +213,7 @@ def _build_insights_aggregation_service(
 
         class _PublishedPort:
             def count_published_reports(self) -> int:
-                registry = report_service.list_published_registry()
-                return count_published_from_registry(registry)
+                return report_service.count_currently_published()
 
         class _SentimentPort:
             def community_sentiment_summary(self) -> dict:

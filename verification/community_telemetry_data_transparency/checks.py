@@ -37,7 +37,7 @@ from verification.community_telemetry_data_transparency.models import CheckResul
 
 STREAM_DOC_STATUS: dict[str, str] = {
     "telemetry": "ACTIVE",
-    "assessment_metadata": "NOT_EMITTED_BY_CURRENT_ASSESS_PATH",
+    "assessment_metadata": "ACTIVE_WITH_V2_CONSENT",
     "cli_event": "NOT_EMITTED_BY_CURRENT_ASSESS_PATH",
     "extension_event": "CONTRACT_ONLY",
     "ai_usage": "DEFERRED",
@@ -185,11 +185,14 @@ def check_stream_honesty(
     add_check(
         checks,
         defects,
-        "streams:telemetry_only_active_called_out",
+        "streams:telemetry_and_amd_active_called_out",
         "ACTIVE" in dc
-        and "Only the product" in tel
-        or ("only" in tel.lower() and "`telemetry`" in tel and "ACTIVE" in tel),
-        "telemetry ACTIVE exclusivity",
+        and "ACTIVE_WITH_V2_CONSENT" in dc
+        and (
+            "Do not assume all five" in dc
+            or "do not assume all five" in dc.lower()
+        ),
+        "telemetry ACTIVE + amd ACTIVE_WITH_V2_CONSENT; not all five live",
         "streams",
     )
     # Map register producer_live_or_deferred honesty
@@ -227,11 +230,20 @@ def check_stream_honesty(
                 "streams",
             )
             limitations.append("contract_deferred_streams_not_emitted")
-        elif name in {"assessment_metadata", "cli_event"}:
+        elif name == "assessment_metadata":
             add_check(
                 checks,
                 defects,
-                f"streams:register_{name}_capacity",
+                "streams:register_assessment_metadata_v2",
+                "consent" in live or "v2" in live,
+                live,
+                "streams",
+            )
+        elif name == "cli_event":
+            add_check(
+                checks,
+                defects,
+                "streams:register_cli_event_capacity",
                 "capacity" in live or "consent" in live,
                 live,
                 "streams",
@@ -370,16 +382,26 @@ def check_consent_and_identity(texts: dict[str, str]) -> tuple[list[CheckResult]
     dc = texts.get("data_collection", "")
     requirements = {
         "consent:default_disabled": ("Disabled" in tel or "disabled_by_default" in tel),
-        "consent:opt_in_allow": ("--telemetry-allow" in tel),
-        "consent:opt_out_deny": ("--telemetry-deny" in tel),
-        "consent:not_persisted": (
-            "Not persisted" in tel or "not persisted" in tel.lower()
+        "consent:opt_in_allow": (
+            "telemetry enable" in tel.lower() or "--telemetry-allow" in tel
+        ),
+        "consent:opt_out_deny": (
+            "telemetry disable" in tel.lower() or "--telemetry-deny" in tel
+        ),
+        "consent:session_bridge_not_persisted": (
+            "Not persisted" in tel
+            or "not persisted" in tel.lower()
+            or "session/frontend bridge" in tel.lower()
+            or "session bridge" in tel.lower()
         ),
         "consent:not_publish": (
             "≠ public report" in tel
             or "not** public report" in tel.lower()
             or "Telemetry opt-in ≠" in tel
+            or "consent ≠ public report" in tel.lower()
+            or "assessment-intelligence consent ≠" in tel.lower()
             or "Telemetry opt-in is **not**" in texts.get("cli", "")
+            or "insights consent" in tel.lower()
         ),
         "consent:interactive_prompt": ("[y/N]" in tel or "may prompt" in tel.lower()),
         "consent:non_interactive_no_prompt": (
@@ -390,11 +412,14 @@ def check_consent_and_identity(texts: dict[str, str]) -> tuple[list[CheckResult]
         "identity:random_wording": (
             "random installation identifier" in tel.lower()
             or "Random UUID" in tel
+            or "pseudonymous" in tel.lower()
         ),
         "identity:no_completely_anonymous": (
             "completely anonymous" not in tel.lower()
         ),
-        "identity:insights_no_raw": ("must not show raw" in tel.lower() or "Must not show raw" in tel),
+        "identity:insights_no_raw": (
+            "must not show raw" in tel.lower() or "Must not show raw" in tel
+        ),
         "opt_out:future_only": ("future" in dc.lower() and "Opt-out" in dc),
         "opt_out:no_auto_delete_lake": ("historical Data Lake" in dc),
         "retention:365": ("365" in dc),
@@ -413,7 +438,24 @@ def check_consent_and_identity(texts: dict[str, str]) -> tuple[list[CheckResult]
         ),
         "ci:example_present": ("--quiet" in tel and "--telemetry-allow" in tel),
         "availability:three_conditions": (
-            "explicitly opts in" in tel.lower() or "Explicit opt-in" in dc
+            "explicitly opts in" in tel.lower()
+            or "Explicit opt-in" in dc
+            or "durable" in tel.lower()
+        ),
+        "consent:no_scores_promise": (
+            "numeric" in tel.lower() and "score" in tel.lower() and "not" in tel.lower()
+        ),
+        "consent:no_graph_telemetry": (
+            "graph telemetry" in tel.lower() and "not" in tel.lower()
+        ),
+        "consent:shared_cli_vscode": (
+            "same" in tel.lower() and "cli" in tel.lower() and "vs code" in tel.lower()
+        ),
+        "consent:legacy_no_silent_v2": (
+            "silently" in tel.lower() and ("v2" in tel.lower() or "upgrade" in tel.lower())
+        ),
+        "consent:allow_not_consent": (
+            "not consent" in tel.lower() or "is not consent" in tel.lower()
         ),
     }
     for check_id, ok in requirements.items():
@@ -566,9 +608,14 @@ def check_cli_vscode_reconcile(
     add_check(
         checks,
         defects,
-        "vscode:no_persistent_consent",
-        "not persisted" in vscode_priv.lower() or "command-local" in vscode_priv.lower(),
-        "vscode consent not persisted",
+        "vscode:shared_engine_consent",
+        "engine" in vscode_priv.lower()
+        and (
+            "same" in vscode_priv.lower()
+            or "share" in vscode_priv.lower()
+            or "shared" in vscode.lower()
+        ),
+        "vscode/cli shared Engine consent",
         "vscode",
     )
     add_check(
@@ -682,8 +729,17 @@ def check_t18_c004(monorepo: Path, texts: dict[str, str]) -> tuple[list[CheckRes
         checks,
         defects,
         "contradiction:privacy_legacy_retitled",
-        "compatibility" in privacy.lower() and "telemetry enable" in privacy.lower(),
-        "privacy.md legacy section",
+        (
+            "legacy" in privacy.lower()
+            and "v2" in privacy.lower()
+            and "telemetry enable" in privacy.lower()
+        )
+        or (
+            "never" in privacy.lower()
+            and "silent" in privacy.lower()
+            and "v2" in privacy.lower()
+        ),
+        "privacy.md legacy v1 / v2 upgrade wording",
         "contradictions",
     )
     # Other contradictions remain open / carry-forward — do not require resolve

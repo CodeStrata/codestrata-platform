@@ -259,6 +259,7 @@
       "status": "supported_with_optionality_limitation",
       "schema_impact": "sufficient_with_optionality_limitation",
       "source_streams": [
+        "telemetry",
         "assessment_metadata"
       ],
       "required_fields": [
@@ -269,6 +270,7 @@
       "time_field": "acceptance.partition_date",
       "grouping_dimensions": [],
       "derive_not_flag": true,
+      "pairing_semantics": "amd_assessment_id_consumes_one_telemetry_terminal_per_installation",
       "privacy": "approved",
       "future_schema_enhancement_required": false,
       "external_metric_source": false,
@@ -278,6 +280,7 @@
       "status": "supported_with_optionality_limitation",
       "schema_impact": "sufficient_with_optionality_limitation",
       "source_streams": [
+        "telemetry",
         "assessment_metadata"
       ],
       "required_fields": [
@@ -287,6 +290,7 @@
       "time_field": "acceptance.partition_date",
       "grouping_dimensions": [],
       "derive_not_flag": true,
+      "pairing_semantics": "amd_assessment_id_consumes_one_telemetry_terminal_per_installation",
       "privacy": "approved",
       "future_schema_enhancement_required": false,
       "external_metric_source": false,
@@ -296,15 +300,15 @@
       "status": "supported",
       "schema_impact": "sufficient_no_change",
       "source_streams": [
-        "assessment_metadata"
+        "telemetry"
       ],
       "required_fields": [
-        "payload.assessment.assessment_status",
-        "payload.execution.result"
+        "payload.event_type",
+        "payload.properties.feature"
       ],
       "deduplication_key": "payload.event_id",
       "time_field": "acceptance.partition_date",
-      "success_semantics": "assessment_status in completed|partially_completed OR execution.result in succeeded|partially_succeeded",
+      "success_semantics": "feature in assess|assessment AND event_type=feature_completed (Epic 20 lifecycle authority)",
       "privacy": "approved",
       "future_schema_enhancement_required": false,
       "external_metric_source": false,
@@ -314,15 +318,15 @@
       "status": "supported",
       "schema_impact": "sufficient_no_change",
       "source_streams": [
-        "assessment_metadata"
+        "telemetry"
       ],
       "required_fields": [
-        "payload.assessment.assessment_status",
-        "payload.execution.result"
+        "payload.event_type",
+        "payload.properties.feature"
       ],
       "deduplication_key": "payload.event_id",
       "time_field": "acceptance.partition_date",
-      "failure_semantics": "assessment_status=failed OR execution.result=failed; NOT open_report",
+      "failure_semantics": "feature in assess|assessment AND event_type=operation_failed (Epic 20 lifecycle authority)",
       "privacy": "approved",
       "future_schema_enhancement_required": false,
       "external_metric_source": false,

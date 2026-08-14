@@ -44,8 +44,8 @@ Artifacts default under
 | `--model-id` | Optional model override (requires `--with-ai`; required for OpenRouter when unset in config) |
 | `--quiet` | Less progress output |
 | `--json-summary` | Completion JSON on stdout |
-| `--telemetry-allow` | Process-local Community telemetry allow (privacy-first) |
-| `--telemetry-deny` | Process-local Community telemetry deny (privacy-first) |
+| `--telemetry-allow` | Session/frontend bridge only — does **not** create consent or override Disabled |
+| `--telemetry-deny` | Session deny for this assess (privacy-first) |
 
 ## AI commands
 
@@ -59,27 +59,36 @@ See [AI Providers](/ai-providers/) and [Source Locality](/security/source-locali
 Provider selection for assess is configuration-driven (`[ai].provider`); credentials
 stay in the AWS chain / environment — never in report artifacts or telemetry.
 
-## Telemetry (opt-in)
+## Telemetry / assessment insights (opt-in)
 
-Anonymous product telemetry is **disabled by default**. When preference is
-undecided and the terminal is interactive, `assess` may ask once:
+Community collection is **disabled by default**. When preference is undecided
+and the terminal is interactive, `assess` may ask once (v2 scope):
 
 ```text
-Share anonymous telemetry? [y/N]:
+Help improve CodeStrata?
+Share anonymous usage metrics and privacy-safe assessment insights.
+Source code and repository identity stay local. Reports are not published.
+[y/N]:
 ```
 
-Enter defaults to No. Explicit Yes/No is stored locally and is not re-asked.
+Enter defaults to No. **Yes** persists **v2** (usage + assessment insights).
+**Legacy v1** users keep lifecycle-only scope until they accept a broader
+upgrade prompt — never silently expanded.
 
 ```bash
 codestrata telemetry status
-codestrata telemetry enable
-codestrata telemetry disable
-codestrata assess --repo . --no-ai --telemetry-allow
+codestrata telemetry status --json
+codestrata telemetry enable    # durable v2 Yes
+codestrata telemetry disable   # future collection off
+codestrata assess --repo . --no-ai --telemetry-allow   # bridge only; not consent
 codestrata assess --repo . --no-ai --telemetry-deny
 ```
 
-Telemetry opt-in is **not** report-publish authorization. Publishing is a
-separate explicit action. Voluntary public-report Yes/No feedback is also
+`--telemetry-allow` does **not** invent consent or override Disabled. Quiet /
+CI runs never prompt; durable v2 may emit approved streams without prompting.
+
+Telemetry / insights opt-in is **not** report-publish authorization. Publishing
+is a separate explicit action. Voluntary public-report Yes/No feedback is also
 separate from telemetry consent.
 
 ```bash

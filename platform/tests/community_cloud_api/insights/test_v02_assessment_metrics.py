@@ -250,6 +250,12 @@ def test_published_reports_port_and_registry_count() -> None:
 
 
 def test_github_metrics_fail_gracefully_without_network(monkeypatch) -> None:
+    from codestrata_platform.community_cloud_api.insights.external_metrics import (
+        reset_shared_github_cache_for_tests,
+    )
+
+    reset_shared_github_cache_for_tests()
+
     class BoomCache:
         def get(self):
             raise RuntimeError("network")

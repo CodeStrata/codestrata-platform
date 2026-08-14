@@ -22,7 +22,7 @@ Useful flags:
 | `--no-ai` | Deterministic only (recommended default) |
 | `--quiet` | Suppress stage progress |
 | `--json-summary` | Machine-readable completion JSON on stdout |
-| `--telemetry-allow` / `--telemetry-deny` | Process-local Community telemetry consent (optional; off by default) |
+| `--telemetry-allow` / `--telemetry-deny` | Session bridge / deny only — `--telemetry-allow` does **not** create consent (optional; off by default) |
 
 ```bash
 codestrata assess --repo . --no-ai --quiet --json-summary

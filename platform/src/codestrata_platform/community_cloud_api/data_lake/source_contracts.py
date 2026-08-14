@@ -34,6 +34,9 @@ class SourceContractDescriptor:
     project_payload: Callable[[CommunityApiRequestModel], dict[str, Any]]
     client_type_extractor: Callable[[CommunityApiRequestModel], str]
     catalog_versions: Mapping[str, str] = field(default_factory=dict)
+    # When set, envelope source_contract.schema_version may be any of these
+    # (request-driven). Default is the singleton {schema_version}.
+    supported_schema_versions: frozenset[str] | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.event_stream, EventStream):
@@ -54,6 +57,16 @@ class SourceContractDescriptor:
             self, "allowed_client_types", frozenset(self.allowed_client_types)
         )
         object.__setattr__(self, "catalog_versions", dict(self.catalog_versions))
+        supported = self.supported_schema_versions
+        if supported is None:
+            supported = frozenset({self.schema_version})
+        else:
+            supported = frozenset(supported)
+        if self.schema_version not in supported:
+            raise SourceContractError(
+                "schema_version must be included in supported_schema_versions"
+            )
+        object.__setattr__(self, "supported_schema_versions", supported)
 
     def to_stable_dict(self) -> dict[str, Any]:
         return {
@@ -63,4 +76,5 @@ class SourceContractDescriptor:
             "policy_id": self.policy_id,
             "schema_name": self.schema_name,
             "schema_version": self.schema_version,
+            "supported_schema_versions": sorted(self.supported_schema_versions or ()),
         }

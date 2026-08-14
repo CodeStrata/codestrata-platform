@@ -54,10 +54,13 @@ FORBIDDEN_PHRASES = (
     "data lake stores reports",
     "data lake is report storage",
     "insights queries report html",
-    "assessment_metadata is active on assess",
+    "assessment_metadata is active on assess without consent",
     "cli_event is active on assess",
     "extension_event is active",
     "ai_usage is active on assess",
+    "we collect assessment scores",
+    "code graph uploaded",
+    "graph telemetry is collected",
 )
 
 
@@ -171,8 +174,8 @@ def check_routes(
     add_check(
         checks,
         defects,
-        "routes:count_16",
-        reg.get("route_count") == 16 and len(routes) == 16,
+        "routes:count_19",
+        reg.get("route_count") == 19 and len(routes) == 19,
         f"count={reg.get('route_count')} len={len(routes)}",
         "routes",
     )

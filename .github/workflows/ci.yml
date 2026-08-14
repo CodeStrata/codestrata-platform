@@ -1,11 +1,18 @@
-# CodeStrata monorepo CI (Slice 12.9)
+# CodeStrata monorepo CI (Slice 12.9 + Slice 20.12B)
 #
-# Validates Engine, Platform, VS Code, and independent Community / Infrastructure
-# export targets. Does NOT: publish, deploy, tag, push remotes, plan/apply/destroy,
-# or configure AWS credentials for export validation.
+# Validates Engine, Platform, VS Code, independent Community / Infrastructure
+# export targets, and Epic 20 transparency claim guards. Does NOT: publish,
+# deploy, tag, push remotes, plan/apply/destroy, or configure AWS credentials
+# for export validation.
 #
 # Active editor extension: VS Code only (Cursor retired Slice 12.1–12.2).
 # Export command: python scripts/export_repository.py --target <community|infrastructure>
+#
+# Jobs (9):
+#   engine-tests, platform-tests, vscode-ci,
+#   insights-ci, reports-ci,
+#   community-export-verification, infrastructure-export-verification,
+#   ci-release-boundaries, epic20-transparency-claims
 
 name: ci
 
@@ -116,6 +123,58 @@ jobs:
       - name: Package dry validation
         run: npm run package:dry
       # Marketplace publish is intentionally NOT invoked here.
+
+  insights-ci:
+    name: insights-ci
+    if: github.repository == 'CodeStrata/codestrata-platform'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: insights
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: insights/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
+      # Deploy / Cloudflare credentials intentionally NOT invoked here.
+
+  reports-ci:
+    name: reports-ci
+    if: github.repository == 'CodeStrata/codestrata-platform'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: reports
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: reports/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      # Wrangler deploy intentionally NOT invoked here.
 
   community-export-verification:
     name: community-export-verification
@@ -272,3 +331,49 @@ jobs:
       - name: Focused unit tests
         run: |
           PYTHONPATH=. python -m pytest tests/verification/ci_release_boundaries -q --tb=line
+
+  # Slice 20.12B — monorepo Epic 20 transparency / consent claim guards.
+  # Exists so documentation regressions fail the clean runner (not only local runs).
+  epic20-transparency-claims:
+    name: epic20-transparency-claims
+    if: github.repository == 'CodeStrata/codestrata-platform'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    env:
+      AWS_EC2_METADATA_DISABLED: "true"
+      NO_COLOR: "1"
+      TERM: dumb
+      FORCE_COLOR: "0"
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            engine/pyproject.toml
+            platform/pyproject.toml
+            pyproject.toml
+      - name: Install Engine + Platform (verification imports)
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e "./engine[dev]"
+          python -m pip install -e "./platform[dev]"
+      - name: Slice 20.12 claim guards (mandatory hard fail)
+        run: |
+          PYTHONPATH=. python -m pytest \
+            tests/verification/community_telemetry_data_transparency/test_slice_20_12_claim_guards.py \
+            -v --tb=short --import-mode=importlib
+      - name: Epic 20 transparency / consent / marketplace packs
+        run: |
+          # --import-mode=importlib avoids colliding test_package.py module names.
+          PYTHONPATH=. python -m pytest \
+            tests/verification/community_telemetry_data_transparency/test_package.py \
+            tests/verification/community_telemetry_consent/test_community_telemetry_consent.py \
+            tests/verification/community_public_claim_runtime_validation/test_package.py \
+            tests/verification/community_privacy_retention_optout/test_package.py \
+            tests/verification/vscode_marketplace_docs/test_docs.py \
+            -q --tb=line --import-mode=importlib

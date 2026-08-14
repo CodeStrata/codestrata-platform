@@ -49,29 +49,26 @@ def _base_limitations(ctx: AggregationContext) -> list[str]:
     return lim
 
 
-def _is_assess_terminal_event(ev: dict[str, Any]) -> bool:
-    """Terminal assessment attempt from telemetry or assessment_metadata."""
+def _is_lifecycle_assess_terminal(ev: dict[str, Any]) -> bool:
+    """Terminal assessment attempt from lifecycle telemetry only (Epic 20)."""
 
-    stream = ev.get("stream")
-    if stream == "assessment_metadata":
-        return not _is_cancelled(ev)
-    if stream != "telemetry":
+    if ev.get("stream") != "telemetry":
         return False
     feature = str(ev.get("feature") or "").lower()
     if feature not in {"assess", "assessment"}:
         return False
     et = ev.get("event_type")
-    if et == "feature_completed":
-        return True
-    if et == "operation_failed":
-        return True
-    return False
+    return et in {"feature_completed", "operation_failed"}
+
+
+def _is_amd_assess_terminal(ev: dict[str, Any]) -> bool:
+    """Non-cancelled assessment_metadata event."""
+
+    return ev.get("stream") == "assessment_metadata" and not _is_cancelled(ev)
 
 
 def _is_assess_success_event(ev: dict[str, Any]) -> bool:
-    if ev.get("stream") == "assessment_metadata":
-        return _is_success(ev) and not _is_cancelled(ev)
-    if not _is_assess_terminal_event(ev):
+    if not _is_lifecycle_assess_terminal(ev):
         return False
     if ev.get("event_type") == "feature_completed":
         return True
@@ -81,9 +78,7 @@ def _is_assess_success_event(ev: dict[str, Any]) -> bool:
 
 
 def _is_assess_failed_event(ev: dict[str, Any]) -> bool:
-    if ev.get("stream") == "assessment_metadata":
-        return _is_failed(ev)
-    if not _is_assess_terminal_event(ev):
+    if not _is_lifecycle_assess_terminal(ev):
         return False
     if ev.get("event_type") == "operation_failed":
         return True
@@ -92,19 +87,60 @@ def _is_assess_failed_event(ev: dict[str, Any]) -> bool:
     return False
 
 
-def _assessment_events(ctx: AggregationContext) -> list[dict[str, Any]]:
-    return [
-        e
-        for e in ctx.events
-        if e.get("stream") in {"assessment_metadata", "telemetry"}
-        and _is_assess_terminal_event(e)
-    ]
+def _lifecycle_assessment_events(ctx: AggregationContext) -> list[dict[str, Any]]:
+    """Total / Successful / Failed — telemetry only (no amd double-count)."""
+
+    return [e for e in ctx.events if _is_lifecycle_assess_terminal(e)]
 
 
-def _event_sort_key(event: dict[str, Any]) -> tuple[str, str]:
-    occurred = event.get("occurred_at") or ""
-    eid = event.get("event_id") or ""
-    return (str(occurred), str(eid))
+def _assessment_dedupe_key(ev: dict[str, Any]) -> str:
+    """Prefer opaque assessment_id; else event_id (one row per amd emit)."""
+
+    aid = ev.get("assessment_id")
+    if isinstance(aid, str) and aid.strip():
+        return f"assessment:{aid.strip()}"
+    eid = ev.get("event_id")
+    if isinstance(eid, str) and eid.strip():
+        return f"event:{eid.strip()}"
+    return f"anon:{id(ev)}"
+
+
+def _first_repeat_units_by_installation(
+    ctx: AggregationContext,
+) -> tuple[dict[str, int], int]:
+    """Logical assessment counts per installation (backward-compatible).
+
+    Old clients emit lifecycle telemetry only — those terminal events remain
+    First/Repeat authority.
+
+    New clients emit telemetry + amd for the same assessment. Pair by
+    consuming one telemetry terminal per distinct amd assessment so the
+    logical unit counts once: ``n_amd + max(0, n_tel - n_amd)``.
+    """
+
+    amd_keys: dict[str, set[str]] = defaultdict(set)
+    tel_counts: dict[str, int] = defaultdict(int)
+    missing = 0
+    for ev in ctx.events:
+        if _is_amd_assess_terminal(ev):
+            iid = ev.get("installation_id")
+            if not iid:
+                missing += 1
+                continue
+            amd_keys[str(iid)].add(_assessment_dedupe_key(ev))
+            continue
+        if _is_lifecycle_assess_terminal(ev):
+            iid = ev.get("installation_id")
+            if not iid:
+                missing += 1
+                continue
+            tel_counts[str(iid)] += 1
+    units: dict[str, int] = {}
+    for iid in set(amd_keys) | set(tel_counts):
+        n_amd = len(amd_keys.get(iid, ()))
+        n_tel = tel_counts.get(iid, 0)
+        units[iid] = n_amd + max(0, n_tel - n_amd)
+    return units, missing
 
 
 def aggregate_total_installations(
@@ -211,15 +247,10 @@ def aggregate_monthly_active(
 def aggregate_first_assessments(
     ctx: AggregationContext, start: date, end: date
 ) -> MetricResult:
-    by_install: dict[str, dict[str, Any]] = {}
-    missing = 0
-    for ev in sorted(_assessment_events(ctx), key=_event_sort_key):
-        iid = ev.get("installation_id")
-        if not iid:
-            missing += 1
-            continue
-        if iid not in by_install:
-            by_install[iid] = ev
+    """Installations with ≥1 logical assessment (telemetry↔amd paired)."""
+
+    units, missing = _first_repeat_units_by_installation(ctx)
+    first_count = sum(1 for n in units.values() if n >= 1)
     ctx.missing_installation_id_count = max(ctx.missing_installation_id_count, missing)
     lim = _base_limitations(ctx)
     lim.append("retention_window_limited")
@@ -232,7 +263,7 @@ def aggregate_first_assessments(
         metric_id="first_assessments",
         status="ok",
         window=_window("first_assessments", start, end),
-        value=len(by_install),
+        value=first_count,
         completeness=completeness,
         limitations=finalize_limitations(lim),
     )
@@ -241,18 +272,10 @@ def aggregate_first_assessments(
 def aggregate_repeat_assessments(
     ctx: AggregationContext, start: date, end: date
 ) -> MetricResult:
-    by_install: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    missing = 0
-    for ev in sorted(_assessment_events(ctx), key=_event_sort_key):
-        iid = ev.get("installation_id")
-        if not iid:
-            missing += 1
-            continue
-        by_install[iid].append(ev)
-    repeat_events = 0
-    for events in by_install.values():
-        if len(events) > 1:
-            repeat_events += len(events) - 1
+    """Extra logical assessments beyond the first per installation."""
+
+    units, missing = _first_repeat_units_by_installation(ctx)
+    repeat_events = sum(n - 1 for n in units.values() if n > 1)
     ctx.missing_installation_id_count = max(ctx.missing_installation_id_count, missing)
     lim = _base_limitations(ctx)
     lim.append("retention_window_limited")
@@ -271,7 +294,7 @@ def aggregate_repeat_assessments(
 
 
 def aggregate_successful(ctx: AggregationContext, start: date, end: date) -> MetricResult:
-    count = sum(1 for ev in _assessment_events(ctx) if _is_assess_success_event(ev))
+    count = sum(1 for ev in _lifecycle_assessment_events(ctx) if _is_assess_success_event(ev))
     lim = _base_limitations(ctx)
     completeness = resolve_completeness(
         diagnostics=ctx.diagnostics, missing_identity=False
@@ -287,7 +310,7 @@ def aggregate_successful(ctx: AggregationContext, start: date, end: date) -> Met
 
 
 def aggregate_failed(ctx: AggregationContext, start: date, end: date) -> MetricResult:
-    count = sum(1 for ev in _assessment_events(ctx) if _is_assess_failed_event(ev))
+    count = sum(1 for ev in _lifecycle_assessment_events(ctx) if _is_assess_failed_event(ev))
     lim = _base_limitations(ctx)
     completeness = resolve_completeness(
         diagnostics=ctx.diagnostics, missing_identity=False
@@ -305,9 +328,9 @@ def aggregate_failed(ctx: AggregationContext, start: date, end: date) -> MetricR
 def aggregate_total_assessments(
     ctx: AggregationContext, start: date, end: date
 ) -> MetricResult:
-    """Total terminal assessment attempts (successful + failed)."""
+    """Total terminal assessment attempts from lifecycle telemetry only."""
 
-    count = len(_assessment_events(ctx))
+    count = len(_lifecycle_assessment_events(ctx))
     lim = _base_limitations(ctx)
     completeness = resolve_completeness(
         diagnostics=ctx.diagnostics, missing_identity=False

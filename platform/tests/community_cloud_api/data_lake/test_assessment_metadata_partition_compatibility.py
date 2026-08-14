@@ -67,6 +67,8 @@ def test_partition_policy_source_policy_id_matches_endpoint_policy_urn() -> None
 def test_partition_policy_source_schema_version_matches_endpoint_schema_version() -> None:
     policy = default_assessment_metadata_partition_policy()
     assert COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION in policy.supported_source_schema_versions
+    assert "1.1" in policy.supported_source_schema_versions
+    assert policy.supported_source_schema_versions == frozenset({"1.0", "1.1"})
 
 
 def test_generic_required_path_dimensions_are_unchanged_five_field_hive_shape() -> None:

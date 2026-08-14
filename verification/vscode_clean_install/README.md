@@ -13,7 +13,7 @@ cd ..
 
 Report: `.codestrata-artifacts/validation/suites/sv13-14/vscode-clean-install-verification.json`
 
-The verifier builds/uses `vscode-plugin/codestrata-assessment-0.2.1.vsix` and
+The verifier builds/uses `vscode-plugin/codestrata-assessment-0.2.2.vsix` and
 inventories contents without leaking absolute paths.
 
 ## Scope

@@ -52,12 +52,25 @@ def test_engine_has_no_community_cloud_api_package() -> None:
 
 
 def test_engine_contains_no_community_cloud_tokens() -> None:
-    forbidden = (
+    """Engine must not embed private Platform Community Cloud API implementation.
+
+    Public endpoint *path literals* may appear only in
+    ``community_cloud/public_api_authority.py`` (canonical public contract).
+    Client modules import helpers from that authority rather than redefining paths.
+
+    Private Platform package tokens remain forbidden everywhere in Engine.
+    Note: Engine ships client wire DTO name ``CommunityCloudTelemetryWireRequest``;
+    that is an intentional public client contract, not the Platform package.
+    """
+
+    private_tokens = (
         "create_community_cloud_app",
-        "CommunityCloud",
         "community_cloud_api",
         "CommunityHealthResponse",
         "RouteRegistry.foundation_v1",
+    )
+    # Public path literals — allowed only under public_api_authority.py.
+    public_path_tokens = (
         "/api/v1/health",
         "/api/v1/telemetry",
         "/api/v1/assessment-metadata",
@@ -67,17 +80,13 @@ def test_engine_contains_no_community_cloud_tokens() -> None:
     )
     offenders: list[str] = []
     for path in ENGINE_SRC.rglob("*.py"):
-        # ACTIVE_CURRENT_PLATFORM_CONTRACT: Engine telemetry wire models
-        # (CommunityCloudTelemetryWireRequest) are shipped client contracts,
-        # not the Platform community_cloud_api package.
-        if "community_cloud" in path.parts or path.name in {
-            "transport.py",
-            "transport_models.py",
-            "transport_mapping.py",
-        }:
-            continue
         text = path.read_text(encoding="utf-8")
-        for token in forbidden:
+        for token in private_tokens:
+            if token in text:
+                offenders.append(f"{path.relative_to(REPO_ROOT)}:{token}")
+        if path.name == "public_api_authority.py":
+            continue
+        for token in public_path_tokens:
             if token in text:
                 offenders.append(f"{path.relative_to(REPO_ROOT)}:{token}")
     assert offenders == []

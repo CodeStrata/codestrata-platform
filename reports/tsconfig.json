@@ -9,5 +9,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["workers/**/*.ts"]
+  "include": ["workers/**/*.ts"],
+  "exclude": ["tests/**", "vitest.config.ts"]
 }

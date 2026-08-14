@@ -10,7 +10,7 @@ Listing narrative is covered by
 
 **Status:** Live Visual Studio Marketplace listing
 https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment
-(`CodeStrataAI.codestrata-assessment` **0.2.1**). Community Engine/CLI remains v0.2.0.
+(`CodeStrataAI.codestrata-assessment` **0.2.2**). Community Engine/CLI remains v0.2.1.
 
 Active Community editor extension: **VS Code only**.
 
@@ -28,7 +28,7 @@ after release without explicit approval.
 
 | Extension | Status |
 | --------- | ------ |
-| codestrata-assessment | **PUBLISHED** — live listing `CodeStrataAI.codestrata-assessment` **0.2.1** |
+| codestrata-assessment | **FREEZE CANDIDATE** — package **0.2.2** (Marketplace live listing still **0.2.1** until publish) |
 
 Do **not** treat a later local VSIX rebuild as an unpublished listing overwrite.
 Marketplace versions are monotonic.
@@ -75,8 +75,8 @@ export OVSX_TOKEN='…'        # local shell only
    (`package` uses `--allow-missing-repository --no-rewrite-relative-links`
    because extension source is private; do not point listing URLs at a
    private GitHub source repository.)
-2. Upload `codestrata-assessment-0.2.1.vsix` in Marketplace manage → Update
-   (Marketplace already published 0.2.0; listing versions are monotonic)
+2. Upload `codestrata-assessment-0.2.2.vsix` in Marketplace manage → Update
+   (Marketplace already published 0.2.1; listing versions are monotonic)
 3. Confirm README renders (listing source is `README.md`)
 4. Attach screenshots from `media/screenshot-*.png` if the upload UI requires them
 5. Review → Make Public only after human approval
@@ -87,7 +87,7 @@ export OVSX_TOKEN='…'        # local shell only
 cd vscode-plugin
 npm test
 npm run package
-npx --yes @vscode/vsce publish --packagePath ./codestrata-assessment-0.2.1.vsix -p "$VSCE_PAT"
+npx --yes @vscode/vsce publish --packagePath ./codestrata-assessment-0.2.2.vsix -p "$VSCE_PAT"
 # Prefer: vsce login CodeStrataAI   then   vsce publish
 ```
 
@@ -105,7 +105,7 @@ npx --yes @vscode/vsce package --no-dependencies
 3. Generate access token → store as `OVSX_TOKEN` only
 
 ```bash
-npx ovsx publish codestrata-assessment-0.2.1.vsix -p "$OVSX_TOKEN"
+npx ovsx publish codestrata-assessment-0.2.2.vsix -p "$OVSX_TOKEN"
 ```
 
 Clean install/update validation: [docs/clean-install-update.md](docs/clean-install-update.md).

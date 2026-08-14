@@ -8,6 +8,28 @@ from typing import Any, Protocol
 from codestrata_platform.community_cloud_api.insights.completeness import finalize_limitations
 from codestrata_platform.community_cloud_api.insights.models import MetricResult, MetricWindow
 
+# Process-local shared cache so overview stars+forks share one GitHub fetch
+# (and warm Lambda invocations reuse TTL). Fail-soft; never holds secrets.
+_SHARED_GITHUB_CACHE: Any | None = None
+
+
+def _github_cache() -> Any:
+    global _SHARED_GITHUB_CACHE
+    if _SHARED_GITHUB_CACHE is None:
+        from codestrata_platform.community_cloud_api.community_status.github_stars import (
+            GitHubMetadataCache,
+        )
+
+        _SHARED_GITHUB_CACHE = GitHubMetadataCache()
+    return _SHARED_GITHUB_CACHE
+
+
+def reset_shared_github_cache_for_tests() -> None:
+    """Test-only: clear process cache between cases."""
+
+    global _SHARED_GITHUB_CACHE
+    _SHARED_GITHUB_CACHE = None
+
 
 class PublishedReportsPort(Protocol):
     def count_published_reports(self) -> int: ...
@@ -25,11 +47,7 @@ def aggregate_github_stars(start: date, end: date) -> MetricResult:
     stars: int | None = None
     lim = ["github_public_api"]
     try:
-        from codestrata_platform.community_cloud_api.community_status.github_stars import (
-            GitHubMetadataCache,
-        )
-
-        meta = GitHubMetadataCache().get()
+        meta = _github_cache().get()
         stars = meta.stars
         if stars is None:
             lim.append("source_unavailable")
@@ -49,11 +67,7 @@ def aggregate_github_forks(start: date, end: date) -> MetricResult:
     forks: int | None = None
     lim = ["github_public_api"]
     try:
-        from codestrata_platform.community_cloud_api.community_status.github_stars import (
-            GitHubMetadataCache,
-        )
-
-        meta = GitHubMetadataCache().get()
+        meta = _github_cache().get()
         forks = getattr(meta, "forks", None)
         if forks is None:
             lim.append("source_unavailable")

@@ -169,15 +169,24 @@ export class HttpInsightsApiClient implements InsightsApiClient {
 
   async getOverview(): Promise<MetricResult[]> {
     const url = joinUrl(this.config.apiBaseUrl, "/insights/api/overview");
-    const res = await this.fetchFn(`${url}?_=${Date.now()}`, {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store",
-      headers: {
-        Accept: "application/json",
-        "Cache-Control": "no-cache",
-      },
-    });
+    let res: Response;
+    try {
+      res = await this.fetchFn(`${url}?_=${Date.now()}`, {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          Accept: "application/json",
+          "Cache-Control": "no-cache",
+        },
+      });
+    } catch (err) {
+      const name = err instanceof Error ? err.name : "";
+      if (name === "AbortError") {
+        throw new AuthApiError("network_error", 0, "Request aborted");
+      }
+      throw new AuthApiError("network_error", 0, "Network error");
+    }
     if (res.status === 401) {
       throw new AuthApiError("unauthenticated", 401, "Authentication required");
     }

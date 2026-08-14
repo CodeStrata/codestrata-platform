@@ -7,7 +7,7 @@ Run local **Engineering Assessments** with **CodeStrata Engine** from VS Code
 recommendations, and open a generated Assessment Report—
 without leaving the editor.
 
-**Version:** 0.2.1 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
+**Version:** 0.2.2 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
 `0.2.x`
 
 Install **[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)**
@@ -98,8 +98,8 @@ through the local Engine CLI:
 
 1. Workspace and repository readiness
 2. Compatible CLI discovery
-3. Optional command-local telemetry prompt (eligible assessments only; default
-   **Deny**)
+3. Optional Community consent prompt when Engine preference is undecided
+   (eligible assessments only; default **Deny**; shared with CLI)
 4. Local Engine process with progress indication
 5. Local report artifacts (including HTML when generated)
 
@@ -148,6 +148,7 @@ Nothing installs, retries, or remediates automatically.
 
 | Extension | Supported Engine CLI |
 | --------- | -------------------- |
+| 0.2.2 | `0.2.x` (release builds; no prerelease) |
 | 0.2.1 | `0.2.x` (release builds; no prerelease) |
 | 0.2.0 | `0.2.x` (release builds; no prerelease) |
 
@@ -164,11 +165,14 @@ Use **CodeStrata: CodeStrata Doctor** to check environment readiness.
 - This extension does **not** upload repository source to CodeStrata Community
   services
 - Reports and findings remain **local** unless you explicitly Publish/Share
-- Telemetry is **optional**, prompted only for eligible assessment commands,
-  defaults to **Deny**, and is **not saved**
-- Community Cloud telemetry ingestion exists in production when a session
-  explicitly opts in with credentials; default assessment does not transmit
-- No installation identity or machine identity is used for VS Code UI identity
+- Telemetry / assessment insights are **optional**, prompted only when Engine
+  consent is undecided on eligible assessment commands, and default to **Deny**
+- VS Code and CLI share the **same** Engine-owned consent preference
+  (`CODESTRATA_HOME`) — disabling in one surface applies to the other
+- Community Cloud ingestion exists when durable consent + credentials allow it;
+  default assessment does not transmit
+- No installation identity or machine identity is used for VS Code **UI**
+  identity (Engine may use a random installation UUID for first/repeat Insights)
 
 Canonical docs:
 
@@ -176,18 +180,21 @@ Canonical docs:
 - https://docs.codestrata.ai/security/data-collection
 - https://docs.codestrata.ai/security/source-locality
 - https://docs.codestrata.ai/security/retention-and-deletion
+- https://docs.codestrata.ai/reference/telemetry
 
 AI assessment is qualified separately above: Engine-owned provider flow may use
 an external provider when you configure one.
 
-## Telemetry
+## Telemetry / assessment insights
 
 For **Run Assessment** and **Run Assessment with AI** only:
 
-- When preference is undecided, VS Code may prompt (`[y/N]` equivalent; default Deny)
-- Explicit Allow / No Thanks is persisted in extension `globalState`
-- Preference can be changed via **Telemetry Settings**
-- Telemetry opt-in is **not** report-publish authorization
+- When Engine preference is undecided, VS Code may prompt (default Deny)
+- Allow persists **v2** consent through the Engine (usage + privacy-safe
+  assessment insights); No Thanks disables Community collection
+- Consent is shared with the CLI — not overridden by extension-local cache
+- Telemetry / insights consent is **not** report-publish authorization
+- Source code and repository identity stay local
 
 Init, install guidance, report open, and recovery actions do not prompt for
 telemetry.
@@ -212,7 +219,7 @@ See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
 ## Known Limitations
 
 - CLI auto-install is not supported (guidance only)
-- Extension 0.2.1 requires Engine CLI `0.2.x`
+- Extension 0.2.2 requires Engine CLI `0.2.x`
 - Progress is indeterminate (no percentage completion)
 - Optional AI depends on Engine provider configuration
 - Public install path is Visual Studio Marketplace

@@ -34,15 +34,15 @@ Separately, if you configure optional AI enrichment, your chosen provider may
 receive bounded enrichment context — that is **not** Community telemetry
 (see [AI Providers](/ai-providers/)).
 
-## Stream status (v0.2.0 honesty)
+## Stream status (v0.2.1 honesty)
 
 Community Cloud registers five ingest streams. **Do not assume all five are
 actively emitted** by the current Engine assess path.
 
-| Stream | Endpoint | Producer status (v0.2.0) | Consent | Destination | Insights use |
+| Stream | Endpoint | Producer status (v0.2.1) | Consent | Destination | Insights use |
 | --- | --- | --- | --- | --- | --- |
-| `telemetry` | `POST /api/v1/telemetry` | **ACTIVE** after explicit opt-in + credential | Required | Community Data Lake `raw/` | activity / adoption aggregates |
-| `assessment_metadata` | `POST /api/v1/assessment-metadata` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** (API + lake capacity exist) | Required | Community Data Lake `raw/` | assessments / coverage / technology |
+| `telemetry` | `POST /api/v1/telemetry` | **ACTIVE** after lifecycle-allowed consent (v1 or v2) + credential | Required | Community Data Lake `raw/` | activity / adoption aggregates |
+| `assessment_metadata` | `POST /api/v1/assessment-metadata` | **ACTIVE_WITH_V2_CONSENT** after durable v2 Yes + credential (schemas 1.0 + 1.1) | Required (v2) | Community Data Lake `raw/` | assessments / coverage / technology (no double-count with lifecycle) |
 | `cli_event` | `POST /api/v1/cli-events` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** (API + lake capacity exist) | Required | Community Data Lake `raw/` | activity / adoption |
 | `extension_event` | `POST /api/v1/extension-events` | **CONTRACT_ONLY** (no fabricated producer traffic) | Required | Community Data Lake `raw/` | adoption (when present) |
 | `ai_usage` | `POST /api/v1/ai-usage` | **DEFERRED** on assess path (construction-only; no prompts/responses) | Required | Community Data Lake `raw/` | AI aggregates (when present) |
@@ -59,10 +59,14 @@ event type, optional coarse properties).
 
 Producer: Engine / CLI product HTTP transport after allow + credential.
 
-### `assessment_metadata` (capacity; not current assess emission)
+### `assessment_metadata` (ACTIVE with v2 consent)
 
-Purpose: privacy-safe assessment aggregates/enums — **not** full
-`assessment.json`, `assessment.html`, or `heads/*.json`.
+Purpose: privacy-safe derived assessment intelligence — executed heads, aggregate
+counts, approved rule/severity/category patterns, head confidence, bounded
+failure category, and categorical repository characteristics.
+
+**Not** full `assessment.json`, `assessment.html`, `heads/*.json`, finding prose,
+source, paths, repository identity, graph data, or report IDs/URLs.
 
 ### `cli_event` / `extension_event` / `ai_usage`
 
@@ -123,11 +127,10 @@ Telemetry opt-in alone **never** publishes a report.
 
 ## Installation / client identity
 
-See [Telemetry — Installation / client identity](/reference/telemetry#installation--client-identity).
+See [Telemetry — Pseudonymous installation identifier](/reference/telemetry#pseudonymous-installation-identifier).
 
 Summary: random UUID v4 installation identifier may exist locally for analytics
-continuity; privacy-first assess does not require inventing one for normal
-transmission; Insights must not show raw ids.
+continuity (first vs repeat); Insights must not show raw ids.
 
 ## Data destinations
 

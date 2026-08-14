@@ -78,10 +78,23 @@ export function AuthProvider({
       setLoginError(null);
       try {
         await client.login(password);
+        // Confirm cookie/session is readable before mounting authenticated routes
+        // (avoids first dashboard fetch racing a not-yet-ready session).
+        const session = await client.getSession();
+        if (!session.authenticated) {
+          endAuthenticatedSession();
+          setState("unauthenticated");
+          setLoginError("Sign-in failed. Try again.");
+          throw new Error("login_failed");
+        }
         // New session — do not reuse any pre-login cache (should already be empty).
         clearOverviewCache();
         setState("authenticated");
       } catch (err) {
+        // Session-confirm path already set unauthenticated + loginError.
+        if (err instanceof Error && err.message === "login_failed") {
+          throw err;
+        }
         endAuthenticatedSession();
         setState("unauthenticated");
         if (err instanceof AuthApiError && err.code === "unavailable") {

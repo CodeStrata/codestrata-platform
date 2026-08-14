@@ -8,7 +8,6 @@ from codestrata_platform.community_cloud_api.assessment_metadata.models import (
     AssessmentMetadataRequest,
 )
 from codestrata_platform.community_cloud_api.assessment_metadata.policy import (
-    COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION,
     CommunityAssessmentMetadataPolicy,
     default_assessment_metadata_policy,
 )
@@ -37,7 +36,7 @@ def validate_assessment_metadata_semantics(
 
     errors: list[ValidationFieldError] = []
 
-    if model.schema_version != active.schema_version:
+    if model.schema_version not in active.supported_schema_versions:
         errors.append(field_error("schema_version", FIELD_INVALID_ENUM))
 
     if model.client.name not in active.allowed_clients:
@@ -45,6 +44,21 @@ def validate_assessment_metadata_semantics(
 
     if model.installation_id is not None and not active.allow_installation_id:
         errors.append(field_error("installation_id", FIELD_UNKNOWN))
+
+    if model.schema_version == "1.1":
+        if model.assessment_id is None:
+            errors.append(field_error("assessment_id", FIELD_INVALID_FORMAT))
+    elif model.assessment_id is not None:
+        # 1.0 clients must not send 1.1 identity fields.
+        errors.append(field_error("assessment_id", FIELD_UNKNOWN))
+
+    if model.schema_version == "1.0":
+        if model.finding_aggregates:
+            errors.append(field_error("finding_aggregates", FIELD_UNKNOWN))
+        if model.head_confidence:
+            errors.append(field_error("head_confidence", FIELD_UNKNOWN))
+        if model.execution.failure_category is not None:
+            errors.append(field_error("execution.failure_category", FIELD_UNKNOWN))
 
     assessment = model.assessment
     if assessment.assessment_status not in active.allowed_assessment_statuses:
@@ -83,15 +97,20 @@ def validate_assessment_metadata_semantics(
         errors.append(field_error("execution.duration_bucket", FIELD_INVALID_ENUM))
     if model.execution.result not in active.execution_result_vocabulary:
         errors.append(field_error("execution.result", FIELD_INVALID_ENUM))
+    if model.execution.failure_category is not None:
+        if model.execution.failure_category not in active.allowed_failure_categories:
+            errors.append(field_error("execution.failure_category", FIELD_INVALID_ENUM))
 
     if model.artifacts.artifact_count > active.maximum_artifact_count:
         errors.append(field_error("artifacts.artifact_count", FIELD_TOO_LARGE))
 
+    if len(model.finding_aggregates) > active.maximum_finding_aggregates:
+        errors.append(field_error("finding_aggregates", FIELD_TOO_LARGE))
+    if len(model.head_confidence) > active.maximum_head_confidence_rows:
+        errors.append(field_error("head_confidence", FIELD_TOO_LARGE))
+
     dumped = model.to_stable_dict()
     _scan_forbidden(dumped, path="", forbidden=set(active.forbidden_field_names), out=errors)
-
-    if COMMUNITY_ASSESSMENT_METADATA_SCHEMA_VERSION != "1.0":
-        errors.append(field_error("schema_version", FIELD_INVALID_ENUM))
 
     unique: dict[tuple[str, str], ValidationFieldError] = {}
     for item in errors:

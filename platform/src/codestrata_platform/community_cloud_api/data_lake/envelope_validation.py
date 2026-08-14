@@ -41,8 +41,14 @@ def require_supported_envelope_schema_version(
         raise EnvelopeBuildError(EnvelopeErrorCode.UNSUPPORTED_ENVELOPE_SCHEMA)
 
 
-def require_supported_source_schema_version(actual: str, expected: str) -> None:
-    if actual != expected:
+def require_supported_source_schema_version(
+    actual: str, expected: str | frozenset[str] | set[str] | tuple[str, ...]
+) -> None:
+    if isinstance(expected, str):
+        if actual != expected:
+            raise EnvelopeBuildError(EnvelopeErrorCode.UNSUPPORTED_SOURCE_SCHEMA)
+        return
+    if actual not in expected:
         raise EnvelopeBuildError(EnvelopeErrorCode.UNSUPPORTED_SOURCE_SCHEMA)
 
 
@@ -91,8 +97,9 @@ def revalidate_payload_against_source_contract(envelope: Any) -> None:
 
     if envelope.source_contract.schema_name != descriptor.schema_name:
         raise EnvelopeBuildError(EnvelopeErrorCode.UNSUPPORTED_SOURCE_SCHEMA, "schema_name_mismatch")
+    supported = descriptor.supported_schema_versions or frozenset({descriptor.schema_version})
     require_supported_source_schema_version(
-        envelope.source_contract.schema_version, descriptor.schema_version
+        envelope.source_contract.schema_version, supported
     )
     require_supported_source_policy(envelope.source_contract.policy_id, descriptor.policy_id)
 

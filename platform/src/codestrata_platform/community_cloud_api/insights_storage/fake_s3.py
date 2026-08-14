@@ -16,16 +16,20 @@ class FakeInsightsS3Client:
     """In-memory object store keyed by S3 key (no network)."""
 
     def __init__(self) -> None:
+        import threading
+
         self.objects: dict[str, bytes] = {}
         self.calls: list[tuple[str, dict[str, Any]]] = []
         self.fail_list: bool = False
         self.fail_get: bool = False
+        self._lock = threading.Lock()
 
     def put_bytes(self, key: str, body: bytes) -> None:
         self.objects[key] = body
 
     def list_objects_v2(self, **kwargs: Any) -> dict[str, Any]:
-        self.calls.append(("list_objects_v2", dict(kwargs)))
+        with self._lock:
+            self.calls.append(("list_objects_v2", dict(kwargs)))
         if self.fail_list:
             raise FakeInsightsS3Error("ServiceUnavailable", "ListObjectsV2")
         prefix = kwargs.get("Prefix") or ""
@@ -49,7 +53,8 @@ class FakeInsightsS3Client:
         return out
 
     def get_object(self, **kwargs: Any) -> dict[str, Any]:
-        self.calls.append(("get_object", dict(kwargs)))
+        with self._lock:
+            self.calls.append(("get_object", dict(kwargs)))
         if self.fail_get:
             raise FakeInsightsS3Error("ServiceUnavailable", "GetObject")
         key = kwargs["Key"]

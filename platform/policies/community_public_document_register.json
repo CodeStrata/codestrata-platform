@@ -40,7 +40,7 @@
       "surface": "CLI help",
       "path": "docs/reference/cli.md",
       "status": "PARTIAL",
-      "notes": "Legacy telemetry commands documented as compatibility-only"
+      "notes": "telemetry enable/disable are durable v2/Disabled; --telemetry-allow is session bridge only"
     },
     {
       "surface": "Community API reference",

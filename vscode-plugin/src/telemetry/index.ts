@@ -55,16 +55,24 @@ export {
   isEligibleTelemetryCommand,
 } from "./promptPolicy";
 export {
-  TELEMETRY_ALLOW_LABEL,
-  TELEMETRY_CONSENT_MESSAGE,
-  TELEMETRY_DENY_LABEL,
-  TELEMETRY_LEARN_MORE_LABEL,
   preferenceLabel,
   runTelemetryConsentPrompt,
   type TelemetryPreferenceStore,
   type TelemetryPromptResult,
   type TelemetryPromptUi,
 } from "./prompt";
+export {
+  TELEMETRY_ALLOW_LABEL,
+  TELEMETRY_CONSENT_MESSAGE,
+  TELEMETRY_DENY_LABEL,
+  TELEMETRY_LEARN_MORE_LABEL,
+  TELEMETRY_UPGRADE_ALLOW_LABEL,
+  TELEMETRY_UPGRADE_DENY_LABEL,
+  TELEMETRY_UPGRADE_MESSAGE,
+  preferenceLabelFromEngineState,
+  resolveCanonicalConsentForAssessment,
+  type CanonicalConsentGateResult,
+} from "./canonicalConsent";
 export {
   projectRuntimeEvent,
   privacySafeToStableJson,

@@ -20,7 +20,7 @@ describe("marketplace docs policy", () => {
     const a = marketplaceDocsPolicyToStableDict(createMarketplaceDocsPolicy());
     const b = marketplaceDocsPolicyToStableDict(createMarketplaceDocsPolicy());
     assert.equal(JSON.stringify(a), JSON.stringify(b));
-    assert.equal(a.extension_version, "0.2.1");
+    assert.equal(a.extension_version, "0.2.2");
     assert.equal(a.listing_authority, "readme");
     assert.equal(a.telemetry_operational_claim_allowed, false);
     assert.equal(a.clean_install_validation_complete, true);

@@ -25,7 +25,7 @@ describe("marketplace branding policy", () => {
       createMarketplaceBrandingPolicy()
     );
     assert.equal(JSON.stringify(a), JSON.stringify(b));
-    assert.equal(a.extension_version, "0.2.1");
+    assert.equal(a.extension_version, "0.2.2");
     assert.equal(a.display_name, MARKETPLACE_DISPLAY_NAME);
     assert.equal(a.publisher_name, "CodeStrataAI");
     assert.equal(a.publisher_name, MARKETPLACE_PUBLISHER_NAME);
@@ -46,7 +46,7 @@ describe("package.json marketplace identity", () => {
     assert.equal(pkg.publisher, "CodeStrataAI");
     assert.equal(pkg.publisher, MARKETPLACE_PUBLISHER_NAME);
     assert.equal(pkg.name, "codestrata-assessment");
-    assert.equal(pkg.version, "0.2.1");
+    assert.equal(pkg.version, "0.2.2");
     assert.equal(`${pkg.publisher}.${pkg.name}`, "CodeStrataAI.codestrata-assessment");
   });
 });

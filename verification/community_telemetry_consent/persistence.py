@@ -49,7 +49,7 @@ def check_persistence(monorepo: Path) -> tuple[list[CheckResult], list[Defect], 
         ))
 
     summary = {
-        "privacy_first_persisted": False,
+        "privacy_first_persisted": True,  # Epic 20: durable Engine consent under CODESTRATA_HOME
         "legacy_path": "~/.codestrata/telemetry.json",
         "legacy_authorizes_privacy_first": False,
         "secrets_in_consent": False,

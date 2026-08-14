@@ -6,7 +6,7 @@
   "epic": 18,
   "authority": "derived_from_community_api_transparency_register_runtime_route_registry",
   "public_api_base_url": "https://api.codestrata.ai",
-  "route_count": 18,
+  "route_count": 19,
   "safe_fields": [
     "route_id",
     "method",

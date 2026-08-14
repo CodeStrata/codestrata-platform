@@ -25,6 +25,8 @@ REQUIRED_CI_JOBS = (
     "engine-tests",
     "platform-tests",
     "vscode-ci",
+    "insights-ci",
+    "reports-ci",
     "community-export-verification",
     "infrastructure-export-verification",
     "ci-release-boundaries",
@@ -40,8 +42,8 @@ FORBIDDEN_CURSOR_TOKENS = (
 
 WORKFLOW_RELATIVE = ".github/workflows/ci.yml"
 
-INTENDED_ENGINE_VERSION = "0.2.0"
-INTENDED_VSCODE_VERSION = "0.2.1"
+INTENDED_ENGINE_VERSION = "0.2.1"
+INTENDED_VSCODE_VERSION = "0.2.2"
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 
 ALLOWED_LIMITATIONS = frozenset(

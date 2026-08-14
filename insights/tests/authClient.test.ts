@@ -81,6 +81,12 @@ describe("authenticated API client", () => {
       fetchImpl: boom as unknown as typeof fetch,
     });
     await expect(authNet.login("x")).rejects.toMatchObject({ code: "network_error" });
+
+    const overviewNet = new HttpInsightsApiClient({
+      apiBaseUrl: "/api/v1",
+      fetchImpl: boom as unknown as typeof fetch,
+    });
+    await expect(overviewNet.getOverview()).rejects.toMatchObject({ code: "network_error" });
   });
 
   it("calls global fetch without illegal-invocation detachment", async () => {

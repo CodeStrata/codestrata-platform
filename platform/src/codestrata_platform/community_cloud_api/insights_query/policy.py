@@ -17,11 +17,16 @@ ALLOWED_STREAMS: frozenset[str] = frozenset(
     }
 )
 
-SUPPORTED_SCHEMA_VERSIONS: frozenset[str] = frozenset({"1.0"})
+SUPPORTED_SCHEMA_VERSIONS: frozenset[str] = frozenset({"1.0", "1.1"})
 
 MAX_DATE_SPAN_DAYS_DEFAULT = 31
 MAX_DATE_SPAN_DAYS_LIFETIME = 365
 
+# Epic 20 / Slice 20.7 — explicit metric authorities (no double-count):
+# - Total / Successful / Failed Assessments = lifecycle telemetry only
+# - First / Repeat = telemetry + assessment_metadata with pairing so old
+#   telemetry-only clients keep working while new dual-emit clients count once
+# - Published Reports = external publish registry (not listed here)
 METRIC_STREAMS: dict[str, tuple[str, ...]] = {
     "total_anonymous_installations": (
         "telemetry",
@@ -46,9 +51,9 @@ METRIC_STREAMS: dict[str, tuple[str, ...]] = {
     ),
     "first_assessments": ("telemetry", "assessment_metadata"),
     "repeat_assessments": ("telemetry", "assessment_metadata"),
-    "successful_assessments": ("telemetry", "assessment_metadata"),
-    "failed_assessments": ("telemetry", "assessment_metadata"),
-    "total_assessments": ("telemetry", "assessment_metadata"),
+    "successful_assessments": ("telemetry",),
+    "failed_assessments": ("telemetry",),
+    "total_assessments": ("telemetry",),
     "cli_version_adoption": ("cli_event",),
     "assessment_head_usage": ("assessment_metadata",),
     "language_ecosystem_distribution": ("assessment_metadata",),

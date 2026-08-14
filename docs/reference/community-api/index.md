@@ -32,7 +32,7 @@ Derived from the runtime route inventory (18 routes). Architecture overview:
 | Stream endpoint | Current assess-path status |
 | --- | --- |
 | `POST /api/v1/telemetry` | **ACTIVE** after explicit opt-in + credential |
-| `POST /api/v1/assessment-metadata` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
+| `POST /api/v1/assessment-metadata` | **ACTIVE_WITH_V2_CONSENT** (schemas **1.0** + **1.1**) |
 | `POST /api/v1/cli-events` | **NOT_EMITTED_BY_CURRENT_ASSESS_PATH** |
 | `POST /api/v1/extension-events` | **CONTRACT_ONLY** |
 | `POST /api/v1/ai-usage` | **DEFERRED** (not an AI provider proxy) |
@@ -192,9 +192,16 @@ plus Community authentication headers required by the current client contract.
 | Auth | Community client credentials |
 | Consent | required |
 
-**Purpose:** Bounded assessment metadata (not findings/evidence/HTML).
+**Purpose:** Privacy-safe derived assessment intelligence (schemas **1.0** and
+**1.1**). Schema 1.1 may include opaque `assessment_id`, `finding_aggregates`
+(approved rule ID / severity / category / count), `head_confidence`, and bounded
+`failure_category`. Not individual finding prose, evidence, HTML, graph data, or
+report identifiers.
 
-**Does not include:** repository contents, findings, evidence, report HTML.
+**Does not include:** repository contents, finding titles/descriptions, evidence
+snippets, report HTML/JSON, paths, remotes, or credentials.
+
+**Consent:** durable **v2 Yes** (lifecycle-only v1 does not authorize this stream).
 
 ### CLI events
 

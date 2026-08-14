@@ -239,7 +239,7 @@ def check_all(monorepo: Path) -> tuple[list[CheckResult], list[Defect], dict]:
                 pkg.get("publisher") == "CodeStrataAI"
                 and pkg.get("name") == "codestrata-assessment"
                 and pkg.get("version") == INTENDED_VSCODE_VERSION,
-                "CodeStrataAI.codestrata-assessment@0.2.1",
+                "CodeStrataAI.codestrata-assessment@0.2.2",
                 "install",
             ),
             CheckResult(

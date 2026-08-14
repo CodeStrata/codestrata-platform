@@ -180,7 +180,7 @@ def test_default_assessment_policy_event_stream() -> None:
 def test_default_assessment_policy_supported_versions() -> None:
     policy = default_assessment_metadata_partition_policy()
     assert policy.supported_envelope_schema_versions == frozenset({"1.0"})
-    assert policy.supported_source_schema_versions == frozenset({"1.0"})
+    assert policy.supported_source_schema_versions == frozenset({"1.0", "1.1"})
     assert policy.supported_source_policy_ids == frozenset(
         {"community-assessment-metadata-policy:1.0"}
     )
