@@ -1115,6 +1115,19 @@ class ReportPublishingService:
 
         if not self._available:
             return 0
+        import time
+
+        cache = getattr(self, "_published_count_cache", None)
+        now = time.monotonic()
+        if (
+            isinstance(cache, tuple)
+            and len(cache) == 2
+            and isinstance(cache[0], (int, float))
+            and isinstance(cache[1], int)
+            and now - float(cache[0]) < 60.0
+        ):
+            return int(cache[1])
+
         slots: list[object] = []
         for key in self._store.list_keys("metadata/logic/"):
             if not key.endswith(".json"):
@@ -1126,6 +1139,7 @@ class ReportPublishingService:
                 if slot:
                     slots.append(slot)
         if not slots:
+            self._published_count_cache = (now, 0)
             return 0
 
         from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -1142,6 +1156,7 @@ class ReportPublishingService:
             for fut in as_completed(futures):
                 if fut.result() == STATUS_PUBLISHED:
                     total += 1
+        self._published_count_cache = (now, total)
         return total
 
     def community_sentiment_summary(self) -> dict[str, Any]:
