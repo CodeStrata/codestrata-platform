@@ -360,7 +360,10 @@ def test_customer_report_experience_hierarchy_and_metadata(tmp_path: Path) -> No
     assert "Advisor version" not in html.split('id="cover"', 1)[1].split('id="contents"', 1)[0]
     assert "@media print" in html
     # Self-contained: no external stylesheets or scripts.
-    assert "<link " not in html
+    # Favicon is embedded as a data URI (presentation-only; Slice 20.13A).
+    assert 'rel="icon"' in html
+    assert "data:image/png;base64," in html
+    assert html.lower().count("<link ") == 1
     assert "<script" not in html
 
 
