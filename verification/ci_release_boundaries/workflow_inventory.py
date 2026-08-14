@@ -85,6 +85,10 @@ def classify_jobs(inv: WorkflowInventory) -> dict[str, str]:
             out[name] = "preserve_platform_ci"
         elif name == "vscode-ci":
             out[name] = "preserve_vscode_ci"
+        elif name == "insights-ci":
+            out[name] = "preserve_insights_ci"
+        elif name == "reports-ci":
+            out[name] = "preserve_reports_ci"
         elif name == "community-export-verification":
             out[name] = "add_community_export_verification"
         elif name == "infrastructure-export-verification":

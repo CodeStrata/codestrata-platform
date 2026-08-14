@@ -8,8 +8,9 @@
 # Active editor extension: VS Code only (Cursor retired Slice 12.1–12.2).
 # Export command: python scripts/export_repository.py --target <community|infrastructure>
 #
-# Jobs (7):
+# Jobs (9):
 #   engine-tests, platform-tests, vscode-ci,
+#   insights-ci, reports-ci,
 #   community-export-verification, infrastructure-export-verification,
 #   ci-release-boundaries, epic20-transparency-claims
 
@@ -122,6 +123,58 @@ jobs:
       - name: Package dry validation
         run: npm run package:dry
       # Marketplace publish is intentionally NOT invoked here.
+
+  insights-ci:
+    name: insights-ci
+    if: github.repository == 'CodeStrata/codestrata-platform'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: insights
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: insights/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
+      # Deploy / Cloudflare credentials intentionally NOT invoked here.
+
+  reports-ci:
+    name: reports-ci
+    if: github.repository == 'CodeStrata/codestrata-platform'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: reports
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: reports/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      # Wrangler deploy intentionally NOT invoked here.
 
   community-export-verification:
     name: community-export-verification

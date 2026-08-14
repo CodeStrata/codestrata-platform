@@ -25,6 +25,8 @@ REQUIRED_CI_JOBS = (
     "engine-tests",
     "platform-tests",
     "vscode-ci",
+    "insights-ci",
+    "reports-ci",
     "community-export-verification",
     "infrastructure-export-verification",
     "ci-release-boundaries",
