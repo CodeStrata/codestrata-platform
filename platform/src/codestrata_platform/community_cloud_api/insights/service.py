@@ -304,18 +304,23 @@ def aggregate_dashboard_overview(
 
     stage_ms["total"] = (time.perf_counter() - t0) * 1000.0
     # Privacy-safe operational timing only (no keys, tokens, or payloads).
-    _LOG.info(
+    timing_line = (
         "insights_overview_timing total_ms=%.1f lake_ms=%.1f lists=%.0f gets=%.0f "
-        "objs=%.0f github_ms=%.1f published_ms=%.1f sentiment_ms=%.1f",
-        stage_ms.get("total", 0.0),
-        stage_ms.get("lake_read", 0.0),
-        stage_ms.get("lake_lists", 0.0),
-        stage_ms.get("lake_gets", 0.0),
-        stage_ms.get("lake_objects", 0.0),
-        stage_ms.get("ext_github_stars", 0.0) + stage_ms.get("ext_github_forks", 0.0),
-        stage_ms.get("ext_published_reports", 0.0),
-        stage_ms.get("ext_community_sentiment", 0.0),
+        "objs=%.0f github_ms=%.1f published_ms=%.1f sentiment_ms=%.1f"
+        % (
+            stage_ms.get("total", 0.0),
+            stage_ms.get("lake_read", 0.0),
+            stage_ms.get("lake_lists", 0.0),
+            stage_ms.get("lake_gets", 0.0),
+            stage_ms.get("lake_objects", 0.0),
+            stage_ms.get("ext_github_stars", 0.0) + stage_ms.get("ext_github_forks", 0.0),
+            stage_ms.get("ext_published_reports", 0.0),
+            stage_ms.get("ext_community_sentiment", 0.0),
+        )
     )
+    _LOG.info(timing_line)
+    # Ensure CloudWatch always captures timing even if logger level filters INFO.
+    print(timing_line, flush=True)
     return tuple(ordered)
 
 

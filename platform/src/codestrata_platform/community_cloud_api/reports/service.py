@@ -1110,6 +1110,26 @@ class ReportPublishingService:
             },
         )
 
+    def count_currently_published(self) -> int:
+        """Count published current/previous slots without loading the validation index."""
+
+        if not self._available:
+            return 0
+        total = 0
+        for key in self._store.list_keys("metadata/logic/"):
+            if not key.endswith(".json"):
+                continue
+            logic = self._store.get_json(key)
+            if not isinstance(logic, dict):
+                continue
+            for slot in (logic.get("current_public_id"), logic.get("previous_public_id")):
+                if not slot:
+                    continue
+                status, _url = self._safe_slot(slot)
+                if status == STATUS_PUBLISHED:
+                    total += 1
+        return total
+
     def community_sentiment_summary(self) -> dict[str, Any]:
         """Aggregate Yes/No feedback counts for Insights (no respondent identities)."""
 

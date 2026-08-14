@@ -182,9 +182,6 @@ def _build_insights_aggregation_service(
 
     import boto3
 
-    from codestrata_platform.community_cloud_api.insights.external_metrics import (
-        count_published_from_registry,
-    )
     from codestrata_platform.community_cloud_api.insights.service import (
         InsightsAggregationService,
     )
@@ -216,8 +213,7 @@ def _build_insights_aggregation_service(
 
         class _PublishedPort:
             def count_published_reports(self) -> int:
-                registry = report_service.list_published_registry()
-                return count_published_from_registry(registry)
+                return report_service.count_currently_published()
 
         class _SentimentPort:
             def community_sentiment_summary(self) -> dict:

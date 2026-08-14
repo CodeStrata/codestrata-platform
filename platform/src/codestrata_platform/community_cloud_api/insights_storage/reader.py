@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from datetime import date
@@ -22,10 +23,14 @@ from codestrata_platform.community_cloud_api.insights_storage.ports import Insig
 _LIST_WORKERS = 8
 _LIST_FUTURE_TIMEOUT_SECONDS = 5.0
 _LIST_TOTAL_TIMEOUT_SECONDS = 12.0
+_GET_WORKERS = 16
+_GET_FUTURE_TIMEOUT_SECONDS = 8.0
+_GET_TOTAL_TIMEOUT_SECONDS = 20.0
 
 _PARTITION_DAY_RE = re.compile(
     r"/year=(?P<year>\d{4})/month=(?P<month>\d{2})/day=(?P<day>\d{2})/"
 )
+_THREAD_LOCAL = threading.local()
 
 
 def _partition_date_from_key(key: str) -> date | None:
@@ -70,38 +75,35 @@ class BoundedS3Reader:
             self._assert_safe_prefix(prefix)
 
         diagnostics = ReadDiagnostics()
-        records: list[ObjectRecord] = []
         budgets = plan.budgets
         window_start = date.fromisoformat(plan.start_date)
         window_end = date.fromisoformat(plan.end_date)
 
         try:
             listed = self._list_all_prefixes(plan, diagnostics)
+            candidates: list[tuple[str, int]] = []
+            estimated_bytes = 0
             for key, size in listed:
                 part_day = _partition_date_from_key(key)
                 if part_day is None or part_day < window_start or part_day > window_end:
                     continue
-                if diagnostics.objects_considered >= budgets.max_objects_per_query:
+                if len(candidates) >= budgets.max_objects_per_query:
                     diagnostics.budget_reached = True
                     raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "objects")
                 if size > budgets.max_single_object_bytes:
                     diagnostics.budget_reached = True
                     raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
-                if diagnostics.bytes_read + size > budgets.max_bytes_per_query:
+                if estimated_bytes + size > budgets.max_bytes_per_query:
                     diagnostics.budget_reached = True
                     raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "bytes")
-                if diagnostics.get_requests >= budgets.max_get_requests_per_query:
-                    diagnostics.budget_reached = True
-                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "gets")
+                estimated_bytes += size
+                candidates.append((key, size))
 
-                body = self._get_object(key, diagnostics)
-                actual = len(body)
-                if actual > budgets.max_single_object_bytes:
-                    diagnostics.budget_reached = True
-                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
-                diagnostics.bytes_read += actual
-                diagnostics.objects_considered += 1
-                records.append(ObjectRecord(size=actual, body=body, _key=""))
+            if len(candidates) > budgets.max_get_requests_per_query:
+                diagnostics.budget_reached = True
+                raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "gets")
+
+            records = self._get_objects_parallel(candidates, plan, diagnostics)
         except InsightsAggregationError:
             raise
         except Exception:
@@ -129,12 +131,15 @@ class BoundedS3Reader:
         meta = getattr(client, "meta", None)
         if meta is None:
             return client
+        cached = getattr(_THREAD_LOCAL, "s3_client", None)
+        if cached is not None:
+            return cached
         try:
             import boto3
             from botocore.config import Config
 
             region = getattr(meta, "region_name", None) or "us-west-2"
-            return boto3.client(
+            created = boto3.client(
                 "s3",
                 region_name=region,
                 config=Config(
@@ -144,8 +149,83 @@ class BoundedS3Reader:
                     max_pool_connections=32,
                 ),
             )
+            _THREAD_LOCAL.s3_client = created
+            return created
         except Exception:
             return client
+
+    def _get_objects_parallel(
+        self,
+        candidates: list[tuple[str, int]],
+        plan: QueryPlan,
+        diagnostics: ReadDiagnostics,
+    ) -> list[ObjectRecord]:
+        """Fetch object bodies; parallelize when many keys to stay under Lambda timeout."""
+
+        if not candidates:
+            return []
+
+        budgets = plan.budgets
+        if len(candidates) <= 4:
+            out: list[ObjectRecord] = []
+            for key, _size in candidates:
+                body = self._get_object(key, diagnostics)
+                actual = len(body)
+                if actual > budgets.max_single_object_bytes:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
+                if diagnostics.bytes_read + actual > budgets.max_bytes_per_query:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "bytes")
+                diagnostics.bytes_read += actual
+                diagnostics.objects_considered += 1
+                out.append(ObjectRecord(size=actual, body=body, _key=""))
+            return out
+
+        workers = min(_GET_WORKERS, len(candidates))
+        bodies: dict[str, bytes] = {}
+
+        def _fetch(key: str) -> tuple[str, bytes]:
+            worker = self._client_for_worker()
+            try:
+                resp = worker.get_object(Bucket=self._bucket, Key=key)
+            except Exception:
+                raise InsightsAggregationError(STORAGE_UNAVAILABLE, "get_failed") from None
+            body = resp.get("Body")
+            if body is None:
+                raise InsightsAggregationError(STORAGE_UNAVAILABLE, "empty_body")
+            data = body.read() if hasattr(body, "read") else body
+            if not isinstance(data, bytes):
+                raise InsightsAggregationError(STORAGE_UNAVAILABLE, "bad_body")
+            return key, data
+
+        try:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = [pool.submit(_fetch, key) for key, _ in candidates]
+                for fut in as_completed(futures, timeout=_GET_TOTAL_TIMEOUT_SECONDS):
+                    key, data = fut.result(timeout=_GET_FUTURE_TIMEOUT_SECONDS)
+                    bodies[key] = data
+        except InsightsAggregationError:
+            raise
+        except Exception as exc:
+            raise InsightsAggregationError(STORAGE_UNAVAILABLE, "get_parallel_failed") from exc
+
+        diagnostics.get_requests += len(candidates)
+        out_records: list[ObjectRecord] = []
+        # Preserve deterministic key order for aggregation stability.
+        for key, _size in sorted(candidates, key=lambda item: item[0]):
+            body = bodies[key]
+            actual = len(body)
+            if actual > budgets.max_single_object_bytes:
+                diagnostics.budget_reached = True
+                raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
+            if diagnostics.bytes_read + actual > budgets.max_bytes_per_query:
+                diagnostics.budget_reached = True
+                raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "bytes")
+            diagnostics.bytes_read += actual
+            diagnostics.objects_considered += 1
+            out_records.append(ObjectRecord(size=actual, body=body, _key=""))
+        return out_records
 
     def _list_all_prefixes(
         self, plan: QueryPlan, diagnostics: ReadDiagnostics
