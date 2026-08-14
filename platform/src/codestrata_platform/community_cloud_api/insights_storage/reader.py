@@ -23,7 +23,7 @@ from codestrata_platform.community_cloud_api.insights_storage.ports import Insig
 _LIST_WORKERS = 8
 _LIST_FUTURE_TIMEOUT_SECONDS = 5.0
 _LIST_TOTAL_TIMEOUT_SECONDS = 12.0
-_GET_WORKERS = 16
+_GET_WORKERS = 32
 _GET_FUTURE_TIMEOUT_SECONDS = 8.0
 _GET_TOTAL_TIMEOUT_SECONDS = 20.0
 

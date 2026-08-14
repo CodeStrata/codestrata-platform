@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 
 from codestrata_platform.community_cloud_api.insights.aggregators import AGGREGATORS
@@ -183,6 +184,8 @@ def aggregate_dashboard_overview(
     ``plan_overview_lake_query`` + ``BoundedS3Reader.read_plan`` so telemetry
     objects are not listed/gotten twice. External metrics stay isolated so a
     slow/failed GitHub or registry call cannot rewrite lake results.
+    Lake and external work run concurrently so wall time is roughly
+    ``max(lake, external)`` rather than the sum.
     """
 
     metric_ids = request.metric_ids or DEFAULT_OVERVIEW_METRICS
@@ -196,54 +199,97 @@ def aggregate_dashboard_overview(
         and mid not in EXTERNAL_METRICS
         and not is_external_metric(mid)
     )
+    external_ids = tuple(
+        mid
+        for mid in metric_ids
+        if mid in SUPPORTED_METRICS
+        and (mid in EXTERNAL_METRICS or is_external_metric(mid))
+    )
+
     lake_ctx: AggregationContext | None = None
     lake_error: InsightsAggregationError | None = None
-    if lake_ids:
+    external_results: dict[str, MetricResult] = {}
+
+    def _lake_work() -> tuple[
+        AggregationContext | None, InsightsAggregationError | None, dict[str, float]
+    ]:
+        local_stage: dict[str, float] = {}
         if reader is None:
-            lake_error = InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required")
-        else:
-            t_lake = time.perf_counter()
-            try:
-                plan = plan_overview_lake_query(
-                    window=DateWindow(
-                        start_date=request.start_date_utc,
-                        end_date=request.end_date_utc,
-                    ),
-                    lake_metrics=lake_ids,
-                )
-                _LOG.info(
-                    "insights_overview_lake_begin prefixes=%s streams=%s",
-                    len(plan.prefixes),
-                    ",".join(plan.streams),
-                )
-                result = reader.read_plan(plan)
-                lake_ctx = _context_from_reader_result(result)
-                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
-                stage_ms["lake_lists"] = float(result.diagnostics.list_requests)
-                stage_ms["lake_gets"] = float(result.diagnostics.get_requests)
-                stage_ms["lake_objects"] = float(result.diagnostics.objects_considered)
-                _LOG.info(
-                    "insights_overview_lake_done lake_ms=%.1f lists=%.0f gets=%.0f objs=%.0f",
-                    stage_ms["lake_read"],
-                    stage_ms["lake_lists"],
-                    stage_ms["lake_gets"],
-                    stage_ms["lake_objects"],
-                )
-            except InsightsAggregationError as exc:
-                lake_error = exc
-                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
-                _LOG.info(
-                    "insights_overview_lake_error lake_ms=%.1f detail=%s",
-                    stage_ms["lake_read"],
-                    exc.detail,
-                )
-            except Exception:
-                lake_error = InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lake_failed")
-                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
-                _LOG.info(
-                    "insights_overview_lake_error lake_ms=%.1f detail=lake_failed",
-                    stage_ms["lake_read"],
-                )
+            return (
+                None,
+                InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required"),
+                local_stage,
+            )
+        t_lake = time.perf_counter()
+        try:
+            plan = plan_overview_lake_query(
+                window=DateWindow(
+                    start_date=request.start_date_utc,
+                    end_date=request.end_date_utc,
+                ),
+                lake_metrics=lake_ids,
+            )
+            _LOG.info(
+                "insights_overview_lake_begin prefixes=%s streams=%s",
+                len(plan.prefixes),
+                ",".join(plan.streams),
+            )
+            result = reader.read_plan(plan)
+            ctx = _context_from_reader_result(result)
+            local_stage["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+            local_stage["lake_lists"] = float(result.diagnostics.list_requests)
+            local_stage["lake_gets"] = float(result.diagnostics.get_requests)
+            local_stage["lake_objects"] = float(result.diagnostics.objects_considered)
+            _LOG.info(
+                "insights_overview_lake_done lake_ms=%.1f lists=%.0f gets=%.0f objs=%.0f",
+                local_stage["lake_read"],
+                local_stage["lake_lists"],
+                local_stage["lake_gets"],
+                local_stage["lake_objects"],
+            )
+            return ctx, None, local_stage
+        except InsightsAggregationError as exc:
+            local_stage["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+            _LOG.info(
+                "insights_overview_lake_error lake_ms=%.1f detail=%s",
+                local_stage["lake_read"],
+                exc.detail,
+            )
+            return None, exc, local_stage
+        except Exception:
+            local_stage["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+            _LOG.info(
+                "insights_overview_lake_error lake_ms=%.1f detail=lake_failed",
+                local_stage["lake_read"],
+            )
+            return (
+                None,
+                InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lake_failed"),
+                local_stage,
+            )
+
+    def _external_work(mid: str) -> tuple[str, MetricResult, float]:
+        req = MetricRequest(mid, request.start_date_utc, request.end_date_utc)
+        t_ext = time.perf_counter()
+        result = aggregate_metric(
+            req,
+            validation_catalog=validation_catalog,
+            published_reports_port=published_reports_port,
+            community_sentiment_port=community_sentiment_port,
+        )
+        return mid, result, (time.perf_counter() - t_ext) * 1000.0
+
+    workers = max(1, (1 if lake_ids else 0) + len(external_ids))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        lake_fut = pool.submit(_lake_work) if lake_ids else None
+        ext_futs = [pool.submit(_external_work, mid) for mid in external_ids]
+        if lake_fut is not None:
+            lake_ctx, lake_error, lake_stage = lake_fut.result()
+            stage_ms.update(lake_stage)
+        for fut in as_completed(ext_futs):
+            mid, result, ms = fut.result()
+            external_results[mid] = result
+            stage_ms[f"ext_{mid}"] = ms
 
     ordered: list[MetricResult] = []
     for mid in metric_ids:
@@ -263,16 +309,7 @@ def aggregate_dashboard_overview(
             )
             continue
         if mid in EXTERNAL_METRICS or is_external_metric(mid):
-            t_ext = time.perf_counter()
-            ordered.append(
-                aggregate_metric(
-                    req,
-                    validation_catalog=validation_catalog,
-                    published_reports_port=published_reports_port,
-                    community_sentiment_port=community_sentiment_port,
-                )
-            )
-            stage_ms[f"ext_{mid}"] = (time.perf_counter() - t_ext) * 1000.0
+            ordered.append(external_results[mid])
             continue
         if lake_error is not None:
             ordered.append(_error_result(mid, req, lake_error))
@@ -303,7 +340,6 @@ def aggregate_dashboard_overview(
             )
 
     stage_ms["total"] = (time.perf_counter() - t0) * 1000.0
-    # Privacy-safe operational timing only (no keys, tokens, or payloads).
     timing_line = (
         "insights_overview_timing total_ms=%.1f lake_ms=%.1f lists=%.0f gets=%.0f "
         "objs=%.0f github_ms=%.1f published_ms=%.1f sentiment_ms=%.1f"
@@ -319,7 +355,6 @@ def aggregate_dashboard_overview(
         )
     )
     _LOG.info(timing_line)
-    # Ensure CloudWatch always captures timing even if logger level filters INFO.
     print(timing_line, flush=True)
     return tuple(ordered)
 
