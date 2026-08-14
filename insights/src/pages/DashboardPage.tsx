@@ -12,6 +12,7 @@ import {
   loadOverviewWithSessionCache,
   peekOverviewCache,
 } from "../api/sessionOverviewCache";
+import { fetchOverviewWithTransientRetry } from "../api/firstLoadOverview";
 
 function byId(results: MetricResult[], id: string): MetricResult | undefined {
   return results.find((r) => r.metric_id === id);
@@ -43,7 +44,7 @@ export function DashboardPage({
   client: InsightsApiClient;
   focusSection?: string;
 }): ReactNode {
-  const { logout } = useAuth();
+  const { state, logout } = useAuth();
   const [loading, setLoading] = useState(() => peekOverviewCache() == null);
   const [refreshing, setRefreshing] = useState(false);
   const [results, setResults] = useState<MetricResult[]>(
@@ -118,10 +119,14 @@ export function DashboardPage({
       setLoadError(null);
       setStaleNotice(false);
       try {
-        const { entry, background } = await loadOverviewWithSessionCache(
-          () => client.getOverview(),
-          { force },
-        );
+        const fetchFresh = () =>
+          fetchOverviewWithTransientRetry(() => client.getOverview(), {
+            // One bounded auto-retry only on first empty-cache load (cold-start / transient).
+            allowTransientRetry: mode === "initial",
+          });
+        const { entry, background } = await loadOverviewWithSessionCache(fetchFresh, {
+          force,
+        });
         applyEntry(entry, setResults, setLastRefreshedAt);
         if (background) void applyBackground(background);
       } catch (err) {
@@ -156,8 +161,13 @@ export function DashboardPage({
   );
 
   useEffect(() => {
+    // Gate on authoritative session readiness — do not fetch while auth is loading.
+    if (state !== "authenticated") return;
     void load("initial");
-  }, [load]);
+  }, [load, state]);
+
+  const showInitializing =
+    state === "authenticated" && loading && !loadError && results.length === 0;
 
   return (
     <div className="cs-page">
@@ -185,6 +195,11 @@ export function DashboardPage({
             </span>
           ) : null}
         </div>
+        {showInitializing ? (
+          <p className="cs-muted" role="status" data-testid="dashboard-loading">
+            Loading dashboard…
+          </p>
+        ) : null}
         {loadError ? (
           <div className="cs-state cs-state--error" role="alert">
             <strong>
