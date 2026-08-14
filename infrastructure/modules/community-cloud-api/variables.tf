@@ -39,7 +39,7 @@ variable "lambda_function_name" {
 variable "lambda_memory_size" {
   description = "Lambda memory in MB."
   type        = number
-  default     = 512
+  default     = 1024
 
   validation {
     condition     = var.lambda_memory_size >= 256 && var.lambda_memory_size <= 3008
