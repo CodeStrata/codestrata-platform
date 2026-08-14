@@ -1115,7 +1115,7 @@ class ReportPublishingService:
 
         if not self._available:
             return 0
-        total = 0
+        slots: list[object] = []
         for key in self._store.list_keys("metadata/logic/"):
             if not key.endswith(".json"):
                 continue
@@ -1123,10 +1123,24 @@ class ReportPublishingService:
             if not isinstance(logic, dict):
                 continue
             for slot in (logic.get("current_public_id"), logic.get("previous_public_id")):
-                if not slot:
-                    continue
-                status, _url = self._safe_slot(slot)
-                if status == STATUS_PUBLISHED:
+                if slot:
+                    slots.append(slot)
+        if not slots:
+            return 0
+
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        total = 0
+        workers = min(16, len(slots))
+
+        def _status(slot: object) -> str | None:
+            status, _url = self._safe_slot(slot)
+            return status
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = [pool.submit(_status, slot) for slot in slots]
+            for fut in as_completed(futures):
+                if fut.result() == STATUS_PUBLISHED:
                     total += 1
         return total
 
