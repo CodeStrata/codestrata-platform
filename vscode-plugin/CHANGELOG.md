@@ -1,16 +1,17 @@
 # Changelog
 
-## Unreleased — transparency / consent documentation (target 0.2.2)
+## 0.2.2 — Community consent / Epic 20 patch
 
-- Document Engine-owned shared CLI/VS Code consent (v2 usage + privacy-safe assessment insights)
+- Engine-owned shared CLI/VS Code consent (v2 usage + privacy-safe assessment insights)
 - Clarify `--telemetry-allow` is a session bridge only (not consent)
 - Separate telemetry/insights consent from report Publish/Share
-- Marketplace-facing README/PRIVACY wording aligned to Epic 20 contract (no version bump in this slice)
+- Marketplace-facing README/PRIVACY wording aligned to Epic 20 contract
+- Compatible with CodeStrata Engine / CLI **0.2.1**
 
 ## 0.2.1 — Marketplace listing screenshot presentation
 
 - Marketplace README screenshots use public HTTPS URLs on docs.codestrata.ai
-- Community Edition Engine/CLI remains v0.2.0; this bump is listing presentation only
+- Community Edition Engine/CLI remained v0.2.0 at this listing-presentation bump
 
 ## 0.2.0 — Phase 10.3 Community release readiness
 

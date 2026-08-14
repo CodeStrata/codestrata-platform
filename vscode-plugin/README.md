@@ -7,7 +7,7 @@ Run local **Engineering Assessments** with **CodeStrata Engine** from VS Code
 recommendations, and open a generated Assessment Report—
 without leaving the editor.
 
-**Version:** 0.2.1 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
+**Version:** 0.2.2 · **Requires:** VS Code `^1.85.0` and CodeStrata Engine CLI
 `0.2.x`
 
 Install **[CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)**
@@ -148,6 +148,7 @@ Nothing installs, retries, or remediates automatically.
 
 | Extension | Supported Engine CLI |
 | --------- | -------------------- |
+| 0.2.2 | `0.2.x` (release builds; no prerelease) |
 | 0.2.1 | `0.2.x` (release builds; no prerelease) |
 | 0.2.0 | `0.2.x` (release builds; no prerelease) |
 
@@ -218,7 +219,7 @@ See [SECURITY.md](SECURITY.md) and [PRIVACY.md](PRIVACY.md).
 ## Known Limitations
 
 - CLI auto-install is not supported (guidance only)
-- Extension 0.2.1 requires Engine CLI `0.2.x`
+- Extension 0.2.2 requires Engine CLI `0.2.x`
 - Progress is indeterminate (no percentage completion)
 - Optional AI depends on Engine provider configuration
 - Public install path is Visual Studio Marketplace

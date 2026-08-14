@@ -4,7 +4,7 @@ Policy: `community-vscode-clean-install-policy:1.0`
 
 ## Purpose
 
-Validate that the packaged CodeStrata VS Code extension (v0.2.1) can be
+Validate that the packaged CodeStrata VS Code extension (v0.2.2) can be
 installed in an isolated environment, activates cleanly, and supports the
 verified Community workflow without developer-machine assumptions.
 
@@ -13,7 +13,7 @@ This is release-readiness validation — not a new product feature.
 ## Procedure (human / CI)
 
 1. `cd vscode-plugin && npm test && npm run package`
-2. Install the produced `codestrata-assessment-0.2.1.vsix` into an **isolated**
+2. Install the produced `codestrata-assessment-0.2.2.vsix` into an **isolated**
    VS Code user-data / extensions directory (never the developer profile).
 3. Open a clean workspace folder.
 4. Confirm activation does not probe CLI, prompt telemetry, init, or assess.

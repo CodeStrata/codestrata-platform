@@ -18,7 +18,7 @@ REPORT_MD = "vscode-marketplace-branding-verification.md"
 
 BRANDING_POLICY_ID = "community-vscode-marketplace-branding-policy"
 BRANDING_POLICY_VERSION = "1.0"
-INTENDED_VSCODE_VERSION = "0.2.1"
+INTENDED_VSCODE_VERSION = "0.2.2"
 ASSESSMENT_SCHEMA_VERSION = "1.2"
 BRANDING_PACKAGE = "vscode-plugin/src/marketplaceBranding"
 PLUGIN_ROOT = "vscode-plugin"

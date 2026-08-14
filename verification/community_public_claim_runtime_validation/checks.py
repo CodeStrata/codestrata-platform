@@ -622,8 +622,8 @@ def check_terminology_cli_vscode(
     add_check(
         checks,
         defects,
-        "cli:package_version_0_2_0",
-        version.startswith("0.2.0"),
+        "cli:package_version_0_2_1",
+        version.startswith("0.2.1"),
         version or proc.stderr[:80],
         "version",
     )
@@ -631,8 +631,8 @@ def check_terminology_cli_vscode(
     add_check(
         checks,
         defects,
-        "cli:pyproject_0_2_0",
-        'version = "0.2.0"' in pyproject,
+        "cli:pyproject_0_2_1",
+        'version = "0.2.1"' in pyproject,
         "pyproject",
         "version",
     )

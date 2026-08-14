@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-14
+
+Community Edition patch freeze on accepted candidate `e818ae6f`. Publication
+(CLI registry, Marketplace, backend deploy) remains a separate step.
+
+### Engine / CLI 0.2.1
+
+* Consent v2 (lifecycle + privacy-safe assessment intelligence)
+* Privacy protections and transparency documentation alignment
+* Report favicon (embedded data URI)
+* Public report feedback CSP/acknowledgement fix (Platform + Reports Worker)
+
+### VS Code 0.2.2
+
+* Shared Engine CLI consent (v2) via telemetry CLI; session `--telemetry-allow`
+  is not consent
+* Marketplace/README/PRIVACY wording aligned to Epic 20 contract
+
+### Operations (not CLI package contents)
+
+* Insights first-load reliability (authenticated session gate + loading state)
+* Clean-runner CI gates for Insights and Reports Worker
+
+### Validation notes
+
+* Five representative frozen repos matched baselines exactly
+* Full 22-repo corpus rerun not required (presentation / UX / delivery / CI only
+  after Construction exit)
+* No graph telemetry; no numeric assessment score collection; no source upload
+
 ## [0.2.0] - 2026-08-11
 
 Community Edition cut. Publication (GitHub Release, CLI registry, Marketplace)

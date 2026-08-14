@@ -41,7 +41,7 @@ class PackageInventory:
 
 
 def ensure_vsix_built(monorepo: Path, *, rebuild: bool = False) -> Path:
-    """Build codestrata-assessment-0.2.1.vsix via npm run package when needed."""
+    """Build codestrata-assessment-0.2.2.vsix via npm run package when needed."""
     plugin = monorepo / PLUGIN_ROOT
     vsix = plugin / VSIX_NAME
     if vsix.is_file() and not rebuild:

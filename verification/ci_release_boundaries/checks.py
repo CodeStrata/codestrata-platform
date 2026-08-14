@@ -645,7 +645,7 @@ def check_release_and_versions(
 
     if not all(c.ok for c in checks if c.category == "version_boundary"):
         defects.append(
-            Defect("version-boundary defect", "versions", "0.2.0 vscode/engine", "mismatch")
+            Defect("version-boundary defect", "versions", "intended engine/vscode pair", "mismatch")
         )
     if not all(c.ok for c in checks if c.category == "release_inventory"):
         defects.append(

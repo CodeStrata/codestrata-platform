@@ -57,5 +57,5 @@ https://api.codestrata.ai
 
 Public distribution:
 [CodeStrata for VS Code](https://marketplace.visualstudio.com/items?itemName=CodeStrataAI.codestrata-assessment)
-(`CodeStrataAI.codestrata-assessment`, listing 0.2.1).
+(`CodeStrataAI.codestrata-assessment`, listing 0.2.2).
 Extension source is private. Do not treat this repository as a public source listing.

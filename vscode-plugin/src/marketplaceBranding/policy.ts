@@ -16,7 +16,7 @@ export const MARKETPLACE_PRODUCT_NAME = "CodeStrata" as const;
 export const MARKETPLACE_DISPLAY_NAME =
   "CodeStrata – Engineering Assessment" as const;
 export const MARKETPLACE_PUBLISHER_NAME = "CodeStrataAI" as const;
-export const MARKETPLACE_EXTENSION_VERSION = "0.2.1" as const;
+export const MARKETPLACE_EXTENSION_VERSION = "0.2.2" as const;
 export const MARKETPLACE_TAGLINE =
   "Engineering decisions grounded in code." as const;
 

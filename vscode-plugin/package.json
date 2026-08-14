@@ -2,7 +2,7 @@
   "name": "codestrata-assessment",
   "displayName": "CodeStrata – Engineering Assessment",
   "description": "Engineering decisions grounded in code. Run local Engineering Assessments with CodeStrata Engine from VS Code (Community Edition). Deterministic findings, recommendations, and Assessment Report HTML. Requires a compatible CodeStrata Engine CLI. Optional AI enrichment is Engine-owned. Portfolio Engineering Intelligence Reports (EIR) are a separate multi-repository capability.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "CodeStrataAI",
   "license": "MIT",
   "icon": "media/codestrata-icon.png",

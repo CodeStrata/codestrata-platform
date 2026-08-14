@@ -71,7 +71,7 @@ remote backend, no plan/apply/destroy.
 
 ## Release inventory
 
-- Engine / VS Code at product version `0.2.0`
+- Engine / VS Code at product version `0.2.1` / `0.2.2`
 - Active editor extension: VS Code only
 - Infrastructure: `private_infrastructure_only`, independently versioned, not a
   Community release artifact, not auto-tagged with Engine
