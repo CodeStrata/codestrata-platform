@@ -195,7 +195,19 @@ def _build_insights_aggregation_service(
         ReportPublishingService,
     )
 
-    client = boto3.client("s3", region_name=region_name)
+    from botocore.config import Config
+
+    # Bound SDK waits so overview cannot burn the full Lambda timeout on hung S3 calls.
+    client = boto3.client(
+        "s3",
+        region_name=region_name,
+        config=Config(
+            connect_timeout=2,
+            read_timeout=5,
+            retries={"max_attempts": 2, "mode": "standard"},
+            max_pool_connections=32,
+        ),
+    )
     reader = BoundedS3Reader(bucket=bucket_name, client=client)
 
     published_port = None

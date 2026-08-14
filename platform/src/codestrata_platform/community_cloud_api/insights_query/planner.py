@@ -5,7 +5,7 @@ No AWS SDK imports, no network, no credentials, no installation IDs.
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import date
 
 from codestrata_platform.community_cloud_api.insights_query.errors import (
     InsightsQueryPlanError,
@@ -27,19 +27,26 @@ from codestrata_platform.community_cloud_api.insights_query.policy import (
 )
 
 
-def _iter_days(start: date, end: date) -> list[date]:
-    days: list[date] = []
-    cur = start
-    while cur <= end:
-        days.append(cur)
-        cur += timedelta(days=1)
-    return days
+def _iter_year_months(start: date, end: date) -> list[tuple[int, int]]:
+    """Inclusive (year, month) pairs covering the UTC window."""
+
+    months: list[tuple[int, int]] = []
+    year, month = start.year, start.month
+    while (year, month) <= (end.year, end.month):
+        months.append((year, month))
+        if month == 12:
+            year, month = year + 1, 1
+        else:
+            month += 1
+    return months
 
 
-def _day_prefix(stream: str, schema_version: str, day: date) -> str:
+def _month_prefix(stream: str, schema_version: str, year: int, month: int) -> str:
+    """Month partition prefix — reader filters keys to the query day window."""
+
     return (
         f"raw/stream={stream}/schema_version={schema_version}/"
-        f"year={day.year:04d}/month={day.month:02d}/day={day.day:02d}/"
+        f"year={year:04d}/month={month:02d}/"
     )
 
 
@@ -84,7 +91,7 @@ def plan_prefixes(
     max_span_days: int | None = None,
     metric: str | None = None,
 ) -> QueryPlan:
-    """Build a bounded list of day prefixes for approved streams/versions."""
+    """Build a bounded list of month prefixes for approved streams/versions."""
 
     if any(s == "quarantine" or s.startswith("quarantine/") for s in streams):
         raise InsightsQueryPlanError("unsupported_stream", "quarantine")
@@ -101,12 +108,12 @@ def plan_prefixes(
     _validate_window(window, max_span_days=span_limit)
 
     active_budgets = budgets or default_query_budgets()
-    days = _iter_days(window.start_date, window.end_date)
+    year_months = _iter_year_months(window.start_date, window.end_date)
     prefixes: list[str] = []
     for stream in streams:
         for ver in schema_versions:
-            for day in days:
-                prefixes.append(_day_prefix(stream, ver, day))
+            for year, month in year_months:
+                prefixes.append(_month_prefix(stream, ver, year, month))
 
     # Deterministic order.
     ordered = tuple(sorted(set(prefixes)))
@@ -147,12 +154,16 @@ def _plan_streams_for_window(
     metric: str | None,
     max_span_days: int,
 ) -> QueryPlan:
-    """Plan day prefixes with per-stream schema versions (amd → 1.0+1.1)."""
+    """Plan month prefixes with per-stream schema versions (amd → 1.0+1.1).
+
+    Month prefixes keep ListObjects cardinality O(months × streams × schemas)
+    instead of O(days × …). BoundedS3Reader filters keys to the day window.
+    """
 
     _validate_window(window, max_span_days=max_span_days)
     _validate_streams(streams)
     active_budgets = budgets or default_query_budgets()
-    days = _iter_days(window.start_date, window.end_date)
+    year_months = _iter_year_months(window.start_date, window.end_date)
     prefixes: list[str] = []
     used_versions: set[str] = set()
     for stream in streams:
@@ -164,8 +175,8 @@ def _plan_streams_for_window(
         _validate_schema_versions(versions)
         used_versions.update(versions)
         for ver in versions:
-            for day in days:
-                prefixes.append(_day_prefix(stream, ver, day))
+            for year, month in year_months:
+                prefixes.append(_month_prefix(stream, ver, year, month))
     ordered = tuple(sorted(set(prefixes)))
     return QueryPlan(
         streams=tuple(streams),

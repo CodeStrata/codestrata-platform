@@ -113,7 +113,7 @@ def test_overview_lake_plan_is_union_not_sum_of_metric_plans() -> None:
     # Naive serial overview would list total prefixes then first prefixes again.
     naive = len(total.prefixes) + len(first.prefixes)
     assert len(overview.prefixes) < naive
-    assert len(overview.prefixes) == 90  # 30 days × (tel + amd1.0 + amd1.1)
+    assert len(overview.prefixes) == 3  # 1 month × (tel + amd1.0 + amd1.1)
 
 
 def test_overview_issues_one_get_per_object_not_n_scans() -> None:
@@ -176,8 +176,8 @@ def test_overview_issues_one_get_per_object_not_n_scans() -> None:
     assert set(by_id) == set(DEFAULT_OVERVIEW_METRICS)
     # 65 unique objects → exactly 65 gets (no duplicate telemetry scan).
     assert gets == 65
-    # One list page per day-prefix in the unified plan (90), not 120.
-    assert lists == 90
+    # One list page per month-prefix in the unified plan (3), not per-day × 2 scans.
+    assert lists == 3
     assert by_id["total_assessments"].value == 40
     assert by_id["successful_assessments"].value == 40
     # Dual-stream first/repeat: 25 amd units + telemetry excess paired — not doubled.
@@ -248,7 +248,7 @@ def test_github_shared_cache_constructs_once(monkeypatch) -> None:
 
 
 def test_large_window_prefix_count_stays_linear() -> None:
-    """30-day overview lake plan stays O(days × streams), not O(metrics × days)."""
+    """30-day overview lake plan stays O(months × streams), not O(metrics × days)."""
 
     start = date(2026, 1, 1)
     end = start + timedelta(days=29)
@@ -256,4 +256,33 @@ def test_large_window_prefix_count_stays_linear() -> None:
         window=DateWindow(start_date=start, end_date=end),
         lake_metrics=tuple(DEFAULT_OVERVIEW_METRICS),
     )
-    assert len(plan.prefixes) == 90
+    assert len(plan.prefixes) == 3  # Jan only × (tel + amd1.0 + amd1.1)
+
+
+def test_month_prefix_skips_out_of_window_days() -> None:
+    """Listing a month must not Get objects outside the query day window."""
+
+    client = FakeInsightsS3Client()
+    client.put_bytes(
+        _key("telemetry", "1.0", "2026-08-01", "in.json"),
+        _tel("2026-08-01", "e-in", "inst-a"),
+    )
+    client.put_bytes(
+        _key("telemetry", "1.0", "2026-08-15", "out.json"),
+        _tel("2026-08-15", "e-out", "inst-b"),
+    )
+    reader = BoundedS3Reader(bucket="test-bucket", client=client)
+    results = aggregate_dashboard_overview(
+        OverviewRequest(
+            start_date_utc=date(2026, 8, 1),
+            end_date_utc=date(2026, 8, 10),
+            metric_ids=("total_assessments",),
+        ),
+        reader=reader,
+    )
+    assert results[0].status == "ok"
+    assert results[0].value == 1
+    gets = sum(1 for op, _ in client.calls if op == "get_object")
+    assert gets == 1
+    lists = sum(1 for op, _ in client.calls if op == "list_objects_v2")
+    assert lists == 1  # one month prefix for telemetry-only

@@ -211,18 +211,39 @@ def aggregate_dashboard_overview(
                     ),
                     lake_metrics=lake_ids,
                 )
+                _LOG.info(
+                    "insights_overview_lake_begin prefixes=%s streams=%s",
+                    len(plan.prefixes),
+                    ",".join(plan.streams),
+                )
                 result = reader.read_plan(plan)
                 lake_ctx = _context_from_reader_result(result)
                 stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
                 stage_ms["lake_lists"] = float(result.diagnostics.list_requests)
                 stage_ms["lake_gets"] = float(result.diagnostics.get_requests)
                 stage_ms["lake_objects"] = float(result.diagnostics.objects_considered)
+                _LOG.info(
+                    "insights_overview_lake_done lake_ms=%.1f lists=%.0f gets=%.0f objs=%.0f",
+                    stage_ms["lake_read"],
+                    stage_ms["lake_lists"],
+                    stage_ms["lake_gets"],
+                    stage_ms["lake_objects"],
+                )
             except InsightsAggregationError as exc:
                 lake_error = exc
                 stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+                _LOG.info(
+                    "insights_overview_lake_error lake_ms=%.1f detail=%s",
+                    stage_ms["lake_read"],
+                    exc.detail,
+                )
             except Exception:
                 lake_error = InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lake_failed")
                 stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+                _LOG.info(
+                    "insights_overview_lake_error lake_ms=%.1f detail=lake_failed",
+                    stage_ms["lake_read"],
+                )
 
     ordered: list[MetricResult] = []
     for mid in metric_ids:
@@ -284,12 +305,16 @@ def aggregate_dashboard_overview(
     stage_ms["total"] = (time.perf_counter() - t0) * 1000.0
     # Privacy-safe operational timing only (no keys, tokens, or payloads).
     _LOG.info(
-        "insights_overview_timing total_ms=%.1f lake_ms=%.1f lists=%.0f gets=%.0f objs=%.0f",
+        "insights_overview_timing total_ms=%.1f lake_ms=%.1f lists=%.0f gets=%.0f "
+        "objs=%.0f github_ms=%.1f published_ms=%.1f sentiment_ms=%.1f",
         stage_ms.get("total", 0.0),
         stage_ms.get("lake_read", 0.0),
         stage_ms.get("lake_lists", 0.0),
         stage_ms.get("lake_gets", 0.0),
         stage_ms.get("lake_objects", 0.0),
+        stage_ms.get("ext_github_stars", 0.0) + stage_ms.get("ext_github_forks", 0.0),
+        stage_ms.get("ext_published_reports", 0.0),
+        stage_ms.get("ext_community_sentiment", 0.0),
     )
     return tuple(ordered)
 

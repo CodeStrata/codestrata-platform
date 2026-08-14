@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
+from datetime import date
 from typing import Any, Iterator
 
 from codestrata_platform.community_cloud_api.insights.errors import (
@@ -16,8 +18,28 @@ from codestrata_platform.community_cloud_api.insights_query.models import QueryP
 from codestrata_platform.community_cloud_api.insights_query.planner import reject_caller_prefix
 from codestrata_platform.community_cloud_api.insights_storage.ports import InsightsS3ClientPort
 
-# Bound parallelism for day-prefix listing (overview ≈ 90 empty-ish prefixes).
-_LIST_WORKERS = 16
+# Month-prefix plans are small; keep a worker pool for multi-stream lifetime windows.
+_LIST_WORKERS = 8
+_LIST_FUTURE_TIMEOUT_SECONDS = 5.0
+_LIST_TOTAL_TIMEOUT_SECONDS = 12.0
+
+_PARTITION_DAY_RE = re.compile(
+    r"/year=(?P<year>\d{4})/month=(?P<month>\d{2})/day=(?P<day>\d{2})/"
+)
+
+
+def _partition_date_from_key(key: str) -> date | None:
+    match = _PARTITION_DAY_RE.search(key)
+    if match is None:
+        return None
+    try:
+        return date(
+            int(match.group("year")),
+            int(match.group("month")),
+            int(match.group("day")),
+        )
+    except ValueError:
+        return None
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,10 +72,15 @@ class BoundedS3Reader:
         diagnostics = ReadDiagnostics()
         records: list[ObjectRecord] = []
         budgets = plan.budgets
+        window_start = date.fromisoformat(plan.start_date)
+        window_end = date.fromisoformat(plan.end_date)
 
         try:
             listed = self._list_all_prefixes(plan, diagnostics)
             for key, size in listed:
+                part_day = _partition_date_from_key(key)
+                if part_day is None or part_day < window_start or part_day > window_end:
+                    continue
                 if diagnostics.objects_considered >= budgets.max_objects_per_query:
                     diagnostics.budget_reached = True
                     raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "objects")
@@ -95,20 +122,44 @@ class BoundedS3Reader:
         if "quarantine" in prefix or prefix == "raw/" or ".." in prefix or "*" in prefix:
             raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "unsafe_prefix")
 
+    def _client_for_worker(self) -> InsightsS3ClientPort:
+        """Prefer a thread-local boto3 client; keep fakes shared."""
+
+        client = self._client
+        meta = getattr(client, "meta", None)
+        if meta is None:
+            return client
+        try:
+            import boto3
+            from botocore.config import Config
+
+            region = getattr(meta, "region_name", None) or "us-west-2"
+            return boto3.client(
+                "s3",
+                region_name=region,
+                config=Config(
+                    connect_timeout=2,
+                    read_timeout=5,
+                    retries={"max_attempts": 2, "mode": "standard"},
+                    max_pool_connections=32,
+                ),
+            )
+        except Exception:
+            return client
+
     def _list_all_prefixes(
         self, plan: QueryPlan, diagnostics: ReadDiagnostics
     ) -> list[tuple[str, int]]:
-        """List every planner prefix; parallelize when many day prefixes are present."""
+        """List every planner prefix; parallelize larger multi-month plans."""
 
         prefixes = plan.prefixes
         if not prefixes:
             return []
 
-        # Small plans stay serial (single-metric / narrow windows).
         if len(prefixes) <= 4:
             out: list[tuple[str, int]] = []
             for prefix in prefixes:
-                for key, size in self._list_prefix(prefix, plan, diagnostics):
+                for key, size in self._list_prefix(prefix, plan, diagnostics, self._client):
                     out.append((key, size))
             return out
 
@@ -119,35 +170,41 @@ class BoundedS3Reader:
 
         def _collect(prefix: str) -> tuple[list[tuple[str, int]], int, int]:
             local_diag = ReadDiagnostics()
-            items = list(self._list_prefix(prefix, plan, local_diag))
+            worker_client = self._client_for_worker()
+            items = list(self._list_prefix(prefix, plan, local_diag, worker_client))
             return items, local_diag.list_requests, local_diag.pages_read
 
-        with ThreadPoolExecutor(max_workers=workers) as pool:
-            futures = [pool.submit(_collect, prefix) for prefix in prefixes]
-            for fut in as_completed(futures):
-                try:
-                    items, lists, pages = fut.result()
-                except InsightsAggregationError:
-                    raise
-                except Exception:
-                    raise InsightsAggregationError(STORAGE_UNAVAILABLE, "list_failed") from None
-                list_requests += lists
-                pages_read += pages
-                if list_requests > plan.budgets.max_list_requests_per_query:
-                    diagnostics.list_requests = list_requests
-                    diagnostics.pages_read = pages_read
-                    diagnostics.budget_reached = True
-                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lists")
-                collected.extend(items)
+        try:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = [pool.submit(_collect, prefix) for prefix in prefixes]
+                for fut in as_completed(futures, timeout=_LIST_TOTAL_TIMEOUT_SECONDS):
+                    items, lists, pages = fut.result(timeout=_LIST_FUTURE_TIMEOUT_SECONDS)
+                    list_requests += lists
+                    pages_read += pages
+                    if list_requests >= plan.budgets.max_list_requests_per_query:
+                        diagnostics.list_requests = list_requests
+                        diagnostics.pages_read = pages_read
+                        diagnostics.budget_reached = True
+                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lists")
+                    collected.extend(items)
+        except InsightsAggregationError:
+            raise
+        except Exception as exc:
+            diagnostics.list_requests = list_requests
+            diagnostics.pages_read = pages_read
+            raise InsightsAggregationError(STORAGE_UNAVAILABLE, "list_parallel_failed") from exc
 
         diagnostics.list_requests += list_requests
         diagnostics.pages_read += pages_read
-        # Deterministic get order (stable across workers).
         collected.sort(key=lambda item: item[0])
         return collected
 
     def _list_prefix(
-        self, prefix: str, plan: QueryPlan, diagnostics: ReadDiagnostics
+        self,
+        prefix: str,
+        plan: QueryPlan,
+        diagnostics: ReadDiagnostics,
+        client: InsightsS3ClientPort,
     ) -> Iterator[tuple[str, int]]:
         token: str | None = None
         pages_for_prefix = 0
@@ -166,7 +223,7 @@ class BoundedS3Reader:
             if token:
                 kwargs["ContinuationToken"] = token
             try:
-                resp = self._client.list_objects_v2(**kwargs)
+                resp = client.list_objects_v2(**kwargs)
             except Exception:
                 raise InsightsAggregationError(STORAGE_UNAVAILABLE, "list_failed") from None
             diagnostics.list_requests += 1

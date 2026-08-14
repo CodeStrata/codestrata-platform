@@ -1,4 +1,4 @@
-"""Regression: Insights list budget must cover day×stream prefix plans."""
+"""Regression: Insights list budget must cover month×stream prefix plans."""
 
 from __future__ import annotations
 
@@ -15,6 +15,6 @@ def test_list_budget_covers_multistream_bounded_window() -> None:
         metric="total_anonymous_installations",
         window=DateWindow(start_date=start, end_date=end),
     )
-    # 31 days × (4 streams @ schema 1.0 + assessment_metadata @ 1.0+1.1)
-    assert len(plan.prefixes) == 186
+    # Jul+Aug × (4 streams @ schema 1.0 + assessment_metadata @ 1.0+1.1) = 2 × 6 = 12
+    assert len(plan.prefixes) == 12
     assert plan.budgets.max_list_requests_per_query >= len(plan.prefixes)
