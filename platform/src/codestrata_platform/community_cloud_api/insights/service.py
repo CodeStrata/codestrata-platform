@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+import time
 from datetime import date
 
 from codestrata_platform.community_cloud_api.insights.aggregators import AGGREGATORS
@@ -43,12 +45,17 @@ from codestrata_platform.community_cloud_api.insights.validation_dataset import 
 )
 from codestrata_platform.community_cloud_api.insights_query.errors import InsightsQueryPlanError
 from codestrata_platform.community_cloud_api.insights_query.models import DateWindow, QueryPlan
-from codestrata_platform.community_cloud_api.insights_query.planner import plan_metric_query
+from codestrata_platform.community_cloud_api.insights_query.planner import (
+    plan_metric_query,
+    plan_overview_lake_query,
+)
 from codestrata_platform.community_cloud_api.insights_query.policy import EXTERNAL_METRICS
 from codestrata_platform.community_cloud_api.insights_storage.reader import (
     BoundedS3Reader,
     ReaderResult,
 )
+
+_LOG = logging.getLogger(__name__)
 
 
 class InsightsAggregationService:
@@ -170,13 +177,54 @@ def aggregate_dashboard_overview(
     published_reports_port: object | None = None,
     community_sentiment_port: object | None = None,
 ) -> tuple[MetricResult, ...]:
-    """Per-metric isolation; reuse S3 reads when planner prefixes match."""
+    """Overview: one lake read for all S3 metrics; independent external cards.
+
+    Lake metrics (total/first/repeat/successful/failed) share a single
+    ``plan_overview_lake_query`` + ``BoundedS3Reader.read_plan`` so telemetry
+    objects are not listed/gotten twice. External metrics stay isolated so a
+    slow/failed GitHub or registry call cannot rewrite lake results.
+    """
 
     metric_ids = request.metric_ids or DEFAULT_OVERVIEW_METRICS
-    read_cache: dict[tuple[str, ...], ReaderResult] = {}
-    context_cache: dict[tuple[str, ...], AggregationContext] = {}
-    ordered: list[MetricResult] = []
+    t0 = time.perf_counter()
+    stage_ms: dict[str, float] = {}
 
+    lake_ids = tuple(
+        mid
+        for mid in metric_ids
+        if mid in SUPPORTED_METRICS
+        and mid not in EXTERNAL_METRICS
+        and not is_external_metric(mid)
+    )
+    lake_ctx: AggregationContext | None = None
+    lake_error: InsightsAggregationError | None = None
+    if lake_ids:
+        if reader is None:
+            lake_error = InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required")
+        else:
+            t_lake = time.perf_counter()
+            try:
+                plan = plan_overview_lake_query(
+                    window=DateWindow(
+                        start_date=request.start_date_utc,
+                        end_date=request.end_date_utc,
+                    ),
+                    lake_metrics=lake_ids,
+                )
+                result = reader.read_plan(plan)
+                lake_ctx = _context_from_reader_result(result)
+                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+                stage_ms["lake_lists"] = float(result.diagnostics.list_requests)
+                stage_ms["lake_gets"] = float(result.diagnostics.get_requests)
+                stage_ms["lake_objects"] = float(result.diagnostics.objects_considered)
+            except InsightsAggregationError as exc:
+                lake_error = exc
+                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+            except Exception:
+                lake_error = InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lake_failed")
+                stage_ms["lake_read"] = (time.perf_counter() - t_lake) * 1000.0
+
+    ordered: list[MetricResult] = []
     for mid in metric_ids:
         req = MetricRequest(mid, request.start_date_utc, request.end_date_utc)
         if mid not in SUPPORTED_METRICS:
@@ -194,6 +242,7 @@ def aggregate_dashboard_overview(
             )
             continue
         if mid in EXTERNAL_METRICS or is_external_metric(mid):
+            t_ext = time.perf_counter()
             ordered.append(
                 aggregate_metric(
                     req,
@@ -202,22 +251,20 @@ def aggregate_dashboard_overview(
                     community_sentiment_port=community_sentiment_port,
                 )
             )
+            stage_ms[f"ext_{mid}"] = (time.perf_counter() - t_ext) * 1000.0
             continue
+        if lake_error is not None:
+            ordered.append(_error_result(mid, req, lake_error))
+            continue
+        assert lake_ctx is not None
         try:
-            plan = _plan(mid, request.start_date_utc, request.end_date_utc)
-            prefix_key = plan.prefixes
-            if prefix_key not in context_cache:
-                if reader is None:
-                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "reader_required")
-                if prefix_key not in read_cache:
-                    read_cache[prefix_key] = reader.read_plan(plan)
-                context_cache[prefix_key] = _context_from_reader_result(read_cache[prefix_key])
-            result = AGGREGATORS[mid](
-                context_cache[prefix_key],
-                request.start_date_utc,
-                request.end_date_utc,
+            ordered.append(
+                AGGREGATORS[mid](
+                    lake_ctx,
+                    request.start_date_utc,
+                    request.end_date_utc,
+                )
             )
-            ordered.append(result)
         except InsightsAggregationError as exc:
             ordered.append(_error_result(mid, req, exc))
         except Exception:
@@ -233,6 +280,17 @@ def aggregate_dashboard_overview(
                     limitations=finalize_limitations(["source_unavailable"]),
                 )
             )
+
+    stage_ms["total"] = (time.perf_counter() - t0) * 1000.0
+    # Privacy-safe operational timing only (no keys, tokens, or payloads).
+    _LOG.info(
+        "insights_overview_timing total_ms=%.1f lake_ms=%.1f lists=%.0f gets=%.0f objs=%.0f",
+        stage_ms.get("total", 0.0),
+        stage_ms.get("lake_read", 0.0),
+        stage_ms.get("lake_lists", 0.0),
+        stage_ms.get("lake_gets", 0.0),
+        stage_ms.get("lake_objects", 0.0),
+    )
     return tuple(ordered)
 
 

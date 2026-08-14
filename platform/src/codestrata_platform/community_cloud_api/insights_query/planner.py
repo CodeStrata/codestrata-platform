@@ -139,6 +139,47 @@ def plan_prefixes(
     )
 
 
+def _plan_streams_for_window(
+    *,
+    streams: tuple[str, ...],
+    window: DateWindow,
+    budgets: QueryBudgets | None,
+    metric: str | None,
+    max_span_days: int,
+) -> QueryPlan:
+    """Plan day prefixes with per-stream schema versions (amd → 1.0+1.1)."""
+
+    _validate_window(window, max_span_days=max_span_days)
+    _validate_streams(streams)
+    active_budgets = budgets or default_query_budgets()
+    days = _iter_days(window.start_date, window.end_date)
+    prefixes: list[str] = []
+    used_versions: set[str] = set()
+    for stream in streams:
+        versions = (
+            tuple(sorted(SUPPORTED_SCHEMA_VERSIONS))
+            if stream == "assessment_metadata"
+            else ("1.0",)
+        )
+        _validate_schema_versions(versions)
+        used_versions.update(versions)
+        for ver in versions:
+            for day in days:
+                prefixes.append(_day_prefix(stream, ver, day))
+    ordered = tuple(sorted(set(prefixes)))
+    return QueryPlan(
+        streams=tuple(streams),
+        schema_versions=tuple(sorted(used_versions)),
+        prefixes=ordered,
+        start_date=window.start_date.isoformat(),
+        end_date=window.end_date.isoformat(),
+        budgets=active_budgets,
+        quarantine_excluded=True,
+        completeness_default="complete",
+        metric=metric,
+    )
+
+
 def plan_metric_query(
     *,
     metric: str,
@@ -174,32 +215,51 @@ def plan_metric_query(
         if metric in LIFETIME_METRICS
         else MAX_DATE_SPAN_DAYS_DEFAULT
     )
-    _validate_window(window, max_span_days=span_limit)
-    _validate_streams(streams)
-    active_budgets = budgets or default_query_budgets()
-    days = _iter_days(window.start_date, window.end_date)
-    prefixes: list[str] = []
-    used_versions: set[str] = set()
-    for stream in streams:
-        versions = (
-            tuple(sorted(SUPPORTED_SCHEMA_VERSIONS))
-            if stream == "assessment_metadata"
-            else ("1.0",)
-        )
-        _validate_schema_versions(versions)
-        used_versions.update(versions)
-        for ver in versions:
-            for day in days:
-                prefixes.append(_day_prefix(stream, ver, day))
-    ordered = tuple(sorted(set(prefixes)))
-    return QueryPlan(
-        streams=tuple(streams),
-        schema_versions=tuple(sorted(used_versions)),
-        prefixes=ordered,
-        start_date=window.start_date.isoformat(),
-        end_date=window.end_date.isoformat(),
-        budgets=active_budgets,
-        quarantine_excluded=True,
-        completeness_default="complete",
+    return _plan_streams_for_window(
+        streams=streams,
+        window=window,
+        budgets=budgets,
         metric=metric,
+        max_span_days=span_limit,
+    )
+
+
+def plan_overview_lake_query(
+    *,
+    window: DateWindow,
+    lake_metrics: tuple[str, ...],
+    budgets: QueryBudgets | None = None,
+) -> QueryPlan:
+    """Single bounded plan covering all lake overview metrics (no duplicate scans).
+
+    Unions METRIC_STREAMS for the requested lake metrics and applies the same
+    per-stream schema rules as ``plan_metric_query`` (amd → 1.0 + 1.1).
+    """
+
+    streams_set: set[str] = set()
+    needs_lifetime_span = False
+    for metric in lake_metrics:
+        if metric in EXTERNAL_METRICS:
+            continue
+        mapped = METRIC_STREAMS.get(metric)
+        if mapped is None:
+            raise InsightsQueryPlanError("unsupported_stream", "unknown_metric")
+        streams_set.update(mapped)
+        if metric in LIFETIME_METRICS:
+            needs_lifetime_span = True
+    if not streams_set:
+        raise InsightsQueryPlanError("unsupported_stream", "empty")
+    # Stable stream order for deterministic plans.
+    streams = tuple(sorted(streams_set))
+    span_limit = (
+        MAX_DATE_SPAN_DAYS_LIFETIME
+        if needs_lifetime_span
+        else MAX_DATE_SPAN_DAYS_DEFAULT
+    )
+    return _plan_streams_for_window(
+        streams=streams,
+        window=window,
+        budgets=budgets,
+        metric="overview_lake_batch",
+        max_span_days=span_limit,
     )

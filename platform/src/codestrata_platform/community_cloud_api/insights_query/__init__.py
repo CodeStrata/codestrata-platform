@@ -16,6 +16,7 @@ from codestrata_platform.community_cloud_api.insights_query.models import (
 )
 from codestrata_platform.community_cloud_api.insights_query.planner import (
     plan_metric_query,
+    plan_overview_lake_query,
     plan_prefixes,
 )
 from codestrata_platform.community_cloud_api.insights_query.policy import (
@@ -33,5 +34,6 @@ __all__ = [
     "QueryPlan",
     "default_query_budgets",
     "plan_metric_query",
+    "plan_overview_lake_query",
     "plan_prefixes",
 ]

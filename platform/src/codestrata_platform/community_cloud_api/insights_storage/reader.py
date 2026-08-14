@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from typing import Any, Iterator
 
@@ -14,6 +15,9 @@ from codestrata_platform.community_cloud_api.insights.models import ReadDiagnost
 from codestrata_platform.community_cloud_api.insights_query.models import QueryPlan
 from codestrata_platform.community_cloud_api.insights_query.planner import reject_caller_prefix
 from codestrata_platform.community_cloud_api.insights_storage.ports import InsightsS3ClientPort
+
+# Bound parallelism for day-prefix listing (overview ≈ 90 empty-ish prefixes).
+_LIST_WORKERS = 16
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,29 +52,29 @@ class BoundedS3Reader:
         budgets = plan.budgets
 
         try:
-            for prefix in plan.prefixes:
-                for key, size in self._list_prefix(prefix, plan, diagnostics):
-                    if diagnostics.objects_considered >= budgets.max_objects_per_query:
-                        diagnostics.budget_reached = True
-                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "objects")
-                    if size > budgets.max_single_object_bytes:
-                        diagnostics.budget_reached = True
-                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
-                    if diagnostics.bytes_read + size > budgets.max_bytes_per_query:
-                        diagnostics.budget_reached = True
-                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "bytes")
-                    if diagnostics.get_requests >= budgets.max_get_requests_per_query:
-                        diagnostics.budget_reached = True
-                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "gets")
+            listed = self._list_all_prefixes(plan, diagnostics)
+            for key, size in listed:
+                if diagnostics.objects_considered >= budgets.max_objects_per_query:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "objects")
+                if size > budgets.max_single_object_bytes:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
+                if diagnostics.bytes_read + size > budgets.max_bytes_per_query:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "bytes")
+                if diagnostics.get_requests >= budgets.max_get_requests_per_query:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "gets")
 
-                    body = self._get_object(key, diagnostics)
-                    actual = len(body)
-                    if actual > budgets.max_single_object_bytes:
-                        diagnostics.budget_reached = True
-                        raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
-                    diagnostics.bytes_read += actual
-                    diagnostics.objects_considered += 1
-                    records.append(ObjectRecord(size=actual, body=body, _key=""))
+                body = self._get_object(key, diagnostics)
+                actual = len(body)
+                if actual > budgets.max_single_object_bytes:
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "single_object")
+                diagnostics.bytes_read += actual
+                diagnostics.objects_considered += 1
+                records.append(ObjectRecord(size=actual, body=body, _key=""))
         except InsightsAggregationError:
             raise
         except Exception:
@@ -90,6 +94,58 @@ class BoundedS3Reader:
             raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "unsafe_prefix")
         if "quarantine" in prefix or prefix == "raw/" or ".." in prefix or "*" in prefix:
             raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "unsafe_prefix")
+
+    def _list_all_prefixes(
+        self, plan: QueryPlan, diagnostics: ReadDiagnostics
+    ) -> list[tuple[str, int]]:
+        """List every planner prefix; parallelize when many day prefixes are present."""
+
+        prefixes = plan.prefixes
+        if not prefixes:
+            return []
+
+        # Small plans stay serial (single-metric / narrow windows).
+        if len(prefixes) <= 4:
+            out: list[tuple[str, int]] = []
+            for prefix in prefixes:
+                for key, size in self._list_prefix(prefix, plan, diagnostics):
+                    out.append((key, size))
+            return out
+
+        workers = min(_LIST_WORKERS, len(prefixes))
+        collected: list[tuple[str, int]] = []
+        list_requests = 0
+        pages_read = 0
+
+        def _collect(prefix: str) -> tuple[list[tuple[str, int]], int, int]:
+            local_diag = ReadDiagnostics()
+            items = list(self._list_prefix(prefix, plan, local_diag))
+            return items, local_diag.list_requests, local_diag.pages_read
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = [pool.submit(_collect, prefix) for prefix in prefixes]
+            for fut in as_completed(futures):
+                try:
+                    items, lists, pages = fut.result()
+                except InsightsAggregationError:
+                    raise
+                except Exception:
+                    raise InsightsAggregationError(STORAGE_UNAVAILABLE, "list_failed") from None
+                list_requests += lists
+                pages_read += pages
+                if list_requests > plan.budgets.max_list_requests_per_query:
+                    diagnostics.list_requests = list_requests
+                    diagnostics.pages_read = pages_read
+                    diagnostics.budget_reached = True
+                    raise InsightsAggregationError(QUERY_LIMIT_EXCEEDED, "lists")
+                collected.extend(items)
+
+        diagnostics.list_requests += list_requests
+        diagnostics.pages_read += pages_read
+        # Deterministic get order (stable across workers).
+        collected.sort(key=lambda item: item[0])
+        return collected
+
     def _list_prefix(
         self, prefix: str, plan: QueryPlan, diagnostics: ReadDiagnostics
     ) -> Iterator[tuple[str, int]]:
