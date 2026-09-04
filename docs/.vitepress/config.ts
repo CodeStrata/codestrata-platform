@@ -140,6 +140,10 @@ export default defineConfig({
               text: "Deterministic vs AI",
               link: "/assessments/deterministic-vs-ai",
             },
+            {
+              text: "Evidence Plans & Studio",
+              link: "/assessments/evidence-framework",
+            },
             { text: "Assessment Reports", link: "/reports/" },
             {
               text: "Findings & Recommendations",

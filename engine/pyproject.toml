@@ -108,6 +108,7 @@ codestrata = [
     "resources/**/*.md",
     "reporting/assets/*.svg",
     "application/rules/data/*.json",
+    "interfaces/evidence_studio/assets/**/*",
 ]
 
 

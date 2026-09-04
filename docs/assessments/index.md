@@ -8,6 +8,10 @@ description: How CodeStrata Engineering Assessments work — deterministic by de
 An **Engineering Assessment** analyzes a repository with CodeStrata Engine and
 produces findings, recommendations, and reports grounded in evidence.
 
+For a user-defined, local-first evidence workflow with plan preview, normalized
+provenance, explicit coverage, and an isolated assessment profile, see
+[Evidence Plans and Evidence Studio](./evidence-framework).
+
 ## Default path
 
 Deterministic Engineering Intelligence:

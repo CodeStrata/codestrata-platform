@@ -1,13 +1,15 @@
-"""CLI for language evidence providers (Phase 4.2.2)."""
+"""CLI for evidence planning plus specialized language providers."""
 
 from __future__ import annotations
 
 import json
+import webbrowser
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
+from codestrata.application.evidence.framework.service import EvidenceFrameworkService
 from codestrata.application.evidence.language.factory import create_language_evidence_service
 from codestrata.config import CodestrataSettings, load_settings
 from codestrata.domain.evidence.language.capability_catalog import (
@@ -18,14 +20,16 @@ from codestrata.domain.evidence.language.capability_catalog import (
     CAP_FRAMEWORK_USAGE,
     CAP_SOURCE_FILES,
 )
+from codestrata.interfaces.evidence_studio import EvidenceStudioServer
+from codestrata.security.redaction import redact_secrets
 
 evidence_app = typer.Typer(
     name="evidence",
     help=(
-        "Language evidence providers used during assess.\n\n"
-        "Providers collect and normalize facts; Shared Architecture rules interpret them. "
-        "The provider pipeline is disabled by default "
-        "(`[evidence.language] enabled = false`)."
+        "Define, preview, collect, normalize, assess, and report repository evidence.\n\n"
+        "Start with `codestrata evidence studio --repo .` for the local visual workflow, "
+        "or `codestrata evidence init --repo .` for a portable YAML plan. Existing "
+        "language-provider commands remain available under `providers`."
     ),
     no_args_is_help=True,
 )
@@ -88,7 +92,7 @@ def inspect_provider(
     try:
         row = service.inspect_provider(provider_id)
     except Exception as error:  # noqa: BLE001
-        typer.echo(str(error), err=True)
+        typer.echo(redact_secrets(str(error)), err=True)
         raise typer.Exit(code=1) from error
     if json_output:
         typer.echo(json.dumps(row, indent=2, ensure_ascii=False))
@@ -128,7 +132,7 @@ def explain_provider(
     try:
         payload = service.explain_provider(provider_id, relative_paths=paths, file_texts={})
     except Exception as error:  # noqa: BLE001
-        typer.echo(str(error), err=True)
+        typer.echo(redact_secrets(str(error)), err=True)
         raise typer.Exit(code=1) from error
     # Without texts, explain still reports language presence via paths in evaluate —
     # re-run with empty texts may yield insufficient_input; that is intentional.
@@ -223,3 +227,156 @@ def _list_source_paths(repository: Path) -> list[str]:
         if len(paths) >= 5000:
             break
     return paths
+
+
+@evidence_app.command("init")
+def init_evidence_plan(
+    repository: Annotated[
+        Path,
+        typer.Option("--repo", "--repository", help="Repository to observe."),
+    ] = Path("."),
+    output: Annotated[
+        Path,
+        typer.Option("--output", "-o", help="Evidence-plan YAML path."),
+    ] = Path("evidence-plan.yaml"),
+    goal: Annotated[
+        str,
+        typer.Option("--goal", help="Decision or question this evidence should support."),
+    ] = "Understand the repository evidence available for an engineering decision",
+    force: Annotated[
+        bool,
+        typer.Option("--force", help="Replace an existing plan file."),
+    ] = False,
+) -> None:
+    """Create a versioned, editable evidence plan from safe local defaults."""
+
+    if output.exists() and not force:
+        typer.echo(f"Plan already exists: {output}. Use --force to replace it.", err=True)
+        raise typer.Exit(code=1)
+    service = EvidenceFrameworkService()
+    plan = service.create_default_plan(repository, goal=goal)
+    destination = service.save_plan(plan, output)
+    typer.echo(f"Evidence plan written: {destination.resolve()}")
+
+
+@evidence_app.command("preview")
+def preview_evidence_plan(
+    plan_path: Annotated[
+        Path,
+        typer.Option("--plan", "-p", help="Evidence-plan YAML path."),
+    ] = Path("evidence-plan.yaml"),
+    json_output: Annotated[bool, typer.Option("--json", help="Emit JSON.")] = False,
+) -> None:
+    """Explain reads, execution, network behavior, applicability, and blind spots."""
+
+    service = EvidenceFrameworkService()
+    try:
+        plan = service.load_plan(plan_path)
+        preview = service.preview(plan)
+    except Exception as error:  # noqa: BLE001 - CLI boundary
+        typer.echo(redact_secrets(str(error)), err=True)
+        raise typer.Exit(code=2) from error
+    if json_output:
+        typer.echo(preview.model_dump_json(indent=2))
+        return
+    typer.echo(f"Plan: {preview.plan_id}")
+    typer.echo("Reads:")
+    for read_description in preview.reads:
+        typer.echo(f"  - {read_description}")
+    typer.echo("Executes:")
+    for execution_description in preview.executes or ("Nothing",):
+        typer.echo(f"  - {execution_description}")
+    typer.echo("Leaves this machine:")
+    for network_description in preview.leaves_machine:
+        typer.echo(f"  - {network_description}")
+    typer.echo("Activities:")
+    for collector_preview in preview.collectors:
+        typer.echo(
+            f"  - {collector_preview.activity_id}: {collector_preview.status} — "
+            f"{collector_preview.reason}"
+        )
+
+
+@evidence_app.command("run")
+def run_evidence_plan(
+    plan_path: Annotated[
+        Path,
+        typer.Option("--plan", "-p", help="Evidence-plan YAML path."),
+    ] = Path("evidence-plan.yaml"),
+    output_root: Annotated[
+        Path,
+        typer.Option("--output", "-o", help="Portable artifact store root."),
+    ] = Path(".codestrata-artifacts"),
+    json_output: Annotated[bool, typer.Option("--json", help="Emit JSON summary.")] = False,
+) -> None:
+    """Collect, normalize, assess, and report a reviewed evidence plan."""
+
+    service = EvidenceFrameworkService()
+    try:
+        plan = service.load_plan(plan_path)
+        result = service.run(plan, output_root=output_root)
+    except Exception as error:  # noqa: BLE001 - CLI boundary
+        typer.echo(redact_secrets(str(error)), err=True)
+        raise typer.Exit(code=1) from error
+    if json_output:
+        typer.echo(
+            json.dumps(
+                {
+                    "run": result.run.model_dump(mode="json"),
+                    "evidence_count": len(result.evidence),
+                    "finding_count": len(result.assessment.findings),
+                    "action_count": len(result.assessment.actions),
+                    "output_directory": str(result.output_directory),
+                    "report": str(result.output_directory / "report.html"),
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return
+    typer.echo(f"Run {result.run.status.value}: {result.run.run_id}")
+    typer.echo(f"Evidence: {len(result.evidence)} normalized record(s)")
+    typer.echo(
+        f"Assessment: {len(result.assessment.findings)} finding(s), "
+        f"{len(result.assessment.actions)} action(s)"
+    )
+    typer.echo(f"Report: {(result.output_directory / 'report.html').resolve()}")
+
+
+@evidence_app.command("studio")
+def evidence_studio(
+    repository: Annotated[
+        Path,
+        typer.Option("--repo", "--repository", help="Repository to observe."),
+    ] = Path("."),
+    port: Annotated[
+        int,
+        typer.Option("--port", min=0, max=65535, help="Loopback port; 0 chooses one."),
+    ] = 8765,
+    open_browser: Annotated[
+        bool,
+        typer.Option("--open/--no-open", help="Open the local studio in a browser."),
+    ] = True,
+) -> None:
+    """Open the goal-first local Evidence Studio; no account or cloud required."""
+
+    server = EvidenceStudioServer(repository=repository, port=port)
+    try:
+        server.start()
+    except OSError as error:
+        typer.echo(f"Could not start Evidence Studio: {error}", err=True)
+        raise typer.Exit(code=1) from error
+    typer.echo(f"Evidence Studio: {server.url}")
+    typer.echo(
+        "Collected evidence stays local. GitHub acquisition and reviewed external "
+        "activities are the only network paths."
+    )
+    typer.echo("Press Ctrl+C to stop.")
+    if open_browser:
+        webbrowser.open(server.url)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        typer.echo("\nEvidence Studio stopped.")
+    finally:
+        server.shutdown()

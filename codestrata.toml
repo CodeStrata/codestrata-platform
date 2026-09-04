@@ -170,7 +170,7 @@ region = "us-east-1"
 
 # Bedrock Converse defaults for --with-ai, plus independent knowledge providers.
 [ai]
-provider = "bedrock"
+provider = "openrouter"
 embedding_provider = "deterministic"
 answer_provider = "deterministic_extractive"
 
@@ -188,5 +188,11 @@ base_url = ""
 embedding_model = "text-embedding-3-small"
 answer_model = "gpt-4o-mini"
 embedding_dimensions = 0
+timeout_seconds = 60
+max_retries = 3
+
+[ai.openrouter]
+api_key_env = "OPENROUTER_API_KEY"
+model = "openai/gpt-4o-mini"
 timeout_seconds = 60
 max_retries = 3
